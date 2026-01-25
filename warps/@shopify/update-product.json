@@ -1,0 +1,121 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Shopify: Update Product",
+  "title": {
+    "en": "Update product",
+    "de": "Produkt aktualisieren"
+  },
+  "description": {
+    "en": "Update an existing product in your Shopify store. Modify the title, description, price, variants, or other product attributes.",
+    "de": "Aktualisiere ein bestehendes Produkt in deinem Shopify-Shop. Ändere Titel, Beschreibung, Preis, Varianten oder andere Produktattribute."
+  },
+  "vars": {
+    "SHOP": "env:SHOPIFY_SHOP|Your Shopify shop domain (e.g., 'myshop' for myshop.myshopify.com)",
+    "ACCESS_TOKEN": "env:SHOPIFY_ACCESS_TOKEN|OAuth access token from Shopify. Get it from Shopify App setup after OAuth authentication."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Update Product",
+      "destination": {
+        "url": "https://{{SHOP}}.myshopify.com/admin/api/2024-10/graphql.json",
+        "method": "POST",
+        "headers": {
+          "X-Shopify-Access-Token": "{{ACCESS_TOKEN}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Product ID",
+          "as": "productId",
+          "description": {
+            "en": "The GraphQL ID of the product to update (e.g., 'gid://shopify/Product/123456789')."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:variables.product.id"
+        },
+        {
+          "name": "Title",
+          "as": "title",
+          "description": {
+            "en": "The updated product title."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:variables.product.title"
+        },
+        {
+          "name": "Description",
+          "as": "description",
+          "description": {
+            "en": "The updated product description. Supports HTML."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:variables.product.descriptionHtml"
+        },
+        {
+          "name": "Vendor",
+          "as": "vendor",
+          "description": {
+            "en": "The updated product vendor name."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:variables.product.vendor"
+        },
+        {
+          "name": "Product Type",
+          "as": "productType",
+          "description": {
+            "en": "The updated product type (e.g., 'T-Shirt', 'Accessories', 'Electronics')."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:variables.product.productType"
+        },
+        {
+          "name": "Tags",
+          "as": "tags",
+          "description": {
+            "en": "Comma-separated list of tags for the product."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:variables.product.tags"
+        },
+        {
+          "name": "Query",
+          "as": "query",
+          "description": {
+            "en": "GraphQL mutation"
+          },
+          "type": "string",
+          "source": "hidden",
+          "position": "payload:query",
+          "default": "mutation productUpdate($product: ProductInput!) { productUpdate(product: $product) { product { id title handle vendor productType tags descriptionHtml variants(first: 10) { edges { node { id title price sku inventoryQuantity } } } } userErrors { field message } } }"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "PRODUCT_ID": "out.data.productUpdate.product.id",
+    "PRODUCT_TITLE": "out.data.productUpdate.product.title",
+    "SUCCESS": "out.data.productUpdate.userErrors.length === 0"
+  },
+  "messages": {
+    "success": {
+      "en": "Product '{{PRODUCT_TITLE}}' updated successfully!",
+      "de": "Produkt '{{PRODUCT_TITLE}}' erfolgreich aktualisiert!"
+    }
+  },
+  "defaultChain": "multiversx"
+}

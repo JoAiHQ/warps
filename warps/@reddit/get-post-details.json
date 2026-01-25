@@ -1,0 +1,78 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Reddit: Get Post Details",
+  "title": {
+    "en": "Get Post Details",
+    "de": "Post-Details abrufen"
+  },
+  "description": {
+    "en": "Retrieve detailed information about a specific Reddit post including its content, score, comments count, and metadata.",
+    "de": "Rufe detaillierte Informationen über einen bestimmten Reddit-Post ab, einschließlich Inhalt, Score, Kommentaranzahl und Metadaten."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:REDDIT_ACCESS_TOKEN|Get your access token from Reddit OAuth2 authentication. See https://www.reddit.com/prefs/apps to create an app."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Get Post Details",
+        "de": "Post-Details abrufen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/r/{{SUBREDDIT}}/comments/{{POST_ID}}",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}",
+          "User-Agent": "Warpbase/1.0"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Subreddit",
+          "as": "SUBREDDIT",
+          "description": {
+            "en": "The subreddit name (without r/ prefix).",
+            "de": "Der Subreddit-Name (ohne r/ Präfix)."
+          },
+          "bot": "The subreddit name without the 'r/' prefix.",
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Post ID",
+          "as": "POST_ID",
+          "description": {
+            "en": "The post ID (the part after the last / in the post URL).",
+            "de": "Die Post-ID (der Teil nach dem letzten / in der Post-URL)."
+          },
+          "bot": "The post ID. This is the identifier found in the post URL after the subreddit name.",
+          "type": "string",
+          "source": "field",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "output": {
+    "POST_DATA": "transform:() => results.out?.[0]?.data?.children?.[0]?.data || null",
+    "POST_TITLE": "transform:() => results.POST_DATA?.title || 'Unknown'",
+    "POST_AUTHOR": "transform:() => results.POST_DATA?.author || 'Unknown'",
+    "POST_SCORE": "transform:() => results.POST_DATA?.score || 0",
+    "POST_UPS": "transform:() => results.POST_DATA?.ups || 0",
+    "POST_DOWNS": "transform:() => results.POST_DATA?.downs || 0",
+    "POST_NUM_COMMENTS": "transform:() => results.POST_DATA?.num_comments || 0",
+    "POST_SELFTEXT": "transform:() => results.POST_DATA?.selftext || ''",
+    "POST_URL": "transform:() => results.POST_DATA?.url || ''",
+    "POST_PERMALINK": "transform:() => results.POST_DATA?.permalink || ''",
+    "POST_CREATED_UTC": "transform:() => results.POST_DATA?.created_utc || 0"
+  },
+  "messages": {
+    "success": {
+      "en": "Post details retrieved: {{POST_TITLE}} (Score: {{POST_SCORE}}, Comments: {{POST_NUM_COMMENTS}})",
+      "de": "Post-Details abgerufen: {{POST_TITLE}} (Score: {{POST_SCORE}}, Kommentare: {{POST_NUM_COMMENTS}})"
+    }
+  },
+  "defaultChain": "multiversx"
+}

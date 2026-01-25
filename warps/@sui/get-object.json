@@ -1,0 +1,53 @@
+{
+  "protocol": "warp:3.0.0",
+  "chain": "sui",
+  "name": "Sui: Get Object",
+  "title": {
+    "en": "Get Sui Object",
+    "de": "Sui-Objekt abrufen"
+  },
+  "description": {
+    "en": "Retrieve information about a specific object on the Sui blockchain by its object ID.",
+    "de": "Rufe Informationen über ein bestimmtes Objekt auf der Sui-Blockchain anhand seiner Objekt-ID ab."
+  },
+  "actions": [
+    {
+      "type": "query",
+      "label": {
+        "en": "Get Object",
+        "de": "Objekt abrufen"
+      },
+      "address": "{{OBJECT_ID}}",
+      "func": "getObject",
+      "args": [],
+      "inputs": [
+        {
+          "name": "Object ID",
+          "as": "OBJECT_ID",
+          "description": {
+            "en": "The object ID to query.",
+            "de": "Die Objekt-ID, die abgefragt werden soll."
+          },
+          "type": "string",
+          "position": "destination",
+          "source": "field",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "output": {
+    "OBJECT_DATA": "out[0]",
+    "_DATA": "out[0]",
+    "OBJECT_TYPE": "transform:() => { const data = results._DATA || results.OBJECT_DATA; return data?.data?.type || data?.type || 'Unknown'; }",
+    "OBJECT_OWNER": "transform:() => { const data = results._DATA || results.OBJECT_DATA; const owner = data?.data?.owner || data?.owner; if (typeof owner === 'object' && owner.AddressOwner) return owner.AddressOwner; if (typeof owner === 'object' && owner.Shared) return 'Shared'; return owner || 'Unknown'; }",
+    "OBJECT_VERSION": "transform:() => { const data = results._DATA || results.OBJECT_DATA; return data?.data?.version || data?.version || '0'; }"
+  },
+  "messages": {
+    "success": {
+      "en": "Object retrieved: {{OBJECT_TYPE}}",
+      "de": "Objekt abgerufen: {{OBJECT_TYPE}}"
+    }
+  },
+  "defaultChain": "sui"
+}

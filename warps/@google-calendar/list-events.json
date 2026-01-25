@@ -1,0 +1,105 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Google Calendar: List Events",
+  "title": {
+    "en": "List calendar events",
+    "de": "Kalendereinträge auflisten"
+  },
+  "description": {
+    "en": "Retrieve a list of events from your Google Calendar. Filter by date range, search for specific events, or get upcoming events.",
+    "de": "Rufe eine Liste von Ereignissen aus deinem Google Kalender ab. Filtere nach Datumsbereich, suche nach bestimmten Ereignissen oder hole kommende Ereignisse."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:GOOGLE_CALENDAR_ACCESS_TOKEN|OAuth 2.0 access token from Google. Get it from Google Cloud Console after OAuth authentication."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "List Events",
+      "destination": {
+        "url": "INJECT:API_EVENTS/{{calendarId}}/events",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Calendar ID",
+          "as": "calendarId",
+          "description": "The calendar ID to list events from. Use 'primary' for your primary calendar.",
+          "bot": "The calendar ID. Use 'primary' for the user's primary calendar, or the calendar email address for other calendars.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:calendarId"
+        },
+        {
+          "name": "Time Min",
+          "as": "timeMin",
+          "description": "Lower bound (exclusive) for an event's end time to filter by. RFC3339 timestamp with mandatory time zone offset (e.g., '2024-01-15T00:00:00Z').",
+          "bot": "The start of the time range to fetch events from. RFC3339 format with timezone, e.g., '2024-01-15T00:00:00Z'.",
+          "type": "string",
+          "source": "field",
+          "position": "query:timeMin"
+        },
+        {
+          "name": "Time Max",
+          "as": "timeMax",
+          "description": "Upper bound (exclusive) for an event's start time to filter by. RFC3339 timestamp with mandatory time zone offset (e.g., '2024-01-31T23:59:59Z').",
+          "bot": "The end of the time range to fetch events until. RFC3339 format with timezone, e.g., '2024-01-31T23:59:59Z'.",
+          "type": "string",
+          "source": "field",
+          "position": "query:timeMax"
+        },
+        {
+          "name": "Max Results",
+          "as": "maxResults",
+          "description": "Maximum number of events to return. Default is 250, maximum is 2500.",
+          "bot": "The maximum number of events to return. Default is 250, can be up to 2500.",
+          "type": "number",
+          "source": "field",
+          "position": "query:maxResults"
+        },
+        {
+          "name": "Query",
+          "as": "q",
+          "description": "Free text search terms to find events that match these terms in any field.",
+          "bot": "Search query to filter events by keywords. Searches in summary, description, location, and other fields.",
+          "type": "string",
+          "source": "field",
+          "position": "query:q"
+        },
+        {
+          "name": "Single Events",
+          "as": "singleEvents",
+          "description": "Whether to expand recurring events into instances. Set to true to expand recurring events.",
+          "bot": "Set to true to expand recurring events into individual instances. Default is false.",
+          "type": "boolean",
+          "source": "field",
+          "position": "query:singleEvents"
+        },
+        {
+          "name": "Order By",
+          "as": "orderBy",
+          "description": "The order of the events returned. Options: 'startTime' or 'updated'.",
+          "bot": "The order of events. Use 'startTime' to order by event start time, or 'updated' to order by last modification time.",
+          "type": "string",
+          "source": "field",
+          "position": "query:orderBy"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "EVENTS": "out.items",
+    "EVENT_COUNT": "out.items.length"
+  },
+  "messages": {
+    "success": {
+      "en": "Found {{EVENT_COUNT}} event(s)",
+      "de": "{{EVENT_COUNT}} Ereignis(se) gefunden"
+    }
+  },
+  "defaultChain": "multiversx"
+}

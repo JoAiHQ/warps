@@ -1,0 +1,45 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Cursor: Get API Key Info",
+  "title": {
+    "en": "Get API key information",
+    "de": "API-Schlüssel-Informationen abrufen"
+  },
+  "description": {
+    "en": "Retrieve information about the API key being used for authentication, including the API key name, creation date, and user email.",
+    "de": "Ruft Informationen über den für die Authentifizierung verwendeten API-Schlüssel ab, einschließlich API-Schlüssel-Name, Erstellungsdatum und Benutzer-E-Mail."
+  },
+  "vars": {
+    "API_KEY": "env:CURSOR_API_KEY|Get your API key from Cursor Dashboard at https://cursor.com/settings/api"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Get API Key Info",
+        "de": "API-Schlüssel-Info abrufen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v0/me",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{API_KEY}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": []
+    }
+  ],
+  "output": {
+    "API_KEY_NAME": "out.apiKeyName",
+    "CREATED_AT": "out.createdAt",
+    "USER_EMAIL": "out.userEmail"
+  },
+  "messages": {
+    "success": {
+      "en": "API key '{{API_KEY_NAME}}' created at {{CREATED_AT}}. User: {{USER_EMAIL}}",
+      "de": "API-Schlüssel '{{API_KEY_NAME}}' erstellt am {{CREATED_AT}}. Benutzer: {{USER_EMAIL}}"
+    }
+  },
+  "defaultChain": "multiversx"
+}

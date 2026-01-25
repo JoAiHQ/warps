@@ -1,0 +1,53 @@
+{
+  "protocol": "warp:3.0.0",
+  "chain": "sui",
+  "name": "Sui: Get Stakes",
+  "title": {
+    "en": "Get Staking Information",
+    "de": "Staking-Informationen abrufen"
+  },
+  "description": {
+    "en": "Retrieve staking information for a specific staked SUI object ID on the Sui blockchain.",
+    "de": "Rufe Staking-Informationen für eine bestimmte gestakte SUI-Objekt-ID auf der Sui-Blockchain ab."
+  },
+  "actions": [
+    {
+      "type": "query",
+      "label": {
+        "en": "Get Stakes",
+        "de": "Stakes abrufen"
+      },
+      "address": "{{STAKED_SUI_ID}}",
+      "func": "getObject",
+      "args": [],
+      "inputs": [
+        {
+          "name": "Staked SUI ID",
+          "as": "STAKED_SUI_ID",
+          "description": {
+            "en": "The staked SUI object ID to query.",
+            "de": "Die gestakte SUI-Objekt-ID, die abgefragt werden soll."
+          },
+          "type": "string",
+          "position": "destination",
+          "source": "field",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "output": {
+    "STAKE_DATA": "out[0]",
+    "_DATA": "out[0]",
+    "STAKE_TYPE": "transform:() => { const data = results._DATA || results.STAKE_DATA; return data?.data?.type || data?.type || 'Unknown'; }",
+    "PRINCIPAL": "transform:() => { const data = results._DATA || results.STAKE_DATA; const content = data?.data?.content || data?.content; const fields = content?.fields || {}; return fields.principal || '0'; }",
+    "PRINCIPAL_SUI": "transform:() => { const principal = results.PRINCIPAL || '0'; return (Number(principal) / 1000000000).toFixed(2); }"
+  },
+  "messages": {
+    "success": {
+      "en": "Stake information retrieved. Principal: {{PRINCIPAL_SUI}} SUI",
+      "de": "Stake-Informationen abgerufen. Principal: {{PRINCIPAL_SUI}} SUI"
+    }
+  },
+  "defaultChain": "sui"
+}

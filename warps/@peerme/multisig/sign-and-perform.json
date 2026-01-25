@@ -1,0 +1,58 @@
+{
+  "protocol": "warp:3.0.0",
+  "chain": "multiversx",
+  "name": "PeerMe MultiSig: Sign and Perform",
+  "title": "Sign and execute a proposal",
+  "description": "Sign a MultiSig proposal and immediately execute it if quorum is reached. This combines signing and execution in a single transaction. Only works if your signature brings the proposal to quorum.",
+  "vars": {
+    "MULTISIG_ADDRESS": "query:multisig"
+  },
+  "actions": [
+    {
+      "type": "contract",
+      "label": "Sign and execute",
+      "address": "{{MULTISIG_ADDRESS}}",
+      "func": "signAndPerform",
+      "args": [],
+      "gasLimit": 10000000,
+      "abi": "INJECT:peerme/multisig.abi.json",
+      "inputs": [
+        {
+          "name": "Action ID",
+          "as": "ACTION_ID",
+          "description": "The ID of the proposal to sign and execute.",
+          "type": "number",
+          "position": "arg:1",
+          "source": "field",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "output": {
+    "RESULT": "out",
+    "DEPLOYED_ADDRESS": "transform:() => results.RESULT && results.RESULT[0] ? results.RESULT[0] : null"
+  },
+  "messages": {
+    "success": "Proposal {{ACTION_ID}} signed and executed successfully. {{DEPLOYED_ADDRESS ? 'Deployed contract: ' + DEPLOYED_ADDRESS : ''}}",
+    "card": "Executed Proposal #{{ACTION_ID}}"
+  },
+  "alerts": {
+    "execution_success": {
+      "label": {
+        "en": "Get notified about successful executions",
+        "de": "Benachrichtigung erhalten über erfolgreiche Ausführungen"
+      },
+      "trigger": "success",
+      "subject": {
+        "en": "MultiSig proposal executed",
+        "de": "MultiSig-Vorschlag ausgeführt"
+      },
+      "body": {
+        "en": "Proposal #{{ACTION_ID}} has been successfully executed",
+        "de": "Vorschlag #{{ACTION_ID}} wurde erfolgreich ausgeführt"
+      }
+    }
+  },
+  "defaultChain": "multiversx"
+}

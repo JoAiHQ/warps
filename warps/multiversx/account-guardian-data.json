@@ -1,0 +1,59 @@
+{
+  "protocol": "warp:3.0.0",
+  "chain": "multiversx",
+  "name": "MultiversX: Account Guardian Data",
+  "title": {
+    "en": "View MultiversX Account Guardian Data",
+    "de": "MultiversX Kontoguardian-Daten anzeigen"
+  },
+  "description": {
+    "en": "View guardian (2FA) information for a MultiversX blockchain account. Check if an account is protected by guardian security, view active guardian addresses, pending guardian activations, activation epochs, and service UIDs. Essential for security verification and account protection status.",
+    "de": "Zeige Guardian-Informationen (2FA) für ein MultiversX Blockchain-Konto. Prüfe, ob ein Konto durch Guardian-Sicherheit geschützt ist, sieh aktive Guardian-Adressen, ausstehende Guardian-Aktivierungen, Aktivierungs-Epochen und Service-UIDs. Wichtig zur Sicherheitsverifikation und Überprüfung des Kontoschutzes."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "View Guardian Data",
+        "de": "Guardian-Daten anzeigen"
+      },
+      "destination": {
+        "url": "{{CHAIN_API}}/accounts/{{ADDRESS}}/guardian-data"
+      },
+      "inputs": [
+        {
+          "name": "Address",
+          "as": "ADDRESS",
+          "description": {
+            "en": "The wallet address to view guardian data for.",
+            "de": "Die Wallet-Adresse, für die Guardian-Daten angezeigt werden sollen."
+          },
+          "type": "address",
+          "source": "field",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "output": {
+    "GUARDIAN_DATA": "out",
+    "ACTIVE_GUARDIANS": "transform:() => results.GUARDIAN_DATA?.activeGuardian || null",
+    "PENDING_GUARDIAN": "transform:() => results.GUARDIAN_DATA?.pendingGuardian || null",
+    "GUARDED": "transform:() => !!results.GUARDIAN_DATA?.activeGuardian ? 'Protected' : 'Not protected'",
+    "HAS_PENDING": "transform:() => !!results.GUARDIAN_DATA?.pendingGuardian ? 'Yes' : 'No'",
+    "GUARDIAN_ADDRESS": "transform:() => results.GUARDIAN_DATA?.activeGuardian?.address || results.GUARDIAN_DATA?.pendingGuardian?.address || 'None'",
+    "GUARDIAN_ACTIVATION_EPOCH": "transform:() => results.ACTIVE_GUARDIANS?.activationEpoch || null",
+    "GUARDIAN_SERVICE_UID": "transform:() => results.ACTIVE_GUARDIANS?.serviceUID || results.PENDING_GUARDIAN?.serviceUID || null"
+  },
+  "messages": {
+    "success": {
+      "en": "Guardian status: {{GUARDED}}, Address: {{GUARDIAN_ADDRESS}}, Pending: {{HAS_PENDING}}",
+      "de": "Guardian-Status: {{GUARDED}}, Adresse: {{GUARDIAN_ADDRESS}}, Ausstehend: {{HAS_PENDING}}"
+    },
+    "info": {
+      "en": "Account guardian status: {{GUARDED}}",
+      "de": "Konto-Guardian-Status: {{GUARDED}}"
+    }
+  },
+  "defaultChain": "multiversx"
+}

@@ -1,0 +1,56 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Cursor: Delete Agent",
+  "title": {
+    "en": "Delete an agent",
+    "de": "Einen Agenten löschen"
+  },
+  "description": {
+    "en": "Delete a cloud agent. This action is permanent and cannot be undone.",
+    "de": "Lösche einen Cloud-Agenten. Diese Aktion ist dauerhaft und kann nicht rückgängig gemacht werden."
+  },
+  "vars": {
+    "API_KEY": "env:CURSOR_API_KEY|Get your API key from Cursor Dashboard at https://cursor.com/settings/api"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Delete Agent",
+        "de": "Agenten löschen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v0/agents/{{AGENT_ID}}",
+        "method": "DELETE",
+        "headers": {
+          "Authorization": "Bearer {{API_KEY}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Agent ID",
+          "as": "AGENT_ID",
+          "description": {
+            "en": "Unique identifier for the cloud agent to delete (e.g., 'bc_abc123').",
+            "de": "Eindeutige Kennung für den zu löschenden Cloud-Agenten (z.B. 'bc_abc123')."
+          },
+          "type": "string",
+          "position": "path:AGENT_ID",
+          "source": "field",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "output": {
+    "AGENT_ID": "out.id"
+  },
+  "messages": {
+    "success": {
+      "en": "Agent {{AGENT_ID}} deleted successfully.",
+      "de": "Agent {{AGENT_ID}} erfolgreich gelöscht."
+    }
+  },
+  "defaultChain": "multiversx"
+}

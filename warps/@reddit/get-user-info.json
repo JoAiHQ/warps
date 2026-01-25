@@ -1,0 +1,66 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Reddit: Get User Info",
+  "title": {
+    "en": "Get Reddit User Information",
+    "de": "Reddit-Nutzerinformationen abrufen"
+  },
+  "description": {
+    "en": "Retrieve information about a Reddit user including their karma, account age, and profile details.",
+    "de": "Rufe Informationen über einen Reddit-Nutzer ab, einschließlich Karma, Kontostandalter und Profildetails."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:REDDIT_ACCESS_TOKEN|Get your access token from Reddit OAuth2 authentication. See https://www.reddit.com/prefs/apps to create an app."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Get User Info",
+        "de": "Nutzerinformationen abrufen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/user/{{USERNAME}}/about",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}",
+          "User-Agent": "Warpbase/1.0"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Username",
+          "as": "USERNAME",
+          "description": {
+            "en": "The Reddit username (without u/ prefix).",
+            "de": "Der Reddit-Benutzername (ohne u/ Präfix)."
+          },
+          "bot": "The Reddit username without the 'u/' prefix. Leave empty to get information about the authenticated user.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "me"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "USER_DATA": "transform:() => results.out?.data || null",
+    "USERNAME": "transform:() => results.USER_DATA?.name || 'Unknown'",
+    "KARMA": "transform:() => results.USER_DATA?.total_karma || 0",
+    "LINK_KARMA": "transform:() => results.USER_DATA?.link_karma || 0",
+    "COMMENT_KARMA": "transform:() => results.USER_DATA?.comment_karma || 0",
+    "ACCOUNT_CREATED_UTC": "transform:() => results.USER_DATA?.created_utc || 0",
+    "ACCOUNT_AGE_DAYS": "transform:() => { const created = results.ACCOUNT_CREATED_UTC; if (!created) return 0; return Math.floor((Date.now() / 1000 - created) / 86400); }",
+    "IS_GOLD": "transform:() => results.USER_DATA?.is_gold || false",
+    "IS_VERIFIED": "transform:() => results.USER_DATA?.verified || false",
+    "POST_KARMA": "transform:() => results.USER_DATA?.link_karma || 0"
+  },
+  "messages": {
+    "success": {
+      "en": "User info retrieved: {{USERNAME}} (Karma: {{KARMA}}, Account Age: {{ACCOUNT_AGE_DAYS}} days)",
+      "de": "Nutzerinformationen abgerufen: {{USERNAME}} (Karma: {{KARMA}}, Kontostandalter: {{ACCOUNT_AGE_DAYS}} Tage)"
+    }
+  },
+  "defaultChain": "multiversx"
+}

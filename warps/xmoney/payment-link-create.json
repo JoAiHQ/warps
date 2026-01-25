@@ -1,0 +1,97 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "xMoney: Payment Link Create",
+  "title": {
+    "en": "Create a payment link",
+    "de": "Einen Zahlungslink erstellen"
+  },
+  "description": {
+    "en": "Create a crypto payment link using xMoney.",
+    "de": "Erstelle einen Zahlungslink für Kryptowährungen mit xMoney."
+  },
+  "vars": {
+    "API_KEY": "env:XMONEY_API_KEY|Get your API key from the xMoney Merchant Dashboard"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Create Payment Link",
+      "destination": {
+        "url": "INJECT:API_MERCHANTS",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{API_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Data Type",
+          "as": "type",
+          "type": "string",
+          "source": "hidden",
+          "default": "orders",
+          "position": "payload:data"
+        },
+        {
+          "name": "Reference",
+          "as": "reference",
+          "bot": "Value to later be used to identify the payment link.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:data.attributes.order"
+        },
+        {
+          "name": "Amount",
+          "as": "total",
+          "bot": "Number format 1090.00 – no commas, only one dot",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:data.attributes.order.amount"
+        },
+        {
+          "name": "Currency",
+          "as": "currency",
+          "type": "string",
+          "source": "hidden",
+          "default": "USD",
+          "position": "payload:data.attributes.order.amount"
+        },
+        {
+          "name": "Return Url",
+          "as": "return_url",
+          "type": "string",
+          "source": "hidden",
+          "default": "https://joai.ai",
+          "position": "payload:data.attributes.order.return_urls"
+        },
+        {
+          "name": "Customer Email",
+          "as": "email",
+          "bot": "The email address of the customer.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:data.attributes.customer"
+        },
+        {
+          "name": "Customer Country",
+          "as": "country",
+          "bot": "Billing country. Format ISO 3166-1 Alpha-2",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:data.attributes.customer"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "LINK": "out.data.attributes.redirect_url"
+  },
+  "messages": {
+    "success": "Here's your payment link: {{LINK}}"
+  },
+  "defaultChain": "multiversx"
+}

@@ -1,0 +1,57 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Cursor: Get Agent Conversation",
+  "title": {
+    "en": "Get agent conversation",
+    "de": "Agenten-Konversation abrufen"
+  },
+  "description": {
+    "en": "Retrieve the conversation history of a cloud agent, including all user prompts and assistant responses.",
+    "de": "Ruft den Konversationsverlauf eines Cloud-Agenten ab, einschließlich aller Benutzer-Prompts und Assistenten-Antworten."
+  },
+  "vars": {
+    "API_KEY": "env:CURSOR_API_KEY|Get your API key from Cursor Dashboard at https://cursor.com/settings/api"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Get Conversation",
+        "de": "Konversation abrufen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v0/agents/{{AGENT_ID}}/conversation",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{API_KEY}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Agent ID",
+          "as": "AGENT_ID",
+          "description": {
+            "en": "Unique identifier for the cloud agent (e.g., 'bc_abc123').",
+            "de": "Eindeutige Kennung für den Cloud-Agenten (z.B. 'bc_abc123')."
+          },
+          "type": "string",
+          "position": "path:AGENT_ID",
+          "source": "field",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "output": {
+    "AGENT_ID": "out.id",
+    "MESSAGES": "out.messages"
+  },
+  "messages": {
+    "success": {
+      "en": "Retrieved conversation for agent {{AGENT_ID}} with {{MESSAGES.length}} message(s).",
+      "de": "Konversation für Agent {{AGENT_ID}} mit {{MESSAGES.length}} Nachricht(en) abgerufen."
+    }
+  },
+  "defaultChain": "multiversx"
+}

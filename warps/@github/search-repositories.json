@@ -1,0 +1,89 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "GitHub: Search Repositories",
+  "title": {
+    "en": "Search GitHub repositories",
+    "de": "GitHub-Repositories durchsuchen"
+  },
+  "description": {
+    "en": "Search for GitHub repositories using GitHub's search API. Supports filtering by language, stars, forks, and more.",
+    "de": "Suche nach GitHub-Repositories mit der GitHub-Such-API. Unterstützt Filterung nach Sprache, Stars, Forks und mehr."
+  },
+  "vars": {
+    "API_KEY": "env:GITHUB_TOKEN|Get your personal access token from https://github.com/settings/tokens"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Search Repositories",
+        "de": "Repositories durchsuchen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/search/repositories",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{API_KEY}}",
+          "Accept": "application/vnd.github.v3+json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Query",
+          "as": "q",
+          "description": {
+            "en": "The search query. Supports GitHub search syntax (e.g., 'language:javascript stars:>100')."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "query:q"
+        },
+        {
+          "name": "Sort",
+          "as": "sort",
+          "description": {
+            "en": "Sort results by: stars, forks, help-wanted-issues, updated. Defaults to best match."
+          },
+          "type": "string",
+          "source": "field",
+          "position": "query:sort",
+          "required": false
+        },
+        {
+          "name": "Order",
+          "as": "order",
+          "description": {
+            "en": "Sort order: asc or desc. Defaults to desc."
+          },
+          "type": "string",
+          "source": "field",
+          "position": "query:order",
+          "required": false
+        },
+        {
+          "name": "Limit",
+          "as": "per_page",
+          "description": {
+            "en": "Number of results per page (max 100). Defaults to 30."
+          },
+          "type": "number",
+          "source": "field",
+          "position": "query:per_page",
+          "required": false
+        }
+      ]
+    }
+  ],
+  "output": {
+    "REPOSITORIES": "out.items",
+    "TOTAL_COUNT": "out.total_count"
+  },
+  "messages": {
+    "success": {
+      "en": "Found {{TOTAL_COUNT}} repository/repositories.",
+      "de": "{{TOTAL_COUNT}} Repository/Repositories gefunden."
+    }
+  },
+  "defaultChain": "multiversx"
+}

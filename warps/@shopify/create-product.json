@@ -1,0 +1,144 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Shopify: Create Product",
+  "title": {
+    "en": "Create product",
+    "de": "Produkt erstellen"
+  },
+  "description": {
+    "en": "Create a new product in your Shopify store. Set the title, description, price, variants, and inventory.",
+    "de": "Erstelle ein neues Produkt in deinem Shopify-Shop. Setze Titel, Beschreibung, Preis, Varianten und Inventar."
+  },
+  "vars": {
+    "SHOP": "env:SHOPIFY_SHOP|Your Shopify shop domain (e.g., 'myshop' for myshop.myshopify.com)",
+    "ACCESS_TOKEN": "env:SHOPIFY_ACCESS_TOKEN|OAuth access token from Shopify. Get it from Shopify App setup after OAuth authentication."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Create Product",
+      "destination": {
+        "url": "https://{{SHOP}}.myshopify.com/admin/api/2024-10/graphql.json",
+        "method": "POST",
+        "headers": {
+          "X-Shopify-Access-Token": "{{ACCESS_TOKEN}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Title",
+          "as": "title",
+          "description": {
+            "en": "The product title."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:variables.product.title"
+        },
+        {
+          "name": "Description",
+          "as": "description",
+          "description": {
+            "en": "The product description. Supports HTML."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:variables.product.descriptionHtml"
+        },
+        {
+          "name": "Vendor",
+          "as": "vendor",
+          "description": {
+            "en": "The product vendor name."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:variables.product.vendor"
+        },
+        {
+          "name": "Product Type",
+          "as": "productType",
+          "description": {
+            "en": "The product type (e.g., 'T-Shirt', 'Accessories', 'Electronics')."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:variables.product.productType"
+        },
+        {
+          "name": "Tags",
+          "as": "tags",
+          "description": {
+            "en": "Comma-separated list of tags for the product."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:variables.product.tags"
+        },
+        {
+          "name": "Price",
+          "as": "price",
+          "description": {
+            "en": "The product price (decimal number, e.g., 19.99)."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:variables.product.variants.0.price"
+        },
+        {
+          "name": "SKU",
+          "as": "sku",
+          "description": {
+            "en": "The product SKU (Stock Keeping Unit)."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:variables.product.variants.0.sku"
+        },
+        {
+          "name": "Inventory Quantity",
+          "as": "inventoryQuantity",
+          "description": {
+            "en": "The initial inventory quantity."
+          },
+          "type": "number",
+          "source": "field",
+          "required": false,
+          "position": "payload:variables.product.variants.0.inventoryQuantities.0.quantity"
+        },
+        {
+          "name": "Query",
+          "as": "query",
+          "description": {
+            "en": "GraphQL mutation"
+          },
+          "type": "string",
+          "source": "hidden",
+          "position": "payload:query",
+          "default": "mutation productCreate($product: ProductInput!) { productCreate(product: $product) { product { id title handle vendor productType tags descriptionHtml variants(first: 1) { edges { node { id price sku inventoryQuantity } } } } userErrors { field message } } }"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "PRODUCT_ID": "out.data.productCreate.product.id",
+    "PRODUCT_TITLE": "out.data.productCreate.product.title",
+    "PRODUCT_HANDLE": "out.data.productCreate.product.handle",
+    "SUCCESS": "out.data.productCreate.userErrors.length === 0"
+  },
+  "messages": {
+    "success": {
+      "en": "Product '{{PRODUCT_TITLE}}' created successfully!",
+      "de": "Produkt '{{PRODUCT_TITLE}}' erfolgreich erstellt!"
+    }
+  },
+  "defaultChain": "multiversx"
+}

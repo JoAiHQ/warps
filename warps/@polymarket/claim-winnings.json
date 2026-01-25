@@ -1,0 +1,78 @@
+{
+  "protocol": "warp:3.0.0",
+  "chain": "polygon",
+  "name": "Polymarket: Claim Winnings",
+  "title": {
+    "en": "Claim Market Winnings",
+    "de": "Marktgewinne einfordern"
+  },
+  "description": {
+    "en": "Claim your winnings from a resolved prediction market on Polymarket. Exchange winning shares for USDC using the Conditional Token Framework.",
+    "de": "Fordere deine Gewinne aus einem aufgelösten Prognosemarkt auf Polymarket ein. Tausche gewinnende Anteile gegen USDC über das Conditional Token Framework."
+  },
+  "actions": [
+    {
+      "type": "contract",
+      "label": {
+        "en": "Claim Winnings",
+        "de": "Gewinne einfordern"
+      },
+      "address": "INJECT:CONTRACT/CTF_EXCHANGE",
+      "func": "redeemPositions",
+      "args": [
+        "address:INJECT:TOKEN/USDC"
+      ],
+      "gasLimit": 500000,
+      "abi": "function redeemPositions(address collateralToken, bytes32 parentCollectionId, bytes32 conditionId, uint256[] calldata indexSets) external",
+      "inputs": [
+        {
+          "name": "Parent Collection ID",
+          "as": "parentCollectionId",
+          "description": {
+            "en": "The parent collection ID (bytes32 hex string, often 0x0).",
+            "de": "Die Parent-Collection-ID (bytes32 Hex-String, oft 0x0)."
+          },
+          "type": "hex",
+          "position": "arg:2",
+          "source": "field",
+          "required": true,
+          "default": "0x0000000000000000000000000000000000000000000000000000000000000000"
+        },
+        {
+          "name": "Condition ID",
+          "as": "conditionId",
+          "description": {
+            "en": "The condition ID of the resolved market (bytes32 hex string).",
+            "de": "Die Condition-ID des aufgelösten Marktes (bytes32 Hex-String)."
+          },
+          "type": "hex",
+          "position": "arg:3",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Index Sets",
+          "as": "indexSets",
+          "description": {
+            "en": "Array of index sets for the winning outcome (e.g., [1] for YES, [2] for NO).",
+            "de": "Array von Index-Sets für das gewinnende Ergebnis (z.B. [1] für YES, [2] für NO)."
+          },
+          "type": "string",
+          "position": "arg:4",
+          "source": "field",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "output": {
+    "SUCCESS": "out"
+  },
+  "messages": {
+    "success": {
+      "en": "Winnings claimed successfully",
+      "de": "Gewinne erfolgreich eingefordert"
+    }
+  },
+  "defaultChain": "polygon"
+}

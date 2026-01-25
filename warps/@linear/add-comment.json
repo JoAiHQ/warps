@@ -1,0 +1,81 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Linear: Add Comment",
+  "title": {
+    "en": "Add a comment to a Linear issue",
+    "de": "Einen Kommentar zu einem Linear-Issue hinzufügen"
+  },
+  "description": {
+    "en": "Add a comment to a Linear issue. Supports Markdown formatting.",
+    "de": "Füge einen Kommentar zu einem Linear-Issue hinzu. Unterstützt Markdown-Formatierung."
+  },
+  "vars": {
+    "API_KEY": "env:LINEAR_API_KEY|Get your API key from Linear Settings > API at https://linear.app/settings/api"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Add Comment",
+        "de": "Kommentar hinzufügen"
+      },
+      "destination": {
+        "url": "INJECT:API_GRAPHQL",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{API_KEY}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Issue ID",
+          "as": "issueId",
+          "description": {
+            "en": "The ID of the issue to comment on."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:variables.issueId"
+        },
+        {
+          "name": "Comment Body",
+          "as": "body",
+          "description": {
+            "en": "The comment text. Supports Markdown."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:variables.body"
+        },
+        {
+          "name": "Query",
+          "as": "query",
+          "description": {
+            "en": "GraphQL mutation"
+          },
+          "type": "string",
+          "source": "hidden",
+          "position": "payload:query",
+          "default": "mutation CommentCreate($issueId: String!, $body: String!) { commentCreate(input: { issueId: $issueId body: $body }) { success comment { id body createdAt user { name } } } } }"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "COMMENT_ID": "out.data.commentCreate.comment.id",
+    "COMMENT_BODY": "out.data.commentCreate.comment.body",
+    "AUTHOR": "out.data.commentCreate.comment.user.name",
+    "CREATED_AT": "out.data.commentCreate.comment.createdAt",
+    "SUCCESS": "out.data.commentCreate.success"
+  },
+  "messages": {
+    "success": {
+      "en": "Comment added successfully by {{AUTHOR}}!",
+      "de": "Kommentar erfolgreich von {{AUTHOR}} hinzugefügt!"
+    }
+  },
+  "defaultChain": "multiversx"
+}

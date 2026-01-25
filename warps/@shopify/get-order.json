@@ -1,0 +1,69 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Shopify: Get Order",
+  "title": {
+    "en": "Get order details",
+    "de": "Bestelldetails abrufen"
+  },
+  "description": {
+    "en": "Retrieve detailed information about a specific order including line items, customer information, shipping details, and payment status.",
+    "de": "Rufe detaillierte Informationen über eine bestimmte Bestellung ab, einschließlich Positionen, Kundeninformationen, Versanddetails und Zahlungsstatus."
+  },
+  "vars": {
+    "SHOP": "env:SHOPIFY_SHOP|Your Shopify shop domain (e.g., 'myshop' for myshop.myshopify.com)",
+    "ACCESS_TOKEN": "env:SHOPIFY_ACCESS_TOKEN|OAuth access token from Shopify. Get it from Shopify App setup after OAuth authentication."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Get Order",
+      "destination": {
+        "url": "https://{{SHOP}}.myshopify.com/admin/api/2024-10/graphql.json",
+        "method": "POST",
+        "headers": {
+          "X-Shopify-Access-Token": "{{ACCESS_TOKEN}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Order ID",
+          "as": "orderId",
+          "description": {
+            "en": "The GraphQL ID of the order (e.g., 'gid://shopify/Order/123456789') or the order name (e.g., '#1001')."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:variables.id"
+        },
+        {
+          "name": "GraphQL Query",
+          "as": "graphqlQuery",
+          "description": {
+            "en": "GraphQL query"
+          },
+          "type": "string",
+          "source": "hidden",
+          "position": "payload:query",
+          "default": "query order($id: ID!) { order(id: $id) { id name email phone createdAt updatedAt totalPriceSet { shopMoney { amount currencyCode } } subtotalPriceSet { shopMoney { amount currencyCode } } totalTaxSet { shopMoney { amount currencyCode } } financialStatus fulfillmentStatus shippingAddress { firstName lastName address1 address2 city province country zip } billingAddress { firstName lastName address1 address2 city province country zip } lineItems(first: 50) { edges { node { id title quantity variant { id title price sku } originalUnitPriceSet { shopMoney { amount currencyCode } } } } } customer { id firstName lastName email } } }"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "ORDER_ID": "out.data.order.id",
+    "ORDER_NAME": "out.data.order.name",
+    "ORDER_EMAIL": "out.data.order.email",
+    "ORDER_TOTAL": "out.data.order.totalPriceSet.shopMoney.amount",
+    "ORDER_STATUS": "out.data.order.financialStatus",
+    "ORDER_LINE_ITEMS": "out.data.order.lineItems.edges"
+  },
+  "messages": {
+    "success": {
+      "en": "Order {{ORDER_NAME}} details retrieved successfully",
+      "de": "Bestelldetails für {{ORDER_NAME}} erfolgreich abgerufen"
+    }
+  },
+  "defaultChain": "multiversx"
+}

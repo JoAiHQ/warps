@@ -1,0 +1,99 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Reddit: Get Posts",
+  "title": {
+    "en": "Get Posts from Subreddit",
+    "de": "Posts aus Subreddit abrufen"
+  },
+  "description": {
+    "en": "Retrieve posts from a Reddit subreddit. Supports different sorting options (hot, new, top, rising) and pagination.",
+    "de": "Rufe Posts aus einem Reddit-Subreddit ab. Unterstützt verschiedene Sortieroptionen (hot, new, top, rising) und Paginierung."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:REDDIT_ACCESS_TOKEN|Get your access token from Reddit OAuth2 authentication. See https://www.reddit.com/prefs/apps to create an app."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Get Posts",
+        "de": "Posts abrufen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/r/{{SUBREDDIT}}/{{SORT}}",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}",
+          "User-Agent": "Warpbase/1.0"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Subreddit",
+          "as": "SUBREDDIT",
+          "description": {
+            "en": "The subreddit name (without r/ prefix).",
+            "de": "Der Subreddit-Name (ohne r/ Präfix)."
+          },
+          "bot": "The subreddit name without the 'r/' prefix. For example, use 'programming' for r/programming.",
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Sort",
+          "as": "SORT",
+          "description": {
+            "en": "Sorting method: hot, new, top, rising.",
+            "de": "Sortiermethode: hot, new, top, rising."
+          },
+          "bot": "How to sort the posts. Options: 'hot' (default), 'new', 'top', 'rising'.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "hot"
+        },
+        {
+          "name": "Limit",
+          "as": "limit",
+          "description": {
+            "en": "Number of posts to retrieve (max 100).",
+            "de": "Anzahl der abzurufenden Posts (max 100)."
+          },
+          "bot": "Number of posts to retrieve. Maximum is 100.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "25",
+          "position": "query:limit"
+        },
+        {
+          "name": "After",
+          "as": "after",
+          "description": {
+            "en": "Fullname of a thing to paginate after (for pagination).",
+            "de": "Fullname eines Objekts, nach dem paginiert werden soll (für Paginierung)."
+          },
+          "bot": "Fullname of a thing to paginate after. Used for getting the next page of results.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "query:after"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "POSTS": "transform:() => results.out?.data?.children || []",
+    "POST_COUNT": "transform:() => Array.isArray(results.POSTS) ? results.POSTS.length : 0",
+    "AFTER": "transform:() => results.out?.data?.after || null",
+    "POSTS_SUMMARY": "transform:() => Array.isArray(results.POSTS) ? results.POSTS.map((p: any) => ({ title: p.data?.title, author: p.data?.author, score: p.data?.score, num_comments: p.data?.num_comments, url: p.data?.url, permalink: p.data?.permalink, created_utc: p.data?.created_utc, id: p.data?.id })) : []"
+  },
+  "messages": {
+    "success": {
+      "en": "Retrieved {{POST_COUNT}} posts from r/{{SUBREDDIT}}",
+      "de": "{{POST_COUNT}} Posts aus r/{{SUBREDDIT}} abgerufen"
+    }
+  },
+  "defaultChain": "multiversx"
+}

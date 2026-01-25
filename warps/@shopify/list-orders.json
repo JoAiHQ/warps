@@ -1,0 +1,88 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Shopify: List Orders",
+  "title": {
+    "en": "List orders",
+    "de": "Bestellungen auflisten"
+  },
+  "description": {
+    "en": "Retrieve a list of orders from your Shopify store. Filter by query, status, or date range.",
+    "de": "Rufe eine Liste von Bestellungen aus deinem Shopify-Shop ab. Filtere nach Abfrage, Status oder Datumsbereich."
+  },
+  "vars": {
+    "SHOP": "env:SHOPIFY_SHOP|Your Shopify shop domain (e.g., 'myshop' for myshop.myshopify.com)",
+    "ACCESS_TOKEN": "env:SHOPIFY_ACCESS_TOKEN|OAuth access token from Shopify. Get it from Shopify App setup after OAuth authentication."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "List Orders",
+      "destination": {
+        "url": "https://{{SHOP}}.myshopify.com/admin/api/2024-10/graphql.json",
+        "method": "POST",
+        "headers": {
+          "X-Shopify-Access-Token": "{{ACCESS_TOKEN}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Query",
+          "as": "query",
+          "description": {
+            "en": "Search query to filter orders (e.g., 'financial_status:paid', 'created_at:>=2024-01-01')."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:variables.query"
+        },
+        {
+          "name": "First",
+          "as": "first",
+          "description": {
+            "en": "Number of orders to return (max 250)."
+          },
+          "type": "number",
+          "source": "field",
+          "required": false,
+          "position": "payload:variables.first"
+        },
+        {
+          "name": "After",
+          "as": "after",
+          "description": {
+            "en": "Cursor for pagination (from previous response)."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:variables.after"
+        },
+        {
+          "name": "GraphQL Query",
+          "as": "graphqlQuery",
+          "description": {
+            "en": "GraphQL query"
+          },
+          "type": "string",
+          "source": "hidden",
+          "position": "payload:query",
+          "default": "query orders($query: String, $first: Int, $after: String) { orders(query: $query, first: $first, after: $after) { edges { node { id name email createdAt updatedAt totalPriceSet { shopMoney { amount currencyCode } } financialStatus fulfillmentStatus lineItems(first: 10) { edges { node { id title quantity variant { id title } } } } } cursor } pageInfo { hasNextPage hasPreviousPage } } }"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "ORDERS": "out.data.orders.edges",
+    "ORDER_COUNT": "out.data.orders.edges.length",
+    "HAS_NEXT_PAGE": "out.data.orders.pageInfo.hasNextPage"
+  },
+  "messages": {
+    "success": {
+      "en": "Found {{ORDER_COUNT}} order(s)",
+      "de": "{{ORDER_COUNT}} Bestellung(en) gefunden"
+    }
+  },
+  "defaultChain": "multiversx"
+}

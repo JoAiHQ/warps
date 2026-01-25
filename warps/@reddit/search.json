@@ -1,0 +1,114 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Reddit: Search",
+  "title": {
+    "en": "Search Reddit",
+    "de": "Reddit durchsuchen"
+  },
+  "description": {
+    "en": "Search Reddit for posts matching a query. Can search all of Reddit or within a specific subreddit.",
+    "de": "Durchsuche Reddit nach Posts, die einer Abfrage entsprechen. Kann ganz Reddit oder einen bestimmten Subreddit durchsuchen."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:REDDIT_ACCESS_TOKEN|Get your access token from Reddit OAuth2 authentication. See https://www.reddit.com/prefs/apps to create an app."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Search Reddit",
+        "de": "Reddit durchsuchen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/search.json",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}",
+          "User-Agent": "Warpbase/1.0"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Query",
+          "as": "q",
+          "description": {
+            "en": "The search query.",
+            "de": "Die Suchabfrage."
+          },
+          "bot": "The search query. This is what you want to search for on Reddit.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "query:q"
+        },
+        {
+          "name": "Subreddit",
+          "as": "restrict_sr",
+          "description": {
+            "en": "Limit search to a specific subreddit (optional).",
+            "de": "Suche auf einen bestimmten Subreddit beschränken (optional)."
+          },
+          "bot": "If provided, limits the search to this specific subreddit. Leave empty to search all of Reddit.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "query:restrict_sr"
+        },
+        {
+          "name": "Sort",
+          "as": "sort",
+          "description": {
+            "en": "Sorting method: relevance, hot, top, new, comments.",
+            "de": "Sortiermethode: relevance, hot, top, new, comments."
+          },
+          "bot": "How to sort the search results. Options: 'relevance' (default), 'hot', 'top', 'new', 'comments'.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "relevance",
+          "position": "query:sort"
+        },
+        {
+          "name": "Time",
+          "as": "t",
+          "description": {
+            "en": "Time period for sorting (hour, day, week, month, year, all). Only used with 'top' or 'controversial' sort.",
+            "de": "Zeitraum für die Sortierung (hour, day, week, month, year, all). Wird nur bei 'top' oder 'controversial' Sortierung verwendet."
+          },
+          "bot": "Time period for sorting. Options: 'hour', 'day', 'week', 'month', 'year', 'all'. Only applies when sort is 'top' or 'controversial'.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "query:t"
+        },
+        {
+          "name": "Limit",
+          "as": "limit",
+          "description": {
+            "en": "Number of results to retrieve (max 100).",
+            "de": "Anzahl der abzurufenden Ergebnisse (max 100)."
+          },
+          "bot": "Number of search results to retrieve. Maximum is 100.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "25",
+          "position": "query:limit"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "RAW_OUT": "out",
+    "RESULTS": "transform:() => { const data = results.RAW_OUT || results.out; if (!data) return []; if (data.data && data.data.children) return data.data.children; if (data.children) return data.children; if (Array.isArray(data)) return data; return []; }",
+    "RESULT_COUNT": "transform:() => Array.isArray(results.RESULTS) ? results.RESULTS.length : 0",
+    "RESULTS_SUMMARY": "transform:() => Array.isArray(results.RESULTS) ? results.RESULTS.map((r: any) => { const postData = r.data || r; return { title: postData.title, subreddit: postData.subreddit, author: postData.author, score: postData.score, num_comments: postData.num_comments, url: postData.url, permalink: postData.permalink, created_utc: postData.created_utc, id: postData.id }; }) : []"
+  },
+  "messages": {
+    "success": {
+      "en": "Found {{RESULT_COUNT}} results for '{{q}}'",
+      "de": "{{RESULT_COUNT}} Ergebnisse für '{{q}}' gefunden"
+    }
+  },
+  "defaultChain": "multiversx"
+}

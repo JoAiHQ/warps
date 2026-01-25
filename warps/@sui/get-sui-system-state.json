@@ -1,0 +1,37 @@
+{
+  "protocol": "warp:3.0.0",
+  "chain": "sui",
+  "name": "Sui: Get System State",
+  "title": {
+    "en": "Get Sui System State",
+    "de": "Sui-Systemstatus abrufen"
+  },
+  "description": {
+    "en": "Retrieve the current Sui system state including validator information and network parameters.",
+    "de": "Rufe den aktuellen Sui-Systemstatus ab, einschließlich Validator-Informationen und Netzwerkparametern."
+  },
+  "actions": [
+    {
+      "type": "query",
+      "label": {
+        "en": "Get System State",
+        "de": "Systemstatus abrufen"
+      },
+      "address": "0x0000000000000000000000000000000000000000000000000000000000000005",
+      "func": "getObject",
+      "args": []
+    }
+  ],
+  "output": {
+    "SYSTEM_STATE": "out[0]",
+    "SYSTEM_TYPE": "transform:() => { const data = results.SYSTEM_STATE; return data?.data?.type || data?.type || 'Unknown'; }",
+    "SYSTEM_VERSION": "transform:() => { const data = results.SYSTEM_STATE; const fields = data?.data?.content?.fields || data?.content?.fields || {}; return fields.version || '0'; }"
+  },
+  "messages": {
+    "success": {
+      "en": "System state retrieved. Type: {{SYSTEM_TYPE}}, Version: {{SYSTEM_VERSION}}",
+      "de": "Systemstatus abgerufen. Typ: {{SYSTEM_TYPE}}, Version: {{SYSTEM_VERSION}}"
+    }
+  },
+  "defaultChain": "sui"
+}

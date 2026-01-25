@@ -1,0 +1,88 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Shopify: List Products",
+  "title": {
+    "en": "List products",
+    "de": "Produkte auflisten"
+  },
+  "description": {
+    "en": "Retrieve a list of products from your Shopify store. Filter by query, product type, vendor, or tags.",
+    "de": "Rufe eine Liste von Produkten aus deinem Shopify-Shop ab. Filtere nach Abfrage, Produkttyp, Hersteller oder Tags."
+  },
+  "vars": {
+    "SHOP": "env:SHOPIFY_SHOP|Your Shopify shop domain (e.g., 'myshop' for myshop.myshopify.com)",
+    "ACCESS_TOKEN": "env:SHOPIFY_ACCESS_TOKEN|OAuth access token from Shopify. Get it from Shopify App setup after OAuth authentication."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "List Products",
+      "destination": {
+        "url": "https://{{SHOP}}.myshopify.com/admin/api/2024-10/graphql.json",
+        "method": "POST",
+        "headers": {
+          "X-Shopify-Access-Token": "{{ACCESS_TOKEN}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Query",
+          "as": "query",
+          "description": {
+            "en": "Search query to filter products by title, description, or other fields."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:variables.query"
+        },
+        {
+          "name": "First",
+          "as": "first",
+          "description": {
+            "en": "Number of products to return (max 250)."
+          },
+          "type": "number",
+          "source": "field",
+          "required": false,
+          "position": "payload:variables.first"
+        },
+        {
+          "name": "After",
+          "as": "after",
+          "description": {
+            "en": "Cursor for pagination (from previous response)."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:variables.after"
+        },
+        {
+          "name": "GraphQL Query",
+          "as": "graphqlQuery",
+          "description": {
+            "en": "GraphQL query"
+          },
+          "type": "string",
+          "source": "hidden",
+          "position": "payload:query",
+          "default": "query products($query: String, $first: Int, $after: String) { products(query: $query, first: $first, after: $after) { edges { node { id title handle vendor productType tags descriptionHtml variants(first: 10) { edges { node { id title price sku inventoryQuantity } } } } cursor } pageInfo { hasNextPage hasPreviousPage } } }"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "PRODUCTS": "out.data.products.edges",
+    "PRODUCT_COUNT": "out.data.products.edges.length",
+    "HAS_NEXT_PAGE": "out.data.products.pageInfo.hasNextPage"
+  },
+  "messages": {
+    "success": {
+      "en": "Found {{PRODUCT_COUNT}} product(s)",
+      "de": "{{PRODUCT_COUNT}} Produkt(e) gefunden"
+    }
+  },
+  "defaultChain": "multiversx"
+}

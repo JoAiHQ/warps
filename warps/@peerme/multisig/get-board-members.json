@@ -1,0 +1,40 @@
+{
+  "protocol": "warp:3.0.0",
+  "chain": "multiversx",
+  "name": "PeerMe MultiSig: Get Board Members",
+  "title": "View all board members",
+  "description": "List all board members who can sign and execute proposals in a MultiSig wallet. Board members have full voting rights and can both propose and sign actions.",
+  "vars": {
+    "MULTISIG_ADDRESS": "query:multisig"
+  },
+  "actions": [
+    {
+      "type": "query",
+      "label": "Get board members",
+      "address": "{{MULTISIG_ADDRESS}}",
+      "func": "getAllBoardMembers",
+      "args": [],
+      "abi": "INJECT:peerme/multisig.abi.json"
+    },
+    {
+      "type": "query",
+      "label": "Get count",
+      "address": "{{MULTISIG_ADDRESS}}",
+      "func": "getNumBoardMembers",
+      "args": [],
+      "abi": "INJECT:peerme/multisig.abi.json"
+    }
+  ],
+  "output": {
+    "BOARD_MEMBERS": "out[0]",
+    "COUNT": "out[1]",
+    "COUNT_NUMBER": "transform:() => Number(results.COUNT)",
+    "MEMBERS_LIST": "transform:() => Array.isArray(results.BOARD_MEMBERS) ? results.BOARD_MEMBERS.join(', ') : 'No members'"
+  },
+  "messages": {
+    "success": "Found {{COUNT_NUMBER}} board member(s): {{MEMBERS_LIST}}",
+    "card": "Board Members: {{COUNT_NUMBER}}",
+    "info": "This MultiSig has {{COUNT_NUMBER}} board member(s) who can sign and execute proposals"
+  },
+  "defaultChain": "multiversx"
+}

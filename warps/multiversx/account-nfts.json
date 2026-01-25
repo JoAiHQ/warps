@@ -1,0 +1,54 @@
+{
+  "protocol": "warp:3.0.0",
+  "chain": "multiversx",
+  "name": "MultiversX: Account NFTs",
+  "title": {
+    "en": "View MultiversX Account NFTs",
+    "de": "MultiversX Kontonfts anzeigen"
+  },
+  "description": {
+    "en": "View all NFTs owned by a MultiversX blockchain account. See your complete NFT collection including identifiers, names, collections, nonces, creators, royalties, and attributes. Browse your NFT holdings and collection details across the MultiversX network.",
+    "de": "Zeige alle NFTs an, die von einem MultiversX Blockchain-Konto besessen werden. Sieh deine vollständige NFT-Sammlung einschließlich Identifikatoren, Namen, Sammlungen, Nonces, Erstellern, Lizenzgebühren und Attributen. Durchstöbere deine NFT-Bestände und Sammlungsdetails im MultiversX-Netzwerk."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "View NFTs",
+        "de": "NFTs anzeigen"
+      },
+      "destination": {
+        "url": "{{CHAIN_API}}/accounts/{{ADDRESS}}/nfts"
+      },
+      "inputs": [
+        {
+          "name": "Address",
+          "as": "ADDRESS",
+          "description": {
+            "en": "The wallet address to view NFTs for.",
+            "de": "Die Wallet-Adresse, für die NFTs angezeigt werden sollen."
+          },
+          "type": "address",
+          "source": "field",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "output": {
+    "NFTS": "transform:() => results.out || []",
+    "NFT_COUNT": "transform:() => Array.isArray(results.NFTS) ? results.NFTS.length : 0",
+    "NFTS_SUMMARY": "transform:() => { const nfts = results.NFTS || []; return nfts.slice(0, 10).map((nft: any) => ({ identifier: nft.identifier, name: nft.name, collection: nft.collection, nonce: nft.nonce, creator: nft.creator, royalties: nft.royalties, attributes: nft.attributes })); }"
+  },
+  "messages": {
+    "success": {
+      "en": "Found {{NFT_COUNT}} NFT(s) in this account.",
+      "de": "{{NFT_COUNT}} NFT(s) in diesem Konto gefunden."
+    },
+    "info": {
+      "en": "This account owns {{NFT_COUNT}} NFT(s)",
+      "de": "Dieses Konto besitzt {{NFT_COUNT}} NFT(s)"
+    }
+  },
+  "defaultChain": "multiversx"
+}

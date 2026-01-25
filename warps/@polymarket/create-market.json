@@ -1,0 +1,93 @@
+{
+  "protocol": "warp:3.0.0",
+  "chain": "polygon",
+  "name": "Polymarket: Create Market",
+  "title": {
+    "en": "Create Prediction Market",
+    "de": "Prognosemarkt erstellen"
+  },
+  "description": {
+    "en": "Create a new prediction market on Polymarket. Define the market question, outcomes, and resolution criteria using the Gamma API.",
+    "de": "Erstelle einen neuen Prognosemarkt auf Polymarket. Definiere die Marktfrage, Ergebnisse und Auflösungskriterien über die Gamma-API."
+  },
+  "vars": {
+    "API_KEY": "env:POLYMARKET_API_KEY|Get your API key from Polymarket at https://polymarket.com/settings/api"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Create Market",
+        "de": "Markt erstellen"
+      },
+      "destination": {
+        "url": "INJECT:API_GAMMA/markets",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{API_KEY}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Question",
+          "as": "question",
+          "description": {
+            "en": "The market question that participants will bet on.",
+            "de": "Die Marktfrage, auf die Teilnehmer wetten werden."
+          },
+          "type": "string",
+          "position": "payload:question",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Description",
+          "as": "description",
+          "description": {
+            "en": "Detailed description of the market and resolution criteria.",
+            "de": "Detaillierte Beschreibung des Marktes und der Auflösungskriterien."
+          },
+          "type": "string",
+          "position": "payload:description",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "End Date",
+          "as": "endDate",
+          "description": {
+            "en": "Market end date (ISO 8601 format).",
+            "de": "Enddatum des Marktes (ISO 8601 Format)."
+          },
+          "type": "string",
+          "position": "payload:endDate",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Category",
+          "as": "category",
+          "description": {
+            "en": "Market category (e.g., 'politics', 'sports', 'crypto').",
+            "de": "Marktkategorie (z.B. 'politics', 'sports', 'crypto')."
+          },
+          "type": "string",
+          "position": "payload:category",
+          "source": "field",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "output": {
+    "MARKET_ID": "out.id"
+  },
+  "messages": {
+    "success": {
+      "en": "Market created successfully. Market ID: {{MARKET_ID}}",
+      "de": "Markt erfolgreich erstellt. Markt-ID: {{MARKET_ID}}"
+    }
+  },
+  "defaultChain": "polygon"
+}

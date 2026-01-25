@@ -1,0 +1,97 @@
+{
+  "protocol": "warp:3.0.0",
+  "chain": "polygon",
+  "name": "Polymarket: Sell Shares",
+  "title": {
+    "en": "Sell Market Shares",
+    "de": "Marktanteile verkaufen"
+  },
+  "description": {
+    "en": "Sell your shares in a prediction market on Polymarket. Exchange your position shares for USDC using the CLOB API.",
+    "de": "Verkaufe deine Anteile in einem Prognosemarkt auf Polymarket. Tausche deine Positionsanteile gegen USDC über die CLOB-API."
+  },
+  "vars": {
+    "API_KEY": "env:POLYMARKET_API_KEY|Get your API key from Polymarket at https://polymarket.com/settings/api"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Sell Shares",
+        "de": "Anteile verkaufen"
+      },
+      "destination": {
+        "url": "INJECT:API_CLOB/orders",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{API_KEY}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Market ID",
+          "as": "marketId",
+          "description": {
+            "en": "The ID of the market to sell shares from.",
+            "de": "Die ID des Marktes, von dem Anteile verkauft werden sollen."
+          },
+          "type": "string",
+          "position": "payload:market",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Outcome",
+          "as": "outcome",
+          "description": {
+            "en": "Which outcome shares to sell ('YES' or 'NO').",
+            "de": "Welche Ergebnisanteile verkauft werden sollen ('YES' oder 'NO')."
+          },
+          "type": "string",
+          "position": "payload:outcome",
+          "source": "field",
+          "required": true,
+          "options": {
+            "YES": "Yes",
+            "NO": "No"
+          }
+        },
+        {
+          "name": "Shares",
+          "as": "shares",
+          "description": {
+            "en": "Number of shares to sell.",
+            "de": "Anzahl der zu verkaufenden Anteile."
+          },
+          "type": "string",
+          "position": "payload:amount",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Price",
+          "as": "price",
+          "description": {
+            "en": "Minimum price per share (0-1, where 1 = 100%).",
+            "de": "Mindestpreis pro Anteil (0-1, wobei 1 = 100%)."
+          },
+          "type": "string",
+          "position": "payload:price",
+          "source": "field",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "output": {
+    "ORDER_ID": "out.id"
+  },
+  "messages": {
+    "success": {
+      "en": "Sell order placed successfully. Order ID: {{ORDER_ID}}",
+      "de": "Verkaufsauftrag erfolgreich platziert. Auftrags-ID: {{ORDER_ID}}"
+    }
+  },
+  "defaultChain": "polygon"
+}

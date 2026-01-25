@@ -1,0 +1,57 @@
+{
+  "protocol": "warp:3.0.0",
+  "chain": "multiversx",
+  "name": "PeerMe MultiSig: Deposit",
+  "title": "Deposit funds to MultiSig",
+  "description": "Deposit EGLD or ESDT tokens to a MultiSig wallet. This allows the MultiSig to receive funds even if marked as unpayable. Funds can later be transferred via proposals.",
+  "vars": {
+    "MULTISIG_ADDRESS": "query:multisig"
+  },
+  "actions": [
+    {
+      "type": "contract",
+      "label": "Deposit funds",
+      "address": "{{MULTISIG_ADDRESS}}",
+      "func": "deposit",
+      "args": [],
+      "gasLimit": 10000000,
+      "abi": "INJECT:peerme/multisig.abi.json",
+      "inputs": [
+        {
+          "name": "Amount",
+          "as": "AMOUNT",
+          "description": "The amount of EGLD or ESDT tokens to deposit.",
+          "type": "asset",
+          "position": "transfer",
+          "source": "field",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "output": {
+    "SUCCESS": "out"
+  },
+  "messages": {
+    "success": "Funds deposited successfully to the MultiSig wallet.",
+    "card": "Deposit Successful"
+  },
+  "alerts": {
+    "deposit_success": {
+      "label": {
+        "en": "Get notified about deposits",
+        "de": "Benachrichtigung erhalten über Einzahlungen"
+      },
+      "trigger": "success",
+      "subject": {
+        "en": "Funds deposited to MultiSig",
+        "de": "Guthaben auf MultiSig eingezahlt"
+      },
+      "body": {
+        "en": "Funds have been successfully deposited to the MultiSig wallet",
+        "de": "Guthaben wurde erfolgreich auf die MultiSig-Wallet eingezahlt"
+      }
+    }
+  },
+  "defaultChain": "multiversx"
+}

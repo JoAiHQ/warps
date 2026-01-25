@@ -1,0 +1,52 @@
+{
+  "protocol": "warp:3.0.0",
+  "chain": "sui",
+  "name": "Sui: Get Balance",
+  "title": {
+    "en": "Get SUI Balance",
+    "de": "SUI-Saldo abrufen"
+  },
+  "description": {
+    "en": "Retrieve the SUI token balance for a specific wallet address on the Sui blockchain by querying the first coin object.",
+    "de": "Rufe den SUI-Token-Saldo für eine bestimmte Wallet-Adresse auf der Sui-Blockchain ab, indem das erste Coin-Objekt abgefragt wird."
+  },
+  "actions": [
+    {
+      "type": "query",
+      "label": {
+        "en": "Get Balance",
+        "de": "Saldo abrufen"
+      },
+      "address": "{{COIN_OBJECT_ID}}",
+      "func": "getObject",
+      "args": [],
+      "inputs": [
+        {
+          "name": "Coin Object ID",
+          "as": "COIN_OBJECT_ID",
+          "description": {
+            "en": "The coin object ID to query (typically the first SUI coin object for the address).",
+            "de": "Die Coin-Objekt-ID, die abgefragt werden soll (typischerweise das erste SUI-Coin-Objekt für die Adresse)."
+          },
+          "type": "string",
+          "position": "destination",
+          "source": "field",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "output": {
+    "RAW_DATA": "out[0]",
+    "_DATA": "out[0]",
+    "BALANCE": "transform:() => { const data = results._DATA || results.RAW_DATA; if (!data) return '0'; const content = data.data?.content || data.content; if (!content) return '0'; const fields = content.fields || {}; return fields.balance || '0'; }",
+    "BALANCE_SUI": "transform:() => { const balance = results.BALANCE || '0'; return (Number(balance) / 1000000000).toFixed(2); }"
+  },
+  "messages": {
+    "success": {
+      "en": "Balance: {{BALANCE_SUI}} SUI",
+      "de": "Saldo: {{BALANCE_SUI}} SUI"
+    }
+  },
+  "defaultChain": "sui"
+}

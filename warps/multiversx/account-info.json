@@ -1,0 +1,64 @@
+{
+  "protocol": "warp:3.0.0",
+  "chain": "multiversx",
+  "name": "MultiversX: Account Info",
+  "title": {
+    "en": "View MultiversX Account Information",
+    "de": "MultiversX Kontoinformationen anzeigen"
+  },
+  "description": {
+    "en": "View comprehensive account information for a MultiversX blockchain account. Get the account balance in eGold (EGLD), transaction nonce, username, and all account details in one place. Perfect for checking wallet status, balance verification, and account overview.",
+    "de": "Zeige umfassende Kontoinformationen für ein MultiversX Blockchain-Konto. Erhalte den Kontostand in eGold (EGLD), Transaktions-Nonce, Benutzername und alle Kontodetails auf einen Blick. Ideal zur Überprüfung des Wallet-Status, Kontostandsverifikation und Kontovorschau."
+  },
+  "ui": "{{CHATAPP_HOST}}/multiversx-account-info.html",
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "View Account Info",
+        "de": "Kontoinformationen anzeigen"
+      },
+      "destination": {
+        "url": "{{CHAIN_API}}/accounts/{{ADDRESS}}"
+      },
+      "inputs": [
+        {
+          "name": "Address",
+          "as": "ADDRESS",
+          "description": {
+            "en": "The wallet address to view account information for (defaults to your wallet).",
+            "de": "Die Wallet-Adresse, für die Kontoinformationen angezeigt werden sollen (Standard: deine Wallet)."
+          },
+          "type": "address",
+          "source": "field",
+          "default": "{{USER_WALLET}}"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "ACCOUNT_DATA": "out",
+    "BALANCE": "transform:() => { const balance = results.ACCOUNT_DATA?.balance || '0'; return BigInt(balance).toString(); }",
+    "BALANCE_EGLD": "transform:() => { const balance = BigInt(results.BALANCE || '0'); return (Number(balance) / 1e18).toFixed(4); }",
+    "BALANCE_FORMATTED": "transform:() => parseFloat(results.BALANCE_EGLD).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 4 })",
+    "NONCE": "transform:() => results.ACCOUNT_DATA?.nonce || 0",
+    "USERNAME": "transform:() => results.ACCOUNT_DATA?.username || null"
+  },
+  "messages": {
+    "success": {
+      "en": "Balance: {{BALANCE_FORMATTED}} EGLD, Username: {{USERNAME}}, Nonce: {{NONCE}}",
+      "de": "Kontostand: {{BALANCE_FORMATTED}} EGLD, Benutzername: {{USERNAME}}, Nonce: {{NONCE}}"
+    },
+    "card": {
+      "en": "{{BALANCE_FORMATTED}} EGLD",
+      "de": "{{BALANCE_FORMATTED}} EGLD"
+    },
+    "info": {
+      "en": "This account has {{BALANCE_FORMATTED}} EGLD",
+      "de": "Dieses Konto hat {{BALANCE_FORMATTED}} EGLD"
+    },
+    "invoking": "Loading ...",
+    "invoked": "Loaded"
+  },
+  "defaultChain": "multiversx"
+}

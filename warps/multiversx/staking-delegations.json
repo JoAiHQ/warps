@@ -1,0 +1,56 @@
+{
+  "protocol": "warp:3.0.0",
+  "chain": "multiversx",
+  "name": "MultiversX: Staking - View Delegations",
+  "title": {
+    "en": "View your MultiversX eGold delegations",
+    "de": "Zeige deine MultiversX eGold-Delegierungen"
+  },
+  "description": {
+    "en": "View all your MultiversX eGold (EGLD) staking delegations. See your active stake positions, claimable rewards, and delegation details across all staking providers.",
+    "de": "Zeige alle deine MultiversX eGold (EGLD) Staking-Delegierungen. Sieh deine aktiven Stake-Positionen, einlösbare Belohnungen und Delegierungsdetails für alle Staking-Provider."
+  },
+  "ui": "{{CHATAPP_HOST}}/multiversx-staking-delegations.html",
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "View Delegations",
+        "de": "Delegierungen anzeigen"
+      },
+      "destination": {
+        "url": "{{CHAIN_API}}/accounts/{{ACCOUNT}}/delegation"
+      },
+      "inputs": [
+        {
+          "name": "Account",
+          "as": "ACCOUNT",
+          "type": "address",
+          "source": "field",
+          "default": "{{USER_WALLET}}",
+          "description": {
+            "en": "The account address to view delegations for (defaults to your wallet)",
+            "de": "Die Adresse des Kontos, für das Delegierungen angezeigt werden sollen (Standard: deine Wallet)"
+          }
+        }
+      ]
+    }
+  ],
+  "output": {
+    "DELEGATIONS": "out",
+    "TOTAL_STAKED": "transform:() => results.DELEGATIONS.reduce((acc, d) => acc + BigInt(d.userActiveStake || '0'), BigInt(0)).toString()",
+    "TOTAL_STAKED_EGLD": "transform:() => Number(results.TOTAL_STAKED) / 10 ** 18",
+    "TOTAL_REWARDS": "transform:() => results.DELEGATIONS.reduce((acc, d) => acc + BigInt(d.claimableRewards || '0'), BigInt(0)).toString()",
+    "TOTAL_REWARDS_EGLD": "transform:() => Number(results.TOTAL_REWARDS) / 10 ** 18",
+    "PROVIDER_COUNT": "transform:() => results.DELEGATIONS.length"
+  },
+  "messages": {
+    "success": {
+      "en": "Found {{PROVIDER_COUNT}} delegation(s). Total staked: {{TOTAL_STAKED_EGLD}} EGLD. Claimable rewards: {{TOTAL_REWARDS_EGLD}} EGLD.",
+      "de": "{{PROVIDER_COUNT}} Delegierung(en) gefunden. Gesamt gestakt: {{TOTAL_STAKED_EGLD}} EGLD. Einlösbare Belohnungen: {{TOTAL_REWARDS_EGLD}} EGLD."
+    },
+    "invoking": "Loading ...",
+    "invoked": "Loaded"
+  },
+  "defaultChain": "multiversx"
+}

@@ -1,0 +1,73 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Reddit: Create Comment",
+  "title": {
+    "en": "Create a Reddit Comment",
+    "de": "Reddit-Kommentar erstellen"
+  },
+  "description": {
+    "en": "Create a comment on a Reddit post or reply to another comment.",
+    "de": "Erstelle einen Kommentar zu einem Reddit-Post oder antworte auf einen anderen Kommentar."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:REDDIT_ACCESS_TOKEN|Get your access token from Reddit OAuth2 authentication. See https://www.reddit.com/prefs/apps to create an app."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Create Comment",
+        "de": "Kommentar erstellen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/api/comment",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}",
+          "User-Agent": "Warpbase/1.0",
+          "Content-Type": "application/x-www-form-urlencoded"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Parent Fullname",
+          "as": "parent",
+          "description": {
+            "en": "The fullname of the parent (post or comment) to reply to. Format: 't3_xxxxx' for posts, 't1_xxxxx' for comments.",
+            "de": "Der Fullname des übergeordneten Elements (Post oder Kommentar), auf das geantwortet werden soll. Format: 't3_xxxxx' für Posts, 't1_xxxxx' für Kommentare."
+          },
+          "bot": "The fullname of the parent post or comment. For posts, use format 't3_' followed by the post ID. For comments, use 't1_' followed by the comment ID.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:parent"
+        },
+        {
+          "name": "Text",
+          "as": "text",
+          "description": {
+            "en": "The text content of the comment.",
+            "de": "Der Textinhalt des Kommentars."
+          },
+          "bot": "The text content of your comment. This is the actual comment text that will be posted.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:text"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "COMMENT_ID": "transform:() => results.out?.json?.data?.things?.[0]?.data?.id || null",
+    "COMMENT_NAME": "transform:() => results.out?.json?.data?.things?.[0]?.data?.name || null",
+    "COMMENT_BODY": "transform:() => results.out?.json?.data?.things?.[0]?.data?.body || null"
+  },
+  "messages": {
+    "success": {
+      "en": "Comment created successfully! Comment ID: {{COMMENT_ID}}",
+      "de": "Kommentar erfolgreich erstellt! Kommentar-ID: {{COMMENT_ID}}"
+    }
+  },
+  "defaultChain": "multiversx"
+}

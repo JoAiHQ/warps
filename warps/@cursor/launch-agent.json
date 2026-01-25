@@ -1,0 +1,167 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Cursor: Launch Agent",
+  "title": {
+    "en": "Launch a cloud agent",
+    "de": "Einen Cloud-Agenten starten"
+  },
+  "description": {
+    "en": "Start a new cloud agent to work autonomously on your GitHub repository. The agent will execute tasks, make code changes, and optionally create pull requests.",
+    "de": "Starte einen neuen Cloud-Agenten, der autonom an deinem GitHub-Repository arbeitet. Der Agent führt Aufgaben aus, nimmt Code-Änderungen vor und erstellt optional Pull Requests."
+  },
+  "vars": {
+    "API_KEY": "env:CURSOR_API_KEY|Get your API key from Cursor Dashboard at https://cursor.com/settings/api"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Launch Agent",
+        "de": "Agenten starten"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v0/agents",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{API_KEY}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Task",
+          "as": "task",
+          "description": {
+            "en": "The task or instructions for the agent to execute.",
+            "de": "Die Aufgabe oder Anweisungen, die der Agent ausführen soll."
+          },
+          "type": "string",
+          "position": "payload:prompt.text",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Repository",
+          "as": "repository",
+          "description": {
+            "en": "The GitHub repository URL (e.g., https://github.com/your-org/your-repo).",
+            "de": "Die GitHub-Repository-URL (z.B. https://github.com/deine-org/dein-repo)."
+          },
+          "type": "string",
+          "position": "payload:source.repository",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Base Branch",
+          "as": "baseBranch",
+          "description": {
+            "en": "Git ref (branch/tag) to use as the base branch (e.g., 'main', 'develop').",
+            "de": "Git-Ref (Branch/Tag), die als Basis-Branch verwendet werden soll (z.B. 'main', 'develop')."
+          },
+          "type": "string",
+          "position": "payload:source.ref",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Model",
+          "as": "model",
+          "description": {
+            "en": "The LLM to use (e.g., 'claude-4-sonnet', 'o3').",
+            "de": "Das zu verwendende LLM (z.B. 'claude-4-sonnet', 'o3')."
+          },
+          "type": "string",
+          "position": "payload:model",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Auto Create PR",
+          "as": "autoCreatePr",
+          "description": {
+            "en": "Whether to automatically create a pull request when the agent completes.",
+            "de": "Ob automatisch ein Pull Request erstellt werden soll, wenn der Agent fertig ist."
+          },
+          "type": "boolean",
+          "position": "payload:target.autoCreatePr",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Open as Cursor GitHub App",
+          "as": "openAsCursorGithubApp",
+          "description": {
+            "en": "Whether to open the pull request as the Cursor GitHub App instead of as the user. Only applies if autoCreatePr is true.",
+            "de": "Ob der Pull Request als Cursor GitHub App statt als Benutzer geöffnet werden soll. Gilt nur, wenn autoCreatePr true ist."
+          },
+          "type": "boolean",
+          "position": "payload:target.openAsCursorGithubApp",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Skip Reviewer Request",
+          "as": "skipReviewerRequest",
+          "description": {
+            "en": "Whether to skip adding the user as a reviewer to the pull request. Only applies if autoCreatePr is true and the PR is opened as the Cursor GitHub App.",
+            "de": "Ob der Benutzer nicht als Reviewer zum Pull Request hinzugefügt werden soll. Gilt nur, wenn autoCreatePr true ist und der PR als Cursor GitHub App geöffnet wird."
+          },
+          "type": "boolean",
+          "position": "payload:target.skipReviewerRequest",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Branch Name",
+          "as": "branchName",
+          "description": {
+            "en": "Custom branch name for the agent to create (e.g., 'feature/add-readme').",
+            "de": "Benutzerdefinierter Branch-Name, den der Agent erstellen soll (z.B. 'feature/add-readme')."
+          },
+          "type": "string",
+          "position": "payload:target.branchName",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Webhook URL",
+          "as": "webhookUrl",
+          "description": {
+            "en": "URL to receive webhook notifications about agent status changes.",
+            "de": "URL zum Empfangen von Webhook-Benachrichtigungen über Agenten-Statusänderungen."
+          },
+          "type": "string",
+          "position": "payload:webhook.url",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Webhook Secret",
+          "as": "webhookSecret",
+          "description": {
+            "en": "Secret key for webhook payload verification (minimum 32 characters).",
+            "de": "Geheimer Schlüssel zur Webhook-Payload-Verifizierung (mindestens 32 Zeichen)."
+          },
+          "type": "string",
+          "position": "payload:webhook.secret",
+          "source": "field",
+          "required": false
+        }
+      ]
+    }
+  ],
+  "output": {
+    "AGENT_ID": "out.id",
+    "AGENT_NAME": "out.name",
+    "AGENT_STATUS": "out.status",
+    "AGENT_URL": "out.target.url"
+  },
+  "messages": {
+    "success": {
+      "en": "Agent launched successfully! Agent ID: {{AGENT_ID}}, Status: {{AGENT_STATUS}}. View at {{AGENT_URL}}",
+      "de": "Agent erfolgreich gestartet! Agent-ID: {{AGENT_ID}}, Status: {{AGENT_STATUS}}. Ansehen unter {{AGENT_URL}}"
+    }
+  },
+  "defaultChain": "multiversx"
+}

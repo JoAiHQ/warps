@@ -1,0 +1,74 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Linear: Get Issue",
+  "title": {
+    "en": "Get Linear issue details",
+    "de": "Linear-Issue-Details abrufen"
+  },
+  "description": {
+    "en": "Retrieve detailed information about a specific Linear issue including description, state, assignee, and comments.",
+    "de": "Ruft detaillierte Informationen über ein bestimmtes Linear-Issue ab, einschließlich Beschreibung, Status, Zugewiesenem und Kommentaren."
+  },
+  "vars": {
+    "API_KEY": "env:LINEAR_API_KEY|Get your API key from Linear Settings > API at https://linear.app/settings/api"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Get Issue",
+        "de": "Issue abrufen"
+      },
+      "destination": {
+        "url": "INJECT:API_GRAPHQL",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{API_KEY}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Issue ID",
+          "as": "issueId",
+          "description": {
+            "en": "The ID of the issue to retrieve. You can find issue IDs using 'List Issues'."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:variables.issueId"
+        },
+        {
+          "name": "Query",
+          "as": "query",
+          "description": {
+            "en": "GraphQL query"
+          },
+          "type": "string",
+          "source": "hidden",
+          "position": "payload:query",
+          "default": "query Issue($issueId: String!) { issue(id: $issueId) { id identifier title description state { id name } assignee { id name email } priority createdAt updatedAt url labels { nodes { id name } } } }"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "ISSUE_ID": "out.data.issue.id",
+    "IDENTIFIER": "out.data.issue.identifier",
+    "TITLE": "out.data.issue.title",
+    "DESCRIPTION": "out.data.issue.description",
+    "STATE": "out.data.issue.state.name",
+    "ASSIGNEE": "out.data.issue.assignee.name",
+    "PRIORITY": "out.data.issue.priority",
+    "URL": "out.data.issue.url",
+    "CREATED_AT": "out.data.issue.createdAt"
+  },
+  "messages": {
+    "success": {
+      "en": "Issue {{IDENTIFIER}}: {{TITLE}} ({{STATE}})",
+      "de": "Issue {{IDENTIFIER}}: {{TITLE}} ({{STATE}})"
+    }
+  },
+  "defaultChain": "multiversx"
+}

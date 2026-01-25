@@ -1,0 +1,62 @@
+{
+  "protocol": "warp:3.0.0",
+  "chain": "multiversx",
+  "name": "MultiversX: Token Details",
+  "title": {
+    "en": "View MultiversX Token Details",
+    "de": "MultiversX Tokendetails anzeigen"
+  },
+  "description": {
+    "en": "View detailed information about a specific MultiversX ESDT token. Get complete token metadata including identifier, name, ticker, total supply, decimals, token type, owner, and issuer information. Perfect for token research and verification.",
+    "de": "Zeige detaillierte Informationen zu einem bestimmten MultiversX ESDT-Token. Erhalte vollständige Token-Metadaten einschließlich Identifikator, Name, Ticker, Gesamtversorgung, Dezimalstellen, Token-Typ, Besitzer und Emittenten-Informationen. Ideal zur Token-Recherche und -verifikation."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "View Token",
+        "de": "Token anzeigen"
+      },
+      "destination": {
+        "url": "{{CHAIN_API}}/tokens/{{TOKEN_IDENTIFIER}}"
+      },
+      "inputs": [
+        {
+          "name": "Token Identifier",
+          "as": "TOKEN_IDENTIFIER",
+          "description": {
+            "en": "The token identifier (e.g., 'WEGLD-bd4d79' or 'USDC-c76f1f').",
+            "de": "Der Token-Identifier (z.B. 'WEGLD-bd4d79' oder 'USDC-c76f1f')."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "output": {
+    "TOKEN_DATA": "out",
+    "IDENTIFIER": "transform:() => results.TOKEN_DATA?.identifier || ''",
+    "NAME": "transform:() => results.TOKEN_DATA?.name || ''",
+    "TICKER": "transform:() => results.TOKEN_DATA?.ticker || ''",
+    "DECIMALS": "transform:() => results.TOKEN_DATA?.decimals || 0",
+    "SUPPLY": "transform:() => results.TOKEN_DATA?.supply || '0'",
+    "SUPPLY_FORMATTED": "transform:() => { const supply = BigInt(results.SUPPLY || '0'); const decimals = results.DECIMALS || 0; return (Number(supply) / Math.pow(10, decimals)).toLocaleString('en-US', { maximumFractionDigits: 2 }); }",
+    "OWNER": "transform:() => results.TOKEN_DATA?.owner || ''",
+    "ISSUER": "transform:() => results.TOKEN_DATA?.owner || ''",
+    "TYPE": "transform:() => results.TOKEN_DATA?.type || ''",
+    "PRICE": "transform:() => results.TOKEN_DATA?.price || null"
+  },
+  "messages": {
+    "success": {
+      "en": "Token {{TICKER}} ({{NAME}}): Supply {{SUPPLY_FORMATTED}}, Decimals {{DECIMALS}}, Type {{TYPE}}",
+      "de": "Token {{TICKER}} ({{NAME}}): Versorgung {{SUPPLY_FORMATTED}}, Dezimalstellen {{DECIMALS}}, Typ {{TYPE}}"
+    },
+    "info": {
+      "en": "Token {{TICKER}} has a supply of {{SUPPLY_FORMATTED}}",
+      "de": "Token {{TICKER}} hat eine Versorgung von {{SUPPLY_FORMATTED}}"
+    }
+  },
+  "defaultChain": "multiversx"
+}

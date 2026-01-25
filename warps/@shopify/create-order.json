@@ -1,0 +1,111 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Shopify: Create Order",
+  "title": {
+    "en": "Create order",
+    "de": "Bestellung erstellen"
+  },
+  "description": {
+    "en": "Create a new order in your Shopify store. Add line items with product variants, set customer information, and shipping details.",
+    "de": "Erstelle eine neue Bestellung in deinem Shopify-Shop. Füge Positionen mit Produktvarianten hinzu, setze Kundeninformationen und Versanddetails."
+  },
+  "vars": {
+    "SHOP": "env:SHOPIFY_SHOP|Your Shopify shop domain (e.g., 'myshop' for myshop.myshopify.com)",
+    "ACCESS_TOKEN": "env:SHOPIFY_ACCESS_TOKEN|OAuth access token from Shopify. Get it from Shopify App setup after OAuth authentication."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Create Order",
+      "destination": {
+        "url": "https://{{SHOP}}.myshopify.com/admin/api/2024-10/graphql.json",
+        "method": "POST",
+        "headers": {
+          "X-Shopify-Access-Token": "{{ACCESS_TOKEN}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Line Items",
+          "as": "lineItems",
+          "description": {
+            "en": "JSON array of line items. Each item should have 'variantId' (GraphQL ID) and 'quantity'. Example: [{\"variantId\": \"gid://shopify/ProductVariant/123\", \"quantity\": 1}]"
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:variables.order.lineItems"
+        },
+        {
+          "name": "Email",
+          "as": "email",
+          "description": {
+            "en": "Customer email address."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:variables.order.email"
+        },
+        {
+          "name": "Shipping Address",
+          "as": "shippingAddress",
+          "description": {
+            "en": "JSON object with shipping address fields: firstName, lastName, address1, city, province, country, zip. Example: {\"firstName\": \"John\", \"lastName\": \"Doe\", \"address1\": \"123 Main St\", \"city\": \"New York\", \"province\": \"NY\", \"country\": \"US\", \"zip\": \"10001\"}"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:variables.order.shippingAddress"
+        },
+        {
+          "name": "Billing Address",
+          "as": "billingAddress",
+          "description": {
+            "en": "JSON object with billing address fields: firstName, lastName, address1, city, province, country, zip. Example: {\"firstName\": \"John\", \"lastName\": \"Doe\", \"address1\": \"123 Main St\", \"city\": \"New York\", \"province\": \"NY\", \"country\": \"US\", \"zip\": \"10001\"}"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:variables.order.billingAddress"
+        },
+        {
+          "name": "Financial Status",
+          "as": "financialStatus",
+          "description": {
+            "en": "The financial status of the order. Options: 'pending', 'authorized', 'partially_paid', 'paid', 'partially_refunded', 'refunded', 'voided'."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:variables.order.financialStatus"
+        },
+        {
+          "name": "Query",
+          "as": "query",
+          "description": {
+            "en": "GraphQL mutation"
+          },
+          "type": "string",
+          "source": "hidden",
+          "position": "payload:query",
+          "default": "mutation orderCreate($order: OrderCreateOrderInput!) { orderCreate(order: $order) { order { id name email totalPriceSet { shopMoney { amount currencyCode } } lineItems(first: 10) { edges { node { id title quantity variant { id title } } } } } userErrors { field message } } }"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "ORDER_ID": "out.data.orderCreate.order.id",
+    "ORDER_NAME": "out.data.orderCreate.order.name",
+    "ORDER_TOTAL": "out.data.orderCreate.order.totalPriceSet.shopMoney.amount",
+    "SUCCESS": "out.data.orderCreate.userErrors.length === 0"
+  },
+  "messages": {
+    "success": {
+      "en": "Order {{ORDER_NAME}} created successfully! Total: {{ORDER_TOTAL}}",
+      "de": "Bestellung {{ORDER_NAME}} erfolgreich erstellt! Gesamt: {{ORDER_TOTAL}}"
+    }
+  },
+  "defaultChain": "multiversx"
+}

@@ -1,0 +1,68 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Cursor: Add Followup",
+  "title": {
+    "en": "Add followup instruction",
+    "de": "Nachfolge-Anweisung hinzufügen"
+  },
+  "description": {
+    "en": "Add a followup instruction to an existing cloud agent. Provide additional tasks or modifications for the agent to execute.",
+    "de": "Füge einer bestehenden Cloud-Agenten eine Nachfolge-Anweisung hinzu. Gib zusätzliche Aufgaben oder Änderungen für den Agenten zur Ausführung an."
+  },
+  "vars": {
+    "API_KEY": "env:CURSOR_API_KEY|Get your API key from Cursor Dashboard at https://cursor.com/settings/api"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Add Followup",
+        "de": "Nachfolge hinzufügen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v0/agents/{{AGENT_ID}}/followup",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{API_KEY}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Agent ID",
+          "as": "AGENT_ID",
+          "description": {
+            "en": "Unique identifier for the cloud agent (e.g., 'bc_abc123').",
+            "de": "Eindeutige Kennung für den Cloud-Agenten (z.B. 'bc_abc123')."
+          },
+          "type": "string",
+          "position": "path:AGENT_ID",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Followup Instruction",
+          "as": "followupInstruction",
+          "description": {
+            "en": "The followup instruction for the agent to execute.",
+            "de": "Die Nachfolge-Anweisung, die der Agent ausführen soll."
+          },
+          "type": "string",
+          "position": "payload:prompt.text",
+          "source": "field",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "output": {
+    "AGENT_ID": "out.id"
+  },
+  "messages": {
+    "success": {
+      "en": "Followup added successfully to agent {{AGENT_ID}}.",
+      "de": "Nachfolge erfolgreich zu Agent {{AGENT_ID}} hinzugefügt."
+    }
+  },
+  "defaultChain": "multiversx"
+}

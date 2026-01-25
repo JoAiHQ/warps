@@ -1,0 +1,114 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Linear: Create Issue",
+  "title": {
+    "en": "Create a Linear issue",
+    "de": "Ein Linear-Issue erstellen"
+  },
+  "description": {
+    "en": "Create a new issue in a Linear team. Supports title, description, assignee, and priority.",
+    "de": "Erstelle ein neues Issue in einem Linear-Team. Unterstützt Titel, Beschreibung, Zugewiesenen und Priorität."
+  },
+  "vars": {
+    "API_KEY": "env:LINEAR_API_KEY|Get your API key from Linear Settings > API at https://linear.app/settings/api"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Create Issue",
+        "de": "Issue erstellen"
+      },
+      "destination": {
+        "url": "INJECT:API_GRAPHQL",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{API_KEY}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Team ID",
+          "as": "teamId",
+          "description": {
+            "en": "The ID of the team to create the issue in. You can find team IDs using the 'List Teams' warp."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:variables.teamId"
+        },
+        {
+          "name": "Title",
+          "as": "title",
+          "description": {
+            "en": "The title of the issue."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:variables.title"
+        },
+        {
+          "name": "Description",
+          "as": "description",
+          "description": {
+            "en": "The issue description. Supports Markdown."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:variables.description"
+        },
+        {
+          "name": "Assignee ID",
+          "as": "assigneeId",
+          "description": {
+            "en": "The ID of the user to assign this issue to. Optional."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:variables.assigneeId"
+        },
+        {
+          "name": "Priority",
+          "as": "priority",
+          "description": {
+            "en": "Issue priority: 0 (No priority), 1 (Urgent), 2 (High), 3 (Medium), 4 (Low)."
+          },
+          "type": "number",
+          "source": "field",
+          "required": false,
+          "position": "payload:variables.priority"
+        },
+        {
+          "name": "Query",
+          "as": "query",
+          "description": {
+            "en": "GraphQL mutation"
+          },
+          "type": "string",
+          "source": "hidden",
+          "position": "payload:query",
+          "default": "mutation IssueCreate($teamId: String!, $title: String!, $description: String, $assigneeId: String, $priority: Int) { issueCreate(input: { teamId: $teamId title: $title description: $description assigneeId: $assigneeId priority: $priority }) { success issue { id title url identifier } } }"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "ISSUE_ID": "out.data.issueCreate.issue.id",
+    "ISSUE_TITLE": "out.data.issueCreate.issue.title",
+    "ISSUE_URL": "out.data.issueCreate.issue.url",
+    "ISSUE_IDENTIFIER": "out.data.issueCreate.issue.identifier",
+    "SUCCESS": "out.data.issueCreate.success"
+  },
+  "messages": {
+    "success": {
+      "en": "Issue {{ISSUE_IDENTIFIER}} created successfully! View it at {{ISSUE_URL}}",
+      "de": "Issue {{ISSUE_IDENTIFIER}} erfolgreich erstellt! Ansehen unter {{ISSUE_URL}}"
+    }
+  },
+  "defaultChain": "multiversx"
+}

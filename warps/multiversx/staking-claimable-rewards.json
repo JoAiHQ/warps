@@ -1,0 +1,40 @@
+{
+  "protocol": "warp:3.0.0",
+  "chain": "multiversx",
+  "name": "MultiversX: Staking - Get Claimable Rewards",
+  "title": "Check your claimable MultiversX eGold staking rewards balance",
+  "description": "View and check your claimable MultiversX eGold (EGLD) staking rewards balance on MultiversX. See how much eGold you have available to claim from your staking delegations across all validators. Track your accumulated eGold rewards and claimable balance from multiple staking providers in one place.",
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Check claimable balance",
+      "destination": {
+        "url": "{{CHAIN_API}}/accounts/{{ADDRESS}}/delegation"
+      },
+      "inputs": [
+        {
+          "name": "Address",
+          "as": "ADDRESS",
+          "description": "Your MultiversX wallet address to check claimable eGold staking rewards for.",
+          "type": "address",
+          "source": "field",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "output": {
+    "DELEGATIONS": "out",
+    "REWARDS_ACCUMLATED": "transform:() => results.DELEGATIONS.reduce((acc, delegation) => acc + BigInt(delegation.claimableRewards), BigInt(0)).toString()",
+    "REWARDS": "transform:() => Number(results.REWARDS_ACCUMLATED) / 10 ** 18",
+    "REWARDS_FORMATTED": "transform:() => results.REWARDS.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })",
+    "PROVIDER_AMOUNT": "transform:() => results.DELEGATIONS.length"
+  },
+  "messages": {
+    "success": "Your claimable staking rewards balance: {{REWARDS_FORMATTED}} eGold (EGLD) from {{PROVIDER_AMOUNT}} staking providers.",
+    "card": "Pending Rewards: {{REWARDS_FORMATTED}} eGold",
+    "info": "You have {{REWARDS_FORMATTED}} eGold (EGLD) available to claim from {{PROVIDER_AMOUNT}} staking providers on MultiversX"
+  },
+  "next": "multiversx-staking-claim?provider={{DELEGATIONS[].contract}}",
+  "defaultChain": "multiversx"
+}

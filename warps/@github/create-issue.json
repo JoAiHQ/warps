@@ -1,0 +1,110 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "GitHub: Create Issue",
+  "title": {
+    "en": "Create a GitHub issue",
+    "de": "Ein GitHub-Issue erstellen"
+  },
+  "description": {
+    "en": "Create a new issue in a GitHub repository. Supports title, body, labels, and assignees.",
+    "de": "Erstelle ein neues Issue in einem GitHub-Repository. Unterstützt Titel, Beschreibung, Labels und Zuweisungen."
+  },
+  "vars": {
+    "API_KEY": "env:GITHUB_TOKEN|Get your personal access token from https://github.com/settings/tokens"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Create Issue",
+        "de": "Issue erstellen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/repos/{{OWNER}}/{{REPO}}/issues",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{API_KEY}}",
+          "Accept": "application/vnd.github.v3+json",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Owner",
+          "as": "OWNER",
+          "description": {
+            "en": "The owner of the repository (username or organization)."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Repository",
+          "as": "REPO",
+          "description": {
+            "en": "The name of the repository."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Title",
+          "as": "title",
+          "description": {
+            "en": "The title of the issue."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:title"
+        },
+        {
+          "name": "Body",
+          "as": "body",
+          "description": {
+            "en": "The contents of the issue. Supports Markdown."
+          },
+          "type": "string",
+          "source": "field",
+          "position": "payload:body"
+        },
+        {
+          "name": "Labels",
+          "as": "labels",
+          "description": {
+            "en": "Labels to associate with this issue. Provide as a JSON array string, e.g., [\"bug\", \"enhancement\"]."
+          },
+          "type": "string",
+          "source": "field",
+          "position": "payload:labels",
+          "required": false
+        },
+        {
+          "name": "Assignees",
+          "as": "assignees",
+          "description": {
+            "en": "Usernames of people to assign this issue to. Provide as a JSON array string, e.g., [\"username1\", \"username2\"]."
+          },
+          "type": "string",
+          "source": "field",
+          "position": "payload:assignees",
+          "required": false
+        }
+      ]
+    }
+  ],
+  "output": {
+    "ISSUE_NUMBER": "out.number",
+    "ISSUE_URL": "out.html_url",
+    "ISSUE_ID": "out.id"
+  },
+  "messages": {
+    "success": {
+      "en": "Issue #{{ISSUE_NUMBER}} created successfully! View it at {{ISSUE_URL}}",
+      "de": "Issue #{{ISSUE_NUMBER}} erfolgreich erstellt! Ansehen unter {{ISSUE_URL}}"
+    }
+  },
+  "defaultChain": "multiversx"
+}

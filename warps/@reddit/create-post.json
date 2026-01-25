@@ -1,0 +1,156 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Reddit: Create Post",
+  "title": {
+    "en": "Create a Reddit Post",
+    "de": "Reddit-Post erstellen"
+  },
+  "description": {
+    "en": "Create a new post in a Reddit subreddit. Supports both text posts and link posts.",
+    "de": "Erstelle einen neuen Post in einem Reddit-Subreddit. Unterstützt sowohl Text-Posts als auch Link-Posts."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:REDDIT_ACCESS_TOKEN|Get your access token from Reddit OAuth2 authentication. See https://www.reddit.com/prefs/apps to create an app."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Create Post",
+        "de": "Post erstellen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/api/submit",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}",
+          "User-Agent": "Warpbase/1.0",
+          "Content-Type": "application/x-www-form-urlencoded"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Subreddit",
+          "as": "sr",
+          "description": {
+            "en": "The subreddit name (without r/ prefix).",
+            "de": "Der Subreddit-Name (ohne r/ Präfix)."
+          },
+          "bot": "The subreddit name without the 'r/' prefix where you want to post.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:sr"
+        },
+        {
+          "name": "Title",
+          "as": "title",
+          "description": {
+            "en": "The title of the post.",
+            "de": "Der Titel des Posts."
+          },
+          "bot": "The title of your Reddit post. This is required and will be displayed prominently.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:title"
+        },
+        {
+          "name": "Text",
+          "as": "text",
+          "description": {
+            "en": "The text content of the post (for text posts). Leave empty for link posts.",
+            "de": "Der Textinhalt des Posts (für Text-Posts). Für Link-Posts leer lassen."
+          },
+          "bot": "The text content of your post. Use this for text/self posts. Leave empty if posting a link.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:text"
+        },
+        {
+          "name": "URL",
+          "as": "url",
+          "description": {
+            "en": "The URL to link to (for link posts). Leave empty for text posts.",
+            "de": "Die zu verlinkende URL (für Link-Posts). Für Text-Posts leer lassen."
+          },
+          "bot": "The URL you want to share. Use this for link posts. Leave empty if creating a text post.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:url"
+        },
+        {
+          "name": "Kind",
+          "as": "kind",
+          "description": {
+            "en": "Post type: 'self' for text posts, 'link' for link posts.",
+            "de": "Post-Typ: 'self' für Text-Posts, 'link' für Link-Posts."
+          },
+          "bot": "The type of post. Use 'self' for text posts or 'link' for link posts. Defaults to 'self' if text is provided, 'link' if URL is provided.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:kind",
+          "default": "self"
+        },
+        {
+          "name": "Send Replies",
+          "as": "sendreplies",
+          "description": {
+            "en": "Whether to send inbox notifications for replies.",
+            "de": "Ob Inbox-Benachrichtigungen für Antworten gesendet werden sollen."
+          },
+          "bot": "If true, you'll receive inbox notifications when people reply to your post.",
+          "type": "bool",
+          "source": "field",
+          "required": false,
+          "position": "payload:sendreplies",
+          "default": true
+        },
+        {
+          "name": "NSFW",
+          "as": "nsfw",
+          "description": {
+            "en": "Mark the post as Not Safe For Work.",
+            "de": "Markiere den Post als nicht sicher für die Arbeit."
+          },
+          "bot": "If true, marks the post as NSFW (Not Safe For Work).",
+          "type": "bool",
+          "source": "field",
+          "required": false,
+          "position": "payload:nsfw",
+          "default": false
+        },
+        {
+          "name": "Spoiler",
+          "as": "spoiler",
+          "description": {
+            "en": "Mark the post as a spoiler.",
+            "de": "Markiere den Post als Spoiler."
+          },
+          "bot": "If true, marks the post as containing spoilers.",
+          "type": "bool",
+          "source": "field",
+          "required": false,
+          "position": "payload:spoiler",
+          "default": false
+        }
+      ]
+    }
+  ],
+  "output": {
+    "POST_ID": "transform:() => results.out?.json?.data?.id || null",
+    "POST_NAME": "transform:() => results.out?.json?.data?.name || null",
+    "POST_URL": "transform:() => results.out?.json?.data?.url || null",
+    "POST_PERMALINK": "transform:() => results.out?.json?.data?.permalink || null"
+  },
+  "messages": {
+    "success": {
+      "en": "Post created successfully! Post ID: {{POST_ID}}",
+      "de": "Post erfolgreich erstellt! Post-ID: {{POST_ID}}"
+    }
+  },
+  "defaultChain": "multiversx"
+}

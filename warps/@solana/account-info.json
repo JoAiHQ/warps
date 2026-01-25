@@ -1,0 +1,111 @@
+{
+  "protocol": "warp:3.0.0",
+  "chain": "solana",
+  "name": "Solana: Account Info",
+  "title": {
+    "en": "View Solana Account Information",
+    "de": "Solana Kontoinformationen anzeigen"
+  },
+  "description": {
+    "en": "Retrieve detailed Solana account data via the Solana JSON RPC API. Check lamport balance, SOL balance, owner program, and executable status for a wallet address. Ideal for wallet status checks, balance tracking, and account inspection on the Solana blockchain.",
+    "de": "Rufe detaillierte Solana-Kontodaten ueber die Solana JSON RPC API ab. Pruefe Lamport-Saldo, SOL-Saldo, Owner-Programm und Executable-Status fuer eine Wallet-Adresse. Ideal fuer Wallet-Statuschecks, Saldo-Tracking und Konto-Inspektion auf der Solana-Blockchain."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "View Account Info",
+        "de": "Kontoinformationen anzeigen"
+      },
+      "destination": {
+        "url": "INJECT:RPC",
+        "method": "POST",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Address",
+          "as": "ADDRESS",
+          "description": {
+            "en": "The wallet address to inspect (defaults to your wallet).",
+            "de": "Die Wallet-Adresse, die geprueft werden soll (Standard: deine Wallet)."
+          },
+          "type": "address",
+          "source": "field",
+          "default": "{{USER_WALLET}}",
+          "position": "payload:params.0"
+        },
+        {
+          "name": "Commitment",
+          "as": "COMMITMENT",
+          "description": {
+            "en": "Optional Solana commitment level (processed, confirmed, finalized).",
+            "de": "Optionales Solana-Commitment-Level (processed, confirmed, finalized)."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:params.1.commitment"
+        },
+        {
+          "name": "Encoding",
+          "as": "ENCODING",
+          "type": "string",
+          "source": "hidden",
+          "position": "payload:params.1.encoding",
+          "default": "jsonParsed"
+        },
+        {
+          "name": "Method",
+          "as": "METHOD",
+          "type": "string",
+          "source": "hidden",
+          "position": "payload:method",
+          "default": "getAccountInfo"
+        },
+        {
+          "name": "JSON RPC",
+          "as": "JSONRPC",
+          "type": "string",
+          "source": "hidden",
+          "position": "payload:jsonrpc",
+          "default": "2.0"
+        },
+        {
+          "name": "Request ID",
+          "as": "REQUEST_ID",
+          "type": "number",
+          "source": "hidden",
+          "position": "payload:id",
+          "default": 1
+        }
+      ]
+    }
+  ],
+  "output": {
+    "ACCOUNT_DATA": "out.result.value",
+    "BALANCE_LAMPORTS": "transform:() => { const lamports = results.ACCOUNT_DATA?.lamports ?? 0; return BigInt(lamports).toString(); }",
+    "BALANCE_SOL": "transform:() => { const lamports = BigInt(results.BALANCE_LAMPORTS || '0'); return (Number(lamports) / 1e9).toFixed(4); }",
+    "BALANCE_FORMATTED": "transform:() => parseFloat(results.BALANCE_SOL).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 4 })",
+    "OWNER": "transform:() => results.ACCOUNT_DATA?.owner || null",
+    "EXECUTABLE": "transform:() => results.ACCOUNT_DATA?.executable || false",
+    "RENT_EPOCH": "transform:() => results.ACCOUNT_DATA?.rentEpoch ?? null"
+  },
+  "messages": {
+    "success": {
+      "en": "Balance: {{BALANCE_FORMATTED}} SOL, Owner: {{OWNER}}",
+      "de": "Kontostand: {{BALANCE_FORMATTED}} SOL, Owner: {{OWNER}}"
+    },
+    "card": {
+      "en": "{{BALANCE_FORMATTED}} SOL",
+      "de": "{{BALANCE_FORMATTED}} SOL"
+    },
+    "info": {
+      "en": "This account has {{BALANCE_FORMATTED}} SOL",
+      "de": "Dieses Konto hat {{BALANCE_FORMATTED}} SOL"
+    }
+  },
+  "defaultChain": "solana"
+}

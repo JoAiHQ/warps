@@ -1,0 +1,57 @@
+{
+  "protocol": "warp:3.0.0",
+  "chain": "multiversx",
+  "name": "PeerMe MultiSig: Sign Action",
+  "title": "Sign a proposal",
+  "description": "Sign a MultiSig proposal as a board member. Your signature counts toward reaching the quorum required to execute the proposal. Only board members can sign proposals.",
+  "vars": {
+    "MULTISIG_ADDRESS": "query:multisig"
+  },
+  "actions": [
+    {
+      "type": "contract",
+      "label": "Sign proposal",
+      "address": "{{MULTISIG_ADDRESS}}",
+      "func": "sign",
+      "args": [],
+      "gasLimit": 10000000,
+      "abi": "INJECT:peerme/multisig.abi.json",
+      "inputs": [
+        {
+          "name": "Action ID",
+          "as": "ACTION_ID",
+          "description": "The ID of the proposal to sign.",
+          "type": "number",
+          "position": "arg:1",
+          "source": "field",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "output": {
+    "SUCCESS": "out"
+  },
+  "messages": {
+    "success": "Proposal {{ACTION_ID}} signed successfully. Your signature has been recorded.",
+    "card": "Signed Proposal #{{ACTION_ID}}"
+  },
+  "alerts": {
+    "quorum_reached": {
+      "label": {
+        "en": "Get notified when quorum is reached after signing",
+        "de": "Benachrichtigung erhalten, wenn das Quorum nach der Unterzeichnung erreicht ist"
+      },
+      "trigger": "event:quorumReached",
+      "subject": {
+        "en": "MultiSig proposal ready to execute",
+        "de": "MultiSig-Vorschlag bereit zur Ausführung"
+      },
+      "body": {
+        "en": "Proposal #{{ACTION_ID}} has reached quorum and is ready to be executed",
+        "de": "Vorschlag #{{ACTION_ID}} hat das Quorum erreicht und ist bereit zur Ausführung"
+      }
+    }
+  },
+  "defaultChain": "multiversx"
+}

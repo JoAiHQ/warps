@@ -1,0 +1,126 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Linear: Update Issue",
+  "title": {
+    "en": "Update a Linear issue",
+    "de": "Ein Linear-Issue aktualisieren"
+  },
+  "description": {
+    "en": "Update an existing Linear issue. Change title, description, assignee, state, or priority.",
+    "de": "Aktualisiere ein bestehendes Linear-Issue. Ändere Titel, Beschreibung, Zugewiesenen, Status oder Priorität."
+  },
+  "vars": {
+    "API_KEY": "env:LINEAR_API_KEY|Get your API key from Linear Settings > API at https://linear.app/settings/api"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Update Issue",
+        "de": "Issue aktualisieren"
+      },
+      "destination": {
+        "url": "INJECT:API_GRAPHQL",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{API_KEY}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Issue ID",
+          "as": "issueId",
+          "description": {
+            "en": "The ID of the issue to update."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:variables.issueId"
+        },
+        {
+          "name": "Title",
+          "as": "title",
+          "description": {
+            "en": "New title for the issue. Leave empty to keep current title."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:variables.title"
+        },
+        {
+          "name": "Description",
+          "as": "description",
+          "description": {
+            "en": "New description for the issue. Leave empty to keep current description."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:variables.description"
+        },
+        {
+          "name": "State ID",
+          "as": "stateId",
+          "description": {
+            "en": "ID of the new state (e.g., 'backlog', 'unstarted', 'started', 'completed', 'canceled'). Use 'Get Issue' to find state IDs."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:variables.stateId"
+        },
+        {
+          "name": "Assignee ID",
+          "as": "assigneeId",
+          "description": {
+            "en": "ID of the user to assign this issue to. Leave empty to unassign."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:variables.assigneeId"
+        },
+        {
+          "name": "Priority",
+          "as": "priority",
+          "description": {
+            "en": "Issue priority: 0 (No priority), 1 (Urgent), 2 (High), 3 (Medium), 4 (Low)."
+          },
+          "type": "number",
+          "source": "field",
+          "required": false,
+          "position": "payload:variables.priority"
+        },
+        {
+          "name": "Query",
+          "as": "query",
+          "description": {
+            "en": "GraphQL mutation"
+          },
+          "type": "string",
+          "source": "hidden",
+          "position": "payload:query",
+          "default": "mutation IssueUpdate($issueId: String!, $title: String, $description: String, $stateId: String, $assigneeId: String, $priority: Int) { issueUpdate(id: $issueId input: { title: $title description: $description stateId: $stateId assigneeId: $assigneeId priority: $priority }) { success issue { id identifier title url state { name } } } } }"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "ISSUE_ID": "out.data.issueUpdate.issue.id",
+    "IDENTIFIER": "out.data.issueUpdate.issue.identifier",
+    "TITLE": "out.data.issueUpdate.issue.title",
+    "URL": "out.data.issueUpdate.issue.url",
+    "STATE": "out.data.issueUpdate.issue.state.name",
+    "SUCCESS": "out.data.issueUpdate.success"
+  },
+  "messages": {
+    "success": {
+      "en": "Issue {{IDENTIFIER}} updated successfully! View it at {{URL}}",
+      "de": "Issue {{IDENTIFIER}} erfolgreich aktualisiert! Ansehen unter {{URL}}"
+    }
+  },
+  "defaultChain": "multiversx"
+}

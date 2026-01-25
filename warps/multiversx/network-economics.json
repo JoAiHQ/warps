@@ -1,0 +1,54 @@
+{
+  "protocol": "warp:3.0.0",
+  "chain": "multiversx",
+  "name": "MultiversX: Network Economics",
+  "title": {
+    "en": "View MultiversX Network Economics",
+    "de": "MultiversX Netzwerkökonomie anzeigen"
+  },
+  "description": {
+    "en": "View MultiversX network economics and market data. Get current EGLD price, market capitalization, total supply, circulating supply, total staked amount, annual percentage rate (APR) for staking, and top-up rewards information. Track economic metrics and staking rewards across the network.",
+    "de": "Zeige MultiversX Netzwerkökonomie und Marktdaten. Erhalte aktuellen EGLD-Preis, Marktkapitalisierung, Gesamtversorgung, zirkulierende Versorgung, insgesamt gestakten Betrag, jährliche prozentuale Rendite (APR) für Staking und Top-up-Belohnungsinformationen. Verfolge Wirtschaftskennzahlen und Staking-Belohnungen im Netzwerk."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "View Economics",
+        "de": "Ökonomie anzeigen"
+      },
+      "destination": {
+        "url": "{{CHAIN_API}}/economics"
+      },
+      "inputs": []
+    }
+  ],
+  "output": {
+    "ECONOMICS_DATA": "out",
+    "EGLD_PRICE": "transform:() => results.ECONOMICS_DATA?.price || 0",
+    "EGLD_PRICE_FORMATTED": "transform:() => parseFloat(results.EGLD_PRICE || 0).toLocaleString('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 2, maximumFractionDigits: 2 })",
+    "MARKET_CAP": "transform:() => results.ECONOMICS_DATA?.marketCap || 0",
+    "MARKET_CAP_FORMATTED": "transform:() => { const cap = parseFloat(results.MARKET_CAP || 0); return cap >= 1e9 ? `$${(cap / 1e9).toFixed(2)}B` : cap >= 1e6 ? `$${(cap / 1e6).toFixed(2)}M` : `$${cap.toLocaleString('en-US')}`; }",
+    "TOTAL_SUPPLY": "transform:() => results.ECONOMICS_DATA?.totalSupply || 0",
+    "CIRCULATING_SUPPLY": "transform:() => results.ECONOMICS_DATA?.circulatingSupply || 0",
+    "STAKED": "transform:() => results.ECONOMICS_DATA?.staked || 0",
+    "STAKED_FORMATTED": "transform:() => { const staked = parseFloat(results.STAKED || 0); return staked >= 1e6 ? `${(staked / 1e6).toFixed(2)}M EGLD` : `${staked.toLocaleString('en-US')} EGLD`; }",
+    "APR": "transform:() => results.ECONOMICS_DATA?.apr || 0",
+    "TOP_UP_REWARDS": "transform:() => results.ECONOMICS_DATA?.topUpRewards || 0"
+  },
+  "messages": {
+    "success": {
+      "en": "EGLD Price: {{EGLD_PRICE_FORMATTED}}, Market Cap: {{MARKET_CAP_FORMATTED}}, Staked: {{STAKED_FORMATTED}}, APR: {{APR}}%",
+      "de": "EGLD-Preis: {{EGLD_PRICE_FORMATTED}}, Marktkapitalisierung: {{MARKET_CAP_FORMATTED}}, Gestaked: {{STAKED_FORMATTED}}, APR: {{APR}}%"
+    },
+    "card": {
+      "en": "{{EGLD_PRICE_FORMATTED}}",
+      "de": "{{EGLD_PRICE_FORMATTED}}"
+    },
+    "info": {
+      "en": "EGLD price: {{EGLD_PRICE_FORMATTED}}",
+      "de": "EGLD-Preis: {{EGLD_PRICE_FORMATTED}}"
+    }
+  },
+  "defaultChain": "multiversx"
+}

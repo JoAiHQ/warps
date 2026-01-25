@@ -1,0 +1,54 @@
+{
+  "protocol": "warp:3.0.0",
+  "chain": "multiversx",
+  "name": "MultiversX: Account Tokens",
+  "title": {
+    "en": "View MultiversX Account Tokens",
+    "de": "MultiversX Kontotoken anzeigen"
+  },
+  "description": {
+    "en": "View all ESDT tokens held by a MultiversX blockchain account with their balances. See your complete token portfolio including token identifiers, balances, decimals, names, and tickers. Track all your token holdings across the MultiversX network in one view.",
+    "de": "Zeige alle ESDT-Token an, die von einem MultiversX Blockchain-Konto gehalten werden, mit ihren Salden. Sieh dein vollständiges Token-Portfolio einschließlich Token-Identifikatoren, Salden, Dezimalstellen, Namen und Ticker. Verfolge alle deine Token-Bestände im MultiversX-Netzwerk auf einen Blick."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "View Tokens",
+        "de": "Token anzeigen"
+      },
+      "destination": {
+        "url": "{{CHAIN_API}}/accounts/{{ADDRESS}}/tokens"
+      },
+      "inputs": [
+        {
+          "name": "Address",
+          "as": "ADDRESS",
+          "description": {
+            "en": "The wallet address to view tokens for.",
+            "de": "Die Wallet-Adresse, für die Token angezeigt werden sollen."
+          },
+          "type": "address",
+          "source": "field",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "output": {
+    "TOKENS": "transform:() => results.out || []",
+    "TOKEN_COUNT": "transform:() => Array.isArray(results.TOKENS) ? results.TOKENS.length : 0",
+    "TOKENS_SUMMARY": "transform:() => { const tokens = results.TOKENS || []; return tokens.map((token: any) => ({ identifier: token.identifier, balance: token.balance, decimals: token.decimals, name: token.name, ticker: token.ticker })); }"
+  },
+  "messages": {
+    "success": {
+      "en": "Found {{TOKEN_COUNT}} token(s) in this account.",
+      "de": "{{TOKEN_COUNT}} Token in diesem Konto gefunden."
+    },
+    "info": {
+      "en": "This account holds {{TOKEN_COUNT}} different token(s)",
+      "de": "Dieses Konto hält {{TOKEN_COUNT}} verschiedene Token"
+    }
+  },
+  "defaultChain": "multiversx"
+}

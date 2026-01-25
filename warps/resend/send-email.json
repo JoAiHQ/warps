@@ -1,0 +1,116 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Resend: Send Email",
+  "title": {
+    "en": "Send an email",
+    "de": "Eine E-Mail senden"
+  },
+  "description": {
+    "en": "Send an email using Resend's email API. Supports HTML, plain text, attachments, and custom headers.",
+    "de": "Sende eine E-Mail über die Resend E-Mail-API. Unterstützt HTML, Plain-Text, Anhänge und benutzerdefinierte Header."
+  },
+  "vars": {
+    "API_KEY": "env:RESEND_API_KEY|Get your API key from the Resend.com Dashboard at https://resend.com/api-keys"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Send Email",
+      "destination": {
+        "url": "INJECT:API_EMAILS",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{API_KEY}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "From",
+          "as": "from",
+          "description": "Sender email address. To include a friendly name, use the format 'Your Name <email@example.com>'.",
+          "bot": "The sender email address. Can include a friendly name like 'Acme <onboarding@resend.dev>'.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:from"
+        },
+        {
+          "name": "To",
+          "as": "to",
+          "description": "Recipient email address(es). For multiple addresses, separate with commas.",
+          "bot": "The recipient email address or addresses. Can be a single email or comma-separated list of emails.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:to"
+        },
+        {
+          "name": "Subject",
+          "as": "subject",
+          "description": "Email subject line.",
+          "bot": "The subject line of the email.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:subject"
+        },
+        {
+          "name": "HTML Content",
+          "as": "html",
+          "description": "The HTML version of the email message.",
+          "bot": "The HTML content of the email. This is optional if plain text is provided.",
+          "type": "string",
+          "source": "field",
+          "position": "payload:html"
+        },
+        {
+          "name": "Plain Text Content",
+          "as": "text",
+          "description": "The plain text version of the email message.",
+          "bot": "The plain text content of the email. If not provided, HTML will be used to generate plain text.",
+          "type": "string",
+          "source": "field",
+          "position": "payload:text"
+        },
+        {
+          "name": "Reply To",
+          "as": "replyTo",
+          "description": "Reply-to email address.",
+          "bot": "The email address that replies should be sent to.",
+          "type": "string",
+          "source": "field",
+          "position": "payload:replyTo"
+        },
+        {
+          "name": "CC",
+          "as": "cc",
+          "description": "CC recipient email address(es). Separate multiple addresses with commas.",
+          "bot": "Carbon copy recipient email addresses. Can be a single email or comma-separated list.",
+          "type": "string",
+          "source": "field",
+          "position": "payload:cc"
+        },
+        {
+          "name": "BCC",
+          "as": "bcc",
+          "description": "BCC recipient email address(es). Separate multiple addresses with commas.",
+          "bot": "Blind carbon copy recipient email addresses. Can be a single email or comma-separated list.",
+          "type": "string",
+          "source": "field",
+          "position": "payload:bcc"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "EMAIL_ID": "out.id"
+  },
+  "messages": {
+    "success": {
+      "en": "Email sent successfully! Email ID: {{EMAIL_ID}}",
+      "de": "E-Mail erfolgreich gesendet! E-Mail-ID: {{EMAIL_ID}}"
+    }
+  },
+  "defaultChain": "multiversx"
+}

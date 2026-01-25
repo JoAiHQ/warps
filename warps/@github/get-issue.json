@@ -1,0 +1,81 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "GitHub: Get Issue",
+  "title": {
+    "en": "Get issue details",
+    "de": "Issue-Details abrufen"
+  },
+  "description": {
+    "en": "Retrieve detailed information about a specific GitHub issue including comments, labels, and assignees.",
+    "de": "Ruft detaillierte Informationen über ein bestimmtes GitHub-Issue ab, einschließlich Kommentaren, Labels und Zugewiesenen."
+  },
+  "vars": {
+    "API_KEY": "env:GITHUB_TOKEN|Get your personal access token from https://github.com/settings/tokens"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Get Issue",
+        "de": "Issue abrufen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/repos/{{OWNER}}/{{REPO}}/issues/{{ISSUE_NUMBER}}",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{API_KEY}}",
+          "Accept": "application/vnd.github.v3+json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Owner",
+          "as": "OWNER",
+          "description": {
+            "en": "The owner of the repository (username or organization)."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Repository",
+          "as": "REPO",
+          "description": {
+            "en": "The name of the repository."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Issue Number",
+          "as": "ISSUE_NUMBER",
+          "description": {
+            "en": "The number of the issue."
+          },
+          "type": "number",
+          "source": "field",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "output": {
+    "NUMBER": "out.number",
+    "TITLE": "out.title",
+    "BODY": "out.body",
+    "STATE": "out.state",
+    "URL": "out.html_url",
+    "LABELS": "out.labels",
+    "ASSIGNEES": "out.assignees",
+    "AUTHOR": "out.user.login"
+  },
+  "messages": {
+    "success": {
+      "en": "Issue #{{NUMBER}}: {{TITLE}} ({{STATE}})",
+      "de": "Issue #{{NUMBER}}: {{TITLE}} ({{STATE}})"
+    }
+  },
+  "defaultChain": "multiversx"
+}

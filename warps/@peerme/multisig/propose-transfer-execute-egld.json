@@ -1,0 +1,88 @@
+{
+  "protocol": "warp:3.0.0",
+  "chain": "multiversx",
+  "name": "PeerMe MultiSig: Propose Transfer Execute EGLD",
+  "title": "Propose EGLD transfer and execution",
+  "description": "Create a proposal to transfer EGLD from the MultiSig wallet and optionally execute a smart contract function. This allows the MultiSig to send funds and interact with other contracts. The proposal requires quorum approval before execution.",
+  "vars": {
+    "MULTISIG_ADDRESS": "query:multisig"
+  },
+  "actions": [
+    {
+      "type": "contract",
+      "label": "Create proposal",
+      "address": "{{MULTISIG_ADDRESS}}",
+      "func": "proposeTransferExecute",
+      "args": [],
+      "gasLimit": 10000000,
+      "abi": "INJECT:peerme/multisig.abi.json",
+      "inputs": [
+        {
+          "name": "Recipient Address",
+          "as": "TO_ADDRESS",
+          "description": "The wallet address to send EGLD to.",
+          "type": "address",
+          "position": "arg:1",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "EGLD Amount",
+          "as": "EGLD_AMOUNT",
+          "description": "The amount of EGLD to transfer (in wei, will be scaled by 18 decimals).",
+          "type": "biguint",
+          "position": "arg:2",
+          "source": "field",
+          "required": true,
+          "min": 1,
+          "modifier": "scale:18"
+        },
+        {
+          "name": "Gas Limit",
+          "as": "GAS_LIMIT",
+          "description": "Optional gas limit for the execution (leave empty for default).",
+          "type": "number",
+          "position": "arg:3",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Function Call",
+          "as": "FUNCTION_CALL",
+          "description": "Optional function call data (hex encoded bytes).",
+          "type": "string",
+          "position": "arg:4",
+          "source": "field",
+          "required": false
+        }
+      ]
+    }
+  ],
+  "output": {
+    "ACTION_ID": "out",
+    "ACTION_ID_NUMBER": "transform:() => results.ACTION_ID ? Number(results.ACTION_ID) : null",
+    "EGLD_AMOUNT_FORMATTED": "transform:() => (Number(results.EGLD_AMOUNT) / 10 ** 18).toLocaleString('en-US', { minimumFractionDigits: 4, maximumFractionDigits: 4 })"
+  },
+  "messages": {
+    "success": "Proposal created successfully. Action ID: {{ACTION_ID_NUMBER}}. The proposal to transfer {{EGLD_AMOUNT_FORMATTED}} EGLD is now awaiting signatures.",
+    "card": "Proposal #{{ACTION_ID_NUMBER}}: Transfer {{EGLD_AMOUNT_FORMATTED}} EGLD"
+  },
+  "alerts": {
+    "proposal_created": {
+      "label": {
+        "en": "Get notified when this proposal is signed",
+        "de": "Benachrichtigung erhalten, wenn dieser Vorschlag unterzeichnet wird"
+      },
+      "trigger": "event:sign",
+      "subject": {
+        "en": "Multisig transfer proposal signed",
+        "de": "MultiSig-Übertragungsvorschlag unterzeichnet"
+      },
+      "body": {
+        "en": "A board member has signed proposal #{{ACTION_ID_NUMBER}} to transfer {{EGLD_AMOUNT_FORMATTED}} EGLD",
+        "de": "Ein Vorstandsmitglied hat Vorschlag #{{ACTION_ID_NUMBER}} zur Übertragung von {{EGLD_AMOUNT_FORMATTED}} EGLD unterzeichnet"
+      }
+    }
+  },
+  "defaultChain": "multiversx"
+}

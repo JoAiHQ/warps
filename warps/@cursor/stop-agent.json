@@ -1,0 +1,56 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Cursor: Stop Agent",
+  "title": {
+    "en": "Stop an agent",
+    "de": "Einen Agenten stoppen"
+  },
+  "description": {
+    "en": "Stop a running cloud agent. This pauses the agent's execution without deleting it. Stopped agents cannot be resumed.",
+    "de": "Stoppe einen laufenden Cloud-Agenten. Dies pausiert die Ausführung des Agenten, ohne ihn zu löschen. Gestoppte Agenten können nicht fortgesetzt werden."
+  },
+  "vars": {
+    "API_KEY": "env:CURSOR_API_KEY|Get your API key from Cursor Dashboard at https://cursor.com/settings/api"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Stop Agent",
+        "de": "Agenten stoppen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v0/agents/{{AGENT_ID}}/stop",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{API_KEY}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Agent ID",
+          "as": "AGENT_ID",
+          "description": {
+            "en": "Unique identifier for the cloud agent to stop (e.g., 'bc_abc123').",
+            "de": "Eindeutige Kennung für den zu stoppenden Cloud-Agenten (z.B. 'bc_abc123')."
+          },
+          "type": "string",
+          "position": "path:AGENT_ID",
+          "source": "field",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "output": {
+    "AGENT_ID": "out.id"
+  },
+  "messages": {
+    "success": {
+      "en": "Agent {{AGENT_ID}} stopped successfully.",
+      "de": "Agent {{AGENT_ID}} erfolgreich gestoppt."
+    }
+  },
+  "defaultChain": "multiversx"
+}

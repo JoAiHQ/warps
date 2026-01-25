@@ -1,0 +1,67 @@
+{
+  "protocol": "warp:3.0.0",
+  "chain": "polygon",
+  "name": "Polymarket: Get Latest Markets",
+  "title": {
+    "en": "Get Latest Markets",
+    "de": "Neueste Märkte abrufen"
+  },
+  "description": {
+    "en": "Retrieve the latest active prediction markets from Polymarket using the Data API.",
+    "de": "Rufe die neuesten aktiven Prognosemärkte von Polymarket über die Data API ab."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Get Markets",
+        "de": "Märkte abrufen"
+      },
+      "destination": {
+        "url": "INJECT:API_GAMMA/markets",
+        "method": "GET"
+      },
+      "inputs": [
+        {
+          "name": "Limit",
+          "as": "limit",
+          "description": {
+            "en": "Number of markets to retrieve (default: 10).",
+            "de": "Anzahl der abzurufenden Märkte (Standard: 10)."
+          },
+          "type": "string",
+          "position": "query:limit",
+          "source": "field",
+          "required": false,
+          "default": "10"
+        },
+        {
+          "name": "Active",
+          "as": "active",
+          "description": {
+            "en": "Filter for active markets only (true/false).",
+            "de": "Nur aktive Märkte filtern (true/false)."
+          },
+          "type": "string",
+          "position": "query:active",
+          "source": "field",
+          "required": false,
+          "default": "true"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "MARKETS": "out",
+    "MARKET_COUNT": "transform:() => Array.isArray(results.MARKETS) ? results.MARKETS.length : 0",
+    "ACTIVE_MARKETS": "transform:() => Array.isArray(results.MARKETS) ? results.MARKETS.filter((m: any) => m.active && !m.closed).length : 0",
+    "LATEST_MARKETS": "transform:() => Array.isArray(results.MARKETS) ? results.MARKETS.filter((m: any) => m.active && !m.closed).slice(0, 5).map((m: any) => ({ question: m.question, volume: m.volumeNum, conditionId: m.conditionId, endDate: m.endDate })) : []"
+  },
+  "messages": {
+    "success": {
+      "en": "Retrieved {{MARKET_COUNT}} markets ({{ACTIVE_MARKETS}} active)",
+      "de": "{{MARKET_COUNT}} Märkte abgerufen ({{ACTIVE_MARKETS}} aktiv)"
+    }
+  },
+  "defaultChain": "polygon"
+}

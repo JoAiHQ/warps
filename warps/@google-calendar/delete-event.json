@@ -1,0 +1,66 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Google Calendar: Delete Event",
+  "title": {
+    "en": "Delete calendar event",
+    "de": "Kalendereintrag löschen"
+  },
+  "description": {
+    "en": "Delete an event from your Google Calendar. This action cannot be undone.",
+    "de": "Lösche einen Eintrag aus deinem Google Kalender. Diese Aktion kann nicht rückgängig gemacht werden."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:GOOGLE_CALENDAR_ACCESS_TOKEN|OAuth 2.0 access token from Google. Get it from Google Cloud Console after OAuth authentication."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Delete Event",
+      "destination": {
+        "url": "INJECT:API_EVENTS/{{calendarId}}/events/{{eventId}}",
+        "method": "DELETE",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Calendar ID",
+          "as": "calendarId",
+          "description": "The calendar ID containing the event to delete. Use 'primary' for your primary calendar.",
+          "bot": "The calendar ID. Use 'primary' for the user's primary calendar, or the calendar email address for other calendars.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:calendarId"
+        },
+        {
+          "name": "Event ID",
+          "as": "eventId",
+          "description": "The ID of the event to delete.",
+          "bot": "The event ID from Google Calendar. You can get this from the event's details or from listing events.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:eventId"
+        },
+        {
+          "name": "Send Updates",
+          "as": "sendUpdates",
+          "description": "Whether to send notifications about the event deletion. Options: 'all', 'externalOnly', 'none'.",
+          "bot": "Whether to send notifications to attendees. Use 'all' to notify all attendees, 'externalOnly' for external attendees only, or 'none' for no notifications.",
+          "type": "string",
+          "source": "field",
+          "position": "query:sendUpdates"
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Event deleted successfully",
+      "de": "Ereignis erfolgreich gelöscht"
+    }
+  },
+  "defaultChain": "multiversx"
+}

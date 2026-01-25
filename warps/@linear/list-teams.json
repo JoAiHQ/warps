@@ -1,0 +1,56 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Linear: List Teams",
+  "title": {
+    "en": "List Linear teams",
+    "de": "Linear-Teams auflisten"
+  },
+  "description": {
+    "en": "Retrieve a list of all teams in your Linear workspace with their IDs and names.",
+    "de": "Ruft eine Liste aller Teams in deinem Linear-Workspace mit ihren IDs und Namen ab."
+  },
+  "vars": {
+    "API_KEY": "env:LINEAR_API_KEY|Get your API key from Linear Settings > API at https://linear.app/settings/api"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "List Teams",
+        "de": "Teams auflisten"
+      },
+      "destination": {
+        "url": "INJECT:API_GRAPHQL",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{API_KEY}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Query",
+          "as": "query",
+          "description": {
+            "en": "GraphQL query"
+          },
+          "type": "string",
+          "source": "hidden",
+          "position": "payload:query",
+          "default": "query { teams { nodes { id name key description } } }"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "TEAMS": "out.data.teams.nodes",
+    "COUNT": "transform:() => { return Array.isArray(results.TEAMS) ? results.TEAMS.length : 0; }"
+  },
+  "messages": {
+    "success": {
+      "en": "Found {{COUNT}} team(s).",
+      "de": "{{COUNT}} Team(s) gefunden."
+    }
+  },
+  "defaultChain": "multiversx"
+}

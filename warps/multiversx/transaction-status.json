@@ -1,0 +1,58 @@
+{
+  "protocol": "warp:3.0.0",
+  "chain": "multiversx",
+  "name": "MultiversX: Transaction Status",
+  "title": {
+    "en": "Check MultiversX Transaction Status",
+    "de": "MultiversX Transaktionsstatus prüfen"
+  },
+  "description": {
+    "en": "Check the execution status of a MultiversX transaction by its hash. Verify if a transaction is pending, successful, or failed. Track transaction completion and monitor transaction state on the MultiversX network.",
+    "de": "Prüfe den Ausführungsstatus einer MultiversX-Transaktion anhand ihres Hashes. Verifiziere, ob eine Transaktion ausstehend, erfolgreich oder fehlgeschlagen ist. Verfolge den Transaktionsabschluss und überwache den Transaktionsstatus im MultiversX-Netzwerk."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Check Status",
+        "de": "Status prüfen"
+      },
+      "destination": {
+        "url": "{{CHAIN_API}}/transactions/{{TX_HASH}}/status"
+      },
+      "inputs": [
+        {
+          "name": "Transaction Hash",
+          "as": "TX_HASH",
+          "description": {
+            "en": "The transaction hash to check status for.",
+            "de": "Der zu prüfende Transaktions-Hash."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "output": {
+    "STATUS_DATA": "out",
+    "STATUS": "transform:() => results.STATUS_DATA?.status || 'unknown'",
+    "TX_HASH": "transform:() => results.STATUS_DATA?.txHash || ''",
+    "IS_COMPLETED": "transform:() => results.STATUS === 'success' || results.STATUS === 'fail' || false",
+    "IS_PENDING": "transform:() => results.STATUS === 'pending' || false",
+    "IS_SUCCESS": "transform:() => results.STATUS === 'success' || false",
+    "IS_FAILED": "transform:() => results.STATUS === 'fail' || false"
+  },
+  "messages": {
+    "success": {
+      "en": "Transaction {{TX_HASH}} status: {{STATUS}}",
+      "de": "Transaktion {{TX_HASH}} Status: {{STATUS}}"
+    },
+    "info": {
+      "en": "Transaction status: {{STATUS}}",
+      "de": "Transaktionsstatus: {{STATUS}}"
+    }
+  },
+  "defaultChain": "multiversx"
+}

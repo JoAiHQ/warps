@@ -1,0 +1,122 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "GitHub: Create Pull Request",
+  "title": {
+    "en": "Create a pull request",
+    "de": "Einen Pull Request erstellen"
+  },
+  "description": {
+    "en": "Create a new pull request in a GitHub repository. Merge changes from one branch into another.",
+    "de": "Erstelle einen neuen Pull Request in einem GitHub-Repository. Führe Änderungen von einem Branch in einen anderen zusammen."
+  },
+  "vars": {
+    "API_KEY": "env:GITHUB_TOKEN|Get your personal access token from https://github.com/settings/tokens"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Create Pull Request",
+        "de": "Pull Request erstellen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/repos/{{OWNER}}/{{REPO}}/pulls",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{API_KEY}}",
+          "Accept": "application/vnd.github.v3+json",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Owner",
+          "as": "OWNER",
+          "description": {
+            "en": "The owner of the repository (username or organization)."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Repository",
+          "as": "REPO",
+          "description": {
+            "en": "The name of the repository."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Title",
+          "as": "title",
+          "description": {
+            "en": "The title of the pull request."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:title"
+        },
+        {
+          "name": "Body",
+          "as": "body",
+          "description": {
+            "en": "The contents of the pull request. Supports Markdown."
+          },
+          "type": "string",
+          "source": "field",
+          "position": "payload:body"
+        },
+        {
+          "name": "Head Branch",
+          "as": "head",
+          "description": {
+            "en": "The name of the branch where your changes are implemented. For cross-repository pull requests, use 'username:branch' format."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:head"
+        },
+        {
+          "name": "Base Branch",
+          "as": "base",
+          "description": {
+            "en": "The name of the branch you want the changes pulled into. Usually 'main' or 'master'."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:base"
+        },
+        {
+          "name": "Draft",
+          "as": "draft",
+          "description": {
+            "en": "Whether the pull request is a draft. Set to 'true' for draft PRs."
+          },
+          "type": "boolean",
+          "source": "field",
+          "position": "payload:draft",
+          "required": false
+        }
+      ]
+    }
+  ],
+  "output": {
+    "PR_NUMBER": "out.number",
+    "PR_URL": "out.html_url",
+    "PR_ID": "out.id",
+    "STATE": "out.state"
+  },
+  "messages": {
+    "success": {
+      "en": "Pull request #{{PR_NUMBER}} created successfully! View it at {{PR_URL}}",
+      "de": "Pull Request #{{PR_NUMBER}} erfolgreich erstellt! Ansehen unter {{PR_URL}}"
+    }
+  },
+  "defaultChain": "multiversx"
+}

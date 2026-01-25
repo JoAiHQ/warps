@@ -1,0 +1,97 @@
+{
+  "protocol": "warp:3.0.0",
+  "chain": "polygon",
+  "name": "Polymarket: Buy Shares",
+  "title": {
+    "en": "Buy Market Shares",
+    "de": "Marktanteile kaufen"
+  },
+  "description": {
+    "en": "Buy shares in a prediction market on Polymarket. Purchase 'Yes' or 'No' shares for a specific market outcome using the CLOB API.",
+    "de": "Kaufe Anteile in einem Prognosemarkt auf Polymarket. Kaufe 'Ja'- oder 'Nein'-Anteile für ein bestimmtes Marktergebnis über die CLOB-API."
+  },
+  "vars": {
+    "API_KEY": "env:POLYMARKET_API_KEY|Get your API key from Polymarket at https://polymarket.com/settings/api"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Buy Shares",
+        "de": "Anteile kaufen"
+      },
+      "destination": {
+        "url": "INJECT:API_CLOB/orders",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{API_KEY}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Market ID",
+          "as": "marketId",
+          "description": {
+            "en": "The ID of the market to buy shares from.",
+            "de": "Die ID des Marktes, von dem Anteile gekauft werden sollen."
+          },
+          "type": "string",
+          "position": "payload:market",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Outcome",
+          "as": "outcome",
+          "description": {
+            "en": "Which outcome to buy shares for ('YES' or 'NO').",
+            "de": "Für welches Ergebnis Anteile gekauft werden sollen ('YES' oder 'NO')."
+          },
+          "type": "string",
+          "position": "payload:outcome",
+          "source": "field",
+          "required": true,
+          "options": {
+            "YES": "Yes",
+            "NO": "No"
+          }
+        },
+        {
+          "name": "Amount",
+          "as": "amount",
+          "description": {
+            "en": "Amount of USDC to spend on shares.",
+            "de": "Betrag an USDC, der für Anteile ausgegeben wird."
+          },
+          "type": "string",
+          "position": "payload:amount",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Price",
+          "as": "price",
+          "description": {
+            "en": "Maximum price per share (0-1, where 1 = 100%).",
+            "de": "Maximaler Preis pro Anteil (0-1, wobei 1 = 100%)."
+          },
+          "type": "string",
+          "position": "payload:price",
+          "source": "field",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "output": {
+    "ORDER_ID": "out.id"
+  },
+  "messages": {
+    "success": {
+      "en": "Order placed successfully. Order ID: {{ORDER_ID}}",
+      "de": "Auftrag erfolgreich platziert. Auftrags-ID: {{ORDER_ID}}"
+    }
+  },
+  "defaultChain": "polygon"
+}

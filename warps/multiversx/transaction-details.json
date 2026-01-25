@@ -1,0 +1,64 @@
+{
+  "protocol": "warp:3.0.0",
+  "chain": "multiversx",
+  "name": "MultiversX: Transaction Details",
+  "title": {
+    "en": "View MultiversX Transaction Details",
+    "de": "MultiversX Transaktionsdetails anzeigen"
+  },
+  "description": {
+    "en": "View detailed information about a specific MultiversX transaction by its hash. Get complete transaction data including status, sender, receiver, value in EGLD, gas information, timestamp, nonce, and execution details. Perfect for transaction verification and tracking.",
+    "de": "Zeige detaillierte Informationen zu einer bestimmten MultiversX-Transaktion anhand ihres Hashes. Erhalte vollständige Transaktionsdaten einschließlich Status, Absender, Empfänger, Wert in EGLD, Gas-Informationen, Zeitstempel, Nonce und Ausführungsdetails. Ideal zur Transaktionsverifikation und -verfolgung."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "View Transaction",
+        "de": "Transaktion anzeigen"
+      },
+      "destination": {
+        "url": "{{CHAIN_API}}/transactions/{{TX_HASH}}"
+      },
+      "inputs": [
+        {
+          "name": "Transaction Hash",
+          "as": "TX_HASH",
+          "description": {
+            "en": "The transaction hash to look up.",
+            "de": "Der zu suchende Transaktions-Hash."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "output": {
+    "TX_DATA": "out",
+    "STATUS": "transform:() => results.TX_DATA?.status || 'unknown'",
+    "TX_HASH": "transform:() => results.TX_DATA?.txHash || ''",
+    "SENDER": "transform:() => results.TX_DATA?.sender || ''",
+    "RECEIVER": "transform:() => results.TX_DATA?.receiver || ''",
+    "VALUE": "transform:() => { const val = results.TX_DATA?.value || '0'; return BigInt(val).toString(); }",
+    "VALUE_EGLD": "transform:() => { const val = BigInt(results.VALUE || '0'); return (Number(val) / 1e18).toFixed(4); }",
+    "VALUE_FORMATTED": "transform:() => parseFloat(results.VALUE_EGLD).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 4 })",
+    "GAS_PRICE": "transform:() => results.TX_DATA?.gasPrice || 0",
+    "GAS_USED": "transform:() => results.TX_DATA?.gasUsed || 0",
+    "TIMESTAMP": "transform:() => results.TX_DATA?.timestamp || 0",
+    "NONCE": "transform:() => results.TX_DATA?.nonce || 0",
+    "ROUND": "transform:() => results.TX_DATA?.round || 0"
+  },
+  "messages": {
+    "success": {
+      "en": "Transaction {{TX_HASH}}: Status {{STATUS}}, Value {{VALUE_FORMATTED}} EGLD. From {{SENDER}} to {{RECEIVER}}.",
+      "de": "Transaktion {{TX_HASH}}: Status {{STATUS}}, Wert {{VALUE_FORMATTED}} EGLD. Von {{SENDER}} an {{RECEIVER}}."
+    },
+    "info": {
+      "en": "Transaction status: {{STATUS}}",
+      "de": "Transaktionsstatus: {{STATUS}}"
+    }
+  },
+  "defaultChain": "multiversx"
+}

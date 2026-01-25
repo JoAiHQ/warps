@@ -1,0 +1,76 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Typefully: Create/Schedule Draft",
+  "title": "Create or schedule a draft post",
+  "description": "Create a draft post given some text content and schedule it for a later date.",
+  "vars": {
+    "API_KEY": "env:TYPEFULLY_API_KEY|Get your API key in the Dashboard of Typefully.com"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Create Draft",
+      "destination": {
+        "url": "https://api.typefully.com/v1/drafts",
+        "method": "POST",
+        "headers": {
+          "X-API-KEY": "Bearer {{API_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Content",
+          "as": "content",
+          "description": "The text content for the draft.",
+          "bot": "You can split into multiple tweets by adding 4 consecutive newlines between tweets.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:content"
+        },
+        {
+          "name": "Threadify",
+          "as": "threadify",
+          "bot": "If true, content will be automatically split into multiple tweets.",
+          "type": "bool",
+          "source": "field",
+          "position": "payload:threadify"
+        },
+        {
+          "name": "Share",
+          "as": "share",
+          "bot": "If true, returned payload will include a share_url.",
+          "type": "bool",
+          "source": "field",
+          "position": "payload:share"
+        },
+        {
+          "name": "Schedule Date",
+          "as": "schedule-date",
+          "bot": "Can either be an ISO formatted date (e.g.: 2022-06-13T11:13:31.662Z) or 'next-free-slot'.",
+          "type": "string",
+          "source": "field",
+          "position": "payload:schedule-date",
+          "default": "next-free-slot"
+        },
+        {
+          "name": "Auto Retweet Enabled",
+          "as": "auto_retweet_enabled",
+          "bot": "If true, the post will have an AutoRT enabled, according to the one set on Typefully for the account.",
+          "type": "bool",
+          "source": "field",
+          "position": "payload:auto_retweet_enabled"
+        },
+        {
+          "name": "Auto Plug Enabled",
+          "as": "auto_plug_enabled",
+          "bot": "If true, the post will have an AutoPlug enabled, according to the one set on Typefully for the account.",
+          "type": "bool",
+          "source": "field",
+          "position": "payload:auto_plug_enabled"
+        }
+      ]
+    }
+  ],
+  "defaultChain": "multiversx"
+}

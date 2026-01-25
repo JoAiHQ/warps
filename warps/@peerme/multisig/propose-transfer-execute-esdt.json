@@ -1,0 +1,85 @@
+{
+  "protocol": "warp:3.0.0",
+  "chain": "multiversx",
+  "name": "PeerMe MultiSig: Propose Transfer Execute ESDT",
+  "title": "Propose ESDT token transfer and execution",
+  "description": "Create a proposal to transfer ESDT tokens from the MultiSig wallet and optionally execute a smart contract function. This allows the MultiSig to send tokens and interact with other contracts. The proposal requires quorum approval before execution.",
+  "vars": {
+    "MULTISIG_ADDRESS": "query:multisig"
+  },
+  "actions": [
+    {
+      "type": "contract",
+      "label": "Create proposal",
+      "address": "{{MULTISIG_ADDRESS}}",
+      "func": "proposeTransferExecuteEsdt",
+      "args": [],
+      "gasLimit": 10000000,
+      "abi": "INJECT:peerme/multisig.abi.json",
+      "inputs": [
+        {
+          "name": "Recipient Address",
+          "as": "TO_ADDRESS",
+          "description": "The wallet address to send tokens to.",
+          "type": "address",
+          "position": "arg:1",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Tokens",
+          "as": "TOKENS",
+          "description": "The ESDT tokens to transfer (format: TOKEN-000000|amount).",
+          "type": "asset",
+          "position": "transfer",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Gas Limit",
+          "as": "GAS_LIMIT",
+          "description": "Optional gas limit for the execution (leave empty for default).",
+          "type": "number",
+          "position": "arg:3",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Function Call",
+          "as": "FUNCTION_CALL",
+          "description": "Optional function call data (hex encoded bytes).",
+          "type": "string",
+          "position": "arg:4",
+          "source": "field",
+          "required": false
+        }
+      ]
+    }
+  ],
+  "output": {
+    "ACTION_ID": "out",
+    "ACTION_ID_NUMBER": "transform:() => results.ACTION_ID ? Number(results.ACTION_ID) : null"
+  },
+  "messages": {
+    "success": "Proposal created successfully. Action ID: {{ACTION_ID_NUMBER}}. The proposal to transfer ESDT tokens is now awaiting signatures.",
+    "card": "Proposal #{{ACTION_ID_NUMBER}}: Transfer ESDT Tokens"
+  },
+  "alerts": {
+    "proposal_created": {
+      "label": {
+        "en": "Get notified when this proposal is signed",
+        "de": "Benachrichtigung erhalten, wenn dieser Vorschlag unterzeichnet wird"
+      },
+      "trigger": "event:sign",
+      "subject": {
+        "en": "Multisig token transfer proposal signed",
+        "de": "MultiSig-Token-Übertragungsvorschlag unterzeichnet"
+      },
+      "body": {
+        "en": "A board member has signed proposal #{{ACTION_ID_NUMBER}} to transfer ESDT tokens",
+        "de": "Ein Vorstandsmitglied hat Vorschlag #{{ACTION_ID_NUMBER}} zur Übertragung von ESDT-Token unterzeichnet"
+      }
+    }
+  },
+  "defaultChain": "multiversx"
+}

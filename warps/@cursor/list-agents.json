@@ -1,0 +1,69 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Cursor: List Agents",
+  "title": {
+    "en": "List all agents",
+    "de": "Alle Agenten auflisten"
+  },
+  "description": {
+    "en": "List all cloud agents for the authenticated user. Retrieve agent status, repository information, and pull request details.",
+    "de": "Liste alle Cloud-Agenten für den authentifizierten Benutzer. Abrufen von Agenten-Status, Repository-Informationen und Pull-Request-Details."
+  },
+  "vars": {
+    "API_KEY": "env:CURSOR_API_KEY|Get your API key from Cursor Dashboard at https://cursor.com/settings/api"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "List Agents",
+        "de": "Agenten auflisten"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v0/agents",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{API_KEY}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Limit",
+          "as": "limit",
+          "description": {
+            "en": "Number of cloud agents to return (1-100, default: 20).",
+            "de": "Anzahl der zurückzugebenden Cloud-Agenten (1-100, Standard: 20)."
+          },
+          "type": "number",
+          "position": "query:limit",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Cursor",
+          "as": "cursor",
+          "description": {
+            "en": "Pagination cursor from the previous response.",
+            "de": "Paginierungs-Cursor aus der vorherigen Antwort."
+          },
+          "type": "string",
+          "position": "query:cursor",
+          "source": "field",
+          "required": false
+        }
+      ]
+    }
+  ],
+  "output": {
+    "AGENTS": "out.agents",
+    "NEXT_CURSOR": "out.nextCursor"
+  },
+  "messages": {
+    "success": {
+      "en": "Retrieved {{AGENTS.length}} agent(s).",
+      "de": "{{AGENTS.length}} Agent(en) abgerufen."
+    }
+  },
+  "defaultChain": "multiversx"
+}

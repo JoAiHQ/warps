@@ -1,0 +1,47 @@
+{
+  "protocol": "warp:3.0.0",
+  "chain": "multiversx",
+  "name": "MultiversX: Network Status",
+  "title": {
+    "en": "View MultiversX Network Status",
+    "de": "MultiversX Netzwerkstatus anzeigen"
+  },
+  "description": {
+    "en": "View current MultiversX network status and statistics. Get real-time network information including current epoch, round number, highest final nonce, number of shards, minimum gas price, and root hash. Monitor network health and current blockchain state.",
+    "de": "Zeige den aktuellen MultiversX Netzwerkstatus und Statistiken. Erhalte Echtzeit-Netzwerkinformationen einschließlich aktueller Epoche, Rundennummer, höchster finaler Nonce, Anzahl der Shards, minimaler Gaspreis und Root-Hash. Überwache die Netzwerkgesundheit und den aktuellen Blockchain-Status."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Check Network Status",
+        "de": "Netzwerkstatus prüfen"
+      },
+      "destination": {
+        "url": "{{CHAIN_API}}/network/status"
+      },
+      "inputs": []
+    }
+  ],
+  "output": {
+    "NETWORK_DATA": "out",
+    "CURRENT_EPOCH": "transform:() => results.NETWORK_DATA?.currentRound || 0",
+    "CURRENT_ROUND": "transform:() => results.NETWORK_DATA?.currentRound || 0",
+    "HIGHEST_FINAL_NONCE": "transform:() => results.NETWORK_DATA?.highestFinalNonce || 0",
+    "NONCE": "transform:() => results.NETWORK_DATA?.nonce || 0",
+    "NUMBER_OF_SHARDS": "transform:() => results.NETWORK_DATA?.erd_num_shards_without_meta || 0",
+    "MIN_GAS_PRICE": "transform:() => results.NETWORK_DATA?.erd_min_gas_price || 0",
+    "ROOT_HASH": "transform:() => results.NETWORK_DATA?.erd_prev_epoch_start_root_hash || ''"
+  },
+  "messages": {
+    "success": {
+      "en": "Network Status: Epoch {{CURRENT_EPOCH}}, Round {{CURRENT_ROUND}}, {{NUMBER_OF_SHARDS}} shard(s), Min Gas Price: {{MIN_GAS_PRICE}}",
+      "de": "Netzwerkstatus: Epoche {{CURRENT_EPOCH}}, Runde {{CURRENT_ROUND}}, {{NUMBER_OF_SHARDS}} Shard(s), Min. Gaspreis: {{MIN_GAS_PRICE}}"
+    },
+    "info": {
+      "en": "Current network epoch: {{CURRENT_EPOCH}}",
+      "de": "Aktuelle Netzwerk-Epoche: {{CURRENT_EPOCH}}"
+    }
+  },
+  "defaultChain": "multiversx"
+}

@@ -1,0 +1,101 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Linear: List Issues",
+  "title": {
+    "en": "List Linear issues",
+    "de": "Linear-Issues auflisten"
+  },
+  "description": {
+    "en": "List issues in a Linear team. Supports filtering by assignee, state, and pagination.",
+    "de": "Listet Issues in einem Linear-Team auf. Unterstützt Filterung nach Zugewiesenem, Status und Paginierung."
+  },
+  "vars": {
+    "API_KEY": "env:LINEAR_API_KEY|Get your API key from Linear Settings > API at https://linear.app/settings/api"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "List Issues",
+        "de": "Issues auflisten"
+      },
+      "destination": {
+        "url": "INJECT:API_GRAPHQL",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{API_KEY}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Team ID",
+          "as": "teamId",
+          "description": {
+            "en": "The ID of the team to list issues from. Use 'List Teams' to find team IDs."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:variables.teamId"
+        },
+        {
+          "name": "Assignee ID",
+          "as": "assigneeId",
+          "description": {
+            "en": "Filter by assignee ID. Optional."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:variables.assigneeId"
+        },
+        {
+          "name": "State",
+          "as": "state",
+          "description": {
+            "en": "Filter by state: 'backlog', 'unstarted', 'started', 'completed', 'canceled'. Optional."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:variables.state"
+        },
+        {
+          "name": "Limit",
+          "as": "first",
+          "description": {
+            "en": "Number of results to return (max 50). Defaults to 20."
+          },
+          "type": "number",
+          "source": "field",
+          "required": false,
+          "position": "payload:variables.first",
+          "default": 20
+        },
+        {
+          "name": "Query",
+          "as": "query",
+          "description": {
+            "en": "GraphQL query"
+          },
+          "type": "string",
+          "source": "hidden",
+          "position": "payload:query",
+          "default": "query Issues($teamId: String!, $assigneeId: String, $state: String, $first: Int) { team(id: $teamId) { issues(filter: { assignee: { id: { eq: $assigneeId } } state: { name: { eq: $state } } } first: $first) { nodes { id identifier title description state { id name } assignee { id name } priority createdAt } } } }"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "ISSUES": "out.data.team.issues.nodes",
+    "COUNT": "transform:() => { return Array.isArray(results.ISSUES) ? results.ISSUES.length : 0; }"
+  },
+  "messages": {
+    "success": {
+      "en": "Found {{COUNT}} issue(s).",
+      "de": "{{COUNT}} Issue(s) gefunden."
+    }
+  },
+  "defaultChain": "multiversx"
+}

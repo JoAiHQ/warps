@@ -1,0 +1,71 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "GitHub: Get Repository",
+  "title": {
+    "en": "Get repository information",
+    "de": "Repository-Informationen abrufen"
+  },
+  "description": {
+    "en": "Retrieve information about a GitHub repository including description, stars, forks, and language.",
+    "de": "Ruft Informationen über ein GitHub-Repository ab, einschließlich Beschreibung, Stars, Forks und Sprache."
+  },
+  "vars": {
+    "API_KEY": "env:GITHUB_TOKEN|Get your personal access token from https://github.com/settings/tokens"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Get Repository",
+        "de": "Repository abrufen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/repos/{{OWNER}}/{{REPO}}",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{API_KEY}}",
+          "Accept": "application/vnd.github.v3+json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Owner",
+          "as": "OWNER",
+          "description": {
+            "en": "The owner of the repository (username or organization)."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Repository",
+          "as": "REPO",
+          "description": {
+            "en": "The name of the repository."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "output": {
+    "NAME": "out.name",
+    "FULL_NAME": "out.full_name",
+    "DESCRIPTION": "out.description",
+    "STARS": "out.stargazers_count",
+    "FORKS": "out.forks_count",
+    "LANGUAGE": "out.language",
+    "URL": "out.html_url",
+    "CLONE_URL": "out.clone_url"
+  },
+  "messages": {
+    "success": {
+      "en": "Repository {{FULL_NAME}} retrieved. {{STARS}} stars, {{FORKS}} forks.",
+      "de": "Repository {{FULL_NAME}} abgerufen. {{STARS}} Stars, {{FORKS}} Forks."
+    }
+  },
+  "defaultChain": "multiversx"
+}

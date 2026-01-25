@@ -1,0 +1,127 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Google Calendar: Create Event",
+  "title": {
+    "en": "Create calendar event",
+    "de": "Kalendereintrag erstellen"
+  },
+  "description": {
+    "en": "Create a new event in your Google Calendar. Set the title, description, start and end times, location, and attendees.",
+    "de": "Erstelle einen neuen Eintrag in deinem Google Kalender. Setze Titel, Beschreibung, Start- und Endzeit, Ort und Teilnehmer."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:GOOGLE_CALENDAR_ACCESS_TOKEN|OAuth 2.0 access token from Google. Get it from Google Cloud Console after OAuth authentication."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Create Event",
+      "destination": {
+        "url": "INJECT:API_EVENTS/{{calendarId}}/events",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Calendar ID",
+          "as": "calendarId",
+          "description": "The calendar ID where the event will be created. Use 'primary' for your primary calendar.",
+          "bot": "The calendar ID. Use 'primary' for the user's primary calendar, or the calendar email address for other calendars.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:calendarId"
+        },
+        {
+          "name": "Event Title",
+          "as": "summary",
+          "description": "The title or name of the event.",
+          "bot": "The event title or summary, e.g., 'Team Meeting', 'Project Review', 'Lunch with Client'.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:summary"
+        },
+        {
+          "name": "Description",
+          "as": "description",
+          "description": "Detailed description of the event.",
+          "bot": "A detailed description of the event. Can include notes, agenda items, or other relevant information.",
+          "type": "string",
+          "source": "field",
+          "position": "payload:description"
+        },
+        {
+          "name": "Start Date Time",
+          "as": "startDateTime",
+          "description": "Start date and time of the event in ISO 8601 format (e.g., '2024-01-15T10:00:00') or RFC3339 format.",
+          "bot": "The start date and time in ISO 8601 format like '2024-01-15T10:00:00' or RFC3339 format. Include timezone if needed.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:start.dateTime"
+        },
+        {
+          "name": "End Date Time",
+          "as": "endDateTime",
+          "description": "End date and time of the event in ISO 8601 format (e.g., '2024-01-15T11:00:00') or RFC3339 format.",
+          "bot": "The end date and time in ISO 8601 format like '2024-01-15T11:00:00' or RFC3339 format. Include timezone if needed.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:end.dateTime"
+        },
+        {
+          "name": "Start Time Zone",
+          "as": "startTimeZone",
+          "description": "Time zone for the start time (e.g., 'America/New_York', 'Europe/Berlin', 'Asia/Tokyo'). Optional if datetime includes timezone.",
+          "bot": "The time zone for the start time, e.g., 'America/New_York', 'Europe/Berlin', 'UTC'. Optional if the datetime string includes timezone information.",
+          "type": "string",
+          "source": "field",
+          "position": "payload:start.timeZone"
+        },
+        {
+          "name": "End Time Zone",
+          "as": "endTimeZone",
+          "description": "Time zone for the end time (e.g., 'America/New_York', 'Europe/Berlin', 'Asia/Tokyo'). Optional if datetime includes timezone.",
+          "bot": "The time zone for the end time, e.g., 'America/New_York', 'Europe/Berlin', 'UTC'. Optional if the datetime string includes timezone information.",
+          "type": "string",
+          "source": "field",
+          "position": "payload:end.timeZone"
+        },
+        {
+          "name": "Location",
+          "as": "location",
+          "description": "Location of the event (e.g., '123 Main St, City, Country' or 'Conference Room A').",
+          "bot": "The event location. Can be a physical address, room name, or video conference link.",
+          "type": "string",
+          "source": "field",
+          "position": "payload:location"
+        },
+        {
+          "name": "Attendees",
+          "as": "attendees",
+          "description": "JSON array of attendee objects. Example: [{\"email\": \"user@example.com\"}, {\"email\": \"other@example.com\"}]",
+          "bot": "JSON array of attendee objects. Each object should have an 'email' field. Example: [{\"email\": \"user@example.com\"}]",
+          "type": "string",
+          "source": "field",
+          "position": "payload:attendees"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "EVENT_ID": "out.id",
+    "EVENT_LINK": "out.htmlLink"
+  },
+  "messages": {
+    "success": {
+      "en": "Event created successfully! Event ID: {{EVENT_ID}}",
+      "de": "Ereignis erfolgreich erstellt! Ereignis-ID: {{EVENT_ID}}"
+    }
+  },
+  "defaultChain": "multiversx"
+}

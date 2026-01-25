@@ -1,0 +1,73 @@
+{
+  "protocol": "warp:3.0.0",
+  "chain": "polygon",
+  "name": "Polymarket: Resolve Market",
+  "title": {
+    "en": "Resolve Prediction Market",
+    "de": "Prognosemarkt auflösen"
+  },
+  "description": {
+    "en": "Resolve a prediction market by setting the winning outcome. Only authorized resolvers can resolve markets using the Gamma API.",
+    "de": "Löse einen Prognosemarkt auf, indem du das gewinnende Ergebnis festlegst. Nur autorisierte Auflöser können Märkte über die Gamma-API auflösen."
+  },
+  "vars": {
+    "API_KEY": "env:POLYMARKET_API_KEY|Get your API key from Polymarket at https://polymarket.com/settings/api"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Resolve Market",
+        "de": "Markt auflösen"
+      },
+      "destination": {
+        "url": "INJECT:API_GAMMA/markets/{{marketId}}/resolve",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{API_KEY}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Market ID",
+          "as": "marketId",
+          "description": {
+            "en": "The ID of the market to resolve.",
+            "de": "Die ID des aufzulösenden Marktes."
+          },
+          "type": "string",
+          "position": "url:marketId",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Winning Outcome",
+          "as": "winningOutcome",
+          "description": {
+            "en": "The winning outcome ('YES' or 'NO').",
+            "de": "Das gewinnende Ergebnis ('YES' oder 'NO')."
+          },
+          "type": "string",
+          "position": "payload:outcome",
+          "source": "field",
+          "required": true,
+          "options": {
+            "YES": "Yes",
+            "NO": "No"
+          }
+        }
+      ]
+    }
+  ],
+  "output": {
+    "RESOLVED": "out.success"
+  },
+  "messages": {
+    "success": {
+      "en": "Market resolved successfully",
+      "de": "Markt erfolgreich aufgelöst"
+    }
+  },
+  "defaultChain": "polygon"
+}

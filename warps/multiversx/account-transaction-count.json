@@ -1,0 +1,39 @@
+{
+  "protocol": "warp:3.0.0",
+  "chain": "multiversx",
+  "name": "MultiversX: Account Transaction Count",
+  "title": "View MultiversX transaction count",
+  "description": "View the total number of transactions for a MultiversX blockchain account.",
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Check now",
+      "destination": {
+        "url": "{{CHAIN_API}}/accounts/{{ADDRESS}}/transactions/count"
+      },
+      "inputs": [
+        {
+          "name": "Address",
+          "as": "ADDRESS",
+          "description": "The wallet address to check transaction count for.",
+          "type": "address",
+          "source": "field",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "output": {
+    "TRANSACTION_COUNT": "out",
+    "COUNT": "transform:() => Number(results.TRANSACTION_COUNT || 0)",
+    "COUNT_FORMATTED": "transform:() => results.COUNT.toLocaleString('en-US')"
+  },
+  "messages": {
+    "success": "The address has made {{COUNT_FORMATTED}} transactions.",
+    "card": "Transaction: {{COUNT_FORMATTED}}",
+    "info": "This account has executed {{COUNT_FORMATTED}} transactions",
+    "invoking": "Loading ...",
+    "invoked": "Loaded"
+  },
+  "defaultChain": "multiversx"
+}

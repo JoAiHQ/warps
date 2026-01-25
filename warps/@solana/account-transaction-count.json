@@ -1,0 +1,132 @@
+{
+  "protocol": "warp:3.0.0",
+  "chain": "solana",
+  "name": "Solana: Account Transaction Count",
+  "title": {
+    "en": "Count Solana Transactions",
+    "de": "Solana Transaktionen zaehlen"
+  },
+  "description": {
+    "en": "Count recent transaction signatures for a Solana wallet using the Solana JSON RPC API. Uses getSignaturesForAddress with a configurable limit to estimate recent activity.",
+    "de": "Zaehle aktuelle Transaktionssignaturen fuer eine Solana-Wallet ueber die Solana JSON RPC API. Nutzt getSignaturesForAddress mit einem konfigurierbaren Limit, um die aktuelle Aktivitaet zu schaetzen."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Count Transactions",
+        "de": "Transaktionen zaehlen"
+      },
+      "destination": {
+        "url": "INJECT:RPC",
+        "method": "POST",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Address",
+          "as": "ADDRESS",
+          "description": {
+            "en": "The wallet address to count transaction signatures for.",
+            "de": "Die Wallet-Adresse, fuer die Transaktionssignaturen gezaehlt werden."
+          },
+          "type": "address",
+          "source": "field",
+          "required": true,
+          "position": "payload:params.0"
+        },
+        {
+          "name": "Limit",
+          "as": "LIMIT",
+          "description": {
+            "en": "Maximum number of signatures to count (max 1000).",
+            "de": "Maximale Anzahl der Signaturen (max 1000)."
+          },
+          "type": "number",
+          "source": "field",
+          "required": false,
+          "position": "payload:params.1.limit",
+          "default": 1000
+        },
+        {
+          "name": "Before",
+          "as": "BEFORE",
+          "description": {
+            "en": "Count signatures before this signature (pagination).",
+            "de": "Signaturen vor dieser Signatur zaehlen (Paginierung)."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:params.1.before"
+        },
+        {
+          "name": "Until",
+          "as": "UNTIL",
+          "description": {
+            "en": "Count signatures until this signature (pagination).",
+            "de": "Signaturen bis zu dieser Signatur zaehlen (Paginierung)."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:params.1.until"
+        },
+        {
+          "name": "Commitment",
+          "as": "COMMITMENT",
+          "description": {
+            "en": "Optional Solana commitment level (processed, confirmed, finalized).",
+            "de": "Optionales Solana-Commitment-Level (processed, confirmed, finalized)."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:params.1.commitment"
+        },
+        {
+          "name": "Method",
+          "as": "METHOD",
+          "type": "string",
+          "source": "hidden",
+          "position": "payload:method",
+          "default": "getSignaturesForAddress"
+        },
+        {
+          "name": "JSON RPC",
+          "as": "JSONRPC",
+          "type": "string",
+          "source": "hidden",
+          "position": "payload:jsonrpc",
+          "default": "2.0"
+        },
+        {
+          "name": "Request ID",
+          "as": "REQUEST_ID",
+          "type": "number",
+          "source": "hidden",
+          "position": "payload:id",
+          "default": 1
+        }
+      ]
+    }
+  ],
+  "output": {
+    "TRANSACTIONS": "out.result",
+    "TRANSACTION_COUNT": "transform:() => Array.isArray(results.TRANSACTIONS) ? results.TRANSACTIONS.length : 0",
+    "COUNT_FORMATTED": "transform:() => results.TRANSACTION_COUNT.toLocaleString('en-US')"
+  },
+  "messages": {
+    "success": {
+      "en": "Counted {{COUNT_FORMATTED}} transaction signature(s).",
+      "de": "{{COUNT_FORMATTED}} Transaktionssignatur(en) gezaehlt."
+    },
+    "info": {
+      "en": "This wallet has {{COUNT_FORMATTED}} recent transaction signature(s)",
+      "de": "Diese Wallet hat {{COUNT_FORMATTED}} aktuelle Transaktionssignatur(en)"
+    }
+  },
+  "defaultChain": "solana"
+}

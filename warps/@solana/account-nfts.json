@@ -1,0 +1,112 @@
+{
+  "protocol": "warp:3.0.0",
+  "chain": "solana",
+  "name": "Solana: Account NFTs",
+  "title": {
+    "en": "View Solana NFTs",
+    "de": "Solana NFTs anzeigen"
+  },
+  "description": {
+    "en": "Discover NFTs owned by a Solana wallet using the Solana JSON RPC API. Filters SPL token accounts to NFT-like assets (0 decimals, amount > 0) to provide a quick NFT overview.",
+    "de": "Entdecke NFTs, die von einer Solana-Wallet gehalten werden, ueber die Solana JSON RPC API. Filtert SPL-Tokenkonten zu NFT-aehnlichen Assets (0 Dezimalstellen, Menge > 0) fuer einen schnellen NFT-Ueberblick."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "View NFTs",
+        "de": "NFTs anzeigen"
+      },
+      "destination": {
+        "url": "INJECT:RPC",
+        "method": "POST",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Address",
+          "as": "ADDRESS",
+          "description": {
+            "en": "The wallet address to list NFTs for.",
+            "de": "Die Wallet-Adresse, fuer die NFTs gelistet werden."
+          },
+          "type": "address",
+          "source": "field",
+          "required": true,
+          "position": "payload:params.0"
+        },
+        {
+          "name": "Commitment",
+          "as": "COMMITMENT",
+          "description": {
+            "en": "Optional Solana commitment level (processed, confirmed, finalized).",
+            "de": "Optionales Solana-Commitment-Level (processed, confirmed, finalized)."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:params.2.commitment"
+        },
+        {
+          "name": "Program ID",
+          "as": "PROGRAM_ID",
+          "type": "string",
+          "source": "hidden",
+          "position": "payload:params.1.programId",
+          "default": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "name": "Encoding",
+          "as": "ENCODING",
+          "type": "string",
+          "source": "hidden",
+          "position": "payload:params.2.encoding",
+          "default": "jsonParsed"
+        },
+        {
+          "name": "Method",
+          "as": "METHOD",
+          "type": "string",
+          "source": "hidden",
+          "position": "payload:method",
+          "default": "getTokenAccountsByOwner"
+        },
+        {
+          "name": "JSON RPC",
+          "as": "JSONRPC",
+          "type": "string",
+          "source": "hidden",
+          "position": "payload:jsonrpc",
+          "default": "2.0"
+        },
+        {
+          "name": "Request ID",
+          "as": "REQUEST_ID",
+          "type": "number",
+          "source": "hidden",
+          "position": "payload:id",
+          "default": 1
+        }
+      ]
+    }
+  ],
+  "output": {
+    "TOKEN_ACCOUNTS": "out.result.value",
+    "NFTS": "transform:() => { const accounts = results.TOKEN_ACCOUNTS || []; return accounts.filter((account: any) => { const info = account.account?.data?.parsed?.info; const tokenAmount = info?.tokenAmount; if (!tokenAmount) return false; const amount = Number(tokenAmount.amount || 0); const decimals = tokenAmount.decimals ?? 0; return amount > 0 && decimals === 0; }).map((account: any) => { const info = account.account?.data?.parsed?.info || {}; const tokenAmount = info.tokenAmount || {}; return { mint: info.mint || null, owner: info.owner || null, amount: tokenAmount.amount || '0', tokenAccount: account.pubkey || null }; }); }",
+    "NFT_COUNT": "transform:() => Array.isArray(results.NFTS) ? results.NFTS.length : 0",
+    "NFTS_SUMMARY": "transform:() => { const nfts = results.NFTS || []; return nfts.slice(0, 10); }"
+  },
+  "messages": {
+    "success": {
+      "en": "Found {{NFT_COUNT}} NFT(s) in this wallet.",
+      "de": "{{NFT_COUNT}} NFT(s) in dieser Wallet gefunden."
+    },
+    "info": {
+      "en": "This wallet owns {{NFT_COUNT}} NFT(s)",
+      "de": "Diese Wallet besitzt {{NFT_COUNT}} NFT(s)"
+    }
+  },
+  "defaultChain": "solana"
+}

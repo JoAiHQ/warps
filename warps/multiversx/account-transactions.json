@@ -1,0 +1,54 @@
+{
+  "protocol": "warp:3.0.0",
+  "chain": "multiversx",
+  "name": "MultiversX: Account Transactions",
+  "title": {
+    "en": "View MultiversX Transaction History",
+    "de": "MultiversX Transaktionsverlauf anzeigen"
+  },
+  "description": {
+    "en": "View the complete transaction history for a MultiversX blockchain account. Retrieve recent transactions with full details including transaction hashes, status, timestamps, values, senders, and receivers. Track account activity and transaction flow over time.",
+    "de": "Zeige den vollständigen Transaktionsverlauf für ein MultiversX Blockchain-Konto. Rufe aktuelle Transaktionen mit vollständigen Details ab, einschließlich Transaktions-Hashes, Status, Zeitstempel, Werte, Absender und Empfänger. Verfolge Kontobewegungen und Transaktionsfluss über die Zeit."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "View Transactions",
+        "de": "Transaktionen anzeigen"
+      },
+      "destination": {
+        "url": "{{CHAIN_API}}/accounts/{{ADDRESS}}/transactions"
+      },
+      "inputs": [
+        {
+          "name": "Address",
+          "as": "ADDRESS",
+          "description": {
+            "en": "The wallet address to view transactions for.",
+            "de": "Die Wallet-Adresse, für die Transaktionen angezeigt werden sollen."
+          },
+          "type": "address",
+          "source": "field",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "output": {
+    "TRANSACTIONS": "transform:() => results.out || []",
+    "TRANSACTION_COUNT": "transform:() => Array.isArray(results.TRANSACTIONS) ? results.TRANSACTIONS.length : 0",
+    "TRANSACTIONS_SUMMARY": "transform:() => { const txs = results.TRANSACTIONS || []; return txs.slice(0, 5).map((tx: any) => ({ hash: tx.txHash, status: tx.status, timestamp: tx.timestamp, value: tx.value, type: tx.type, sender: tx.sender, receiver: tx.receiver })); }"
+  },
+  "messages": {
+    "success": {
+      "en": "Retrieved {{TRANSACTION_COUNT}} transaction(s) for this account.",
+      "de": "{{TRANSACTION_COUNT}} Transaktion(en) für dieses Konto abgerufen."
+    },
+    "info": {
+      "en": "This account has {{TRANSACTION_COUNT}} transaction(s) shown",
+      "de": "Diesem Konto werden {{TRANSACTION_COUNT}} Transaktion(en) angezeigt"
+    }
+  },
+  "defaultChain": "multiversx"
+}

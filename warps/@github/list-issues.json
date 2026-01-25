@@ -1,0 +1,109 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "GitHub: List Issues",
+  "title": {
+    "en": "List repository issues",
+    "de": "Repository-Issues auflisten"
+  },
+  "description": {
+    "en": "List issues in a GitHub repository. Supports filtering by state (open, closed, all), labels, and assignee.",
+    "de": "Listet Issues in einem GitHub-Repository auf. Unterstützt Filterung nach Status (offen, geschlossen, alle), Labels und Zugewiesenen."
+  },
+  "vars": {
+    "API_KEY": "env:GITHUB_TOKEN|Get your personal access token from https://github.com/settings/tokens"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "List Issues",
+        "de": "Issues auflisten"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/repos/{{OWNER}}/{{REPO}}/issues",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{API_KEY}}",
+          "Accept": "application/vnd.github.v3+json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Owner",
+          "as": "OWNER",
+          "description": {
+            "en": "The owner of the repository (username or organization)."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Repository",
+          "as": "REPO",
+          "description": {
+            "en": "The name of the repository."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "State",
+          "as": "state",
+          "description": {
+            "en": "Filter by state: open, closed, or all. Defaults to open."
+          },
+          "type": "string",
+          "source": "field",
+          "position": "query:state",
+          "required": false
+        },
+        {
+          "name": "Labels",
+          "as": "labels",
+          "description": {
+            "en": "Filter by labels. Separate multiple labels with commas."
+          },
+          "type": "string",
+          "source": "field",
+          "position": "query:labels",
+          "required": false
+        },
+        {
+          "name": "Assignee",
+          "as": "assignee",
+          "description": {
+            "en": "Filter by assignee username."
+          },
+          "type": "string",
+          "source": "field",
+          "position": "query:assignee",
+          "required": false
+        },
+        {
+          "name": "Limit",
+          "as": "per_page",
+          "description": {
+            "en": "Number of results per page (max 100). Defaults to 30."
+          },
+          "type": "number",
+          "source": "field",
+          "position": "query:per_page",
+          "required": false
+        }
+      ]
+    }
+  ],
+  "output": {
+    "ISSUES": "out",
+    "COUNT": "transform:() => { return Array.isArray(results.ISSUES) ? results.ISSUES.length : 0; }"
+  },
+  "messages": {
+    "success": {
+      "en": "Found {{COUNT}} issue(s).",
+      "de": "{{COUNT}} Issue(s) gefunden."
+    }
+  },
+  "defaultChain": "multiversx"
+}

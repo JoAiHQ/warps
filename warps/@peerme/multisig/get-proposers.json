@@ -1,0 +1,40 @@
+{
+  "protocol": "warp:3.0.0",
+  "chain": "multiversx",
+  "name": "PeerMe MultiSig: Get Proposers",
+  "title": "View all proposers",
+  "description": "List all proposers who can create proposals but cannot sign actions in a MultiSig wallet. Proposers can initiate actions but require board members to sign them.",
+  "vars": {
+    "MULTISIG_ADDRESS": "query:multisig"
+  },
+  "actions": [
+    {
+      "type": "query",
+      "label": "Get proposers",
+      "address": "{{MULTISIG_ADDRESS}}",
+      "func": "getAllProposers",
+      "args": [],
+      "abi": "INJECT:peerme/multisig.abi.json"
+    },
+    {
+      "type": "query",
+      "label": "Get count",
+      "address": "{{MULTISIG_ADDRESS}}",
+      "func": "getNumProposers",
+      "args": [],
+      "abi": "INJECT:peerme/multisig.abi.json"
+    }
+  ],
+  "output": {
+    "PROPOSERS": "out[0]",
+    "COUNT": "out[1]",
+    "COUNT_NUMBER": "transform:() => Number(results.COUNT)",
+    "PROPOSERS_LIST": "transform:() => Array.isArray(results.PROPOSERS) ? results.PROPOSERS.join(', ') : 'No proposers'"
+  },
+  "messages": {
+    "success": "Found {{COUNT_NUMBER}} proposer(s): {{PROPOSERS_LIST}}",
+    "card": "Proposers: {{COUNT_NUMBER}}",
+    "info": "This MultiSig has {{COUNT_NUMBER}} proposer(s) who can create proposals but cannot sign them"
+  },
+  "defaultChain": "multiversx"
+}

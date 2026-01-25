@@ -1,0 +1,111 @@
+{
+  "protocol": "warp:3.0.0",
+  "chain": "solana",
+  "name": "Solana: Account Tokens",
+  "title": {
+    "en": "View Solana SPL Tokens",
+    "de": "Solana SPL-Token anzeigen"
+  },
+  "description": {
+    "en": "List SPL token accounts for a Solana wallet using the Solana JSON RPC API. See token mints, balances, and decimals to track your token portfolio on the Solana blockchain.",
+    "de": "Liste SPL-Tokenkonten fuer eine Solana-Wallet ueber die Solana JSON RPC API. Sieh Token-Mints, Salden und Dezimalstellen, um dein Token-Portfolio auf der Solana-Blockchain zu verfolgen."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "View Tokens",
+        "de": "Token anzeigen"
+      },
+      "destination": {
+        "url": "INJECT:RPC",
+        "method": "POST",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Address",
+          "as": "ADDRESS",
+          "description": {
+            "en": "The wallet address to list SPL token accounts for.",
+            "de": "Die Wallet-Adresse, fuer die SPL-Tokenkonten gelistet werden."
+          },
+          "type": "address",
+          "source": "field",
+          "required": true,
+          "position": "payload:params.0"
+        },
+        {
+          "name": "Commitment",
+          "as": "COMMITMENT",
+          "description": {
+            "en": "Optional Solana commitment level (processed, confirmed, finalized).",
+            "de": "Optionales Solana-Commitment-Level (processed, confirmed, finalized)."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:params.2.commitment"
+        },
+        {
+          "name": "Program ID",
+          "as": "PROGRAM_ID",
+          "type": "string",
+          "source": "hidden",
+          "position": "payload:params.1.programId",
+          "default": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "name": "Encoding",
+          "as": "ENCODING",
+          "type": "string",
+          "source": "hidden",
+          "position": "payload:params.2.encoding",
+          "default": "jsonParsed"
+        },
+        {
+          "name": "Method",
+          "as": "METHOD",
+          "type": "string",
+          "source": "hidden",
+          "position": "payload:method",
+          "default": "getTokenAccountsByOwner"
+        },
+        {
+          "name": "JSON RPC",
+          "as": "JSONRPC",
+          "type": "string",
+          "source": "hidden",
+          "position": "payload:jsonrpc",
+          "default": "2.0"
+        },
+        {
+          "name": "Request ID",
+          "as": "REQUEST_ID",
+          "type": "number",
+          "source": "hidden",
+          "position": "payload:id",
+          "default": 1
+        }
+      ]
+    }
+  ],
+  "output": {
+    "TOKEN_ACCOUNTS": "out.result.value",
+    "TOKEN_COUNT": "transform:() => Array.isArray(results.TOKEN_ACCOUNTS) ? results.TOKEN_ACCOUNTS.length : 0",
+    "TOKENS_SUMMARY": "transform:() => { const accounts = results.TOKEN_ACCOUNTS || []; return accounts.map((account: any) => { const info = account.account?.data?.parsed?.info || {}; const tokenAmount = info.tokenAmount || {}; return { mint: info.mint || null, owner: info.owner || null, amount: tokenAmount.amount || '0', decimals: tokenAmount.decimals ?? 0, uiAmount: tokenAmount.uiAmount ?? null, uiAmountString: tokenAmount.uiAmountString ?? null }; }); }"
+  },
+  "messages": {
+    "success": {
+      "en": "Found {{TOKEN_COUNT}} SPL token account(s).",
+      "de": "{{TOKEN_COUNT}} SPL-Tokenkonto(en) gefunden."
+    },
+    "info": {
+      "en": "This wallet has {{TOKEN_COUNT}} SPL token account(s)",
+      "de": "Diese Wallet hat {{TOKEN_COUNT}} SPL-Tokenkonto(en)"
+    }
+  },
+  "defaultChain": "solana"
+}

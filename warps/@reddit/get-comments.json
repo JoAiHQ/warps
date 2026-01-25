@@ -1,0 +1,111 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Reddit: Get Comments",
+  "title": {
+    "en": "Get Post Comments",
+    "de": "Post-Kommentare abrufen"
+  },
+  "description": {
+    "en": "Retrieve comments for a specific Reddit post. Supports different sorting options (best, top, new, controversial, old, qa) and depth limits.",
+    "de": "Rufe Kommentare für einen bestimmten Reddit-Post ab. Unterstützt verschiedene Sortieroptionen (best, top, new, controversial, old, qa) und Tiefenlimits."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:REDDIT_ACCESS_TOKEN|Get your access token from Reddit OAuth2 authentication. See https://www.reddit.com/prefs/apps to create an app."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Get Comments",
+        "de": "Kommentare abrufen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/r/{{SUBREDDIT}}/comments/{{POST_ID}}",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}",
+          "User-Agent": "Warpbase/1.0"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Subreddit",
+          "as": "SUBREDDIT",
+          "description": {
+            "en": "The subreddit name (without r/ prefix).",
+            "de": "Der Subreddit-Name (ohne r/ Präfix)."
+          },
+          "bot": "The subreddit name without the 'r/' prefix.",
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Post ID",
+          "as": "POST_ID",
+          "description": {
+            "en": "The post ID (the part after the last / in the post URL).",
+            "de": "Die Post-ID (der Teil nach dem letzten / in der Post-URL)."
+          },
+          "bot": "The post ID. This is the identifier found in the post URL after the subreddit name.",
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Sort",
+          "as": "sort",
+          "description": {
+            "en": "Sorting method: best, top, new, controversial, old, qa.",
+            "de": "Sortiermethode: best, top, new, controversial, old, qa."
+          },
+          "bot": "How to sort the comments. Options: 'best' (default), 'top', 'new', 'controversial', 'old', 'qa'.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "best",
+          "position": "query:sort"
+        },
+        {
+          "name": "Limit",
+          "as": "limit",
+          "description": {
+            "en": "Number of comments to retrieve (max 500).",
+            "de": "Anzahl der abzurufenden Kommentare (max 500)."
+          },
+          "bot": "Number of comments to retrieve. Maximum is 500.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "100",
+          "position": "query:limit"
+        },
+        {
+          "name": "Depth",
+          "as": "depth",
+          "description": {
+            "en": "Maximum depth of comment threads to retrieve.",
+            "de": "Maximale Tiefe der Kommentar-Threads, die abgerufen werden sollen."
+          },
+          "bot": "Maximum depth of comment threads. Higher values return more nested comments.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "query:depth"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "COMMENTS": "transform:() => results.out?.[1]?.data?.children || []",
+    "COMMENT_COUNT": "transform:() => Array.isArray(results.COMMENTS) ? results.COMMENTS.length : 0",
+    "COMMENTS_SUMMARY": "transform:() => { const extractComments = (children: any[], depth = 0): any[] => { if (!Array.isArray(children)) return []; return children.filter(c => c.kind === 't1').map(c => ({ author: c.data?.author, body: c.data?.body, score: c.data?.score, created_utc: c.data?.created_utc, id: c.data?.id, depth: depth, replies: extractComments(c.data?.replies?.data?.children || [], depth + 1) })); }; return extractComments(results.COMMENTS); }"
+  },
+  "messages": {
+    "success": {
+      "en": "Retrieved {{COMMENT_COUNT}} top-level comments",
+      "de": "{{COMMENT_COUNT}} Top-Level-Kommentare abgerufen"
+    }
+  },
+  "defaultChain": "multiversx"
+}

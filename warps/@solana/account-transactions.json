@@ -1,0 +1,132 @@
+{
+  "protocol": "warp:3.0.0",
+  "chain": "solana",
+  "name": "Solana: Account Transactions",
+  "title": {
+    "en": "View Solana Transaction History",
+    "de": "Solana Transaktionsverlauf anzeigen"
+  },
+  "description": {
+    "en": "Retrieve recent transaction signatures for a Solana wallet via the Solana JSON RPC API. Inspect signatures, slots, and block times to track wallet activity on the Solana blockchain.",
+    "de": "Rufe aktuelle Transaktionssignaturen fuer eine Solana-Wallet ueber die Solana JSON RPC API ab. Pruefe Signaturen, Slots und Blockzeiten, um Wallet-Aktivitaet auf der Solana-Blockchain zu verfolgen."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "View Transactions",
+        "de": "Transaktionen anzeigen"
+      },
+      "destination": {
+        "url": "INJECT:RPC",
+        "method": "POST",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Address",
+          "as": "ADDRESS",
+          "description": {
+            "en": "The wallet address to list recent transactions for.",
+            "de": "Die Wallet-Adresse, fuer die aktuelle Transaktionen gelistet werden."
+          },
+          "type": "address",
+          "source": "field",
+          "required": true,
+          "position": "payload:params.0"
+        },
+        {
+          "name": "Limit",
+          "as": "LIMIT",
+          "description": {
+            "en": "Maximum number of signatures to return (max 1000).",
+            "de": "Maximale Anzahl der Signaturen (max 1000)."
+          },
+          "type": "number",
+          "source": "field",
+          "required": false,
+          "position": "payload:params.1.limit",
+          "default": 20
+        },
+        {
+          "name": "Before",
+          "as": "BEFORE",
+          "description": {
+            "en": "Return signatures before this signature (pagination).",
+            "de": "Signaturen vor dieser Signatur (Paginierung)."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:params.1.before"
+        },
+        {
+          "name": "Until",
+          "as": "UNTIL",
+          "description": {
+            "en": "Return signatures until this signature (pagination).",
+            "de": "Signaturen bis zu dieser Signatur (Paginierung)."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:params.1.until"
+        },
+        {
+          "name": "Commitment",
+          "as": "COMMITMENT",
+          "description": {
+            "en": "Optional Solana commitment level (processed, confirmed, finalized).",
+            "de": "Optionales Solana-Commitment-Level (processed, confirmed, finalized)."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:params.1.commitment"
+        },
+        {
+          "name": "Method",
+          "as": "METHOD",
+          "type": "string",
+          "source": "hidden",
+          "position": "payload:method",
+          "default": "getSignaturesForAddress"
+        },
+        {
+          "name": "JSON RPC",
+          "as": "JSONRPC",
+          "type": "string",
+          "source": "hidden",
+          "position": "payload:jsonrpc",
+          "default": "2.0"
+        },
+        {
+          "name": "Request ID",
+          "as": "REQUEST_ID",
+          "type": "number",
+          "source": "hidden",
+          "position": "payload:id",
+          "default": 1
+        }
+      ]
+    }
+  ],
+  "output": {
+    "TRANSACTIONS": "out.result",
+    "TRANSACTION_COUNT": "transform:() => Array.isArray(results.TRANSACTIONS) ? results.TRANSACTIONS.length : 0",
+    "TRANSACTIONS_SUMMARY": "transform:() => { const txs = results.TRANSACTIONS || []; return txs.slice(0, 5).map((tx: any) => ({ signature: tx.signature, slot: tx.slot, err: tx.err, blockTime: tx.blockTime })); }"
+  },
+  "messages": {
+    "success": {
+      "en": "Retrieved {{TRANSACTION_COUNT}} transaction signature(s).",
+      "de": "{{TRANSACTION_COUNT}} Transaktionssignatur(en) abgerufen."
+    },
+    "info": {
+      "en": "This wallet shows {{TRANSACTION_COUNT}} recent transaction signature(s)",
+      "de": "Diese Wallet zeigt {{TRANSACTION_COUNT}} aktuelle Transaktionssignatur(en)"
+    }
+  },
+  "defaultChain": "solana"
+}

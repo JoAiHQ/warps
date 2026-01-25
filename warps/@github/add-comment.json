@@ -1,0 +1,87 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "GitHub: Add Comment to Issue",
+  "title": {
+    "en": "Add a comment to an issue",
+    "de": "Einen Kommentar zu einem Issue hinzufügen"
+  },
+  "description": {
+    "en": "Add a comment to a GitHub issue or pull request. Supports Markdown formatting.",
+    "de": "Füge einen Kommentar zu einem GitHub-Issue oder Pull Request hinzu. Unterstützt Markdown-Formatierung."
+  },
+  "vars": {
+    "API_KEY": "env:GITHUB_TOKEN|Get your personal access token from https://github.com/settings/tokens"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Add Comment",
+        "de": "Kommentar hinzufügen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/repos/{{OWNER}}/{{REPO}}/issues/{{ISSUE_NUMBER}}/comments",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{API_KEY}}",
+          "Accept": "application/vnd.github.v3+json",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Owner",
+          "as": "OWNER",
+          "description": {
+            "en": "The owner of the repository (username or organization)."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Repository",
+          "as": "REPO",
+          "description": {
+            "en": "The name of the repository."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Issue Number",
+          "as": "ISSUE_NUMBER",
+          "description": {
+            "en": "The number of the issue or pull request."
+          },
+          "type": "number",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Comment Body",
+          "as": "body",
+          "description": {
+            "en": "The contents of the comment. Supports Markdown."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:body"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "COMMENT_ID": "out.id",
+    "COMMENT_URL": "out.html_url"
+  },
+  "messages": {
+    "success": {
+      "en": "Comment added successfully! View it at {{COMMENT_URL}}",
+      "de": "Kommentar erfolgreich hinzugefügt! Ansehen unter {{COMMENT_URL}}"
+    }
+  },
+  "defaultChain": "multiversx"
+}

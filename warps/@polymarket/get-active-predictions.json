@@ -1,0 +1,54 @@
+{
+  "protocol": "warp:3.0.0",
+  "chain": "polygon",
+  "name": "Polymarket: Get Active Predictions",
+  "title": {
+    "en": "Get Active Prediction Markets",
+    "de": "Aktive Prognosemärkte abrufen"
+  },
+  "description": {
+    "en": "Retrieve the latest active prediction markets from Polymarket showing current predictions, volumes, and end dates.",
+    "de": "Rufe die neuesten aktiven Prognosemärkte von Polymarket ab, die aktuelle Vorhersagen, Volumina und Enddaten anzeigen."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Get Active Markets",
+        "de": "Aktive Märkte abrufen"
+      },
+      "destination": {
+        "url": "INJECT:API_GAMMA/markets",
+        "method": "GET"
+      },
+      "inputs": [
+        {
+          "name": "Limit",
+          "as": "limit",
+          "description": {
+            "en": "Number of markets to retrieve.",
+            "de": "Anzahl der abzurufenden Märkte."
+          },
+          "type": "string",
+          "position": "query:limit",
+          "source": "field",
+          "required": false,
+          "default": "20"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "ALL_MARKETS": "out",
+    "ACTIVE_MARKETS": "transform:() => Array.isArray(results.ALL_MARKETS) ? results.ALL_MARKETS.filter((m: any) => m.active && !m.closed).slice(0, 10) : []",
+    "MARKET_COUNT": "transform:() => Array.isArray(results.ACTIVE_MARKETS) ? results.ACTIVE_MARKETS.length : 0",
+    "MARKETS_SUMMARY": "transform:() => Array.isArray(results.ACTIVE_MARKETS) ? results.ACTIVE_MARKETS.map((m: any) => ({ question: m.question, volume: m.volumeNum || 0, endDate: m.endDateIso || m.endDate, conditionId: m.conditionId, yesPrice: m.outcomePrices ? JSON.parse(m.outcomePrices)[0] : '0', noPrice: m.outcomePrices ? JSON.parse(m.outcomePrices)[1] : '0' })) : []"
+  },
+  "messages": {
+    "success": {
+      "en": "Found {{MARKET_COUNT}} active prediction markets",
+      "de": "{{MARKET_COUNT}} aktive Prognosemärkte gefunden"
+    }
+  },
+  "defaultChain": "polygon"
+}
