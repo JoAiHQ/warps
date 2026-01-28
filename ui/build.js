@@ -52,8 +52,9 @@ async function typeCheck() {
 
   try {
     console.log('🔍 Running TypeScript check...')
-    execSync('./node_modules/.bin/tsc --noEmit', {
-      cwd: __dirname,
+    const tscPath = resolve(__dirname, '../node_modules/.bin/tsc')
+    execSync(`${tscPath} --noEmit`, {
+      cwd: resolve(__dirname, '..'), // Run from root where node_modules is
       stdio: 'inherit',
     })
     console.log('✓ TypeScript check passed')

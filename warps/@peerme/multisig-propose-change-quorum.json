@@ -1,0 +1,58 @@
+{
+  "protocol": "warp:3.0.0",
+  "chain": "multiversx",
+  "name": "PeerMe MultiSig: Propose Change Quorum",
+  "title": "Propose changing quorum",
+  "description": "Create a proposal to change the quorum requirement for a MultiSig wallet. The quorum determines how many signatures are needed to execute proposals. This proposal requires quorum approval before the change takes effect.",
+  "vars": {
+    "MULTISIG_ADDRESS": "query:multisig"
+  },
+  "actions": [
+    {
+      "type": "contract",
+      "label": "Create proposal",
+      "address": "{{MULTISIG_ADDRESS}}",
+      "func": "proposeChangeQuorum",
+      "args": [],
+      "gasLimit": 10000000,
+      "abi": "INJECT:abis/multisig.abi.json",
+      "inputs": [
+        {
+          "name": "New Quorum",
+          "as": "NEW_QUORUM",
+          "description": "The new minimum number of signatures required to execute actions.",
+          "type": "number",
+          "position": "arg:1",
+          "source": "field",
+          "required": true,
+          "min": 1
+        }
+      ]
+    }
+  ],
+  "output": {
+    "ACTION_ID": "out",
+    "ACTION_ID_NUMBER": "transform:() => Number(results.ACTION_ID)"
+  },
+  "messages": {
+    "success": "Proposal created successfully. Action ID: {{ACTION_ID_NUMBER}}. The proposal is now awaiting signatures from board members.",
+    "card": "Proposal #{{ACTION_ID_NUMBER}}: Change Quorum to {{NEW_QUORUM}}"
+  },
+  "alerts": {
+    "proposal_created": {
+      "label": {
+        "en": "Get notified when this proposal is signed",
+        "de": "Benachrichtigung erhalten, wenn dieser Vorschlag unterzeichnet wird"
+      },
+      "trigger": "event:sign",
+      "subject": {
+        "en": "MultiSig proposal signed",
+        "de": "MultiSig-Vorschlag unterzeichnet"
+      },
+      "body": {
+        "en": "A board member has signed proposal #{{ACTION_ID_NUMBER}} to change the quorum to {{NEW_QUORUM}}",
+        "de": "Ein Vorstandsmitglied hat Vorschlag #{{ACTION_ID_NUMBER}} zur Änderung des Quorums auf {{NEW_QUORUM}} unterzeichnet"
+      }
+    }
+  }
+}

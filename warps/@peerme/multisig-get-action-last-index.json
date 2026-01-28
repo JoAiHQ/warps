@@ -1,0 +1,30 @@
+{
+  "protocol": "warp:3.0.0",
+  "chain": "multiversx",
+  "name": "PeerMe MultiSig: Get Action Last Index",
+  "title": "View last proposal ID",
+  "description": "Get the index of the last proposed action in a MultiSig wallet. This shows the total number of proposals that have been created. A value of 0 means no actions have been proposed yet.",
+  "vars": {
+    "MULTISIG_ADDRESS": "query:multisig"
+  },
+  "actions": [
+    {
+      "type": "query",
+      "label": "Get last index",
+      "address": "{{MULTISIG_ADDRESS}}",
+      "func": "getActionLastIndex",
+      "args": [],
+      "abi": "INJECT:abis/multisig.abi.json"
+    }
+  ],
+  "output": {
+    "LAST_INDEX": "out",
+    "LAST_INDEX_NUMBER": "transform:() => Number(results.LAST_INDEX)",
+    "TOTAL_PROPOSALS": "transform:() => results.LAST_INDEX_NUMBER === 0 ? 'No proposals yet' : results.LAST_INDEX_NUMBER.toString()"
+  },
+  "messages": {
+    "success": "Last proposal ID: {{LAST_INDEX_NUMBER}}. {{LAST_INDEX_NUMBER === 0 ? 'No proposals have been created yet.' : 'Total proposals created: ' + LAST_INDEX_NUMBER}}",
+    "card": "Last Proposal ID: {{LAST_INDEX_NUMBER}}",
+    "info": "{{LAST_INDEX_NUMBER === 0 ? 'No proposals have been created in this MultiSig wallet yet' : 'This MultiSig wallet has created ' + LAST_INDEX_NUMBER + ' proposal(s)'}}"
+  }
+}

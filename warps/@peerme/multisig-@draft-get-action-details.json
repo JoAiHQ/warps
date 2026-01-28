@@ -1,0 +1,78 @@
+{
+  "protocol": "warp:3.0.0",
+  "chain": "multiversx",
+  "name": "PeerMe MultiSig: Get Action Details",
+  "title": "View proposal details",
+  "description": "Get detailed information about a specific MultiSig proposal including its type, target address, and execution parameters. View the complete proposal data before signing or executing.",
+  "vars": {
+    "MULTISIG_ADDRESS": "query:multisig"
+  },
+  "actions": [
+    {
+      "type": "query",
+      "label": "Get action data",
+      "address": "{{MULTISIG_ADDRESS}}",
+      "func": "getActionData",
+      "args": [],
+      "abi": "INJECT:abis/multisig.abi.json"
+    },
+    {
+      "type": "query",
+      "label": "Get signers",
+      "address": "{{MULTISIG_ADDRESS}}",
+      "func": "getActionSigners",
+      "args": [],
+      "abi": "INJECT:abis/multisig.abi.json"
+    },
+    {
+      "type": "query",
+      "label": "Get signer count",
+      "address": "{{MULTISIG_ADDRESS}}",
+      "func": "getActionSignerCount",
+      "args": [],
+      "abi": "INJECT:abis/multisig.abi.json"
+    },
+    {
+      "type": "query",
+      "label": "Get valid signer count",
+      "address": "{{MULTISIG_ADDRESS}}",
+      "func": "getActionValidSignerCount",
+      "args": [],
+      "abi": "INJECT:abis/multisig.abi.json"
+    },
+    {
+      "type": "query",
+      "label": "Check quorum reached",
+      "address": "{{MULTISIG_ADDRESS}}",
+      "func": "quorumReached",
+      "args": [],
+      "abi": "INJECT:abis/multisig.abi.json"
+    }
+  ],
+  "inputs": [
+    {
+      "name": "Action ID",
+      "as": "ACTION_ID",
+      "description": "The ID of the proposal to view.",
+      "type": "number",
+      "position": "arg:1",
+      "source": "field",
+      "required": true
+    }
+  ],
+  "output": {
+    "ACTION_DATA": "out[0]",
+    "SIGNERS": "out[1]",
+    "SIGNER_COUNT": "out[2]",
+    "VALID_SIGNER_COUNT": "out[3]",
+    "QUORUM_REACHED": "out[4]",
+    "SIGNER_COUNT_NUMBER": "transform:() => Number(results.SIGNER_COUNT)",
+    "VALID_SIGNER_COUNT_NUMBER": "transform:() => Number(results.VALID_SIGNER_COUNT)",
+    "STATUS": "transform:() => results.QUORUM_REACHED ? 'Ready to execute' : 'Awaiting signatures'"
+  },
+  "messages": {
+    "success": "Proposal {{ACTION_ID}}: {{STATUS}}. {{VALID_SIGNER_COUNT_NUMBER}} valid signature(s) collected.",
+    "card": "Proposal {{ACTION_ID}}: {{STATUS}} ({{VALID_SIGNER_COUNT_NUMBER}} signatures)",
+    "info": "This proposal has {{VALID_SIGNER_COUNT_NUMBER}} valid signature(s) and is {{STATUS.toLowerCase()}}"
+  }
+}

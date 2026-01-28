@@ -1,0 +1,47 @@
+{
+  "protocol": "warp:3.0.0",
+  "chain": "multiversx",
+  "name": "PeerMe MultiSig: Get Pending Actions",
+  "title": "View pending proposals",
+  "description": "View all pending proposals awaiting signatures in a MultiSig wallet. See which actions are waiting for board member approval and track their signature progress.",
+  "vars": {
+    "MULTISIG_ADDRESS": "query:multisig"
+  },
+  "actions": [
+    {
+      "type": "query",
+      "label": "Get pending actions",
+      "address": "{{MULTISIG_ADDRESS}}",
+      "func": "getPendingActionFullInfo",
+      "args": [],
+      "abi": "INJECT:abis/multisig.abi.json"
+    }
+  ],
+  "output": {
+    "PENDING_ACTIONS": "out",
+    "COUNT": "transform:() => Array.isArray(results.PENDING_ACTIONS) ? results.PENDING_ACTIONS.length : 0",
+    "COUNT_FORMATTED": "transform:() => results.COUNT.toLocaleString('en-US')"
+  },
+  "messages": {
+    "success": "Found {{COUNT_FORMATTED}} pending proposal(s) awaiting signatures.",
+    "card": "Pending Proposals: {{COUNT_FORMATTED}}",
+    "info": "There are {{COUNT_FORMATTED}} proposal(s) waiting for board member signatures"
+  },
+  "alerts": {
+    "new_proposal": {
+      "label": {
+        "en": "Get notified when new proposals are created",
+        "de": "Benachrichtigung erhalten, wenn neue Vorschläge erstellt werden"
+      },
+      "trigger": "event:propose",
+      "subject": {
+        "en": "New MultiSig proposal created",
+        "de": "Neuer MultiSig-Vorschlag erstellt"
+      },
+      "body": {
+        "en": "A new proposal has been created in the MultiSig wallet and is awaiting signatures",
+        "de": "Ein neuer Vorschlag wurde in der MultiSig-Wallet erstellt und wartet auf Unterschriften"
+      }
+    }
+  }
+}

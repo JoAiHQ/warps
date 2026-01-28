@@ -1,0 +1,57 @@
+{
+  "protocol": "warp:3.0.0",
+  "chain": "multiversx",
+  "name": "PeerMe MultiSig: Propose Add Module",
+  "title": "Propose adding a module",
+  "description": "Create a proposal to add a module to the MultiSig wallet. Modules extend the functionality of the MultiSig contract. The proposal requires quorum approval before the module is added.",
+  "vars": {
+    "MULTISIG_ADDRESS": "query:multisig"
+  },
+  "actions": [
+    {
+      "type": "contract",
+      "label": "Create proposal",
+      "address": "{{MULTISIG_ADDRESS}}",
+      "func": "proposeAddModule",
+      "args": [],
+      "gasLimit": 10000000,
+      "abi": "INJECT:abis/multisig.abi.json",
+      "inputs": [
+        {
+          "name": "Module Address",
+          "as": "SC_ADDRESS",
+          "description": "The address of the smart contract module to add.",
+          "type": "address",
+          "position": "arg:1",
+          "source": "field",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "output": {
+    "ACTION_ID": "out",
+    "ACTION_ID_NUMBER": "transform:() => Number(results.ACTION_ID)"
+  },
+  "messages": {
+    "success": "Proposal created successfully. Action ID: {{ACTION_ID_NUMBER}}. The proposal to add a module is now awaiting signatures.",
+    "card": "Proposal #{{ACTION_ID_NUMBER}}: Add Module"
+  },
+  "alerts": {
+    "proposal_created": {
+      "label": {
+        "en": "Get notified when this proposal is signed",
+        "de": "Benachrichtigung erhalten, wenn dieser Vorschlag unterzeichnet wird"
+      },
+      "trigger": "event:sign",
+      "subject": {
+        "en": "MultiSig module proposal signed",
+        "de": "MultiSig-Modul-Vorschlag unterzeichnet"
+      },
+      "body": {
+        "en": "A board member has signed proposal #{{ACTION_ID_NUMBER}} to add a module",
+        "de": "Ein Vorstandsmitglied hat Vorschlag #{{ACTION_ID_NUMBER}} zur Hinzufügung eines Moduls unterzeichnet"
+      }
+    }
+  }
+}
