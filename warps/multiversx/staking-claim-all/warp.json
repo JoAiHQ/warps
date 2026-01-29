@@ -4,7 +4,7 @@
   "name": "MultiversX: Staking - Claim Rewards - All",
   "title": "Claim all your MultiversX eGold staking rewards",
   "description": "Claim all your MultiversX eGold (EGLD) staking rewards across all providers.",
-  "ui": "https://raw.githubusercontent.com/JoAiHQ/warps/main/warps/multiversx/staking-claim-all/chatapp.dist.html",
+  "ui": "{{CHATAPP_HOST}}/multiversx-staking-claim-all.html",
   "actions": [
     {
       "type": "collect",
@@ -15,7 +15,10 @@
     }
   ],
   "output": {
-    "DELEGATIONS": "out"
+    "DELEGATIONS": "out",
+    "CLAIMS": "transform:() => results.DELEGATIONS.filter(d => BigInt(d.claimableRewards || '0') > 0).map(d => ({ provider: d.contract, rewardsClaimedEgld: Number(BigInt(d.claimableRewards))/1e18, txHash: 'pending...' }))",
+    "TOTAL_REWARDS_CLAIMED_EGLD": "transform:() => results.DELEGATIONS.reduce((acc, d) => acc + (BigInt(d.claimableRewards || '0') > 0 ? Number(BigInt(d.claimableRewards))/1e18 : 0), 0)",
+    "PROVIDER_COUNT": "transform:() => results.DELEGATIONS.filter(d => BigInt(d.claimableRewards || '0') > 0).length"
   },
   "next": "multiversx-staking-claim?PROVIDER={{DELEGATIONS[].contract}}"
 }

@@ -9,10 +9,10 @@ import { App, useAppContext } from '../../../ui/lib/components'
 import { AppExecute } from '../../../ui/lib/hooks'
 import { EmptyMessageSkeleton } from '../../../ui/lib/skeletons'
 import { formatEgld, shortenAddress } from '../helpers'
-import { Delegation, DelegationData } from '../types'
 import { Config } from './config'
+import { MultiversXStakingViewDelegationsData, MultiversXStakingViewDelegationsInputs } from './warp.types'
 
-export function DelegationCard({ delegation, executeTool }: { delegation: Delegation; executeTool: AppExecute }) {
+export function DelegationCard({ delegation, executeTool }: { delegation: any; executeTool: AppExecute }) {
   const [expanded, setExpanded] = useState(false)
   const [claimRequested, setClaimRequested] = useState(false)
   const activeStake = formatEgld(delegation.userActiveStake)
@@ -118,7 +118,7 @@ export function DelegationCard({ delegation, executeTool }: { delegation: Delega
 
 export function Main() {
   const [claimAllRequested, setClaimAllRequested] = useState(false)
-  const { data, executeTool, executePrompt } = useAppContext<DelegationData>()
+  const { data, executeTool, executePrompt } = useAppContext<MultiversXStakingViewDelegationsData, MultiversXStakingViewDelegationsInputs>()
 
   if (!data) {
     return <EmptyMessageSkeleton />

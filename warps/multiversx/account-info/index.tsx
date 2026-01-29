@@ -7,10 +7,10 @@ import ReactDOM from 'react-dom/client'
 import { App, useAppContext } from '../../../ui/lib/components'
 import { EmptyMessageSkeleton } from '../../../ui/lib/skeletons'
 import { shortenAddress } from '../helpers'
-import { AccountToolData } from '../types'
+import { MultiversXAccountInfoData, MultiversXAccountInfoInputs } from './warp.types'
 
 function Main() {
-  const { data } = useAppContext<AccountToolData>()
+  const { data } = useAppContext<MultiversXAccountInfoData, MultiversXAccountInfoInputs>()
 
   if (!data) {
     return <EmptyMessageSkeleton />

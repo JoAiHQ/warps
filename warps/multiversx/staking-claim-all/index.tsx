@@ -7,9 +7,9 @@ import ReactDOM from 'react-dom/client'
 import { App, useAppContext } from '../../../ui/lib/components'
 import { EmptyMessageSkeleton } from '../../../ui/lib/skeletons'
 import { shortenAddress, shortenHash } from '../helpers'
-import { ClaimAllRewardsData, ProviderClaim } from '../types'
+import { MultiversXStakingClaimRewardsAllData, MultiversXStakingClaimRewardsAllInputs } from './warp.types'
 
-function ClaimCard({ claim }: { claim: ProviderClaim }) {
+function ClaimCard({ claim }: { claim: any }) {
   const explorerUrl = `https://explorer.multiversx.com/transactions/${claim.txHash}`
 
   return (
@@ -53,7 +53,7 @@ function ClaimCard({ claim }: { claim: ProviderClaim }) {
 }
 
 function Main() {
-  const { data } = useAppContext<ClaimAllRewardsData>()
+  const { data } = useAppContext<MultiversXStakingClaimRewardsAllData, MultiversXStakingClaimRewardsAllInputs>()
 
   if (!data) {
     return <EmptyMessageSkeleton />

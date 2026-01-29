@@ -7,10 +7,10 @@ import ReactDOM from 'react-dom/client'
 import { App, useAppContext } from '../../../ui/lib/components'
 import { EmptyMessageSkeleton } from '../../../ui/lib/skeletons'
 import { shortenAddress, shortenHash } from '../helpers'
-import { ClaimRewardsData } from '../types'
+import { MultiversXStakingClaimRewardsData, MultiversXStakingClaimRewardsInputs } from './warp.types'
 
 function Main() {
-  const { data } = useAppContext<ClaimRewardsData>()
+  const { data } = useAppContext<MultiversXStakingClaimRewardsData, MultiversXStakingClaimRewardsInputs>()
 
   if (!data) {
     return <EmptyMessageSkeleton />
