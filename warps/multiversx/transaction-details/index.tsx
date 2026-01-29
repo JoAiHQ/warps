@@ -11,7 +11,6 @@ import { MultiversXTransactionDetailsData, MultiversXTransactionDetailsInputs } 
 
 function Main() {
   const { data, inputs, config } = useAppContext<MultiversXTransactionDetailsData, MultiversXTransactionDetailsInputs>()
-
   const txHash = data?.TX_HASH || inputs?.TX_HASH
 
   if (!data && !inputs) {
@@ -28,10 +27,10 @@ function Main() {
   }
 
   const env = config?.WARP_ENV || 'mainnet'
-  const explorerUrl = env === 'mainnet' 
+  const explorerUrl = env === 'mainnet'
     ? `https://explorer.multiversx.com/transactions/${txHash}`
     : `https://${env}-explorer.multiversx.com/transactions/${txHash}`
-  
+
   const isSuccess = data?.STATUS.toLowerCase() === 'success' || data?.STATUS.toLowerCase() === 'executed'
   const isPending = data?.STATUS.toLowerCase() === 'pending' || (!data && inputs)
   const statusColor = isSuccess ? 'success' : isPending ? 'warning' : 'danger'
