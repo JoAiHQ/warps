@@ -10,5 +10,5 @@ export type MultiversXStakingViewDelegationsData = {
   TOTAL_STAKED_EGLD: number;
   TOTAL_REWARDS: number;
   TOTAL_REWARDS_EGLD: number;
-  PROVIDER_COUNT: any;
+  PROVIDER_COUNT: number;
 };

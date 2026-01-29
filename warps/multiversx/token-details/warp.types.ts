@@ -11,7 +11,7 @@ export type MultiversXTokenDetailsData = {
   TICKER: string;
   DECIMALS: number;
   SUPPLY: string;
-  SUPPLY_FORMATTED: string;
+  SUPPLY_FORMATTED: number;
   OWNER: string;
   ISSUER: string;
   TYPE: string;

@@ -102,7 +102,7 @@ export function DelegationCard({ delegation, executeTool }: { delegation: any; e
                   <dd className="font-medium">{unbondable} EGLD</dd>
                 </div>
               )}
-              {undelegatedList.map((item, idx) => (
+              {undelegatedList.map((item: any, idx: number) => (
                 <div key={idx} className="flex justify-between text-sm">
                   <dt className="text-secondary">Undelegating {item.seconds === 0 ? '(ready)' : `(${item.seconds}s remaining)`}</dt>
                   <dd className="font-medium">{formatEgld(item.amount)} EGLD</dd>
