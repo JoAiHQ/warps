@@ -237,7 +237,6 @@ async function startServer() {
 </head>
 <body>
   <div id="root"></div>
-  <script type="module" src="/index.tsx"></script>
 </body>
 </html>
       `
