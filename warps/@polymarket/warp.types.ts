@@ -5,7 +5,6 @@ export type PolymarketViewLatestPredictionsInputs = {
 };
 
 export type PolymarketViewLatestPredictionsData = {
-  RAW_MARKETS: any;
   ACTIVE_MARKETS: any;
   MARKET_COUNT: number;
   PREDICTIONS: any[];

@@ -10,4 +10,5 @@ export type MultiversXAccountInfoData = {
   BALANCE_FORMATTED: string;
   NONCE: number;
   USERNAME: any;
+  ACCOUNT_DATA: any;
 };

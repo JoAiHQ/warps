@@ -124,7 +124,7 @@ export function Main() {
     return <EmptyMessageSkeleton />
   }
 
-  if (!data.DELEGATIONS) {
+  if (!data.DELEGATIONS || data.DELEGATIONS.length === 0) {
     return (
       <EmptyMessage>
         <EmptyMessage.Title>No delegations found</EmptyMessage.Title>

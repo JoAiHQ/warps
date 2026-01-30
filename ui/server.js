@@ -199,6 +199,7 @@ async function startServer() {
                          }
                      })
 
+                     const out = json
                      // Second pass: transformations
                      Object.entries(warp.output).forEach(([key, value]) => {
                          if (typeof value === 'string' && value.startsWith('transform:')) {

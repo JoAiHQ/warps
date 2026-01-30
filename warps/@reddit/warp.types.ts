@@ -9,8 +9,7 @@ export type RedditSearchInputs = {
 };
 
 export type RedditSearchData = {
-  RAW_OUT: any;
   RESULTS: any;
-  RESULT_COUNT: number;
+  COUNT: number;
   RESULTS_SUMMARY: any[];
 };
