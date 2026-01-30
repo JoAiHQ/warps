@@ -23,4 +23,6 @@ export type MultiversXTransactionDetailsData = {
   ROUND: number;
   DATA: string;
   SMART_CONTRACT_RESULTS: string[];
+  FUNCTION: string;
+  IS_SC_CALL: boolean;
 };

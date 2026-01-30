@@ -159,6 +159,16 @@ function Main() {
                 </div>
               )}
 
+              {data.FUNCTION && (
+                <div className="flex justify-between border-t border-subtle pt-4">
+                  <dt className="flex items-center gap-2 text-secondary text-sm">
+                    <Tag className="size-4" />
+                    Function
+                  </dt>
+                  <dd className="font-mono text-sm font-medium bg-secondary/10 px-2 py-0.5 rounded text-primary">{data.FUNCTION}</dd>
+                </div>
+              )}
+
               {data.DATA && (
                 <div className="border-t border-subtle pt-4">
                   <dt className="flex items-center gap-2 text-secondary text-sm mb-1">
