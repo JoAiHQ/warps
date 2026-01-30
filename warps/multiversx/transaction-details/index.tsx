@@ -31,8 +31,8 @@ function Main() {
     ? `https://explorer.multiversx.com/transactions/${txHash}`
     : `https://${env}-explorer.multiversx.com/transactions/${txHash}`
 
-  const isSuccess = data?.STATUS.toLowerCase() === 'success' || data?.STATUS.toLowerCase() === 'executed'
-  const isPending = data?.STATUS.toLowerCase() === 'pending' || (!data && inputs)
+  const isSuccess = data?.STATUS?.toLowerCase() === 'success' || data?.STATUS?.toLowerCase() === 'executed'
+  const isPending = data?.STATUS?.toLowerCase() === 'pending' || (!data && inputs)
   const statusColor = isSuccess ? 'success' : isPending ? 'warning' : 'danger'
   const statusIcon = isSuccess ? <CheckCircle className="size-3" /> : isPending ? <Clock className="size-3" /> : <XCircle className="size-3" />
 

@@ -24,16 +24,15 @@
     }
   ],
   "output": {
-    "DELEGATIONS": "out",
-    "REWARDS_ACCUMLATED": "transform:() => results.DELEGATIONS.reduce((acc, delegation) => acc + BigInt(delegation.claimableRewards), BigInt(0)).toString()",
+    "REWARDS_ACCUMLATED": "transform:() => out.reduce((acc, delegation) => acc + BigInt(delegation.claimableRewards), BigInt(0)).toString()",
     "REWARDS": "transform:() => Number(results.REWARDS_ACCUMLATED) / 10 ** 18",
     "REWARDS_FORMATTED": "transform:() => results.REWARDS.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })",
-    "PROVIDER_AMOUNT": "transform:() => results.DELEGATIONS.length"
+    "PROVIDER_AMOUNT": "transform:() => out.length"
   },
   "messages": {
     "success": "Your claimable staking rewards balance: {{REWARDS_FORMATTED}} eGold (EGLD) from {{PROVIDER_AMOUNT}} staking providers.",
     "card": "Pending Rewards: {{REWARDS_FORMATTED}} eGold",
     "info": "You have {{REWARDS_FORMATTED}} eGold (EGLD) available to claim from {{PROVIDER_AMOUNT}} staking providers on MultiversX"
   },
-  "next": "multiversx-staking-claim?provider={{DELEGATIONS[].contract}}"
+  "next": "multiversx-staking-claim?provider={{out[].contract}}"
 }

@@ -39,8 +39,7 @@
     }
   ],
   "output": {
-    "RAW_MARKETS": "out",
-    "ACTIVE_MARKETS": "transform:() => { const markets = Array.isArray(results.RAW_MARKETS) ? results.RAW_MARKETS : []; return markets.filter((m: any) => m.active && !m.closed).slice(0, 10); }",
+    "ACTIVE_MARKETS": "transform:() => { const markets = Array.isArray(out) ? out : []; return markets.filter((m: any) => m.active && !m.closed).slice(0, 10); }",
     "MARKET_COUNT": "transform:() => Array.isArray(results.ACTIVE_MARKETS) ? results.ACTIVE_MARKETS.length : 0",
     "PREDICTIONS": "transform:() => { const markets = results.ACTIVE_MARKETS || []; return markets.map((m: any) => { const prices = m.outcomePrices ? JSON.parse(m.outcomePrices) : ['0', '0']; const outcomes = m.outcomes ? JSON.parse(m.outcomes) : ['Yes', 'No']; return { question: m.question, yesPrice: parseFloat(prices[0]) || 0, noPrice: parseFloat(prices[1]) || 0, yesOutcome: outcomes[0] || 'Yes', noOutcome: outcomes[1] || 'No', volume: m.volumeNum || 0, endDate: m.endDateIso || m.endDate, conditionId: m.conditionId, category: m.category }; }); }"
   },

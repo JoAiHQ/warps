@@ -4,7 +4,6 @@ export type MultiversXStakingClaimRewardsAllInputs = {
 };
 
 export type MultiversXStakingClaimRewardsAllData = {
-  DELEGATIONS: any;
   CLAIMS: any[];
   TOTAL_REWARDS_CLAIMED_EGLD: number;
   PROVIDER_COUNT: number;

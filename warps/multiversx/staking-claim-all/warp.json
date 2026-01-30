@@ -15,10 +15,9 @@
     }
   ],
   "output": {
-    "DELEGATIONS": "out",
-    "CLAIMS": "transform:() => results.DELEGATIONS.filter(d => BigInt(d.claimableRewards || '0') > 0).map(d => ({ provider: d.contract, rewardsClaimedEgld: Number(BigInt(d.claimableRewards))/1e18, txHash: 'pending...' }))",
-    "TOTAL_REWARDS_CLAIMED_EGLD": "transform:() => results.DELEGATIONS.reduce((acc, d) => acc + (BigInt(d.claimableRewards || '0') > 0 ? Number(BigInt(d.claimableRewards))/1e18 : 0), 0)",
-    "PROVIDER_COUNT": "transform:() => results.DELEGATIONS.filter(d => BigInt(d.claimableRewards || '0') > 0).length"
+    "CLAIMS": "transform:() => out.filter(d => BigInt(d.claimableRewards || '0') > 0).map(d => ({ provider: d.contract, rewardsClaimedEgld: Number(BigInt(d.claimableRewards))/1e18, txHash: 'pending...' }))",
+    "TOTAL_REWARDS_CLAIMED_EGLD": "transform:() => out.reduce((acc, d) => acc + (BigInt(d.claimableRewards || '0') > 0 ? Number(BigInt(d.claimableRewards))/1e18 : 0), 0)",
+    "PROVIDER_COUNT": "transform:() => out.filter(d => BigInt(d.claimableRewards || '0') > 0).length"
   },
-  "next": "multiversx-staking-claim?PROVIDER={{DELEGATIONS[].contract}}"
+  "next": "multiversx-staking-claim?PROVIDER={{out[].contract}}"
 }
