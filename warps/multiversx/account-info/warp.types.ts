@@ -5,7 +5,6 @@ export type MultiversXAccountInfoInputs = {
 };
 
 export type MultiversXAccountInfoData = {
-  ACCOUNT_DATA: any;
   BALANCE: string;
   BALANCE_EGLD: number;
   BALANCE_FORMATTED: string;

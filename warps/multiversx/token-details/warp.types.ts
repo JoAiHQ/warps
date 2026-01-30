@@ -5,7 +5,6 @@ export type MultiversXTokenDetailsInputs = {
 };
 
 export type MultiversXTokenDetailsData = {
-  TOKEN_DATA: any;
   IDENTIFIER: string;
   NAME: string;
   TICKER: string;

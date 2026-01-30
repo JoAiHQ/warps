@@ -5,7 +5,6 @@ export type MultiversXStakingViewDelegationsInputs = {
 };
 
 export type MultiversXStakingViewDelegationsData = {
-  DELEGATIONS: any;
   TOTAL_STAKED: number;
   TOTAL_STAKED_EGLD: number;
   TOTAL_REWARDS: number;

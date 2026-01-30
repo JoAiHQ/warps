@@ -5,7 +5,6 @@ export type MultiversXTransactionDetailsInputs = {
 };
 
 export type MultiversXTransactionDetailsData = {
-  TX_DATA: any;
   STATUS: string;
   TX_HASH: string;
   SENDER: string;
