@@ -4,7 +4,7 @@ export type TypefullyCreateScheduleDraftInputs = {
   content: string;
   threadify: string;
   share: string;
-  schedule-date: string;
+  'schedule-date': string;
   auto_retweet_enabled: string;
   auto_plug_enabled: string;
 };
