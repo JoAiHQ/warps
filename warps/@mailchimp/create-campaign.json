@@ -1,0 +1,87 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Mailchimp: Create Campaign",
+  "title": {
+    "en": "Create campaign",
+    "de": "Kampagne erstellen"
+  },
+  "description": {
+    "en": "Create a new campaign in Mailchimp.",
+    "de": "Erstelle eine neue Kampagne in Mailchimp."
+  },
+  "vars": {
+    "API_KEY": "env:MAILCHIMP_API_KEY|Your Mailchimp API Key.",
+    "SERVER_PREFIX": "env:MAILCHIMP_SERVER_PREFIX|The server prefix (e.g., us19)."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Create Campaign",
+      "destination": {
+        "url": "https://{{SERVER_PREFIX}}.api.mailchimp.com/3.0/campaigns",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{API_KEY}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Type",
+          "as": "type",
+          "description": {
+            "en": "Campaign type: regular, plaintext, absplit, rss, variate."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:type",
+          "default": "regular"
+        },
+        {
+          "name": "Subject Line",
+          "as": "subject_line",
+          "description": {
+            "en": "The subject line of the campaign."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:settings.subject_line"
+        },
+        {
+          "name": "Reply To",
+          "as": "reply_to",
+          "description": {
+            "en": "The 'reply-to' email address."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:settings.reply_to"
+        },
+        {
+          "name": "From Name",
+          "as": "from_name",
+          "description": {
+            "en": "The 'from' name."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:settings.from_name"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "CAMPAIGN_ID": "out.id",
+    "STATUS": "out.status"
+  },
+  "messages": {
+    "success": {
+      "en": "Campaign created! ID: {{CAMPAIGN_ID}}",
+      "de": "Kampagne erstellt! ID: {{CAMPAIGN_ID}}"
+    }
+  }
+}

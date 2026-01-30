@@ -1,0 +1,72 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Trello: Get Lists",
+  "title": {
+    "en": "Get lists",
+    "de": "Listen abrufen"
+  },
+  "description": {
+    "en": "Get the lists on a Trello board.",
+    "de": "Rufe die Listen eines Trello-Boards ab."
+  },
+  "vars": {
+    "API_KEY": "env:TRELLO_API_KEY|Get your API Key from https://trello.com/app-key",
+    "TOKEN": "env:TRELLO_TOKEN|Get your Token from https://trello.com/app-key (Generate Token)"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Get Lists",
+        "de": "Listen abrufen"
+      },
+      "destination": {
+        "url": "https://api.trello.com/1/boards/{{BOARD_ID}}/lists",
+        "method": "GET",
+        "headers": {}
+      },
+      "inputs": [
+        {
+          "name": "Board ID",
+          "as": "BOARD_ID",
+          "description": {
+            "en": "The ID of the board."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:BOARD_ID"
+        },
+        {
+          "name": "Key",
+          "as": "key",
+          "description": "API Key",
+          "type": "string",
+          "source": "variable",
+          "value": "API_KEY",
+          "position": "query:key",
+          "required": true
+        },
+        {
+          "name": "Token",
+          "as": "token",
+          "description": "API Token",
+          "type": "string",
+          "source": "variable",
+          "value": "TOKEN",
+          "position": "query:token",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "output": {
+    "LISTS": "out"
+  },
+  "messages": {
+    "success": {
+      "en": "Retrieved {{LISTS.length}} lists.",
+      "de": "{{LISTS.length}} Listen abgerufen."
+    }
+  }
+}

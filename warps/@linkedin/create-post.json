@@ -1,0 +1,95 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "LinkedIn: Create Post",
+  "title": {
+    "en": "Create post",
+    "de": "Beitrag erstellen"
+  },
+  "description": {
+    "en": "Create a text post on LinkedIn.",
+    "de": "Erstelle einen Textbeitrag auf LinkedIn."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:LINKEDIN_ACCESS_TOKEN|Your LinkedIn OAuth 2.0 Access Token."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Create Post",
+      "destination": {
+        "url": "https://api.linkedin.com/v2/ugcPosts",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Author URN",
+          "as": "author",
+          "description": {
+            "en": "The URN of the author (e.g., 'urn:li:person:12345')."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:author"
+        },
+        {
+          "name": "Text",
+          "as": "text",
+          "description": {
+            "en": "The content of the post."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:specificContent.com.linkedin.ugc.ShareContent.shareCommentary.text"
+        },
+        {
+          "name": "Visibility",
+          "as": "visibility",
+          "description": {
+            "en": "Visibility: 'PUBLIC' or 'CONNECTIONS'."
+          },
+          "type": "string",
+          "source": "hidden",
+          "position": "payload:visibility.com.linkedin.ugc.MemberNetworkVisibility",
+          "default": "PUBLIC"
+        },
+        {
+          "name": "Share Media Category",
+          "as": "shareMediaCategory",
+          "description": {
+            "en": "Category of share."
+          },
+          "type": "string",
+          "source": "hidden",
+          "position": "payload:specificContent.com.linkedin.ugc.ShareContent.shareMediaCategory",
+          "default": "NONE"
+        },
+        {
+          "name": "Lifecycle State",
+          "as": "lifecycleState",
+          "description": {
+            "en": "State of the post."
+          },
+          "type": "string",
+          "source": "hidden",
+          "position": "payload:lifecycleState",
+          "default": "PUBLISHED"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "POST_ID": "out.id"
+  },
+  "messages": {
+    "success": {
+      "en": "Post created! ID: {{POST_ID}}",
+      "de": "Beitrag erstellt! ID: {{POST_ID}}"
+    }
+  }
+}

@@ -1,0 +1,76 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "HubSpot: Create Contact",
+  "title": {
+    "en": "Create contact",
+    "de": "Kontakt erstellen"
+  },
+  "description": {
+    "en": "Create a new contact in HubSpot CRM.",
+    "de": "Erstelle einen neuen Kontakt im HubSpot CRM."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:HUBSPOT_ACCESS_TOKEN|Your HubSpot Private App Access Token."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Create Contact",
+      "destination": {
+        "url": "https://api.hubapi.com/crm/v3/objects/contacts",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Email",
+          "as": "email",
+          "description": {
+            "en": "The contact's email address."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:properties.email"
+        },
+        {
+          "name": "First Name",
+          "as": "firstname",
+          "description": {
+            "en": "The contact's first name."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:properties.firstname"
+        },
+        {
+          "name": "Last Name",
+          "as": "lastname",
+          "description": {
+            "en": "The contact's last name."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:properties.lastname"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "CONTACT_ID": "out.id",
+    "EMAIL": "out.properties.email",
+    "FIRST_NAME": "out.properties.firstname",
+    "LAST_NAME": "out.properties.lastname"
+  },
+  "messages": {
+    "success": {
+      "en": "Contact created! ID: {{CONTACT_ID}}",
+      "de": "Kontakt erstellt! ID: {{CONTACT_ID}}"
+    }
+  }
+}

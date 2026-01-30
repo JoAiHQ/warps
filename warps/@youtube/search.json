@@ -1,0 +1,84 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "YouTube: Search",
+  "title": {
+    "en": "Search YouTube",
+    "de": "YouTube durchsuchen"
+  },
+  "description": {
+    "en": "Search for videos, channels, or playlists on YouTube.",
+    "de": "Suche nach Videos, Kanälen oder Playlists auf YouTube."
+  },
+  "vars": {
+    "API_KEY": "env:YOUTUBE_API_KEY|Get your API Key from Google Cloud Console."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Search",
+      "destination": {
+        "url": "https://www.googleapis.com/youtube/v3/search",
+        "method": "GET",
+        "headers": {}
+      },
+      "inputs": [
+        {
+          "name": "API Key",
+          "as": "key",
+          "description": "API Key",
+          "type": "string",
+          "source": "variable",
+          "value": "API_KEY",
+          "position": "query:key",
+          "required": true
+        },
+        {
+          "name": "Query",
+          "as": "q",
+          "description": "The search query.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "query:q"
+        },
+        {
+          "name": "Part",
+          "as": "part",
+          "description": "Comma-separated list of resource properties (snippet).",
+          "type": "string",
+          "source": "hidden",
+          "position": "query:part",
+          "default": "snippet"
+        },
+        {
+          "name": "Type",
+          "as": "type",
+          "description": "Type of resource to search for (video, channel, playlist).",
+          "type": "string",
+          "source": "field",
+          "position": "query:type",
+          "default": "video"
+        },
+        {
+          "name": "Max Results",
+          "as": "maxResults",
+          "description": "Maximum number of results to return.",
+          "type": "number",
+          "source": "field",
+          "position": "query:maxResults",
+          "default": 10
+        }
+      ]
+    }
+  ],
+  "output": {
+    "ITEMS": "out.items",
+    "COUNT": "out.items.length"
+  },
+  "messages": {
+    "success": {
+      "en": "Found {{COUNT}} result(s).",
+      "de": "{{COUNT}} Ergebnis(se) gefunden."
+    }
+  }
+}

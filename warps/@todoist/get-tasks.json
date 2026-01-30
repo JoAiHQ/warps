@@ -1,0 +1,62 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Todoist: Get Tasks",
+  "title": {
+    "en": "Get tasks",
+    "de": "Aufgaben abrufen"
+  },
+  "description": {
+    "en": "Get active tasks from Todoist.",
+    "de": "Rufe aktive Aufgaben aus Todoist ab."
+  },
+  "vars": {
+    "API_TOKEN": "env:TODOIST_API_TOKEN|Your Todoist API Token."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Get Tasks",
+      "destination": {
+        "url": "https://api.todoist.com/rest/v2/tasks",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{API_TOKEN}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Project ID",
+          "as": "project_id",
+          "description": {
+            "en": "Filter tasks by project ID."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "query:project_id"
+        },
+        {
+          "name": "Filter",
+          "as": "filter",
+          "description": {
+            "en": "Filter tasks by label, etc. (e.g., 'today')."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "query:filter"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "TASKS": "out",
+    "COUNT": "out.length"
+  },
+  "messages": {
+    "success": {
+      "en": "Retrieved {{COUNT}} task(s).",
+      "de": "{{COUNT}} Aufgabe(n) abgerufen."
+    }
+  }
+}

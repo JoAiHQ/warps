@@ -1,0 +1,86 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Microsoft: Create Event",
+  "title": {
+    "en": "Create Calendar Event",
+    "de": "Kalendereintrag erstellen"
+  },
+  "description": {
+    "en": "Create a new event in your Microsoft Outlook Calendar.",
+    "de": "Erstelle einen neuen Eintrag in deinem Microsoft Outlook-Kalender."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:MICROSOFT_ACCESS_TOKEN|Your Microsoft Graph Access Token."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Create Event",
+      "destination": {
+        "url": "https://graph.microsoft.com/v1.0/me/events",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Subject",
+          "as": "subject",
+          "description": {
+            "en": "The title of the event."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:subject"
+        },
+        {
+          "name": "Start Time",
+          "as": "startDateTime",
+          "description": {
+            "en": "Start time (ISO 8601, e.g., '2024-01-01T10:00:00')."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:start.dateTime"
+        },
+        {
+          "name": "End Time",
+          "as": "endDateTime",
+          "description": {
+            "en": "End time (ISO 8601)."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:end.dateTime"
+        },
+        {
+          "name": "Time Zone",
+          "as": "timeZone",
+          "description": {
+            "en": "Time zone (e.g., 'UTC', 'Pacific Standard Time')."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:start.timeZone",
+          "default": "UTC"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "EVENT_ID": "out.id",
+    "WEB_LINK": "out.webLink"
+  },
+  "messages": {
+    "success": {
+      "en": "Event created! Link: {{WEB_LINK}}",
+      "de": "Ereignis erstellt! Link: {{WEB_LINK}}"
+    }
+  }
+}

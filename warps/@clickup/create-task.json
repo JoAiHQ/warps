@@ -1,0 +1,86 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "ClickUp: Create Task",
+  "title": {
+    "en": "Create task",
+    "de": "Aufgabe erstellen"
+  },
+  "description": {
+    "en": "Create a new task in a ClickUp list.",
+    "de": "Erstelle eine neue Aufgabe in einer ClickUp-Liste."
+  },
+  "vars": {
+    "API_TOKEN": "env:CLICKUP_API_TOKEN|Your ClickUp Personal API Token."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Create Task",
+      "destination": {
+        "url": "https://api.clickup.com/api/v2/list/{{LIST_ID}}/task",
+        "method": "POST",
+        "headers": {
+          "Authorization": "{{API_TOKEN}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "List ID",
+          "as": "LIST_ID",
+          "description": {
+            "en": "The ID of the list."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:LIST_ID"
+        },
+        {
+          "name": "Name",
+          "as": "name",
+          "description": {
+            "en": "The name of the task."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:name"
+        },
+        {
+          "name": "Content",
+          "as": "description",
+          "description": {
+            "en": "The description content of the task."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:description"
+        },
+        {
+          "name": "Priority",
+          "as": "priority",
+          "description": {
+            "en": "Priority (1 = Urgent, 2 = High, 3 = Normal, 4 = Low)."
+          },
+          "type": "number",
+          "source": "field",
+          "required": false,
+          "position": "payload:priority"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "TASK_ID": "out.id",
+    "TASK_NAME": "out.name",
+    "URL": "out.url"
+  },
+  "messages": {
+    "success": {
+      "en": "Task '{{TASK_NAME}}' created! ID: {{TASK_ID}}. Link: {{URL}}",
+      "de": "Aufgabe '{{TASK_NAME}}' erstellt! ID: {{TASK_ID}}. Link: {{URL}}"
+    }
+  }
+}

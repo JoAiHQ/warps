@@ -1,0 +1,76 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Zoho CRM: Get Records",
+  "title": {
+    "en": "Get records",
+    "de": "Datensätze abrufen"
+  },
+  "description": {
+    "en": "Get records from a Zoho CRM module (e.g., Leads, Contacts).",
+    "de": "Rufe Datensätze aus einem Zoho CRM-Modul ab (z.B. Leads, Kontakte)."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:ZOHO_ACCESS_TOKEN|Your Zoho CRM OAuth Access Token.",
+    "API_DOMAIN": "env:ZOHO_API_DOMAIN|Your Zoho API Domain (e.g., www.zohoapis.com)."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Get Records",
+      "destination": {
+        "url": "https://{{API_DOMAIN}}/crm/v2/{{MODULE}}",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Zoho-oauthtoken {{ACCESS_TOKEN}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Module",
+          "as": "MODULE",
+          "description": {
+            "en": "The module name (e.g., Leads, Contacts, Accounts)."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:MODULE"
+        },
+        {
+          "name": "Page",
+          "as": "page",
+          "description": {
+            "en": "Page number."
+          },
+          "type": "number",
+          "source": "field",
+          "required": false,
+          "position": "query:page",
+          "default": 1
+        },
+        {
+          "name": "Per Page",
+          "as": "per_page",
+          "description": {
+            "en": "Number of records per page."
+          },
+          "type": "number",
+          "source": "field",
+          "required": false,
+          "position": "query:per_page",
+          "default": 20
+        }
+      ]
+    }
+  ],
+  "output": {
+    "RECORDS": "out.data",
+    "COUNT": "out.data.length"
+  },
+  "messages": {
+    "success": {
+      "en": "Retrieved {{COUNT}} record(s).",
+      "de": "{{COUNT}} Datensatz/Datensätze abgerufen."
+    }
+  }
+}

@@ -1,0 +1,67 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Airtable: List Records",
+  "title": {
+    "en": "List records",
+    "de": "Datensätze auflisten"
+  },
+  "description": {
+    "en": "List records from an Airtable base and table.",
+    "de": "Liste Datensätze aus einer Airtable-Base und Tabelle auf."
+  },
+  "vars": {
+    "API_KEY": "env:AIRTABLE_API_KEY|Your Airtable Personal Access Token."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "List Records",
+      "destination": {
+        "url": "https://api.airtable.com/v0/{{BASE_ID}}/{{TABLE_ID}}",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{API_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Base ID",
+          "as": "BASE_ID",
+          "description": "The ID of the base.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:BASE_ID"
+        },
+        {
+          "name": "Table ID",
+          "as": "TABLE_ID",
+          "description": "The ID or name of the table.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:TABLE_ID"
+        },
+        {
+          "name": "Max Records",
+          "as": "maxRecords",
+          "description": "Maximum number of records to return.",
+          "type": "number",
+          "source": "field",
+          "required": false,
+          "position": "query:maxRecords"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "RECORDS": "out.records",
+    "COUNT": "out.records.length"
+  },
+  "messages": {
+    "success": {
+      "en": "Retrieved {{COUNT}} record(s).",
+      "de": "{{COUNT}} Datensatz/Datensätze abgerufen."
+    }
+  }
+}

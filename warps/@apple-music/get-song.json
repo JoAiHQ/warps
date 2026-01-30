@@ -1,0 +1,69 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Apple Music: Get Song",
+  "title": {
+    "en": "Get song details",
+    "de": "Song-Details abrufen"
+  },
+  "description": {
+    "en": "Fetch details for a specific song by ID from Apple Music.",
+    "de": "Rufe Details für einen bestimmten Song per ID von Apple Music ab."
+  },
+  "vars": {
+    "DEVELOPER_TOKEN": "env:APPLE_MUSIC_DEVELOPER_TOKEN|Signed JWT (ES256) from Apple Developer Account."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Get Song",
+        "de": "Song abrufen"
+      },
+      "destination": {
+        "url": "https://api.music.apple.com/v1/catalog/{{storefront}}/songs/{{id}}",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{DEVELOPER_TOKEN}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Song ID",
+          "as": "id",
+          "description": {
+            "en": "The unique Apple Music ID for the song."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:id"
+        },
+        {
+          "name": "Storefront",
+          "as": "storefront",
+          "description": {
+            "en": "The two-letter country code (e.g., 'us')."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:storefront",
+          "default": "us"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "NAME": "out.data.0.attributes.name",
+    "ARTIST": "out.data.0.attributes.artistName",
+    "ALBUM": "out.data.0.attributes.albumName",
+    "URL": "out.data.0.attributes.url",
+    "PREVIEW": "out.data.0.attributes.previews.0.url"
+  },
+  "messages": {
+    "success": {
+      "en": "Song: {{NAME}} by {{ARTIST}} ({{ALBUM}}). Link: {{URL}}",
+      "de": "Song: {{NAME}} von {{ARTIST}} ({{ALBUM}}). Link: {{URL}}"
+    }
+  }
+}

@@ -1,0 +1,84 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Microsoft: Send Email",
+  "title": {
+    "en": "Send Outlook email",
+    "de": "Outlook-E-Mail senden"
+  },
+  "description": {
+    "en": "Send an email using Microsoft Outlook (Graph API).",
+    "de": "Sende eine E-Mail über Microsoft Outlook (Graph API)."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:MICROSOFT_ACCESS_TOKEN|Your Microsoft Graph Access Token."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Send Email",
+      "destination": {
+        "url": "https://graph.microsoft.com/v1.0/me/sendMail",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "To",
+          "as": "to",
+          "description": {
+            "en": "Recipient email address."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:message.toRecipients.0.emailAddress.address"
+        },
+        {
+          "name": "Subject",
+          "as": "subject",
+          "description": {
+            "en": "Email subject."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:message.subject"
+        },
+        {
+          "name": "Body",
+          "as": "content",
+          "description": {
+            "en": "Email body content."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:message.body.content"
+        },
+        {
+          "name": "Content Type",
+          "as": "contentType",
+          "description": {
+            "en": "Body type: 'Text' or 'HTML'."
+          },
+          "type": "string",
+          "source": "hidden",
+          "position": "payload:message.body.contentType",
+          "default": "Text"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "STATUS": "out.status"
+  },
+  "messages": {
+    "success": {
+      "en": "Email sent successfully.",
+      "de": "E-Mail erfolgreich gesendet."
+    }
+  }
+}

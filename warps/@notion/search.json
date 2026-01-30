@@ -1,0 +1,79 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Notion: Search",
+  "title": {
+    "en": "Search pages",
+    "de": "Seiten suchen"
+  },
+  "description": {
+    "en": "Search for pages or databases in Notion. Filters by title.",
+    "de": "Suche nach Seiten oder Datenbanken in Notion. Filtert nach Titel."
+  },
+  "vars": {
+    "API_KEY": "env:NOTION_API_KEY|Get your API key from Notion Integrations at https://www.notion.so/my-integrations"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Search",
+        "de": "Suchen"
+      },
+      "destination": {
+        "url": "https://api.notion.com/v1/search",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{API_KEY}}",
+          "Content-Type": "application/json",
+          "Notion-Version": "2022-06-28"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Query",
+          "as": "query",
+          "description": {
+            "en": "The text to search for."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:query"
+        },
+        {
+          "name": "Sort Direction",
+          "as": "direction",
+          "description": {
+            "en": "Sort direction: 'ascending' or 'descending'. Defaults to descending by last edited time."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:sort.direction",
+          "default": "descending"
+        },
+        {
+          "name": "Sort Timestamp",
+          "as": "timestamp",
+          "description": {
+            "en": "Timestamp to sort by. Currently only 'last_edited_time' is supported."
+          },
+          "type": "string",
+          "source": "hidden",
+          "position": "payload:sort.timestamp",
+          "default": "last_edited_time"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "RESULTS": "out.results",
+    "COUNT": "out.results.length"
+  },
+  "messages": {
+    "success": {
+      "en": "Found {{COUNT}} result(s).",
+      "de": "{{COUNT}} Ergebnis(se) gefunden."
+    }
+  }
+}

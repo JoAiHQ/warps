@@ -1,0 +1,51 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Google Tasks: List Tasklists",
+  "title": {
+    "en": "List tasklists",
+    "de": "Aufgabenlisten auflisten"
+  },
+  "description": {
+    "en": "List your Google Tasks tasklists.",
+    "de": "Liste deine Google Tasks-Aufgabenlisten auf."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:GOOGLE_TASKS_ACCESS_TOKEN|OAuth 2.0 access token with https://www.googleapis.com/auth/tasks.readonly scope."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "List Tasklists",
+      "destination": {
+        "url": "https://tasks.googleapis.com/tasks/v1/users/@me/lists",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Max Results",
+          "as": "maxResults",
+          "description": {
+            "en": "Maximum number of tasklists to return."
+          },
+          "type": "number",
+          "source": "field",
+          "required": false,
+          "position": "query:maxResults",
+          "default": 20
+        }
+      ]
+    }
+  ],
+  "output": {
+    "TASKLISTS": "out.items"
+  },
+  "messages": {
+    "success": {
+      "en": "Retrieved tasklists.",
+      "de": "Aufgabenlisten abgerufen."
+    }
+  }
+}

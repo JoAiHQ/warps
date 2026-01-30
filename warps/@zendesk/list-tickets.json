@@ -1,0 +1,76 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Zendesk: List Tickets",
+  "title": {
+    "en": "List tickets",
+    "de": "Tickets auflisten"
+  },
+  "description": {
+    "en": "List support tickets from Zendesk.",
+    "de": "Liste Support-Tickets aus Zendesk auf."
+  },
+  "vars": {
+    "SUBDOMAIN": "env:ZENDESK_SUBDOMAIN|Your Zendesk subdomain (e.g., 'your-company').",
+    "EMAIL": "env:ZENDESK_EMAIL|Your Zendesk account email.",
+    "API_TOKEN": "env:ZENDESK_API_TOKEN|Your Zendesk API Token."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "List Tickets",
+      "destination": {
+        "url": "https://{{SUBDOMAIN}}.zendesk.com/api/v2/tickets.json",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Basic {{AUTH_HEADER}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Auth Header",
+          "as": "AUTH_HEADER",
+          "description": "Base64 encoded 'email/token:api_token'",
+          "type": "string",
+          "source": "variable",
+          "value": "EMAIL/token:API_TOKEN",
+          "position": "header:Authorization",
+          "required": true
+        },
+        {
+          "name": "Page",
+          "as": "page",
+          "description": {
+            "en": "Page number."
+          },
+          "type": "number",
+          "source": "field",
+          "required": false,
+          "position": "query:page",
+          "default": 1
+        },
+        {
+          "name": "Per Page",
+          "as": "per_page",
+          "description": {
+            "en": "Number of tickets per page."
+          },
+          "type": "number",
+          "source": "field",
+          "required": false,
+          "position": "query:per_page",
+          "default": 20
+        }
+      ]
+    }
+  ],
+  "output": {
+    "TICKETS": "out.tickets",
+    "COUNT": "out.count"
+  },
+  "messages": {
+    "success": {
+      "en": "Found {{COUNT}} ticket(s).",
+      "de": "{{COUNT}} Ticket(s) gefunden."
+    }
+  }
+}

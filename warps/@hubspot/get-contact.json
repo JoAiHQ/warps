@@ -1,0 +1,64 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "HubSpot: Get Contact",
+  "title": {
+    "en": "Get contact",
+    "de": "Kontakt abrufen"
+  },
+  "description": {
+    "en": "Retrieve a contact from HubSpot by ID.",
+    "de": "Rufe einen Kontakt aus HubSpot per ID ab."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:HUBSPOT_ACCESS_TOKEN|Your HubSpot Private App Access Token."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Get Contact",
+      "destination": {
+        "url": "https://api.hubapi.com/crm/v3/objects/contacts/{{CONTACT_ID}}",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Contact ID",
+          "as": "CONTACT_ID",
+          "description": {
+            "en": "The ID of the contact."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:CONTACT_ID"
+        },
+        {
+          "name": "Properties",
+          "as": "properties",
+          "description": {
+            "en": "Comma-separated list of properties to retrieve."
+          },
+          "type": "string",
+          "source": "hidden",
+          "position": "query:properties",
+          "default": "email,firstname,lastname,phone"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "CONTACT_ID": "out.id",
+    "EMAIL": "out.properties.email",
+    "FIRST_NAME": "out.properties.firstname",
+    "LAST_NAME": "out.properties.lastname"
+  },
+  "messages": {
+    "success": {
+      "en": "Contact found: {{FIRST_NAME}} {{LAST_NAME}} ({{EMAIL}})",
+      "de": "Kontakt gefunden: {{FIRST_NAME}} {{LAST_NAME}} ({{EMAIL}})"
+    }
+  }
+}

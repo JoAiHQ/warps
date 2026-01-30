@@ -1,0 +1,52 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Google Docs: Create Document",
+  "title": {
+    "en": "Create document",
+    "de": "Dokument erstellen"
+  },
+  "description": {
+    "en": "Create a new Google Doc.",
+    "de": "Erstelle ein neues Google Doc."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:GOOGLE_DOCS_ACCESS_TOKEN|OAuth 2.0 access token with https://www.googleapis.com/auth/documents scope."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Create Document",
+      "destination": {
+        "url": "https://docs.googleapis.com/v1/documents",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Title",
+          "as": "title",
+          "description": {
+            "en": "The title of the new document."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:title"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "DOCUMENT_ID": "out.documentId",
+    "TITLE": "out.title"
+  },
+  "messages": {
+    "success": {
+      "en": "Document '{{TITLE}}' created! ID: {{DOCUMENT_ID}}",
+      "de": "Dokument '{{TITLE}}' erstellt! ID: {{DOCUMENT_ID}}"
+    }
+  }
+}

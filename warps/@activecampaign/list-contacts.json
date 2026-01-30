@@ -1,0 +1,64 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "ActiveCampaign: List Contacts",
+  "title": {
+    "en": "List contacts",
+    "de": "Kontakte auflisten"
+  },
+  "description": {
+    "en": "List contacts in ActiveCampaign.",
+    "de": "Liste Kontakte in ActiveCampaign auf."
+  },
+  "vars": {
+    "API_URL": "env:ACTIVECAMPAIGN_API_URL|Your API URL (e.g., https://account.api-us1.com).",
+    "API_TOKEN": "env:ACTIVECAMPAIGN_API_TOKEN|Your API Token."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "List Contacts",
+      "destination": {
+        "url": "{{API_URL}}/api/3/contacts",
+        "method": "GET",
+        "headers": {
+          "Api-Token": "{{API_TOKEN}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Limit",
+          "as": "limit",
+          "description": {
+            "en": "Number of contacts to return."
+          },
+          "type": "number",
+          "source": "field",
+          "required": false,
+          "position": "query:limit",
+          "default": 20
+        },
+        {
+          "name": "Search",
+          "as": "search",
+          "description": {
+            "en": "Search term for filtering contacts."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "query:search"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "CONTACTS": "out.contacts",
+    "COUNT": "out.meta.total"
+  },
+  "messages": {
+    "success": {
+      "en": "Found {{COUNT}} contact(s).",
+      "de": "{{COUNT}} Kontakt(e) gefunden."
+    }
+  }
+}

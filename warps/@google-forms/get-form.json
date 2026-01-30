@@ -1,0 +1,52 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Google Forms: Get Form",
+  "title": {
+    "en": "Get form",
+    "de": "Formular abrufen"
+  },
+  "description": {
+    "en": "Get metadata for a Google Form.",
+    "de": "Rufe Metadaten für ein Google Formular ab."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:GOOGLE_FORMS_ACCESS_TOKEN|OAuth 2.0 access token with https://www.googleapis.com/auth/forms.body.readonly scope."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Get Form",
+      "destination": {
+        "url": "https://forms.googleapis.com/v1/forms/{{FORM_ID}}",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Form ID",
+          "as": "FORM_ID",
+          "description": {
+            "en": "The ID of the form."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:FORM_ID"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "FORM_ID": "out.formId",
+    "TITLE": "out.info.title",
+    "DOCUMENT_TITLE": "out.info.documentTitle"
+  },
+  "messages": {
+    "success": {
+      "en": "Form: {{TITLE}} ({{FORM_ID}})",
+      "de": "Formular: {{TITLE}} ({{FORM_ID}})"
+    }
+  }
+}

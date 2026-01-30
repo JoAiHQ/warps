@@ -1,0 +1,53 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Dropbox: List Folder",
+  "title": {
+    "en": "List folder",
+    "de": "Ordner auflisten"
+  },
+  "description": {
+    "en": "List files and folders in Dropbox.",
+    "de": "Liste Dateien und Ordner in Dropbox auf."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:DROPBOX_ACCESS_TOKEN|Your Dropbox Access Token."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "List Folder",
+      "destination": {
+        "url": "https://api.dropboxapi.com/2/files/list_folder",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Path",
+          "as": "path",
+          "description": {
+            "en": "The path to the folder. Empty string for root."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:path",
+          "default": ""
+        }
+      ]
+    }
+  ],
+  "output": {
+    "ENTRIES": "out.entries",
+    "COUNT": "out.entries.length"
+  },
+  "messages": {
+    "success": {
+      "en": "Found {{COUNT}} item(s).",
+      "de": "{{COUNT}} Element(e) gefunden."
+    }
+  }
+}

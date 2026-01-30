@@ -1,0 +1,71 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Google Drive: Create Folder",
+  "title": {
+    "en": "Create folder"
+  },
+  "description": {
+    "en": "Create a new folder in Google Drive."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:GOOGLE_DRIVE_ACCESS_TOKEN|OAuth 2.0 access token with https://www.googleapis.com/auth/drive.file scope."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Create Folder",
+      "destination": {
+        "url": "https://www.googleapis.com/drive/v3/files",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Name",
+          "as": "name",
+          "description": {
+            "en": "The name of the folder."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:name"
+        },
+        {
+          "name": "Mime Type",
+          "as": "mimeType",
+          "description": {
+            "en": "Mime type for folder."
+          },
+          "type": "string",
+          "source": "hidden",
+          "position": "payload:mimeType",
+          "default": "application/vnd.google-apps.folder"
+        },
+        {
+          "name": "Parent ID",
+          "as": "parentId",
+          "description": {
+            "en": "The ID of the parent folder."
+          },
+          "bot": "The ID of the parent folder. To create in root, omit this.",
+          "type": "string",
+          "source": "field",
+          "position": "payload:parents.0"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "FOLDER_ID": "out.id",
+    "FOLDER_NAME": "out.name"
+  },
+  "messages": {
+    "success": {
+      "en": "Folder '{{FOLDER_NAME}}' created! ID: {{FOLDER_ID}}"
+    }
+  }
+}

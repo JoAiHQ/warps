@@ -1,0 +1,57 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Google Drive: List Files",
+  "title": {
+    "en": "List files"
+  },
+  "description": {
+    "en": "List files in Google Drive."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:GOOGLE_DRIVE_ACCESS_TOKEN|OAuth 2.0 access token with https://www.googleapis.com/auth/drive.readonly scope."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "List Files",
+      "destination": {
+        "url": "https://www.googleapis.com/drive/v3/files",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Page Size",
+          "as": "pageSize",
+          "description": {
+            "en": "Maximum number of files to return."
+          },
+          "type": "number",
+          "source": "field",
+          "position": "query:pageSize"
+        },
+        {
+          "name": "Query",
+          "as": "q",
+          "description": {
+            "en": "Search query (e.g., \"name contains 'report'\")."
+          },
+          "type": "string",
+          "source": "field",
+          "position": "query:q"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "FILES": "out.files",
+    "NEXT_PAGE_TOKEN": "out.nextPageToken"
+  },
+  "messages": {
+    "success": {
+      "en": "Found {{FILES.length}} files."
+    }
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Zoho CRM: Create Lead",
+  "title": {
+    "en": "Create Lead",
+    "de": "Lead erstellen"
+  },
+  "description": {
+    "en": "Create a new lead in Zoho CRM.",
+    "de": "Erstelle einen neuen Lead in Zoho CRM."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:ZOHO_ACCESS_TOKEN|Your Zoho CRM OAuth Access Token.",
+    "API_DOMAIN": "env:ZOHO_API_DOMAIN|Your Zoho API Domain (e.g., www.zohoapis.com)."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Create Lead",
+      "destination": {
+        "url": "https://{{API_DOMAIN}}/crm/v2/Leads",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Zoho-oauthtoken {{ACCESS_TOKEN}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Last Name",
+          "as": "Last_Name",
+          "description": {
+            "en": "The lead's last name."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:data.0.Last_Name"
+        },
+        {
+          "name": "Company",
+          "as": "Company",
+          "description": {
+            "en": "The lead's company."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:data.0.Company"
+        },
+        {
+          "name": "Email",
+          "as": "Email",
+          "description": {
+            "en": "The lead's email."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:data.0.Email"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "LEAD_ID": "out.data.0.details.id",
+    "STATUS": "out.data.0.status"
+  },
+  "messages": {
+    "success": {
+      "en": "Lead created! ID: {{LEAD_ID}}",
+      "de": "Lead erstellt! ID: {{LEAD_ID}}"
+    }
+  }
+}

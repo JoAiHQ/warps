@@ -1,0 +1,75 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Todoist: Create Task",
+  "title": {
+    "en": "Create task",
+    "de": "Aufgabe erstellen"
+  },
+  "description": {
+    "en": "Create a new task in Todoist.",
+    "de": "Erstelle eine neue Aufgabe in Todoist."
+  },
+  "vars": {
+    "API_TOKEN": "env:TODOIST_API_TOKEN|Your Todoist API Token."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Create Task",
+      "destination": {
+        "url": "https://api.todoist.com/rest/v2/tasks",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{API_TOKEN}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Content",
+          "as": "content",
+          "description": {
+            "en": "The task content."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:content"
+        },
+        {
+          "name": "Description",
+          "as": "description",
+          "description": {
+            "en": "A description for the task."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:description"
+        },
+        {
+          "name": "Due Date",
+          "as": "due_string",
+          "description": {
+            "en": "Natural language due date (e.g., 'tomorrow at 12')."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:due_string"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "TASK_ID": "out.id",
+    "CONTENT": "out.content",
+    "URL": "out.url"
+  },
+  "messages": {
+    "success": {
+      "en": "Task created! ID: {{TASK_ID}}. Link: {{URL}}",
+      "de": "Aufgabe erstellt! ID: {{TASK_ID}}. Link: {{URL}}"
+    }
+  }
+}

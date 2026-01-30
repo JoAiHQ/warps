@@ -1,0 +1,61 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Google Sheets: Get Values",
+  "title": {
+    "en": "Get sheet values",
+    "de": "Tabellenwerte abrufen"
+  },
+  "description": {
+    "en": "Read values from a Google Sheet range.",
+    "de": "Lese Werte aus einem Google Sheets-Bereich."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:GOOGLE_SHEETS_ACCESS_TOKEN|OAuth 2.0 access token with https://www.googleapis.com/auth/spreadsheets.readonly scope."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Get Values",
+      "destination": {
+        "url": "https://sheets.googleapis.com/v4/spreadsheets/{{SPREADSHEET_ID}}/values/{{RANGE}}",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Spreadsheet ID",
+          "as": "SPREADSHEET_ID",
+          "description": {
+            "en": "The ID of the spreadsheet."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:SPREADSHEET_ID"
+        },
+        {
+          "name": "Range",
+          "as": "RANGE",
+          "description": {
+            "en": "The A1 notation of the values to retrieve (e.g., 'Sheet1!A1:B5')."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:RANGE"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "VALUES": "out.values"
+  },
+  "messages": {
+    "success": {
+      "en": "Retrieved values.",
+      "de": "Werte abgerufen."
+    }
+  }
+}

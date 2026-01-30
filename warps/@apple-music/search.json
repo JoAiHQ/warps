@@ -1,0 +1,89 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Apple Music: Search",
+  "title": {
+    "en": "Search Apple Music",
+    "de": "Apple Music durchsuchen"
+  },
+  "description": {
+    "en": "Search for songs, albums, artists, playlists, or music videos in the Apple Music catalog.",
+    "de": "Suche nach Songs, Alben, Künstlern, Playlists oder Musikvideos im Apple Music-Katalog."
+  },
+  "vars": {
+    "DEVELOPER_TOKEN": "env:APPLE_MUSIC_DEVELOPER_TOKEN|Signed JWT (ES256) from Apple Developer Account."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Search",
+        "de": "Suchen"
+      },
+      "destination": {
+        "url": "https://api.music.apple.com/v1/catalog/{{storefront}}/search",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{DEVELOPER_TOKEN}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Term",
+          "as": "term",
+          "description": {
+            "en": "The URL-encoded text search term."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "query:term"
+        },
+        {
+          "name": "Types",
+          "as": "types",
+          "description": {
+            "en": "Comma-separated list of types. Options: artists, albums, songs, playlists, stations."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "query:types"
+        },
+        {
+          "name": "Storefront",
+          "as": "storefront",
+          "description": {
+            "en": "The two-letter country code (e.g., 'us', 'de', 'gb')."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:storefront",
+          "default": "us"
+        },
+        {
+          "name": "Limit",
+          "as": "limit",
+          "description": {
+            "en": "Number of objects returned per type (max 25)."
+          },
+          "type": "number",
+          "source": "field",
+          "required": false,
+          "position": "query:limit"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "SONGS": "out.results.songs.data",
+    "ARTISTS": "out.results.artists.data",
+    "ALBUMS": "out.results.albums.data"
+  },
+  "messages": {
+    "success": {
+      "en": "Search completed.",
+      "de": "Suche abgeschlossen."
+    }
+  }
+}

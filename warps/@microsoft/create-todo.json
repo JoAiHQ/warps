@@ -1,0 +1,63 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Microsoft To Do: Create Task",
+  "title": {
+    "en": "Create To Do task",
+    "de": "To Do-Aufgabe erstellen"
+  },
+  "description": {
+    "en": "Create a new task in Microsoft To Do.",
+    "de": "Erstelle eine neue Aufgabe in Microsoft To Do."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:MICROSOFT_ACCESS_TOKEN|Your Microsoft Graph Access Token."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Create Task",
+      "destination": {
+        "url": "https://graph.microsoft.com/v1.0/me/todo/lists/{{LIST_ID}}/tasks",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "List ID",
+          "as": "LIST_ID",
+          "description": {
+            "en": "The ID of the task list."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:LIST_ID"
+        },
+        {
+          "name": "Title",
+          "as": "title",
+          "description": {
+            "en": "The title of the task."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:title"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "TASK_ID": "out.id",
+    "TITLE": "out.title"
+  },
+  "messages": {
+    "success": {
+      "en": "Task '{{TITLE}}' created! ID: {{TASK_ID}}",
+      "de": "Aufgabe '{{TITLE}}' erstellt! ID: {{TASK_ID}}"
+    }
+  }
+}

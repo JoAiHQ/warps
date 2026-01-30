@@ -1,0 +1,74 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Asana: Get Tasks",
+  "title": {
+    "en": "Get Asana tasks",
+    "de": "Asana-Aufgaben abrufen"
+  },
+  "description": {
+    "en": "List tasks from a specific project in Asana.",
+    "de": "Liste Aufgaben aus einem bestimmten Projekt in Asana auf."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:ASANA_ACCESS_TOKEN|Your Asana Personal Access Token."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Get Tasks",
+      "destination": {
+        "url": "https://app.asana.com/api/1.0/tasks",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Project ID",
+          "as": "project",
+          "description": {
+            "en": "The ID of the project to list tasks from."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "query:project"
+        },
+        {
+          "name": "Limit",
+          "as": "limit",
+          "description": {
+            "en": "Number of tasks to return."
+          },
+          "type": "number",
+          "source": "field",
+          "required": false,
+          "position": "query:limit",
+          "default": 20
+        },
+        {
+          "name": "Fields",
+          "as": "opt_fields",
+          "description": {
+            "en": "Fields to return (e.g., name,notes,completed)."
+          },
+          "type": "string",
+          "source": "hidden",
+          "position": "query:opt_fields",
+          "default": "name,notes,completed,permalink_url"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "TASKS": "out.data",
+    "COUNT": "out.data.length"
+  },
+  "messages": {
+    "success": {
+      "en": "Retrieved {{COUNT}} task(s).",
+      "de": "{{COUNT}} Aufgabe(n) abgerufen."
+    }
+  }
+}

@@ -1,0 +1,77 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Mailchimp: Add Subscriber",
+  "title": {
+    "en": "Add subscriber",
+    "de": "Abonnent hinzufügen"
+  },
+  "description": {
+    "en": "Add a new subscriber to a Mailchimp list.",
+    "de": "Füge einen neuen Abonnenten zu einer Mailchimp-Liste hinzu."
+  },
+  "vars": {
+    "API_KEY": "env:MAILCHIMP_API_KEY|Your Mailchimp API Key.",
+    "SERVER_PREFIX": "env:MAILCHIMP_SERVER_PREFIX|The server prefix (e.g., us19) from your API key or URL."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Add Subscriber",
+      "destination": {
+        "url": "https://{{SERVER_PREFIX}}.api.mailchimp.com/3.0/lists/{{LIST_ID}}/members",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{API_KEY}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "List ID",
+          "as": "LIST_ID",
+          "description": {
+            "en": "The ID of the list (audience)."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:LIST_ID"
+        },
+        {
+          "name": "Email",
+          "as": "email_address",
+          "description": {
+            "en": "The email address of the subscriber."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:email_address"
+        },
+        {
+          "name": "Status",
+          "as": "status",
+          "description": {
+            "en": "Subscriber status: subscribed, unsubscribed, cleaned, pending."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:status",
+          "default": "subscribed"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "ID": "out.id",
+    "EMAIL": "out.email_address",
+    "STATUS": "out.status"
+  },
+  "messages": {
+    "success": {
+      "en": "Subscriber added: {{EMAIL}} ({{STATUS}})",
+      "de": "Abonnent hinzugefügt: {{EMAIL}} ({{STATUS}})"
+    }
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JotForm: Get Submissions",
+  "title": {
+    "en": "Get submissions",
+    "de": "Einsendungen abrufen"
+  },
+  "description": {
+    "en": "Get submissions for a specific JotForm form.",
+    "de": "Rufe Einsendungen für ein bestimmtes JotForm-Formular ab."
+  },
+  "vars": {
+    "API_KEY": "env:JOTFORM_API_KEY|Your JotForm API Key."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Get Submissions",
+      "destination": {
+        "url": "https://api.jotform.com/form/{{FORM_ID}}/submissions",
+        "method": "GET",
+        "headers": {
+          "APIKEY": "{{API_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Form ID",
+          "as": "FORM_ID",
+          "description": {
+            "en": "The ID of the form."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:FORM_ID"
+        },
+        {
+          "name": "Limit",
+          "as": "limit",
+          "description": {
+            "en": "Number of submissions to return."
+          },
+          "type": "number",
+          "source": "field",
+          "required": false,
+          "position": "query:limit",
+          "default": 20
+        }
+      ]
+    }
+  ],
+  "output": {
+    "SUBMISSIONS": "out.content",
+    "COUNT": "out.resultSet.count"
+  },
+  "messages": {
+    "success": {
+      "en": "Retrieved {{COUNT}} submission(s).",
+      "de": "{{COUNT}} Einsendung(en) abgerufen."
+    }
+  }
+}

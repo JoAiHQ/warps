@@ -1,0 +1,53 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "OneNote: Create Page",
+  "title": {
+    "en": "Create page",
+    "de": "Seite erstellen"
+  },
+  "description": {
+    "en": "Create a new page in the default OneNote section.",
+    "de": "Erstelle eine neue Seite im Standard-OneNote-Abschnitt."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:MICROSOFT_ACCESS_TOKEN|Your Microsoft Graph Access Token."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Create Page",
+      "destination": {
+        "url": "https://graph.microsoft.com/v1.0/me/onenote/pages",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}",
+          "Content-Type": "application/xhtml+xml"
+        }
+      },
+      "inputs": [
+        {
+          "name": "HTML Content",
+          "as": "content",
+          "description": {
+            "en": "The HTML content of the page. Should include a <title> tag."
+          },
+          "bot": "The HTML content for the page. Example: <!DOCTYPE html><html><head><title>My Page</title></head><body><p>Hello world!</p></body></html>",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "body"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "PAGE_ID": "out.id",
+    "WEB_URL": "out.links.oneNoteWebUrl.href"
+  },
+  "messages": {
+    "success": {
+      "en": "Page created! Link: {{WEB_URL}}",
+      "de": "Seite erstellt! Link: {{WEB_URL}}"
+    }
+  }
+}

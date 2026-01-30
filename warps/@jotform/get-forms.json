@@ -1,0 +1,64 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JotForm: Get Forms",
+  "title": {
+    "en": "Get forms",
+    "de": "Formulare abrufen"
+  },
+  "description": {
+    "en": "List your JotForm forms.",
+    "de": "Liste deine JotForm-Formulare auf."
+  },
+  "vars": {
+    "API_KEY": "env:JOTFORM_API_KEY|Your JotForm API Key."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Get Forms",
+      "destination": {
+        "url": "https://api.jotform.com/user/forms",
+        "method": "GET",
+        "headers": {
+          "APIKEY": "{{API_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Limit",
+          "as": "limit",
+          "description": {
+            "en": "Number of forms to return."
+          },
+          "type": "number",
+          "source": "field",
+          "required": false,
+          "position": "query:limit",
+          "default": 20
+        },
+        {
+          "name": "Offset",
+          "as": "offset",
+          "description": {
+            "en": "Offset for pagination."
+          },
+          "type": "number",
+          "source": "field",
+          "required": false,
+          "position": "query:offset",
+          "default": 0
+        }
+      ]
+    }
+  ],
+  "output": {
+    "FORMS": "out.content",
+    "COUNT": "out.resultSet.count"
+  },
+  "messages": {
+    "success": {
+      "en": "Retrieved {{COUNT}} form(s).",
+      "de": "{{COUNT}} Formular(e) abgerufen."
+    }
+  }
+}

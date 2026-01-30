@@ -1,0 +1,57 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Gmail: List Messages",
+  "title": {
+    "en": "List messages"
+  },
+  "description": {
+    "en": "List messages in Gmail."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:GMAIL_ACCESS_TOKEN|OAuth 2.0 access token with https://www.googleapis.com/auth/gmail.readonly scope."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "List Messages",
+      "destination": {
+        "url": "https://gmail.googleapis.com/gmail/v1/users/me/messages",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Max Results",
+          "as": "maxResults",
+          "description": {
+            "en": "Maximum number of messages to return."
+          },
+          "type": "number",
+          "source": "field",
+          "position": "query:maxResults"
+        },
+        {
+          "name": "Query",
+          "as": "q",
+          "description": {
+            "en": "Search query (e.g., 'from:user@example.com')."
+          },
+          "type": "string",
+          "source": "field",
+          "position": "query:q"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "MESSAGES": "out.messages",
+    "NEXT_PAGE_TOKEN": "out.nextPageToken"
+  },
+  "messages": {
+    "success": {
+      "en": "Found {{MESSAGES.length}} messages."
+    }
+  }
+}

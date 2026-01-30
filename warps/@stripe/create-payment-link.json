@@ -1,0 +1,60 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Stripe: Create Payment Link",
+  "title": {
+    "en": "Create Payment Link",
+    "de": "Zahlungslink erstellen"
+  },
+  "description": {
+    "en": "Create a Stripe payment link for a specific price.",
+    "de": "Erstelle einen Stripe-Zahlungslink für einen bestimmten Preis."
+  },
+  "vars": {
+    "API_KEY": "env:STRIPE_SECRET_KEY|Get your Secret Key from Stripe Dashboard."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Create Link",
+      "destination": {
+        "url": "https://api.stripe.com/v1/payment_links",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{API_KEY}}",
+          "Content-Type": "application/x-www-form-urlencoded"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Price ID",
+          "as": "price",
+          "description": "The ID of the price object (e.g., price_12345).",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:line_items[0][price]"
+        },
+        {
+          "name": "Quantity",
+          "as": "quantity",
+          "description": "The quantity of the line item.",
+          "type": "number",
+          "source": "field",
+          "required": false,
+          "position": "payload:line_items[0][quantity]",
+          "default": 1
+        }
+      ]
+    }
+  ],
+  "output": {
+    "URL": "out.url",
+    "ID": "out.id"
+  },
+  "messages": {
+    "success": {
+      "en": "Payment link created: {{URL}}",
+      "de": "Zahlungslink erstellt: {{URL}}"
+    }
+  }
+}

@@ -1,0 +1,74 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Google Contacts: Create Contact",
+  "title": {
+    "en": "Create contact",
+    "de": "Kontakt erstellen"
+  },
+  "description": {
+    "en": "Create a new contact in Google Contacts.",
+    "de": "Erstelle einen neuen Kontakt in Google Kontakte."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:GOOGLE_CONTACTS_ACCESS_TOKEN|OAuth 2.0 access token with https://www.googleapis.com/auth/contacts scope."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Create Contact",
+      "destination": {
+        "url": "https://people.googleapis.com/v1/people:createContact",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Given Name",
+          "as": "givenName",
+          "description": {
+            "en": "The contact's given name."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:names.0.givenName"
+        },
+        {
+          "name": "Family Name",
+          "as": "familyName",
+          "description": {
+            "en": "The contact's family name."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:names.0.familyName"
+        },
+        {
+          "name": "Email",
+          "as": "email",
+          "description": {
+            "en": "The contact's email address."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:emailAddresses.0.value"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "RESOURCE_NAME": "out.resourceName",
+    "NAME": "out.names.0.displayName"
+  },
+  "messages": {
+    "success": {
+      "en": "Contact '{{NAME}}' created!",
+      "de": "Kontakt '{{NAME}}' erstellt!"
+    }
+  }
+}

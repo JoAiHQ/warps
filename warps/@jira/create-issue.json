@@ -1,0 +1,100 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Jira: Create Issue",
+  "title": {
+    "en": "Create Jira issue",
+    "de": "Jira-Issue erstellen"
+  },
+  "description": {
+    "en": "Create a new issue in a Jira project.",
+    "de": "Erstelle ein neues Issue in einem Jira-Projekt."
+  },
+  "vars": {
+    "DOMAIN": "env:JIRA_DOMAIN|Your Jira domain (e.g., 'your-domain' for your-domain.atlassian.net).",
+    "EMAIL": "env:JIRA_EMAIL|Your Jira account email address.",
+    "API_TOKEN": "env:JIRA_API_TOKEN|Your Jira API Token from https://id.atlassian.com/manage-profile/security/api-tokens"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Create Issue",
+      "destination": {
+        "url": "https://{{DOMAIN}}.atlassian.net/rest/api/3/issue",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Basic {{AUTH_HEADER}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Auth Header",
+          "as": "AUTH_HEADER",
+          "description": "Base64 encoded 'email:api_token'",
+          "type": "string",
+          "source": "variable",
+          "value": "EMAIL:API_TOKEN",
+          "position": "header:Authorization",
+          "required": true
+        },
+        {
+          "name": "Project Key",
+          "as": "projectKey",
+          "description": {
+            "en": "The key of the project (e.g., 'PROJ')."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:fields.project.key"
+        },
+        {
+          "name": "Summary",
+          "as": "summary",
+          "description": {
+            "en": "The title or summary of the issue."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:fields.summary"
+        },
+        {
+          "name": "Issue Type",
+          "as": "issuetype",
+          "description": {
+            "en": "The type of issue (e.g., 'Task', 'Bug', 'Story')."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:fields.issuetype.name",
+          "default": "Task"
+        },
+        {
+          "name": "Description",
+          "as": "description",
+          "description": {
+            "en": "The description of the issue (ADF format or plain text if handled by middleware)."
+          },
+          "bot": "Note: Jira uses Atlassian Document Format (ADF) for descriptions. For simple text, middleware or complex JSON construction is needed. This warp expects a simplified structure or assumes the user knows ADF.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:fields.description"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "ISSUE_ID": "out.id",
+    "ISSUE_KEY": "out.key",
+    "ISSUE_URL": "out.self"
+  },
+  "messages": {
+    "success": {
+      "en": "Issue {{ISSUE_KEY}} created! ID: {{ISSUE_ID}}",
+      "de": "Issue {{ISSUE_KEY}} erstellt! ID: {{ISSUE_ID}}"
+    }
+  }
+}

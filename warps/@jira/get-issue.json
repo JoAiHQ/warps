@@ -1,0 +1,66 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Jira: Get Issue",
+  "title": {
+    "en": "Get Jira issue",
+    "de": "Jira-Issue abrufen"
+  },
+  "description": {
+    "en": "Retrieve details of a Jira issue.",
+    "de": "Rufe Details eines Jira-Issues ab."
+  },
+  "vars": {
+    "DOMAIN": "env:JIRA_DOMAIN|Your Jira domain (e.g., 'your-domain' for your-domain.atlassian.net).",
+    "EMAIL": "env:JIRA_EMAIL|Your Jira account email address.",
+    "API_TOKEN": "env:JIRA_API_TOKEN|Your Jira API Token from https://id.atlassian.com/manage-profile/security/api-tokens"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Get Issue",
+      "destination": {
+        "url": "https://{{DOMAIN}}.atlassian.net/rest/api/3/issue/{{ISSUE_KEY}}",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Basic {{AUTH_HEADER}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Auth Header",
+          "as": "AUTH_HEADER",
+          "description": "Base64 encoded 'email:api_token'",
+          "type": "string",
+          "source": "variable",
+          "value": "EMAIL:API_TOKEN",
+          "position": "header:Authorization",
+          "required": true
+        },
+        {
+          "name": "Issue Key",
+          "as": "ISSUE_KEY",
+          "description": {
+            "en": "The key or ID of the issue (e.g., 'PROJ-123')."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:ISSUE_KEY"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "KEY": "out.key",
+    "SUMMARY": "out.fields.summary",
+    "STATUS": "out.fields.status.name",
+    "ASSIGNEE": "out.fields.assignee.displayName"
+  },
+  "messages": {
+    "success": {
+      "en": "{{KEY}}: {{SUMMARY}} ({{STATUS}})",
+      "de": "{{KEY}}: {{SUMMARY}} ({{STATUS}})"
+    }
+  }
+}

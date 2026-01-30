@@ -1,0 +1,74 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Calendly: List Event Types",
+  "title": {
+    "en": "List event types",
+    "de": "Ereignistypen auflisten"
+  },
+  "description": {
+    "en": "List available event types for a user.",
+    "de": "Liste verfügbare Ereignistypen für einen Benutzer auf."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:CALENDLY_ACCESS_TOKEN|Your Calendly Personal Access Token."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "List Event Types",
+      "destination": {
+        "url": "https://api.calendly.com/event_types",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "User URI",
+          "as": "user",
+          "description": {
+            "en": "The user URI (e.g., https://api.calendly.com/users/ABC...). Leave empty to list for authenticated user."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "query:user"
+        },
+        {
+          "name": "Organization",
+          "as": "organization",
+          "description": {
+            "en": "The organization URI."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "query:organization"
+        },
+        {
+          "name": "Count",
+          "as": "count",
+          "description": {
+            "en": "Number of items to return."
+          },
+          "type": "number",
+          "source": "field",
+          "required": false,
+          "position": "query:count",
+          "default": 20
+        }
+      ]
+    }
+  ],
+  "output": {
+    "EVENT_TYPES": "out.collection",
+    "COUNT": "out.collection.length"
+  },
+  "messages": {
+    "success": {
+      "en": "Found {{COUNT}} event type(s).",
+      "de": "{{COUNT}} Ereignistyp(en) gefunden."
+    }
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Google Contacts: Search Contacts",
+  "title": {
+    "en": "Search contacts",
+    "de": "Kontakte suchen"
+  },
+  "description": {
+    "en": "Search for contacts in Google Contacts.",
+    "de": "Suche nach Kontakten in Google Kontakte."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:GOOGLE_CONTACTS_ACCESS_TOKEN|OAuth 2.0 access token with https://www.googleapis.com/auth/contacts.readonly scope."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Search Contacts",
+      "destination": {
+        "url": "https://people.googleapis.com/v1/people:searchContacts",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Query",
+          "as": "query",
+          "description": {
+            "en": "The search query."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "query:query"
+        },
+        {
+          "name": "Read Mask",
+          "as": "readMask",
+          "description": {
+            "en": "Comma-separated list of fields to read."
+          },
+          "type": "string",
+          "source": "hidden",
+          "position": "query:readMask",
+          "default": "names,emailAddresses"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "RESULTS": "out.results"
+  },
+  "messages": {
+    "success": {
+      "en": "Search completed.",
+      "de": "Suche abgeschlossen."
+    }
+  }
+}

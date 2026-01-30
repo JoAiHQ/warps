@@ -1,0 +1,57 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Spotify: Get Track",
+  "title": {
+    "en": "Get track",
+    "de": "Song abrufen"
+  },
+  "description": {
+    "en": "Get detailed information about a single track from Spotify.",
+    "de": "Erhalte detaillierte Informationen über einen einzelnen Song von Spotify."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:SPOTIFY_ACCESS_TOKEN|OAuth access token from Spotify Developer Dashboard."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Get Track",
+        "de": "Song abrufen"
+      },
+      "destination": {
+        "url": "https://api.spotify.com/v1/tracks/{{ID}}",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Track ID",
+          "as": "ID",
+          "description": {
+            "en": "The Spotify ID for the track."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:ID"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "NAME": "out.name",
+    "ARTIST": "out.artists.0.name",
+    "ALBUM": "out.album.name",
+    "URL": "out.external_urls.spotify",
+    "PREVIEW": "out.preview_url"
+  },
+  "messages": {
+    "success": {
+      "en": "Track found: {{NAME}} by {{ARTIST}}. Listen: {{URL}}",
+      "de": "Song gefunden: {{NAME}} von {{ARTIST}}. Anhören: {{URL}}"
+    }
+  }
+}

@@ -1,0 +1,86 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Salesforce: Create Lead",
+  "title": {
+    "en": "Create Lead",
+    "de": "Lead erstellen"
+  },
+  "description": {
+    "en": "Create a new lead in Salesforce.",
+    "de": "Erstelle einen neuen Lead in Salesforce."
+  },
+  "vars": {
+    "INSTANCE_URL": "env:SALESFORCE_INSTANCE_URL|Your Salesforce Instance URL (e.g., https://your-domain.my.salesforce.com).",
+    "ACCESS_TOKEN": "env:SALESFORCE_ACCESS_TOKEN|Your Salesforce Access Token."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Create Lead",
+      "destination": {
+        "url": "{{INSTANCE_URL}}/services/data/v60.0/sobjects/Lead",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Last Name",
+          "as": "LastName",
+          "description": {
+            "en": "The lead's last name (required)."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:LastName"
+        },
+        {
+          "name": "Company",
+          "as": "Company",
+          "description": {
+            "en": "The lead's company (required)."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:Company"
+        },
+        {
+          "name": "First Name",
+          "as": "FirstName",
+          "description": {
+            "en": "The lead's first name."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:FirstName"
+        },
+        {
+          "name": "Email",
+          "as": "Email",
+          "description": {
+            "en": "The lead's email address."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:Email"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "LEAD_ID": "out.id",
+    "SUCCESS": "out.success"
+  },
+  "messages": {
+    "success": {
+      "en": "Lead created successfully! ID: {{LEAD_ID}}",
+      "de": "Lead erfolgreich erstellt! ID: {{LEAD_ID}}"
+    }
+  }
+}

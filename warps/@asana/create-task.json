@@ -1,0 +1,85 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Asana: Create Task",
+  "title": {
+    "en": "Create Asana task",
+    "de": "Asana-Aufgabe erstellen"
+  },
+  "description": {
+    "en": "Create a new task in Asana.",
+    "de": "Erstelle eine neue Aufgabe in Asana."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:ASANA_ACCESS_TOKEN|Your Asana Personal Access Token."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Create Task",
+      "destination": {
+        "url": "https://app.asana.com/api/1.0/tasks",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Name",
+          "as": "name",
+          "description": {
+            "en": "The name of the task."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:data.name"
+        },
+        {
+          "name": "Notes",
+          "as": "notes",
+          "description": {
+            "en": "Description or notes for the task."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:data.notes"
+        },
+        {
+          "name": "Project ID",
+          "as": "projects",
+          "description": {
+            "en": "The ID of the project to add the task to."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:data.projects.0"
+        },
+        {
+          "name": "Workspace ID",
+          "as": "workspace",
+          "description": {
+            "en": "The ID of the workspace (required if no project is specified)."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:data.workspace"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "TASK_ID": "out.data.gid",
+    "PERMALINK": "out.data.permalink_url"
+  },
+  "messages": {
+    "success": {
+      "en": "Task created! ID: {{TASK_ID}}. Link: {{PERMALINK}}",
+      "de": "Aufgabe erstellt! ID: {{TASK_ID}}. Link: {{PERMALINK}}"
+    }
+  }
+}

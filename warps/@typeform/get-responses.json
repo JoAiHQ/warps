@@ -1,0 +1,63 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Typeform: Get Responses",
+  "title": {
+    "en": "Get responses",
+    "de": "Antworten abrufen"
+  },
+  "description": {
+    "en": "Retrieve responses for a specific Typeform form.",
+    "de": "Rufe Antworten für ein bestimmtes Typeform-Formular ab."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:TYPEFORM_ACCESS_TOKEN|Your Typeform Personal Access Token."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Get Responses",
+      "destination": {
+        "url": "https://api.typeform.com/forms/{{FORM_ID}}/responses",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Form ID",
+          "as": "FORM_ID",
+          "description": {
+            "en": "The ID of the form."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:FORM_ID"
+        },
+        {
+          "name": "Page Size",
+          "as": "page_size",
+          "description": {
+            "en": "Number of responses to return."
+          },
+          "type": "number",
+          "source": "field",
+          "required": false,
+          "position": "query:page_size",
+          "default": 25
+        }
+      ]
+    }
+  ],
+  "output": {
+    "RESPONSES": "out.items",
+    "COUNT": "out.total_items"
+  },
+  "messages": {
+    "success": {
+      "en": "Retrieved {{COUNT}} response(s).",
+      "de": "{{COUNT}} Antwort(en) abgerufen."
+    }
+  }
+}

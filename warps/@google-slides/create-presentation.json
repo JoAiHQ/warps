@@ -1,0 +1,52 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Google Slides: Create Presentation",
+  "title": {
+    "en": "Create presentation",
+    "de": "Präsentation erstellen"
+  },
+  "description": {
+    "en": "Create a new Google Slides presentation.",
+    "de": "Erstelle eine neue Google Slides-Präsentation."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:GOOGLE_SLIDES_ACCESS_TOKEN|OAuth 2.0 access token with https://www.googleapis.com/auth/presentations scope."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Create Presentation",
+      "destination": {
+        "url": "https://slides.googleapis.com/v1/presentations",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Title",
+          "as": "title",
+          "description": {
+            "en": "The title of the new presentation."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:title"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "PRESENTATION_ID": "out.presentationId",
+    "TITLE": "out.title"
+  },
+  "messages": {
+    "success": {
+      "en": "Presentation '{{TITLE}}' created! ID: {{PRESENTATION_ID}}",
+      "de": "Präsentation '{{TITLE}}' erstellt! ID: {{PRESENTATION_ID}}"
+    }
+  }
+}

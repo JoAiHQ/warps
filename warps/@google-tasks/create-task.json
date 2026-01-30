@@ -1,0 +1,85 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Google Tasks: Create Task",
+  "title": {
+    "en": "Create task",
+    "de": "Aufgabe erstellen"
+  },
+  "description": {
+    "en": "Create a new task in a Google Tasks list.",
+    "de": "Erstelle eine neue Aufgabe in einer Google Tasks-Liste."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:GOOGLE_TASKS_ACCESS_TOKEN|OAuth 2.0 access token with https://www.googleapis.com/auth/tasks scope."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Create Task",
+      "destination": {
+        "url": "https://tasks.googleapis.com/tasks/v1/lists/{{TASKLIST_ID}}/tasks",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Tasklist ID",
+          "as": "TASKLIST_ID",
+          "description": {
+            "en": "The ID of the tasklist."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:TASKLIST_ID"
+        },
+        {
+          "name": "Title",
+          "as": "title",
+          "description": {
+            "en": "The title of the task."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:title"
+        },
+        {
+          "name": "Notes",
+          "as": "notes",
+          "description": {
+            "en": "Notes describing the task."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:notes"
+        },
+        {
+          "name": "Due Date",
+          "as": "due",
+          "description": {
+            "en": "Due date of the task (RFC 3339 timestamp)."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:due"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "TASK_ID": "out.id",
+    "TITLE": "out.title"
+  },
+  "messages": {
+    "success": {
+      "en": "Task '{{TITLE}}' created! ID: {{TASK_ID}}",
+      "de": "Aufgabe '{{TITLE}}' erstellt! ID: {{TASK_ID}}"
+    }
+  }
+}

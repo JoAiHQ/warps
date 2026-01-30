@@ -1,0 +1,51 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Tally: Get Responses",
+  "title": {
+    "en": "Get responses",
+    "de": "Antworten abrufen"
+  },
+  "description": {
+    "en": "Retrieve responses for a specific Tally form.",
+    "de": "Rufe Antworten für ein bestimmtes Tally-Formular ab."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:TALLY_ACCESS_TOKEN|Your Tally Personal Access Token."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Get Responses",
+      "destination": {
+        "url": "https://api.tally.so/forms/{{FORM_ID}}/responses",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Form ID",
+          "as": "FORM_ID",
+          "description": {
+            "en": "The ID of the form."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:FORM_ID"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "RESPONSES": "out.data",
+    "COUNT": "out.data.length"
+  },
+  "messages": {
+    "success": {
+      "en": "Retrieved {{COUNT}} response(s).",
+      "de": "{{COUNT}} Antwort(en) abgerufen."
+    }
+  }
+}

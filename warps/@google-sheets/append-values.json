@@ -1,0 +1,86 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Google Sheets: Append Values",
+  "title": {
+    "en": "Append sheet values",
+    "de": "Tabellenwerte anhängen"
+  },
+  "description": {
+    "en": "Append rows of data to a Google Sheet.",
+    "de": "Hänge Datenzeilen an ein Google Sheet an."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:GOOGLE_SHEETS_ACCESS_TOKEN|OAuth 2.0 access token with https://www.googleapis.com/auth/spreadsheets scope."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Append Values",
+      "destination": {
+        "url": "https://sheets.googleapis.com/v4/spreadsheets/{{SPREADSHEET_ID}}/values/{{RANGE}}:append",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Spreadsheet ID",
+          "as": "SPREADSHEET_ID",
+          "description": {
+            "en": "The ID of the spreadsheet."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:SPREADSHEET_ID"
+        },
+        {
+          "name": "Range",
+          "as": "RANGE",
+          "description": {
+            "en": "The A1 notation of a range to search for a table ending (e.g., 'Sheet1!A1')."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:RANGE"
+        },
+        {
+          "name": "Values",
+          "as": "values",
+          "description": {
+            "en": "JSON array of arrays of strings/numbers to append."
+          },
+          "bot": "JSON array of arrays: [[\"Name\", \"Age\"], [\"Alice\", 30]]",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:values"
+        },
+        {
+          "name": "Value Input Option",
+          "as": "valueInputOption",
+          "description": {
+            "en": "How the input data should be interpreted (RAW or USER_ENTERED)."
+          },
+          "type": "string",
+          "source": "hidden",
+          "position": "query:valueInputOption",
+          "default": "USER_ENTERED"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "UPDATED_RANGE": "out.updates.updatedRange",
+    "UPDATED_ROWS": "out.updates.updatedRows"
+  },
+  "messages": {
+    "success": {
+      "en": "Appended {{UPDATED_ROWS}} row(s).",
+      "de": "{{UPDATED_ROWS}} Zeile(n) angehängt."
+    }
+  }
+}

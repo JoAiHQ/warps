@@ -1,0 +1,101 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Zoom: Create Meeting",
+  "title": {
+    "en": "Create meeting",
+    "de": "Meeting erstellen"
+  },
+  "description": {
+    "en": "Create a scheduled or instant meeting in Zoom.",
+    "de": "Erstelle ein geplantes oder sofortiges Meeting in Zoom."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:ZOOM_ACCESS_TOKEN|OAuth access token or JWT token from Zoom App Marketplace."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Create Meeting",
+        "de": "Meeting erstellen"
+      },
+      "destination": {
+        "url": "https://api.zoom.us/v2/users/me/meetings",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Topic",
+          "as": "topic",
+          "description": {
+            "en": "The meeting topic."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:topic"
+        },
+        {
+          "name": "Type",
+          "as": "type",
+          "description": {
+            "en": "Meeting type: 1 = Instant, 2 = Scheduled, 3 = Recurring (no fixed time), 8 = Recurring (fixed time)."
+          },
+          "type": "number",
+          "source": "field",
+          "required": false,
+          "position": "payload:type",
+          "default": 2
+        },
+        {
+          "name": "Start Time",
+          "as": "start_time",
+          "description": {
+            "en": "Meeting start time in ISO 8601 format (yyyy-MM-ddTHH:mm:ss). Required for scheduled meetings."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:start_time"
+        },
+        {
+          "name": "Duration",
+          "as": "duration",
+          "description": {
+            "en": "Meeting duration in minutes."
+          },
+          "type": "number",
+          "source": "field",
+          "required": false,
+          "position": "payload:duration"
+        },
+        {
+          "name": "Password",
+          "as": "password",
+          "description": {
+            "en": "Password to join the meeting."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:password"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "MEETING_ID": "out.id",
+    "JOIN_URL": "out.join_url",
+    "START_URL": "out.start_url"
+  },
+  "messages": {
+    "success": {
+      "en": "Meeting '{{topic}}' created! Join URL: {{JOIN_URL}}",
+      "de": "Meeting '{{topic}}' erstellt! Beitritts-Link: {{JOIN_URL}}"
+    }
+  }
+}

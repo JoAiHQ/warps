@@ -1,0 +1,75 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "GitLab: Create Issue",
+  "title": {
+    "en": "Create issue",
+    "de": "Issue erstellen"
+  },
+  "description": {
+    "en": "Create a new issue in a GitLab project.",
+    "de": "Erstelle ein neues Issue in einem GitLab-Projekt."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:GITLAB_ACCESS_TOKEN|Your GitLab Personal Access Token."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Create Issue",
+      "destination": {
+        "url": "https://gitlab.com/api/v4/projects/{{PROJECT_ID}}/issues",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Project ID",
+          "as": "PROJECT_ID",
+          "description": {
+            "en": "The ID or URL-encoded path of the project."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:PROJECT_ID"
+        },
+        {
+          "name": "Title",
+          "as": "title",
+          "description": {
+            "en": "The title of the issue."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:title"
+        },
+        {
+          "name": "Description",
+          "as": "description",
+          "description": {
+            "en": "The description of the issue."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:description"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "ISSUE_ID": "out.iid",
+    "WEB_URL": "out.web_url",
+    "TITLE": "out.title"
+  },
+  "messages": {
+    "success": {
+      "en": "Issue #{{ISSUE_ID}} created! Link: {{WEB_URL}}",
+      "de": "Issue #{{ISSUE_ID}} erstellt! Link: {{WEB_URL}}"
+    }
+  }
+}

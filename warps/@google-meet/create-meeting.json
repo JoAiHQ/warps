@@ -1,0 +1,99 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Google Meet: Create Meeting",
+  "title": {
+    "en": "Create Google Meet",
+    "de": "Google Meet erstellen"
+  },
+  "description": {
+    "en": "Create a new Google Meet conference link by creating a calendar event with conference data.",
+    "de": "Erstelle einen neuen Google Meet-Konferenzlink durch Erstellen eines Kalendereintrags mit Konferenzdaten."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:GOOGLE_CALENDAR_ACCESS_TOKEN|OAuth 2.0 access token from Google."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Create Meeting",
+      "destination": {
+        "url": "https://www.googleapis.com/calendar/v3/calendars/primary/events?conferenceDataVersion=1",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Summary",
+          "as": "summary",
+          "description": {
+            "en": "The title of the meeting."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:summary"
+        },
+        {
+          "name": "Start Time",
+          "as": "startDateTime",
+          "description": {
+            "en": "Start time in ISO 8601 format (e.g., '2024-01-01T10:00:00Z')."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:start.dateTime"
+        },
+        {
+          "name": "End Time",
+          "as": "endDateTime",
+          "description": {
+            "en": "End time in ISO 8601 format."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:end.dateTime"
+        },
+        {
+          "name": "Request ID",
+          "as": "requestId",
+          "description": {
+            "en": "Unique string for the conference request."
+          },
+          "type": "string",
+          "source": "hidden",
+          "required": true,
+          "position": "payload:conferenceData.createRequest.requestId",
+          "default": "meet-{{TIMESTAMP}}"
+        },
+        {
+          "name": "Conference Solution Key",
+          "as": "conferenceSolutionKey",
+          "description": {
+            "en": "Type of conference. 'eventHangout' for Google Meet."
+          },
+          "type": "string",
+          "source": "hidden",
+          "required": true,
+          "position": "payload:conferenceData.createRequest.conferenceSolutionKey.type",
+          "default": "eventHangout"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "MEET_LINK": "out.conferenceData.entryPoints.0.uri",
+    "EVENT_ID": "out.id",
+    "HTML_LINK": "out.htmlLink"
+  },
+  "messages": {
+    "success": {
+      "en": "Google Meet created! Link: {{MEET_LINK}}",
+      "de": "Google Meet erstellt! Link: {{MEET_LINK}}"
+    }
+  }
+}

@@ -1,0 +1,95 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Pipedrive: Add Deal",
+  "title": {
+    "en": "Add deal",
+    "de": "Deal hinzufügen"
+  },
+  "description": {
+    "en": "Add a new deal to Pipedrive.",
+    "de": "Füge einen neuen Deal zu Pipedrive hinzu."
+  },
+  "vars": {
+    "API_TOKEN": "env:PIPEDRIVE_API_TOKEN|Your Pipedrive API Token."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Add Deal",
+      "destination": {
+        "url": "https://api.pipedrive.com/v1/deals",
+        "method": "POST",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "API Token",
+          "as": "api_token",
+          "description": "API Token",
+          "type": "string",
+          "source": "variable",
+          "value": "API_TOKEN",
+          "position": "query:api_token",
+          "required": true
+        },
+        {
+          "name": "Title",
+          "as": "title",
+          "description": {
+            "en": "The title of the deal."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:title"
+        },
+        {
+          "name": "Person ID",
+          "as": "person_id",
+          "description": {
+            "en": "The ID of the person associated with the deal."
+          },
+          "type": "number",
+          "source": "field",
+          "required": false,
+          "position": "payload:person_id"
+        },
+        {
+          "name": "Value",
+          "as": "value",
+          "description": {
+            "en": "The value of the deal."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:value"
+        },
+        {
+          "name": "Currency",
+          "as": "currency",
+          "description": {
+            "en": "The currency of the deal value."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:currency",
+          "default": "USD"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "DEAL_ID": "out.data.id",
+    "TITLE": "out.data.title"
+  },
+  "messages": {
+    "success": {
+      "en": "Deal added! ID: {{DEAL_ID}}",
+      "de": "Deal hinzugefügt! ID: {{DEAL_ID}}"
+    }
+  }
+}

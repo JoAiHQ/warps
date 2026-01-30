@@ -1,0 +1,63 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "TickTick: Create Task",
+  "title": {
+    "en": "Create task",
+    "de": "Aufgabe erstellen"
+  },
+  "description": {
+    "en": "Create a new task in TickTick.",
+    "de": "Erstelle eine neue Aufgabe in TickTick."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:TICKTICK_ACCESS_TOKEN|Your TickTick Access Token."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Create Task",
+      "destination": {
+        "url": "https://api.ticktick.com/open/v1/task",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Title",
+          "as": "title",
+          "description": {
+            "en": "The title of the task."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:title"
+        },
+        {
+          "name": "Content",
+          "as": "content",
+          "description": {
+            "en": "The content of the task."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:content"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "TASK_ID": "out.id",
+    "TITLE": "out.title"
+  },
+  "messages": {
+    "success": {
+      "en": "Task '{{TITLE}}' created! ID: {{TASK_ID}}",
+      "de": "Aufgabe '{{TITLE}}' erstellt! ID: {{TASK_ID}}"
+    }
+  }
+}

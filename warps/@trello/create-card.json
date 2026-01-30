@@ -1,0 +1,95 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Trello: Create Card",
+  "title": {
+    "en": "Create card",
+    "de": "Karte erstellen"
+  },
+  "description": {
+    "en": "Create a new card on a Trello board.",
+    "de": "Erstelle eine neue Karte auf einem Trello-Board."
+  },
+  "vars": {
+    "API_KEY": "env:TRELLO_API_KEY|Get your API Key from https://trello.com/app-key",
+    "TOKEN": "env:TRELLO_TOKEN|Get your Token from https://trello.com/app-key (Generate Token)"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Create Card",
+        "de": "Karte erstellen"
+      },
+      "destination": {
+        "url": "https://api.trello.com/1/cards",
+        "method": "POST",
+        "headers": {}
+      },
+      "inputs": [
+        {
+          "name": "List ID",
+          "as": "idList",
+          "description": {
+            "en": "The ID of the list the card should be created in."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "query:idList"
+        },
+        {
+          "name": "Name",
+          "as": "name",
+          "description": {
+            "en": "The name of the new card."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "query:name"
+        },
+        {
+          "name": "Description",
+          "as": "desc",
+          "description": {
+            "en": "The description for the card."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "query:desc"
+        },
+        {
+          "name": "Key",
+          "as": "key",
+          "description": "API Key",
+          "type": "string",
+          "source": "variable",
+          "value": "API_KEY",
+          "position": "query:key",
+          "required": true
+        },
+        {
+          "name": "Token",
+          "as": "token",
+          "description": "API Token",
+          "type": "string",
+          "source": "variable",
+          "value": "TOKEN",
+          "position": "query:token",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "output": {
+    "CARD_ID": "out.id",
+    "URL": "out.shortUrl"
+  },
+  "messages": {
+    "success": {
+      "en": "Card created successfully! View it at {{URL}}",
+      "de": "Karte erfolgreich erstellt! Ansehen unter {{URL}}"
+    }
+  }
+}

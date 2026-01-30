@@ -1,0 +1,77 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Spotify: Search",
+  "title": {
+    "en": "Search Spotify",
+    "de": "Spotify durchsuchen"
+  },
+  "description": {
+    "en": "Search for tracks, artists, albums, or playlists on Spotify.",
+    "de": "Suche nach Songs, Künstlern, Alben oder Playlists auf Spotify."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:SPOTIFY_ACCESS_TOKEN|OAuth access token from Spotify Developer Dashboard."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Search",
+        "de": "Suchen"
+      },
+      "destination": {
+        "url": "https://api.spotify.com/v1/search",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Query",
+          "as": "q",
+          "description": {
+            "en": "Search query keywords and optional field filters and operators."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "query:q"
+        },
+        {
+          "name": "Type",
+          "as": "type",
+          "description": {
+            "en": "A comma-separated list of item types to search across. Options: album, artist, playlist, track, show, episode, audiobook."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "query:type"
+        },
+        {
+          "name": "Limit",
+          "as": "limit",
+          "description": {
+            "en": "Maximum number of results to return (default 20, max 50)."
+          },
+          "type": "number",
+          "source": "field",
+          "required": false,
+          "position": "query:limit"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "TRACKS": "out.tracks.items",
+    "ARTISTS": "out.artists.items",
+    "ALBUMS": "out.albums.items"
+  },
+  "messages": {
+    "success": {
+      "en": "Search completed.",
+      "de": "Suche abgeschlossen."
+    }
+  }
+}

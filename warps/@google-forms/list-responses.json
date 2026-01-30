@@ -1,0 +1,62 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Google Forms: List Responses",
+  "title": {
+    "en": "List responses",
+    "de": "Antworten auflisten"
+  },
+  "description": {
+    "en": "List responses for a Google Form.",
+    "de": "Liste Antworten für ein Google Formular auf."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:GOOGLE_FORMS_ACCESS_TOKEN|OAuth 2.0 access token with https://www.googleapis.com/auth/forms.responses.readonly scope."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "List Responses",
+      "destination": {
+        "url": "https://forms.googleapis.com/v1/forms/{{FORM_ID}}/responses",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Form ID",
+          "as": "FORM_ID",
+          "description": {
+            "en": "The ID of the form."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:FORM_ID"
+        },
+        {
+          "name": "Page Size",
+          "as": "pageSize",
+          "description": {
+            "en": "The maximum number of responses to return."
+          },
+          "type": "number",
+          "source": "field",
+          "required": false,
+          "position": "query:pageSize"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "RESPONSES": "out.responses",
+    "COUNT": "out.responses.length"
+  },
+  "messages": {
+    "success": {
+      "en": "Retrieved {{COUNT}} response(s).",
+      "de": "{{COUNT}} Antwort(en) abgerufen."
+    }
+  }
+}

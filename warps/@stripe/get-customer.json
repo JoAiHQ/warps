@@ -1,0 +1,50 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Stripe: Get Customer",
+  "title": {
+    "en": "Get Customer",
+    "de": "Kunde abrufen"
+  },
+  "description": {
+    "en": "Retrieve details of a customer by ID.",
+    "de": "Rufe Details eines Kunden per ID ab."
+  },
+  "vars": {
+    "API_KEY": "env:STRIPE_SECRET_KEY|Get your Secret Key from Stripe Dashboard."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Get Customer",
+      "destination": {
+        "url": "https://api.stripe.com/v1/customers/{{CUSTOMER_ID}}",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{API_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Customer ID",
+          "as": "CUSTOMER_ID",
+          "description": "The ID of the customer (e.g., cus_12345).",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:CUSTOMER_ID"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "EMAIL": "out.email",
+    "NAME": "out.name",
+    "ID": "out.id"
+  },
+  "messages": {
+    "success": {
+      "en": "Customer: {{NAME}} ({{EMAIL}})",
+      "de": "Kunde: {{NAME}} ({{EMAIL}})"
+    }
+  }
+}

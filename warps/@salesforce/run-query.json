@@ -1,0 +1,52 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Salesforce: Run Query",
+  "title": {
+    "en": "Run SOQL Query",
+    "de": "SOQL-Abfrage ausführen"
+  },
+  "description": {
+    "en": "Execute a SOQL query against your Salesforce data.",
+    "de": "Führe eine SOQL-Abfrage gegen deine Salesforce-Daten aus."
+  },
+  "vars": {
+    "INSTANCE_URL": "env:SALESFORCE_INSTANCE_URL|Your Salesforce Instance URL (e.g., https://your-domain.my.salesforce.com).",
+    "ACCESS_TOKEN": "env:SALESFORCE_ACCESS_TOKEN|Your Salesforce Access Token."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Run Query",
+      "destination": {
+        "url": "{{INSTANCE_URL}}/services/data/v60.0/query",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Query",
+          "as": "q",
+          "description": {
+            "en": "The SOQL query (e.g., 'SELECT Id, Name FROM Account LIMIT 5')."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "query:q"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "RECORDS": "out.records",
+    "TOTAL_SIZE": "out.totalSize"
+  },
+  "messages": {
+    "success": {
+      "en": "Query returned {{TOTAL_SIZE}} record(s).",
+      "de": "Abfrage gab {{TOTAL_SIZE}} Datensatz/Datensätze zurück."
+    }
+  }
+}

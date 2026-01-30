@@ -1,0 +1,75 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Calendly: List Scheduled Events",
+  "title": {
+    "en": "List scheduled events",
+    "de": "Geplante Ereignisse auflisten"
+  },
+  "description": {
+    "en": "List events scheduled for a user.",
+    "de": "Liste geplante Ereignisse für einen Benutzer auf."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:CALENDLY_ACCESS_TOKEN|Your Calendly Personal Access Token."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "List Events",
+      "destination": {
+        "url": "https://api.calendly.com/scheduled_events",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "User URI",
+          "as": "user",
+          "description": {
+            "en": "The user URI (required by Calendly API for this endpoint)."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "query:user"
+        },
+        {
+          "name": "Status",
+          "as": "status",
+          "description": {
+            "en": "Filter by status: 'active' or 'canceled'."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "query:status",
+          "default": "active"
+        },
+        {
+          "name": "Count",
+          "as": "count",
+          "description": {
+            "en": "Number of items to return."
+          },
+          "type": "number",
+          "source": "field",
+          "required": false,
+          "position": "query:count",
+          "default": 20
+        }
+      ]
+    }
+  ],
+  "output": {
+    "EVENTS": "out.collection",
+    "COUNT": "out.collection.length"
+  },
+  "messages": {
+    "success": {
+      "en": "Found {{COUNT}} scheduled event(s).",
+      "de": "{{COUNT}} geplante(s) Ereignis(se) gefunden."
+    }
+  }
+}

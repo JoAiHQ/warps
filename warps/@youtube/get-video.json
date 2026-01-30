@@ -1,0 +1,68 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "YouTube: Get Video",
+  "title": {
+    "en": "Get video details",
+    "de": "Video-Details abrufen"
+  },
+  "description": {
+    "en": "Retrieve information about a specific YouTube video.",
+    "de": "Rufe Informationen über ein bestimmtes YouTube-Video ab."
+  },
+  "vars": {
+    "API_KEY": "env:YOUTUBE_API_KEY|Get your API Key from Google Cloud Console."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Get Video",
+      "destination": {
+        "url": "https://www.googleapis.com/youtube/v3/videos",
+        "method": "GET",
+        "headers": {}
+      },
+      "inputs": [
+        {
+          "name": "API Key",
+          "as": "key",
+          "description": "API Key",
+          "type": "string",
+          "source": "variable",
+          "value": "API_KEY",
+          "position": "query:key",
+          "required": true
+        },
+        {
+          "name": "Video ID",
+          "as": "id",
+          "description": "The ID of the video.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "query:id"
+        },
+        {
+          "name": "Part",
+          "as": "part",
+          "description": "Comma-separated list of resource properties (snippet,statistics,contentDetails).",
+          "type": "string",
+          "source": "hidden",
+          "position": "query:part",
+          "default": "snippet,statistics,contentDetails"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "TITLE": "out.items.0.snippet.title",
+    "CHANNEL": "out.items.0.snippet.channelTitle",
+    "VIEWS": "out.items.0.statistics.viewCount",
+    "DESCRIPTION": "out.items.0.snippet.description"
+  },
+  "messages": {
+    "success": {
+      "en": "Video: {{TITLE}} by {{CHANNEL}}. Views: {{VIEWS}}.",
+      "de": "Video: {{TITLE}} von {{CHANNEL}}. Aufrufe: {{VIEWS}}."
+    }
+  }
+}

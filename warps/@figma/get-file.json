@@ -1,0 +1,52 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Figma: Get File",
+  "title": {
+    "en": "Get file info",
+    "de": "Datei-Infos abrufen"
+  },
+  "description": {
+    "en": "Get information about a Figma file.",
+    "de": "Rufe Informationen über eine Figma-Datei ab."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:FIGMA_ACCESS_TOKEN|Your Figma Personal Access Token."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Get File",
+      "destination": {
+        "url": "https://api.figma.com/v1/files/{{FILE_KEY}}",
+        "method": "GET",
+        "headers": {
+          "X-Figma-Token": "{{ACCESS_TOKEN}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "File Key",
+          "as": "FILE_KEY",
+          "description": {
+            "en": "The key of the file (from the URL)."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:FILE_KEY"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "NAME": "out.name",
+    "LAST_MODIFIED": "out.lastModified",
+    "THUMBNAIL": "out.thumbnailUrl"
+  },
+  "messages": {
+    "success": {
+      "en": "File: {{NAME}} (Last modified: {{LAST_MODIFIED}})",
+      "de": "Datei: {{NAME}} (Zuletzt geändert: {{LAST_MODIFIED}})"
+    }
+  }
+}

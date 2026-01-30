@@ -1,0 +1,51 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Google Docs: Get Document",
+  "title": {
+    "en": "Get document",
+    "de": "Dokument abrufen"
+  },
+  "description": {
+    "en": "Get the content of a Google Doc.",
+    "de": "Rufe den Inhalt eines Google Docs ab."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:GOOGLE_DOCS_ACCESS_TOKEN|OAuth 2.0 access token with https://www.googleapis.com/auth/documents.readonly scope."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Get Document",
+      "destination": {
+        "url": "https://docs.googleapis.com/v1/documents/{{DOCUMENT_ID}}",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Document ID",
+          "as": "DOCUMENT_ID",
+          "description": {
+            "en": "The ID of the document."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:DOCUMENT_ID"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "TITLE": "out.title",
+    "BODY": "out.body"
+  },
+  "messages": {
+    "success": {
+      "en": "Retrieved document: {{TITLE}}",
+      "de": "Dokument abgerufen: {{TITLE}}"
+    }
+  }
+}

@@ -1,0 +1,87 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Zendesk: Create Ticket",
+  "title": {
+    "en": "Create ticket",
+    "de": "Ticket erstellen"
+  },
+  "description": {
+    "en": "Create a new support ticket in Zendesk.",
+    "de": "Erstelle ein neues Support-Ticket in Zendesk."
+  },
+  "vars": {
+    "SUBDOMAIN": "env:ZENDESK_SUBDOMAIN|Your Zendesk subdomain (e.g., 'your-company').",
+    "EMAIL": "env:ZENDESK_EMAIL|Your Zendesk account email.",
+    "API_TOKEN": "env:ZENDESK_API_TOKEN|Your Zendesk API Token."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Create Ticket",
+      "destination": {
+        "url": "https://{{SUBDOMAIN}}.zendesk.com/api/v2/tickets.json",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Basic {{AUTH_HEADER}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Auth Header",
+          "as": "AUTH_HEADER",
+          "description": "Base64 encoded 'email/token:api_token'",
+          "type": "string",
+          "source": "variable",
+          "value": "EMAIL/token:API_TOKEN",
+          "position": "header:Authorization",
+          "required": true
+        },
+        {
+          "name": "Subject",
+          "as": "subject",
+          "description": {
+            "en": "The subject of the ticket."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:ticket.subject"
+        },
+        {
+          "name": "Comment",
+          "as": "body",
+          "description": {
+            "en": "The body of the ticket."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:ticket.comment.body"
+        },
+        {
+          "name": "Priority",
+          "as": "priority",
+          "description": {
+            "en": "Priority: urgent, high, normal, low."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:ticket.priority",
+          "default": "normal"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "TICKET_ID": "out.ticket.id",
+    "SUBJECT": "out.ticket.subject"
+  },
+  "messages": {
+    "success": {
+      "en": "Ticket created! ID: {{TICKET_ID}}",
+      "de": "Ticket erstellt! ID: {{TICKET_ID}}"
+    }
+  }
+}

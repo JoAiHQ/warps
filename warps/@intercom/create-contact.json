@@ -1,0 +1,76 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Intercom: Create Contact",
+  "title": {
+    "en": "Create contact",
+    "de": "Kontakt erstellen"
+  },
+  "description": {
+    "en": "Create a new contact in Intercom.",
+    "de": "Erstelle einen neuen Kontakt in Intercom."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:INTERCOM_ACCESS_TOKEN|Your Intercom Access Token."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Create Contact",
+      "destination": {
+        "url": "https://api.intercom.io/contacts",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}",
+          "Content-Type": "application/json",
+          "Intercom-Version": "2.9"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Email",
+          "as": "email",
+          "description": {
+            "en": "The contact's email."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:email"
+        },
+        {
+          "name": "Name",
+          "as": "name",
+          "description": {
+            "en": "The contact's name."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:name"
+        },
+        {
+          "name": "Role",
+          "as": "role",
+          "description": {
+            "en": "Role: 'user' or 'lead'."
+          },
+          "type": "string",
+          "source": "hidden",
+          "position": "payload:role",
+          "default": "user"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "CONTACT_ID": "out.id",
+    "EMAIL": "out.email",
+    "NAME": "out.name"
+  },
+  "messages": {
+    "success": {
+      "en": "Contact created! ID: {{CONTACT_ID}}",
+      "de": "Kontakt erstellt! ID: {{CONTACT_ID}}"
+    }
+  }
+}

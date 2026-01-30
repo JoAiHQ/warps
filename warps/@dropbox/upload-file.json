@@ -1,0 +1,64 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Dropbox: Upload File",
+  "title": {
+    "en": "Upload file",
+    "de": "Datei hochladen"
+  },
+  "description": {
+    "en": "Upload a text file to Dropbox.",
+    "de": "Lade eine Textdatei auf Dropbox hoch."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:DROPBOX_ACCESS_TOKEN|Your Dropbox Access Token."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Upload File",
+      "destination": {
+        "url": "https://content.dropboxapi.com/2/files/upload",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}",
+          "Content-Type": "application/octet-stream",
+          "Dropbox-API-Arg": "{\"path\": \"{{PATH}}\", \"mode\": \"add\", \"autorename\": true, \"mute\": false}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Path",
+          "as": "PATH",
+          "description": {
+            "en": "The path where the file should be saved (e.g., /notes.txt)."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "header:Dropbox-API-Arg"
+        },
+        {
+          "name": "Content",
+          "as": "content",
+          "description": {
+            "en": "The content of the file."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "body"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "NAME": "out.name",
+    "PATH": "out.path_display"
+  },
+  "messages": {
+    "success": {
+      "en": "File uploaded: {{NAME}} at {{PATH}}",
+      "de": "Datei hochgeladen: {{NAME}} unter {{PATH}}"
+    }
+  }
+}

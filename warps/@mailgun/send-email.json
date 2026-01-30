@@ -1,0 +1,88 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Mailgun: Send Email",
+  "title": {
+    "en": "Send email",
+    "de": "E-Mail senden"
+  },
+  "description": {
+    "en": "Send an email using Mailgun's API.",
+    "de": "Sende eine E-Mail über die Mailgun-API."
+  },
+  "vars": {
+    "API_KEY": "env:MAILGUN_API_KEY|Get your API Key from Mailgun Control Panel.",
+    "DOMAIN": "env:MAILGUN_DOMAIN|Your Mailgun domain (e.g., mg.example.com)."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Send Email",
+      "destination": {
+        "url": "https://api.mailgun.net/v3/{{DOMAIN}}/messages",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Basic {{AUTH_TOKEN}}",
+          "Content-Type": "application/x-www-form-urlencoded"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Auth Token",
+          "as": "AUTH_TOKEN",
+          "description": "Base64 encoded 'api:YOUR_API_KEY'",
+          "type": "string",
+          "source": "variable",
+          "value": "API_KEY",
+          "position": "header:Authorization",
+          "required": true
+        },
+        {
+          "name": "To",
+          "as": "to",
+          "description": "Recipient email address.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:to"
+        },
+        {
+          "name": "From",
+          "as": "from",
+          "description": "Sender email address (e.g., 'Excited User <mailgun@YOUR_DOMAIN_NAME>').",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:from"
+        },
+        {
+          "name": "Subject",
+          "as": "subject",
+          "description": "Email subject.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:subject"
+        },
+        {
+          "name": "Text",
+          "as": "text",
+          "description": "Body of the email (text version).",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:text"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "ID": "out.id",
+    "MESSAGE": "out.message"
+  },
+  "messages": {
+    "success": {
+      "en": "Email sent! ID: {{ID}}",
+      "de": "E-Mail gesendet! ID: {{ID}}"
+    }
+  }
+}

@@ -1,0 +1,85 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Intercom: Create Conversation",
+  "title": {
+    "en": "Create conversation",
+    "de": "Konversation erstellen"
+  },
+  "description": {
+    "en": "Create a new conversation in Intercom on behalf of a user.",
+    "de": "Erstelle eine neue Konversation in Intercom im Namen eines Benutzers."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:INTERCOM_ACCESS_TOKEN|Your Intercom Access Token."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Create Conversation",
+      "destination": {
+        "url": "https://api.intercom.io/conversations",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}",
+          "Content-Type": "application/json",
+          "Intercom-Version": "2.9"
+        }
+      },
+      "inputs": [
+        {
+          "name": "User ID",
+          "as": "userId",
+          "description": {
+            "en": "The Intercom User ID of the sender."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:from.id"
+        },
+        {
+          "name": "Email",
+          "as": "email",
+          "description": {
+            "en": "The email of the sender (use if User ID is not known)."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:from.email"
+        },
+        {
+          "name": "Type",
+          "as": "type",
+          "description": {
+            "en": "Type of sender ('user' or 'lead')."
+          },
+          "type": "string",
+          "source": "hidden",
+          "position": "payload:from.type",
+          "default": "user"
+        },
+        {
+          "name": "Body",
+          "as": "body",
+          "description": {
+            "en": "The message body."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:body"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "CONVERSATION_ID": "out.id"
+  },
+  "messages": {
+    "success": {
+      "en": "Conversation created! ID: {{CONVERSATION_ID}}",
+      "de": "Konversation erstellt! ID: {{CONVERSATION_ID}}"
+    }
+  }
+}

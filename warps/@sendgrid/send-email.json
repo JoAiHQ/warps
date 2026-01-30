@@ -1,0 +1,96 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "SendGrid: Send Email",
+  "title": {
+    "en": "Send email",
+    "de": "E-Mail senden"
+  },
+  "description": {
+    "en": "Send an email using SendGrid's API.",
+    "de": "Sende eine E-Mail über die SendGrid-API."
+  },
+  "vars": {
+    "API_KEY": "env:SENDGRID_API_KEY|Get your API Key from https://app.sendgrid.com/settings/api_keys"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Send Email",
+      "destination": {
+        "url": "https://api.sendgrid.com/v3/mail/send",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{API_KEY}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "To",
+          "as": "to",
+          "description": {
+            "en": "Recipient email address."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:personalizations.0.to.0.email"
+        },
+        {
+          "name": "From",
+          "as": "from",
+          "description": {
+            "en": "Sender email address (must be verified)."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:from.email"
+        },
+        {
+          "name": "Subject",
+          "as": "subject",
+          "description": {
+            "en": "Email subject."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:personalizations.0.subject"
+        },
+        {
+          "name": "Content Value",
+          "as": "value",
+          "description": {
+            "en": "The body of the email (text/plain or text/html)."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:content.0.value"
+        },
+        {
+          "name": "Content Type",
+          "as": "type",
+          "description": {
+            "en": "Mime type of the content (text/plain or text/html)."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:content.0.type",
+          "default": "text/plain"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "STATUS": "out.status"
+  },
+  "messages": {
+    "success": {
+      "en": "Email sent successfully.",
+      "de": "E-Mail erfolgreich gesendet."
+    }
+  }
+}

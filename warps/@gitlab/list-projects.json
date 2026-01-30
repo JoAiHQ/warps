@@ -1,0 +1,73 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "GitLab: List Projects",
+  "title": {
+    "en": "List projects",
+    "de": "Projekte auflisten"
+  },
+  "description": {
+    "en": "List GitLab projects.",
+    "de": "Liste GitLab-Projekte auf."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:GITLAB_ACCESS_TOKEN|Your GitLab Personal Access Token."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "List Projects",
+      "destination": {
+        "url": "https://gitlab.com/api/v4/projects",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Limit",
+          "as": "per_page",
+          "description": {
+            "en": "Number of projects to return."
+          },
+          "type": "number",
+          "source": "field",
+          "required": false,
+          "position": "query:per_page",
+          "default": 20
+        },
+        {
+          "name": "Owned",
+          "as": "owned",
+          "description": {
+            "en": "Limit to projects owned by the authenticated user."
+          },
+          "type": "boolean",
+          "source": "field",
+          "required": false,
+          "position": "query:owned"
+        },
+        {
+          "name": "Search",
+          "as": "search",
+          "description": {
+            "en": "Search for specific projects."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "query:search"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "PROJECTS": "out"
+  },
+  "messages": {
+    "success": {
+      "en": "Retrieved {{PROJECTS.length}} project(s).",
+      "de": "{{PROJECTS.length}} Projekt(e) abgerufen."
+    }
+  }
+}

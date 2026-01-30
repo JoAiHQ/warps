@@ -1,0 +1,63 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Vercel: List Deployments",
+  "title": {
+    "en": "List deployments",
+    "de": "Deployments auflisten"
+  },
+  "description": {
+    "en": "List deployments on Vercel.",
+    "de": "Liste Deployments auf Vercel auf."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:VERCEL_ACCESS_TOKEN|Your Vercel Access Token."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "List Deployments",
+      "destination": {
+        "url": "https://api.vercel.com/v6/deployments",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Limit",
+          "as": "limit",
+          "description": {
+            "en": "Number of deployments to return."
+          },
+          "type": "number",
+          "source": "field",
+          "required": false,
+          "position": "query:limit",
+          "default": 20
+        },
+        {
+          "name": "Project ID",
+          "as": "projectId",
+          "description": {
+            "en": "Filter by project ID."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "query:projectId"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "DEPLOYMENTS": "out.deployments",
+    "COUNT": "out.deployments.length"
+  },
+  "messages": {
+    "success": {
+      "en": "Retrieved {{COUNT}} deployment(s).",
+      "de": "{{COUNT}} Deployment(s) abgerufen."
+    }
+  }
+}

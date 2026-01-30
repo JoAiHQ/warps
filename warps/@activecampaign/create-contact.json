@@ -1,0 +1,75 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "ActiveCampaign: Create Contact",
+  "title": {
+    "en": "Create contact",
+    "de": "Kontakt erstellen"
+  },
+  "description": {
+    "en": "Create a new contact in ActiveCampaign.",
+    "de": "Erstelle einen neuen Kontakt in ActiveCampaign."
+  },
+  "vars": {
+    "API_URL": "env:ACTIVECAMPAIGN_API_URL|Your API URL (e.g., https://account.api-us1.com).",
+    "API_TOKEN": "env:ACTIVECAMPAIGN_API_TOKEN|Your API Token."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Create Contact",
+      "destination": {
+        "url": "{{API_URL}}/api/3/contacts",
+        "method": "POST",
+        "headers": {
+          "Api-Token": "{{API_TOKEN}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Email",
+          "as": "email",
+          "description": {
+            "en": "The email address of the contact."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:contact.email"
+        },
+        {
+          "name": "First Name",
+          "as": "firstName",
+          "description": {
+            "en": "The first name of the contact."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:contact.firstName"
+        },
+        {
+          "name": "Last Name",
+          "as": "lastName",
+          "description": {
+            "en": "The last name of the contact."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:contact.lastName"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "CONTACT_ID": "out.contact.id",
+    "EMAIL": "out.contact.email"
+  },
+  "messages": {
+    "success": {
+      "en": "Contact created! ID: {{CONTACT_ID}}",
+      "de": "Kontakt erstellt! ID: {{CONTACT_ID}}"
+    }
+  }
+}

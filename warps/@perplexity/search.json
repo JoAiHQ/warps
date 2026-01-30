@@ -1,0 +1,61 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Perplexity: Search",
+  "title": {
+    "en": "Perplexity Search",
+    "de": "Perplexity Suche"
+  },
+  "description": {
+    "en": "Use Perplexity to answer questions with real-time web search.",
+    "de": "Nutze Perplexity, um Fragen mit Echtzeit-Websuche zu beantworten."
+  },
+  "vars": {
+    "API_KEY": "env:PERPLEXITY_API_KEY|Get your API Key from Perplexity Settings."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Search",
+      "destination": {
+        "url": "https://api.perplexity.ai/chat/completions",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{API_KEY}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Model",
+          "as": "model",
+          "description": "The model to use (e.g., llama-3.1-sonar-small-128k-online).",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:model",
+          "default": "llama-3.1-sonar-small-128k-online"
+        },
+        {
+          "name": "Messages",
+          "as": "messages",
+          "description": "A list of messages comprising the conversation so far.",
+          "bot": "JSON array of message objects: [{\"role\": \"user\", \"content\": \"How to make pizza?\"}]",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:messages"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "CONTENT": "out.choices.0.message.content",
+    "CITATIONS": "out.citations"
+  },
+  "messages": {
+    "success": {
+      "en": "Perplexity: {{CONTENT}}",
+      "de": "Perplexity: {{CONTENT}}"
+    }
+  }
+}

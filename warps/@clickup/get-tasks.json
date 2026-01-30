@@ -1,0 +1,63 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "ClickUp: Get Tasks",
+  "title": {
+    "en": "Get tasks",
+    "de": "Aufgaben abrufen"
+  },
+  "description": {
+    "en": "Get tasks from a ClickUp list.",
+    "de": "Rufe Aufgaben aus einer ClickUp-Liste ab."
+  },
+  "vars": {
+    "API_TOKEN": "env:CLICKUP_API_TOKEN|Your ClickUp Personal API Token."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Get Tasks",
+      "destination": {
+        "url": "https://api.clickup.com/api/v2/list/{{LIST_ID}}/task",
+        "method": "GET",
+        "headers": {
+          "Authorization": "{{API_TOKEN}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "List ID",
+          "as": "LIST_ID",
+          "description": {
+            "en": "The ID of the list."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:LIST_ID"
+        },
+        {
+          "name": "Archived",
+          "as": "archived",
+          "description": {
+            "en": "Include archived tasks."
+          },
+          "type": "boolean",
+          "source": "field",
+          "required": false,
+          "position": "query:archived",
+          "default": false
+        }
+      ]
+    }
+  ],
+  "output": {
+    "TASKS": "out.tasks",
+    "COUNT": "out.tasks.length"
+  },
+  "messages": {
+    "success": {
+      "en": "Retrieved {{COUNT}} task(s).",
+      "de": "{{COUNT}} Aufgabe(n) abgerufen."
+    }
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "protocol": "warp:3.0.0",
+  "chain": "sui",
+  "name": "DeepBook: Get Pool Info",
+  "title": {
+    "en": "Get DeepBook Pool Information",
+    "de": "DeepBook-Pool-Informationen abrufen"
+  },
+  "description": {
+    "en": "Retrieve information about a DeepBook liquidity pool by querying the pool object.",
+    "de": "Rufe Informationen über einen DeepBook-Liquiditätspool ab, indem das Pool-Objekt abgefragt wird."
+  },
+  "actions": [
+    {
+      "type": "query",
+      "label": {
+        "en": "Get Pool Info",
+        "de": "Pool-Informationen abrufen"
+      },
+      "address": "{{POOL_OBJECT_ID}}",
+      "func": "getObject",
+      "args": [],
+      "inputs": [
+        {
+          "name": "Pool Object ID",
+          "as": "POOL_OBJECT_ID",
+          "description": {
+            "en": "The DeepBook pool object ID to query.",
+            "de": "Die DeepBook-Pool-Objekt-ID, die abgefragt werden soll."
+          },
+          "type": "string",
+          "position": "destination",
+          "source": "field",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "output": {
+    "POOL_DATA": "out[0]",
+    "_DATA": "out[0]",
+    "POOL_TYPE": "transform:() => { const data = results._DATA || results.POOL_DATA; return data?.data?.type || data?.type || 'Unknown'; }",
+    "POOL_ID": "transform:() => { const data = results._DATA || results.POOL_DATA; return data?.data?.objectId || data?.objectId || 'Unknown'; }"
+  },
+  "messages": {
+    "success": {
+      "en": "Pool information retrieved: {{POOL_TYPE}}",
+      "de": "Pool-Informationen abgerufen: {{POOL_TYPE}}"
+    }
+  },
+  "defaultChain": "sui"
+}

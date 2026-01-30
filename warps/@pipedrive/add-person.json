@@ -1,0 +1,83 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Pipedrive: Add Person",
+  "title": {
+    "en": "Add person",
+    "de": "Person hinzufügen"
+  },
+  "description": {
+    "en": "Add a new person to Pipedrive.",
+    "de": "Füge eine neue Person zu Pipedrive hinzu."
+  },
+  "vars": {
+    "API_TOKEN": "env:PIPEDRIVE_API_TOKEN|Your Pipedrive API Token."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Add Person",
+      "destination": {
+        "url": "https://api.pipedrive.com/v1/persons",
+        "method": "POST",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "API Token",
+          "as": "api_token",
+          "description": "API Token",
+          "type": "string",
+          "source": "variable",
+          "value": "API_TOKEN",
+          "position": "query:api_token",
+          "required": true
+        },
+        {
+          "name": "Name",
+          "as": "name",
+          "description": {
+            "en": "The name of the person."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:name"
+        },
+        {
+          "name": "Email",
+          "as": "email",
+          "description": {
+            "en": "The email address."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:email.0.value"
+        },
+        {
+          "name": "Phone",
+          "as": "phone",
+          "description": {
+            "en": "The phone number."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:phone.0.value"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "PERSON_ID": "out.data.id",
+    "NAME": "out.data.name"
+  },
+  "messages": {
+    "success": {
+      "en": "Person added! ID: {{PERSON_ID}}",
+      "de": "Person hinzugefügt! ID: {{PERSON_ID}}"
+    }
+  }
+}
