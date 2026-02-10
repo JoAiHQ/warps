@@ -1,0 +1,58 @@
+{
+  "protocol": "warp:3.0.0",
+  "chain": "solana",
+  "name": "Jupiter: Token Price",
+  "title": {
+    "en": "Get Token Price",
+    "de": "Token-Preis abrufen"
+  },
+  "description": {
+    "en": "Retrieve the current USD price of any Solana token using the Jupiter Price API. Returns price, decimals, 24h price change, and liquidity data.",
+    "de": "Rufe den aktuellen USD-Preis eines beliebigen Solana-Tokens ueber die Jupiter Price API ab. Gibt Preis, Dezimalstellen, 24-Stunden-Preisaenderung und Liquiditaetsdaten zurueck."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Get Price",
+        "de": "Preis abrufen"
+      },
+      "destination": {
+        "url": "INJECT:PRICE_API?ids={{TOKEN_MINT}}",
+        "method": "GET"
+      },
+      "inputs": [
+        {
+          "name": "Token Mint",
+          "as": "TOKEN_MINT",
+          "description": {
+            "en": "The mint address of the Solana token to get the price for.",
+            "de": "Die Mint-Adresse des Solana-Tokens, fuer den der Preis abgerufen werden soll."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "output": {
+    "TOKEN_DATA": "transform:() => { const data = results.out; const keys = Object.keys(data); return keys.length > 0 ? data[keys[0]] : null; }",
+    "USD_PRICE": "transform:() => results.TOKEN_DATA?.usdPrice ?? null",
+    "DECIMALS": "transform:() => results.TOKEN_DATA?.decimals ?? null",
+    "PRICE_CHANGE_24H": "transform:() => results.TOKEN_DATA?.priceChange24h ?? null",
+    "LIQUIDITY": "transform:() => results.TOKEN_DATA?.liquidity ?? null",
+    "PRICE_FORMATTED": "transform:() => { const p = results.USD_PRICE; return p != null ? Number(p).toLocaleString('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 2, maximumFractionDigits: 6 }) : 'N/A'; }"
+  },
+  "messages": {
+    "success": {
+      "en": "Price: {{PRICE_FORMATTED}} (24h: {{PRICE_CHANGE_24H}}%)",
+      "de": "Preis: {{PRICE_FORMATTED}} (24h: {{PRICE_CHANGE_24H}}%)"
+    },
+    "card": {
+      "en": "{{PRICE_FORMATTED}}",
+      "de": "{{PRICE_FORMATTED}}"
+    }
+  },
+  "defaultChain": "solana"
+}

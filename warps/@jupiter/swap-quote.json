@@ -1,0 +1,94 @@
+{
+  "protocol": "warp:3.0.0",
+  "chain": "solana",
+  "name": "Jupiter: Swap Quote",
+  "title": {
+    "en": "Get Swap Quote",
+    "de": "Swap-Angebot abrufen"
+  },
+  "description": {
+    "en": "Get the best swap quote from Jupiter DEX aggregator on Solana. Compares routes across multiple liquidity sources to find the optimal price for your token swap.",
+    "de": "Hole das beste Swap-Angebot vom Jupiter DEX-Aggregator auf Solana. Vergleicht Routen ueber mehrere Liquiditaetsquellen, um den optimalen Preis fuer deinen Token-Swap zu finden."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Get Quote",
+        "de": "Angebot abrufen"
+      },
+      "destination": {
+        "url": "INJECT:QUOTE_API?inputMint={{INPUT_MINT}}&outputMint={{OUTPUT_MINT}}&amount={{AMOUNT}}&slippageBps={{SLIPPAGE_BPS}}",
+        "method": "GET"
+      },
+      "inputs": [
+        {
+          "name": "Input Token Mint",
+          "as": "INPUT_MINT",
+          "description": {
+            "en": "The mint address of the token you want to swap from.",
+            "de": "Die Mint-Adresse des Tokens, den du tauschen moechtest."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Output Token Mint",
+          "as": "OUTPUT_MINT",
+          "description": {
+            "en": "The mint address of the token you want to receive.",
+            "de": "Die Mint-Adresse des Tokens, den du erhalten moechtest."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Amount",
+          "as": "AMOUNT",
+          "description": {
+            "en": "The amount of input tokens in the smallest unit (e.g., lamports for SOL).",
+            "de": "Die Menge der Eingabe-Token in der kleinsten Einheit (z.B. Lamports fuer SOL)."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Slippage (BPS)",
+          "as": "SLIPPAGE_BPS",
+          "description": {
+            "en": "Maximum slippage tolerance in basis points (e.g., 50 = 0.5%). Defaults to 50.",
+            "de": "Maximale Slippage-Toleranz in Basispunkten (z.B. 50 = 0,5%). Standard: 50."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "50"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "OUT_AMOUNT": "out.outAmount",
+    "IN_AMOUNT": "out.inAmount",
+    "PRICE_IMPACT": "out.priceImpactPct",
+    "SWAP_USD_VALUE": "out.swapUsdValue",
+    "SLIPPAGE_BPS": "out.slippageBps",
+    "OTHER_AMOUNT_THRESHOLD": "out.otherAmountThreshold",
+    "SWAP_MODE": "out.swapMode",
+    "ROUTE_COUNT": "transform:() => Array.isArray(results.out.routePlan) ? results.out.routePlan.length : 0"
+  },
+  "messages": {
+    "success": {
+      "en": "Quote: {{IN_AMOUNT}} -> {{OUT_AMOUNT}} ({{ROUTE_COUNT}} route(s), impact: {{PRICE_IMPACT}}%)",
+      "de": "Angebot: {{IN_AMOUNT}} -> {{OUT_AMOUNT}} ({{ROUTE_COUNT}} Route(n), Impact: {{PRICE_IMPACT}}%)"
+    },
+    "card": {
+      "en": "{{OUT_AMOUNT}} ({{ROUTE_COUNT}} routes)",
+      "de": "{{OUT_AMOUNT}} ({{ROUTE_COUNT}} Routen)"
+    }
+  },
+  "defaultChain": "solana"
+}
