@@ -24,6 +24,11 @@ export const brand = async (config: WarpClientConfig): Promise<WarpbaseBrand> =>
       if (env === 'devnet') return 'erd1qqqqqqqqqqqqqpgqld08ayjqfk4sptve3xslanhq4pd5ar5dl3tsvm7gcp'
       return 'erd1qqqqqqqqqqqqqpgq4kns8he9r84c58ed3jjuam3tp7u9zl4n27rsy2kv6u'
     },
+    REGISTRY: (env: WarpChainEnv) => {
+      if (env === 'devnet') return 'erd1qqqqqqqqqqqqqpgqxa54zq3anq23zu7nwmv3lk99jr58htffhj9smvzjy0'
+      return 'erd1qqqqqqqqqqqqqpgq_DEPLOY_AND_REPLACE_mainnet'
+    },
   },
   destinations: {},
+  discover: ['multisig-registry-list.json'],
 })

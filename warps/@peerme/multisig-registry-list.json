@@ -1,0 +1,35 @@
+{
+  "protocol": "warp:3.0.0",
+  "chain": "multiversx",
+  "name": "PeerMe MultiSig: My Multi-Sigs",
+  "title": {
+    "en": "List my multi-sig wallets",
+    "de": "Meine Multi-Sig Wallets auflisten"
+  },
+  "description": "List all multi-sig wallets the user has registered. Use this as the first step when a user wants to interact with any multi-sig — it shows their wallets with friendly names. If no results are returned, suggest registering a multi-sig first.",
+  "actions": [
+    {
+      "type": "query",
+      "label": "List multi-sigs",
+      "address": "INJECT:REGISTRY",
+      "func": "getMultisigsForUser",
+      "abi": "INJECT:abis/multisig-registry.abi.json",
+      "inputs": [
+        {
+          "name": "Wallet",
+          "type": "address",
+          "position": "arg:1",
+          "source": "user:wallet"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "MULTISIGS": "out",
+    "COUNT": "transform:() => Array.isArray(results.MULTISIGS) ? results.MULTISIGS.length : 0"
+  },
+  "messages": {
+    "success": "Found {{COUNT}} registered multi-sig wallet(s).",
+    "card": "{{COUNT}} Multi-Sig Wallet(s)"
+  }
+}

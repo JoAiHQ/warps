@@ -1,0 +1,65 @@
+{
+  "protocol": "warp:3.0.0",
+  "chain": "multiversx",
+  "name": "PeerMe MultiSig: Overview",
+  "title": {
+    "en": "Multi-sig dashboard",
+    "de": "Multi-Sig Dashboard"
+  },
+  "description": "Get a full overview of a multi-sig wallet: quorum, board member count, pending proposals, and the user's role. Use this after the user selects a specific multi-sig to see its current state.",
+  "vars": {
+    "MULTISIG_ADDRESS": "query:multisig"
+  },
+  "actions": [
+    {
+      "type": "query",
+      "label": "Get quorum",
+      "address": "{{MULTISIG_ADDRESS}}",
+      "func": "getQuorum",
+      "abi": "INJECT:abis/multisig.abi.json"
+    },
+    {
+      "type": "query",
+      "label": "Get board member count",
+      "address": "{{MULTISIG_ADDRESS}}",
+      "func": "getNumBoardMembers",
+      "abi": "INJECT:abis/multisig.abi.json"
+    },
+    {
+      "type": "query",
+      "label": "Get pending actions",
+      "address": "{{MULTISIG_ADDRESS}}",
+      "func": "getPendingActionFullInfo",
+      "abi": "INJECT:abis/multisig.abi.json"
+    },
+    {
+      "type": "query",
+      "label": "Check user role",
+      "address": "{{MULTISIG_ADDRESS}}",
+      "func": "userRole",
+      "abi": "INJECT:abis/multisig.abi.json",
+      "inputs": [
+        {
+          "name": "Wallet",
+          "type": "address",
+          "position": "arg:1",
+          "source": "user:wallet"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "QUORUM": "out[0]",
+    "BOARD_MEMBERS": "out[1]",
+    "PENDING": "out[2]",
+    "ROLE": "out[3]",
+    "QUORUM_NUM": "transform:() => Number(results.QUORUM)",
+    "MEMBERS_NUM": "transform:() => Number(results.BOARD_MEMBERS)",
+    "PENDING_COUNT": "transform:() => Array.isArray(results.PENDING) ? results.PENDING.length : 0",
+    "ROLE_NAME": "transform:() => { const r = Number(results.ROLE); return r === 2 ? 'Board Member' : r === 1 ? 'Proposer' : 'None'; }"
+  },
+  "messages": {
+    "success": "Quorum: {{QUORUM_NUM}}/{{MEMBERS_NUM}} | Your role: {{ROLE_NAME}} | {{PENDING_COUNT}} pending proposal(s)",
+    "card": "{{QUORUM_NUM}}/{{MEMBERS_NUM}} quorum | {{PENDING_COUNT}} pending"
+  }
+}

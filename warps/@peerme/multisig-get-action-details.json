@@ -1,0 +1,115 @@
+{
+  "protocol": "warp:3.0.0",
+  "chain": "multiversx",
+  "name": "PeerMe MultiSig: Get Action Details",
+  "title": {
+    "en": "View proposal details",
+    "de": "Vorschlagsdetails anzeigen"
+  },
+  "description": "Get detailed information about a specific MultiSig proposal including its type, signers, and whether quorum has been reached. Use this to inspect a proposal before signing or executing it.",
+  "vars": {
+    "MULTISIG_ADDRESS": "query:multisig"
+  },
+  "actions": [
+    {
+      "type": "query",
+      "label": "Get action data",
+      "address": "{{MULTISIG_ADDRESS}}",
+      "func": "getActionData",
+      "abi": "INJECT:abis/multisig.abi.json",
+      "inputs": [
+        {
+          "name": "Action ID",
+          "as": "ACTION_ID",
+          "description": {
+            "en": "The ID of the proposal to view.",
+            "de": "Die ID des anzuzeigenden Vorschlags."
+          },
+          "bot": "If the user hasn't specified an action ID, first run 'Get Pending Actions' to show what's available.",
+          "type": "uint32",
+          "position": "arg:1",
+          "source": "field",
+          "required": true
+        }
+      ]
+    },
+    {
+      "type": "query",
+      "label": "Get signers",
+      "address": "{{MULTISIG_ADDRESS}}",
+      "func": "getActionSigners",
+      "abi": "INJECT:abis/multisig.abi.json",
+      "inputs": [
+        {
+          "name": "Action ID",
+          "type": "uint32",
+          "position": "arg:1",
+          "source": "hidden",
+          "default": "{{ACTION_ID}}"
+        }
+      ]
+    },
+    {
+      "type": "query",
+      "label": "Get signer count",
+      "address": "{{MULTISIG_ADDRESS}}",
+      "func": "getActionSignerCount",
+      "abi": "INJECT:abis/multisig.abi.json",
+      "inputs": [
+        {
+          "name": "Action ID",
+          "type": "uint32",
+          "position": "arg:1",
+          "source": "hidden",
+          "default": "{{ACTION_ID}}"
+        }
+      ]
+    },
+    {
+      "type": "query",
+      "label": "Get valid signer count",
+      "address": "{{MULTISIG_ADDRESS}}",
+      "func": "getActionValidSignerCount",
+      "abi": "INJECT:abis/multisig.abi.json",
+      "inputs": [
+        {
+          "name": "Action ID",
+          "type": "uint32",
+          "position": "arg:1",
+          "source": "hidden",
+          "default": "{{ACTION_ID}}"
+        }
+      ]
+    },
+    {
+      "type": "query",
+      "label": "Check quorum reached",
+      "address": "{{MULTISIG_ADDRESS}}",
+      "func": "quorumReached",
+      "abi": "INJECT:abis/multisig.abi.json",
+      "inputs": [
+        {
+          "name": "Action ID",
+          "type": "uint32",
+          "position": "arg:1",
+          "source": "hidden",
+          "default": "{{ACTION_ID}}"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "ACTION_DATA": "out[0]",
+    "SIGNERS": "out[1]",
+    "SIGNER_COUNT": "out[2]",
+    "VALID_SIGNER_COUNT": "out[3]",
+    "QUORUM_REACHED": "out[4]",
+    "SIGNER_COUNT_NUMBER": "transform:() => Number(results.SIGNER_COUNT)",
+    "VALID_SIGNER_COUNT_NUMBER": "transform:() => Number(results.VALID_SIGNER_COUNT)",
+    "STATUS": "transform:() => results.QUORUM_REACHED ? 'Ready to execute' : 'Awaiting signatures'"
+  },
+  "messages": {
+    "success": "Proposal #{{ACTION_ID}}: {{STATUS}}. {{VALID_SIGNER_COUNT_NUMBER}} valid signature(s) collected.",
+    "card": "Proposal #{{ACTION_ID}}: {{STATUS}} ({{VALID_SIGNER_COUNT_NUMBER}} signatures)"
+  }
+}

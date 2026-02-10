@@ -1,0 +1,59 @@
+{
+  "protocol": "warp:3.0.0",
+  "chain": "multiversx",
+  "name": "PeerMe MultiSig: Check Signed",
+  "title": {
+    "en": "Check if user signed proposal",
+    "de": "Prüfen ob Benutzer Vorschlag unterzeichnet hat"
+  },
+  "description": "Check if a specific user has signed a MultiSig proposal. Use this to verify whether a board member has already approved a specific proposal before asking them to sign.",
+  "vars": {
+    "MULTISIG_ADDRESS": "query:multisig"
+  },
+  "actions": [
+    {
+      "type": "query",
+      "label": "Check signature",
+      "address": "{{MULTISIG_ADDRESS}}",
+      "func": "signed",
+      "abi": "INJECT:abis/multisig.abi.json",
+      "inputs": [
+        {
+          "name": "User Address",
+          "as": "USER_ADDRESS",
+          "description": {
+            "en": "The wallet address to check.",
+            "de": "Die Wallet-Adresse, die geprüft werden soll."
+          },
+          "bot": "Default to the user's own wallet address unless they specify someone else.",
+          "type": "address",
+          "position": "arg:1",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Action ID",
+          "as": "ACTION_ID",
+          "description": {
+            "en": "The ID of the proposal to check.",
+            "de": "Die ID des zu prüfenden Vorschlags."
+          },
+          "bot": "If the user hasn't specified an action ID, first run 'Get Pending Actions' to show what's available.",
+          "type": "uint32",
+          "position": "arg:2",
+          "source": "field",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "output": {
+    "SIGNED": "out",
+    "HAS_SIGNED": "transform:() => results.SIGNED === true || results.SIGNED === 1 || results.SIGNED === '1'",
+    "STATUS": "transform:() => results.HAS_SIGNED ? 'Signed' : 'Not signed'"
+  },
+  "messages": {
+    "success": "User {{USER_ADDRESS}} has {{STATUS}} proposal #{{ACTION_ID}}.",
+    "card": "Signature Status: {{STATUS}}"
+  }
+}
