@@ -12,7 +12,7 @@ export const brand = async (config: WarpClientConfig): Promise<WarpbaseBrand> =>
       dark: 'https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/openbond-white.svg',
     })
     .setColors({ primary: '#98ff98' })
-    .setUrls({ web: 'https://joai.ai' })
+    .setUrls({ web: 'https://openbond.org' })
     .build(),
   contracts: {
     REGISTRY: (env: WarpChainEnv) => {
