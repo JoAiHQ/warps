@@ -13,6 +13,10 @@ export const brand = async (config: WarpClientConfig): Promise<WarpbaseBrand> =>
     .setUrls({ web: 'https://xoxno.com' })
     .build(),
   contracts: {
+    PROVIDER: (env: WarpChainEnv) => {
+      if (env === 'devnet') return 'erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqplllllscktaww'
+      return 'erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqg8llllsqra25h'
+    },
     LIQUID_STAKING: (env: WarpChainEnv) => {
       if (env === 'devnet') return 'erd1qqqqqqqqqqqqqpgqc2d2z4atpxpk7xgucfkc7nrrp5ynscjrah0scsqc35'
       return 'TODO'
