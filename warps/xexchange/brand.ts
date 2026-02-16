@@ -93,10 +93,6 @@ export const brand = async (config: WarpClientConfig): Promise<WarpbaseBrand> =>
       if (env === 'devnet') return 'PROTEO-6ca7c8'
       return 'TODO'
     },
-    'TOKEN/CYBER': (env: WarpChainEnv) => {
-      if (env === 'devnet') return 'CYBER-94724e'
-      return 'TODO'
-    },
     'TOKEN/MEX': (env: WarpChainEnv) => {
       if (env === 'devnet') return 'MEX-a659d0'
       return 'TODO'
