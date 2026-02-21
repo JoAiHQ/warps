@@ -1,0 +1,63 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Allowance: View",
+  "title": {
+    "en": "View Allowance"
+  },
+  "description": {
+    "en": "View the details of an allowance including balance, spending limits, and usage."
+  },
+  "actions": [
+    {
+      "type": "query",
+      "label": {
+        "en": "View"
+      },
+      "address": "INJECT:ALLOWANCE_SC",
+      "func": "getAllowance",
+      "gasLimit": 5000000,
+      "abi": "INJECT:abis/allowance.abi.json",
+      "inputs": [
+        {
+          "name": "Blockchain",
+          "as": "chain",
+          "bot": "The blockchain network.",
+          "type": "string",
+          "position": "chain",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Allowance ID",
+          "as": "allowance_id",
+          "description": {
+            "en": "The ID of the allowance to view"
+          },
+          "type": "uint64",
+          "position": "arg:1",
+          "source": "field",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "output": {
+    "ALLOWANCE": "out",
+    "TOKEN": "transform:() => results.ALLOWANCE?.token || 'EGLD'",
+    "BALANCE_RAW": "transform:() => results.ALLOWANCE?.balance || '0'",
+    "BALANCE": "transform:() => Number(results.BALANCE_RAW) / 10 ** 18",
+    "BALANCE_FORMATTED": "transform:() => results.BALANCE.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })",
+    "STATUS": "transform:() => results.ALLOWANCE?.paused ? 'Paused' : 'Active'"
+  },
+  "messages": {
+    "success": {
+      "en": "{{STATUS}} allowance: {{BALANCE_FORMATTED}} {{TOKEN}} remaining."
+    },
+    "card": {
+      "en": "{{BALANCE_FORMATTED}} {{TOKEN}} • {{STATUS}}"
+    },
+    "info": {
+      "en": "Balance: {{BALANCE_FORMATTED}} {{TOKEN}}, Status: {{STATUS}}"
+    }
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Allowance: View Agent IDs",
+  "title": {
+    "en": "View Agent Allowance IDs"
+  },
+  "description": {
+    "en": "Get all allowance IDs assigned to an agent address."
+  },
+  "actions": [
+    {
+      "type": "query",
+      "label": {
+        "en": "View"
+      },
+      "address": "INJECT:ALLOWANCE_SC",
+      "func": "getAgentAllowanceIds",
+      "gasLimit": 5000000,
+      "abi": "INJECT:abis/allowance.abi.json",
+      "inputs": [
+        {
+          "name": "Blockchain",
+          "as": "chain",
+          "bot": "The blockchain network.",
+          "type": "string",
+          "position": "chain",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Agent Address",
+          "as": "agent",
+          "description": {
+            "en": "The wallet address of the agent"
+          },
+          "type": "address",
+          "position": "arg:1",
+          "source": "field",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "output": {
+    "IDS": "out",
+    "COUNT": "transform:() => Array.isArray(results.IDS) ? results.IDS.length : 0"
+  },
+  "messages": {
+    "success": {
+      "en": "Found {{COUNT}} budget(s) for this agent."
+    },
+    "card": {
+      "en": "{{COUNT}} Budget(s)"
+    }
+  }
+}

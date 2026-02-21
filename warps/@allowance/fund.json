@@ -1,0 +1,106 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Allowance: Fund Agent",
+  "title": {
+    "en": "Fund Agent Allowance"
+  },
+  "description": {
+    "en": "Create or top up a spending allowance for an AI agent. Deposit EGLD or tokens and set per-transaction and periodic spending limits."
+  },
+  "actions": [
+    {
+      "type": "contract",
+      "label": {
+        "en": "Fund Allowance"
+      },
+      "address": "INJECT:ALLOWANCE_SC",
+      "func": "fund",
+      "gasLimit": 10000000,
+      "inputs": [
+        {
+          "name": "Blockchain",
+          "as": "chain",
+          "bot": "The blockchain network.",
+          "type": "string",
+          "position": "chain",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Agent Address",
+          "as": "agent",
+          "description": {
+            "en": "The wallet address of the agent to fund"
+          },
+          "type": "address",
+          "position": "arg:1",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Per-Transaction Limit",
+          "as": "per_tx_limit",
+          "description": {
+            "en": "Maximum amount the agent can spend per transaction in the token's smallest unit. Set 0 for unlimited."
+          },
+          "type": "biguint",
+          "position": "arg:2",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Period Limit",
+          "as": "period_limit",
+          "description": {
+            "en": "Maximum amount the agent can spend per time period in the token's smallest unit. Set 0 for unlimited."
+          },
+          "type": "biguint",
+          "position": "arg:3",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Period Type",
+          "as": "period_type",
+          "description": {
+            "en": "Time period for budget resets: 0=None (one-time), 1=Daily, 2=Weekly, 3=Monthly"
+          },
+          "type": "uint8",
+          "position": "arg:4",
+          "source": "field",
+          "required": true,
+          "options": ["0", "1", "2", "3"],
+          "default": "0"
+        },
+        {
+          "name": "Expires At",
+          "as": "expires_at",
+          "description": {
+            "en": "Unix timestamp when the allowance expires. Set 0 for no expiration."
+          },
+          "type": "uint64",
+          "position": "arg:5",
+          "source": "field",
+          "required": true,
+          "default": "0"
+        },
+        {
+          "name": "Token & Amount",
+          "as": "payment",
+          "description": {
+            "en": "The token and amount to deposit into the allowance"
+          },
+          "type": "asset",
+          "position": "transfer",
+          "source": "field",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Allowance funded successfully. The agent can now spend within the configured limits."
+    }
+  }
+}

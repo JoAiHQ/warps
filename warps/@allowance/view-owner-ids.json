@@ -1,0 +1,56 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Allowance: View Owner IDs",
+  "title": {
+    "en": "View Owner Allowance IDs"
+  },
+  "description": {
+    "en": "Get all allowance IDs created by an owner address."
+  },
+  "actions": [
+    {
+      "type": "query",
+      "label": {
+        "en": "View"
+      },
+      "address": "INJECT:ALLOWANCE_SC",
+      "func": "getOwnerAllowanceIds",
+      "gasLimit": 5000000,
+      "abi": "INJECT:abis/allowance.abi.json",
+      "inputs": [
+        {
+          "name": "Blockchain",
+          "as": "chain",
+          "bot": "The blockchain network.",
+          "type": "string",
+          "position": "chain",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Owner Address",
+          "as": "owner",
+          "description": {
+            "en": "The wallet address of the owner"
+          },
+          "type": "address",
+          "position": "arg:1",
+          "source": "field",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "output": {
+    "IDS": "out",
+    "COUNT": "transform:() => Array.isArray(results.IDS) ? results.IDS.length : 0"
+  },
+  "messages": {
+    "success": {
+      "en": "Found {{COUNT}} budget(s) for this owner."
+    },
+    "card": {
+      "en": "{{COUNT}} Budget(s)"
+    }
+  }
+}
