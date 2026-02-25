@@ -1,0 +1,114 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Ingest Knowledge",
+  "title": {
+    "en": "Ingest knowledge",
+    "de": "Wissen erfassen"
+  },
+  "description": {
+    "en": "Turn unstructured notes, transcripts, or articles into structured primitives such as action items, reminders, CRM contacts, memories, and goals.",
+    "de": "Verwandle unstrukturierte Notizen, Transkripte oder Artikel in strukturierte Primitive wie Action Items, Erinnerungen, CRM-Kontakte, Erinnerungen und Ziele."
+  },
+  "bot": "Use this when the user shares raw notes, meeting transcripts, or long-form text and wants it automatically structured into useful primitives. Prefer this warp over manually creating many separate objects.",
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Ingest",
+        "de": "Erfassen"
+      },
+      "inputs": [
+        {
+          "name": "Content",
+          "as": "content",
+          "description": {
+            "en": "Raw text to ingest",
+            "de": "Rohtext zur Erfassung"
+          },
+          "bot": "The full raw content to ingest. Keep original details because extraction quality depends on this.",
+          "type": "string",
+          "source": "field",
+          "position": "arg:1",
+          "required": true,
+          "min": 10
+        },
+        {
+          "name": "Source Type",
+          "as": "sourceType",
+          "description": {
+            "en": "Type of source",
+            "de": "Typ der Quelle"
+          },
+          "bot": "Where the content comes from. Use meeting, note, context, article, email, chat, or webhook.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "note",
+          "options": {
+            "note": "Note",
+            "meeting": "Meeting",
+            "context": "Context",
+            "article": "Article",
+            "email": "Email",
+            "chat": "Chat",
+            "webhook": "Webhook"
+          }
+        },
+        {
+          "name": "Source Provider",
+          "as": "sourceProvider",
+          "description": {
+            "en": "Origin provider",
+            "de": "Quellanbieter"
+          },
+          "bot": "Optional provider/origin such as zoom, google-meet, slack, or manual.",
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Source External ID",
+          "as": "sourceExternalId",
+          "description": {
+            "en": "External source id",
+            "de": "Externe Quell-ID"
+          },
+          "bot": "Optional external reference ID used for deduplication.",
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Title",
+          "as": "title",
+          "description": {
+            "en": "Optional source title",
+            "de": "Optionaler Quelltitel"
+          },
+          "bot": "Optional title for this ingestion payload.",
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Primitives",
+          "as": "primitives",
+          "description": {
+            "en": "Primitive subset",
+            "de": "Primitive-Teilmenge"
+          },
+          "bot": "Optional comma-separated subset: memory, context, action_item, crm_contact, reminder, article, goal.",
+          "type": "string",
+          "source": "field",
+          "required": false
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Ingestion queued. I am extracting structured primitives now.",
+      "de": "Erfassung gestartet. Ich extrahiere jetzt strukturierte Primitive."
+    }
+  }
+}

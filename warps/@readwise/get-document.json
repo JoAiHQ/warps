@@ -1,0 +1,57 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Readwise: Get Document",
+  "title": {
+    "en": "Get a reader document",
+    "de": "Reader-Dokument abrufen"
+  },
+  "description": {
+    "en": "Retrieve a single Readwise Reader document by ID.",
+    "de": "Ruft ein einzelnes Readwise Reader-Dokument per ID ab."
+  },
+  "vars": {
+    "API_KEY": "env:READWISE_API_KEY|Get your Reader API token from https://readwise.io/reader_api"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Get document",
+        "de": "Dokument abrufen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/get/{{DOCUMENT_ID}}/",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Token {{API_KEY}}",
+          "Accept": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Document ID",
+          "as": "DOCUMENT_ID",
+          "description": {
+            "en": "Readwise Reader document ID."
+          },
+          "type": "string",
+          "source": "field",
+          "position": "arg:1",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "output": {
+    "TITLE": "out.title || null",
+    "URL": "out.url || null",
+    "CATEGORY": "out.category || null",
+    "LOCATION": "out.location || null"
+  },
+  "messages": {
+    "success": {
+      "en": "Fetched document '{{TITLE}}'.",
+      "de": "Dokument '{{TITLE}}' abgerufen."
+    }
+  }
+}

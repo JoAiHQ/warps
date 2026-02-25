@@ -6,3 +6,6 @@ export type JoAiUserOnboardingInputs = {
   userMode: string;
 };
 
+export type JoAiIngestInputs = {
+  content: string;
+};

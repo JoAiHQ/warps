@@ -1,0 +1,42 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Readwise: List Tags",
+  "title": {
+    "en": "List reader tags",
+    "de": "Reader-Tags auflisten"
+  },
+  "description": {
+    "en": "List available Readwise Reader tags.",
+    "de": "Listet verfügbare Tags in Readwise Reader auf."
+  },
+  "vars": {
+    "API_KEY": "env:READWISE_API_KEY|Get your Reader API token from https://readwise.io/reader_api"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "List tags",
+        "de": "Tags auflisten"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/tags/",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Token {{API_KEY}}",
+          "Accept": "application/json"
+        }
+      }
+    }
+  ],
+  "output": {
+    "TAGS": "out || []",
+    "COUNT": "transform:() => { return Array.isArray(out) ? out.length : 0; }"
+  },
+  "messages": {
+    "success": {
+      "en": "Retrieved {{COUNT}} tag(s).",
+      "de": "{{COUNT}} Tag(s) abgerufen."
+    }
+  }
+}

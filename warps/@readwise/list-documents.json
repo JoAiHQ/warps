@@ -1,0 +1,124 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Readwise: List Documents",
+  "title": {
+    "en": "List reader documents",
+    "de": "Reader-Dokumente auflisten"
+  },
+  "description": {
+    "en": "List documents from Readwise Reader with filtering and pagination support.",
+    "de": "Listet Dokumente aus Readwise Reader mit Filter- und Paginierungsoptionen."
+  },
+  "vars": {
+    "API_KEY": "env:READWISE_API_KEY|Get your Reader API token from https://readwise.io/reader_api"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "List documents",
+        "de": "Dokumente auflisten"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/list/",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Token {{API_KEY}}",
+          "Accept": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Updated After",
+          "as": "updatedAfter",
+          "description": {
+            "en": "Only include documents updated after this ISO timestamp."
+          },
+          "type": "string",
+          "source": "field",
+          "position": "query:updatedAfter",
+          "required": false
+        },
+        {
+          "name": "Location",
+          "as": "location",
+          "description": {
+            "en": "Filter by location (new, later, shortlist, archive, feed)."
+          },
+          "type": "string",
+          "source": "field",
+          "position": "query:location",
+          "required": false
+        },
+        {
+          "name": "Category",
+          "as": "category",
+          "description": {
+            "en": "Filter by document category (article, email, tweet, video, note, pdf, etc)."
+          },
+          "type": "string",
+          "source": "field",
+          "position": "query:category",
+          "required": false
+        },
+        {
+          "name": "Tag",
+          "as": "tag",
+          "description": {
+            "en": "Filter by tag."
+          },
+          "type": "string",
+          "source": "field",
+          "position": "query:tag",
+          "required": false
+        },
+        {
+          "name": "With HTML Content",
+          "as": "withHtmlContent",
+          "description": {
+            "en": "Include html_content in each document result."
+          },
+          "type": "boolean",
+          "source": "field",
+          "position": "query:withHtmlContent",
+          "required": false
+        },
+        {
+          "name": "Page Cursor",
+          "as": "pageCursor",
+          "description": {
+            "en": "Pagination cursor from a previous response."
+          },
+          "type": "string",
+          "source": "field",
+          "position": "query:pageCursor",
+          "required": false
+        },
+        {
+          "name": "Page Size",
+          "as": "page_size",
+          "description": {
+            "en": "Number of documents per page (max 1000 according to Reader API docs)."
+          },
+          "type": "number",
+          "source": "field",
+          "position": "query:page_size",
+          "required": false
+        }
+      ]
+    }
+  ],
+  "related": ["joai-ingest"],
+  "schedule": "daily",
+  "output": {
+    "RESULTS": "out.results || []",
+    "COUNT": "transform:() => { return Array.isArray(out?.results) ? out.results.length : 0; }",
+    "NEXT_PAGE_CURSOR": "out.nextPageCursor || null"
+  },
+  "messages": {
+    "success": {
+      "en": "Retrieved {{COUNT}} document(s).",
+      "de": "{{COUNT}} Dokument(e) abgerufen."
+    }
+  }
+}
