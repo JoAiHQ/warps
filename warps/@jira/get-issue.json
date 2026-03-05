@@ -11,8 +11,7 @@
   },
   "vars": {
     "DOMAIN": "env:JIRA_DOMAIN|Your Jira domain (e.g., 'your-domain' for your-domain.atlassian.net).",
-    "EMAIL": "env:JIRA_EMAIL|Your Jira account email address.",
-    "API_TOKEN": "env:JIRA_API_TOKEN|Your Jira API Token from https://id.atlassian.com/manage-profile/security/api-tokens"
+    "AUTH": "env:JIRA_AUTH|Your Base64-encoded 'email:api_token' for Basic authentication."
   },
   "actions": [
     {
@@ -22,21 +21,11 @@
         "url": "https://{{DOMAIN}}.atlassian.net/rest/api/3/issue/{{ISSUE_KEY}}",
         "method": "GET",
         "headers": {
-          "Authorization": "Basic {{AUTH_HEADER}}",
+          "Authorization": "Basic {{AUTH}}",
           "Content-Type": "application/json"
         }
       },
       "inputs": [
-        {
-          "name": "Auth Header",
-          "as": "AUTH_HEADER",
-          "description": "Base64 encoded 'email:api_token'",
-          "type": "string",
-          "source": "variable",
-          "value": "EMAIL:API_TOKEN",
-          "position": "header:Authorization",
-          "required": true
-        },
         {
           "name": "Issue Key",
           "as": "ISSUE_KEY",
@@ -45,8 +34,7 @@
           },
           "type": "string",
           "source": "field",
-          "required": true,
-          "position": "url:ISSUE_KEY"
+          "required": true
         }
       ]
     }
