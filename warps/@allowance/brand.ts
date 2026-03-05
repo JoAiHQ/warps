@@ -7,6 +7,8 @@ export const brand = async (config: WarpClientConfig): Promise<WarpbaseBrand> =>
     .setDescription({
       en: 'On-chain spending allowances for AI agents. Owners deposit tokens, set limits, and agents spend within them.',
     })
+    .setLogo('https://raw.githubusercontent.com/iconic/open-iconic/master/svg/lock-locked.svg')
+    .setColors({ primary: '#111111', secondary: '#00C389' })
     .setUrls({ web: 'https://joai.ai' })
     .build(),
   contracts: {
