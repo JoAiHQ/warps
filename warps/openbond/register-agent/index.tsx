@@ -32,7 +32,7 @@ function Main() {
           <CheckCircle className="size-10 text-[#98ff98]" />
           <h1 className="text-2xl font-black tracking-tighter text-white uppercase">Agent Active</h1>
         </div>
-        <Badge color="success" style={{ backgroundColor: 'rgba(152, 255, 152, 0.1)', color: '#98ff98', borderColor: 'rgba(152, 255, 152, 0.2)' }}>
+        <Badge color="success">
             Network Sync Confirmed
         </Badge>
       </div>
@@ -40,7 +40,7 @@ function Main() {
       <div className="rounded-xl border border-white/5 bg-white/[0.02] p-5 space-y-4">
         <div>
           <p className="text-slate-500 text-[9px] font-black uppercase tracking-widest mb-1">Agent Name</p>
-          <p className="text-lg font-black text-white">{inputs.name}</p>
+          <p className="text-lg font-black text-white">{inputs?.name}</p>
         </div>
         
         <div className="pt-4 border-t border-white/5">
