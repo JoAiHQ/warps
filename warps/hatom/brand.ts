@@ -10,9 +10,9 @@ export const brand = async (config: WarpClientConfig): Promise<WarpbaseBrand> =>
     .setUrls({ web: 'https://hatom.com' })
     .build(),
   contracts: {
-    PROVIDER: (env: WarpChainEnv) => {
+    LIQUID_STAKING: (env: WarpChainEnv) => {
       if (env === 'devnet') return 'erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqplllllscktaww'
-      return 'TODO'
+      return 'erd1qqqqqqqqqqqqqpgq4gzfcw7kmkjy8zsf04ce6dl0auhtzjx078sslvrf4e'
     },
   },
   destinations: {},
