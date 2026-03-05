@@ -1,0 +1,21 @@
+{
+  "protocol": "warp:3.0.0",
+  "chain": "multiversx",
+  "name": "Colombia Staking: User Stake Calculation",
+  "title": { "en": "User Stake Calculation", "de": "Staking-Berechnung des Nutzers" },
+  "description": { "en": "Calculate the user's stake.", "de": "Berechne den Stake des Nutzers." },
+  "actions": [
+    {
+      "type": "collect",
+      "label": { "en": "Retrieve Delegations", "de": "Delegierungen abrufen" },
+      "destination": {
+        "url": "https://delegation-api.multiversx.com/providers/erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqallllls5rqmaf/delegations"
+      }
+    }
+  ],
+  "output": {
+    "DELEGATORS": "transform:() => (out || []).map(d => ({ user: d.address, amount: d.activeStake }))",
+    "STAKERS": "transform:() => result.DELEGATORS || []"
+  },
+  "next": "@peerme-earn-distribute-colombia-staking?user={{STAKERS[].user}}&amount={{STAKERS[].amount}}"
+}

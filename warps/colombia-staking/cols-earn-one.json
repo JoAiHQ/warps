@@ -1,0 +1,33 @@
+{
+  "protocol": "warp:3.0.0",
+  "chain": "multiversx",
+  "name": "Colombia Staking: Buyback with Wallet EGLD",
+  "title": { "en": "Buyback: Use My EGLD Balance", "de": "Rückkauf: Mein EGLD-Guthaben verwenden" },
+  "description": { "en": "Check your wallet EGLD balance and use it to wrap to WEGLD and buyback for stakers.", "de": "Überprüfe dein EGLD-Guthaben und nutze es, um es in WEGLD zu wrappen und einen Rückkauf für Staker durchzuführen." },
+  "actions": [
+    {
+      "type": "collect",
+      "label": { "en": "Check wallet balance", "de": "Guthaben prüfen" },
+      "destination": {
+        "url": "{{CHAIN_API}}/accounts/{{ADDRESS}}"
+      },
+      "inputs": [
+        {
+          "name": "Wallet address",
+          "as": "ADDRESS",
+          "type": "address",
+          "source": "field",
+          "default": "{{USER_WALLET}}"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "BALANCE": "transform:() => (out?.balance || '0')",
+    "BALANCE_EGLD": "transform:() => (Number(BigInt(out?.balance || '0')) / 1e18).toFixed(4)"
+  },
+  "messages": {
+    "success": { "en": "Balance: {{BALANCE_EGLD}} EGLD. Proceeding to wrap and buyback.", "de": "Guthaben: {{BALANCE_EGLD}} EGLD. Wrapping und Rückkauf werden durchgeführt." }
+  },
+  "next": "@colombia-staking-cols-earn-two?amount={{BALANCE}}"
+}
