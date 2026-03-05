@@ -2,13 +2,13 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { App, useAppContext } from '../../../ui/lib/components'
 import { EmptyMessageSkeleton } from '../../../ui/lib/skeletons'
-import { StakingSuccess } from '../../../ui/shared/multiversx/staking'
-import { HatomStakeEgldData, HatomStakeEgldInputs } from './warp.types'
+import { LiquidUnstakeSuccess } from '../../../ui/shared/multiversx/staking'
+import { HatomLiquidUnstakeData, HatomLiquidUnstakeInputs } from './warp.types'
 
 function Main() {
-  const { data } = useAppContext<HatomStakeEgldData, HatomStakeEgldInputs>()
+  const { data } = useAppContext<HatomLiquidUnstakeData, HatomLiquidUnstakeInputs>()
   if (!data) return <EmptyMessageSkeleton />
-  return <StakingSuccess txHash={data.TX_HASH} amount={data.AMOUNT_EGLD} />
+  return <LiquidUnstakeSuccess txHash={data.TX_HASH} />
 }
 
 const rootElement = document.getElementById('root')
