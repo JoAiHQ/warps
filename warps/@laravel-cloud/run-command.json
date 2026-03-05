@@ -1,0 +1,73 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Laravel Cloud: Run Command",
+  "title": {
+    "en": "Run CLI command",
+    "de": "CLI-Befehl ausführen"
+  },
+  "description": {
+    "en": "Execute a CLI command (e.g., Artisan) on a specific environment.",
+    "de": "Führt einen CLI-Befehl (z.B. Artisan) in einer bestimmten Umgebung aus."
+  },
+  "vars": {
+    "API_KEY": "env:LARAVEL_CLOUD_TOKEN|Get your API token from Organization Settings in Laravel Cloud"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Run Command",
+        "de": "Befehl ausführen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/environments/{{ENVIRONMENT_ID}}/commands",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{API_KEY}}",
+          "Accept": "application/vnd.api+json",
+          "Content-Type": "application/vnd.api+json"
+        },
+        "body": {
+          "data": {
+            "type": "commands",
+            "attributes": {
+              "command": "{{COMMAND}}"
+            }
+          }
+        }
+      },
+      "inputs": [
+        {
+          "name": "Environment ID",
+          "as": "ENVIRONMENT_ID",
+          "description": {
+            "en": "The ID or slug of the environment."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Command",
+          "as": "COMMAND",
+          "description": {
+            "en": "The CLI command to run (e.g., php artisan migrate)."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "output": {
+    "ID": "out.data.id",
+    "STATUS": "out.data.attributes.status"
+  },
+  "messages": {
+    "success": {
+      "en": "Command {{ID}} submitted. Status: {{STATUS}}.",
+      "de": "Befehl {{ID}} übermittelt. Status: {{STATUS}}."
+    }
+  }
+}

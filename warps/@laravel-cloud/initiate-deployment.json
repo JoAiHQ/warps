@@ -1,0 +1,79 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Laravel Cloud: Initiate Deployment",
+  "title": {
+    "en": "Initiate deployment",
+    "de": "Deployment starten"
+  },
+  "description": {
+    "en": "Start a new deployment for a specific environment from a branch or commit.",
+    "de": "Startet ein neues Deployment für eine bestimmte Umgebung von einem Branch oder Commit."
+  },
+  "vars": {
+    "API_KEY": "env:LARAVEL_CLOUD_TOKEN|Get your API token from Organization Settings in Laravel Cloud"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Initiate Deployment",
+        "de": "Deployment starten"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/environments/{{ENVIRONMENT_ID}}/deployments",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{API_KEY}}",
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "branch_name": "{{BRANCH}}",
+          "commit_hash": "{{COMMIT}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Environment ID",
+          "as": "ENVIRONMENT_ID",
+          "description": {
+            "en": "The ID or slug of the environment."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Branch",
+          "as": "BRANCH",
+          "description": {
+            "en": "The branch to deploy (e.g., main)."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Commit Hash",
+          "as": "COMMIT",
+          "description": {
+            "en": "Specific commit hash to deploy (optional)."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        }
+      ]
+    }
+  ],
+  "output": {
+    "ID": "out.data.id",
+    "STATUS": "out.data.attributes.status"
+  },
+  "messages": {
+    "success": {
+      "en": "Deployment {{ID}} initiated. Current status: {{STATUS}}.",
+      "de": "Deployment {{ID}} gestartet. Aktueller Status: {{STATUS}}."
+    }
+  }
+}

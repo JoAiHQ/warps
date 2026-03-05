@@ -1,0 +1,55 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Laravel Cloud: List Deployments",
+  "title": {
+    "en": "List deployments",
+    "de": "Deployments auflisten"
+  },
+  "description": {
+    "en": "List all deployments for a specific environment. Deployments represent the process of shipping code.",
+    "de": "Listet alle Deployments für eine bestimmte Umgebung auf. Deployments repräsentieren den Prozess des Veröffentlichens von Code."
+  },
+  "vars": {
+    "API_KEY": "env:LARAVEL_CLOUD_TOKEN|Get your API token from Organization Settings in Laravel Cloud"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "List Deployments",
+        "de": "Deployments auflisten"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/environments/{{ENVIRONMENT_ID}}/deployments",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{API_KEY}}",
+          "Accept": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Environment ID",
+          "as": "ENVIRONMENT_ID",
+          "description": {
+            "en": "The ID or slug of the environment."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "output": {
+    "COUNT": "transform:(out) => { return Array.isArray(out.data) ? out.data.length : 0; }",
+    "DEPLOYMENTS": "transform:(out) => { return Array.isArray(out.data) ? out.data.map(item => ({ id: item.id, status: item.attributes.status, commit_hash: item.attributes.commit_hash, commit_message: item.attributes.commit_message, started_at: item.attributes.started_at, finished_at: item.attributes.finished_at })) : []; }"
+  },
+  "messages": {
+    "success": {
+      "en": "Found {{COUNT}} deployment(s).",
+      "de": "{{COUNT}} Deployment(s) gefunden."
+    }
+  },
+  "ui": "https://raw.githubusercontent.com/JoAiHQ/warps/main/warps/@laravel-cloud/list-deployments/chatapp.dist.html"
+}

@@ -1,0 +1,42 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Laravel Cloud: List Applications",
+  "title": {
+    "en": "List all applications",
+    "de": "Alle Applikationen auflisten"
+  },
+  "description": {
+    "en": "List all applications in your Laravel Cloud account. Applications are the top-level containers for your code and resources.",
+    "de": "Listet alle Applikationen in deinem Laravel Cloud-Konto auf. Applikationen sind die obersten Container für deinen Code und deine Ressourcen."
+  },
+  "vars": {
+    "API_KEY": "env:LARAVEL_CLOUD_TOKEN|Get your API token from Organization Settings in Laravel Cloud"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "List Applications",
+        "de": "Applikationen auflisten"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/applications",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{API_KEY}}",
+          "Accept": "application/json"
+        }
+      }
+    }
+  ],
+  "output": {
+    "COUNT": "transform:(out) => { return Array.isArray(out.data) ? out.data.length : 0; }",
+    "APPLICATIONS": "transform:(out) => { return Array.isArray(out.data) ? out.data.map(item => ({ id: item.id, name: item.attributes.name, slug: item.attributes.slug, region: item.attributes.region })) : []; }"
+  },
+  "messages": {
+    "success": {
+      "en": "Found {{COUNT}} application(s).",
+      "de": "{{COUNT}} Applikation(en) gefunden."
+    }
+  }
+}

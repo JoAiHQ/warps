@@ -1,0 +1,55 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Laravel Cloud: List Logs",
+  "title": {
+    "en": "List environment logs",
+    "de": "Umgebungs-Logs auflisten"
+  },
+  "description": {
+    "en": "Retrieve the latest logs for a specific environment. Useful for debugging and monitoring commands.",
+    "de": "Ruft die neuesten Logs für eine bestimmte Umgebung ab. Hilfreich beim Debugging und Überwachen von Befehlen."
+  },
+  "vars": {
+    "API_KEY": "env:LARAVEL_CLOUD_TOKEN|Get your API token from Organization Settings in Laravel Cloud"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "List Logs",
+        "de": "Logs auflisten"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/environments/{{ENVIRONMENT_ID}}/logs",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{API_KEY}}",
+          "Accept": "application/vnd.api+json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Environment ID",
+          "as": "ENVIRONMENT_ID",
+          "description": {
+            "en": "The ID or slug of the environment."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "output": {
+    "COUNT": "transform:(out) => { return Array.isArray(out.data) ? out.data.length : 0; }",
+    "LOGS": "transform:(out) => { return Array.isArray(out.data) ? out.data.map(item => ({ id: item.id, timestamp: item.attributes.timestamp, level: item.attributes.level, message: item.attributes.message })) : []; }"
+  },
+  "messages": {
+    "success": {
+      "en": "Found {{COUNT}} log entry(s).",
+      "de": "{{COUNT}} Log-Eintrag(-Einträge) gefunden."
+    }
+  },
+  "ui": "https://raw.githubusercontent.com/JoAiHQ/warps/main/warps/@laravel-cloud/list-environment-logs/chatapp.dist.html"
+}

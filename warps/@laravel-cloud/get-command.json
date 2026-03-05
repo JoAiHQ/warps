@@ -1,0 +1,55 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Laravel Cloud: Get Command",
+  "title": {
+    "en": "Get command details",
+    "de": "Befehlsdetails abrufen"
+  },
+  "description": {
+    "en": "Retrieve the status and details of a specific CLI command.",
+    "de": "Ruft den Status und die Details eines bestimmten CLI-Befehls ab."
+  },
+  "vars": {
+    "API_KEY": "env:LARAVEL_CLOUD_TOKEN|Get your API token from Organization Settings in Laravel Cloud"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Get Command",
+        "de": "Befehl abrufen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/commands/{{COMMAND_ID}}",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{API_KEY}}",
+          "Accept": "application/vnd.api+json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Command ID",
+          "as": "COMMAND_ID",
+          "description": {
+            "en": "The ID of the command."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "output": {
+    "COMMAND": "out.data.attributes.command",
+    "STATUS": "out.data.attributes.status",
+    "FINISHED_AT": "out.data.attributes.finished_at"
+  },
+  "messages": {
+    "success": {
+      "en": "Command '{{COMMAND}}' status: {{STATUS}}.",
+      "de": "Befehl '{{COMMAND}}' Status: {{STATUS}}."
+    }
+  }
+}
