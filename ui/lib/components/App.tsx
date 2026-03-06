@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { App as McpApp } from '@modelcontextprotocol/ext-apps'
 import { useApp, UseAppResult } from '../hooks/useApp'
+import { useMcpHostContext } from '../hooks/useMcpGlobal'
 import { UpgradePrompt } from './Billing/UpgradePrompt'
 
 const AppContext = React.createContext<UseAppResult<any, any> | null>(null)
@@ -44,6 +45,16 @@ export function App(props: Props) {
 
     setApp(newApp)
   }, [appName, appVersion])
+
+  const hostContext = useMcpHostContext(app)
+
+  useEffect(() => {
+    const theme = hostContext?.theme
+    if (!theme || theme === 'auto') return
+
+    document.documentElement.setAttribute('data-theme', theme)
+    ;(window as any).openai = { theme }
+  }, [hostContext?.theme])
 
   const appResult = useApp(app as McpApp, isDevMode)
 

@@ -87,9 +87,9 @@ async function buildApp(targetAppName) {
     const warpsRoot = resolve(__dirname, '../warps')
     const appDir = resolve(warpsRoot, targetAppName)
     const entryPoint = resolve(appDir, 'index.tsx')
-    const stylesCssPath = resolve(appDir, 'styles.css') 
-    
-    const hasStyles = existsSync(stylesCssPath);
+    const defaultStylesCssPath = resolve(__dirname, 'styles.css')
+    const appStylesCssPath = resolve(appDir, 'styles.css')
+    const stylesCssPath = existsSync(appStylesCssPath) ? appStylesCssPath : defaultStylesCssPath
     
     const distDir = resolve(appDir, 'dist')
     const outfile = `chatapp.dist.js` 
@@ -100,7 +100,7 @@ async function buildApp(targetAppName) {
       root: appDir,
       logLevel: 'warn', // Quieter
       plugins: [
-        hasStyles ? wrapEntryPlugin(virtualIdInput, entryPoint, stylesCssPath) : [],
+        wrapEntryPlugin(virtualIdInput, entryPoint, stylesCssPath),
         tailwindcss({ config: resolve(__dirname, '../tailwind.config.js') }), 
         react(),
       ],
@@ -111,7 +111,7 @@ async function buildApp(targetAppName) {
         cssMinify: 'esbuild',
         cssCodeSplit: false,
         rollupOptions: {
-          input: hasStyles ? virtualIdInput : entryPoint,
+          input: virtualIdInput,
           output: {
             format: 'es',
             entryFileNames: outfile,
