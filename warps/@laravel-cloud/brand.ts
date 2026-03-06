@@ -8,7 +8,7 @@ export const brand = async (config: WarpClientConfig): Promise<WarpbaseBrand> =>
       en: "The <strong>Laravel Cloud API</strong> allows you to manage your <strong>applications</strong>, <strong>environments</strong>, <strong>deployments</strong>, <strong>databases</strong>, and more. Ship your Laravel apps at scale with cloud-native infrastructure.",
       de: 'Die <strong>Laravel Cloud API</strong> ermöglicht es dir, deine <strong>Applikationen</strong>, <strong>Umgebungen</strong>, <strong>Deployments</strong>, <strong>Datenbanken</strong> und mehr zu verwalten. Veröffentliche deine Laravel-Apps skaliert mit Cloud-nativer Infrastruktur.',
     })
-    .setLogo('https://laravel.com/img/logomark.min.svg')
+    .setLogo('https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/laravel.svg')
     .setColors({ primary: '#FF2D20' })
     .setUrls({ web: 'https://cloud.laravel.com' })
     .build(),
