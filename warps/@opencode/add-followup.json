@@ -1,0 +1,71 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "OpenCode: Add Followup",
+  "title": {
+    "en": "Add followup"
+  },
+  "description": {
+    "en": "Send a followup message to an existing OpenCode session."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Add Followup"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/session/{{RUN_ID}}/message",
+        "method": "POST",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Run ID",
+          "as": "RUN_ID",
+          "description": {
+            "en": "OpenCode session ID."
+          },
+          "type": "string",
+          "position": "path:RUN_ID",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Followup",
+          "as": "FOLLOWUP",
+          "description": {
+            "en": "Followup instruction text."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:parts.0.text"
+        },
+        {
+          "name": "Part Type",
+          "as": "PART_TYPE",
+          "description": {
+            "en": "Message part type."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "text",
+          "position": "payload:parts.0.type"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "RUN_ID": "in.RUN_ID",
+    "RUN_STATUS": "transform:() => out.status || 'updated'",
+    "SUMMARY": "transform:() => out.summary || 'Followup sent'"
+  },
+  "messages": {
+    "success": {
+      "en": "Followup sent to OpenCode session {{RUN_ID}}."
+    }
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "OpenAI (Codex CLI): Cancel Task",
+  "title": {
+    "en": "Cancel task (Codex)"
+  },
+  "description": {
+    "en": "Request cancellation through Codex exec mode."
+  },
+  "actions": [
+    {
+      "type": "prompt",
+      "label": {
+        "en": "Cancel Task"
+      },
+      "prompt": "/codex exec --json \"$(cat <<'JOAI_PROMPT'\nFor run ID {{RUN_ID}}, stop work now and return only: cancel_requested.\nJOAI_PROMPT\n)\"",
+      "inputs": [
+        {
+          "name": "Run ID",
+          "as": "RUN_ID",
+          "description": {
+            "en": "Run identifier to cancel."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "output": {
+    "RUN_ID": "in.RUN_ID",
+    "RUN_STATUS": "transform:() => 'cancel_requested'",
+    "SUMMARY": "transform:() => 'Cancellation requested via Codex.'"
+  },
+  "messages": {
+    "success": {
+      "en": "Cancellation requested for {{RUN_ID}}."
+    }
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "OpenAI: Get Task Status",
+  "title": {
+    "en": "Get task status"
+  },
+  "description": {
+    "en": "Get status for an OpenAI task run."
+  },
+  "vars": {
+    "API_KEY": "env:OPENAI_API_KEY|OpenAI API key"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Get Status"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/responses/{{RUN_ID}}",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{API_KEY}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Run ID",
+          "as": "RUN_ID",
+          "description": {
+            "en": "Response run ID."
+          },
+          "type": "string",
+          "position": "path:RUN_ID",
+          "source": "field",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "output": {
+    "RUN_ID": "out.id",
+    "RUN_STATUS": "out.status",
+    "SUMMARY": "out.output_text"
+  },
+  "messages": {
+    "success": {
+      "en": "OpenAI run {{RUN_ID}} is {{RUN_STATUS}}."
+    }
+  }
+}

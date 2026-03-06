@@ -1,0 +1,49 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "OpenCode: Launch Task",
+  "title": {
+    "en": "Launch task"
+  },
+  "description": {
+    "en": "Create a new OpenCode session for task execution."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Launch Task"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/session",
+        "method": "POST",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Task",
+          "as": "TASK",
+          "description": {
+            "en": "Initial task title for the session."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:title"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "RUN_ID": "out.id",
+    "RUN_STATUS": "transform:() => out.status || 'created'",
+    "RUN_URL": "transform:() => out.id ? `opencode://session/${out.id}` : null",
+    "SUMMARY": "transform:() => out.title || 'Session created'"
+  },
+  "messages": {
+    "success": {
+      "en": "OpenCode session {{RUN_ID}} created ({{RUN_STATUS}})."
+    }
+  }
+}

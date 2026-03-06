@@ -1,0 +1,100 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Anthropic: Add Followup",
+  "title": {
+    "en": "Add followup"
+  },
+  "description": {
+    "en": "Launch a followup Anthropic run using Message Batches."
+  },
+  "vars": {
+    "API_KEY": "env:ANTHROPIC_API_KEY|Anthropic API key"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Add Followup"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/messages/batches",
+        "method": "POST",
+        "headers": {
+          "x-api-key": "{{API_KEY}}",
+          "anthropic-version": "2023-06-01",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Run ID",
+          "as": "RUN_ID",
+          "description": {
+            "en": "Previous run ID for traceability."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:requests.0.custom_id"
+        },
+        {
+          "name": "Followup",
+          "as": "FOLLOWUP",
+          "description": {
+            "en": "Followup instruction."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:requests.0.params.messages.0.content"
+        },
+        {
+          "name": "Model",
+          "as": "MODEL",
+          "description": {
+            "en": "Anthropic model to use."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "claude-sonnet-4-5",
+          "position": "payload:requests.0.params.model"
+        },
+        {
+          "name": "Max Tokens",
+          "as": "MAX_TOKENS",
+          "description": {
+            "en": "Maximum output tokens."
+          },
+          "type": "number",
+          "source": "field",
+          "required": false,
+          "default": 2048,
+          "position": "payload:requests.0.params.max_tokens"
+        },
+        {
+          "name": "Role",
+          "as": "ROLE",
+          "description": {
+            "en": "Message role."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "user",
+          "position": "payload:requests.0.params.messages.0.role"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "RUN_ID": "out.id",
+    "RUN_STATUS": "out.processing_status",
+    "SUMMARY": "transform:() => `Followup batch ${out.id} is ${out.processing_status}`"
+  },
+  "messages": {
+    "success": {
+      "en": "Anthropic followup run {{RUN_ID}} created with status {{RUN_STATUS}}."
+    }
+  }
+}

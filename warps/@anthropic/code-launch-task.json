@@ -1,0 +1,51 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Anthropic (Claude Code): Launch Task",
+  "title": {
+    "en": "Launch task (Claude Code)"
+  },
+  "description": {
+    "en": "Launch a task through Claude Code non-interactive print mode."
+  },
+  "actions": [
+    {
+      "type": "prompt",
+      "label": {
+        "en": "Launch Task"
+      },
+      "prompt": "/claude --print --output-format json \"$(cat <<'JOAI_PROMPT'\nRun ID {{RUN_ID}}.\nExecute this task:\n{{TASK}}\nJOAI_PROMPT\n)\"",
+      "inputs": [
+        {
+          "name": "Run ID",
+          "as": "RUN_ID",
+          "description": {
+            "en": "Tracking run ID used by JoAi orchestration."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Task",
+          "as": "TASK",
+          "description": {
+            "en": "Task instruction to execute with Claude Code CLI."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "output": {
+    "RUN_ID": "in.RUN_ID",
+    "RUN_STATUS": "transform:() => 'submitted'",
+    "SUMMARY": "transform:() => 'Task submitted to Claude Code print mode.'"
+  },
+  "messages": {
+    "success": {
+      "en": "Claude Code task submitted."
+    }
+  }
+}

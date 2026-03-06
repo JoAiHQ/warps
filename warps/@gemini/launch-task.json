@@ -1,0 +1,63 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Gemini: Launch Task",
+  "title": {
+    "en": "Launch task"
+  },
+  "description": {
+    "en": "Launch a new Gemini batch generation task."
+  },
+  "vars": {
+    "API_KEY": "env:GEMINI_API_KEY|Gemini API key"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Launch Task"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1beta/{{MODEL}}:batchGenerateContent?key={{API_KEY}}",
+        "method": "POST",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Model",
+          "as": "MODEL",
+          "description": {
+            "en": "Model path, e.g. models/gemini-2.5-flash."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "models/gemini-2.5-flash",
+          "position": "path:MODEL"
+        },
+        {
+          "name": "Task",
+          "as": "TASK",
+          "description": {
+            "en": "Task instruction to execute."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:inputConfig.inlinedRequests.requests.0.request.contents.0.parts.0.text"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "RUN_ID": "out.name",
+    "RUN_STATUS": "transform:() => out.done ? 'completed' : (out.state || out.metadata?.state || 'running')",
+    "SUMMARY": "transform:() => out.done ? 'Batch run completed' : 'Batch run in progress'"
+  },
+  "messages": {
+    "success": {
+      "en": "Gemini run {{RUN_ID}} launched with status {{RUN_STATUS}}."
+    }
+  }
+}

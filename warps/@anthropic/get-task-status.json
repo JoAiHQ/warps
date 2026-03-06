@@ -1,0 +1,53 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Anthropic: Get Task Status",
+  "title": {
+    "en": "Get task status"
+  },
+  "description": {
+    "en": "Get status for an Anthropic Message Batch run."
+  },
+  "vars": {
+    "API_KEY": "env:ANTHROPIC_API_KEY|Anthropic API key"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Get Status"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/messages/batches/{{RUN_ID}}",
+        "method": "GET",
+        "headers": {
+          "x-api-key": "{{API_KEY}}",
+          "anthropic-version": "2023-06-01",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Run ID",
+          "as": "RUN_ID",
+          "description": {
+            "en": "Message batch ID."
+          },
+          "type": "string",
+          "position": "path:RUN_ID",
+          "source": "field",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "output": {
+    "RUN_ID": "out.id",
+    "RUN_STATUS": "out.processing_status",
+    "SUMMARY": "transform:() => `Request counts: ${JSON.stringify(out.request_counts || {})}`"
+  },
+  "messages": {
+    "success": {
+      "en": "Anthropic run {{RUN_ID}} is {{RUN_STATUS}}."
+    }
+  }
+}

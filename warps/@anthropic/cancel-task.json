@@ -1,0 +1,53 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Anthropic: Cancel Task",
+  "title": {
+    "en": "Cancel task"
+  },
+  "description": {
+    "en": "Cancel an Anthropic Message Batch run."
+  },
+  "vars": {
+    "API_KEY": "env:ANTHROPIC_API_KEY|Anthropic API key"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Cancel Task"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/messages/batches/{{RUN_ID}}/cancel",
+        "method": "POST",
+        "headers": {
+          "x-api-key": "{{API_KEY}}",
+          "anthropic-version": "2023-06-01",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Run ID",
+          "as": "RUN_ID",
+          "description": {
+            "en": "Message batch ID to cancel."
+          },
+          "type": "string",
+          "position": "path:RUN_ID",
+          "source": "field",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "output": {
+    "RUN_ID": "out.id",
+    "RUN_STATUS": "out.processing_status",
+    "SUMMARY": "transform:() => `Cancellation requested for batch ${out.id}`"
+  },
+  "messages": {
+    "success": {
+      "en": "Anthropic run {{RUN_ID}} cancellation requested. Status: {{RUN_STATUS}}."
+    }
+  }
+}

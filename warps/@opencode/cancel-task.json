@@ -1,0 +1,48 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "OpenCode: Cancel Task",
+  "title": {
+    "en": "Cancel task"
+  },
+  "description": {
+    "en": "Abort and close an OpenCode session."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Cancel Task"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/session/{{RUN_ID}}/abort",
+        "method": "POST",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Run ID",
+          "as": "RUN_ID",
+          "description": {
+            "en": "OpenCode session ID."
+          },
+          "type": "string",
+          "position": "path:RUN_ID",
+          "source": "field",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "output": {
+    "RUN_ID": "in.RUN_ID",
+    "RUN_STATUS": "transform:() => 'aborted'",
+    "SUMMARY": "transform:() => 'Session aborted'"
+  },
+  "messages": {
+    "success": {
+      "en": "OpenCode session {{RUN_ID}} aborted."
+    }
+  }
+}

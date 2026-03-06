@@ -1,0 +1,49 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "OpenCode: Get Task Status",
+  "title": {
+    "en": "Get task status"
+  },
+  "description": {
+    "en": "Get current status of an OpenCode session."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Get Status"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/session/{{RUN_ID}}",
+        "method": "GET",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Run ID",
+          "as": "RUN_ID",
+          "description": {
+            "en": "OpenCode session ID."
+          },
+          "type": "string",
+          "position": "path:RUN_ID",
+          "source": "field",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "output": {
+    "RUN_ID": "out.id",
+    "RUN_STATUS": "transform:() => out.status || 'unknown'",
+    "RUN_URL": "transform:() => out.id ? `opencode://session/${out.id}` : null",
+    "SUMMARY": "transform:() => out.title || 'Session loaded'"
+  },
+  "messages": {
+    "success": {
+      "en": "OpenCode session {{RUN_ID}} is {{RUN_STATUS}}."
+    }
+  }
+}

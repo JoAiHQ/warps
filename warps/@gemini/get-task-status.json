@@ -1,0 +1,51 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Gemini: Get Task Status",
+  "title": {
+    "en": "Get task status"
+  },
+  "description": {
+    "en": "Get status for a Gemini batch generation task."
+  },
+  "vars": {
+    "API_KEY": "env:GEMINI_API_KEY|Gemini API key"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Get Status"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1beta/{{RUN_ID}}?key={{API_KEY}}",
+        "method": "GET",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Run ID",
+          "as": "RUN_ID",
+          "description": {
+            "en": "Operation resource name returned by launch-task."
+          },
+          "type": "string",
+          "position": "path:RUN_ID",
+          "source": "field",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "output": {
+    "RUN_ID": "out.name",
+    "RUN_STATUS": "transform:() => out.done ? 'completed' : (out.state || out.metadata?.state || 'running')",
+    "SUMMARY": "transform:() => out.error ? JSON.stringify(out.error) : (out.done ? 'Batch run completed' : 'Batch run in progress')"
+  },
+  "messages": {
+    "success": {
+      "en": "Gemini run {{RUN_ID}} is {{RUN_STATUS}}."
+    }
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Anthropic (Claude Code): Cancel Task",
+  "title": {
+    "en": "Cancel task (Claude Code)"
+  },
+  "description": {
+    "en": "Request cancellation through Claude Code print mode."
+  },
+  "actions": [
+    {
+      "type": "prompt",
+      "label": {
+        "en": "Cancel Task"
+      },
+      "prompt": "/claude --print --output-format json \"$(cat <<'JOAI_PROMPT'\nFor run ID {{RUN_ID}}, stop work now and return only: cancel_requested.\nJOAI_PROMPT\n)\"",
+      "inputs": [
+        {
+          "name": "Run ID",
+          "as": "RUN_ID",
+          "description": {
+            "en": "Run identifier to cancel."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "output": {
+    "RUN_ID": "in.RUN_ID",
+    "RUN_STATUS": "transform:() => 'cancel_requested'",
+    "SUMMARY": "transform:() => 'Cancellation requested via Claude Code.'"
+  },
+  "messages": {
+    "success": {
+      "en": "Cancellation requested for {{RUN_ID}}."
+    }
+  }
+}

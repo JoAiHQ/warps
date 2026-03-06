@@ -1,0 +1,41 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Anthropic (Claude Code): Get Task Status",
+  "title": {
+    "en": "Get task status (Claude Code)"
+  },
+  "description": {
+    "en": "Check task status by asking Claude Code for a one-line status update."
+  },
+  "actions": [
+    {
+      "type": "prompt",
+      "label": {
+        "en": "Get Status"
+      },
+      "prompt": "/claude --print --output-format json \"$(cat <<'JOAI_PROMPT'\nFor run ID {{RUN_ID}}, summarize current status in one line using one of: running, blocked, completed.\nJOAI_PROMPT\n)\"",
+      "inputs": [
+        {
+          "name": "Run ID",
+          "as": "RUN_ID",
+          "description": {
+            "en": "Run identifier returned by launch-task."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "output": {
+    "RUN_ID": "in.RUN_ID",
+    "RUN_STATUS": "transform:() => 'status_requested'",
+    "SUMMARY": "transform:() => 'Status requested from Claude Code.'"
+  },
+  "messages": {
+    "success": {
+      "en": "Claude Code status requested for {{RUN_ID}}."
+    }
+  }
+}

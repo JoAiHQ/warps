@@ -1,0 +1,100 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Anthropic: Launch Task",
+  "title": {
+    "en": "Launch task"
+  },
+  "description": {
+    "en": "Launch a new task run through Anthropic Message Batches."
+  },
+  "vars": {
+    "API_KEY": "env:ANTHROPIC_API_KEY|Anthropic API key"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Launch Task"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/messages/batches",
+        "method": "POST",
+        "headers": {
+          "x-api-key": "{{API_KEY}}",
+          "anthropic-version": "2023-06-01",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Task",
+          "as": "TASK",
+          "description": {
+            "en": "Task instruction to execute."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:requests.0.params.messages.0.content"
+        },
+        {
+          "name": "Model",
+          "as": "MODEL",
+          "description": {
+            "en": "Anthropic model to use."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "claude-sonnet-4-5",
+          "position": "payload:requests.0.params.model"
+        },
+        {
+          "name": "Max Tokens",
+          "as": "MAX_TOKENS",
+          "description": {
+            "en": "Maximum output tokens."
+          },
+          "type": "number",
+          "source": "field",
+          "required": false,
+          "default": 2048,
+          "position": "payload:requests.0.params.max_tokens"
+        },
+        {
+          "name": "Custom ID",
+          "as": "CUSTOM_ID",
+          "description": {
+            "en": "Unique custom identifier for this batched request."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:requests.0.custom_id"
+        },
+        {
+          "name": "Role",
+          "as": "ROLE",
+          "description": {
+            "en": "Message role."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "user",
+          "position": "payload:requests.0.params.messages.0.role"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "RUN_ID": "out.id",
+    "RUN_STATUS": "out.processing_status",
+    "SUMMARY": "transform:() => `Message batch ${out.id} is ${out.processing_status}`"
+  },
+  "messages": {
+    "success": {
+      "en": "Anthropic run {{RUN_ID}} launched with status {{RUN_STATUS}}."
+    }
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Gemini: Cancel Task",
+  "title": {
+    "en": "Cancel task"
+  },
+  "description": {
+    "en": "Cancel a Gemini long-running operation."
+  },
+  "vars": {
+    "API_KEY": "env:GEMINI_API_KEY|Gemini API key"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Cancel Task"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1beta/{{RUN_ID}}:cancel?key={{API_KEY}}",
+        "method": "POST",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Run ID",
+          "as": "RUN_ID",
+          "description": {
+            "en": "Operation resource name to cancel."
+          },
+          "type": "string",
+          "position": "path:RUN_ID",
+          "source": "field",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "output": {
+    "RUN_ID": "in.RUN_ID",
+    "RUN_STATUS": "transform:() => 'cancel_requested'",
+    "SUMMARY": "transform:() => 'Cancellation requested'"
+  },
+  "messages": {
+    "success": {
+      "en": "Gemini run {{RUN_ID}} cancellation requested."
+    }
+  }
+}
