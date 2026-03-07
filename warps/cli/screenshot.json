@@ -1,0 +1,40 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "CLI: Screenshot",
+  "title": {
+    "en": "Take a screenshot",
+    "de": "Screenshot aufnehmen"
+  },
+  "description": {
+    "en": "Capture a screenshot and save it to a file.",
+    "de": "Einen Screenshot aufnehmen und als Datei speichern."
+  },
+  "actions": [
+    {
+      "type": "prompt",
+      "label": {
+        "en": "Take Screenshot",
+        "de": "Screenshot aufnehmen"
+      },
+      "prompt": {
+        "macos": "/screencapture \"{{FILE_PATH}}\"",
+        "linux": "/gnome-screenshot -f \"{{FILE_PATH}}\"",
+        "windows": "/powershell -command \"Add-Type -AssemblyName System.Windows.Forms; [System.Windows.Forms.Screen]::PrimaryScreen | ForEach-Object { $bitmap = New-Object System.Drawing.Bitmap($_.Bounds.Width, $_.Bounds.Height); $graphics = [System.Drawing.Graphics]::FromImage($bitmap); $graphics.CopyFromScreen($_.Bounds.Location, [System.Drawing.Point]::Empty, $_.Bounds.Size); $bitmap.Save('{{FILE_PATH}}') }\""
+      },
+      "inputs": [
+        {
+          "name": "File Path",
+          "as": "FILE_PATH",
+          "description": {
+            "en": "Where to save the screenshot",
+            "de": "Wo der Screenshot gespeichert werden soll"
+          },
+          "bot": "The file path for the screenshot. Use a .png extension. Default to ~/Desktop/screenshot.png if the user doesn't specify.",
+          "type": "string",
+          "source": "field",
+          "required": true
+        }
+      ]
+    }
+  ]
+}
