@@ -4,8 +4,8 @@
   "repo": "JoAiHQ/warps",
   "branch": "dev",
   "network": "devnet",
-  "commitSha": "47e806e9739afe8b7ddf20306bbf83644b4a5791",
-  "generatedAt": "2026-03-07T12:19:28.993Z",
+  "commitSha": "d0585d645dff9b51670bce43817dfb81fade6e60",
+  "generatedAt": "2026-03-07T12:29:59.982Z",
   "warps": [
     {
       "key": "arbitrum:omniset-deposit-arbitrum",
@@ -3800,16 +3800,16 @@
       "identifier": "@multiversx:cli-disk-usage",
       "alias": "cli-disk-usage",
       "chain": "multiversx",
-      "hash": "9acc1b6df826d62cc31a4dfc76f23d2bce807df71116e1175ae0ea6d701b3e37",
-      "checksum": "9acc1b6df826d62cc31a4dfc76f23d2bce807df71116e1175ae0ea6d701b3e37",
+      "hash": "808b80306ee6d12ec66d60e795ed8c43c674a9420da57e1909447c778192aaf8",
+      "checksum": "808b80306ee6d12ec66d60e795ed8c43c674a9420da57e1909447c778192aaf8",
       "name": "CLI: Disk Usage",
       "title": {
-        "en": "Show disk usage",
+        "en": "Show disk usage overview",
         "de": "Festplattennutzung anzeigen"
       },
       "description": {
-        "en": "Show disk space usage and available storage.",
-        "de": "Festplattenspeichernutzung und verfügbaren Speicher anzeigen."
+        "en": "Show available and used disk space on the system.",
+        "de": "Verfügbaren und belegten Speicherplatz auf dem System anzeigen."
       },
       "preview": null,
       "creator": "github:JoAiHQ/warps",
@@ -3839,21 +3839,25 @@
         "protocol": "warp:3.0.0",
         "name": "CLI: Disk Usage",
         "title": {
-          "en": "Show disk usage",
+          "en": "Show disk usage overview",
           "de": "Festplattennutzung anzeigen"
         },
         "description": {
-          "en": "Show disk space usage and available storage.",
-          "de": "Festplattenspeichernutzung und verfügbaren Speicher anzeigen."
+          "en": "Show available and used disk space on the system.",
+          "de": "Verfügbaren und belegten Speicherplatz auf dem System anzeigen."
         },
         "actions": [
           {
             "type": "prompt",
             "label": {
-              "en": "Disk Usage",
-              "de": "Festplattennutzung"
+              "en": "Show Disk Usage",
+              "de": "Festplattennutzung anzeigen"
             },
-            "prompt": "/df -h"
+            "prompt": {
+              "macos": "/df -h",
+              "linux": "/df -h",
+              "windows": "/wmic logicaldisk get size,freespace,caption"
+            }
           }
         ]
       }
@@ -4031,16 +4035,16 @@
       "identifier": "@multiversx:cli-find-files",
       "alias": "cli-find-files",
       "chain": "multiversx",
-      "hash": "d4cd662fa24cd76ec980d38d8e3fbfed58639dc883109276891f36161052b85c",
-      "checksum": "d4cd662fa24cd76ec980d38d8e3fbfed58639dc883109276891f36161052b85c",
+      "hash": "7bb1bf63a1e837bffa329fc82151d9f0f55ad74e611fbb3550caa80b629625d1",
+      "checksum": "7bb1bf63a1e837bffa329fc82151d9f0f55ad74e611fbb3550caa80b629625d1",
       "name": "CLI: Find Files",
       "title": {
         "en": "Find files by name",
         "de": "Dateien nach Name suchen"
       },
       "description": {
-        "en": "Find files matching a name pattern.",
-        "de": "Dateien finden, die einem Namensmuster entsprechen."
+        "en": "Search for files matching a name pattern in a directory.",
+        "de": "Nach Dateien suchen, die einem Namensmuster in einem Verzeichnis entsprechen."
       },
       "preview": null,
       "creator": "github:JoAiHQ/warps",
@@ -4074,25 +4078,41 @@
           "de": "Dateien nach Name suchen"
         },
         "description": {
-          "en": "Find files matching a name pattern.",
-          "de": "Dateien finden, die einem Namensmuster entsprechen."
+          "en": "Search for files matching a name pattern in a directory.",
+          "de": "Nach Dateien suchen, die einem Namensmuster in einem Verzeichnis entsprechen."
         },
         "actions": [
           {
             "type": "prompt",
             "label": {
               "en": "Find Files",
-              "de": "Dateien suchen"
+              "de": "Dateien finden"
             },
-            "prompt": "/find . -name \"{{PATTERN}}\"",
+            "prompt": {
+              "macos": "/find \"{{PATH}}\" -iname \"{{PATTERN}}\"",
+              "linux": "/find \"{{PATH}}\" -iname \"{{PATTERN}}\"",
+              "windows": "/dir /S /B \"{{PATH}}\\{{PATTERN}}\""
+            },
             "inputs": [
               {
                 "name": "Pattern",
                 "as": "PATTERN",
                 "description": {
-                  "en": "The file name pattern to search for",
-                  "de": "Das Dateinamensmuster zum Suchen"
+                  "en": "The filename pattern to search for (e.g. *.pdf, report*)",
+                  "de": "Das Dateinamensmuster (z.B. *.pdf, bericht*)"
                 },
+                "type": "string",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Path",
+                "as": "PATH",
+                "description": {
+                  "en": "The directory to search in",
+                  "de": "Das zu durchsuchende Verzeichnis"
+                },
+                "bot": "The directory to search in. Default to the user's home directory if not specified.",
                 "type": "string",
                 "source": "field",
                 "required": true
@@ -4187,16 +4207,16 @@
       "identifier": "@multiversx:cli-list-files",
       "alias": "cli-list-files",
       "chain": "multiversx",
-      "hash": "44bf315d65aa3ece7872b95690654cf0f25603feac8fdfea518c56fbcaab0541",
-      "checksum": "44bf315d65aa3ece7872b95690654cf0f25603feac8fdfea518c56fbcaab0541",
+      "hash": "8893b8ecc460fb1498ba898885bc5647eac628c88c9c9ed1a1fb969ede1b6ad6",
+      "checksum": "8893b8ecc460fb1498ba898885bc5647eac628c88c9c9ed1a1fb969ede1b6ad6",
       "name": "CLI: List Files",
       "title": {
-        "en": "List files and directories",
-        "de": "Dateien und Verzeichnisse auflisten"
+        "en": "List files in a directory",
+        "de": "Dateien in einem Verzeichnis auflisten"
       },
       "description": {
-        "en": "List files and directories in a given path.",
-        "de": "Dateien und Verzeichnisse in einem bestimmten Pfad auflisten."
+        "en": "List files and directories with details.",
+        "de": "Dateien und Verzeichnisse mit Details auflisten."
       },
       "preview": null,
       "creator": "github:JoAiHQ/warps",
@@ -4226,12 +4246,12 @@
         "protocol": "warp:3.0.0",
         "name": "CLI: List Files",
         "title": {
-          "en": "List files and directories",
-          "de": "Dateien und Verzeichnisse auflisten"
+          "en": "List files in a directory",
+          "de": "Dateien in einem Verzeichnis auflisten"
         },
         "description": {
-          "en": "List files and directories in a given path.",
-          "de": "Dateien und Verzeichnisse in einem bestimmten Pfad auflisten."
+          "en": "List files and directories with details.",
+          "de": "Dateien und Verzeichnisse mit Details auflisten."
         },
         "actions": [
           {
@@ -4240,18 +4260,23 @@
               "en": "List Files",
               "de": "Dateien auflisten"
             },
-            "prompt": "/ls {{PATH}}",
+            "prompt": {
+              "macos": "/ls -lah \"{{PATH}}\"",
+              "linux": "/ls -lah \"{{PATH}}\"",
+              "windows": "/dir \"{{PATH}}\""
+            },
             "inputs": [
               {
                 "name": "Path",
                 "as": "PATH",
                 "description": {
-                  "en": "The directory path to list",
-                  "de": "Der Verzeichnispfad zum Auflisten"
+                  "en": "The directory to list",
+                  "de": "Das aufzulistende Verzeichnis"
                 },
+                "bot": "The directory path. Default to current directory or user's home if not specified.",
                 "type": "string",
                 "source": "field",
-                "required": false
+                "required": true
               }
             ]
           }
@@ -4347,6 +4372,73 @@
                 "required": true
               }
             ]
+          }
+        ]
+      }
+    },
+    {
+      "key": "multiversx:cli-network-info",
+      "identifier": "@multiversx:cli-network-info",
+      "alias": "cli-network-info",
+      "chain": "multiversx",
+      "hash": "4207f1756477775c1abdc3d33855d6e8c03a3ef384b0c2967825f9d031ac9a77",
+      "checksum": "4207f1756477775c1abdc3d33855d6e8c03a3ef384b0c2967825f9d031ac9a77",
+      "name": "CLI: Network Info",
+      "title": {
+        "en": "Show network information",
+        "de": "Netzwerkinformationen anzeigen"
+      },
+      "description": {
+        "en": "Show IP address and network interface information.",
+        "de": "IP-Adresse und Netzwerkschnittstellen-Informationen anzeigen."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "d728726cac0cde31d404eae935b917c8334ba90b4ff1f4a0e7afce67da9e3627",
+        "slug": "cli",
+        "name": "CLI",
+        "description": {
+          "en": "Execute CLI commands on the desktop.",
+          "de": "CLI-Befehle auf dem Desktop ausführen."
+        },
+        "logo": {
+          "light": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/cli-black.svg",
+          "dark": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/cli-white.svg"
+        },
+        "colors": {
+          "primary": "#000000",
+          "secondary": "#FFFFFF"
+        },
+        "urls": null,
+        "active": true
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "CLI: Network Info",
+        "title": {
+          "en": "Show network information",
+          "de": "Netzwerkinformationen anzeigen"
+        },
+        "description": {
+          "en": "Show IP address and network interface information.",
+          "de": "IP-Adresse und Netzwerkschnittstellen-Informationen anzeigen."
+        },
+        "actions": [
+          {
+            "type": "prompt",
+            "label": {
+              "en": "Show Network Info",
+              "de": "Netzwerkinfo anzeigen"
+            },
+            "prompt": {
+              "macos": "/ifconfig | grep -E 'inet |flags'",
+              "linux": "/ip addr show",
+              "windows": "/ipconfig"
+            }
           }
         ]
       }
