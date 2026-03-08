@@ -23,12 +23,13 @@ type Dict<T = unknown> = Record<string, T>
 type BrandPayload = {
   hash: string
   slug: string
+  active: boolean
+  protocol: string
   name: string
   description: Dict<string>
-  logo: Dict<string> | null
-  colors: Dict | null
-  urls: Dict | null
-  active: boolean
+  logo: string | Dict<string>
+  urls?: Dict
+  colors?: Dict
 }
 
 type WarpUpsert = {
@@ -83,6 +84,11 @@ type CatalogDelta = {
 
 const PLACEHOLDER_PREFIX = 'INJECT:'
 const NON_INSCRIBED_FIELDS = new Set(['meta'])
+const VALID_WARP_FIELDS = new Set([
+  'protocol', 'chain', 'name', 'title', 'description', 'bot', 'preview',
+  'vars', 'actions', 'next', 'output', 'messages', 'ui', 'alerts',
+  'related', 'schedule', 'meta',
+])
 const CREATOR = 'github:JoAiHQ/warps'
 
 const __filename = fileURLToPath(import.meta.url)
@@ -372,6 +378,16 @@ function ensureNoInjectPlaceholders(input: unknown): void {
   }
 }
 
+function stripNonWarpFields(raw: Dict): Dict {
+  const stripped: Dict = {}
+  for (const key of Object.keys(raw)) {
+    if (VALID_WARP_FIELDS.has(key)) {
+      stripped[key] = raw[key]
+    }
+  }
+  return stripped
+}
+
 function normalizeWarpForChecksum(raw: Dict): Dict {
   const normalized = deepClone(raw)
 
@@ -552,26 +568,19 @@ function toBrandPayload(brandFactoryOutput: any, active: boolean): BrandPayload 
   const info = deepClone((brandFactoryOutput?.info ?? {}) as Dict)
   delete info.meta
 
-  const name = typeof info.name === 'string' && info.name.trim()
-    ? info.name.trim()
-    : 'Unnamed Brand'
-
-  const description = normalizeTranslationField(info.description)
-  const logo = normalizeLogo(info.logo)
-  const colors = info.colors && typeof info.colors === 'object' ? info.colors : null
-  const urls = info.urls && typeof info.urls === 'object' ? info.urls : null
-
+  const name = typeof info.name === 'string' && info.name.trim() ? info.name.trim() : 'Unnamed Brand'
   const brandHash = hashDeterministic(info)
 
   return {
     hash: brandHash,
     slug: toSlug(name),
-    name,
-    description,
-    logo,
-    colors,
-    urls,
     active,
+    protocol: typeof info.protocol === 'string' ? info.protocol : 'brand:1.0.0',
+    name,
+    description: normalizeTranslationField(info.description),
+    logo: typeof info.logo === 'string' ? info.logo : normalizeLogo(info.logo) ?? '',
+    ...(info.urls && typeof info.urls === 'object' ? { urls: info.urls as Dict } : {}),
+    ...(info.colors && typeof info.colors === 'object' ? { colors: info.colors as Dict } : {}),
   }
 }
 
@@ -740,7 +749,7 @@ async function buildManifest(args: CliArgs, network: SyncNetwork): Promise<Catal
       primaryAddress: primaryInfo.address,
       primaryFunc: primaryInfo.func,
       brand: brandPayload,
-      warp: workingWarp,
+      warp: stripNonWarpFields(workingWarp),
     })
   }
 
