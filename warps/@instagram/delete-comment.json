@@ -1,0 +1,50 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Instagram: Delete Comment",
+  "title": {
+    "en": "Delete a comment",
+    "de": "Einen Kommentar löschen"
+  },
+  "description": {
+    "en": "Delete a comment on your Instagram post.",
+    "de": "Lösche einen Kommentar auf deinem Instagram-Beitrag."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:INSTAGRAM_ACCESS_TOKEN|Instagram Graph API access token with instagram_manage_comments permission."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Delete Comment",
+      "destination": {
+        "url": "https://graph.instagram.com/v21.0/{{COMMENT_ID}}",
+        "method": "DELETE",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Comment ID",
+          "as": "COMMENT_ID",
+          "description": {
+            "en": "The ID of the comment to delete."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:COMMENT_ID"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "SUCCESS": "out.success"
+  },
+  "messages": {
+    "success": {
+      "en": "Comment deleted.",
+      "de": "Kommentar gelöscht."
+    }
+  }
+}

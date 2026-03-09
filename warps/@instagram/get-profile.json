@@ -1,0 +1,64 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Instagram: Get Profile",
+  "title": {
+    "en": "Get account profile",
+    "de": "Kontoprofil abrufen"
+  },
+  "description": {
+    "en": "Get profile information for an Instagram Business or Creator account.",
+    "de": "Rufe Profilinformationen eines Instagram Business- oder Creator-Kontos ab."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:INSTAGRAM_ACCESS_TOKEN|Instagram Graph API access token with instagram_business_basic permission."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Get Profile",
+      "destination": {
+        "url": "https://graph.instagram.com/v21.0/{{IG_USER_ID}}",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "IG User ID",
+          "as": "IG_USER_ID",
+          "description": {
+            "en": "The Instagram Business/Creator account ID."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:IG_USER_ID"
+        },
+        {
+          "name": "Fields",
+          "as": "fields",
+          "type": "string",
+          "source": "hidden",
+          "position": "query:fields",
+          "default": "id,username,name,biography,followers_count,follows_count,media_count,profile_picture_url,website"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "USERNAME": "out.username",
+    "NAME": "out.name",
+    "BIOGRAPHY": "out.biography",
+    "FOLLOWERS": "out.followers_count",
+    "FOLLOWING": "out.follows_count",
+    "MEDIA_COUNT": "out.media_count",
+    "PROFILE_PIC": "out.profile_picture_url"
+  },
+  "messages": {
+    "success": {
+      "en": "@{{USERNAME}} — {{FOLLOWERS}} followers, {{MEDIA_COUNT}} posts.",
+      "de": "@{{USERNAME}} — {{FOLLOWERS}} Follower, {{MEDIA_COUNT}} Beiträge."
+    }
+  }
+}

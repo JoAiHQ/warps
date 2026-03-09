@@ -1,0 +1,88 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Instagram: Send Private Reply",
+  "title": {
+    "en": "Send a private reply (DM) to a commenter",
+    "de": "Private Antwort (DM) an einen Kommentator senden"
+  },
+  "description": {
+    "en": "Send a DM to a user who commented on your post. Must be sent within 7 days of the comment. One private reply per commenter per comment.",
+    "de": "Sende eine Direktnachricht an einen Benutzer, der deinen Beitrag kommentiert hat. Muss innerhalb von 7 Tagen nach dem Kommentar gesendet werden."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:INSTAGRAM_PAGE_ACCESS_TOKEN|Facebook Page access token with pages_messaging and instagram_manage_comments permissions."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Send Private Reply",
+      "destination": {
+        "url": "https://graph.facebook.com/v21.0/{{PAGE_ID}}/messages",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Page ID",
+          "as": "PAGE_ID",
+          "description": {
+            "en": "Your Facebook Page ID linked to the Instagram account."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:PAGE_ID"
+        },
+        {
+          "name": "Comment ID",
+          "as": "COMMENT_ID",
+          "description": {
+            "en": "The ID of the comment to privately reply to."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Message",
+          "as": "MESSAGE_TEXT",
+          "description": {
+            "en": "The DM text to send."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Recipient",
+          "as": "recipient",
+          "type": "string",
+          "source": "hidden",
+          "position": "payload:recipient",
+          "default": "{\"comment_id\": \"{{COMMENT_ID}}\"}"
+        },
+        {
+          "name": "Message Payload",
+          "as": "message",
+          "type": "string",
+          "source": "hidden",
+          "position": "payload:message",
+          "default": "{\"text\": \"{{MESSAGE_TEXT}}\"}"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "RECIPIENT_ID": "out.recipient_id",
+    "MESSAGE_ID": "out.message_id"
+  },
+  "messages": {
+    "success": {
+      "en": "Private reply sent.",
+      "de": "Private Antwort gesendet."
+    }
+  }
+}

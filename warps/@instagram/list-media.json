@@ -1,0 +1,58 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Instagram: List Media",
+  "title": {
+    "en": "List user media",
+    "de": "Benutzerbeiträge auflisten"
+  },
+  "description": {
+    "en": "List recent media posts for an Instagram Business or Creator account.",
+    "de": "Liste aktuelle Beiträge eines Instagram Business- oder Creator-Kontos auf."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:INSTAGRAM_ACCESS_TOKEN|Instagram Graph API access token with instagram_business_basic permission."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "List Media",
+      "destination": {
+        "url": "https://graph.instagram.com/v21.0/{{IG_USER_ID}}/media",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "IG User ID",
+          "as": "IG_USER_ID",
+          "description": {
+            "en": "Your Instagram Business/Creator account ID."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:IG_USER_ID"
+        },
+        {
+          "name": "Fields",
+          "as": "fields",
+          "type": "string",
+          "source": "hidden",
+          "position": "query:fields",
+          "default": "id,caption,media_type,media_url,thumbnail_url,timestamp,permalink,like_count,comments_count"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "MEDIA": "out.data"
+  },
+  "messages": {
+    "success": {
+      "en": "Retrieved media posts.",
+      "de": "Beiträge abgerufen."
+    }
+  }
+}

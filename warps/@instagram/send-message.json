@@ -1,0 +1,88 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Instagram: Send Message",
+  "title": {
+    "en": "Send a direct message",
+    "de": "Direktnachricht senden"
+  },
+  "description": {
+    "en": "Send a DM to a user on Instagram. Only works with users who have an existing conversation with you.",
+    "de": "Sende eine Direktnachricht an einen Instagram-Benutzer. Funktioniert nur mit Benutzern, die bereits eine Konversation mit dir haben."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:INSTAGRAM_ACCESS_TOKEN|Instagram access token with instagram_business_manage_messages permission."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Send Message",
+      "destination": {
+        "url": "https://graph.instagram.com/v21.0/{{IG_USER_ID}}/messages",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Your IG User ID",
+          "as": "IG_USER_ID",
+          "description": {
+            "en": "Your Instagram Business/Creator account ID."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:IG_USER_ID"
+        },
+        {
+          "name": "Recipient ID",
+          "as": "RECIPIENT_ID",
+          "description": {
+            "en": "The Instagram-scoped ID (IGSID) of the recipient."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Text",
+          "as": "TEXT",
+          "description": {
+            "en": "The message text (max 1000 characters)."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Recipient",
+          "as": "recipient",
+          "type": "string",
+          "source": "hidden",
+          "position": "payload:recipient",
+          "default": "{\"id\": \"{{RECIPIENT_ID}}\"}"
+        },
+        {
+          "name": "Message",
+          "as": "message",
+          "type": "string",
+          "source": "hidden",
+          "position": "payload:message",
+          "default": "{\"text\": \"{{TEXT}}\"}"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "RECIPIENT_ID": "out.recipient_id",
+    "MESSAGE_ID": "out.message_id"
+  },
+  "messages": {
+    "success": {
+      "en": "Message sent.",
+      "de": "Nachricht gesendet."
+    }
+  }
+}
