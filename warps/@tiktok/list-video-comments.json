@@ -1,0 +1,85 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "TikTok: List Video Comments",
+  "title": {
+    "en": "List comments on a video",
+    "de": "Kommentare eines Videos auflisten"
+  },
+  "description": {
+    "en": "List comments on a TikTok video. Requires Business API access.",
+    "de": "Liste die Kommentare eines TikTok-Videos auf. Erfordert Business API-Zugang."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:TIKTOK_ACCESS_TOKEN|TikTok Business API access token."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "List Comments",
+      "destination": {
+        "url": "https://business-api.tiktok.com/open_api/v1.3/business/comment/list/",
+        "method": "GET",
+        "headers": {
+          "Access-Token": "{{ACCESS_TOKEN}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Business ID",
+          "as": "business_id",
+          "description": {
+            "en": "Your TikTok Business Account ID."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "query:business_id"
+        },
+        {
+          "name": "Video ID",
+          "as": "video_id",
+          "description": {
+            "en": "The ID of the TikTok video."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "query:video_id"
+        },
+        {
+          "name": "Page Size",
+          "as": "page_size",
+          "description": {
+            "en": "Number of comments per page (max 100)."
+          },
+          "type": "number",
+          "source": "field",
+          "required": false,
+          "position": "query:page_size"
+        },
+        {
+          "name": "Cursor",
+          "as": "cursor",
+          "description": {
+            "en": "Pagination cursor from previous response."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "query:cursor"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "COMMENTS": "out.data.comments",
+    "HAS_MORE": "out.data.has_more",
+    "CURSOR": "out.data.cursor"
+  },
+  "messages": {
+    "success": {
+      "en": "Retrieved comments.",
+      "de": "Kommentare abgerufen."
+    }
+  }
+}

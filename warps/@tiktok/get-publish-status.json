@@ -1,0 +1,51 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "TikTok: Get Publish Status",
+  "title": {
+    "en": "Check video publish status",
+    "de": "Videoveröffentlichungsstatus prüfen"
+  },
+  "description": {
+    "en": "Check the processing status of a video being published to TikTok.",
+    "de": "Prüfe den Verarbeitungsstatus eines auf TikTok veröffentlichten Videos."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:TIKTOK_ACCESS_TOKEN|TikTok user access token with video.publish scope."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Get Publish Status",
+      "destination": {
+        "url": "https://open.tiktokapis.com/v2/post/publish/status/fetch/",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Publish ID",
+          "as": "publish_id",
+          "description": {
+            "en": "The publish ID returned from the publish video request."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:publish_id"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "STATUS": "out.data.status"
+  },
+  "messages": {
+    "success": {
+      "en": "Publish status: {{STATUS}}",
+      "de": "Veröffentlichungsstatus: {{STATUS}}"
+    }
+  }
+}

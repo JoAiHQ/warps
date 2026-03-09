@@ -1,0 +1,73 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "TikTok: List Videos",
+  "title": {
+    "en": "List user videos",
+    "de": "Benutzervideos auflisten"
+  },
+  "description": {
+    "en": "List videos posted by the authenticated TikTok user.",
+    "de": "Liste die Videos des authentifizierten TikTok-Benutzers auf."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:TIKTOK_ACCESS_TOKEN|TikTok user access token with video.list scope."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "List Videos",
+      "destination": {
+        "url": "https://open.tiktokapis.com/v2/video/list/",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Max Count",
+          "as": "max_count",
+          "description": {
+            "en": "Number of videos to return (max 20)."
+          },
+          "type": "number",
+          "source": "field",
+          "required": false,
+          "position": "payload:max_count",
+          "default": "20"
+        },
+        {
+          "name": "Cursor",
+          "as": "cursor",
+          "description": {
+            "en": "Pagination cursor from previous response."
+          },
+          "type": "number",
+          "source": "field",
+          "required": false,
+          "position": "payload:cursor"
+        },
+        {
+          "name": "Fields",
+          "as": "fields",
+          "type": "string",
+          "source": "hidden",
+          "position": "query:fields",
+          "default": "id,title,video_description,duration,cover_image_url,share_url,like_count,comment_count,share_count,view_count,create_time"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "VIDEOS": "out.data.videos",
+    "HAS_MORE": "out.data.has_more",
+    "CURSOR": "out.data.cursor"
+  },
+  "messages": {
+    "success": {
+      "en": "Retrieved videos.",
+      "de": "Videos abgerufen."
+    }
+  }
+}
