@@ -1,0 +1,77 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Airtable: Update Table",
+  "title": {
+    "en": "Update a table",
+    "de": "Eine Tabelle aktualisieren"
+  },
+  "description": {
+    "en": "Update the name or description of an Airtable table.",
+    "de": "Aktualisiere den Namen oder die Beschreibung einer Airtable-Tabelle."
+  },
+  "vars": {
+    "API_KEY": "env:AIRTABLE_API_KEY|Your Airtable Personal Access Token."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Update Table",
+      "destination": {
+        "url": "https://api.airtable.com/v0/meta/bases/{{BASE_ID}}/tables/{{TABLE_ID}}",
+        "method": "PATCH",
+        "headers": {
+          "Authorization": "Bearer {{API_KEY}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Base ID",
+          "as": "BASE_ID",
+          "description": "The ID of the base.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:BASE_ID"
+        },
+        {
+          "name": "Table ID",
+          "as": "TABLE_ID",
+          "description": "The ID of the table to update.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:TABLE_ID"
+        },
+        {
+          "name": "Name",
+          "as": "name",
+          "description": "The new name for the table.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:name"
+        },
+        {
+          "name": "Description",
+          "as": "description",
+          "description": "The new description for the table.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:description"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "TABLE_ID": "out.id",
+    "TABLE_NAME": "out.name"
+  },
+  "messages": {
+    "success": {
+      "en": "Table '{{TABLE_NAME}}' updated.",
+      "de": "Tabelle '{{TABLE_NAME}}' aktualisiert."
+    }
+  }
+}
