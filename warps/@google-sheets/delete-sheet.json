@@ -1,0 +1,66 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Google Sheets: Delete Sheet",
+  "title": {
+    "en": "Delete a sheet tab",
+    "de": "Ein Tabellenblatt löschen"
+  },
+  "description": {
+    "en": "Delete a sheet tab from a Google Sheets spreadsheet by its sheet ID.",
+    "de": "Lösche ein Tabellenblatt aus einer Google Sheets-Tabelle anhand seiner Blatt-ID."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:GOOGLE_SHEETS_ACCESS_TOKEN|OAuth 2.0 access token with https://www.googleapis.com/auth/spreadsheets scope."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Delete Sheet",
+      "destination": {
+        "url": "https://sheets.googleapis.com/v4/spreadsheets/{{SPREADSHEET_ID}}:batchUpdate",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Spreadsheet ID",
+          "as": "SPREADSHEET_ID",
+          "description": {
+            "en": "The ID of the spreadsheet."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:SPREADSHEET_ID"
+        },
+        {
+          "name": "Sheet ID",
+          "as": "SHEET_ID",
+          "description": {
+            "en": "The numeric ID of the sheet tab to delete (use Get Spreadsheet to find sheet IDs)."
+          },
+          "type": "number",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Requests",
+          "as": "requests",
+          "type": "string",
+          "source": "hidden",
+          "position": "payload:requests",
+          "default": "[{\"deleteSheet\": {\"sheetId\": {{SHEET_ID}}}}]"
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Sheet deleted.",
+      "de": "Blatt gelöscht."
+    }
+  }
+}

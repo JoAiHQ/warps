@@ -1,0 +1,92 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Google Sheets: Find and Replace",
+  "title": {
+    "en": "Find and replace in a spreadsheet",
+    "de": "Suchen und Ersetzen in einer Tabelle"
+  },
+  "description": {
+    "en": "Find and replace text across a Google Sheets spreadsheet.",
+    "de": "Suche und ersetze Text in einer Google Sheets-Tabelle."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:GOOGLE_SHEETS_ACCESS_TOKEN|OAuth 2.0 access token with https://www.googleapis.com/auth/spreadsheets scope."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Find and Replace",
+      "destination": {
+        "url": "https://sheets.googleapis.com/v4/spreadsheets/{{SPREADSHEET_ID}}:batchUpdate",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Spreadsheet ID",
+          "as": "SPREADSHEET_ID",
+          "description": {
+            "en": "The ID of the spreadsheet."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:SPREADSHEET_ID"
+        },
+        {
+          "name": "Find",
+          "as": "FIND_TEXT",
+          "description": {
+            "en": "The text to find."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Replace",
+          "as": "REPLACE_TEXT",
+          "description": {
+            "en": "The text to replace with."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Match Case",
+          "as": "MATCH_CASE",
+          "description": {
+            "en": "Whether the search is case-sensitive (true or false)."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "false"
+        },
+        {
+          "name": "Requests",
+          "as": "requests",
+          "type": "string",
+          "source": "hidden",
+          "position": "payload:requests",
+          "default": "[{\"findReplace\": {\"find\": \"{{FIND_TEXT}}\", \"replacement\": \"{{REPLACE_TEXT}}\", \"matchCase\": {{MATCH_CASE}}, \"allSheets\": true}}]"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "OCCURRENCES": "out.replies[0].findReplace.occurrencesChanged",
+    "ROWS_CHANGED": "out.replies[0].findReplace.rowsChanged",
+    "SHEETS_CHANGED": "out.replies[0].findReplace.sheetsChanged"
+  },
+  "messages": {
+    "success": {
+      "en": "Replaced {{OCCURRENCES}} occurrence(s) across {{SHEETS_CHANGED}} sheet(s).",
+      "de": "{{OCCURRENCES}} Vorkommen in {{SHEETS_CHANGED}} Blatt/Blättern ersetzt."
+    }
+  }
+}

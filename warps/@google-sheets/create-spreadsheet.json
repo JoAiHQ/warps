@@ -1,0 +1,52 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Google Sheets: Create Spreadsheet",
+  "title": {
+    "en": "Create a spreadsheet",
+    "de": "Eine Tabelle erstellen"
+  },
+  "description": {
+    "en": "Create a new Google Sheets spreadsheet.",
+    "de": "Erstelle eine neue Google Sheets-Tabelle."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:GOOGLE_SHEETS_ACCESS_TOKEN|OAuth 2.0 access token with https://www.googleapis.com/auth/spreadsheets scope."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Create Spreadsheet",
+      "destination": {
+        "url": "https://sheets.googleapis.com/v4/spreadsheets",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Title",
+          "as": "title",
+          "description": {
+            "en": "The title of the new spreadsheet."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:properties.title"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "SPREADSHEET_ID": "out.spreadsheetId",
+    "SPREADSHEET_URL": "out.spreadsheetUrl"
+  },
+  "messages": {
+    "success": {
+      "en": "Spreadsheet created: {{SPREADSHEET_URL}}",
+      "de": "Tabelle erstellt: {{SPREADSHEET_URL}}"
+    }
+  }
+}

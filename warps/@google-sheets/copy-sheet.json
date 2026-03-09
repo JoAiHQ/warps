@@ -1,0 +1,74 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Google Sheets: Copy Sheet",
+  "title": {
+    "en": "Copy a sheet to another spreadsheet",
+    "de": "Ein Blatt in eine andere Tabelle kopieren"
+  },
+  "description": {
+    "en": "Copy a sheet tab from one spreadsheet to another.",
+    "de": "Kopiere ein Tabellenblatt von einer Tabelle in eine andere."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:GOOGLE_SHEETS_ACCESS_TOKEN|OAuth 2.0 access token with https://www.googleapis.com/auth/spreadsheets scope."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Copy Sheet",
+      "destination": {
+        "url": "https://sheets.googleapis.com/v4/spreadsheets/{{SPREADSHEET_ID}}/sheets/{{SHEET_ID}}:copyTo",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Source Spreadsheet ID",
+          "as": "SPREADSHEET_ID",
+          "description": {
+            "en": "The ID of the source spreadsheet."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:SPREADSHEET_ID"
+        },
+        {
+          "name": "Sheet ID",
+          "as": "SHEET_ID",
+          "description": {
+            "en": "The numeric ID of the sheet tab to copy."
+          },
+          "type": "number",
+          "source": "field",
+          "required": true,
+          "position": "url:SHEET_ID"
+        },
+        {
+          "name": "Destination Spreadsheet ID",
+          "as": "destinationSpreadsheetId",
+          "description": {
+            "en": "The ID of the spreadsheet to copy the sheet to."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:destinationSpreadsheetId"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "NEW_SHEET_ID": "out.sheetId",
+    "NEW_SHEET_TITLE": "out.title"
+  },
+  "messages": {
+    "success": {
+      "en": "Sheet copied as '{{NEW_SHEET_TITLE}}'.",
+      "de": "Blatt als '{{NEW_SHEET_TITLE}}' kopiert."
+    }
+  }
+}

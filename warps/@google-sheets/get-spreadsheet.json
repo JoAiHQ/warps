@@ -1,0 +1,53 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Google Sheets: Get Spreadsheet",
+  "title": {
+    "en": "Get spreadsheet details",
+    "de": "Tabellendetails abrufen"
+  },
+  "description": {
+    "en": "Get metadata and properties of a Google Sheets spreadsheet.",
+    "de": "Rufe Metadaten und Eigenschaften einer Google Sheets-Tabelle ab."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:GOOGLE_SHEETS_ACCESS_TOKEN|OAuth 2.0 access token with https://www.googleapis.com/auth/spreadsheets.readonly scope."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Get Spreadsheet",
+      "destination": {
+        "url": "https://sheets.googleapis.com/v4/spreadsheets/{{SPREADSHEET_ID}}",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Spreadsheet ID",
+          "as": "SPREADSHEET_ID",
+          "description": {
+            "en": "The ID of the spreadsheet."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:SPREADSHEET_ID"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "TITLE": "out.properties.title",
+    "LOCALE": "out.properties.locale",
+    "SPREADSHEET_URL": "out.spreadsheetUrl",
+    "SHEETS": "out.sheets"
+  },
+  "messages": {
+    "success": {
+      "en": "Spreadsheet: {{TITLE}}",
+      "de": "Tabelle: {{TITLE}}"
+    }
+  }
+}

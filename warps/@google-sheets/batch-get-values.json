@@ -1,0 +1,61 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Google Sheets: Batch Get Values",
+  "title": {
+    "en": "Get values from multiple ranges",
+    "de": "Werte aus mehreren Bereichen abrufen"
+  },
+  "description": {
+    "en": "Read values from multiple ranges in a Google Sheet at once.",
+    "de": "Lese Werte aus mehreren Bereichen eines Google Sheets auf einmal."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:GOOGLE_SHEETS_ACCESS_TOKEN|OAuth 2.0 access token with https://www.googleapis.com/auth/spreadsheets.readonly scope."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Batch Get Values",
+      "destination": {
+        "url": "https://sheets.googleapis.com/v4/spreadsheets/{{SPREADSHEET_ID}}/values:batchGet",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Spreadsheet ID",
+          "as": "SPREADSHEET_ID",
+          "description": {
+            "en": "The ID of the spreadsheet."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:SPREADSHEET_ID"
+        },
+        {
+          "name": "Ranges",
+          "as": "ranges",
+          "description": {
+            "en": "Comma-separated A1 notation ranges (e.g., 'Sheet1!A1:B5,Sheet1!D1:E5')."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "query:ranges"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "VALUE_RANGES": "out.valueRanges"
+  },
+  "messages": {
+    "success": {
+      "en": "Retrieved values from multiple ranges.",
+      "de": "Werte aus mehreren Bereichen abgerufen."
+    }
+  }
+}

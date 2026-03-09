@@ -1,0 +1,62 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Google Sheets: Clear Values",
+  "title": {
+    "en": "Clear sheet values",
+    "de": "Tabellenwerte löschen"
+  },
+  "description": {
+    "en": "Clear values from a range in a Google Sheet. Formatting is preserved.",
+    "de": "Lösche Werte aus einem Bereich eines Google Sheets. Formatierung bleibt erhalten."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:GOOGLE_SHEETS_ACCESS_TOKEN|OAuth 2.0 access token with https://www.googleapis.com/auth/spreadsheets scope."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Clear Values",
+      "destination": {
+        "url": "https://sheets.googleapis.com/v4/spreadsheets/{{SPREADSHEET_ID}}/values/{{RANGE}}:clear",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Spreadsheet ID",
+          "as": "SPREADSHEET_ID",
+          "description": {
+            "en": "The ID of the spreadsheet."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:SPREADSHEET_ID"
+        },
+        {
+          "name": "Range",
+          "as": "RANGE",
+          "description": {
+            "en": "The A1 notation of the range to clear (e.g., 'Sheet1!A1:C3')."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:RANGE"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "CLEARED_RANGE": "out.clearedRange"
+  },
+  "messages": {
+    "success": {
+      "en": "Cleared values in {{CLEARED_RANGE}}.",
+      "de": "Werte in {{CLEARED_RANGE}} gelöscht."
+    }
+  }
+}
