@@ -1,0 +1,65 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Lemon Squeezy: List Orders",
+  "title": {
+    "en": "List orders",
+    "de": "Bestellungen auflisten"
+  },
+  "description": {
+    "en": "Retrieve a list of orders from your Lemon Squeezy store.",
+    "de": "Rufe eine Liste von Bestellungen aus deinem Lemon Squeezy Store ab."
+  },
+  "vars": {
+    "API_KEY": "env:LEMON_SQUEEZY_API_KEY|Get your API key from https://app.lemonsqueezy.com/settings/api"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "List Orders",
+      "destination": {
+        "url": "INJECT:API_ORDERS",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{API_KEY}}",
+          "Accept": "application/vnd.api+json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Store ID",
+          "as": "store_id",
+          "description": {
+            "en": "Filter orders by store ID."
+          },
+          "bot": "Filter orders by a specific store ID.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "query:filter[store_id]"
+        },
+        {
+          "name": "Status",
+          "as": "status",
+          "description": {
+            "en": "Filter orders by status (e.g., 'paid', 'pending', 'failed', 'refunded')."
+          },
+          "bot": "Filter orders by status. Options: paid, pending, failed, refunded.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "query:filter[status]"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "ORDERS": "out.data",
+    "COUNT": "out.meta.page.total"
+  },
+  "messages": {
+    "success": {
+      "en": "Found {{COUNT}} order(s).",
+      "de": "{{COUNT}} Bestellung(en) gefunden."
+    }
+  }
+}

@@ -8,7 +8,7 @@ export const brand = async (config: WarpClientConfig): Promise<WarpbaseBrand> =>
       en: 'Launch and manage generic task runs through Anthropic Message Batches.',
       de: 'Starte und verwalte generische Task-Runs über Anthropic Message Batches.',
     })
-    .setLogo('https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/anthropic.png')
+    .setLogo('https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/anthropic.svg')
     .setColors({ primary: '#191919' })
     .setUrls({ web: 'https://www.anthropic.com' })
     .build(),

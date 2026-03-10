@@ -1,0 +1,75 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "X: Post Tweet",
+  "title": {
+    "en": "Post a tweet",
+    "de": "Einen Tweet posten"
+  },
+  "description": {
+    "en": "Post a new tweet on X.com (Twitter).",
+    "de": "Einen neuen Tweet auf X.com (Twitter) veröffentlichen."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:X_ACCESS_TOKEN|OAuth 2.0 user access token with tweet.write scope from the X Developer Portal."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Post Tweet",
+      "destination": {
+        "url": "https://api.x.com/2/tweets",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Text",
+          "as": "text",
+          "description": {
+            "en": "The text of the tweet (max 280 characters)."
+          },
+          "bot": "The tweet text content. Max 280 characters. Can include hashtags, mentions, and URLs.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:text"
+        },
+        {
+          "name": "Reply To",
+          "as": "replyTo",
+          "description": {
+            "en": "Tweet ID to reply to (optional)."
+          },
+          "bot": "If this tweet is a reply, provide the ID of the tweet being replied to.",
+          "type": "string",
+          "source": "field",
+          "position": "payload:reply.in_reply_to_tweet_id"
+        },
+        {
+          "name": "Quote Tweet ID",
+          "as": "quoteTweetId",
+          "description": {
+            "en": "Tweet ID to quote (optional)."
+          },
+          "bot": "If this is a quote tweet, provide the ID of the tweet being quoted.",
+          "type": "string",
+          "source": "field",
+          "position": "payload:quote_tweet_id"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "TWEET_ID": "out.data.id",
+    "TWEET_TEXT": "out.data.text"
+  },
+  "messages": {
+    "success": {
+      "en": "Tweet posted! ID: {{TWEET_ID}}",
+      "de": "Tweet gepostet! ID: {{TWEET_ID}}"
+    }
+  }
+}

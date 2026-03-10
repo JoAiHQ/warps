@@ -1,0 +1,86 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "TikTok: Upload Video Draft",
+  "title": {
+    "en": "Upload video as draft",
+    "de": "Video als Entwurf hochladen"
+  },
+  "description": {
+    "en": "Upload a video to TikTok as a draft. The user receives a notification to edit and publish it from TikTok.",
+    "de": "Lade ein Video als Entwurf auf TikTok hoch. Der Benutzer erhält eine Benachrichtigung, um es in TikTok zu bearbeiten und zu veröffentlichen."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:TIKTOK_ACCESS_TOKEN|TikTok user access token with video.upload scope."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Upload Draft",
+      "destination": {
+        "url": "https://open.tiktokapis.com/v2/post/publish/video/init/",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}",
+          "Content-Type": "application/json; charset=UTF-8"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Title",
+          "as": "TITLE",
+          "description": {
+            "en": "Video caption with hashtags and mentions."
+          },
+          "bot": "The video title/caption. Can include hashtags and @mentions.",
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Video URL",
+          "as": "VIDEO_URL",
+          "description": {
+            "en": "Public URL of the video file."
+          },
+          "bot": "A publicly accessible URL to the video file to upload.",
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Post Info",
+          "as": "post_info",
+          "type": "string",
+          "source": "hidden",
+          "position": "payload:post_info",
+          "default": "{\"title\": \"{{TITLE}}\", \"privacy_level\": \"SELF_ONLY\"}"
+        },
+        {
+          "name": "Source Info",
+          "as": "source_info",
+          "type": "string",
+          "source": "hidden",
+          "position": "payload:source_info",
+          "default": "{\"source\": \"PULL_FROM_URL\", \"video_url\": \"{{VIDEO_URL}}\"}"
+        },
+        {
+          "name": "Post Mode",
+          "as": "post_mode",
+          "type": "string",
+          "source": "hidden",
+          "position": "payload:post_mode",
+          "default": "MEDIA_UPLOAD"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "PUBLISH_ID": "out.data.publish_id"
+  },
+  "messages": {
+    "success": {
+      "en": "Video uploaded as draft (ID: {{PUBLISH_ID}}). Check TikTok to edit and publish.",
+      "de": "Video als Entwurf hochgeladen (ID: {{PUBLISH_ID}}). Öffne TikTok zum Bearbeiten und Veröffentlichen."
+    }
+  }
+}

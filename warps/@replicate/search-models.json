@@ -1,0 +1,51 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Replicate: Search Models",
+  "title": {
+    "en": "Search models",
+    "de": "Modelle suchen"
+  },
+  "description": {
+    "en": "Search for AI models available on Replicate.",
+    "de": "Nach verfügbaren KI-Modellen auf Replicate suchen."
+  },
+  "vars": {
+    "API_TOKEN": "env:REPLICATE_API_TOKEN|Get your API token from https://replicate.com/account/api-tokens"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Search",
+      "destination": {
+        "url": "INJECT:API_MODELS",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{API_TOKEN}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Query",
+          "as": "query",
+          "description": {
+            "en": "Search query (e.g., 'stable diffusion', 'text to speech')."
+          },
+          "bot": "Search query to find models. Examples: 'stable diffusion', 'text to speech', 'video generation'.",
+          "type": "string",
+          "source": "field",
+          "position": "query:query"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "MODELS": "out.results",
+    "COUNT": "out.results.length"
+  },
+  "messages": {
+    "success": {
+      "en": "Found {{COUNT}} model(s).",
+      "de": "{{COUNT}} Modell(e) gefunden."
+    }
+  }
+}

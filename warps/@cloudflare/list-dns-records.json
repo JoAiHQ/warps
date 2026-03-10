@@ -1,0 +1,72 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Cloudflare: List DNS Records",
+  "title": {
+    "en": "List DNS records",
+    "de": "DNS-Einträge auflisten"
+  },
+  "description": {
+    "en": "List DNS records for a Cloudflare zone.",
+    "de": "DNS-Einträge für eine Cloudflare-Zone auflisten."
+  },
+  "vars": {
+    "API_TOKEN": "env:CLOUDFLARE_API_TOKEN|Get your API token from Cloudflare Dashboard > My Profile > API Tokens."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "List DNS Records",
+      "destination": {
+        "url": "https://api.cloudflare.com/client/v4/zones/{{ZONE_ID}}/dns_records",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{API_TOKEN}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Zone ID",
+          "as": "ZONE_ID",
+          "description": {
+            "en": "The zone ID."
+          },
+          "bot": "The Cloudflare zone ID. Get this from the list-zones warp.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:ZONE_ID"
+        },
+        {
+          "name": "Type",
+          "as": "type",
+          "description": {
+            "en": "Filter by record type (A, AAAA, CNAME, MX, TXT, etc.)."
+          },
+          "type": "string",
+          "source": "field",
+          "position": "query:type"
+        },
+        {
+          "name": "Name",
+          "as": "name",
+          "description": {
+            "en": "Filter by record name."
+          },
+          "type": "string",
+          "source": "field",
+          "position": "query:name"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "RECORDS": "out.result",
+    "COUNT": "out.result_info.total_count"
+  },
+  "messages": {
+    "success": {
+      "en": "Found {{COUNT}} DNS record(s).",
+      "de": "{{COUNT}} DNS-Eintrag/Einträge gefunden."
+    }
+  }
+}

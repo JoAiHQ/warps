@@ -1,0 +1,40 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Cloudflare: List Workers",
+  "title": {
+    "en": "List Workers",
+    "de": "Workers auflisten"
+  },
+  "description": {
+    "en": "List all Workers scripts in your Cloudflare account.",
+    "de": "Alle Workers-Skripte in Ihrem Cloudflare-Konto auflisten."
+  },
+  "vars": {
+    "API_TOKEN": "env:CLOUDFLARE_API_TOKEN|Get your API token from Cloudflare Dashboard > My Profile > API Tokens.",
+    "ACCOUNT_ID": "env:CLOUDFLARE_ACCOUNT_ID|Your Cloudflare Account ID from the dashboard overview page."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "List Workers",
+      "destination": {
+        "url": "https://api.cloudflare.com/client/v4/accounts/{{ACCOUNT_ID}}/workers/scripts",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{API_TOKEN}}"
+        }
+      },
+      "inputs": []
+    }
+  ],
+  "output": {
+    "WORKERS": "out.result",
+    "COUNT": "out.result.length"
+  },
+  "messages": {
+    "success": {
+      "en": "Found {{COUNT}} Worker(s).",
+      "de": "{{COUNT}} Worker(s) gefunden."
+    }
+  }
+}

@@ -1,0 +1,67 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Cal.com: Cancel Booking",
+  "title": {
+    "en": "Cancel a booking",
+    "de": "Eine Buchung stornieren"
+  },
+  "description": {
+    "en": "Cancel an existing Cal.com booking by its unique identifier.",
+    "de": "Eine bestehende Cal.com-Buchung anhand ihrer eindeutigen Kennung stornieren."
+  },
+  "vars": {
+    "API_KEY": "env:CAL_COM_API_KEY|Get your API key from Cal.com Settings > Developer > API Keys at https://app.cal.com/settings/developer/api-keys"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Cancel Booking",
+      "destination": {
+        "url": "INJECT:API_BOOKINGS/{{bookingUid}}/cancel",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{API_KEY}}",
+          "Content-Type": "application/json",
+          "cal-api-version": "2024-08-13"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Booking UID",
+          "as": "bookingUid",
+          "description": {
+            "en": "The unique identifier of the booking to cancel.",
+            "de": "Die eindeutige Kennung der zu stornierenden Buchung."
+          },
+          "bot": "The unique identifier (UID) of the booking to cancel. Get this from the list bookings warp.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:bookingUid"
+        },
+        {
+          "name": "Cancellation Reason",
+          "as": "cancellationReason",
+          "description": {
+            "en": "Optional reason for cancelling the booking.",
+            "de": "Optionaler Grund für die Stornierung der Buchung."
+          },
+          "bot": "An optional reason explaining why the booking is being cancelled.",
+          "type": "string",
+          "source": "field",
+          "position": "payload:cancellationReason"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "BOOKING_UID": "out.data.uid",
+    "BOOKING_STATUS": "out.data.status"
+  },
+  "messages": {
+    "success": {
+      "en": "Booking {{BOOKING_UID}} cancelled successfully.",
+      "de": "Buchung {{BOOKING_UID}} erfolgreich storniert."
+    }
+  }
+}

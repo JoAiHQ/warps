@@ -1,0 +1,58 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Gumroad: List Subscribers",
+  "title": {
+    "en": "List subscribers",
+    "de": "Abonnenten auflisten"
+  },
+  "description": {
+    "en": "Retrieve a list of subscribers for a specific product.",
+    "de": "Rufe eine Liste von Abonnenten für ein bestimmtes Produkt ab."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:GUMROAD_ACCESS_TOKEN|Get your access token from https://app.gumroad.com/settings/advanced#application-form"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "List Subscribers",
+      "destination": {
+        "url": "INJECT:API_SUBSCRIBERS/{{PRODUCT_ID}}",
+        "method": "GET",
+        "headers": {}
+      },
+      "inputs": [
+        {
+          "name": "Product ID",
+          "as": "PRODUCT_ID",
+          "description": {
+            "en": "The ID of the product to list subscribers for."
+          },
+          "bot": "The unique product ID from Gumroad.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:PRODUCT_ID"
+        },
+        {
+          "name": "Access Token",
+          "as": "access_token",
+          "type": "string",
+          "source": "hidden",
+          "default": "{{ACCESS_TOKEN}}",
+          "position": "query:access_token"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "SUBSCRIBERS": "out.subscribers",
+    "COUNT": "out.subscribers.length"
+  },
+  "messages": {
+    "success": {
+      "en": "Found {{COUNT}} subscriber(s).",
+      "de": "{{COUNT}} Abonnent(en) gefunden."
+    }
+  }
+}

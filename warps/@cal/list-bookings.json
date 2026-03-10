@@ -1,0 +1,90 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Cal.com: List Bookings",
+  "title": {
+    "en": "List bookings",
+    "de": "Buchungen auflisten"
+  },
+  "description": {
+    "en": "Retrieve all bookings for the authenticated Cal.com user. Filter by status, date range, or event type.",
+    "de": "Alle Buchungen für den authentifizierten Cal.com-Benutzer abrufen. Filtern nach Status, Datumsbereich oder Ereignistyp."
+  },
+  "vars": {
+    "API_KEY": "env:CAL_COM_API_KEY|Get your API key from Cal.com Settings > Developer > API Keys at https://app.cal.com/settings/developer/api-keys"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "List Bookings",
+      "destination": {
+        "url": "INJECT:API_BOOKINGS",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{API_KEY}}",
+          "cal-api-version": "2024-08-13"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Status",
+          "as": "status",
+          "description": {
+            "en": "Filter by booking status: 'upcoming', 'recurring', 'past', 'cancelled', or 'unconfirmed'.",
+            "de": "Nach Buchungsstatus filtern: 'upcoming', 'recurring', 'past', 'cancelled' oder 'unconfirmed'."
+          },
+          "bot": "Filter bookings by status. Options: 'upcoming', 'recurring', 'past', 'cancelled', 'unconfirmed'.",
+          "type": "string",
+          "source": "field",
+          "position": "query:status"
+        },
+        {
+          "name": "Event Type ID",
+          "as": "eventTypeId",
+          "description": {
+            "en": "Filter by event type ID.",
+            "de": "Nach Ereignistyp-ID filtern."
+          },
+          "bot": "Optional event type ID to filter bookings by.",
+          "type": "number",
+          "source": "field",
+          "position": "query:eventTypeId"
+        },
+        {
+          "name": "After Start",
+          "as": "afterStart",
+          "description": {
+            "en": "Only return bookings starting after this date (ISO 8601 UTC).",
+            "de": "Nur Buchungen zurückgeben, die nach diesem Datum beginnen (ISO 8601 UTC)."
+          },
+          "bot": "Filter to only return bookings starting after this UTC datetime, e.g. '2024-08-13T00:00:00Z'.",
+          "type": "string",
+          "source": "field",
+          "position": "query:afterStart"
+        },
+        {
+          "name": "Take",
+          "as": "take",
+          "description": {
+            "en": "Number of bookings to return.",
+            "de": "Anzahl der zurückzugebenden Buchungen."
+          },
+          "bot": "Number of bookings to return. Useful for pagination.",
+          "type": "number",
+          "source": "field",
+          "position": "query:take",
+          "default": 25
+        }
+      ]
+    }
+  ],
+  "output": {
+    "BOOKINGS": "out.data",
+    "COUNT": "out.data.length"
+  },
+  "messages": {
+    "success": {
+      "en": "Found {{COUNT}} booking(s).",
+      "de": "{{COUNT}} Buchung(en) gefunden."
+    }
+  }
+}

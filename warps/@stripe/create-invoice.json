@@ -1,0 +1,86 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Stripe: Create Invoice",
+  "title": {
+    "en": "Create invoice",
+    "de": "Rechnung erstellen"
+  },
+  "description": {
+    "en": "Create a new invoice for a Stripe customer.",
+    "de": "Eine neue Rechnung für einen Stripe-Kunden erstellen."
+  },
+  "vars": {
+    "API_KEY": "env:STRIPE_SECRET_KEY|Get your Secret Key from Stripe Dashboard."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Create Invoice",
+      "destination": {
+        "url": "https://api.stripe.com/v1/invoices",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{API_KEY}}",
+          "Content-Type": "application/x-www-form-urlencoded"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Customer ID",
+          "as": "customer",
+          "description": {
+            "en": "The ID of the customer to invoice."
+          },
+          "bot": "The Stripe customer ID (e.g. cus_12345).",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:customer"
+        },
+        {
+          "name": "Collection Method",
+          "as": "collection_method",
+          "description": {
+            "en": "'charge_automatically' or 'send_invoice'."
+          },
+          "type": "string",
+          "source": "field",
+          "position": "payload:collection_method",
+          "default": "send_invoice"
+        },
+        {
+          "name": "Days Until Due",
+          "as": "days_until_due",
+          "description": {
+            "en": "Number of days until the invoice is due (required for send_invoice)."
+          },
+          "type": "number",
+          "source": "field",
+          "position": "payload:days_until_due",
+          "default": "30"
+        },
+        {
+          "name": "Description",
+          "as": "description",
+          "description": {
+            "en": "Description for the invoice."
+          },
+          "type": "string",
+          "source": "field",
+          "position": "payload:description"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "INVOICE_ID": "out.id",
+    "STATUS": "out.status",
+    "HOSTED_URL": "out.hosted_invoice_url"
+  },
+  "messages": {
+    "success": {
+      "en": "Invoice created ({{STATUS}}). ID: {{INVOICE_ID}}",
+      "de": "Rechnung erstellt ({{STATUS}}). ID: {{INVOICE_ID}}"
+    }
+  }
+}

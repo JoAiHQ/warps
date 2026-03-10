@@ -1,0 +1,65 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Supabase: Call RPC Function",
+  "title": {
+    "en": "Call database function",
+    "de": "Datenbankfunktion aufrufen"
+  },
+  "description": {
+    "en": "Call a PostgreSQL function (RPC) on your Supabase database.",
+    "de": "Eine PostgreSQL-Funktion (RPC) auf Ihrer Supabase-Datenbank aufrufen."
+  },
+  "vars": {
+    "SUPABASE_URL": "env:SUPABASE_URL|Your Supabase project URL (e.g., https://xxxx.supabase.co).",
+    "SUPABASE_KEY": "env:SUPABASE_KEY|Your Supabase anon or service_role key from Project Settings > API."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Call Function",
+      "destination": {
+        "url": "{{SUPABASE_URL}}/rest/v1/rpc/{{FUNCTION_NAME}}",
+        "method": "POST",
+        "headers": {
+          "apikey": "{{SUPABASE_KEY}}",
+          "Authorization": "Bearer {{SUPABASE_KEY}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Function Name",
+          "as": "FUNCTION_NAME",
+          "description": {
+            "en": "The name of the PostgreSQL function to call."
+          },
+          "bot": "The name of the database function (RPC) to call.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:FUNCTION_NAME"
+        },
+        {
+          "name": "Arguments",
+          "as": "args",
+          "description": {
+            "en": "JSON object of function arguments."
+          },
+          "bot": "JSON object of named arguments to pass to the function. Example: {\"user_id\": 123, \"limit_count\": 10}",
+          "type": "string",
+          "source": "field",
+          "position": "body"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "RESULT": "out"
+  },
+  "messages": {
+    "success": {
+      "en": "Function executed successfully.",
+      "de": "Funktion erfolgreich ausgeführt."
+    }
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Cloudflare: Delete DNS Record",
+  "title": {
+    "en": "Delete DNS record",
+    "de": "DNS-Eintrag löschen"
+  },
+  "description": {
+    "en": "Delete a DNS record from a Cloudflare zone.",
+    "de": "Einen DNS-Eintrag aus einer Cloudflare-Zone löschen."
+  },
+  "vars": {
+    "API_TOKEN": "env:CLOUDFLARE_API_TOKEN|Get your API token from Cloudflare Dashboard > My Profile > API Tokens."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Delete Record",
+      "destination": {
+        "url": "https://api.cloudflare.com/client/v4/zones/{{ZONE_ID}}/dns_records/{{RECORD_ID}}",
+        "method": "DELETE",
+        "headers": {
+          "Authorization": "Bearer {{API_TOKEN}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Zone ID",
+          "as": "ZONE_ID",
+          "description": {
+            "en": "The zone ID."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:ZONE_ID"
+        },
+        {
+          "name": "Record ID",
+          "as": "RECORD_ID",
+          "description": {
+            "en": "The ID of the DNS record to delete."
+          },
+          "bot": "The DNS record ID. Get this from the list-dns-records warp.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:RECORD_ID"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "DELETED_ID": "out.result.id"
+  },
+  "messages": {
+    "success": {
+      "en": "DNS record deleted.",
+      "de": "DNS-Eintrag gelöscht."
+    }
+  }
+}

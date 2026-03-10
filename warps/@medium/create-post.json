@@ -1,0 +1,110 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Medium: Create Post",
+  "title": {
+    "en": "Create a post on Medium",
+    "de": "Einen Beitrag auf Medium erstellen"
+  },
+  "description": {
+    "en": "Create a new post on Medium with HTML content. Supports draft and public publish statuses, and tags.",
+    "de": "Erstelle einen neuen Beitrag auf Medium mit HTML-Inhalt. Unterstützt Entwurf- und öffentliche Veröffentlichungsstatus sowie Tags."
+  },
+  "vars": {
+    "API_KEY": "env:MEDIUM_INTEGRATION_TOKEN|Get your integration token from Medium Settings > Security and apps"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Create Post",
+        "de": "Beitrag erstellen"
+      },
+      "destination": {
+        "url": "INJECT:API_USER_POSTS/{{USER_ID}}/posts",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{API_KEY}}",
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "User ID",
+          "as": "USER_ID",
+          "description": {
+            "en": "The user ID from the get-user warp."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:USER_ID"
+        },
+        {
+          "name": "Title",
+          "as": "title",
+          "description": {
+            "en": "The title of the post."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:title"
+        },
+        {
+          "name": "Content",
+          "as": "content",
+          "description": {
+            "en": "HTML content of the post."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:content"
+        },
+        {
+          "name": "Content Format",
+          "as": "contentFormat",
+          "type": "string",
+          "source": "hidden",
+          "position": "payload:contentFormat",
+          "default": "html"
+        },
+        {
+          "name": "Publish Status",
+          "as": "publishStatus",
+          "description": {
+            "en": "Publish status: draft or public."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:publishStatus",
+          "default": "draft"
+        },
+        {
+          "name": "Tags",
+          "as": "tags",
+          "description": {
+            "en": "Comma-separated tags for the post."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:tags"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "POST_ID": "out.data.id",
+    "TITLE": "out.data.title",
+    "URL": "out.data.url"
+  },
+  "messages": {
+    "success": {
+      "en": "Post '{{TITLE}}' created.",
+      "de": "Beitrag '{{TITLE}}' erstellt."
+    }
+  }
+}

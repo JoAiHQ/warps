@@ -1,0 +1,62 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "ElevenLabs: Speech to Text",
+  "title": {
+    "en": "Transcribe audio",
+    "de": "Audio transkribieren"
+  },
+  "description": {
+    "en": "Transcribe audio to text using ElevenLabs speech-to-text.",
+    "de": "Audio mit ElevenLabs Speech-to-Text in Text transkribieren."
+  },
+  "vars": {
+    "API_KEY": "env:ELEVENLABS_API_KEY|Get your API key from ElevenLabs at https://elevenlabs.io/app/settings/api-keys"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Transcribe",
+      "destination": {
+        "url": "INJECT:API_STT",
+        "method": "POST",
+        "headers": {
+          "xi-api-key": "{{API_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Audio URL",
+          "as": "audio_url",
+          "description": {
+            "en": "URL of the audio file to transcribe."
+          },
+          "bot": "A publicly accessible URL to an audio file (mp3, wav, etc.) to transcribe.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:audio_url"
+        },
+        {
+          "name": "Language Code",
+          "as": "language_code",
+          "description": {
+            "en": "ISO 639-1 language code (e.g., 'en', 'de', 'es'). Auto-detected if not specified."
+          },
+          "type": "string",
+          "source": "field",
+          "position": "payload:language_code"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "TEXT": "out.text",
+    "LANGUAGE": "out.language_code"
+  },
+  "messages": {
+    "success": {
+      "en": "Transcription complete.",
+      "de": "Transkription abgeschlossen."
+    }
+  }
+}

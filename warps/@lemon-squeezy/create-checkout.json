@@ -1,0 +1,97 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Lemon Squeezy: Create Checkout",
+  "title": {
+    "en": "Create checkout",
+    "de": "Checkout erstellen"
+  },
+  "description": {
+    "en": "Create a checkout link for a specific product variant in your Lemon Squeezy store.",
+    "de": "Erstelle einen Checkout-Link für eine bestimmte Produktvariante in deinem Lemon Squeezy Store."
+  },
+  "vars": {
+    "API_KEY": "env:LEMON_SQUEEZY_API_KEY|Get your API key from https://app.lemonsqueezy.com/settings/api"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Create Checkout",
+      "destination": {
+        "url": "INJECT:API_CHECKOUTS",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{API_KEY}}",
+          "Accept": "application/vnd.api+json",
+          "Content-Type": "application/vnd.api+json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Store ID",
+          "as": "store_id",
+          "description": {
+            "en": "The ID of the store this checkout belongs to."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:data.relationships.store.data.id"
+        },
+        {
+          "name": "Variant ID",
+          "as": "variant_id",
+          "description": {
+            "en": "The ID of the product variant for the checkout."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:data.relationships.variant.data.id"
+        },
+        {
+          "name": "Data Type",
+          "as": "data_type",
+          "description": {
+            "en": "Resource type"
+          },
+          "type": "string",
+          "source": "hidden",
+          "position": "payload:data.type",
+          "default": "checkouts"
+        },
+        {
+          "name": "Store Type",
+          "as": "store_type",
+          "description": {
+            "en": "Store relationship type"
+          },
+          "type": "string",
+          "source": "hidden",
+          "position": "payload:data.relationships.store.data.type",
+          "default": "stores"
+        },
+        {
+          "name": "Variant Type",
+          "as": "variant_type",
+          "description": {
+            "en": "Variant relationship type"
+          },
+          "type": "string",
+          "source": "hidden",
+          "position": "payload:data.relationships.variant.data.type",
+          "default": "variants"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "CHECKOUT_URL": "out.data.attributes.url",
+    "ID": "out.data.id"
+  },
+  "messages": {
+    "success": {
+      "en": "Checkout created: {{CHECKOUT_URL}}",
+      "de": "Checkout erstellt: {{CHECKOUT_URL}}"
+    }
+  }
+}

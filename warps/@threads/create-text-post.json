@@ -1,0 +1,67 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Threads: Create Text Post",
+  "title": {
+    "en": "Create a text post",
+    "de": "Einen Textbeitrag erstellen"
+  },
+  "description": {
+    "en": "Create a text post container on Threads. Use publish-post to publish it.",
+    "de": "Einen Textbeitrag-Container auf Threads erstellen. Verwende publish-post, um ihn zu veröffentlichen."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:THREADS_ACCESS_TOKEN|Get your access token from Meta Developer Portal"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Create Text Post",
+      "destination": {
+        "url": "INJECT:API_THREADS",
+        "method": "POST",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Text",
+          "as": "text",
+          "description": {
+            "en": "The text content of the post (max 500 characters)."
+          },
+          "bot": "The text content of the Threads post. Maximum 500 characters. Can include hashtags and mentions.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:text"
+        },
+        {
+          "name": "Media Type",
+          "as": "media_type",
+          "type": "string",
+          "source": "hidden",
+          "default": "TEXT",
+          "position": "payload:media_type"
+        },
+        {
+          "name": "Access Token",
+          "as": "access_token",
+          "type": "string",
+          "source": "hidden",
+          "default": "{{ACCESS_TOKEN}}",
+          "position": "query:access_token"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "CONTAINER_ID": "out.id"
+  },
+  "messages": {
+    "success": {
+      "en": "Text container created ({{CONTAINER_ID}}). Use publish-post to publish it.",
+      "de": "Text-Container erstellt ({{CONTAINER_ID}}). Verwende publish-post, um ihn zu veröffentlichen."
+    }
+  }
+}

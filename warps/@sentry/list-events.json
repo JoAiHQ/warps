@@ -1,0 +1,55 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Sentry: List Events",
+  "title": {
+    "en": "List events for an issue",
+    "de": "Events eines Issues auflisten"
+  },
+  "description": {
+    "en": "List individual error occurrences (events) for a specific Sentry issue.",
+    "de": "Einzelne Fehlervorkommen (Events) fur ein bestimmtes Sentry-Issue auflisten."
+  },
+  "vars": {
+    "AUTH_TOKEN": "env:SENTRY_AUTH_TOKEN|Get your auth token from https://sentry.io/settings/auth-tokens/"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "List Events",
+        "de": "Events auflisten"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/issues/{{ISSUE_ID}}/events/",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{AUTH_TOKEN}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Issue ID",
+          "as": "ISSUE_ID",
+          "description": {
+            "en": "The ID of the Sentry issue to list events for."
+          },
+          "bot": "The Sentry issue ID. Use 'List Issues' to find issue IDs.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:ISSUE_ID"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "EVENTS": "out",
+    "COUNT": "out.length"
+  },
+  "messages": {
+    "success": {
+      "en": "Found {{COUNT}} event(s).",
+      "de": "{{COUNT}} Event(s) gefunden."
+    }
+  }
+}

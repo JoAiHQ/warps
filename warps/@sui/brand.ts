@@ -7,7 +7,7 @@ export const brand = async (config: WarpClientConfig): Promise<WarpbaseBrand> =>
     .setDescription(
       'Sui is a next-generation smart contract platform with high throughput, low latency, and an asset-oriented programming model powered by the Move programming language.'
     )
-    .setLogo('https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/sui.svg')
+    .setLogo('https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/chains/logos/sui.svg')
     .setColors({ primary: '#4FA8FF' })
     .setUrls({ web: 'https://sui.io' })
     .build(),

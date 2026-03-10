@@ -1,0 +1,55 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Threads: Get Profile",
+  "title": {
+    "en": "Get profile",
+    "de": "Profil abrufen"
+  },
+  "description": {
+    "en": "Get your Threads profile information.",
+    "de": "Deine Threads-Profilinformationen abrufen."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:THREADS_ACCESS_TOKEN|Get your access token from Meta Developer Portal"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Get Profile",
+      "destination": {
+        "url": "INJECT:API_PROFILE",
+        "method": "GET",
+        "headers": {}
+      },
+      "inputs": [
+        {
+          "name": "Fields",
+          "as": "fields",
+          "type": "string",
+          "source": "hidden",
+          "default": "id,username,threads_profile_picture_url,threads_biography",
+          "position": "query:fields"
+        },
+        {
+          "name": "Access Token",
+          "as": "access_token",
+          "type": "string",
+          "source": "hidden",
+          "default": "{{ACCESS_TOKEN}}",
+          "position": "query:access_token"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "ID": "out.id",
+    "USERNAME": "out.username",
+    "BIO": "out.threads_biography"
+  },
+  "messages": {
+    "success": {
+      "en": "Profile for @{{USERNAME}}: {{BIO}}",
+      "de": "Profil von @{{USERNAME}}: {{BIO}}"
+    }
+  }
+}

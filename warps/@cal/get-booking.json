@@ -1,0 +1,57 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Cal.com: Get Booking",
+  "title": {
+    "en": "Get booking details",
+    "de": "Buchungsdetails abrufen"
+  },
+  "description": {
+    "en": "Retrieve details of a specific Cal.com booking by its unique identifier.",
+    "de": "Details einer bestimmten Cal.com-Buchung anhand ihrer eindeutigen Kennung abrufen."
+  },
+  "vars": {
+    "API_KEY": "env:CAL_COM_API_KEY|Get your API key from Cal.com Settings > Developer > API Keys at https://app.cal.com/settings/developer/api-keys"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Get Booking",
+      "destination": {
+        "url": "INJECT:API_BOOKINGS/{{bookingUid}}",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{API_KEY}}",
+          "cal-api-version": "2024-08-13"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Booking UID",
+          "as": "bookingUid",
+          "description": {
+            "en": "The unique identifier of the booking to retrieve.",
+            "de": "Die eindeutige Kennung der abzurufenden Buchung."
+          },
+          "bot": "The unique identifier (UID) of the booking to retrieve details for.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:bookingUid"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "BOOKING_UID": "out.data.uid",
+    "BOOKING_STATUS": "out.data.status",
+    "BOOKING_START": "out.data.start",
+    "BOOKING_END": "out.data.end",
+    "MEETING_URL": "out.data.meetingUrl"
+  },
+  "messages": {
+    "success": {
+      "en": "Booking {{BOOKING_UID}} retrieved. Status: {{BOOKING_STATUS}}",
+      "de": "Buchung {{BOOKING_UID}} abgerufen. Status: {{BOOKING_STATUS}}"
+    }
+  }
+}

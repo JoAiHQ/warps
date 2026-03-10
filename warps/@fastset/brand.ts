@@ -9,8 +9,8 @@ export const brand = async (config: WarpClientConfig): Promise<WarpbaseBrand> =>
       de: 'Leistungsstarkes Blockchain-Netzwerk für dezentrale Anwendungen. Fokus auf hohem Durchsatz, geringer Latenz und Interoperabilität.',
     })
     .setLogo({
-      light: 'https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/fastset-black.svg',
-      dark: 'https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/fastset-white.svg',
+      light: 'https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/chains/logos/fastset-black.svg',
+      dark: 'https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/chains/logos/fastset-white.svg',
     })
     .setColors({ primary: '#000000' })
     .setUrls({ web: 'https://fastset.xyz' })

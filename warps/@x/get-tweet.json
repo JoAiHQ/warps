@@ -1,0 +1,83 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "X: Get Tweet",
+  "title": {
+    "en": "Get tweet details",
+    "de": "Tweet-Details abrufen"
+  },
+  "description": {
+    "en": "Get a tweet's details and engagement metrics from X.com.",
+    "de": "Details und Engagement-Metriken eines Tweets von X.com abrufen."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:X_ACCESS_TOKEN|OAuth 2.0 access token from the X Developer Portal."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Get Tweet",
+      "destination": {
+        "url": "https://api.x.com/2/tweets/{{TWEET_ID}}",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Tweet ID",
+          "as": "TWEET_ID",
+          "description": {
+            "en": "The ID of the tweet."
+          },
+          "bot": "The numeric tweet ID.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:TWEET_ID"
+        },
+        {
+          "name": "Tweet Fields",
+          "as": "tweetFields",
+          "type": "string",
+          "source": "hidden",
+          "position": "query:tweet.fields",
+          "default": "created_at,public_metrics,text,author_id,conversation_id"
+        },
+        {
+          "name": "Expansions",
+          "as": "expansions",
+          "type": "string",
+          "source": "hidden",
+          "position": "query:expansions",
+          "default": "author_id"
+        },
+        {
+          "name": "User Fields",
+          "as": "userFields",
+          "type": "string",
+          "source": "hidden",
+          "position": "query:user.fields",
+          "default": "name,username"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "TEXT": "out.data.text",
+    "AUTHOR_ID": "out.data.author_id",
+    "LIKES": "out.data.public_metrics.like_count",
+    "RETWEETS": "out.data.public_metrics.retweet_count",
+    "REPLIES": "out.data.public_metrics.reply_count",
+    "QUOTES": "out.data.public_metrics.quote_count",
+    "IMPRESSIONS": "out.data.public_metrics.impression_count",
+    "BOOKMARKS": "out.data.public_metrics.bookmark_count",
+    "CREATED_AT": "out.data.created_at"
+  },
+  "messages": {
+    "success": {
+      "en": "Tweet: {{TEXT}} — Likes: {{LIKES}}, Retweets: {{RETWEETS}}, Replies: {{REPLIES}}, Impressions: {{IMPRESSIONS}}",
+      "de": "Tweet: {{TEXT}} — Likes: {{LIKES}}, Retweets: {{RETWEETS}}, Antworten: {{REPLIES}}, Impressionen: {{IMPRESSIONS}}"
+    }
+  }
+}

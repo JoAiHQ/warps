@@ -1,0 +1,101 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Gumroad: List Sales",
+  "title": {
+    "en": "List sales",
+    "de": "Verkäufe auflisten"
+  },
+  "description": {
+    "en": "Retrieve a list of sales from your Gumroad account.",
+    "de": "Rufe eine Liste von Verkäufen aus deinem Gumroad-Konto ab."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:GUMROAD_ACCESS_TOKEN|Get your access token from https://app.gumroad.com/settings/advanced#application-form"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "List Sales",
+      "destination": {
+        "url": "INJECT:API_SALES",
+        "method": "GET",
+        "headers": {}
+      },
+      "inputs": [
+        {
+          "name": "Access Token",
+          "as": "access_token",
+          "type": "string",
+          "source": "hidden",
+          "default": "{{ACCESS_TOKEN}}",
+          "position": "query:access_token"
+        },
+        {
+          "name": "After",
+          "as": "after",
+          "description": {
+            "en": "Only return sales after this date (e.g., 2024-01-01)."
+          },
+          "bot": "Filter sales after a specific date (YYYY-MM-DD).",
+          "type": "string",
+          "source": "field",
+          "position": "query:after"
+        },
+        {
+          "name": "Before",
+          "as": "before",
+          "description": {
+            "en": "Only return sales before this date (e.g., 2024-12-31)."
+          },
+          "bot": "Filter sales before a specific date (YYYY-MM-DD).",
+          "type": "string",
+          "source": "field",
+          "position": "query:before"
+        },
+        {
+          "name": "Product ID",
+          "as": "product_id",
+          "description": {
+            "en": "Filter sales by product ID."
+          },
+          "bot": "Filter sales by a specific product ID.",
+          "type": "string",
+          "source": "field",
+          "position": "query:product_id"
+        },
+        {
+          "name": "Email",
+          "as": "email",
+          "description": {
+            "en": "Filter sales by customer email."
+          },
+          "bot": "Filter sales by customer email address.",
+          "type": "string",
+          "source": "field",
+          "position": "query:email"
+        },
+        {
+          "name": "Page",
+          "as": "page",
+          "description": {
+            "en": "Page number for pagination."
+          },
+          "bot": "Page number to retrieve.",
+          "type": "string",
+          "source": "field",
+          "position": "query:page"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "SALES": "out.sales",
+    "COUNT": "out.sales.length"
+  },
+  "messages": {
+    "success": {
+      "en": "Found {{COUNT}} sale(s).",
+      "de": "{{COUNT}} Verkauf/Verkäufe gefunden."
+    }
+  }
+}

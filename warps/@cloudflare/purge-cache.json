@@ -1,0 +1,74 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Cloudflare: Purge Cache",
+  "title": {
+    "en": "Purge cache",
+    "de": "Cache leeren"
+  },
+  "description": {
+    "en": "Purge cached content for a Cloudflare zone. Purge everything or specific URLs.",
+    "de": "Gecachte Inhalte für eine Cloudflare-Zone leeren. Alles oder bestimmte URLs leeren."
+  },
+  "vars": {
+    "API_TOKEN": "env:CLOUDFLARE_API_TOKEN|Get your API token from Cloudflare Dashboard > My Profile > API Tokens."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Purge Cache",
+      "destination": {
+        "url": "https://api.cloudflare.com/client/v4/zones/{{ZONE_ID}}/purge_cache",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{API_TOKEN}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Zone ID",
+          "as": "ZONE_ID",
+          "description": {
+            "en": "The zone ID."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:ZONE_ID"
+        },
+        {
+          "name": "Purge Everything",
+          "as": "purge_everything",
+          "description": {
+            "en": "Set to true to purge all cached content."
+          },
+          "bot": "Set to true to purge everything. If false, provide specific files to purge.",
+          "type": "bool",
+          "source": "field",
+          "position": "payload:purge_everything",
+          "default": "true"
+        },
+        {
+          "name": "Files",
+          "as": "files",
+          "description": {
+            "en": "JSON array of URLs to purge (if not purging everything)."
+          },
+          "bot": "Optional JSON array of specific URLs to purge. Example: [\"https://example.com/style.css\"]",
+          "type": "string",
+          "source": "field",
+          "position": "payload:files"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "ID": "out.result.id"
+  },
+  "messages": {
+    "success": {
+      "en": "Cache purged successfully.",
+      "de": "Cache erfolgreich geleert."
+    }
+  }
+}

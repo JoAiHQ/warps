@@ -1,0 +1,60 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Gumroad: Get Product",
+  "title": {
+    "en": "Get product",
+    "de": "Produkt abrufen"
+  },
+  "description": {
+    "en": "Retrieve details of a specific product by ID.",
+    "de": "Rufe Details eines bestimmten Produkts per ID ab."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:GUMROAD_ACCESS_TOKEN|Get your access token from https://app.gumroad.com/settings/advanced#application-form"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Get Product",
+      "destination": {
+        "url": "INJECT:API_PRODUCTS/{{PRODUCT_ID}}",
+        "method": "GET",
+        "headers": {}
+      },
+      "inputs": [
+        {
+          "name": "Product ID",
+          "as": "PRODUCT_ID",
+          "description": {
+            "en": "The ID of the product to retrieve."
+          },
+          "bot": "The unique product ID from Gumroad.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:PRODUCT_ID"
+        },
+        {
+          "name": "Access Token",
+          "as": "access_token",
+          "type": "string",
+          "source": "hidden",
+          "default": "{{ACCESS_TOKEN}}",
+          "position": "query:access_token"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "PRODUCT": "out.product",
+    "NAME": "out.product.name",
+    "SALES_COUNT": "out.product.sales_count",
+    "REVENUE": "out.product.formatted_price"
+  },
+  "messages": {
+    "success": {
+      "en": "Product: {{NAME}} ({{SALES_COUNT}} sales, {{REVENUE}})",
+      "de": "Produkt: {{NAME}} ({{SALES_COUNT}} Verkäufe, {{REVENUE}})"
+    }
+  }
+}

@@ -1,0 +1,56 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "LinkedIn: Get Post Analytics",
+  "title": {
+    "en": "Get post analytics",
+    "de": "Beitragsanalysen abrufen"
+  },
+  "description": {
+    "en": "Get engagement metrics (likes, comments, shares, impressions) for a LinkedIn post.",
+    "de": "Engagement-Metriken (Likes, Kommentare, Shares, Impressionen) für einen LinkedIn-Beitrag abrufen."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:LINKEDIN_ACCESS_TOKEN|Your LinkedIn OAuth 2.0 Access Token with r_organization_social or r_member_social scope."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Get Analytics",
+      "destination": {
+        "url": "https://api.linkedin.com/rest/socialMetadata/{{POST_URN}}",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}",
+          "LinkedIn-Version": "202401",
+          "X-Restli-Protocol-Version": "2.0.0"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Post URN",
+          "as": "POST_URN",
+          "description": {
+            "en": "The URN of the post (e.g., 'urn:li:share:12345' or 'urn:li:ugcPost:12345')."
+          },
+          "bot": "The LinkedIn post URN. Get this from the list-posts warp. URL-encode if needed.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:POST_URN"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "REACTIONS": "out.reactionSummaries",
+    "COMMENTS": "out.commentSummary.count",
+    "TOP_LEVEL_COMMENTS": "out.commentSummary.topLevelCount",
+    "COMMENTS_STATE": "out.commentsState"
+  },
+  "messages": {
+    "success": {
+      "en": "Comments: {{COMMENTS}} ({{TOP_LEVEL_COMMENTS}} top-level). Reactions breakdown available in output.",
+      "de": "Kommentare: {{COMMENTS}} ({{TOP_LEVEL_COMMENTS}} Top-Level). Reaktionsaufschlüsselung in der Ausgabe verfügbar."
+    }
+  }
+}

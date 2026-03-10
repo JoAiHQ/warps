@@ -1,0 +1,62 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Cloudflare: List Zones",
+  "title": {
+    "en": "List zones",
+    "de": "Zonen auflisten"
+  },
+  "description": {
+    "en": "List all zones (domains) in your Cloudflare account.",
+    "de": "Alle Zonen (Domains) in Ihrem Cloudflare-Konto auflisten."
+  },
+  "vars": {
+    "API_TOKEN": "env:CLOUDFLARE_API_TOKEN|Get your API token from Cloudflare Dashboard > My Profile > API Tokens."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "List Zones",
+      "destination": {
+        "url": "https://api.cloudflare.com/client/v4/zones",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{API_TOKEN}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Name",
+          "as": "name",
+          "description": {
+            "en": "Filter by domain name."
+          },
+          "bot": "Optional domain name to filter zones by, e.g. 'example.com'.",
+          "type": "string",
+          "source": "field",
+          "position": "query:name"
+        },
+        {
+          "name": "Per Page",
+          "as": "per_page",
+          "description": {
+            "en": "Number of zones to return (max 50)."
+          },
+          "type": "number",
+          "source": "field",
+          "position": "query:per_page",
+          "default": "20"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "ZONES": "out.result",
+    "COUNT": "out.result_info.total_count"
+  },
+  "messages": {
+    "success": {
+      "en": "Found {{COUNT}} zone(s).",
+      "de": "{{COUNT}} Zone(n) gefunden."
+    }
+  }
+}

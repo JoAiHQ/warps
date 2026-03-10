@@ -1,0 +1,62 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Stripe: List Payments",
+  "title": {
+    "en": "List payments",
+    "de": "Zahlungen auflisten"
+  },
+  "description": {
+    "en": "List recent payment intents from your Stripe account.",
+    "de": "Aktuelle Zahlungsabsichten aus Ihrem Stripe-Konto auflisten."
+  },
+  "vars": {
+    "API_KEY": "env:STRIPE_SECRET_KEY|Get your Secret Key from Stripe Dashboard."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "List Payments",
+      "destination": {
+        "url": "https://api.stripe.com/v1/payment_intents",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{API_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Limit",
+          "as": "limit",
+          "description": {
+            "en": "Number of payments to return (max 100)."
+          },
+          "type": "number",
+          "source": "field",
+          "position": "query:limit",
+          "default": "25"
+        },
+        {
+          "name": "Customer",
+          "as": "customer",
+          "description": {
+            "en": "Filter by customer ID."
+          },
+          "bot": "Optional Stripe customer ID to filter payments by.",
+          "type": "string",
+          "source": "field",
+          "position": "query:customer"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "PAYMENTS": "out.data",
+    "HAS_MORE": "out.has_more"
+  },
+  "messages": {
+    "success": {
+      "en": "Payments retrieved.",
+      "de": "Zahlungen abgerufen."
+    }
+  }
+}

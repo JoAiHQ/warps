@@ -1,0 +1,64 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Cloudflare: KV Read",
+  "title": {
+    "en": "Read KV value",
+    "de": "KV-Wert lesen"
+  },
+  "description": {
+    "en": "Read a value from a Cloudflare Workers KV namespace.",
+    "de": "Einen Wert aus einem Cloudflare Workers KV-Namespace lesen."
+  },
+  "vars": {
+    "API_TOKEN": "env:CLOUDFLARE_API_TOKEN|Get your API token from Cloudflare Dashboard > My Profile > API Tokens.",
+    "ACCOUNT_ID": "env:CLOUDFLARE_ACCOUNT_ID|Your Cloudflare Account ID from the dashboard overview page."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Read Value",
+      "destination": {
+        "url": "https://api.cloudflare.com/client/v4/accounts/{{ACCOUNT_ID}}/storage/kv/namespaces/{{NAMESPACE_ID}}/values/{{KEY}}",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{API_TOKEN}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Namespace ID",
+          "as": "NAMESPACE_ID",
+          "description": {
+            "en": "The KV namespace ID."
+          },
+          "bot": "The KV namespace ID. Get this from the list-kv-namespaces warp.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:NAMESPACE_ID"
+        },
+        {
+          "name": "Key",
+          "as": "KEY",
+          "description": {
+            "en": "The key to read."
+          },
+          "bot": "The key name to read from the KV namespace.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:KEY"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "VALUE": "out"
+  },
+  "messages": {
+    "success": {
+      "en": "Value retrieved.",
+      "de": "Wert abgerufen."
+    }
+  }
+}

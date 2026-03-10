@@ -1,0 +1,93 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Bluesky: Create Post",
+  "title": {
+    "en": "Create a post",
+    "de": "Einen Beitrag erstellen"
+  },
+  "description": {
+    "en": "Create a new post on Bluesky using the AT Protocol.",
+    "de": "Einen neuen Beitrag auf Bluesky über das AT Protocol erstellen."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:BLUESKY_ACCESS_TOKEN|Get your access token from Bluesky app settings"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Create Post",
+      "destination": {
+        "url": "INJECT:API_CREATE_RECORD",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Handle",
+          "as": "repo",
+          "description": {
+            "en": "Your Bluesky handle or DID (e.g., 'alice.bsky.social' or 'did:plc:...')."
+          },
+          "bot": "The user's Bluesky handle (e.g., 'alice.bsky.social') or DID (e.g., 'did:plc:xyz123'). This identifies the account creating the post.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:repo"
+        },
+        {
+          "name": "Text",
+          "as": "text",
+          "description": {
+            "en": "The text content of the post (max 300 characters)."
+          },
+          "bot": "The text content of the Bluesky post. Maximum 300 characters.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:record.text"
+        },
+        {
+          "name": "Collection",
+          "as": "collection",
+          "type": "string",
+          "source": "field",
+          "value": "app.bsky.feed.post",
+          "position": "payload:collection",
+          "hidden": true
+        },
+        {
+          "name": "Record Type",
+          "as": "$type",
+          "type": "string",
+          "source": "field",
+          "value": "app.bsky.feed.post",
+          "position": "payload:record.$type",
+          "hidden": true
+        },
+        {
+          "name": "Created At",
+          "as": "createdAt",
+          "type": "string",
+          "source": "field",
+          "value": "{{NOW}}",
+          "bot": "ISO 8601 timestamp for when the post was created. Uses {{NOW}} template variable if supported, otherwise provide a timestamp like '2024-01-01T00:00:00.000Z'.",
+          "position": "payload:record.createdAt",
+          "hidden": true
+        }
+      ]
+    }
+  ],
+  "output": {
+    "URI": "out.uri",
+    "CID": "out.cid"
+  },
+  "messages": {
+    "success": {
+      "en": "Post created successfully ({{URI}}).",
+      "de": "Beitrag erfolgreich erstellt ({{URI}})."
+    }
+  }
+}

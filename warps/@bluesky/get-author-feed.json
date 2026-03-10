@@ -1,0 +1,63 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Bluesky: Get Author Feed",
+  "title": {
+    "en": "Get author feed",
+    "de": "Autoren-Feed abrufen"
+  },
+  "description": {
+    "en": "Get posts from a Bluesky user's feed.",
+    "de": "Beiträge aus dem Feed eines Bluesky-Benutzers abrufen."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:BLUESKY_ACCESS_TOKEN|Get your access token from Bluesky app settings"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Get Feed",
+      "destination": {
+        "url": "INJECT:API_GET_AUTHOR_FEED",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Actor",
+          "as": "actor",
+          "description": {
+            "en": "The handle or DID of the user (e.g., 'alice.bsky.social' or 'did:plc:...')."
+          },
+          "bot": "The Bluesky handle (e.g., 'alice.bsky.social') or DID (e.g., 'did:plc:xyz123') of the user whose feed to retrieve.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "query:actor"
+        },
+        {
+          "name": "Limit",
+          "as": "limit",
+          "description": {
+            "en": "Maximum number of posts to return (default 25, max 100)."
+          },
+          "bot": "Number of posts to return. Defaults to 25 if not specified. Maximum is 100.",
+          "type": "string",
+          "source": "field",
+          "position": "query:limit"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "FEED": "out.feed",
+    "CURSOR": "out.cursor"
+  },
+  "messages": {
+    "success": {
+      "en": "Retrieved feed for the requested user.",
+      "de": "Feed des angeforderten Benutzers abgerufen."
+    }
+  }
+}

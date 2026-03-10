@@ -1,0 +1,66 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Spotify: Get Artist Top Tracks",
+  "title": {
+    "en": "Get artist's top tracks",
+    "de": "Top-Tracks eines Künstlers abrufen"
+  },
+  "description": {
+    "en": "Get the top tracks for an artist on Spotify.",
+    "de": "Erhalte die Top-Tracks eines Künstlers auf Spotify."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:SPOTIFY_ACCESS_TOKEN|OAuth access token from Spotify Developer Dashboard."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Get Top Tracks",
+        "de": "Top-Tracks abrufen"
+      },
+      "destination": {
+        "url": "https://api.spotify.com/v1/artists/{{ID}}/top-tracks",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Artist ID",
+          "as": "ID",
+          "description": {
+            "en": "The Spotify ID for the artist."
+          },
+          "bot": "The Spotify artist ID. You can get this from search results or a Spotify URL.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:ID"
+        },
+        {
+          "name": "Market",
+          "as": "market",
+          "description": {
+            "en": "ISO 3166-1 alpha-2 country code (e.g., 'US', 'DE', 'GB')."
+          },
+          "bot": "An ISO 3166-1 alpha-2 country code for market-specific results, e.g. 'US'. Defaults to user's account country if not provided.",
+          "type": "string",
+          "source": "field",
+          "position": "query:market"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "TRACKS": "out.tracks",
+    "COUNT": "out.tracks.length"
+  },
+  "messages": {
+    "success": {
+      "en": "Found {{COUNT}} top track(s).",
+      "de": "{{COUNT}} Top-Track(s) gefunden."
+    }
+  }
+}

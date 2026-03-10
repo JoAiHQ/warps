@@ -1,0 +1,53 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Gmail: Get Thread",
+  "title": {
+    "en": "Get email thread",
+    "de": "E-Mail-Thread abrufen"
+  },
+  "description": {
+    "en": "Get all messages in an email thread.",
+    "de": "Alle Nachrichten in einem E-Mail-Thread abrufen."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:GMAIL_ACCESS_TOKEN|OAuth 2.0 access token with https://www.googleapis.com/auth/gmail.readonly scope."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Get Thread",
+      "destination": {
+        "url": "https://gmail.googleapis.com/gmail/v1/users/me/threads/{{THREAD_ID}}",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Thread ID",
+          "as": "THREAD_ID",
+          "description": {
+            "en": "The ID of the thread to retrieve."
+          },
+          "bot": "The Gmail thread ID. Get this from a message's threadId field.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:THREAD_ID"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "THREAD_ID": "out.id",
+    "MESSAGES": "out.messages",
+    "MESSAGE_COUNT": "out.messages.length"
+  },
+  "messages": {
+    "success": {
+      "en": "Thread with {{MESSAGE_COUNT}} message(s).",
+      "de": "Thread mit {{MESSAGE_COUNT}} Nachricht(en)."
+    }
+  }
+}

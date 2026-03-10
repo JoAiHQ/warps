@@ -1,0 +1,59 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Threads: Publish Post",
+  "title": {
+    "en": "Publish a post",
+    "de": "Einen Beitrag veröffentlichen"
+  },
+  "description": {
+    "en": "Publish a previously created Threads media container.",
+    "de": "Einen zuvor erstellten Threads-Media-Container veröffentlichen."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:THREADS_ACCESS_TOKEN|Get your access token from Meta Developer Portal"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Publish Post",
+      "destination": {
+        "url": "INJECT:API_PUBLISH",
+        "method": "POST",
+        "headers": {
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Creation ID",
+          "as": "creation_id",
+          "description": {
+            "en": "The container ID from the create step."
+          },
+          "bot": "The media container ID returned from the create-text-post step.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:creation_id"
+        },
+        {
+          "name": "Access Token",
+          "as": "access_token",
+          "type": "string",
+          "source": "hidden",
+          "default": "{{ACCESS_TOKEN}}",
+          "position": "query:access_token"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "POST_ID": "out.id"
+  },
+  "messages": {
+    "success": {
+      "en": "Post published ({{POST_ID}}).",
+      "de": "Beitrag veröffentlicht ({{POST_ID}})."
+    }
+  }
+}

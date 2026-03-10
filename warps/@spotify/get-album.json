@@ -1,0 +1,59 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Spotify: Get Album",
+  "title": {
+    "en": "Get album",
+    "de": "Album abrufen"
+  },
+  "description": {
+    "en": "Get detailed information about an album on Spotify, including its tracks.",
+    "de": "Erhalte detaillierte Informationen über ein Album auf Spotify, einschließlich seiner Tracks."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:SPOTIFY_ACCESS_TOKEN|OAuth access token from Spotify Developer Dashboard."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Get Album",
+        "de": "Album abrufen"
+      },
+      "destination": {
+        "url": "https://api.spotify.com/v1/albums/{{ID}}",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Album ID",
+          "as": "ID",
+          "description": {
+            "en": "The Spotify ID for the album."
+          },
+          "bot": "The Spotify album ID. You can get this from search results or a Spotify URL.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:ID"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "NAME": "out.name",
+    "ARTIST": "out.artists.0.name",
+    "TOTAL_TRACKS": "out.total_tracks",
+    "RELEASE_DATE": "out.release_date",
+    "URL": "out.external_urls.spotify",
+    "TRACKS": "out.tracks.items"
+  },
+  "messages": {
+    "success": {
+      "en": "Album: {{NAME}} by {{ARTIST}} ({{TOTAL_TRACKS}} tracks, released {{RELEASE_DATE}}). {{URL}}",
+      "de": "Album: {{NAME}} von {{ARTIST}} ({{TOTAL_TRACKS}} Tracks, veröffentlicht {{RELEASE_DATE}}). {{URL}}"
+    }
+  }
+}

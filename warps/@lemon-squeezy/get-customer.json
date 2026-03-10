@@ -1,0 +1,53 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Lemon Squeezy: Get Customer",
+  "title": {
+    "en": "Get customer",
+    "de": "Kunde abrufen"
+  },
+  "description": {
+    "en": "Retrieve details of a customer by ID.",
+    "de": "Rufe Details eines Kunden per ID ab."
+  },
+  "vars": {
+    "API_KEY": "env:LEMON_SQUEEZY_API_KEY|Get your API key from https://app.lemonsqueezy.com/settings/api"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Get Customer",
+      "destination": {
+        "url": "INJECT:API_CUSTOMERS/{{CUSTOMER_ID}}",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{API_KEY}}",
+          "Accept": "application/vnd.api+json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Customer ID",
+          "as": "CUSTOMER_ID",
+          "description": {
+            "en": "The ID of the customer to retrieve."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:CUSTOMER_ID"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "CUSTOMER": "out.data",
+    "NAME": "out.data.attributes.name",
+    "EMAIL": "out.data.attributes.email"
+  },
+  "messages": {
+    "success": {
+      "en": "Customer: {{NAME}} ({{EMAIL}})",
+      "de": "Kunde: {{NAME}} ({{EMAIL}})"
+    }
+  }
+}

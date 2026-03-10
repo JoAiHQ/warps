@@ -1,0 +1,64 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Sentry: Resolve Issue",
+  "title": {
+    "en": "Resolve an issue",
+    "de": "Ein Issue beheben"
+  },
+  "description": {
+    "en": "Mark a Sentry issue as resolved.",
+    "de": "Ein Sentry-Issue als behoben markieren."
+  },
+  "vars": {
+    "AUTH_TOKEN": "env:SENTRY_AUTH_TOKEN|Get your auth token from https://sentry.io/settings/auth-tokens/"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Resolve Issue",
+        "de": "Issue beheben"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/issues/{{ISSUE_ID}}/",
+        "method": "PUT",
+        "headers": {
+          "Authorization": "Bearer {{AUTH_TOKEN}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Issue ID",
+          "as": "ISSUE_ID",
+          "description": {
+            "en": "The ID of the Sentry issue to resolve."
+          },
+          "bot": "The Sentry issue ID. Use 'List Issues' to find issue IDs.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:ISSUE_ID"
+        },
+        {
+          "name": "Status",
+          "as": "status",
+          "type": "string",
+          "source": "hidden",
+          "default": "resolved",
+          "position": "payload:status"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "ID": "out.id",
+    "STATUS": "out.status"
+  },
+  "messages": {
+    "success": {
+      "en": "Issue {{ID}} has been resolved.",
+      "de": "Issue {{ID}} wurde behoben."
+    }
+  }
+}

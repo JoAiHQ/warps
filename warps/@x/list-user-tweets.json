@@ -1,0 +1,72 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "X: List User Tweets",
+  "title": {
+    "en": "List user's tweets",
+    "de": "Tweets eines Benutzers auflisten"
+  },
+  "description": {
+    "en": "List recent tweets posted by a user on X.com, including engagement metrics.",
+    "de": "Aktuelle Tweets eines Benutzers auf X.com auflisten, einschließlich Engagement-Metriken."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:X_ACCESS_TOKEN|OAuth 2.0 access token from the X Developer Portal."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "List Tweets",
+      "destination": {
+        "url": "https://api.x.com/2/users/{{USER_ID}}/tweets",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "User ID",
+          "as": "USER_ID",
+          "description": {
+            "en": "The X user ID (numeric)."
+          },
+          "bot": "The numeric X/Twitter user ID. Use the get-user warp to look up a user ID from a username.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:USER_ID"
+        },
+        {
+          "name": "Max Results",
+          "as": "maxResults",
+          "description": {
+            "en": "Number of tweets to return (5-100)."
+          },
+          "bot": "Number of tweets to return, between 5 and 100.",
+          "type": "number",
+          "source": "field",
+          "position": "query:max_results",
+          "default": "10"
+        },
+        {
+          "name": "Tweet Fields",
+          "as": "tweetFields",
+          "type": "string",
+          "source": "hidden",
+          "position": "query:tweet.fields",
+          "default": "created_at,public_metrics,text"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "TWEETS": "out.data",
+    "COUNT": "out.meta.result_count"
+  },
+  "messages": {
+    "success": {
+      "en": "Retrieved {{COUNT}} tweet(s).",
+      "de": "{{COUNT}} Tweet(s) abgerufen."
+    }
+  }
+}

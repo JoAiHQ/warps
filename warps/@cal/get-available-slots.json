@@ -1,0 +1,103 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Cal.com: Get Available Slots",
+  "title": {
+    "en": "Get available time slots",
+    "de": "Verfügbare Zeitfenster abrufen"
+  },
+  "description": {
+    "en": "Get available time slots for a Cal.com event type within a date range.",
+    "de": "Verfügbare Zeitfenster für einen Cal.com-Ereignistyp innerhalb eines Datumsbereichs abrufen."
+  },
+  "vars": {
+    "API_KEY": "env:CAL_COM_API_KEY|Get your API key from Cal.com Settings > Developer > API Keys at https://app.cal.com/settings/developer/api-keys"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Get Slots",
+      "destination": {
+        "url": "INJECT:API_SLOTS",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{API_KEY}}",
+          "cal-api-version": "2024-09-04"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Event Type ID",
+          "as": "eventTypeId",
+          "description": {
+            "en": "The ID of the event type to check availability for.",
+            "de": "Die ID des Ereignistyps, für den die Verfügbarkeit geprüft werden soll."
+          },
+          "bot": "The numeric ID of the Cal.com event type. Use the list event types warp to find available event type IDs.",
+          "type": "number",
+          "source": "field",
+          "required": true,
+          "position": "query:eventTypeId"
+        },
+        {
+          "name": "Start Date",
+          "as": "start",
+          "description": {
+            "en": "Start date for slot search in UTC (e.g., '2024-09-05').",
+            "de": "Startdatum für die Suche in UTC (z.B. '2024-09-05')."
+          },
+          "bot": "The start date from which to fetch available slots, in UTC date format like '2024-09-05'.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "query:start"
+        },
+        {
+          "name": "End Date",
+          "as": "end",
+          "description": {
+            "en": "End date for slot search in UTC (e.g., '2024-09-06').",
+            "de": "Enddatum für die Suche in UTC (z.B. '2024-09-06')."
+          },
+          "bot": "The end date until which to fetch available slots, in UTC date format like '2024-09-06'.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "query:end"
+        },
+        {
+          "name": "Time Zone",
+          "as": "timeZone",
+          "description": {
+            "en": "Time zone for the returned slots (e.g., 'Europe/Berlin', 'America/New_York'). Defaults to UTC.",
+            "de": "Zeitzone für die zurückgegebenen Slots (z.B. 'Europe/Berlin', 'America/New_York'). Standard ist UTC."
+          },
+          "bot": "The time zone in which slots should be returned, e.g. 'America/New_York'. Defaults to UTC if not provided.",
+          "type": "string",
+          "source": "field",
+          "position": "query:timeZone"
+        },
+        {
+          "name": "Duration",
+          "as": "duration",
+          "description": {
+            "en": "Duration of each slot in minutes. Only needed for event types that allow multiple durations.",
+            "de": "Dauer jedes Zeitfensters in Minuten. Nur nötig für Ereignistypen mit mehreren Dauern."
+          },
+          "bot": "Slot duration in minutes. Only use for event types that allow multiple durations. If not passed, defaults to the event type's default duration.",
+          "type": "number",
+          "source": "field",
+          "position": "query:duration"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "SLOTS": "out.data.slots"
+  },
+  "messages": {
+    "success": {
+      "en": "Available slots retrieved successfully.",
+      "de": "Verfügbare Zeitfenster erfolgreich abgerufen."
+    }
+  }
+}

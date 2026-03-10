@@ -1,0 +1,78 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Sentry: List Issues",
+  "title": {
+    "en": "List issues for a project",
+    "de": "Issues eines Projekts auflisten"
+  },
+  "description": {
+    "en": "List issues for a specific project in a Sentry organization. Supports searching with a query string.",
+    "de": "Issues fur ein bestimmtes Projekt in einer Sentry-Organisation auflisten. Unterstutzt Suche mit einem Suchbegriff."
+  },
+  "vars": {
+    "AUTH_TOKEN": "env:SENTRY_AUTH_TOKEN|Get your auth token from https://sentry.io/settings/auth-tokens/"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "List Issues",
+        "de": "Issues auflisten"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/projects/{{ORG_SLUG}}/{{PROJECT_SLUG}}/issues/",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{AUTH_TOKEN}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Organization Slug",
+          "as": "ORG_SLUG",
+          "description": {
+            "en": "The slug of the organization."
+          },
+          "bot": "The Sentry organization slug. You can find this in your Sentry URL: https://sentry.io/organizations/{org_slug}/",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:ORG_SLUG"
+        },
+        {
+          "name": "Project Slug",
+          "as": "PROJECT_SLUG",
+          "description": {
+            "en": "The slug of the project."
+          },
+          "bot": "The Sentry project slug. Use 'List Projects' to find project slugs.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:PROJECT_SLUG"
+        },
+        {
+          "name": "Query",
+          "as": "query",
+          "description": {
+            "en": "A search query to filter issues. Optional."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "query:query"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "ISSUES": "out",
+    "COUNT": "out.length"
+  },
+  "messages": {
+    "success": {
+      "en": "Found {{COUNT}} issue(s).",
+      "de": "{{COUNT}} Issue(s) gefunden."
+    }
+  }
+}
