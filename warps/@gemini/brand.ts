@@ -8,7 +8,7 @@ export const brand = async (config: WarpClientConfig): Promise<WarpbaseBrand> =>
       en: 'Launch and manage generic task runs through the Gemini Batch API.',
       de: 'Starte und verwalte generische Task-Runs über die Gemini Batch API.',
     })
-    .setLogo('https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/gemini.png')
+    .setLogo('https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/gemini.svg')
     .setColors({ primary: '#1a73e8' })
     .setUrls({ web: 'https://ai.google.dev' })
     .build(),

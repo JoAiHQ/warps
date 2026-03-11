@@ -1,0 +1,132 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Cal.com: Create Booking",
+  "title": {
+    "en": "Create a booking",
+    "de": "Eine Buchung erstellen"
+  },
+  "description": {
+    "en": "Create a new booking on Cal.com for a specific event type and time slot.",
+    "de": "Erstelle eine neue Buchung auf Cal.com für einen bestimmten Ereignistyp und Zeitslot."
+  },
+  "vars": {
+    "API_KEY": "env:CAL_COM_API_KEY|Get your API key from Cal.com Settings > Developer > API Keys at https://app.cal.com/settings/developer/api-keys"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Create Booking",
+      "destination": {
+        "url": "INJECT:API_BOOKINGS",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{API_KEY}}",
+          "Content-Type": "application/json",
+          "cal-api-version": "2024-08-13"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Event Type ID",
+          "as": "eventTypeId",
+          "description": {
+            "en": "The ID of the event type to book.",
+            "de": "Die ID des zu buchenden Ereignistyps."
+          },
+          "bot": "The numeric ID of the Cal.com event type to book. Use the list event types warp to find available IDs.",
+          "type": "number",
+          "source": "field",
+          "required": true,
+          "position": "payload:eventTypeId"
+        },
+        {
+          "name": "Start Time",
+          "as": "start",
+          "description": {
+            "en": "Start time in ISO 8601 UTC format (e.g., '2024-08-13T09:00:00Z').",
+            "de": "Startzeit im ISO 8601 UTC-Format (z.B. '2024-08-13T09:00:00Z')."
+          },
+          "bot": "The booking start time in ISO 8601 UTC format, e.g. '2024-08-13T09:00:00Z'. Must be an available slot.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:start"
+        },
+        {
+          "name": "Attendee Name",
+          "as": "attendeeName",
+          "description": {
+            "en": "Full name of the attendee.",
+            "de": "Vollständiger Name des Teilnehmers."
+          },
+          "bot": "The full name of the person booking the event.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:attendee.name"
+        },
+        {
+          "name": "Attendee Email",
+          "as": "attendeeEmail",
+          "description": {
+            "en": "Email address of the attendee.",
+            "de": "E-Mail-Adresse des Teilnehmers."
+          },
+          "bot": "The email address of the person booking the event.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:attendee.email"
+        },
+        {
+          "name": "Attendee Time Zone",
+          "as": "attendeeTimeZone",
+          "description": {
+            "en": "Time zone of the attendee (e.g., 'America/New_York').",
+            "de": "Zeitzone des Teilnehmers (z.B. 'America/New_York')."
+          },
+          "bot": "The attendee's time zone, e.g. 'America/New_York', 'Europe/Berlin'.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:attendee.timeZone"
+        },
+        {
+          "name": "Guests",
+          "as": "guests",
+          "description": {
+            "en": "Comma-separated list of guest email addresses.",
+            "de": "Kommagetrennte Liste der E-Mail-Adressen der Gäste."
+          },
+          "bot": "Optional comma-separated list of guest email addresses to add to the booking.",
+          "type": "string",
+          "source": "field",
+          "position": "payload:guests"
+        },
+        {
+          "name": "Notes",
+          "as": "notes",
+          "description": {
+            "en": "Additional notes or message for the booking.",
+            "de": "Zusätzliche Notizen oder Nachricht für die Buchung."
+          },
+          "bot": "Optional notes or message to include with the booking.",
+          "type": "string",
+          "source": "field",
+          "position": "payload:bookingFieldsResponses.notes"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "BOOKING_UID": "out.data.uid",
+    "BOOKING_STATUS": "out.data.status",
+    "MEETING_URL": "out.data.meetingUrl"
+  },
+  "messages": {
+    "success": {
+      "en": "Booking created successfully! Booking ID: {{BOOKING_UID}}, Status: {{BOOKING_STATUS}}",
+      "de": "Buchung erfolgreich erstellt! Buchungs-ID: {{BOOKING_UID}}, Status: {{BOOKING_STATUS}}"
+    }
+  }
+}

@@ -1,0 +1,55 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Bluesky: Get Profile",
+  "title": {
+    "en": "Get user profile",
+    "de": "Benutzerprofil abrufen"
+  },
+  "description": {
+    "en": "Get a Bluesky user's profile information including followers and post count.",
+    "de": "Profilinformationen eines Bluesky-Benutzers abrufen, einschließlich Follower und Beitragsanzahl."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:BLUESKY_ACCESS_TOKEN|Get your access token from Bluesky app settings"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Get Profile",
+      "destination": {
+        "url": "INJECT:API_GET_PROFILE",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Actor",
+          "as": "actor",
+          "description": {
+            "en": "The handle or DID of the user (e.g., 'alice.bsky.social' or 'did:plc:...')."
+          },
+          "bot": "The Bluesky handle (e.g., 'alice.bsky.social') or DID (e.g., 'did:plc:xyz123') of the user whose profile to retrieve.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "query:actor"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "HANDLE": "out.handle",
+    "DISPLAY_NAME": "out.displayName",
+    "FOLLOWERS": "out.followersCount",
+    "FOLLOWING": "out.followsCount",
+    "POSTS": "out.postsCount"
+  },
+  "messages": {
+    "success": {
+      "en": "Profile for {{DISPLAY_NAME}} (@{{HANDLE}}): {{FOLLOWERS}} followers, {{FOLLOWING}} following, {{POSTS}} posts.",
+      "de": "Profil von {{DISPLAY_NAME}} (@{{HANDLE}}): {{FOLLOWERS}} Follower, {{FOLLOWING}} folgt, {{POSTS}} Beiträge."
+    }
+  }
+}

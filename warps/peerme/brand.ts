@@ -9,8 +9,8 @@ export const brand = async (config: WarpClientConfig): Promise<WarpbaseBrand> =>
       de: 'Dezentralisierte Governance- und Multi-Signatur-Wallet-Plattform für DAOs auf MultiversX. Verwalte Organisationen und führe sichere Transaktionen mit erweiterten Multisig-Funktionen aus.',
     })
     .setLogo({
-      light: 'https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/peerme-black.png',
-      dark: 'https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/peerme-white.png',
+      light: 'https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/peerme-black.svg',
+      dark: 'https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/peerme-white.svg',
     })
     .setColors({ primary: '#4fd1c5', secondary: '#7f8fa6' })
     .setUrls({ web: 'https://peerme.io' })

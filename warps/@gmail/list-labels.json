@@ -1,0 +1,39 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Gmail: List Labels",
+  "title": {
+    "en": "List labels",
+    "de": "Labels auflisten"
+  },
+  "description": {
+    "en": "List all labels in the user's Gmail account.",
+    "de": "Alle Labels im Gmail-Konto des Benutzers auflisten."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:GMAIL_ACCESS_TOKEN|OAuth 2.0 access token with https://www.googleapis.com/auth/gmail.readonly scope."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "List Labels",
+      "destination": {
+        "url": "https://gmail.googleapis.com/gmail/v1/users/me/labels",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}"
+        }
+      },
+      "inputs": []
+    }
+  ],
+  "output": {
+    "LABELS": "out.labels",
+    "COUNT": "out.labels.length"
+  },
+  "messages": {
+    "success": {
+      "en": "Found {{COUNT}} label(s).",
+      "de": "{{COUNT}} Label(s) gefunden."
+    }
+  }
+}

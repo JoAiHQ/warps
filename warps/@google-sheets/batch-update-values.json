@@ -1,0 +1,76 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Google Sheets: Batch Update Values",
+  "title": {
+    "en": "Update values in multiple ranges",
+    "de": "Werte in mehreren Bereichen aktualisieren"
+  },
+  "description": {
+    "en": "Write values to multiple ranges in a Google Sheet at once.",
+    "de": "Schreibe Werte in mehrere Bereiche eines Google Sheets auf einmal."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:GOOGLE_SHEETS_ACCESS_TOKEN|OAuth 2.0 access token with https://www.googleapis.com/auth/spreadsheets scope."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Batch Update Values",
+      "destination": {
+        "url": "https://sheets.googleapis.com/v4/spreadsheets/{{SPREADSHEET_ID}}/values:batchUpdate",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Spreadsheet ID",
+          "as": "SPREADSHEET_ID",
+          "description": {
+            "en": "The ID of the spreadsheet."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:SPREADSHEET_ID"
+        },
+        {
+          "name": "Data",
+          "as": "data",
+          "description": {
+            "en": "JSON array of ValueRange objects with range and values."
+          },
+          "bot": "JSON array of ValueRange objects: [{\"range\": \"Sheet1!A1:B2\", \"values\": [[\"a\", \"b\"], [\"c\", \"d\"]]}, {\"range\": \"Sheet1!D1:E2\", \"values\": [[\"e\", \"f\"]]}]",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:data"
+        },
+        {
+          "name": "Value Input Option",
+          "as": "valueInputOption",
+          "description": {
+            "en": "How the input data should be interpreted (RAW or USER_ENTERED)."
+          },
+          "type": "string",
+          "source": "hidden",
+          "position": "payload:valueInputOption",
+          "default": "USER_ENTERED"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "UPDATED_ROWS": "out.totalUpdatedRows",
+    "UPDATED_CELLS": "out.totalUpdatedCells",
+    "UPDATED_SHEETS": "out.totalUpdatedSheets"
+  },
+  "messages": {
+    "success": {
+      "en": "Updated {{UPDATED_CELLS}} cell(s) across {{UPDATED_SHEETS}} sheet(s).",
+      "de": "{{UPDATED_CELLS}} Zelle(n) über {{UPDATED_SHEETS}} Blatt/Blätter aktualisiert."
+    }
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Lemon Squeezy: List Products",
+  "title": {
+    "en": "List products",
+    "de": "Produkte auflisten"
+  },
+  "description": {
+    "en": "Retrieve a list of products from your Lemon Squeezy store.",
+    "de": "Rufe eine Liste von Produkten aus deinem Lemon Squeezy Store ab."
+  },
+  "vars": {
+    "API_KEY": "env:LEMON_SQUEEZY_API_KEY|Get your API key from https://app.lemonsqueezy.com/settings/api"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "List Products",
+      "destination": {
+        "url": "INJECT:API_PRODUCTS",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{API_KEY}}",
+          "Accept": "application/vnd.api+json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Store ID",
+          "as": "store_id",
+          "description": {
+            "en": "Filter products by store ID."
+          },
+          "bot": "Filter products by a specific store ID.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "query:filter[store_id]"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "PRODUCTS": "out.data",
+    "COUNT": "out.meta.page.total"
+  },
+  "messages": {
+    "success": {
+      "en": "Found {{COUNT}} product(s).",
+      "de": "{{COUNT}} Produkt(e) gefunden."
+    }
+  }
+}

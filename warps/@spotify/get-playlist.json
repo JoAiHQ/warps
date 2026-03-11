@@ -1,0 +1,59 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Spotify: Get Playlist",
+  "title": {
+    "en": "Get playlist",
+    "de": "Playlist abrufen"
+  },
+  "description": {
+    "en": "Get detailed information about a Spotify playlist, including its tracks.",
+    "de": "Erhalte detaillierte Informationen über eine Spotify-Playlist, einschließlich ihrer Tracks."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:SPOTIFY_ACCESS_TOKEN|OAuth access token from Spotify Developer Dashboard."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Get Playlist",
+        "de": "Playlist abrufen"
+      },
+      "destination": {
+        "url": "https://api.spotify.com/v1/playlists/{{ID}}",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Playlist ID",
+          "as": "ID",
+          "description": {
+            "en": "The Spotify ID for the playlist."
+          },
+          "bot": "The Spotify playlist ID. You can get this from search results or a Spotify URL.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:ID"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "NAME": "out.name",
+    "DESCRIPTION": "out.description",
+    "OWNER": "out.owner.display_name",
+    "TOTAL_TRACKS": "out.tracks.total",
+    "URL": "out.external_urls.spotify",
+    "TRACKS": "out.tracks.items"
+  },
+  "messages": {
+    "success": {
+      "en": "Playlist: {{NAME}} by {{OWNER}} ({{TOTAL_TRACKS}} tracks). {{URL}}",
+      "de": "Playlist: {{NAME}} von {{OWNER}} ({{TOTAL_TRACKS}} Tracks). {{URL}}"
+    }
+  }
+}

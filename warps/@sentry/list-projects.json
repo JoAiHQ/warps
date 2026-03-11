@@ -1,0 +1,55 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Sentry: List Projects",
+  "title": {
+    "en": "List projects in an organization",
+    "de": "Projekte einer Organisation auflisten"
+  },
+  "description": {
+    "en": "List all projects in a Sentry organization.",
+    "de": "Alle Projekte in einer Sentry-Organisation auflisten."
+  },
+  "vars": {
+    "AUTH_TOKEN": "env:SENTRY_AUTH_TOKEN|Get your auth token from https://sentry.io/settings/auth-tokens/"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "List Projects",
+        "de": "Projekte auflisten"
+      },
+      "destination": {
+        "url": "INJECT:API_ORGS/{{ORG_SLUG}}/projects/",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{AUTH_TOKEN}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Organization Slug",
+          "as": "ORG_SLUG",
+          "description": {
+            "en": "The slug of the organization to list projects from."
+          },
+          "bot": "The Sentry organization slug. You can find this in your Sentry URL: https://sentry.io/organizations/{org_slug}/",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:ORG_SLUG"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "PROJECTS": "out",
+    "COUNT": "out.length"
+  },
+  "messages": {
+    "success": {
+      "en": "Found {{COUNT}} project(s).",
+      "de": "{{COUNT}} Projekt(e) gefunden."
+    }
+  }
+}

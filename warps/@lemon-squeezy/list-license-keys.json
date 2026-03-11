@@ -1,0 +1,53 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Lemon Squeezy: List License Keys",
+  "title": {
+    "en": "List license keys",
+    "de": "Lizenzschlüssel auflisten"
+  },
+  "description": {
+    "en": "Retrieve a list of license keys from your Lemon Squeezy store.",
+    "de": "Rufe eine Liste von Lizenzschlüsseln aus deinem Lemon Squeezy Store ab."
+  },
+  "vars": {
+    "API_KEY": "env:LEMON_SQUEEZY_API_KEY|Get your API key from https://app.lemonsqueezy.com/settings/api"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "List License Keys",
+      "destination": {
+        "url": "INJECT:API_LICENSE_KEYS",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{API_KEY}}",
+          "Accept": "application/vnd.api+json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Store ID",
+          "as": "store_id",
+          "description": {
+            "en": "Filter license keys by store ID."
+          },
+          "bot": "Filter license keys by a specific store ID.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "query:filter[store_id]"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "LICENSE_KEYS": "out.data",
+    "COUNT": "out.meta.page.total"
+  },
+  "messages": {
+    "success": {
+      "en": "Found {{COUNT}} license key(s).",
+      "de": "{{COUNT}} Lizenzschlüssel gefunden."
+    }
+  }
+}

@@ -1,0 +1,70 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Google Sheets: Add Sheet",
+  "title": {
+    "en": "Add a sheet tab",
+    "de": "Ein Tabellenblatt hinzufügen"
+  },
+  "description": {
+    "en": "Add a new sheet tab to a Google Sheets spreadsheet.",
+    "de": "Füge ein neues Tabellenblatt zu einer Google Sheets-Tabelle hinzu."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:GOOGLE_SHEETS_ACCESS_TOKEN|OAuth 2.0 access token with https://www.googleapis.com/auth/spreadsheets scope."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Add Sheet",
+      "destination": {
+        "url": "https://sheets.googleapis.com/v4/spreadsheets/{{SPREADSHEET_ID}}:batchUpdate",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Spreadsheet ID",
+          "as": "SPREADSHEET_ID",
+          "description": {
+            "en": "The ID of the spreadsheet."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:SPREADSHEET_ID"
+        },
+        {
+          "name": "Sheet Title",
+          "as": "SHEET_TITLE",
+          "description": {
+            "en": "The title for the new sheet tab."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Requests",
+          "as": "requests",
+          "type": "string",
+          "source": "hidden",
+          "position": "payload:requests",
+          "default": "[{\"addSheet\": {\"properties\": {\"title\": \"{{SHEET_TITLE}}\"}}}]"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "SHEET_ID": "out.replies[0].addSheet.properties.sheetId",
+    "SHEET_TITLE": "out.replies[0].addSheet.properties.title"
+  },
+  "messages": {
+    "success": {
+      "en": "Sheet '{{SHEET_TITLE}}' added.",
+      "de": "Blatt '{{SHEET_TITLE}}' hinzugefügt."
+    }
+  }
+}

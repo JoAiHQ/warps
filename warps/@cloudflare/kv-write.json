@@ -1,0 +1,74 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Cloudflare: KV Write",
+  "title": {
+    "en": "Write KV value",
+    "de": "KV-Wert schreiben"
+  },
+  "description": {
+    "en": "Write a value to a Cloudflare Workers KV namespace.",
+    "de": "Einen Wert in einen Cloudflare Workers KV-Namespace schreiben."
+  },
+  "vars": {
+    "API_TOKEN": "env:CLOUDFLARE_API_TOKEN|Get your API token from Cloudflare Dashboard > My Profile > API Tokens.",
+    "ACCOUNT_ID": "env:CLOUDFLARE_ACCOUNT_ID|Your Cloudflare Account ID from the dashboard overview page."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Write Value",
+      "destination": {
+        "url": "https://api.cloudflare.com/client/v4/accounts/{{ACCOUNT_ID}}/storage/kv/namespaces/{{NAMESPACE_ID}}/values/{{KEY}}",
+        "method": "PUT",
+        "headers": {
+          "Authorization": "Bearer {{API_TOKEN}}",
+          "Content-Type": "text/plain"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Namespace ID",
+          "as": "NAMESPACE_ID",
+          "description": {
+            "en": "The KV namespace ID."
+          },
+          "bot": "The KV namespace ID.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:NAMESPACE_ID"
+        },
+        {
+          "name": "Key",
+          "as": "KEY",
+          "description": {
+            "en": "The key to write."
+          },
+          "bot": "The key name to write to.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:KEY"
+        },
+        {
+          "name": "Value",
+          "as": "value",
+          "description": {
+            "en": "The value to store."
+          },
+          "bot": "The value to store. Can be any string or JSON.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "body"
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Value written successfully.",
+      "de": "Wert erfolgreich geschrieben."
+    }
+  }
+}

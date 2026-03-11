@@ -1,0 +1,65 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "X: Get User",
+  "title": {
+    "en": "Get user profile",
+    "de": "Benutzerprofil abrufen"
+  },
+  "description": {
+    "en": "Get a user's profile information from X.com by username.",
+    "de": "Profilinformationen eines Benutzers von X.com anhand des Benutzernamens abrufen."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:X_ACCESS_TOKEN|OAuth 2.0 access token from the X Developer Portal."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Get User",
+      "destination": {
+        "url": "https://api.x.com/2/users/by/username/{{USERNAME}}",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Username",
+          "as": "USERNAME",
+          "description": {
+            "en": "The X username (without @)."
+          },
+          "bot": "The X/Twitter username without the @ symbol.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:USERNAME"
+        },
+        {
+          "name": "User Fields",
+          "as": "userFields",
+          "type": "string",
+          "source": "hidden",
+          "position": "query:user.fields",
+          "default": "id,name,username,description,public_metrics,profile_image_url,created_at"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "USER_ID": "out.data.id",
+    "NAME": "out.data.name",
+    "USERNAME": "out.data.username",
+    "DESCRIPTION": "out.data.description",
+    "FOLLOWERS": "out.data.public_metrics.followers_count",
+    "FOLLOWING": "out.data.public_metrics.following_count",
+    "TWEET_COUNT": "out.data.public_metrics.tweet_count"
+  },
+  "messages": {
+    "success": {
+      "en": "@{{USERNAME}} ({{NAME}}): {{FOLLOWERS}} followers, {{TWEET_COUNT}} tweets.",
+      "de": "@{{USERNAME}} ({{NAME}}): {{FOLLOWERS}} Follower, {{TWEET_COUNT}} Tweets."
+    }
+  }
+}

@@ -7,7 +7,7 @@ export const brand = async (config: WarpClientConfig): Promise<WarpbaseBrand> =>
     .setDescription(
       'MultiversX, the EGLD network, is a distributed blockchain network for next-gen applications. Decentralized via 3,000+ nodes, scalable through sharding, fast, secure & green.'
     )
-    .setLogo('https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/multiversx.svg')
+    .setLogo('https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/chains/logos/multiversx.svg')
     .setColors({ primary: '#22F7DD' })
     .setUrls({ web: 'https://multiversx.com' })
     .build(),

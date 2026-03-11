@@ -1,0 +1,81 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Cal.com: Reschedule Booking",
+  "title": {
+    "en": "Reschedule a booking",
+    "de": "Eine Buchung verschieben"
+  },
+  "description": {
+    "en": "Reschedule an existing Cal.com booking to a new time slot.",
+    "de": "Eine bestehende Cal.com-Buchung auf einen neuen Zeitslot verschieben."
+  },
+  "vars": {
+    "API_KEY": "env:CAL_COM_API_KEY|Get your API key from Cal.com Settings > Developer > API Keys at https://app.cal.com/settings/developer/api-keys"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Reschedule Booking",
+      "destination": {
+        "url": "INJECT:API_BOOKINGS/{{bookingUid}}/reschedule",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{API_KEY}}",
+          "Content-Type": "application/json",
+          "cal-api-version": "2024-08-13"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Booking UID",
+          "as": "bookingUid",
+          "description": {
+            "en": "The unique identifier of the booking to reschedule.",
+            "de": "Die eindeutige Kennung der zu verschiebenden Buchung."
+          },
+          "bot": "The unique identifier (UID) of the booking to reschedule. Get this from the list bookings warp.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:bookingUid"
+        },
+        {
+          "name": "New Start Time",
+          "as": "start",
+          "description": {
+            "en": "New start time in ISO 8601 UTC format (e.g., '2024-08-13T10:00:00Z').",
+            "de": "Neue Startzeit im ISO 8601 UTC-Format (z.B. '2024-08-13T10:00:00Z')."
+          },
+          "bot": "The new start time for the booking in ISO 8601 UTC format, e.g. '2024-08-13T10:00:00Z'. Must be an available slot.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:start"
+        },
+        {
+          "name": "Reschedule Reason",
+          "as": "reschedulingReason",
+          "description": {
+            "en": "Optional reason for rescheduling the booking.",
+            "de": "Optionaler Grund für die Verschiebung der Buchung."
+          },
+          "bot": "An optional reason explaining why the booking is being rescheduled.",
+          "type": "string",
+          "source": "field",
+          "position": "payload:reschedulingReason"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "BOOKING_UID": "out.data.uid",
+    "BOOKING_STATUS": "out.data.status",
+    "MEETING_URL": "out.data.meetingUrl"
+  },
+  "messages": {
+    "success": {
+      "en": "Booking rescheduled successfully! New booking ID: {{BOOKING_UID}}",
+      "de": "Buchung erfolgreich verschoben! Neue Buchungs-ID: {{BOOKING_UID}}"
+    }
+  }
+}

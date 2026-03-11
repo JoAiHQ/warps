@@ -1,0 +1,46 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Spotify: Get Currently Playing",
+  "title": {
+    "en": "Get currently playing track",
+    "de": "Aktuell spielenden Track abrufen"
+  },
+  "description": {
+    "en": "Get the track currently playing on the user's Spotify account.",
+    "de": "Erhalte den aktuell spielenden Track auf dem Spotify-Konto des Benutzers."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:SPOTIFY_ACCESS_TOKEN|OAuth access token with 'user-read-currently-playing' scope."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Get Currently Playing",
+        "de": "Aktuellen Track abrufen"
+      },
+      "destination": {
+        "url": "https://api.spotify.com/v1/me/player/currently-playing",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}"
+        }
+      },
+      "inputs": []
+    }
+  ],
+  "output": {
+    "IS_PLAYING": "out.is_playing",
+    "TRACK_NAME": "out.item.name",
+    "ARTIST": "out.item.artists.0.name",
+    "ALBUM": "out.item.album.name",
+    "URL": "out.item.external_urls.spotify",
+    "PROGRESS_MS": "out.progress_ms"
+  },
+  "messages": {
+    "success": {
+      "en": "Now playing: {{TRACK_NAME}} by {{ARTIST}} from {{ALBUM}}. {{URL}}",
+      "de": "Spielt gerade: {{TRACK_NAME}} von {{ARTIST}} aus {{ALBUM}}. {{URL}}"
+    }
+  }
+}

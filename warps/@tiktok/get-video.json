@@ -1,0 +1,67 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "TikTok: Get Video Details",
+  "title": {
+    "en": "Get video details",
+    "de": "Videodetails abrufen"
+  },
+  "description": {
+    "en": "Get details of specific TikTok videos by their IDs.",
+    "de": "Rufe Details bestimmter TikTok-Videos anhand ihrer IDs ab."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:TIKTOK_ACCESS_TOKEN|TikTok user access token with video.list scope."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Get Video",
+      "destination": {
+        "url": "https://open.tiktokapis.com/v2/video/query/",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Video IDs",
+          "as": "VIDEO_IDS",
+          "description": {
+            "en": "JSON array of video IDs (max 20)."
+          },
+          "bot": "JSON array of video ID strings: [\"7123456789\", \"7987654321\"]",
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Filters",
+          "as": "filters",
+          "type": "string",
+          "source": "hidden",
+          "position": "payload:filters",
+          "default": "{\"video_ids\": {{VIDEO_IDS}}}"
+        },
+        {
+          "name": "Fields",
+          "as": "fields",
+          "type": "string",
+          "source": "hidden",
+          "position": "query:fields",
+          "default": "id,title,video_description,duration,cover_image_url,share_url,like_count,comment_count,share_count,view_count,create_time"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "VIDEOS": "out.data.videos"
+  },
+  "messages": {
+    "success": {
+      "en": "Retrieved video details.",
+      "de": "Videodetails abgerufen."
+    }
+  }
+}

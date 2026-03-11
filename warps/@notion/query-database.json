@@ -1,0 +1,81 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Notion: Query Database",
+  "title": {
+    "en": "Query a database",
+    "de": "Datenbank abfragen"
+  },
+  "description": {
+    "en": "Query a Notion database with optional filters and sorting.",
+    "de": "Eine Notion-Datenbank mit optionalen Filtern und Sortierung abfragen."
+  },
+  "vars": {
+    "API_KEY": "env:NOTION_API_KEY|Get your API key from Notion Integrations at https://www.notion.so/my-integrations"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Query Database",
+        "de": "Datenbank abfragen"
+      },
+      "destination": {
+        "url": "https://api.notion.com/v1/databases/{{DATABASE_ID}}/query",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{API_KEY}}",
+          "Content-Type": "application/json",
+          "Notion-Version": "2022-06-28"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Database ID",
+          "as": "DATABASE_ID",
+          "description": {
+            "en": "The ID of the Notion database to query."
+          },
+          "bot": "The Notion database ID. You can find this in the database URL or via the search warp.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:DATABASE_ID"
+        },
+        {
+          "name": "Filter",
+          "as": "filter",
+          "description": {
+            "en": "JSON filter object. See Notion API docs for filter structure."
+          },
+          "bot": "Optional JSON filter object. Example: {\"property\": \"Status\", \"select\": {\"equals\": \"Done\"}}",
+          "type": "string",
+          "source": "field",
+          "position": "payload:filter"
+        },
+        {
+          "name": "Page Size",
+          "as": "page_size",
+          "description": {
+            "en": "Number of results to return (max 100)."
+          },
+          "type": "number",
+          "source": "field",
+          "position": "payload:page_size",
+          "default": "100"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "RESULTS": "out.results",
+    "COUNT": "out.results.length",
+    "HAS_MORE": "out.has_more",
+    "NEXT_CURSOR": "out.next_cursor"
+  },
+  "messages": {
+    "success": {
+      "en": "Found {{COUNT}} result(s).",
+      "de": "{{COUNT}} Ergebnis(se) gefunden."
+    }
+  }
+}

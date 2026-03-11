@@ -1,0 +1,87 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Google Sheets: Update Values",
+  "title": {
+    "en": "Update sheet values",
+    "de": "Tabellenwerte aktualisieren"
+  },
+  "description": {
+    "en": "Write values to a specific range in a Google Sheet.",
+    "de": "Schreibe Werte in einen bestimmten Bereich eines Google Sheets."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:GOOGLE_SHEETS_ACCESS_TOKEN|OAuth 2.0 access token with https://www.googleapis.com/auth/spreadsheets scope."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Update Values",
+      "destination": {
+        "url": "https://sheets.googleapis.com/v4/spreadsheets/{{SPREADSHEET_ID}}/values/{{RANGE}}",
+        "method": "PUT",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Spreadsheet ID",
+          "as": "SPREADSHEET_ID",
+          "description": {
+            "en": "The ID of the spreadsheet."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:SPREADSHEET_ID"
+        },
+        {
+          "name": "Range",
+          "as": "RANGE",
+          "description": {
+            "en": "The A1 notation of the range to update (e.g., 'Sheet1!A1:C3')."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:RANGE"
+        },
+        {
+          "name": "Values",
+          "as": "values",
+          "description": {
+            "en": "JSON array of arrays of strings/numbers to write."
+          },
+          "bot": "JSON array of arrays: [[\"Name\", \"Age\"], [\"Alice\", 30]]",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:values"
+        },
+        {
+          "name": "Value Input Option",
+          "as": "valueInputOption",
+          "description": {
+            "en": "How the input data should be interpreted (RAW or USER_ENTERED)."
+          },
+          "type": "string",
+          "source": "hidden",
+          "position": "query:valueInputOption",
+          "default": "USER_ENTERED"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "UPDATED_RANGE": "out.updatedRange",
+    "UPDATED_ROWS": "out.updatedRows",
+    "UPDATED_CELLS": "out.updatedCells"
+  },
+  "messages": {
+    "success": {
+      "en": "Updated {{UPDATED_CELLS}} cell(s) in {{UPDATED_RANGE}}.",
+      "de": "{{UPDATED_CELLS}} Zelle(n) in {{UPDATED_RANGE}} aktualisiert."
+    }
+  }
+}

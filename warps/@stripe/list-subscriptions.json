@@ -1,0 +1,72 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Stripe: List Subscriptions",
+  "title": {
+    "en": "List subscriptions",
+    "de": "Abonnements auflisten"
+  },
+  "description": {
+    "en": "List active subscriptions in your Stripe account.",
+    "de": "Aktive Abonnements in Ihrem Stripe-Konto auflisten."
+  },
+  "vars": {
+    "API_KEY": "env:STRIPE_SECRET_KEY|Get your Secret Key from Stripe Dashboard."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "List Subscriptions",
+      "destination": {
+        "url": "https://api.stripe.com/v1/subscriptions",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{API_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Limit",
+          "as": "limit",
+          "description": {
+            "en": "Number of subscriptions to return (max 100)."
+          },
+          "type": "number",
+          "source": "field",
+          "position": "query:limit",
+          "default": "25"
+        },
+        {
+          "name": "Customer",
+          "as": "customer",
+          "description": {
+            "en": "Filter by customer ID."
+          },
+          "type": "string",
+          "source": "field",
+          "position": "query:customer"
+        },
+        {
+          "name": "Status",
+          "as": "status",
+          "description": {
+            "en": "Filter by status: 'active', 'past_due', 'canceled', 'unpaid', 'trialing', or 'all'."
+          },
+          "bot": "Filter by subscription status. Options: active, past_due, canceled, unpaid, trialing, all.",
+          "type": "string",
+          "source": "field",
+          "position": "query:status"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "SUBSCRIPTIONS": "out.data",
+    "HAS_MORE": "out.has_more"
+  },
+  "messages": {
+    "success": {
+      "en": "Subscriptions retrieved.",
+      "de": "Abonnements abgerufen."
+    }
+  }
+}

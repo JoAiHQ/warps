@@ -1,0 +1,39 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Airtable: List Bases",
+  "title": {
+    "en": "List bases",
+    "de": "Bases auflisten"
+  },
+  "description": {
+    "en": "List all Airtable bases accessible to the token.",
+    "de": "Liste alle Airtable-Bases auf, auf die der Token Zugriff hat."
+  },
+  "vars": {
+    "API_KEY": "env:AIRTABLE_API_KEY|Your Airtable Personal Access Token."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "List Bases",
+      "destination": {
+        "url": "https://api.airtable.com/v0/meta/bases",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{API_KEY}}"
+        }
+      },
+      "inputs": []
+    }
+  ],
+  "output": {
+    "BASES": "out.bases",
+    "COUNT": "transform:() => { return Array.isArray(out.bases) ? out.bases.length : 0; }"
+  },
+  "messages": {
+    "success": {
+      "en": "Found {{COUNT}} base(s).",
+      "de": "{{COUNT}} Base(s) gefunden."
+    }
+  }
+}

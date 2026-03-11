@@ -1,0 +1,55 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "TikTok: Get User Info",
+  "title": {
+    "en": "Get user profile",
+    "de": "Benutzerprofil abrufen"
+  },
+  "description": {
+    "en": "Get profile information for the authenticated TikTok user.",
+    "de": "Rufe Profilinformationen des authentifizierten TikTok-Benutzers ab."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:TIKTOK_ACCESS_TOKEN|TikTok user access token with user.info.basic scope."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Get User Info",
+      "destination": {
+        "url": "https://open.tiktokapis.com/v2/user/info/",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Fields",
+          "as": "fields",
+          "type": "string",
+          "source": "hidden",
+          "position": "query:fields",
+          "default": "open_id,display_name,avatar_url,bio_description,profile_deep_link,is_verified,username,follower_count,following_count,likes_count,video_count"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "USERNAME": "out.data.user.username",
+    "DISPLAY_NAME": "out.data.user.display_name",
+    "BIO": "out.data.user.bio_description",
+    "FOLLOWERS": "out.data.user.follower_count",
+    "FOLLOWING": "out.data.user.following_count",
+    "LIKES": "out.data.user.likes_count",
+    "VIDEOS": "out.data.user.video_count",
+    "AVATAR": "out.data.user.avatar_url",
+    "VERIFIED": "out.data.user.is_verified"
+  },
+  "messages": {
+    "success": {
+      "en": "@{{USERNAME}} — {{FOLLOWERS}} followers, {{VIDEOS}} videos.",
+      "de": "@{{USERNAME}} — {{FOLLOWERS}} Follower, {{VIDEOS}} Videos."
+    }
+  }
+}

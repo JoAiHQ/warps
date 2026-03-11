@@ -1,0 +1,74 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "LinkedIn: List Posts",
+  "title": {
+    "en": "List posts",
+    "de": "Beiträge auflisten"
+  },
+  "description": {
+    "en": "List recent posts by the authenticated LinkedIn user.",
+    "de": "Aktuelle Beiträge des authentifizierten LinkedIn-Benutzers auflisten."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:LINKEDIN_ACCESS_TOKEN|Your LinkedIn OAuth 2.0 Access Token with w_member_social scope."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "List Posts",
+      "destination": {
+        "url": "https://api.linkedin.com/rest/posts",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}",
+          "LinkedIn-Version": "202401",
+          "X-Restli-Protocol-Version": "2.0.0",
+          "X-RestLi-Method": "FINDER"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Author URN",
+          "as": "author",
+          "description": {
+            "en": "The author URN (e.g., 'urn:li:person:12345')."
+          },
+          "bot": "The LinkedIn person URN of the author, e.g. 'urn:li:person:12345'. Get this from the get-profile warp.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "query:author"
+        },
+        {
+          "name": "Count",
+          "as": "count",
+          "description": {
+            "en": "Number of posts to return."
+          },
+          "type": "number",
+          "source": "field",
+          "position": "query:count",
+          "default": "20"
+        },
+        {
+          "name": "Sort By",
+          "as": "q",
+          "type": "string",
+          "source": "hidden",
+          "position": "query:q",
+          "default": "author"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "POSTS": "out.elements",
+    "COUNT": "out.elements.length"
+  },
+  "messages": {
+    "success": {
+      "en": "Retrieved {{COUNT}} post(s).",
+      "de": "{{COUNT}} Beitrag/Beiträge abgerufen."
+    }
+  }
+}

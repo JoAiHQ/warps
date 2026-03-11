@@ -1,0 +1,53 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Threads: Get Insights",
+  "title": {
+    "en": "Get account insights",
+    "de": "Konto-Einblicke abrufen"
+  },
+  "description": {
+    "en": "Get insights and metrics for your Threads account.",
+    "de": "Einblicke und Metriken für dein Threads-Konto abrufen."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:THREADS_ACCESS_TOKEN|Get your access token from Meta Developer Portal"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Get Insights",
+      "destination": {
+        "url": "INJECT:API_INSIGHTS",
+        "method": "GET",
+        "headers": {}
+      },
+      "inputs": [
+        {
+          "name": "Metric",
+          "as": "metric",
+          "type": "string",
+          "source": "hidden",
+          "default": "views,likes,replies,reposts,quotes",
+          "position": "query:metric"
+        },
+        {
+          "name": "Access Token",
+          "as": "access_token",
+          "type": "string",
+          "source": "hidden",
+          "default": "{{ACCESS_TOKEN}}",
+          "position": "query:access_token"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "INSIGHTS": "out.data"
+  },
+  "messages": {
+    "success": {
+      "en": "Account insights retrieved successfully.",
+      "de": "Konto-Einblicke erfolgreich abgerufen."
+    }
+  }
+}

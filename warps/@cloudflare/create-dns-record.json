@@ -1,0 +1,114 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Cloudflare: Create DNS Record",
+  "title": {
+    "en": "Create DNS record",
+    "de": "DNS-Eintrag erstellen"
+  },
+  "description": {
+    "en": "Create a new DNS record in a Cloudflare zone.",
+    "de": "Einen neuen DNS-Eintrag in einer Cloudflare-Zone erstellen."
+  },
+  "vars": {
+    "API_TOKEN": "env:CLOUDFLARE_API_TOKEN|Get your API token from Cloudflare Dashboard > My Profile > API Tokens."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Create Record",
+      "destination": {
+        "url": "https://api.cloudflare.com/client/v4/zones/{{ZONE_ID}}/dns_records",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{API_TOKEN}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Zone ID",
+          "as": "ZONE_ID",
+          "description": {
+            "en": "The zone ID."
+          },
+          "bot": "The Cloudflare zone ID.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:ZONE_ID"
+        },
+        {
+          "name": "Type",
+          "as": "type",
+          "description": {
+            "en": "Record type: A, AAAA, CNAME, MX, TXT, etc."
+          },
+          "bot": "The DNS record type, e.g. 'A', 'CNAME', 'TXT', 'MX'.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:type"
+        },
+        {
+          "name": "Name",
+          "as": "name",
+          "description": {
+            "en": "DNS record name (e.g., 'example.com' or 'sub.example.com')."
+          },
+          "bot": "The DNS record name. Use '@' for the root domain.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:name"
+        },
+        {
+          "name": "Content",
+          "as": "content",
+          "description": {
+            "en": "Record content (e.g., IP address for A record, domain for CNAME)."
+          },
+          "bot": "The record value. For A records: an IP address. For CNAME: a domain. For TXT: the text value.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:content"
+        },
+        {
+          "name": "Proxied",
+          "as": "proxied",
+          "description": {
+            "en": "Whether the record is proxied through Cloudflare (true/false)."
+          },
+          "bot": "Set to true to proxy traffic through Cloudflare (orange cloud). false for DNS-only (grey cloud).",
+          "type": "bool",
+          "source": "field",
+          "position": "payload:proxied",
+          "default": "false"
+        },
+        {
+          "name": "TTL",
+          "as": "ttl",
+          "description": {
+            "en": "TTL in seconds (1 = automatic)."
+          },
+          "type": "number",
+          "source": "field",
+          "position": "payload:ttl",
+          "default": "1"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "RECORD_ID": "out.result.id",
+    "NAME": "out.result.name",
+    "TYPE": "out.result.type",
+    "CONTENT": "out.result.content"
+  },
+  "messages": {
+    "success": {
+      "en": "DNS record created: {{TYPE}} {{NAME}} → {{CONTENT}}",
+      "de": "DNS-Eintrag erstellt: {{TYPE}} {{NAME}} → {{CONTENT}}"
+    }
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Instagram: List Media Comments",
+  "title": {
+    "en": "List comments on a post",
+    "de": "Kommentare eines Beitrags auflisten"
+  },
+  "description": {
+    "en": "List comments on an Instagram media post.",
+    "de": "Liste die Kommentare eines Instagram-Beitrags auf."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:INSTAGRAM_ACCESS_TOKEN|Instagram Graph API access token with instagram_manage_comments permission."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "List Comments",
+      "destination": {
+        "url": "https://graph.instagram.com/v21.0/{{MEDIA_ID}}/comments",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Media ID",
+          "as": "MEDIA_ID",
+          "description": {
+            "en": "The ID of the Instagram media post."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:MEDIA_ID"
+        },
+        {
+          "name": "Fields",
+          "as": "fields",
+          "type": "string",
+          "source": "hidden",
+          "position": "query:fields",
+          "default": "id,text,username,timestamp,like_count,replies{id,text,username,timestamp}"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "COMMENTS": "out.data"
+  },
+  "messages": {
+    "success": {
+      "en": "Retrieved comments.",
+      "de": "Kommentare abgerufen."
+    }
+  }
+}

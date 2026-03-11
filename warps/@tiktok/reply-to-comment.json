@@ -1,0 +1,84 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "TikTok: Reply to Comment",
+  "title": {
+    "en": "Reply to a comment",
+    "de": "Auf einen Kommentar antworten"
+  },
+  "description": {
+    "en": "Reply to a comment on a TikTok video. Requires Business API access.",
+    "de": "Antworte auf einen Kommentar eines TikTok-Videos. Erfordert Business API-Zugang."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:TIKTOK_ACCESS_TOKEN|TikTok Business API access token."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Reply to Comment",
+      "destination": {
+        "url": "https://business-api.tiktok.com/open_api/v1.3/business/comment/reply/",
+        "method": "POST",
+        "headers": {
+          "Access-Token": "{{ACCESS_TOKEN}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Business ID",
+          "as": "business_id",
+          "description": {
+            "en": "Your TikTok Business Account ID."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:business_id"
+        },
+        {
+          "name": "Video ID",
+          "as": "video_id",
+          "description": {
+            "en": "The ID of the TikTok video."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:video_id"
+        },
+        {
+          "name": "Comment ID",
+          "as": "comment_id",
+          "description": {
+            "en": "The ID of the comment to reply to."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:comment_id"
+        },
+        {
+          "name": "Text",
+          "as": "text",
+          "description": {
+            "en": "The reply text."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:text"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "COMMENT_ID": "out.data.comment_id"
+  },
+  "messages": {
+    "success": {
+      "en": "Reply posted.",
+      "de": "Antwort veröffentlicht."
+    }
+  }
+}

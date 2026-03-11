@@ -6,25 +6,41 @@
     "de": "Dateien nach Name suchen"
   },
   "description": {
-    "en": "Find files matching a name pattern.",
-    "de": "Dateien finden, die einem Namensmuster entsprechen."
+    "en": "Search for files matching a name pattern in a directory.",
+    "de": "Nach Dateien suchen, die einem Namensmuster in einem Verzeichnis entsprechen."
   },
   "actions": [
     {
       "type": "prompt",
       "label": {
         "en": "Find Files",
-        "de": "Dateien suchen"
+        "de": "Dateien finden"
       },
-      "prompt": "/find . -name \"{{PATTERN}}\"",
+      "prompt": {
+        "macos": "/find \"{{PATH}}\" -iname \"{{PATTERN}}\"",
+        "linux": "/find \"{{PATH}}\" -iname \"{{PATTERN}}\"",
+        "windows": "/dir /S /B \"{{PATH}}\\{{PATTERN}}\""
+      },
       "inputs": [
         {
           "name": "Pattern",
           "as": "PATTERN",
           "description": {
-            "en": "The file name pattern to search for",
-            "de": "Das Dateinamensmuster zum Suchen"
+            "en": "The filename pattern to search for (e.g. *.pdf, report*)",
+            "de": "Das Dateinamensmuster (z.B. *.pdf, bericht*)"
           },
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Path",
+          "as": "PATH",
+          "description": {
+            "en": "The directory to search in",
+            "de": "Das zu durchsuchende Verzeichnis"
+          },
+          "bot": "The directory to search in. Default to the user's home directory if not specified.",
           "type": "string",
           "source": "field",
           "required": true

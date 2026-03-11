@@ -1,0 +1,67 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Gmail: Get Message",
+  "title": {
+    "en": "Get email details",
+    "de": "E-Mail-Details abrufen"
+  },
+  "description": {
+    "en": "Get the full content and headers of a specific Gmail message.",
+    "de": "Den vollständigen Inhalt und die Header einer bestimmten Gmail-Nachricht abrufen."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:GMAIL_ACCESS_TOKEN|OAuth 2.0 access token with https://www.googleapis.com/auth/gmail.readonly scope."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Get Message",
+      "destination": {
+        "url": "https://gmail.googleapis.com/gmail/v1/users/me/messages/{{MESSAGE_ID}}",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Message ID",
+          "as": "MESSAGE_ID",
+          "description": {
+            "en": "The ID of the message to retrieve."
+          },
+          "bot": "The Gmail message ID. Get this from the list-messages warp.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:MESSAGE_ID"
+        },
+        {
+          "name": "Format",
+          "as": "format",
+          "description": {
+            "en": "Response format: 'full', 'metadata', 'minimal', or 'raw'."
+          },
+          "type": "string",
+          "source": "field",
+          "position": "query:format",
+          "default": "full"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "MESSAGE_ID": "out.id",
+    "THREAD_ID": "out.threadId",
+    "SNIPPET": "out.snippet",
+    "HEADERS": "out.payload.headers",
+    "LABELS": "out.labelIds",
+    "BODY": "out.payload"
+  },
+  "messages": {
+    "success": {
+      "en": "Message retrieved: {{SNIPPET}}",
+      "de": "Nachricht abgerufen: {{SNIPPET}}"
+    }
+  }
+}

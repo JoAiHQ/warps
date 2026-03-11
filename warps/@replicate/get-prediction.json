@@ -1,0 +1,55 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Replicate: Get Prediction",
+  "title": {
+    "en": "Get prediction status",
+    "de": "Vorhersagestatus abrufen"
+  },
+  "description": {
+    "en": "Check the status and results of a Replicate prediction.",
+    "de": "Status und Ergebnisse einer Replicate-Vorhersage prüfen."
+  },
+  "vars": {
+    "API_TOKEN": "env:REPLICATE_API_TOKEN|Get your API token from https://replicate.com/account/api-tokens"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Get Prediction",
+      "destination": {
+        "url": "INJECT:API_PREDICTIONS/{{PREDICTION_ID}}",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{API_TOKEN}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Prediction ID",
+          "as": "PREDICTION_ID",
+          "description": {
+            "en": "The ID of the prediction to check."
+          },
+          "bot": "The prediction ID returned from the run-model warp.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:PREDICTION_ID"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "ID": "out.id",
+    "STATUS": "out.status",
+    "OUTPUT": "out.output",
+    "ERROR": "out.error",
+    "METRICS": "out.metrics"
+  },
+  "messages": {
+    "success": {
+      "en": "Prediction {{ID}}: {{STATUS}}",
+      "de": "Vorhersage {{ID}}: {{STATUS}}"
+    }
+  }
+}

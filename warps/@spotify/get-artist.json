@@ -1,0 +1,59 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Spotify: Get Artist",
+  "title": {
+    "en": "Get artist",
+    "de": "Künstler abrufen"
+  },
+  "description": {
+    "en": "Get detailed information about an artist on Spotify.",
+    "de": "Erhalte detaillierte Informationen über einen Künstler auf Spotify."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:SPOTIFY_ACCESS_TOKEN|OAuth access token from Spotify Developer Dashboard."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Get Artist",
+        "de": "Künstler abrufen"
+      },
+      "destination": {
+        "url": "https://api.spotify.com/v1/artists/{{ID}}",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Artist ID",
+          "as": "ID",
+          "description": {
+            "en": "The Spotify ID for the artist."
+          },
+          "bot": "The Spotify artist ID. You can get this from search results or a Spotify URL.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:ID"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "NAME": "out.name",
+    "GENRES": "out.genres",
+    "FOLLOWERS": "out.followers.total",
+    "POPULARITY": "out.popularity",
+    "URL": "out.external_urls.spotify",
+    "IMAGE": "out.images.0.url"
+  },
+  "messages": {
+    "success": {
+      "en": "Artist: {{NAME}} ({{FOLLOWERS}} followers). {{URL}}",
+      "de": "Künstler: {{NAME}} ({{FOLLOWERS}} Follower). {{URL}}"
+    }
+  }
+}

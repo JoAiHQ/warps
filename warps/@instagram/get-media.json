@@ -1,0 +1,64 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Instagram: Get Media",
+  "title": {
+    "en": "Get media details",
+    "de": "Beitragsdetails abrufen"
+  },
+  "description": {
+    "en": "Get details of a specific Instagram media post.",
+    "de": "Rufe Details eines bestimmten Instagram-Beitrags ab."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:INSTAGRAM_ACCESS_TOKEN|Instagram Graph API access token with instagram_business_basic permission."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Get Media",
+      "destination": {
+        "url": "https://graph.instagram.com/v21.0/{{MEDIA_ID}}",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Media ID",
+          "as": "MEDIA_ID",
+          "description": {
+            "en": "The ID of the Instagram media post."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:MEDIA_ID"
+        },
+        {
+          "name": "Fields",
+          "as": "fields",
+          "type": "string",
+          "source": "hidden",
+          "position": "query:fields",
+          "default": "id,caption,media_type,media_url,thumbnail_url,timestamp,permalink,like_count,comments_count,username"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "MEDIA_ID": "out.id",
+    "CAPTION": "out.caption",
+    "MEDIA_TYPE": "out.media_type",
+    "PERMALINK": "out.permalink",
+    "LIKE_COUNT": "out.like_count",
+    "COMMENTS_COUNT": "out.comments_count",
+    "TIMESTAMP": "out.timestamp"
+  },
+  "messages": {
+    "success": {
+      "en": "Media: {{CAPTION}}",
+      "de": "Beitrag: {{CAPTION}}"
+    }
+  }
+}

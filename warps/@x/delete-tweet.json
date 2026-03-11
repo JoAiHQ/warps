@@ -1,0 +1,51 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "X: Delete Tweet",
+  "title": {
+    "en": "Delete a tweet",
+    "de": "Einen Tweet löschen"
+  },
+  "description": {
+    "en": "Delete a tweet from X.com.",
+    "de": "Einen Tweet von X.com löschen."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:X_ACCESS_TOKEN|OAuth 2.0 user access token with tweet.write scope from the X Developer Portal."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Delete Tweet",
+      "destination": {
+        "url": "https://api.x.com/2/tweets/{{TWEET_ID}}",
+        "method": "DELETE",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Tweet ID",
+          "as": "TWEET_ID",
+          "description": {
+            "en": "The ID of the tweet to delete."
+          },
+          "bot": "The numeric ID of the tweet to delete.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:TWEET_ID"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "DELETED": "out.data.deleted"
+  },
+  "messages": {
+    "success": {
+      "en": "Tweet deleted.",
+      "de": "Tweet gelöscht."
+    }
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Stripe: List Customers",
+  "title": {
+    "en": "List customers",
+    "de": "Kunden auflisten"
+  },
+  "description": {
+    "en": "List customers in your Stripe account.",
+    "de": "Kunden in Ihrem Stripe-Konto auflisten."
+  },
+  "vars": {
+    "API_KEY": "env:STRIPE_SECRET_KEY|Get your Secret Key from Stripe Dashboard."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "List Customers",
+      "destination": {
+        "url": "https://api.stripe.com/v1/customers",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{API_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Limit",
+          "as": "limit",
+          "description": {
+            "en": "Number of customers to return (max 100)."
+          },
+          "type": "number",
+          "source": "field",
+          "position": "query:limit",
+          "default": "25"
+        },
+        {
+          "name": "Email",
+          "as": "email",
+          "description": {
+            "en": "Filter by customer email address."
+          },
+          "bot": "Optional email to filter customers by.",
+          "type": "string",
+          "source": "field",
+          "position": "query:email"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "CUSTOMERS": "out.data",
+    "HAS_MORE": "out.has_more"
+  },
+  "messages": {
+    "success": {
+      "en": "Customers retrieved.",
+      "de": "Kunden abgerufen."
+    }
+  }
+}

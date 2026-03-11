@@ -1,0 +1,87 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "TikTok: Publish Video",
+  "title": {
+    "en": "Publish a video from URL",
+    "de": "Video von URL veröffentlichen"
+  },
+  "description": {
+    "en": "Initiate publishing a TikTok video from a public URL. TikTok will pull and process the video.",
+    "de": "Starte die Veröffentlichung eines TikTok-Videos von einer öffentlichen URL. TikTok lädt und verarbeitet das Video."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:TIKTOK_ACCESS_TOKEN|TikTok user access token with video.publish scope."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Publish Video",
+      "destination": {
+        "url": "https://open.tiktokapis.com/v2/post/publish/video/init/",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}",
+          "Content-Type": "application/json; charset=UTF-8"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Title",
+          "as": "TITLE",
+          "description": {
+            "en": "Video caption with hashtags and mentions."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Video URL",
+          "as": "VIDEO_URL",
+          "description": {
+            "en": "Public URL of the video file."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Privacy Level",
+          "as": "PRIVACY",
+          "description": {
+            "en": "Privacy setting: PUBLIC_TO_EVERYONE, MUTUAL_FOLLOW_FRIENDS, FOLLOWER_OF_CREATOR, or SELF_ONLY."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "PUBLIC_TO_EVERYONE"
+        },
+        {
+          "name": "Post Info",
+          "as": "post_info",
+          "type": "string",
+          "source": "hidden",
+          "position": "payload:post_info",
+          "default": "{\"title\": \"{{TITLE}}\", \"privacy_level\": \"{{PRIVACY}}\", \"disable_comment\": false}"
+        },
+        {
+          "name": "Source Info",
+          "as": "source_info",
+          "type": "string",
+          "source": "hidden",
+          "position": "payload:source_info",
+          "default": "{\"source\": \"PULL_FROM_URL\", \"video_url\": \"{{VIDEO_URL}}\"}"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "PUBLISH_ID": "out.data.publish_id"
+  },
+  "messages": {
+    "success": {
+      "en": "Video publish initiated (ID: {{PUBLISH_ID}}). TikTok is processing the video.",
+      "de": "Videoveröffentlichung gestartet (ID: {{PUBLISH_ID}}). TikTok verarbeitet das Video."
+    }
+  }
+}

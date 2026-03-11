@@ -1,0 +1,67 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Supabase: Delete Rows",
+  "title": {
+    "en": "Delete rows from table",
+    "de": "Zeilen aus Tabelle löschen"
+  },
+  "description": {
+    "en": "Delete rows from a Supabase table matching a filter condition.",
+    "de": "Zeilen aus einer Supabase-Tabelle löschen, die einer Filterbedingung entsprechen."
+  },
+  "vars": {
+    "SUPABASE_URL": "env:SUPABASE_URL|Your Supabase project URL (e.g., https://xxxx.supabase.co).",
+    "SUPABASE_KEY": "env:SUPABASE_KEY|Your Supabase anon or service_role key from Project Settings > API."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Delete",
+      "destination": {
+        "url": "{{SUPABASE_URL}}/rest/v1/{{TABLE}}?{{FILTER}}",
+        "method": "DELETE",
+        "headers": {
+          "apikey": "{{SUPABASE_KEY}}",
+          "Authorization": "Bearer {{SUPABASE_KEY}}",
+          "Prefer": "return=representation"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Table",
+          "as": "TABLE",
+          "description": {
+            "en": "The table name."
+          },
+          "bot": "The name of the Supabase/PostgreSQL table.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:TABLE"
+        },
+        {
+          "name": "Filter",
+          "as": "FILTER",
+          "description": {
+            "en": "PostgREST filter to match rows (e.g., 'id=eq.123')."
+          },
+          "bot": "PostgREST filter to identify which rows to delete. Example: 'id=eq.123'. REQUIRED to avoid deleting all rows.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:FILTER"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "ROWS": "out",
+    "COUNT": "out.length"
+  },
+  "messages": {
+    "success": {
+      "en": "Deleted {{COUNT}} row(s).",
+      "de": "{{COUNT}} Zeile(n) gelöscht."
+    }
+  }
+}

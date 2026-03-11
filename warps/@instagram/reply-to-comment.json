@@ -1,0 +1,62 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Instagram: Reply to Comment",
+  "title": {
+    "en": "Reply to a comment",
+    "de": "Auf einen Kommentar antworten"
+  },
+  "description": {
+    "en": "Post a public reply to a comment on an Instagram post.",
+    "de": "Veröffentliche eine öffentliche Antwort auf einen Kommentar eines Instagram-Beitrags."
+  },
+  "vars": {
+    "ACCESS_TOKEN": "env:INSTAGRAM_ACCESS_TOKEN|Instagram Graph API access token with instagram_manage_comments permission."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Reply to Comment",
+      "destination": {
+        "url": "https://graph.instagram.com/v21.0/{{COMMENT_ID}}/replies",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{ACCESS_TOKEN}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Comment ID",
+          "as": "COMMENT_ID",
+          "description": {
+            "en": "The ID of the comment to reply to."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:COMMENT_ID"
+        },
+        {
+          "name": "Message",
+          "as": "message",
+          "description": {
+            "en": "The reply text."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:message"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "REPLY_ID": "out.id"
+  },
+  "messages": {
+    "success": {
+      "en": "Reply posted.",
+      "de": "Antwort veröffentlicht."
+    }
+  }
+}

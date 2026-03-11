@@ -1,0 +1,67 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Replicate: Run Model",
+  "title": {
+    "en": "Run an AI model",
+    "de": "Ein KI-Modell ausführen"
+  },
+  "description": {
+    "en": "Run any AI model on Replicate by providing the model version and input parameters.",
+    "de": "Beliebiges KI-Modell auf Replicate ausführen mit Modellversion und Eingabeparametern."
+  },
+  "vars": {
+    "API_TOKEN": "env:REPLICATE_API_TOKEN|Get your API token from https://replicate.com/account/api-tokens"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Run Model",
+      "destination": {
+        "url": "INJECT:API_PREDICTIONS",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{API_TOKEN}}",
+          "Content-Type": "application/json",
+          "Prefer": "wait"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Model Version",
+          "as": "version",
+          "description": {
+            "en": "The model version ID (sha256 hash)."
+          },
+          "bot": "The full model version ID (sha256 hash). Find this on the model's page at replicate.com. Example: 'db21e45d3f7023abc2a46ee38a23973f6dce16bb082a930b0c49861f96d1e5bf' for stable-diffusion.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:version"
+        },
+        {
+          "name": "Input",
+          "as": "input",
+          "description": {
+            "en": "JSON object of model input parameters."
+          },
+          "bot": "JSON object of input parameters specific to the model. Example for image gen: {\"prompt\": \"a photo of a cat\", \"width\": 1024, \"height\": 1024}",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:input"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "ID": "out.id",
+    "STATUS": "out.status",
+    "OUTPUT": "out.output"
+  },
+  "messages": {
+    "success": {
+      "en": "Prediction {{ID}} completed ({{STATUS}}).",
+      "de": "Vorhersage {{ID}} abgeschlossen ({{STATUS}})."
+    }
+  }
+}
