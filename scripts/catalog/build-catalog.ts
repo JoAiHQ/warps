@@ -578,7 +578,7 @@ function toBrandPayload(brandFactoryOutput: any, active: boolean): BrandPayload 
     protocol: typeof info.protocol === 'string' ? info.protocol : 'brand:1.0.0',
     name,
     description: normalizeTranslationField(info.description),
-    logo: typeof info.logo === 'string' ? info.logo : normalizeLogo(info.logo) ?? '',
+    logo: normalizeLogo(info.logo) ?? {},
     ...(info.urls && typeof info.urls === 'object' ? { urls: info.urls as Dict } : {}),
     ...(info.colors && typeof info.colors === 'object' ? { colors: info.colors as Dict } : {}),
   }
