@@ -435,7 +435,8 @@ function getChainNameFromWarpData(warpData: Dict): string {
     ((warpData.meta as Dict | undefined)?.chain as string | undefined)
 
   if (typeof chain === 'string' && chain.trim()) {
-    return chain.trim().toLowerCase()
+    const normalizedChain = chain.trim().toLowerCase()
+    return normalizedChain === 'internal' ? 'none' : normalizedChain
   }
 
   return DEFAULT_CHAIN
@@ -722,13 +723,14 @@ async function buildManifest(args: CliArgs, network: SyncNetwork): Promise<Catal
     const chain = getChainNameFromWarpData(parsed)
     const aliasBase = getAliasFromFileName(fileName)
     const identifier = createWarpIdentifier(
-      chain as WarpChainName,
+      chain === 'none' ? null : chain as WarpChainName,
       'alias',
       aliasBase,
     )
 
-    const info = getWarpInfoFromIdentifier(identifier)
-    const alias = info?.identifierBase ?? aliasBase
+    const alias = chain === 'none'
+      ? aliasBase
+      : (getWarpInfoFromIdentifier(identifier)?.identifierBase ?? aliasBase)
 
     const key = `${chain}:${alias}`
     const primaryInfo = getPrimaryInfo(workingWarp)
