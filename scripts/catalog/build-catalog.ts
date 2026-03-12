@@ -11,7 +11,6 @@ import {
 } from '@joai/warps'
 
 import {
-  DEFAULT_CHAIN,
   GLOBAL_PLACEHOLDERS,
   getNetworkForBranch,
   SOURCE_REPO,
@@ -430,16 +429,14 @@ function isBrandInactive(fileName: string): boolean {
 
 function getChainNameFromWarpData(warpData: Dict): string {
   const chain =
-    (warpData.defaultChain as string | undefined) ||
     (warpData.chain as string | undefined) ||
     ((warpData.meta as Dict | undefined)?.chain as string | undefined)
 
   if (typeof chain === 'string' && chain.trim()) {
-    const normalizedChain = chain.trim().toLowerCase()
-    return normalizedChain === 'internal' ? 'none' : normalizedChain
+    return chain.trim().toLowerCase()
   }
 
-  return DEFAULT_CHAIN
+  return 'none'
 }
 
 function getAliasFromFileName(fileName: string): string {
@@ -556,7 +553,6 @@ async function getBrandFactoryOutput(
   const config = {
     currentUrl: 'https://joai.ai',
     env,
-    defaultChain: DEFAULT_CHAIN as WarpChainName,
     user: { wallets: {} },
     preferences: { providers: {} },
     transform: {},
