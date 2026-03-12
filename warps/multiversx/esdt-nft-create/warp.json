@@ -1,0 +1,136 @@
+{
+  "protocol": "warp:3.0.0",
+  "chain": "multiversx",
+  "name": "MultiversX: Create NFT",
+  "title": {
+    "en": "Create (Mint) an NFT on MultiversX",
+    "de": "NFT auf MultiversX erstellen (Minten)"
+  },
+  "description": {
+    "en": "Mint a new NFT or SFT within an existing MultiversX collection. You must own the ESDTRoleNFTCreate role for the collection to use this. Provide the collection identifier, quantity, name, royalties, optional metadata hash, attributes, and a media URI. No EGLD fee required — only gas.",
+    "de": "Minte ein neues NFT oder SFT innerhalb einer bestehenden MultiversX-Kollektion. Du musst die ESDTRoleNFTCreate-Rolle für die Kollektion besitzen. Gib die Kollektion-ID, Menge, Name, Royalties, optionalen Metadaten-Hash, Attribute und eine Medien-URI an. Keine EGLD-Gebühr erforderlich — nur Gas."
+  },
+  "actions": [
+    {
+      "type": "contract",
+      "label": {
+        "en": "Create NFT",
+        "de": "NFT erstellen"
+      },
+      "address": "{{USER_WALLET}}",
+      "func": "ESDTNFTCreate",
+      "args": [],
+      "gasLimit": 10000000,
+      "primary": true,
+      "inputs": [
+        {
+          "name": "Collection Identifier",
+          "as": "COLLECTION_ID",
+          "description": {
+            "en": "The collection token identifier (e.g. 'MYNFT-a1b2c3'). Must be an NFT or SFT collection where you hold the create role.",
+            "de": "Der Kollektion-Token-Identifier (z.B. 'MEINNFT-a1b2c3'). Muss eine NFT- oder SFT-Kollektion sein, für die du die Erstellungsrolle besitzt."
+          },
+          "type": "string",
+          "position": "arg:1",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Quantity",
+          "as": "QUANTITY",
+          "description": {
+            "en": "Number of tokens to mint. Use 1 for a unique NFT, or more for SFTs where multiple copies exist.",
+            "de": "Anzahl der zu mintenden Tokens. 1 für ein einzigartiges NFT, oder mehr für SFTs mit mehreren Kopien."
+          },
+          "type": "biguint",
+          "position": "arg:2",
+          "source": "field",
+          "required": true,
+          "default": "1",
+          "min": 1
+        },
+        {
+          "name": "NFT Name",
+          "as": "NFT_NAME",
+          "description": {
+            "en": "The display name of this specific NFT (e.g. 'My Rare Dragon #1').",
+            "de": "Der Anzeigename dieses spezifischen NFTs (z.B. 'Mein Seltener Drache #1')."
+          },
+          "type": "string",
+          "position": "arg:3",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Royalties",
+          "as": "ROYALTIES",
+          "description": {
+            "en": "Creator royalty in basis points (0–10000). E.g. 500 = 5%, 1000 = 10%. Set to 0 for no royalties.",
+            "de": "Creator-Royalty in Basispunkten (0–10000). Z.B. 500 = 5%, 1000 = 10%. 0 für keine Royalties."
+          },
+          "type": "biguint",
+          "position": "arg:4",
+          "source": "field",
+          "required": true,
+          "default": "0"
+        },
+        {
+          "name": "Metadata Hash",
+          "as": "HASH",
+          "description": {
+            "en": "Optional content hash (e.g. IPFS CID) for off-chain metadata integrity verification. Leave empty if not needed.",
+            "de": "Optionaler Inhalts-Hash (z.B. IPFS-CID) zur Integritätsprüfung von Off-Chain-Metadaten. Leer lassen wenn nicht benötigt."
+          },
+          "type": "string",
+          "position": "arg:5",
+          "source": "field",
+          "required": false,
+          "default": ""
+        },
+        {
+          "name": "Attributes",
+          "as": "ATTRIBUTES",
+          "description": {
+            "en": "Custom NFT attributes as a string (e.g. 'rarity:legendary;power:95'). Leave empty if not needed.",
+            "de": "Benutzerdefinierte NFT-Attribute als Zeichenkette (z.B. 'seltenheit:legendär;kraft:95'). Leer lassen wenn nicht benötigt."
+          },
+          "type": "string",
+          "position": "arg:6",
+          "source": "field",
+          "required": false,
+          "default": ""
+        },
+        {
+          "name": "Media URI",
+          "as": "URI",
+          "description": {
+            "en": "The URI pointing to the NFT's media or metadata (e.g. 'https://ipfs.io/ipfs/Qm...' or 'ipfs://Qm...').",
+            "de": "Die URI, die auf das Medien- oder Metadaten-Asset des NFTs verweist (z.B. 'https://ipfs.io/ipfs/Qm...' oder 'ipfs://Qm...')."
+          },
+          "type": "string",
+          "position": "arg:7",
+          "source": "field",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "output": {
+    "TX_HASH": "out",
+    "COLLECTION_ID": "input:COLLECTION_ID",
+    "NFT_NAME": "input:NFT_NAME",
+    "QUANTITY": "input:QUANTITY"
+  },
+  "messages": {
+    "success": {
+      "en": "NFT '{{NFT_NAME}}' minted successfully in collection {{COLLECTION_ID}} (qty: {{QUANTITY}}).",
+      "de": "NFT '{{NFT_NAME}}' erfolgreich in Kollektion {{COLLECTION_ID}} gemintet (Menge: {{QUANTITY}})."
+    },
+    "invoking": "Minting NFT ...",
+    "invoked": "NFT minted"
+  },
+  "related": [
+    "@multiversx:multiversx-esdt-issue-nft-collection",
+    "@multiversx:multiversx-account-nfts"
+  ]
+}

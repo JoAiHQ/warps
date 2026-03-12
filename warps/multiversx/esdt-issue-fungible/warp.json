@@ -1,0 +1,102 @@
+{
+  "protocol": "warp:3.0.0",
+  "chain": "multiversx",
+  "name": "MultiversX: Issue Fungible ESDT Token",
+  "title": {
+    "en": "Issue a Fungible ESDT Token on MultiversX",
+    "de": "Fungiblen ESDT-Token auf MultiversX ausgeben"
+  },
+  "description": {
+    "en": "Create and issue a new fungible ESDT token on the MultiversX blockchain. Define the token name, ticker, initial supply, and decimal precision. Requires a 0.05 EGLD issuance fee. After issuance, the token identifier (e.g. MYTICKER-xxxxxx) will be assigned by the protocol.",
+    "de": "Erstelle und gib einen neuen fungiblen ESDT-Token auf der MultiversX Blockchain aus. Definiere Token-Name, Ticker, initiale Versorgung und Dezimalgenauigkeit. Erfordert eine Ausgabegebühr von 0,05 EGLD. Nach der Ausgabe wird der Token-Identifier (z.B. MYTICKER-xxxxxx) vom Protokoll zugewiesen."
+  },
+  "actions": [
+    {
+      "type": "contract",
+      "label": {
+        "en": "Issue Token",
+        "de": "Token ausgeben"
+      },
+      "address": "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u",
+      "func": "issue",
+      "args": [],
+      "gasLimit": 60000000,
+      "primary": true,
+      "inputs": [
+        {
+          "name": "Issuance Fee",
+          "type": "biguint",
+          "position": "value",
+          "source": "hidden",
+          "default": "50000000000000000"
+        },
+        {
+          "name": "Token Name",
+          "as": "TOKEN_NAME",
+          "description": {
+            "en": "The full name of the token (e.g. 'MyToken'). 3–20 alphanumeric characters.",
+            "de": "Der vollständige Name des Tokens (z.B. 'MeinToken'). 3–20 alphanumerische Zeichen."
+          },
+          "type": "string",
+          "position": "arg:1",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Token Ticker",
+          "as": "TOKEN_TICKER",
+          "description": {
+            "en": "The uppercase ticker symbol (e.g. 'MTK'). 3–10 uppercase alphanumeric characters.",
+            "de": "Das Ticker-Symbol in Großbuchstaben (z.B. 'MTK'). 3–10 alphanumerische Großbuchstaben."
+          },
+          "type": "string",
+          "position": "arg:2",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Initial Supply",
+          "as": "INITIAL_SUPPLY",
+          "description": {
+            "en": "The initial token supply in the smallest unit (no decimal scaling). E.g. for 1000 tokens with 2 decimals, enter 100000.",
+            "de": "Die initiale Token-Versorgung in der kleinsten Einheit (ohne Dezimal-Skalierung). Z.B. für 1000 Token mit 2 Dezimalstellen: 100000 eingeben."
+          },
+          "type": "biguint",
+          "position": "arg:3",
+          "source": "field",
+          "required": true,
+          "min": 1
+        },
+        {
+          "name": "Decimals",
+          "as": "DECIMALS",
+          "description": {
+            "en": "Number of decimal places for the token (0–18). E.g. 18 for EGLD-like precision, 2 for cent-like precision.",
+            "de": "Anzahl der Dezimalstellen des Tokens (0–18). Z.B. 18 für EGLD-ähnliche Genauigkeit, 2 für Cent-ähnliche Genauigkeit."
+          },
+          "type": "uint32",
+          "position": "arg:4",
+          "source": "field",
+          "required": true,
+          "default": "18"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "TX_HASH": "out",
+    "TOKEN_NAME": "input:TOKEN_NAME",
+    "TOKEN_TICKER": "input:TOKEN_TICKER"
+  },
+  "messages": {
+    "success": {
+      "en": "Token '{{TOKEN_NAME}}' ({{TOKEN_TICKER}}) issued successfully. The token identifier will be available once the transaction is confirmed.",
+      "de": "Token '{{TOKEN_NAME}}' ({{TOKEN_TICKER}}) erfolgreich ausgegeben. Der Token-Identifier ist verfügbar, sobald die Transaktion bestätigt wurde."
+    },
+    "invoking": "Issuing token ...",
+    "invoked": "Token issued"
+  },
+  "related": [
+    "@multiversx:multiversx-token-details"
+  ]
+}
