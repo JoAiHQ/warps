@@ -1,0 +1,90 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Mailcoach: Create Segment",
+  "title": {
+    "en": "Create a segment",
+    "de": "Segment erstellen"
+  },
+  "description": {
+    "en": "Create a new subscriber segment for an email list based on positive and negative tag filters.",
+    "de": "Ein neues Abonnentensegment für eine E-Mail-Liste basierend auf positiven und negativen Tag-Filtern erstellen."
+  },
+  "vars": {
+    "API_TOKEN": "env:MAILCOACH_API_TOKEN|Your Mailcoach API token from /settings/account/tokens",
+    "MAILCOACH_URL": "env:MAILCOACH_URL|Your Mailcoach base URL (e.g. https://yourapp.mailcoach.app)"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Create Segment",
+        "de": "Segment erstellen"
+      },
+      "destination": {
+        "url": "{{MAILCOACH_URL}}/api/email-lists/{{LIST_UUID}}/segments",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{API_TOKEN}}",
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "List UUID",
+          "as": "LIST_UUID",
+          "description": { "en": "The UUID of the email list." },
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Name",
+          "as": "name",
+          "description": { "en": "The name of the segment." },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:name"
+        },
+        {
+          "name": "Positive Tags",
+          "as": "positive_tags",
+          "description": { "en": "JSON array of tag names subscribers must have, e.g. [\"premium\"]." },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:positive_tags"
+        },
+        {
+          "name": "Negative Tags",
+          "as": "negative_tags",
+          "description": { "en": "JSON array of tag names subscribers must NOT have, e.g. [\"unsubscribed\"]." },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:negative_tags"
+        },
+        {
+          "name": "All Positive Tags Required",
+          "as": "all_positive_tags_required",
+          "description": { "en": "If true, subscriber must have ALL positive tags. If false, any positive tag matches." },
+          "type": "boolean",
+          "source": "field",
+          "required": false,
+          "position": "payload:all_positive_tags_required"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "SEGMENT_UUID": "out.data.uuid",
+    "SEGMENT_NAME": "out.data.name"
+  },
+  "messages": {
+    "success": {
+      "en": "Segment '{{SEGMENT_NAME}}' created! UUID: {{SEGMENT_UUID}}",
+      "de": "Segment '{{SEGMENT_NAME}}' erstellt! UUID: {{SEGMENT_UUID}}"
+    }
+  }
+}

@@ -1,0 +1,100 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Mailcoach: Update Campaign",
+  "title": {
+    "en": "Update a campaign",
+    "de": "Kampagne aktualisieren"
+  },
+  "description": {
+    "en": "Update a campaign's content, subject, or schedule. Can also be used to schedule a campaign by setting schedule_at.",
+    "de": "Inhalt, Betreff oder Zeitplan einer Kampagne aktualisieren. Kann auch zum Planen einer Kampagne mit schedule_at verwendet werden."
+  },
+  "vars": {
+    "API_TOKEN": "env:MAILCOACH_API_TOKEN|Your Mailcoach API token from /settings/account/tokens",
+    "MAILCOACH_URL": "env:MAILCOACH_URL|Your Mailcoach base URL (e.g. https://yourapp.mailcoach.app)"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Update Campaign",
+        "de": "Kampagne aktualisieren"
+      },
+      "destination": {
+        "url": "{{MAILCOACH_URL}}/api/campaigns/{{CAMPAIGN_UUID}}",
+        "method": "PUT",
+        "headers": {
+          "Authorization": "Bearer {{API_TOKEN}}",
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Campaign UUID",
+          "as": "CAMPAIGN_UUID",
+          "description": { "en": "The UUID of the campaign to update." },
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Name",
+          "as": "name",
+          "description": { "en": "Internal campaign name." },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:name"
+        },
+        {
+          "name": "Subject",
+          "as": "subject",
+          "description": { "en": "The email subject line." },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:subject"
+        },
+        {
+          "name": "HTML",
+          "as": "html",
+          "description": { "en": "The HTML content of the campaign." },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:html"
+        },
+        {
+          "name": "From Email",
+          "as": "from_email",
+          "description": { "en": "Override the sender email address." },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:from_email"
+        },
+        {
+          "name": "Schedule At",
+          "as": "schedule_at",
+          "description": { "en": "Schedule the campaign to send at this datetime (ISO 8601). Set to schedule the campaign." },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:schedule_at"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "CAMPAIGN_UUID": "out.data.uuid",
+    "CAMPAIGN_NAME": "out.data.name",
+    "STATUS": "out.data.status"
+  },
+  "messages": {
+    "success": {
+      "en": "Campaign '{{CAMPAIGN_NAME}}' updated. Status: {{STATUS}}.",
+      "de": "Kampagne '{{CAMPAIGN_NAME}}' aktualisiert. Status: {{STATUS}}."
+    }
+  }
+}

@@ -1,0 +1,74 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Mailcoach: List Sends",
+  "title": {
+    "en": "List sends",
+    "de": "Versendungen auflisten"
+  },
+  "description": {
+    "en": "Retrieve send records with engagement metrics. Filter by subscriber, campaign, or automation mail.",
+    "de": "Versendungsdatensätze mit Engagement-Metriken abrufen. Nach Abonnent, Kampagne oder Automatisierungs-E-Mail filtern."
+  },
+  "vars": {
+    "API_TOKEN": "env:MAILCOACH_API_TOKEN|Your Mailcoach API token from /settings/account/tokens",
+    "MAILCOACH_URL": "env:MAILCOACH_URL|Your Mailcoach base URL (e.g. https://yourapp.mailcoach.app)"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "List Sends",
+        "de": "Versendungen abrufen"
+      },
+      "destination": {
+        "url": "{{MAILCOACH_URL}}/api/sends",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{API_TOKEN}}",
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Subscriber UUID",
+          "as": "subscriber_uuid",
+          "description": { "en": "Filter sends by subscriber UUID." },
+          "type": "string",
+          "source": "field",
+          "position": "query:subscriber_uuid",
+          "required": false
+        },
+        {
+          "name": "Campaign UUID",
+          "as": "campaign_uuid",
+          "description": { "en": "Filter sends by campaign UUID." },
+          "type": "string",
+          "source": "field",
+          "position": "query:campaign_uuid",
+          "required": false
+        },
+        {
+          "name": "Per Page",
+          "as": "per_page",
+          "description": { "en": "Number of results per page." },
+          "type": "number",
+          "source": "field",
+          "position": "query:per_page",
+          "required": false
+        }
+      ]
+    }
+  ],
+  "output": {
+    "SENDS": "out.data",
+    "COUNT": "transform:() => { return Array.isArray(out?.data) ? out.data.length : 0; }",
+    "TOTAL": "out.meta.total"
+  },
+  "messages": {
+    "success": {
+      "en": "Found {{COUNT}} send record(s) ({{TOTAL}} total).",
+      "de": "{{COUNT}} Versendungsdatensatz/-datensätze gefunden ({{TOTAL}} insgesamt)."
+    }
+  }
+}

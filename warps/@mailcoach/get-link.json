@@ -1,0 +1,56 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Mailcoach: Get Link",
+  "title": {
+    "en": "Get a link",
+    "de": "Link abrufen"
+  },
+  "description": {
+    "en": "Retrieve click details for a tracked link including unique click count and individual click records.",
+    "de": "Klickdetails für einen getrackten Link abrufen, einschließlich eindeutiger Klickanzahl und einzelner Klickdatensätze."
+  },
+  "vars": {
+    "API_TOKEN": "env:MAILCOACH_API_TOKEN|Your Mailcoach API token from /settings/account/tokens",
+    "MAILCOACH_URL": "env:MAILCOACH_URL|Your Mailcoach base URL (e.g. https://yourapp.mailcoach.app)"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Get Link",
+        "de": "Link abrufen"
+      },
+      "destination": {
+        "url": "{{MAILCOACH_URL}}/api/links/{{LINK_UUID}}",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{API_TOKEN}}",
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Link UUID",
+          "as": "LINK_UUID",
+          "description": { "en": "The UUID of the tracked link." },
+          "type": "string",
+          "source": "field",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "output": {
+    "LINK_DATA": "out",
+    "URL": "out.url",
+    "UNIQUE_CLICK_COUNT": "out.unique_click_count",
+    "CLICK_COUNT": "out.click_count"
+  },
+  "messages": {
+    "success": {
+      "en": "Link '{{URL}}' — {{UNIQUE_CLICK_COUNT}} unique click(s), {{CLICK_COUNT}} total.",
+      "de": "Link '{{URL}}' — {{UNIQUE_CLICK_COUNT}} eindeutiger/e Klick(s), {{CLICK_COUNT}} insgesamt."
+    }
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Mailcoach: Delete Subscriber",
+  "title": {
+    "en": "Delete a subscriber",
+    "de": "Abonnenten löschen"
+  },
+  "description": {
+    "en": "Permanently delete a subscriber from Mailcoach.",
+    "de": "Einen Abonnenten dauerhaft aus Mailcoach löschen."
+  },
+  "vars": {
+    "API_TOKEN": "env:MAILCOACH_API_TOKEN|Your Mailcoach API token from /settings/account/tokens",
+    "MAILCOACH_URL": "env:MAILCOACH_URL|Your Mailcoach base URL (e.g. https://yourapp.mailcoach.app)"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Delete Subscriber",
+        "de": "Abonnenten löschen"
+      },
+      "destination": {
+        "url": "{{MAILCOACH_URL}}/api/subscribers/{{SUBSCRIBER_UUID}}",
+        "method": "DELETE",
+        "headers": {
+          "Authorization": "Bearer {{API_TOKEN}}",
+          "Accept": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Subscriber UUID",
+          "as": "SUBSCRIBER_UUID",
+          "description": { "en": "The UUID of the subscriber to delete." },
+          "type": "string",
+          "source": "field",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "output": {},
+  "messages": {
+    "success": {
+      "en": "Subscriber {{SUBSCRIBER_UUID}} has been deleted.",
+      "de": "Abonnent {{SUBSCRIBER_UUID}} wurde gelöscht."
+    }
+  }
+}

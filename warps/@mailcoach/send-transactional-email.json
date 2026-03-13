@@ -1,0 +1,122 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Mailcoach: Send Transactional Email",
+  "title": {
+    "en": "Send a transactional email",
+    "de": "Transaktions-E-Mail senden"
+  },
+  "description": {
+    "en": "Send a one-off transactional email using Mailcoach. Supports templates, variable replacements, CC, and BCC.",
+    "de": "Eine einmalige Transaktions-E-Mail über Mailcoach senden. Unterstützt Vorlagen, Variablenersetzungen, CC und BCC."
+  },
+  "vars": {
+    "API_TOKEN": "env:MAILCOACH_API_TOKEN|Your Mailcoach API token from /settings/account/tokens",
+    "MAILCOACH_URL": "env:MAILCOACH_URL|Your Mailcoach base URL (e.g. https://yourapp.mailcoach.app)"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Send Email",
+        "de": "E-Mail senden"
+      },
+      "destination": {
+        "url": "{{MAILCOACH_URL}}/api/transactional-mails/send",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{API_TOKEN}}",
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "To",
+          "as": "to",
+          "description": {
+            "en": "Recipient email address."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:to"
+        },
+        {
+          "name": "From",
+          "as": "from",
+          "description": {
+            "en": "Sender email address."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:from"
+        },
+        {
+          "name": "Subject",
+          "as": "subject",
+          "description": {
+            "en": "The email subject line."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:subject"
+        },
+        {
+          "name": "Mail Name",
+          "as": "mail_name",
+          "description": {
+            "en": "Name of a transactional mail template stored in Mailcoach. Use this OR html."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:mail_name"
+        },
+        {
+          "name": "HTML",
+          "as": "html",
+          "description": {
+            "en": "Raw HTML content for the email. Use this OR mail_name."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:html"
+        },
+        {
+          "name": "CC",
+          "as": "cc",
+          "description": {
+            "en": "CC email address(es)."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:cc"
+        },
+        {
+          "name": "BCC",
+          "as": "bcc",
+          "description": {
+            "en": "BCC email address(es)."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:bcc"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "MAIL_UUID": "out.uuid"
+  },
+  "messages": {
+    "success": {
+      "en": "Transactional email sent to {{to}}. UUID: {{MAIL_UUID}}",
+      "de": "Transaktions-E-Mail an {{to}} gesendet. UUID: {{MAIL_UUID}}"
+    }
+  }
+}

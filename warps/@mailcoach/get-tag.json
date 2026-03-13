@@ -1,0 +1,62 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Mailcoach: Get Tag",
+  "title": {
+    "en": "Get a tag",
+    "de": "Tag abrufen"
+  },
+  "description": {
+    "en": "Retrieve details of a specific tag on an email list.",
+    "de": "Details eines bestimmten Tags einer E-Mail-Liste abrufen."
+  },
+  "vars": {
+    "API_TOKEN": "env:MAILCOACH_API_TOKEN|Your Mailcoach API token from /settings/account/tokens",
+    "MAILCOACH_URL": "env:MAILCOACH_URL|Your Mailcoach base URL (e.g. https://yourapp.mailcoach.app)"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Get Tag",
+        "de": "Tag abrufen"
+      },
+      "destination": {
+        "url": "{{MAILCOACH_URL}}/api/email-lists/{{LIST_UUID}}/tags/{{TAG_UUID}}",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{API_TOKEN}}",
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "List UUID",
+          "as": "LIST_UUID",
+          "description": { "en": "The UUID of the email list." },
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Tag UUID",
+          "as": "TAG_UUID",
+          "description": { "en": "The UUID of the tag." },
+          "type": "string",
+          "source": "field",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "output": {
+    "TAG_DATA": "out.data",
+    "TAG_NAME": "out.data.name"
+  },
+  "messages": {
+    "success": {
+      "en": "Retrieved tag '{{TAG_NAME}}'.",
+      "de": "Tag '{{TAG_NAME}}' abgerufen."
+    }
+  }
+}

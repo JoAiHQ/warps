@@ -1,0 +1,56 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Mailcoach: List Subscriber Imports",
+  "title": {
+    "en": "List subscriber imports",
+    "de": "Abonnenten-Importe auflisten"
+  },
+  "description": {
+    "en": "Retrieve all subscriber imports in your Mailcoach account.",
+    "de": "Alle Abonnenten-Importe in deinem Mailcoach-Konto abrufen."
+  },
+  "vars": {
+    "API_TOKEN": "env:MAILCOACH_API_TOKEN|Your Mailcoach API token from /settings/account/tokens",
+    "MAILCOACH_URL": "env:MAILCOACH_URL|Your Mailcoach base URL (e.g. https://yourapp.mailcoach.app)"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "List Imports",
+        "de": "Importe auflisten"
+      },
+      "destination": {
+        "url": "{{MAILCOACH_URL}}/api/subscriber-imports",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{API_TOKEN}}",
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Per Page",
+          "as": "per_page",
+          "description": { "en": "Number of results per page." },
+          "type": "number",
+          "source": "field",
+          "position": "query:per_page",
+          "required": false
+        }
+      ]
+    }
+  ],
+  "output": {
+    "IMPORTS": "out.data",
+    "COUNT": "transform:() => { return Array.isArray(out?.data) ? out.data.length : 0; }",
+    "TOTAL": "out.meta.total"
+  },
+  "messages": {
+    "success": {
+      "en": "Found {{COUNT}} import(s) ({{TOTAL}} total).",
+      "de": "{{COUNT}} Import(e) gefunden ({{TOTAL}} insgesamt)."
+    }
+  }
+}

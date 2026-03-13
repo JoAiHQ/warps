@@ -1,0 +1,50 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Mailcoach: Delete Send",
+  "title": {
+    "en": "Delete a send record",
+    "de": "Versendungsdatensatz löschen"
+  },
+  "description": {
+    "en": "Delete a send record from Mailcoach.",
+    "de": "Einen Versendungsdatensatz aus Mailcoach löschen."
+  },
+  "vars": {
+    "API_TOKEN": "env:MAILCOACH_API_TOKEN|Your Mailcoach API token from /settings/account/tokens",
+    "MAILCOACH_URL": "env:MAILCOACH_URL|Your Mailcoach base URL (e.g. https://yourapp.mailcoach.app)"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Delete Send",
+        "de": "Versendung löschen"
+      },
+      "destination": {
+        "url": "{{MAILCOACH_URL}}/api/sends/{{SEND_UUID}}",
+        "method": "DELETE",
+        "headers": {
+          "Authorization": "Bearer {{API_TOKEN}}",
+          "Accept": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Send UUID",
+          "as": "SEND_UUID",
+          "description": { "en": "The UUID of the send record to delete." },
+          "type": "string",
+          "source": "field",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "output": {},
+  "messages": {
+    "success": {
+      "en": "Send record {{SEND_UUID}} has been deleted.",
+      "de": "Versendungsdatensatz {{SEND_UUID}} wurde gelöscht."
+    }
+  }
+}

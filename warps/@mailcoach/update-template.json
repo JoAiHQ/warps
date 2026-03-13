@@ -1,0 +1,72 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Mailcoach: Update Template",
+  "title": {
+    "en": "Update a template",
+    "de": "Vorlage aktualisieren"
+  },
+  "description": {
+    "en": "Update an existing email template in Mailcoach.",
+    "de": "Eine bestehende E-Mail-Vorlage in Mailcoach aktualisieren."
+  },
+  "vars": {
+    "API_TOKEN": "env:MAILCOACH_API_TOKEN|Your Mailcoach API token from /settings/account/tokens",
+    "MAILCOACH_URL": "env:MAILCOACH_URL|Your Mailcoach base URL (e.g. https://yourapp.mailcoach.app)"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Update Template",
+        "de": "Vorlage aktualisieren"
+      },
+      "destination": {
+        "url": "{{MAILCOACH_URL}}/api/templates/{{TEMPLATE_UUID}}",
+        "method": "PUT",
+        "headers": {
+          "Authorization": "Bearer {{API_TOKEN}}",
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Template UUID",
+          "as": "TEMPLATE_UUID",
+          "description": { "en": "The UUID of the template to update." },
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Name",
+          "as": "name",
+          "description": { "en": "The new name for the template." },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:name"
+        },
+        {
+          "name": "HTML",
+          "as": "html",
+          "description": { "en": "The updated HTML content of the template." },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:html"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "TEMPLATE_UUID": "out.data.uuid",
+    "TEMPLATE_NAME": "out.data.name"
+  },
+  "messages": {
+    "success": {
+      "en": "Template '{{TEMPLATE_NAME}}' updated.",
+      "de": "Vorlage '{{TEMPLATE_NAME}}' aktualisiert."
+    }
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Mailcoach: Append Subscriber Import",
+  "title": {
+    "en": "Append to a subscriber import",
+    "de": "Daten zu Abonnenten-Import hinzufügen"
+  },
+  "description": {
+    "en": "Append additional CSV data to an existing subscriber import that is still in draft status.",
+    "de": "Weitere CSV-Daten zu einem bestehenden Abonnenten-Import im Entwurfsstatus hinzufügen."
+  },
+  "vars": {
+    "API_TOKEN": "env:MAILCOACH_API_TOKEN|Your Mailcoach API token from /settings/account/tokens",
+    "MAILCOACH_URL": "env:MAILCOACH_URL|Your Mailcoach base URL (e.g. https://yourapp.mailcoach.app)"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Append to Import",
+        "de": "Zum Import hinzufügen"
+      },
+      "destination": {
+        "url": "{{MAILCOACH_URL}}/api/subscriber-imports/{{IMPORT_UUID}}/append",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{API_TOKEN}}",
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Import UUID",
+          "as": "IMPORT_UUID",
+          "description": { "en": "The UUID of the subscriber import to append to." },
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Subscribers CSV",
+          "as": "subscribers_csv",
+          "description": { "en": "Additional CSV data to append. Must use the same column structure as the original import." },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:subscribers_csv"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "IMPORT_UUID": "out.data.uuid",
+    "STATUS": "out.data.status"
+  },
+  "messages": {
+    "success": {
+      "en": "Data appended to subscriber import {{IMPORT_UUID}}.",
+      "de": "Daten zu Abonnenten-Import {{IMPORT_UUID}} hinzugefügt."
+    }
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Mailcoach: Unsubscribe",
+  "title": {
+    "en": "Unsubscribe from an email list",
+    "de": "Von E-Mail-Liste abmelden"
+  },
+  "description": {
+    "en": "Unsubscribe a subscriber from a Mailcoach email list by their subscriber UUID.",
+    "de": "Einen Abonnenten von einer Mailcoach-E-Mail-Liste per Abonnenten-UUID abmelden."
+  },
+  "vars": {
+    "API_TOKEN": "env:MAILCOACH_API_TOKEN|Your Mailcoach API token from /settings/account/tokens",
+    "MAILCOACH_URL": "env:MAILCOACH_URL|Your Mailcoach base URL (e.g. https://yourapp.mailcoach.app)"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Unsubscribe",
+        "de": "Abmelden"
+      },
+      "destination": {
+        "url": "{{MAILCOACH_URL}}/api/subscribers/{{SUBSCRIBER_UUID}}/unsubscribe",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{API_TOKEN}}",
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Subscriber UUID",
+          "as": "SUBSCRIBER_UUID",
+          "description": {
+            "en": "The UUID of the subscriber to unsubscribe."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "output": {},
+  "messages": {
+    "success": {
+      "en": "Subscriber {{SUBSCRIBER_UUID}} has been unsubscribed.",
+      "de": "Abonnent {{SUBSCRIBER_UUID}} wurde abgemeldet."
+    }
+  }
+}

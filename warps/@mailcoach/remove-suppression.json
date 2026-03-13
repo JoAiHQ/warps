@@ -1,0 +1,50 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Mailcoach: Remove Suppression",
+  "title": {
+    "en": "Remove a suppression",
+    "de": "Unterdrückung entfernen"
+  },
+  "description": {
+    "en": "Remove a suppression to allow an email address to receive emails again. Note: spam complaint suppressions cannot be removed on Mailcoach hosted.",
+    "de": "Eine Unterdrückung entfernen, damit eine E-Mail-Adresse wieder E-Mails empfangen kann. Hinweis: Spam-Beschwerde-Unterdrückungen können auf Mailcoach Hosted nicht entfernt werden."
+  },
+  "vars": {
+    "API_TOKEN": "env:MAILCOACH_API_TOKEN|Your Mailcoach API token from /settings/account/tokens",
+    "MAILCOACH_URL": "env:MAILCOACH_URL|Your Mailcoach base URL (e.g. https://yourapp.mailcoach.app)"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Remove Suppression",
+        "de": "Unterdrückung entfernen"
+      },
+      "destination": {
+        "url": "{{MAILCOACH_URL}}/api/suppressions/{{EMAIL_OR_UUID}}",
+        "method": "DELETE",
+        "headers": {
+          "Authorization": "Bearer {{API_TOKEN}}",
+          "Accept": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Email or UUID",
+          "as": "EMAIL_OR_UUID",
+          "description": { "en": "The email address or UUID of the suppression to remove." },
+          "type": "string",
+          "source": "field",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "output": {},
+  "messages": {
+    "success": {
+      "en": "Suppression for {{EMAIL_OR_UUID}} has been removed.",
+      "de": "Unterdrückung für {{EMAIL_OR_UUID}} wurde entfernt."
+    }
+  }
+}

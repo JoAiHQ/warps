@@ -1,0 +1,55 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Mailcoach: Get Suppression",
+  "title": {
+    "en": "Get a suppression",
+    "de": "Unterdrückung abrufen"
+  },
+  "description": {
+    "en": "Retrieve a specific suppression record by email address or UUID.",
+    "de": "Einen bestimmten Unterdrückungsdatensatz per E-Mail-Adresse oder UUID abrufen."
+  },
+  "vars": {
+    "API_TOKEN": "env:MAILCOACH_API_TOKEN|Your Mailcoach API token from /settings/account/tokens",
+    "MAILCOACH_URL": "env:MAILCOACH_URL|Your Mailcoach base URL (e.g. https://yourapp.mailcoach.app)"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Get Suppression",
+        "de": "Unterdrückung abrufen"
+      },
+      "destination": {
+        "url": "{{MAILCOACH_URL}}/api/suppressions/{{EMAIL_OR_UUID}}",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{API_TOKEN}}",
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Email or UUID",
+          "as": "EMAIL_OR_UUID",
+          "description": { "en": "The email address or UUID of the suppression to look up." },
+          "type": "string",
+          "source": "field",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "output": {
+    "SUPPRESSION_DATA": "out.data",
+    "EMAIL": "out.data.email",
+    "REASON": "out.data.reason"
+  },
+  "messages": {
+    "success": {
+      "en": "Suppression found for {{EMAIL}} — Reason: {{REASON}}.",
+      "de": "Unterdrückung für {{EMAIL}} gefunden — Grund: {{REASON}}."
+    }
+  }
+}

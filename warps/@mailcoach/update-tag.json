@@ -1,0 +1,80 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Mailcoach: Update Tag",
+  "title": {
+    "en": "Update a tag",
+    "de": "Tag aktualisieren"
+  },
+  "description": {
+    "en": "Update an existing tag on an email list.",
+    "de": "Einen bestehenden Tag einer E-Mail-Liste aktualisieren."
+  },
+  "vars": {
+    "API_TOKEN": "env:MAILCOACH_API_TOKEN|Your Mailcoach API token from /settings/account/tokens",
+    "MAILCOACH_URL": "env:MAILCOACH_URL|Your Mailcoach base URL (e.g. https://yourapp.mailcoach.app)"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Update Tag",
+        "de": "Tag aktualisieren"
+      },
+      "destination": {
+        "url": "{{MAILCOACH_URL}}/api/email-lists/{{LIST_UUID}}/tags/{{TAG_UUID}}",
+        "method": "PUT",
+        "headers": {
+          "Authorization": "Bearer {{API_TOKEN}}",
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "List UUID",
+          "as": "LIST_UUID",
+          "description": { "en": "The UUID of the email list." },
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Tag UUID",
+          "as": "TAG_UUID",
+          "description": { "en": "The UUID of the tag to update." },
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Name",
+          "as": "name",
+          "description": { "en": "The new name for the tag." },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:name"
+        },
+        {
+          "name": "Visible in Preferences",
+          "as": "visible_in_preferences",
+          "description": { "en": "Whether subscribers can see and toggle this tag in their preferences." },
+          "type": "boolean",
+          "source": "field",
+          "required": false,
+          "position": "payload:visible_in_preferences"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "TAG_UUID": "out.data.uuid",
+    "TAG_NAME": "out.data.name"
+  },
+  "messages": {
+    "success": {
+      "en": "Tag '{{TAG_NAME}}' updated.",
+      "de": "Tag '{{TAG_NAME}}' aktualisiert."
+    }
+  }
+}

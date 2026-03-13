@@ -1,0 +1,73 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Mailcoach: Get Campaign Clicks",
+  "title": {
+    "en": "Get campaign clicks",
+    "de": "Kampagnenklicks abrufen"
+  },
+  "description": {
+    "en": "Retrieve the clicks report for a campaign, showing link click counts.",
+    "de": "Den Klickbericht einer Kampagne abrufen, der die Link-Klickzahlen zeigt."
+  },
+  "vars": {
+    "API_TOKEN": "env:MAILCOACH_API_TOKEN|Your Mailcoach API token from /settings/account/tokens",
+    "MAILCOACH_URL": "env:MAILCOACH_URL|Your Mailcoach base URL (e.g. https://yourapp.mailcoach.app)"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Get Clicks",
+        "de": "Klicks abrufen"
+      },
+      "destination": {
+        "url": "{{MAILCOACH_URL}}/api/campaigns/{{CAMPAIGN_UUID}}/clicks",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{API_TOKEN}}",
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Campaign UUID",
+          "as": "CAMPAIGN_UUID",
+          "description": { "en": "The UUID of the campaign." },
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Sort",
+          "as": "sort",
+          "description": { "en": "Sort by: unique_click_count, click_count. Prefix with - for descending." },
+          "type": "string",
+          "source": "field",
+          "position": "query:sort",
+          "required": false
+        },
+        {
+          "name": "Per Page",
+          "as": "per_page",
+          "description": { "en": "Number of results per page." },
+          "type": "number",
+          "source": "field",
+          "position": "query:per_page",
+          "required": false
+        }
+      ]
+    }
+  ],
+  "output": {
+    "CLICKS": "out.data",
+    "COUNT": "transform:() => { return Array.isArray(out?.data) ? out.data.length : 0; }",
+    "TOTAL": "out.meta.total"
+  },
+  "messages": {
+    "success": {
+      "en": "Found {{COUNT}} link(s) clicked ({{TOTAL}} total).",
+      "de": "{{COUNT}} geklickte(r) Link(s) gefunden ({{TOTAL}} insgesamt)."
+    }
+  }
+}

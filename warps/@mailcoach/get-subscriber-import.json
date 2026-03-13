@@ -1,0 +1,56 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Mailcoach: Get Subscriber Import",
+  "title": {
+    "en": "Get a subscriber import",
+    "de": "Abonnenten-Import abrufen"
+  },
+  "description": {
+    "en": "Retrieve the status and details of a subscriber import.",
+    "de": "Den Status und die Details eines Abonnenten-Imports abrufen."
+  },
+  "vars": {
+    "API_TOKEN": "env:MAILCOACH_API_TOKEN|Your Mailcoach API token from /settings/account/tokens",
+    "MAILCOACH_URL": "env:MAILCOACH_URL|Your Mailcoach base URL (e.g. https://yourapp.mailcoach.app)"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Get Import",
+        "de": "Import abrufen"
+      },
+      "destination": {
+        "url": "{{MAILCOACH_URL}}/api/subscriber-imports/{{IMPORT_UUID}}",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{API_TOKEN}}",
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Import UUID",
+          "as": "IMPORT_UUID",
+          "description": { "en": "The UUID of the subscriber import." },
+          "type": "string",
+          "source": "field",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "output": {
+    "IMPORT_DATA": "out.data",
+    "STATUS": "out.data.status",
+    "IMPORTED_SUBSCRIBERS_COUNT": "out.data.imported_subscribers_count",
+    "ERROR_COUNT": "out.data.error_count"
+  },
+  "messages": {
+    "success": {
+      "en": "Import status: {{STATUS}}. Imported: {{IMPORTED_SUBSCRIBERS_COUNT}}, Errors: {{ERROR_COUNT}}.",
+      "de": "Import-Status: {{STATUS}}. Importiert: {{IMPORTED_SUBSCRIBERS_COUNT}}, Fehler: {{ERROR_COUNT}}."
+    }
+  }
+}

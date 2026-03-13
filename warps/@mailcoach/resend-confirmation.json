@@ -1,0 +1,51 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Mailcoach: Resend Confirmation",
+  "title": {
+    "en": "Resend confirmation email",
+    "de": "Bestätigungs-E-Mail erneut senden"
+  },
+  "description": {
+    "en": "Resend the double opt-in confirmation email to an unconfirmed subscriber.",
+    "de": "Die Double-Opt-In-Bestätigungs-E-Mail erneut an einen unbestätigten Abonnenten senden."
+  },
+  "vars": {
+    "API_TOKEN": "env:MAILCOACH_API_TOKEN|Your Mailcoach API token from /settings/account/tokens",
+    "MAILCOACH_URL": "env:MAILCOACH_URL|Your Mailcoach base URL (e.g. https://yourapp.mailcoach.app)"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Resend Confirmation",
+        "de": "Bestätigung erneut senden"
+      },
+      "destination": {
+        "url": "{{MAILCOACH_URL}}/api/subscribers/{{SUBSCRIBER_UUID}}/resend-confirmation",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{API_TOKEN}}",
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Subscriber UUID",
+          "as": "SUBSCRIBER_UUID",
+          "description": { "en": "The UUID of the subscriber to resend confirmation to." },
+          "type": "string",
+          "source": "field",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "output": {},
+  "messages": {
+    "success": {
+      "en": "Confirmation email resent to subscriber {{SUBSCRIBER_UUID}}.",
+      "de": "Bestätigungs-E-Mail erneut an Abonnent {{SUBSCRIBER_UUID}} gesendet."
+    }
+  }
+}

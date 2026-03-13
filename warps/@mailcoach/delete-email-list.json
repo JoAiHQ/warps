@@ -1,0 +1,50 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Mailcoach: Delete Email List",
+  "title": {
+    "en": "Delete an email list",
+    "de": "E-Mail-Liste löschen"
+  },
+  "description": {
+    "en": "Permanently delete an email list and all its subscribers from Mailcoach.",
+    "de": "Eine E-Mail-Liste und alle ihre Abonnenten dauerhaft aus Mailcoach löschen."
+  },
+  "vars": {
+    "API_TOKEN": "env:MAILCOACH_API_TOKEN|Your Mailcoach API token from /settings/account/tokens",
+    "MAILCOACH_URL": "env:MAILCOACH_URL|Your Mailcoach base URL (e.g. https://yourapp.mailcoach.app)"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Delete Email List",
+        "de": "E-Mail-Liste löschen"
+      },
+      "destination": {
+        "url": "{{MAILCOACH_URL}}/api/email-lists/{{LIST_UUID}}",
+        "method": "DELETE",
+        "headers": {
+          "Authorization": "Bearer {{API_TOKEN}}",
+          "Accept": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "List UUID",
+          "as": "LIST_UUID",
+          "description": { "en": "The UUID of the email list to delete." },
+          "type": "string",
+          "source": "field",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "output": {},
+  "messages": {
+    "success": {
+      "en": "Email list {{LIST_UUID}} has been deleted.",
+      "de": "E-Mail-Liste {{LIST_UUID}} wurde gelöscht."
+    }
+  }
+}

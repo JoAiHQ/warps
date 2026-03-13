@@ -1,0 +1,91 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Mailcoach: Create Subscriber Import",
+  "title": {
+    "en": "Create a subscriber import",
+    "de": "Abonnenten-Import erstellen"
+  },
+  "description": {
+    "en": "Create a subscriber import from a CSV string. The import starts in draft status — call start-subscriber-import to begin processing.",
+    "de": "Einen Abonnenten-Import aus einem CSV-String erstellen. Der Import startet im Entwurfsstatus — starte den Import mit start-subscriber-import."
+  },
+  "vars": {
+    "API_TOKEN": "env:MAILCOACH_API_TOKEN|Your Mailcoach API token from /settings/account/tokens",
+    "MAILCOACH_URL": "env:MAILCOACH_URL|Your Mailcoach base URL (e.g. https://yourapp.mailcoach.app)"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Create Import",
+        "de": "Import erstellen"
+      },
+      "destination": {
+        "url": "{{MAILCOACH_URL}}/api/subscriber-imports",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{API_TOKEN}}",
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Email List UUID",
+          "as": "email_list_uuid",
+          "description": { "en": "The UUID of the email list to import subscribers into." },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:email_list_uuid"
+        },
+        {
+          "name": "Subscribers CSV",
+          "as": "subscribers_csv",
+          "description": { "en": "CSV data with at minimum an email column. First row must be headers." },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:subscribers_csv"
+        },
+        {
+          "name": "Subscribe Unsubscribed",
+          "as": "subscribe_unsubscribed",
+          "description": { "en": "If true, previously unsubscribed subscribers will be re-subscribed." },
+          "type": "boolean",
+          "source": "field",
+          "required": true,
+          "position": "payload:subscribe_unsubscribed"
+        },
+        {
+          "name": "Unsubscribe Others",
+          "as": "unsubscribe_others",
+          "description": { "en": "If true, subscribers not in the CSV will be unsubscribed." },
+          "type": "boolean",
+          "source": "field",
+          "required": true,
+          "position": "payload:unsubscribe_others"
+        },
+        {
+          "name": "Replace Tags",
+          "as": "replace_tags",
+          "description": { "en": "If true, existing tags will be replaced. If false, CSV tags are appended." },
+          "type": "boolean",
+          "source": "field",
+          "required": true,
+          "position": "payload:replace_tags"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "IMPORT_UUID": "out.data.uuid",
+    "STATUS": "out.data.status"
+  },
+  "messages": {
+    "success": {
+      "en": "Subscriber import created with status '{{STATUS}}'. UUID: {{IMPORT_UUID}}",
+      "de": "Abonnenten-Import mit Status '{{STATUS}}' erstellt. UUID: {{IMPORT_UUID}}"
+    }
+  }
+}

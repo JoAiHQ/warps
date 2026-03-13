@@ -1,0 +1,54 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Mailcoach: Get Template",
+  "title": {
+    "en": "Get a template",
+    "de": "Vorlage abrufen"
+  },
+  "description": {
+    "en": "Retrieve a specific email template by UUID.",
+    "de": "Eine bestimmte E-Mail-Vorlage anhand der UUID abrufen."
+  },
+  "vars": {
+    "API_TOKEN": "env:MAILCOACH_API_TOKEN|Your Mailcoach API token from /settings/account/tokens",
+    "MAILCOACH_URL": "env:MAILCOACH_URL|Your Mailcoach base URL (e.g. https://yourapp.mailcoach.app)"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Get Template",
+        "de": "Vorlage abrufen"
+      },
+      "destination": {
+        "url": "{{MAILCOACH_URL}}/api/templates/{{TEMPLATE_UUID}}",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{API_TOKEN}}",
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Template UUID",
+          "as": "TEMPLATE_UUID",
+          "description": { "en": "The UUID of the template." },
+          "type": "string",
+          "source": "field",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "output": {
+    "TEMPLATE_DATA": "out.data",
+    "TEMPLATE_NAME": "out.data.name"
+  },
+  "messages": {
+    "success": {
+      "en": "Retrieved template '{{TEMPLATE_NAME}}'.",
+      "de": "Vorlage '{{TEMPLATE_NAME}}' abgerufen."
+    }
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Mailcoach: Delete Subscriber Import",
+  "title": {
+    "en": "Delete a subscriber import",
+    "de": "Abonnenten-Import löschen"
+  },
+  "description": {
+    "en": "Delete a subscriber import from Mailcoach.",
+    "de": "Einen Abonnenten-Import aus Mailcoach löschen."
+  },
+  "vars": {
+    "API_TOKEN": "env:MAILCOACH_API_TOKEN|Your Mailcoach API token from /settings/account/tokens",
+    "MAILCOACH_URL": "env:MAILCOACH_URL|Your Mailcoach base URL (e.g. https://yourapp.mailcoach.app)"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Delete Import",
+        "de": "Import löschen"
+      },
+      "destination": {
+        "url": "{{MAILCOACH_URL}}/api/subscriber-imports/{{IMPORT_UUID}}",
+        "method": "DELETE",
+        "headers": {
+          "Authorization": "Bearer {{API_TOKEN}}",
+          "Accept": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Import UUID",
+          "as": "IMPORT_UUID",
+          "description": { "en": "The UUID of the subscriber import to delete." },
+          "type": "string",
+          "source": "field",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "output": {},
+  "messages": {
+    "success": {
+      "en": "Subscriber import {{IMPORT_UUID}} has been deleted.",
+      "de": "Abonnenten-Import {{IMPORT_UUID}} wurde gelöscht."
+    }
+  }
+}

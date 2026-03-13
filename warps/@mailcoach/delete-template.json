@@ -1,0 +1,50 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Mailcoach: Delete Template",
+  "title": {
+    "en": "Delete a template",
+    "de": "Vorlage löschen"
+  },
+  "description": {
+    "en": "Permanently delete an email template from Mailcoach.",
+    "de": "Eine E-Mail-Vorlage dauerhaft aus Mailcoach löschen."
+  },
+  "vars": {
+    "API_TOKEN": "env:MAILCOACH_API_TOKEN|Your Mailcoach API token from /settings/account/tokens",
+    "MAILCOACH_URL": "env:MAILCOACH_URL|Your Mailcoach base URL (e.g. https://yourapp.mailcoach.app)"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Delete Template",
+        "de": "Vorlage löschen"
+      },
+      "destination": {
+        "url": "{{MAILCOACH_URL}}/api/templates/{{TEMPLATE_UUID}}",
+        "method": "DELETE",
+        "headers": {
+          "Authorization": "Bearer {{API_TOKEN}}",
+          "Accept": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Template UUID",
+          "as": "TEMPLATE_UUID",
+          "description": { "en": "The UUID of the template to delete." },
+          "type": "string",
+          "source": "field",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "output": {},
+  "messages": {
+    "success": {
+      "en": "Template {{TEMPLATE_UUID}} has been deleted.",
+      "de": "Vorlage {{TEMPLATE_UUID}} wurde gelöscht."
+    }
+  }
+}

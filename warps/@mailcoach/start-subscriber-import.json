@@ -1,0 +1,51 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Mailcoach: Start Subscriber Import",
+  "title": {
+    "en": "Start a subscriber import",
+    "de": "Abonnenten-Import starten"
+  },
+  "description": {
+    "en": "Start processing a subscriber import that is in draft status.",
+    "de": "Die Verarbeitung eines Abonnenten-Imports im Entwurfsstatus starten."
+  },
+  "vars": {
+    "API_TOKEN": "env:MAILCOACH_API_TOKEN|Your Mailcoach API token from /settings/account/tokens",
+    "MAILCOACH_URL": "env:MAILCOACH_URL|Your Mailcoach base URL (e.g. https://yourapp.mailcoach.app)"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Start Import",
+        "de": "Import starten"
+      },
+      "destination": {
+        "url": "{{MAILCOACH_URL}}/api/subscriber-imports/{{IMPORT_UUID}}/start",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{API_TOKEN}}",
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Import UUID",
+          "as": "IMPORT_UUID",
+          "description": { "en": "The UUID of the subscriber import to start (must be in draft status)." },
+          "type": "string",
+          "source": "field",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "output": {},
+  "messages": {
+    "success": {
+      "en": "Subscriber import {{IMPORT_UUID}} has been started.",
+      "de": "Abonnenten-Import {{IMPORT_UUID}} wurde gestartet."
+    }
+  }
+}

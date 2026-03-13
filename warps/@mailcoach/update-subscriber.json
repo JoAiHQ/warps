@@ -1,0 +1,112 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Mailcoach: Update Subscriber",
+  "title": {
+    "en": "Update a subscriber",
+    "de": "Abonnenten aktualisieren"
+  },
+  "description": {
+    "en": "Update subscriber details such as name, tags, or extra attributes.",
+    "de": "Abonnentendetails wie Name, Tags oder zusätzliche Attribute aktualisieren."
+  },
+  "vars": {
+    "API_TOKEN": "env:MAILCOACH_API_TOKEN|Your Mailcoach API token from /settings/account/tokens",
+    "MAILCOACH_URL": "env:MAILCOACH_URL|Your Mailcoach base URL (e.g. https://yourapp.mailcoach.app)"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Update Subscriber",
+        "de": "Abonnenten aktualisieren"
+      },
+      "destination": {
+        "url": "{{MAILCOACH_URL}}/api/subscribers/{{SUBSCRIBER_UUID}}",
+        "method": "PATCH",
+        "headers": {
+          "Authorization": "Bearer {{API_TOKEN}}",
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Subscriber UUID",
+          "as": "SUBSCRIBER_UUID",
+          "description": {
+            "en": "The UUID of the subscriber to update."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Email",
+          "as": "email",
+          "description": {
+            "en": "Updated email address."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:email"
+        },
+        {
+          "name": "First Name",
+          "as": "first_name",
+          "description": {
+            "en": "Updated first name."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:first_name"
+        },
+        {
+          "name": "Last Name",
+          "as": "last_name",
+          "description": {
+            "en": "Updated last name."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:last_name"
+        },
+        {
+          "name": "Tags",
+          "as": "tags",
+          "description": {
+            "en": "Comma-separated list of tags to set on the subscriber."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:tags"
+        },
+        {
+          "name": "Append Tags",
+          "as": "append_tags",
+          "description": {
+            "en": "If true, tags are appended rather than replacing existing tags."
+          },
+          "type": "boolean",
+          "source": "field",
+          "required": false,
+          "position": "payload:append_tags"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "SUBSCRIBER_UUID": "out.data.uuid",
+    "EMAIL": "out.data.email",
+    "STATUS": "out.data.status"
+  },
+  "messages": {
+    "success": {
+      "en": "Subscriber {{EMAIL}} updated successfully.",
+      "de": "Abonnent {{EMAIL}} erfolgreich aktualisiert."
+    }
+  }
+}

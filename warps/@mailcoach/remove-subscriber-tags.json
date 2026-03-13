@@ -1,0 +1,60 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Mailcoach: Remove Subscriber Tags",
+  "title": {
+    "en": "Remove tags from a subscriber",
+    "de": "Tags von Abonnenten entfernen"
+  },
+  "description": {
+    "en": "Remove one or more tags from a Mailcoach subscriber.",
+    "de": "Einen oder mehrere Tags von einem Mailcoach-Abonnenten entfernen."
+  },
+  "vars": {
+    "API_TOKEN": "env:MAILCOACH_API_TOKEN|Your Mailcoach API token from /settings/account/tokens",
+    "MAILCOACH_URL": "env:MAILCOACH_URL|Your Mailcoach base URL (e.g. https://yourapp.mailcoach.app)"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Remove Tags",
+        "de": "Tags entfernen"
+      },
+      "destination": {
+        "url": "{{MAILCOACH_URL}}/api/subscribers/{{SUBSCRIBER_UUID}}/tags",
+        "method": "DELETE",
+        "headers": {
+          "Authorization": "Bearer {{API_TOKEN}}",
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Subscriber UUID",
+          "as": "SUBSCRIBER_UUID",
+          "description": { "en": "The UUID of the subscriber." },
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Tags",
+          "as": "tags",
+          "description": { "en": "JSON array of tag names to remove, e.g. [\"premium\", \"newsletter\"]." },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:tags"
+        }
+      ]
+    }
+  ],
+  "output": {},
+  "messages": {
+    "success": {
+      "en": "Tags removed from subscriber {{SUBSCRIBER_UUID}}.",
+      "de": "Tags von Abonnent {{SUBSCRIBER_UUID}} entfernt."
+    }
+  }
+}

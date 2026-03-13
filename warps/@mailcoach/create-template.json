@@ -1,0 +1,68 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Mailcoach: Create Template",
+  "title": {
+    "en": "Create a template",
+    "de": "Vorlage erstellen"
+  },
+  "description": {
+    "en": "Create a new reusable email template in Mailcoach.",
+    "de": "Eine neue wiederverwendbare E-Mail-Vorlage in Mailcoach erstellen."
+  },
+  "vars": {
+    "API_TOKEN": "env:MAILCOACH_API_TOKEN|Your Mailcoach API token from /settings/account/tokens",
+    "MAILCOACH_URL": "env:MAILCOACH_URL|Your Mailcoach base URL (e.g. https://yourapp.mailcoach.app)"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Create Template",
+        "de": "Vorlage erstellen"
+      },
+      "destination": {
+        "url": "{{MAILCOACH_URL}}/api/templates",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{API_TOKEN}}",
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Name",
+          "as": "name",
+          "description": {
+            "en": "The name of the template."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:name"
+        },
+        {
+          "name": "HTML",
+          "as": "html",
+          "description": {
+            "en": "The HTML content of the template."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:html"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "TEMPLATE_UUID": "out.data.uuid",
+    "TEMPLATE_NAME": "out.data.name"
+  },
+  "messages": {
+    "success": {
+      "en": "Template '{{TEMPLATE_NAME}}' created! UUID: {{TEMPLATE_UUID}}",
+      "de": "Vorlage '{{TEMPLATE_NAME}}' erstellt! UUID: {{TEMPLATE_UUID}}"
+    }
+  }
+}

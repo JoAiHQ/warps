@@ -1,0 +1,80 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Mailcoach: List Campaigns",
+  "title": {
+    "en": "List campaigns",
+    "de": "Kampagnen auflisten"
+  },
+  "description": {
+    "en": "Retrieve all campaigns in your Mailcoach account. Filter by status, email list, or search term.",
+    "de": "Alle Kampagnen in deinem Mailcoach-Konto abrufen. Nach Status, E-Mail-Liste oder Suchbegriff filtern."
+  },
+  "vars": {
+    "API_TOKEN": "env:MAILCOACH_API_TOKEN|Your Mailcoach API token from /settings/account/tokens",
+    "MAILCOACH_URL": "env:MAILCOACH_URL|Your Mailcoach base URL (e.g. https://yourapp.mailcoach.app)"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "List Campaigns",
+        "de": "Kampagnen abrufen"
+      },
+      "destination": {
+        "url": "{{MAILCOACH_URL}}/api/campaigns",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{API_TOKEN}}",
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Search",
+          "as": "filter[search]",
+          "description": {
+            "en": "Filter campaigns by search term."
+          },
+          "type": "string",
+          "source": "field",
+          "position": "query:filter[search]",
+          "required": false
+        },
+        {
+          "name": "Status",
+          "as": "filter[status]",
+          "description": {
+            "en": "Filter by status: sent, scheduled, draft."
+          },
+          "type": "string",
+          "source": "field",
+          "position": "query:filter[status]",
+          "required": false
+        },
+        {
+          "name": "Per Page",
+          "as": "per_page",
+          "description": {
+            "en": "Number of results per page."
+          },
+          "type": "number",
+          "source": "field",
+          "position": "query:per_page",
+          "required": false
+        }
+      ]
+    }
+  ],
+  "output": {
+    "CAMPAIGNS": "out.data",
+    "COUNT": "transform:() => { return Array.isArray(out?.data) ? out.data.length : 0; }",
+    "TOTAL": "out.meta.total"
+  },
+  "messages": {
+    "success": {
+      "en": "Found {{COUNT}} campaign(s) ({{TOTAL}} total).",
+      "de": "{{COUNT}} Kampagne(n) gefunden ({{TOTAL}} insgesamt)."
+    }
+  }
+}

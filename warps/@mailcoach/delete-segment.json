@@ -1,0 +1,58 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Mailcoach: Delete Segment",
+  "title": {
+    "en": "Delete a segment",
+    "de": "Segment löschen"
+  },
+  "description": {
+    "en": "Delete a segment from an email list in Mailcoach.",
+    "de": "Ein Segment von einer E-Mail-Liste in Mailcoach löschen."
+  },
+  "vars": {
+    "API_TOKEN": "env:MAILCOACH_API_TOKEN|Your Mailcoach API token from /settings/account/tokens",
+    "MAILCOACH_URL": "env:MAILCOACH_URL|Your Mailcoach base URL (e.g. https://yourapp.mailcoach.app)"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Delete Segment",
+        "de": "Segment löschen"
+      },
+      "destination": {
+        "url": "{{MAILCOACH_URL}}/api/email-lists/{{LIST_UUID}}/segments/{{SEGMENT_UUID}}",
+        "method": "DELETE",
+        "headers": {
+          "Authorization": "Bearer {{API_TOKEN}}",
+          "Accept": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "List UUID",
+          "as": "LIST_UUID",
+          "description": { "en": "The UUID of the email list." },
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Segment UUID",
+          "as": "SEGMENT_UUID",
+          "description": { "en": "The UUID of the segment to delete." },
+          "type": "string",
+          "source": "field",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "output": {},
+  "messages": {
+    "success": {
+      "en": "Segment {{SEGMENT_UUID}} has been deleted.",
+      "de": "Segment {{SEGMENT_UUID}} wurde gelöscht."
+    }
+  }
+}

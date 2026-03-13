@@ -1,0 +1,62 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Mailcoach: Get Segment",
+  "title": {
+    "en": "Get a segment",
+    "de": "Segment abrufen"
+  },
+  "description": {
+    "en": "Retrieve details of a specific segment by UUID.",
+    "de": "Details eines bestimmten Segments anhand der UUID abrufen."
+  },
+  "vars": {
+    "API_TOKEN": "env:MAILCOACH_API_TOKEN|Your Mailcoach API token from /settings/account/tokens",
+    "MAILCOACH_URL": "env:MAILCOACH_URL|Your Mailcoach base URL (e.g. https://yourapp.mailcoach.app)"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Get Segment",
+        "de": "Segment abrufen"
+      },
+      "destination": {
+        "url": "{{MAILCOACH_URL}}/api/email-lists/{{LIST_UUID}}/segments/{{SEGMENT_UUID}}",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{API_TOKEN}}",
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "List UUID",
+          "as": "LIST_UUID",
+          "description": { "en": "The UUID of the email list." },
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Segment UUID",
+          "as": "SEGMENT_UUID",
+          "description": { "en": "The UUID of the segment." },
+          "type": "string",
+          "source": "field",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "output": {
+    "SEGMENT_DATA": "out.data",
+    "SEGMENT_NAME": "out.data.name"
+  },
+  "messages": {
+    "success": {
+      "en": "Retrieved segment '{{SEGMENT_NAME}}'.",
+      "de": "Segment '{{SEGMENT_NAME}}' abgerufen."
+    }
+  }
+}

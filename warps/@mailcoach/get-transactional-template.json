@@ -1,0 +1,54 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Mailcoach: Get Transactional Template",
+  "title": {
+    "en": "Get a transactional template",
+    "de": "Transaktionsvorlage abrufen"
+  },
+  "description": {
+    "en": "Retrieve a specific transactional email template by UUID.",
+    "de": "Eine bestimmte Transaktions-E-Mail-Vorlage anhand der UUID abrufen."
+  },
+  "vars": {
+    "API_TOKEN": "env:MAILCOACH_API_TOKEN|Your Mailcoach API token from /settings/account/tokens",
+    "MAILCOACH_URL": "env:MAILCOACH_URL|Your Mailcoach base URL (e.g. https://yourapp.mailcoach.app)"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Get Transactional Template",
+        "de": "Transaktionsvorlage abrufen"
+      },
+      "destination": {
+        "url": "{{MAILCOACH_URL}}/api/transactional-mails/templates/{{TEMPLATE_UUID}}",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{API_TOKEN}}",
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Template UUID",
+          "as": "TEMPLATE_UUID",
+          "description": { "en": "The UUID of the transactional template." },
+          "type": "string",
+          "source": "field",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "output": {
+    "TEMPLATE_DATA": "out.data",
+    "TEMPLATE_NAME": "out.data.name"
+  },
+  "messages": {
+    "success": {
+      "en": "Retrieved transactional template '{{TEMPLATE_NAME}}'.",
+      "de": "Transaktionsvorlage '{{TEMPLATE_NAME}}' abgerufen."
+    }
+  }
+}

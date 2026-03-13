@@ -1,0 +1,64 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Mailcoach: Add Subscriber Tags",
+  "title": {
+    "en": "Add tags to a subscriber",
+    "de": "Tags zu Abonnenten hinzufügen"
+  },
+  "description": {
+    "en": "Add one or more tags to an existing Mailcoach subscriber.",
+    "de": "Einen oder mehrere Tags zu einem bestehenden Mailcoach-Abonnenten hinzufügen."
+  },
+  "vars": {
+    "API_TOKEN": "env:MAILCOACH_API_TOKEN|Your Mailcoach API token from /settings/account/tokens",
+    "MAILCOACH_URL": "env:MAILCOACH_URL|Your Mailcoach base URL (e.g. https://yourapp.mailcoach.app)"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Add Tags",
+        "de": "Tags hinzufügen"
+      },
+      "destination": {
+        "url": "{{MAILCOACH_URL}}/api/subscribers/{{SUBSCRIBER_UUID}}/tags",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{API_TOKEN}}",
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Subscriber UUID",
+          "as": "SUBSCRIBER_UUID",
+          "description": {
+            "en": "The UUID of the subscriber."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Tags",
+          "as": "tags",
+          "description": {
+            "en": "JSON array of tag names to add, e.g. [\"premium\", \"newsletter\"]."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:tags"
+        }
+      ]
+    }
+  ],
+  "output": {},
+  "messages": {
+    "success": {
+      "en": "Tags added to subscriber {{SUBSCRIBER_UUID}}.",
+      "de": "Tags zu Abonnent {{SUBSCRIBER_UUID}} hinzugefügt."
+    }
+  }
+}
