@@ -4,16 +4,268 @@
   "repo": "JoAiHQ/warps",
   "branch": "dev",
   "network": "devnet",
-  "commitSha": "e371200fa059157efc1b6059ffe21e12a1423b9f",
-  "committedAt": "2026-03-14T10:02:21.051Z",
-  "generatedAt": "2026-03-14T10:02:22.895Z",
-  "upserts": [],
-  "deletes": [
+  "commitSha": "beb8724db0781a8abe9359bc6fe0ef301c0d23d0",
+  "committedAt": "2026-03-14T15:35:07.505Z",
+  "generatedAt": "2026-03-14T15:35:09.842Z",
+  "upserts": [
     {
-      "key": "multiversx:multiversx-staking-undelegate",
-      "alias": "multiversx-staking-undelegate",
-      "chain": "multiversx",
-      "hash": "8df5fc70397515e6e0d12a90e3bf3916259c500556a0f8a13d2e7724c1b236b1"
+      "key": "none:boogas-check-guess",
+      "identifier": "@boogas-check-guess",
+      "alias": "boogas-check-guess",
+      "chain": "none",
+      "hash": "e5ae4715875b6a2623b0d7d387f64e59f5e26a12990d6bcb79893d3891346bf9",
+      "checksum": "e5ae4715875b6a2623b0d7d387f64e59f5e26a12990d6bcb79893d3891346bf9",
+      "name": "Boogas: Check Guess",
+      "title": {
+        "en": "Check Guess"
+      },
+      "description": {
+        "en": "Checks a numeric guess against the active guessing game secret."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "34b07798145e5ffa86c37e601b39b56fe47b4a5ee805a51a99c260901f3f1796",
+        "slug": "boogas",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "Boogas",
+        "description": {
+          "en": "Put a bounce in your step! A fun-loving collectible NFT project featuring prehistoric caveman characters.",
+          "de": "Gib deinem Schritt einen Schwung! Ein fröhliches Sammler-NFT-Projekt mit prähistorischen Höhlenmensch-Charakteren."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/boogas.png"
+        },
+        "urls": {
+          "web": "https://boogas.io"
+        },
+        "colors": {
+          "primary": "#000000",
+          "secondary": "#ffffff"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "Boogas: Check Guess",
+        "title": {
+          "en": "Check Guess"
+        },
+        "description": {
+          "en": "Checks a numeric guess against the active guessing game secret."
+        },
+        "trigger": {
+          "type": "message",
+          "pattern": "^\\d+$"
+        },
+        "messages": {
+          "success": "{{message}}"
+        },
+        "actions": [
+          {
+            "type": "state",
+            "op": "read",
+            "store": "guessing-game",
+            "keys": [
+              "secret",
+              "active"
+            ]
+          },
+          {
+            "type": "collect",
+            "label": "Evaluate guess",
+            "when": "{{state.active}} === 'true'",
+            "inputs": [
+              {
+                "name": "correct",
+                "type": "bool",
+                "source": "hidden",
+                "modifier": "transform:() => parseInt('{{JOAI_MESSAGE_TEXT}}') === parseInt('{{state.secret}}')"
+              },
+              {
+                "name": "message",
+                "type": "string",
+                "source": "hidden",
+                "modifier": "transform:() => parseInt('{{JOAI_MESSAGE_TEXT}}') === parseInt('{{state.secret}}') ? '🎉 {{JOAI_SENDER_NAME}} got it! The number was {{state.secret}}.' : '❌ Nope, try again!'"
+              }
+            ]
+          },
+          {
+            "type": "state",
+            "op": "write",
+            "store": "guessing-game",
+            "data": {
+              "active": false
+            },
+            "when": "{{correct}} === true"
+          },
+          {
+            "type": "unmount",
+            "warp": "@check-guess",
+            "when": "{{correct}} === true"
+          }
+        ]
+      }
+    },
+    {
+      "key": "none:boogas-start-guessing-game",
+      "identifier": "@boogas-start-guessing-game",
+      "alias": "boogas-start-guessing-game",
+      "chain": "none",
+      "hash": "469ce8599c3e34826ea34d6f87f6700a8003ed58c14b7ab50764f9786c9bc2c2",
+      "checksum": "469ce8599c3e34826ea34d6f87f6700a8003ed58c14b7ab50764f9786c9bc2c2",
+      "name": "Boogas: Start Guessing Game",
+      "title": {
+        "en": "Start Guessing Game"
+      },
+      "description": {
+        "en": "Starts a number guessing game. The agent picks a secret number between 1 and 100."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "34b07798145e5ffa86c37e601b39b56fe47b4a5ee805a51a99c260901f3f1796",
+        "slug": "boogas",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "Boogas",
+        "description": {
+          "en": "Put a bounce in your step! A fun-loving collectible NFT project featuring prehistoric caveman characters.",
+          "de": "Gib deinem Schritt einen Schwung! Ein fröhliches Sammler-NFT-Projekt mit prähistorischen Höhlenmensch-Charakteren."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/boogas.png"
+        },
+        "urls": {
+          "web": "https://boogas.io"
+        },
+        "colors": {
+          "primary": "#000000",
+          "secondary": "#ffffff"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "Boogas: Start Guessing Game",
+        "title": {
+          "en": "Start Guessing Game"
+        },
+        "description": {
+          "en": "Starts a number guessing game. The agent picks a secret number between 1 and 100."
+        },
+        "messages": {
+          "success": "🎮 Game on! I'm thinking of a number between 1 and 100. What's your guess?"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": "Generate secret",
+            "inputs": [
+              {
+                "name": "secret",
+                "type": "uint64",
+                "source": "hidden",
+                "modifier": "transform:() => Math.floor(Math.random() * 100) + 1"
+              }
+            ]
+          },
+          {
+            "type": "state",
+            "op": "write",
+            "store": "guessing-game",
+            "data": {
+              "secret": "{{secret}}",
+              "active": true
+            }
+          },
+          {
+            "type": "mount",
+            "warp": "@check-guess"
+          },
+          {
+            "type": "collect",
+            "label": "Announce",
+            "inputs": []
+          }
+        ]
+      }
+    },
+    {
+      "key": "none:boogas-stop-guessing-game",
+      "identifier": "@boogas-stop-guessing-game",
+      "alias": "boogas-stop-guessing-game",
+      "chain": "none",
+      "hash": "ee90fc41d4294e9e9a07a5de72ece83a02ca85b1b3096458db716414372d5fb3",
+      "checksum": "ee90fc41d4294e9e9a07a5de72ece83a02ca85b1b3096458db716414372d5fb3",
+      "name": "Boogas: Stop Guessing Game",
+      "title": {
+        "en": "Stop Guessing Game"
+      },
+      "description": {
+        "en": "Stops the active guessing game and clears all game state."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "34b07798145e5ffa86c37e601b39b56fe47b4a5ee805a51a99c260901f3f1796",
+        "slug": "boogas",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "Boogas",
+        "description": {
+          "en": "Put a bounce in your step! A fun-loving collectible NFT project featuring prehistoric caveman characters.",
+          "de": "Gib deinem Schritt einen Schwung! Ein fröhliches Sammler-NFT-Projekt mit prähistorischen Höhlenmensch-Charakteren."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/boogas.png"
+        },
+        "urls": {
+          "web": "https://boogas.io"
+        },
+        "colors": {
+          "primary": "#000000",
+          "secondary": "#ffffff"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "Boogas: Stop Guessing Game",
+        "title": {
+          "en": "Stop Guessing Game"
+        },
+        "description": {
+          "en": "Stops the active guessing game and clears all game state."
+        },
+        "messages": {
+          "success": "🛑 Game stopped."
+        },
+        "actions": [
+          {
+            "type": "state",
+            "op": "clear",
+            "store": "guessing-game"
+          },
+          {
+            "type": "unmount",
+            "warp": "@check-guess"
+          },
+          {
+            "type": "collect",
+            "label": "Announce",
+            "inputs": []
+          }
+        ]
+      }
     }
-  ]
+  ],
+  "deletes": []
 }
