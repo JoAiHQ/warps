@@ -1,0 +1,113 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Mailcoach: Create Campaign",
+  "title": {
+    "en": "Create a campaign",
+    "de": "Kampagne erstellen"
+  },
+  "description": {
+    "en": "Create a new email campaign in Mailcoach. Campaigns start in draft status.",
+    "de": "Erstelle eine neue E-Mail-Kampagne in Mailcoach. Kampagnen starten im Entwurfsstatus."
+  },
+  "vars": {
+    "API_TOKEN": "env:MAILCOACH_API_TOKEN|Your Mailcoach API token from /settings/account/tokens",
+    "MAILCOACH_URL": "env:MAILCOACH_URL|Your Mailcoach base URL (e.g. https://yourapp.mailcoach.app)"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Create Campaign",
+        "de": "Kampagne erstellen"
+      },
+      "destination": {
+        "url": "{{MAILCOACH_URL}}/api/campaigns",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{API_TOKEN}}",
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Name",
+          "as": "name",
+          "description": {
+            "en": "The internal name of the campaign."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:name"
+        },
+        {
+          "name": "Email List UUID",
+          "as": "email_list_uuid",
+          "description": {
+            "en": "The UUID of the email list to send this campaign to."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:email_list_uuid"
+        },
+        {
+          "name": "Subject",
+          "as": "subject",
+          "description": {
+            "en": "The subject line of the campaign email."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:subject"
+        },
+        {
+          "name": "From Email",
+          "as": "from_email",
+          "description": {
+            "en": "Override the sender email address."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:from_email"
+        },
+        {
+          "name": "HTML",
+          "as": "html",
+          "description": {
+            "en": "The HTML content of the campaign email."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:html"
+        },
+        {
+          "name": "Schedule At",
+          "as": "schedule_at",
+          "description": {
+            "en": "Schedule the campaign to be sent at this datetime (ISO 8601 format)."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:schedule_at"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "CAMPAIGN_UUID": "out.data.uuid",
+    "CAMPAIGN_NAME": "out.data.name",
+    "STATUS": "out.data.status"
+  },
+  "messages": {
+    "success": {
+      "en": "Campaign '{{CAMPAIGN_NAME}}' created! Status: {{STATUS}}. UUID: {{CAMPAIGN_UUID}}",
+      "de": "Kampagne '{{CAMPAIGN_NAME}}' erstellt! Status: {{STATUS}}. UUID: {{CAMPAIGN_UUID}}"
+    }
+  }
+}

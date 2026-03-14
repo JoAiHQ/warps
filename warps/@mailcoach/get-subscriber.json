@@ -1,0 +1,59 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Mailcoach: Get Subscriber",
+  "title": {
+    "en": "Get a subscriber",
+    "de": "Abonnenten abrufen"
+  },
+  "description": {
+    "en": "Retrieve details for a specific subscriber by UUID.",
+    "de": "Details für einen bestimmten Abonnenten anhand der UUID abrufen."
+  },
+  "vars": {
+    "API_TOKEN": "env:MAILCOACH_API_TOKEN|Your Mailcoach API token from /settings/account/tokens",
+    "MAILCOACH_URL": "env:MAILCOACH_URL|Your Mailcoach base URL (e.g. https://yourapp.mailcoach.app)"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Get Subscriber",
+        "de": "Abonnenten abrufen"
+      },
+      "destination": {
+        "url": "{{MAILCOACH_URL}}/api/subscribers/{{SUBSCRIBER_UUID}}",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{API_TOKEN}}",
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Subscriber UUID",
+          "as": "SUBSCRIBER_UUID",
+          "description": {
+            "en": "The UUID of the subscriber."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "output": {
+    "SUBSCRIBER_DATA": "out.data",
+    "EMAIL": "out.data.email",
+    "STATUS": "out.data.status",
+    "FIRST_NAME": "out.data.first_name",
+    "LAST_NAME": "out.data.last_name"
+  },
+  "messages": {
+    "success": {
+      "en": "Subscriber {{EMAIL}} — Status: {{STATUS}}.",
+      "de": "Abonnent {{EMAIL}} — Status: {{STATUS}}."
+    }
+  }
+}

@@ -1,0 +1,89 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Mailcoach: Update Segment",
+  "title": {
+    "en": "Update a segment",
+    "de": "Segment aktualisieren"
+  },
+  "description": {
+    "en": "Update an existing segment on an email list.",
+    "de": "Ein bestehendes Segment einer E-Mail-Liste aktualisieren."
+  },
+  "vars": {
+    "API_TOKEN": "env:MAILCOACH_API_TOKEN|Your Mailcoach API token from /settings/account/tokens",
+    "MAILCOACH_URL": "env:MAILCOACH_URL|Your Mailcoach base URL (e.g. https://yourapp.mailcoach.app)"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Update Segment",
+        "de": "Segment aktualisieren"
+      },
+      "destination": {
+        "url": "{{MAILCOACH_URL}}/api/email-lists/{{LIST_UUID}}/segments/{{SEGMENT_UUID}}",
+        "method": "PUT",
+        "headers": {
+          "Authorization": "Bearer {{API_TOKEN}}",
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "List UUID",
+          "as": "LIST_UUID",
+          "description": { "en": "The UUID of the email list." },
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Segment UUID",
+          "as": "SEGMENT_UUID",
+          "description": { "en": "The UUID of the segment to update." },
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Name",
+          "as": "name",
+          "description": { "en": "The new name for the segment." },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:name"
+        },
+        {
+          "name": "Positive Tags",
+          "as": "positive_tags",
+          "description": { "en": "JSON array of tag names subscribers must have." },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:positive_tags"
+        },
+        {
+          "name": "Negative Tags",
+          "as": "negative_tags",
+          "description": { "en": "JSON array of tag names subscribers must NOT have." },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:negative_tags"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "SEGMENT_UUID": "out.data.uuid",
+    "SEGMENT_NAME": "out.data.name"
+  },
+  "messages": {
+    "success": {
+      "en": "Segment '{{SEGMENT_NAME}}' updated.",
+      "de": "Segment '{{SEGMENT_NAME}}' aktualisiert."
+    }
+  }
+}

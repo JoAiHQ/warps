@@ -1,0 +1,82 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Mailcoach: Get Campaign Opens",
+  "title": {
+    "en": "Get campaign opens",
+    "de": "Kampagnenöffnungen abrufen"
+  },
+  "description": {
+    "en": "Retrieve the opens report for a campaign, showing which subscribers opened the email.",
+    "de": "Den Öffnungsbericht einer Kampagne abrufen, der zeigt, welche Abonnenten die E-Mail geöffnet haben."
+  },
+  "vars": {
+    "API_TOKEN": "env:MAILCOACH_API_TOKEN|Your Mailcoach API token from /settings/account/tokens",
+    "MAILCOACH_URL": "env:MAILCOACH_URL|Your Mailcoach base URL (e.g. https://yourapp.mailcoach.app)"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Get Opens",
+        "de": "Öffnungen abrufen"
+      },
+      "destination": {
+        "url": "{{MAILCOACH_URL}}/api/campaigns/{{CAMPAIGN_UUID}}/opens",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{API_TOKEN}}",
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Campaign UUID",
+          "as": "CAMPAIGN_UUID",
+          "description": { "en": "The UUID of the campaign." },
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Search",
+          "as": "filter[search]",
+          "description": { "en": "Filter by subscriber email." },
+          "type": "string",
+          "source": "field",
+          "position": "query:filter[search]",
+          "required": false
+        },
+        {
+          "name": "Sort",
+          "as": "sort",
+          "description": { "en": "Sort by: email, open_count, first_opened_at. Prefix with - for descending." },
+          "type": "string",
+          "source": "field",
+          "position": "query:sort",
+          "required": false
+        },
+        {
+          "name": "Per Page",
+          "as": "per_page",
+          "description": { "en": "Number of results per page." },
+          "type": "number",
+          "source": "field",
+          "position": "query:per_page",
+          "required": false
+        }
+      ]
+    }
+  ],
+  "output": {
+    "OPENS": "out.data",
+    "COUNT": "transform:() => { return Array.isArray(out?.data) ? out.data.length : 0; }",
+    "TOTAL": "out.meta.total"
+  },
+  "messages": {
+    "success": {
+      "en": "Found {{COUNT}} open(s) ({{TOTAL}} total).",
+      "de": "{{COUNT}} Öffnung(en) gefunden ({{TOTAL}} insgesamt)."
+    }
+  }
+}

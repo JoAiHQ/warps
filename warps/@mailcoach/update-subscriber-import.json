@@ -1,0 +1,90 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Mailcoach: Update Subscriber Import",
+  "title": {
+    "en": "Update a subscriber import",
+    "de": "Abonnenten-Import aktualisieren"
+  },
+  "description": {
+    "en": "Update a subscriber import that is still in draft status.",
+    "de": "Einen Abonnenten-Import aktualisieren, der sich noch im Entwurfsstatus befindet."
+  },
+  "vars": {
+    "API_TOKEN": "env:MAILCOACH_API_TOKEN|Your Mailcoach API token from /settings/account/tokens",
+    "MAILCOACH_URL": "env:MAILCOACH_URL|Your Mailcoach base URL (e.g. https://yourapp.mailcoach.app)"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Update Import",
+        "de": "Import aktualisieren"
+      },
+      "destination": {
+        "url": "{{MAILCOACH_URL}}/api/subscriber-imports/{{IMPORT_UUID}}",
+        "method": "PUT",
+        "headers": {
+          "Authorization": "Bearer {{API_TOKEN}}",
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Import UUID",
+          "as": "IMPORT_UUID",
+          "description": { "en": "The UUID of the subscriber import to update (must be in draft status)." },
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Subscribers CSV",
+          "as": "subscribers_csv",
+          "description": { "en": "Updated CSV data for the import." },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:subscribers_csv"
+        },
+        {
+          "name": "Subscribe Unsubscribed",
+          "as": "subscribe_unsubscribed",
+          "description": { "en": "If true, previously unsubscribed subscribers will be re-subscribed." },
+          "type": "boolean",
+          "source": "field",
+          "required": false,
+          "position": "payload:subscribe_unsubscribed"
+        },
+        {
+          "name": "Unsubscribe Others",
+          "as": "unsubscribe_others",
+          "description": { "en": "If true, subscribers not in the CSV will be unsubscribed." },
+          "type": "boolean",
+          "source": "field",
+          "required": false,
+          "position": "payload:unsubscribe_others"
+        },
+        {
+          "name": "Replace Tags",
+          "as": "replace_tags",
+          "description": { "en": "If true, existing tags will be replaced. If false, CSV tags are appended." },
+          "type": "boolean",
+          "source": "field",
+          "required": false,
+          "position": "payload:replace_tags"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "IMPORT_UUID": "out.data.uuid",
+    "STATUS": "out.data.status"
+  },
+  "messages": {
+    "success": {
+      "en": "Subscriber import {{IMPORT_UUID}} updated.",
+      "de": "Abonnenten-Import {{IMPORT_UUID}} aktualisiert."
+    }
+  }
+}

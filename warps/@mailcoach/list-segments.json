@@ -1,0 +1,54 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Mailcoach: List Segments",
+  "title": {
+    "en": "List segments",
+    "de": "Segmente auflisten"
+  },
+  "description": {
+    "en": "Retrieve all segments for a given email list.",
+    "de": "Alle Segmente für eine bestimmte E-Mail-Liste abrufen."
+  },
+  "vars": {
+    "API_TOKEN": "env:MAILCOACH_API_TOKEN|Your Mailcoach API token from /settings/account/tokens",
+    "MAILCOACH_URL": "env:MAILCOACH_URL|Your Mailcoach base URL (e.g. https://yourapp.mailcoach.app)"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "List Segments",
+        "de": "Segmente abrufen"
+      },
+      "destination": {
+        "url": "{{MAILCOACH_URL}}/api/email-lists/{{LIST_UUID}}/segments",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{API_TOKEN}}",
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "List UUID",
+          "as": "LIST_UUID",
+          "description": { "en": "The UUID of the email list." },
+          "type": "string",
+          "source": "field",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "output": {
+    "SEGMENTS": "out.data",
+    "COUNT": "transform:() => { return Array.isArray(out?.data) ? out.data.length : 0; }"
+  },
+  "messages": {
+    "success": {
+      "en": "Found {{COUNT}} segment(s).",
+      "de": "{{COUNT}} Segment(e) gefunden."
+    }
+  }
+}

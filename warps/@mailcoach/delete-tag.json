@@ -1,0 +1,58 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Mailcoach: Delete Tag",
+  "title": {
+    "en": "Delete a tag",
+    "de": "Tag löschen"
+  },
+  "description": {
+    "en": "Delete a tag from an email list in Mailcoach.",
+    "de": "Einen Tag von einer E-Mail-Liste in Mailcoach löschen."
+  },
+  "vars": {
+    "API_TOKEN": "env:MAILCOACH_API_TOKEN|Your Mailcoach API token from /settings/account/tokens",
+    "MAILCOACH_URL": "env:MAILCOACH_URL|Your Mailcoach base URL (e.g. https://yourapp.mailcoach.app)"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Delete Tag",
+        "de": "Tag löschen"
+      },
+      "destination": {
+        "url": "{{MAILCOACH_URL}}/api/email-lists/{{LIST_UUID}}/tags/{{TAG_UUID}}",
+        "method": "DELETE",
+        "headers": {
+          "Authorization": "Bearer {{API_TOKEN}}",
+          "Accept": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "List UUID",
+          "as": "LIST_UUID",
+          "description": { "en": "The UUID of the email list." },
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Tag UUID",
+          "as": "TAG_UUID",
+          "description": { "en": "The UUID of the tag to delete." },
+          "type": "string",
+          "source": "field",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "output": {},
+  "messages": {
+    "success": {
+      "en": "Tag {{TAG_UUID}} has been deleted.",
+      "de": "Tag {{TAG_UUID}} wurde gelöscht."
+    }
+  }
+}

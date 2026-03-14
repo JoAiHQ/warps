@@ -1,0 +1,101 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Mailcoach: Create Email List",
+  "title": {
+    "en": "Create an email list",
+    "de": "E-Mail-Liste erstellen"
+  },
+  "description": {
+    "en": "Create a new email list in your Mailcoach account.",
+    "de": "Erstelle eine neue E-Mail-Liste in deinem Mailcoach-Konto."
+  },
+  "vars": {
+    "API_TOKEN": "env:MAILCOACH_API_TOKEN|Your Mailcoach API token from /settings/account/tokens",
+    "MAILCOACH_URL": "env:MAILCOACH_URL|Your Mailcoach base URL (e.g. https://yourapp.mailcoach.app)"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Create Email List",
+        "de": "E-Mail-Liste erstellen"
+      },
+      "destination": {
+        "url": "{{MAILCOACH_URL}}/api/email-lists",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{API_TOKEN}}",
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Name",
+          "as": "name",
+          "description": {
+            "en": "The name of the email list."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:name"
+        },
+        {
+          "name": "Default From Email",
+          "as": "default_from_email",
+          "description": {
+            "en": "The default sender email address."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:default_from_email"
+        },
+        {
+          "name": "Default From Name",
+          "as": "default_from_name",
+          "description": {
+            "en": "The default sender name."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:default_from_name"
+        },
+        {
+          "name": "Default Reply-To Email",
+          "as": "default_reply_to_email",
+          "description": {
+            "en": "The default reply-to email address."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:default_reply_to_email"
+        },
+        {
+          "name": "Requires Confirmation",
+          "as": "requires_confirmation",
+          "description": {
+            "en": "Whether new subscribers must confirm their subscription (double opt-in)."
+          },
+          "type": "boolean",
+          "source": "field",
+          "required": false,
+          "position": "payload:requires_confirmation"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "LIST_UUID": "out.data.uuid",
+    "LIST_NAME": "out.data.name"
+  },
+  "messages": {
+    "success": {
+      "en": "Email list '{{LIST_NAME}}' created successfully! UUID: {{LIST_UUID}}",
+      "de": "E-Mail-Liste '{{LIST_NAME}}' erfolgreich erstellt! UUID: {{LIST_UUID}}"
+    }
+  }
+}

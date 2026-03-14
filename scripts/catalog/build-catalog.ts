@@ -11,7 +11,6 @@ import {
 } from '@joai/warps'
 
 import {
-  DEFAULT_CHAIN,
   GLOBAL_PLACEHOLDERS,
   getNetworkForBranch,
   SOURCE_REPO,
@@ -430,7 +429,6 @@ function isBrandInactive(fileName: string): boolean {
 
 function getChainNameFromWarpData(warpData: Dict): string {
   const chain =
-    (warpData.defaultChain as string | undefined) ||
     (warpData.chain as string | undefined) ||
     ((warpData.meta as Dict | undefined)?.chain as string | undefined)
 
@@ -438,7 +436,7 @@ function getChainNameFromWarpData(warpData: Dict): string {
     return chain.trim().toLowerCase()
   }
 
-  return DEFAULT_CHAIN
+  return 'none'
 }
 
 function getAliasFromFileName(fileName: string): string {
@@ -555,7 +553,6 @@ async function getBrandFactoryOutput(
   const config = {
     currentUrl: 'https://joai.ai',
     env,
-    defaultChain: DEFAULT_CHAIN as WarpChainName,
     user: { wallets: {} },
     preferences: { providers: {} },
     transform: {},
@@ -722,13 +719,14 @@ async function buildManifest(args: CliArgs, network: SyncNetwork): Promise<Catal
     const chain = getChainNameFromWarpData(parsed)
     const aliasBase = getAliasFromFileName(fileName)
     const identifier = createWarpIdentifier(
-      chain as WarpChainName,
+      chain === 'none' ? null : chain as WarpChainName,
       'alias',
       aliasBase,
     )
 
-    const info = getWarpInfoFromIdentifier(identifier)
-    const alias = info?.identifierBase ?? aliasBase
+    const alias = chain === 'none'
+      ? aliasBase
+      : (getWarpInfoFromIdentifier(identifier)?.identifierBase ?? aliasBase)
 
     const key = `${chain}:${alias}`
     const primaryInfo = getPrimaryInfo(workingWarp)

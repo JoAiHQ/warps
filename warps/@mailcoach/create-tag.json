@@ -1,0 +1,72 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Mailcoach: Create Tag",
+  "title": {
+    "en": "Create a tag",
+    "de": "Tag erstellen"
+  },
+  "description": {
+    "en": "Create a new tag for an email list in Mailcoach.",
+    "de": "Einen neuen Tag für eine E-Mail-Liste in Mailcoach erstellen."
+  },
+  "vars": {
+    "API_TOKEN": "env:MAILCOACH_API_TOKEN|Your Mailcoach API token from /settings/account/tokens",
+    "MAILCOACH_URL": "env:MAILCOACH_URL|Your Mailcoach base URL (e.g. https://yourapp.mailcoach.app)"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Create Tag",
+        "de": "Tag erstellen"
+      },
+      "destination": {
+        "url": "{{MAILCOACH_URL}}/api/email-lists/{{LIST_UUID}}/tags",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{API_TOKEN}}",
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "List UUID",
+          "as": "LIST_UUID",
+          "description": { "en": "The UUID of the email list." },
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Name",
+          "as": "name",
+          "description": { "en": "The name of the tag." },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:name"
+        },
+        {
+          "name": "Visible in Preferences",
+          "as": "visible_in_preferences",
+          "description": { "en": "Whether subscribers can see and toggle this tag in their preferences." },
+          "type": "boolean",
+          "source": "field",
+          "required": false,
+          "position": "payload:visible_in_preferences"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "TAG_UUID": "out.data.uuid",
+    "TAG_NAME": "out.data.name"
+  },
+  "messages": {
+    "success": {
+      "en": "Tag '{{TAG_NAME}}' created! UUID: {{TAG_UUID}}",
+      "de": "Tag '{{TAG_NAME}}' erstellt! UUID: {{TAG_UUID}}"
+    }
+  }
+}

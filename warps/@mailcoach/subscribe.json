@@ -1,0 +1,112 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Mailcoach: Subscribe",
+  "title": {
+    "en": "Subscribe to an email list",
+    "de": "E-Mail-Liste abonnieren"
+  },
+  "description": {
+    "en": "Add a new subscriber to a Mailcoach email list. Supports tags, extra attributes, and double opt-in skip.",
+    "de": "Einen neuen Abonnenten zu einer Mailcoach-E-Mail-Liste hinzufügen. Unterstützt Tags, zusätzliche Attribute und Double-Opt-In-Überspringen."
+  },
+  "vars": {
+    "API_TOKEN": "env:MAILCOACH_API_TOKEN|Your Mailcoach API token from /settings/account/tokens",
+    "MAILCOACH_URL": "env:MAILCOACH_URL|Your Mailcoach base URL (e.g. https://yourapp.mailcoach.app)"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Subscribe",
+        "de": "Abonnieren"
+      },
+      "destination": {
+        "url": "{{MAILCOACH_URL}}/api/email-lists/{{LIST_UUID}}/subscribers",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{API_TOKEN}}",
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "List UUID",
+          "as": "LIST_UUID",
+          "description": {
+            "en": "The UUID of the email list to subscribe to."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Email",
+          "as": "email",
+          "description": {
+            "en": "The email address of the subscriber."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:email"
+        },
+        {
+          "name": "First Name",
+          "as": "first_name",
+          "description": {
+            "en": "The subscriber's first name."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:first_name"
+        },
+        {
+          "name": "Last Name",
+          "as": "last_name",
+          "description": {
+            "en": "The subscriber's last name."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:last_name"
+        },
+        {
+          "name": "Tags",
+          "as": "tags",
+          "description": {
+            "en": "Comma-separated list of tags to assign to the subscriber."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:tags"
+        },
+        {
+          "name": "Skip Confirmation",
+          "as": "skip_confirmation",
+          "description": {
+            "en": "Skip the double opt-in confirmation email and immediately subscribe."
+          },
+          "type": "boolean",
+          "source": "field",
+          "required": false,
+          "position": "payload:skip_confirmation"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "SUBSCRIBER_UUID": "out.data.uuid",
+    "SUBSCRIBER_EMAIL": "out.data.email",
+    "STATUS": "out.data.status"
+  },
+  "messages": {
+    "success": {
+      "en": "Subscriber {{SUBSCRIBER_EMAIL}} added with status '{{STATUS}}'. UUID: {{SUBSCRIBER_UUID}}",
+      "de": "Abonnent {{SUBSCRIBER_EMAIL}} mit Status '{{STATUS}}' hinzugefügt. UUID: {{SUBSCRIBER_UUID}}"
+    }
+  }
+}

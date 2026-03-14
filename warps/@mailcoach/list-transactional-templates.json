@@ -1,0 +1,65 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Mailcoach: List Transactional Templates",
+  "title": {
+    "en": "List transactional templates",
+    "de": "Transaktionsvorlagen auflisten"
+  },
+  "description": {
+    "en": "Retrieve all transactional email templates in your Mailcoach account.",
+    "de": "Alle Transaktions-E-Mail-Vorlagen in deinem Mailcoach-Konto abrufen."
+  },
+  "vars": {
+    "API_TOKEN": "env:MAILCOACH_API_TOKEN|Your Mailcoach API token from /settings/account/tokens",
+    "MAILCOACH_URL": "env:MAILCOACH_URL|Your Mailcoach base URL (e.g. https://yourapp.mailcoach.app)"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "List Transactional Templates",
+        "de": "Transaktionsvorlagen abrufen"
+      },
+      "destination": {
+        "url": "{{MAILCOACH_URL}}/api/transactional-mails/templates",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{API_TOKEN}}",
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Name Filter",
+          "as": "filter[name]",
+          "description": { "en": "Filter templates by name." },
+          "type": "string",
+          "source": "field",
+          "position": "query:filter[name]",
+          "required": false
+        },
+        {
+          "name": "Per Page",
+          "as": "per_page",
+          "description": { "en": "Number of results per page." },
+          "type": "number",
+          "source": "field",
+          "position": "query:per_page",
+          "required": false
+        }
+      ]
+    }
+  ],
+  "output": {
+    "TEMPLATES": "out.data",
+    "COUNT": "transform:() => { return Array.isArray(out?.data) ? out.data.length : 0; }",
+    "TOTAL": "out.meta.total"
+  },
+  "messages": {
+    "success": {
+      "en": "Found {{COUNT}} transactional template(s) ({{TOTAL}} total).",
+      "de": "{{COUNT}} Transaktionsvorlage(n) gefunden ({{TOTAL}} insgesamt)."
+    }
+  }
+}

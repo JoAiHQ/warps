@@ -1,0 +1,57 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Mailcoach: Get Email List",
+  "title": {
+    "en": "Get an email list",
+    "de": "E-Mail-Liste abrufen"
+  },
+  "description": {
+    "en": "Retrieve details of a specific email list by UUID.",
+    "de": "Details einer bestimmten E-Mail-Liste anhand der UUID abrufen."
+  },
+  "vars": {
+    "API_TOKEN": "env:MAILCOACH_API_TOKEN|Your Mailcoach API token from /settings/account/tokens",
+    "MAILCOACH_URL": "env:MAILCOACH_URL|Your Mailcoach base URL (e.g. https://yourapp.mailcoach.app)"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Get Email List",
+        "de": "E-Mail-Liste abrufen"
+      },
+      "destination": {
+        "url": "{{MAILCOACH_URL}}/api/email-lists/{{LIST_UUID}}",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{API_TOKEN}}",
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "List UUID",
+          "as": "LIST_UUID",
+          "description": {
+            "en": "The UUID of the email list."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "output": {
+    "LIST_DATA": "out.data",
+    "LIST_NAME": "out.data.name",
+    "ACTIVE_SUBSCRIBERS": "out.data.active_subscribers_count"
+  },
+  "messages": {
+    "success": {
+      "en": "Retrieved list '{{LIST_NAME}}' with {{ACTIVE_SUBSCRIBERS}} active subscriber(s).",
+      "de": "Liste '{{LIST_NAME}}' mit {{ACTIVE_SUBSCRIBERS}} aktiven Abonnenten abgerufen."
+    }
+  }
+}

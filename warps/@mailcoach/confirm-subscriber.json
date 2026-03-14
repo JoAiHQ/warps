@@ -1,0 +1,53 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Mailcoach: Confirm Subscriber",
+  "title": {
+    "en": "Confirm a subscriber",
+    "de": "Abonnenten bestätigen"
+  },
+  "description": {
+    "en": "Manually confirm a subscriber's double opt-in, moving them from unconfirmed to subscribed status.",
+    "de": "Das Double-Opt-In eines Abonnenten manuell bestätigen und ihn von unbestätigt auf abonniert setzen."
+  },
+  "vars": {
+    "API_TOKEN": "env:MAILCOACH_API_TOKEN|Your Mailcoach API token from /settings/account/tokens",
+    "MAILCOACH_URL": "env:MAILCOACH_URL|Your Mailcoach base URL (e.g. https://yourapp.mailcoach.app)"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Confirm Subscriber",
+        "de": "Abonnenten bestätigen"
+      },
+      "destination": {
+        "url": "{{MAILCOACH_URL}}/api/subscribers/{{SUBSCRIBER_UUID}}/confirm",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{API_TOKEN}}",
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Subscriber UUID",
+          "as": "SUBSCRIBER_UUID",
+          "description": {
+            "en": "The UUID of the subscriber to confirm."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "output": {},
+  "messages": {
+    "success": {
+      "en": "Subscriber {{SUBSCRIBER_UUID}} has been confirmed.",
+      "de": "Abonnent {{SUBSCRIBER_UUID}} wurde bestätigt."
+    }
+  }
+}

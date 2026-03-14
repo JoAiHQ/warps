@@ -15,8 +15,6 @@ export const NETWORK_TO_API_BASE_URL: Record<SyncNetwork, string> = {
   mainnet: 'https://api.joai.ai',
 }
 
-export const DEFAULT_CHAIN = 'multiversx'
-
 export const GLOBAL_PLACEHOLDERS: Record<string, string> = {
   CHATAPP_HOST:
     'https://raw.githubusercontent.com/JoAiHQ/warps/refs/heads/main/dist',

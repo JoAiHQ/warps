@@ -1,0 +1,80 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Mailcoach: List Email Lists",
+  "title": {
+    "en": "List email lists",
+    "de": "E-Mail-Listen auflisten"
+  },
+  "description": {
+    "en": "Retrieve all email lists in your Mailcoach account. Supports search filtering and sorting.",
+    "de": "Alle E-Mail-Listen in deinem Mailcoach-Konto abrufen. Unterstützt Suchfilter und Sortierung."
+  },
+  "vars": {
+    "API_TOKEN": "env:MAILCOACH_API_TOKEN|Your Mailcoach API token from /settings/account/tokens",
+    "MAILCOACH_URL": "env:MAILCOACH_URL|Your Mailcoach base URL (e.g. https://yourapp.mailcoach.app)"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "List Email Lists",
+        "de": "E-Mail-Listen abrufen"
+      },
+      "destination": {
+        "url": "{{MAILCOACH_URL}}/api/email-lists",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{API_TOKEN}}",
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Search",
+          "as": "filter[search]",
+          "description": {
+            "en": "Filter lists by search term."
+          },
+          "type": "string",
+          "source": "field",
+          "position": "query:filter[search]",
+          "required": false
+        },
+        {
+          "name": "Sort",
+          "as": "sort",
+          "description": {
+            "en": "Sort by field: name, created_at, active_subscribers_count. Prefix with - for descending."
+          },
+          "type": "string",
+          "source": "field",
+          "position": "query:sort",
+          "required": false
+        },
+        {
+          "name": "Per Page",
+          "as": "per_page",
+          "description": {
+            "en": "Number of results per page."
+          },
+          "type": "number",
+          "source": "field",
+          "position": "query:per_page",
+          "required": false
+        }
+      ]
+    }
+  ],
+  "output": {
+    "LISTS": "out.data",
+    "COUNT": "transform:() => { return Array.isArray(out?.data) ? out.data.length : 0; }",
+    "TOTAL": "out.meta.total"
+  },
+  "messages": {
+    "success": {
+      "en": "Found {{COUNT}} email list(s) ({{TOTAL}} total).",
+      "de": "{{COUNT}} E-Mail-Liste(n) gefunden ({{TOTAL}} insgesamt)."
+    }
+  }
+}

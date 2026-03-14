@@ -1,0 +1,68 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Mailcoach: Add Suppression",
+  "title": {
+    "en": "Add a suppression",
+    "de": "Unterdrückung hinzufügen"
+  },
+  "description": {
+    "en": "Manually suppress an email address to prevent it from receiving any future emails.",
+    "de": "Eine E-Mail-Adresse manuell unterdrücken, um zu verhindern, dass sie künftige E-Mails erhält."
+  },
+  "vars": {
+    "API_TOKEN": "env:MAILCOACH_API_TOKEN|Your Mailcoach API token from /settings/account/tokens",
+    "MAILCOACH_URL": "env:MAILCOACH_URL|Your Mailcoach base URL (e.g. https://yourapp.mailcoach.app)"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Add Suppression",
+        "de": "Unterdrückung hinzufügen"
+      },
+      "destination": {
+        "url": "{{MAILCOACH_URL}}/api/suppressions",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{API_TOKEN}}",
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Email",
+          "as": "email",
+          "description": {
+            "en": "The email address to suppress."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:email"
+        },
+        {
+          "name": "Reason",
+          "as": "reason",
+          "description": {
+            "en": "Reason for suppression: manual (default), hard_bounce, spam_complaint."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:reason",
+          "default": "manual"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "SUPPRESSION_UUID": "out.data.uuid"
+  },
+  "messages": {
+    "success": {
+      "en": "Email {{email}} has been suppressed.",
+      "de": "E-Mail {{email}} wurde unterdrückt."
+    }
+  }
+}

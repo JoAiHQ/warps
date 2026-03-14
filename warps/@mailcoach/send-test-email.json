@@ -1,0 +1,64 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Mailcoach: Send Test Email",
+  "title": {
+    "en": "Send a test email",
+    "de": "Test-E-Mail senden"
+  },
+  "description": {
+    "en": "Send a test version of a campaign to one or more email addresses before sending to the full list.",
+    "de": "Eine Testversion einer Kampagne an eine oder mehrere E-Mail-Adressen senden, bevor sie an die vollständige Liste versendet wird."
+  },
+  "vars": {
+    "API_TOKEN": "env:MAILCOACH_API_TOKEN|Your Mailcoach API token from /settings/account/tokens",
+    "MAILCOACH_URL": "env:MAILCOACH_URL|Your Mailcoach base URL (e.g. https://yourapp.mailcoach.app)"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Send Test",
+        "de": "Test senden"
+      },
+      "destination": {
+        "url": "{{MAILCOACH_URL}}/api/campaigns/{{CAMPAIGN_UUID}}/send-test",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{API_TOKEN}}",
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Campaign UUID",
+          "as": "CAMPAIGN_UUID",
+          "description": {
+            "en": "The UUID of the campaign to test."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Email",
+          "as": "email",
+          "description": {
+            "en": "Comma-separated list of email addresses to send the test to (max 10)."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:email"
+        }
+      ]
+    }
+  ],
+  "output": {},
+  "messages": {
+    "success": {
+      "en": "Test email sent to {{email}}.",
+      "de": "Test-E-Mail an {{email}} gesendet."
+    }
+  }
+}

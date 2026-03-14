@@ -1,0 +1,60 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Mailcoach: Get Campaign",
+  "title": {
+    "en": "Get a campaign",
+    "de": "Kampagne abrufen"
+  },
+  "description": {
+    "en": "Retrieve details and stats for a specific campaign including opens, clicks, and bounces.",
+    "de": "Details und Statistiken für eine bestimmte Kampagne abrufen, einschließlich Öffnungen, Klicks und Bounces."
+  },
+  "vars": {
+    "API_TOKEN": "env:MAILCOACH_API_TOKEN|Your Mailcoach API token from /settings/account/tokens",
+    "MAILCOACH_URL": "env:MAILCOACH_URL|Your Mailcoach base URL (e.g. https://yourapp.mailcoach.app)"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Get Campaign",
+        "de": "Kampagne abrufen"
+      },
+      "destination": {
+        "url": "{{MAILCOACH_URL}}/api/campaigns/{{CAMPAIGN_UUID}}",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{API_TOKEN}}",
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Campaign UUID",
+          "as": "CAMPAIGN_UUID",
+          "description": {
+            "en": "The UUID of the campaign."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "output": {
+    "CAMPAIGN_DATA": "out.data",
+    "CAMPAIGN_NAME": "out.data.name",
+    "STATUS": "out.data.status",
+    "OPEN_COUNT": "out.data.open_count",
+    "CLICK_COUNT": "out.data.click_count",
+    "SENT_COUNT": "out.data.sent_to_number_of_subscribers"
+  },
+  "messages": {
+    "success": {
+      "en": "Campaign '{{CAMPAIGN_NAME}}' — Status: {{STATUS}}, Opens: {{OPEN_COUNT}}, Clicks: {{CLICK_COUNT}}.",
+      "de": "Kampagne '{{CAMPAIGN_NAME}}' — Status: {{STATUS}}, Öffnungen: {{OPEN_COUNT}}, Klicks: {{CLICK_COUNT}}."
+    }
+  }
+}

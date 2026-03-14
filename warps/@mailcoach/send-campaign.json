@@ -1,0 +1,53 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Mailcoach: Send Campaign",
+  "title": {
+    "en": "Send a campaign",
+    "de": "Kampagne senden"
+  },
+  "description": {
+    "en": "Send a campaign immediately to all subscribers on the email list.",
+    "de": "Kampagne sofort an alle Abonnenten der E-Mail-Liste senden."
+  },
+  "vars": {
+    "API_TOKEN": "env:MAILCOACH_API_TOKEN|Your Mailcoach API token from /settings/account/tokens",
+    "MAILCOACH_URL": "env:MAILCOACH_URL|Your Mailcoach base URL (e.g. https://yourapp.mailcoach.app)"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Send Campaign",
+        "de": "Kampagne senden"
+      },
+      "destination": {
+        "url": "{{MAILCOACH_URL}}/api/campaigns/{{CAMPAIGN_UUID}}/send",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{API_TOKEN}}",
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Campaign UUID",
+          "as": "CAMPAIGN_UUID",
+          "description": {
+            "en": "The UUID of the campaign to send."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "output": {},
+  "messages": {
+    "success": {
+      "en": "Campaign {{CAMPAIGN_UUID}} has been queued for sending.",
+      "de": "Kampagne {{CAMPAIGN_UUID}} wurde zum Versand in die Warteschlange eingereiht."
+    }
+  }
+}

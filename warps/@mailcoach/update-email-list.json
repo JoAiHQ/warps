@@ -1,0 +1,99 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Mailcoach: Update Email List",
+  "title": {
+    "en": "Update an email list",
+    "de": "E-Mail-Liste aktualisieren"
+  },
+  "description": {
+    "en": "Update settings of an existing Mailcoach email list.",
+    "de": "Einstellungen einer bestehenden Mailcoach-E-Mail-Liste aktualisieren."
+  },
+  "vars": {
+    "API_TOKEN": "env:MAILCOACH_API_TOKEN|Your Mailcoach API token from /settings/account/tokens",
+    "MAILCOACH_URL": "env:MAILCOACH_URL|Your Mailcoach base URL (e.g. https://yourapp.mailcoach.app)"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Update Email List",
+        "de": "E-Mail-Liste aktualisieren"
+      },
+      "destination": {
+        "url": "{{MAILCOACH_URL}}/api/email-lists/{{LIST_UUID}}",
+        "method": "PUT",
+        "headers": {
+          "Authorization": "Bearer {{API_TOKEN}}",
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "List UUID",
+          "as": "LIST_UUID",
+          "description": { "en": "The UUID of the email list to update." },
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Name",
+          "as": "name",
+          "description": { "en": "The name of the email list." },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:name"
+        },
+        {
+          "name": "Default From Email",
+          "as": "default_from_email",
+          "description": { "en": "The default sender email address." },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:default_from_email"
+        },
+        {
+          "name": "Default From Name",
+          "as": "default_from_name",
+          "description": { "en": "The default sender name." },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:default_from_name"
+        },
+        {
+          "name": "Default Reply-To Email",
+          "as": "default_reply_to_email",
+          "description": { "en": "The default reply-to email address." },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:default_reply_to_email"
+        },
+        {
+          "name": "Requires Confirmation",
+          "as": "requires_confirmation",
+          "description": { "en": "Whether new subscribers must confirm their subscription." },
+          "type": "boolean",
+          "source": "field",
+          "required": false,
+          "position": "payload:requires_confirmation"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "LIST_UUID": "out.data.uuid",
+    "LIST_NAME": "out.data.name"
+  },
+  "messages": {
+    "success": {
+      "en": "Email list '{{LIST_NAME}}' updated successfully.",
+      "de": "E-Mail-Liste '{{LIST_NAME}}' erfolgreich aktualisiert."
+    }
+  }
+}

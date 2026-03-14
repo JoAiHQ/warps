@@ -1,0 +1,50 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Mailcoach: Delete Campaign",
+  "title": {
+    "en": "Delete a campaign",
+    "de": "Kampagne löschen"
+  },
+  "description": {
+    "en": "Permanently delete a campaign from Mailcoach.",
+    "de": "Eine Kampagne dauerhaft aus Mailcoach löschen."
+  },
+  "vars": {
+    "API_TOKEN": "env:MAILCOACH_API_TOKEN|Your Mailcoach API token from /settings/account/tokens",
+    "MAILCOACH_URL": "env:MAILCOACH_URL|Your Mailcoach base URL (e.g. https://yourapp.mailcoach.app)"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Delete Campaign",
+        "de": "Kampagne löschen"
+      },
+      "destination": {
+        "url": "{{MAILCOACH_URL}}/api/campaigns/{{CAMPAIGN_UUID}}",
+        "method": "DELETE",
+        "headers": {
+          "Authorization": "Bearer {{API_TOKEN}}",
+          "Accept": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Campaign UUID",
+          "as": "CAMPAIGN_UUID",
+          "description": { "en": "The UUID of the campaign to delete." },
+          "type": "string",
+          "source": "field",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "output": {},
+  "messages": {
+    "success": {
+      "en": "Campaign {{CAMPAIGN_UUID}} has been deleted.",
+      "de": "Kampagne {{CAMPAIGN_UUID}} wurde gelöscht."
+    }
+  }
+}

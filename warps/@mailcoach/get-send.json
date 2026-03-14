@@ -1,0 +1,56 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Mailcoach: Get Send",
+  "title": {
+    "en": "Get a send record",
+    "de": "Versendungsdatensatz abrufen"
+  },
+  "description": {
+    "en": "Retrieve a specific send record including open and click engagement metrics.",
+    "de": "Einen bestimmten Versendungsdatensatz einschließlich Öffnungs- und Klick-Engagement-Metriken abrufen."
+  },
+  "vars": {
+    "API_TOKEN": "env:MAILCOACH_API_TOKEN|Your Mailcoach API token from /settings/account/tokens",
+    "MAILCOACH_URL": "env:MAILCOACH_URL|Your Mailcoach base URL (e.g. https://yourapp.mailcoach.app)"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Get Send",
+        "de": "Versendung abrufen"
+      },
+      "destination": {
+        "url": "{{MAILCOACH_URL}}/api/sends/{{SEND_UUID}}",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{API_TOKEN}}",
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Send UUID",
+          "as": "SEND_UUID",
+          "description": { "en": "The UUID of the send record." },
+          "type": "string",
+          "source": "field",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "output": {
+    "SEND_DATA": "out.data",
+    "OPEN_COUNT": "out.data.open_count",
+    "CLICK_COUNT": "out.data.click_count",
+    "FAILURE_REASON": "out.data.failure_reason"
+  },
+  "messages": {
+    "success": {
+      "en": "Send record retrieved. Opens: {{OPEN_COUNT}}, Clicks: {{CLICK_COUNT}}.",
+      "de": "Versendungsdatensatz abgerufen. Öffnungen: {{OPEN_COUNT}}, Klicks: {{CLICK_COUNT}}."
+    }
+  }
+}
