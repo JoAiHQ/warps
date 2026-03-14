@@ -1,0 +1,53 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Boogas: Check Guess",
+  "title": {
+    "en": "Check Guess"
+  },
+  "description": {
+    "en": "Checks a numeric guess against the active guessing game secret."
+  },
+  "trigger": { "type": "message", "pattern": "^\\d+$" },
+  "messages": {
+    "success": "{{message}}"
+  },
+  "actions": [
+    {
+      "type": "state",
+      "op": "read",
+      "store": "guessing-game",
+      "keys": ["secret", "active"]
+    },
+    {
+      "type": "collect",
+      "label": "Evaluate guess",
+      "when": "{{state.active}} === 'true'",
+      "inputs": [
+        {
+          "name": "correct",
+          "type": "bool",
+          "source": "hidden",
+          "modifier": "transform:() => parseInt('{{JOAI_MESSAGE_TEXT}}') === parseInt('{{state.secret}}')"
+        },
+        {
+          "name": "message",
+          "type": "string",
+          "source": "hidden",
+          "modifier": "transform:() => parseInt('{{JOAI_MESSAGE_TEXT}}') === parseInt('{{state.secret}}') ? '🎉 {{JOAI_SENDER_NAME}} got it! The number was {{state.secret}}.' : '❌ Nope, try again!'"
+        }
+      ]
+    },
+    {
+      "type": "state",
+      "op": "write",
+      "store": "guessing-game",
+      "data": { "active": false },
+      "when": "{{correct}} === true"
+    },
+    {
+      "type": "unmount",
+      "warp": "@check-guess",
+      "when": "{{correct}} === true"
+    }
+  ]
+}
