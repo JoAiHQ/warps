@@ -4,114 +4,254 @@
   "repo": "JoAiHQ/warps",
   "branch": "dev",
   "network": "devnet",
-  "commitSha": "cefc1a95821da673d4492501c9df8779133c7c2f",
-  "committedAt": "2026-03-15T16:47:02.093Z",
-  "generatedAt": "2026-03-15T16:47:04.382Z",
+  "commitSha": "e395c5a5640773c0a7dde9e2c332472f53153719",
+  "committedAt": "2026-03-15T19:15:39.966Z",
+  "generatedAt": "2026-03-15T19:15:42.451Z",
   "upserts": [
     {
-      "key": "none:boogas-game-guess-number-check",
-      "identifier": "@boogas-game-guess-number-check",
-      "alias": "boogas-game-guess-number-check",
+      "key": "none:browser-click",
+      "identifier": "@browser-click",
+      "alias": "browser-click",
       "chain": "none",
-      "hash": "6354d27708856fd843b880a90e60041668e43935705d68b19f80cebb12e9b24e",
-      "checksum": "6354d27708856fd843b880a90e60041668e43935705d68b19f80cebb12e9b24e",
-      "name": "game-guess-number-check",
+      "hash": "0cbec42e3f064a86d4983eb0fe2fdd03382f3e87f3d3a04865ebb484af3d711f",
+      "checksum": "0cbec42e3f064a86d4983eb0fe2fdd03382f3e87f3d3a04865ebb484af3d711f",
+      "name": "Browser: Click Element",
       "title": {
-        "en": "Check Guess"
+        "en": "Click element"
       },
       "description": {
-        "en": "Checks a numeric guess against the active guessing game secret."
+        "en": "Click a specific element on the current browser page."
       },
       "preview": null,
       "creator": "github:JoAiHQ/warps",
       "privileges": [],
-      "listed": false,
+      "listed": true,
       "primaryAddress": null,
       "primaryFunc": null,
       "brand": {
-        "hash": "34b07798145e5ffa86c37e601b39b56fe47b4a5ee805a51a99c260901f3f1796",
-        "slug": "boogas",
-        "active": true,
+        "hash": "23633e6c5f676878d5423aff68efee6bb4390b8b5efa922d30235244642c57f0",
+        "slug": "browser",
+        "active": false,
         "protocol": "brand:0.2.0",
-        "name": "Boogas",
+        "name": "Browser",
         "description": {
-          "en": "Put a bounce in your step! A fun-loving collectible NFT project featuring prehistoric caveman characters.",
-          "de": "Gib deinem Schritt einen Schwung! Ein fröhliches Sammler-NFT-Projekt mit prähistorischen Höhlenmensch-Charakteren."
+          "en": "Control Chrome on your desktop to automate web tasks, take screenshots, navigate pages, and interact with web content."
         },
         "logo": {
-          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/boogas.png"
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/chrome.png"
         },
         "urls": {
-          "web": "https://boogas.io"
+          "web": "https://google.com/chrome"
         },
         "colors": {
-          "primary": "#000000",
-          "secondary": "#ffffff"
+          "primary": "#4285F4"
         }
       },
       "warp": {
         "protocol": "warp:3.0.0",
-        "name": "game-guess-number-check",
+        "name": "Browser: Click Element",
         "title": {
-          "en": "Check Guess"
+          "en": "Click element"
         },
         "description": {
-          "en": "Checks a numeric guess against the active guessing game secret."
-        },
-        "trigger": {
-          "type": "message",
-          "pattern": "^\\d+$"
-        },
-        "messages": {
-          "success": "{{message}}"
+          "en": "Click a specific element on the current browser page."
         },
         "actions": [
           {
-            "type": "state",
-            "label": "Load game state",
-            "op": "read",
-            "store": "guessing-game",
-            "keys": [
-              "secret",
-              "active"
-            ]
-          },
-          {
-            "type": "compute",
-            "label": "Evaluate guess",
-            "when": "{{state.active}} === true",
+            "type": "mcp",
+            "label": {
+              "en": "Click Element"
+            },
+            "destination": {
+              "url": "browser://devtools",
+              "tool": "click"
+            },
             "inputs": [
               {
-                "name": "correct",
-                "type": "bool",
-                "source": "hidden",
-                "modifier": "transform:() => parseInt('{{JOAI_MESSAGE_TEXT}}') === parseInt('{{state.secret}}')"
-              },
-              {
-                "name": "message",
+                "name": "Element UID",
+                "as": "uid",
+                "description": {
+                  "en": "The UID of the element to click, obtained from the page snapshot (use Get Page Content first)"
+                },
                 "type": "string",
-                "source": "hidden",
-                "modifier": "transform:() => parseInt('{{JOAI_MESSAGE_TEXT}}') === parseInt('{{state.secret}}') ? '🎉 {{JOAI_SENDER_NAME}} got it! The number was {{state.secret}}.' : '❌ Nope, try again!'"
+                "source": "field",
+                "required": true
               }
             ]
-          },
-          {
-            "type": "state",
-            "label": "Mark game inactive",
-            "op": "write",
-            "store": "guessing-game",
-            "data": {
-              "active": false
-            },
-            "when": "{{correct}} === true"
-          },
-          {
-            "type": "unmount",
-            "label": "Unmount guess listener",
-            "warp": "@boogas-game-guess-number-check",
-            "when": "{{correct}} === true"
           }
-        ]
+        ],
+        "messages": {
+          "success": {
+            "en": "Element clicked successfully."
+          },
+          "error": {
+            "en": "Failed to click element."
+          }
+        }
+      }
+    },
+    {
+      "key": "none:browser-evaluate",
+      "identifier": "@browser-evaluate",
+      "alias": "browser-evaluate",
+      "chain": "none",
+      "hash": "838774e79aa84858566b74364c07b9e62e7bf3737b8c08256e1b80954b752268",
+      "checksum": "838774e79aa84858566b74364c07b9e62e7bf3737b8c08256e1b80954b752268",
+      "name": "Browser: Evaluate Script",
+      "title": {
+        "en": "Evaluate script"
+      },
+      "description": {
+        "en": "Execute JavaScript in the current browser tab and return the result."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "23633e6c5f676878d5423aff68efee6bb4390b8b5efa922d30235244642c57f0",
+        "slug": "browser",
+        "active": false,
+        "protocol": "brand:0.2.0",
+        "name": "Browser",
+        "description": {
+          "en": "Control Chrome on your desktop to automate web tasks, take screenshots, navigate pages, and interact with web content."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/chrome.png"
+        },
+        "urls": {
+          "web": "https://google.com/chrome"
+        },
+        "colors": {
+          "primary": "#4285F4"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "Browser: Evaluate Script",
+        "title": {
+          "en": "Evaluate script"
+        },
+        "description": {
+          "en": "Execute JavaScript in the current browser tab and return the result."
+        },
+        "actions": [
+          {
+            "type": "mcp",
+            "label": {
+              "en": "Evaluate Script"
+            },
+            "destination": {
+              "url": "browser://devtools",
+              "tool": "evaluate_script"
+            },
+            "inputs": [
+              {
+                "name": "Script",
+                "as": "expression",
+                "description": {
+                  "en": "JavaScript function to evaluate in the page context. Must be a function declaration, e.g. function() { return document.title; }"
+                },
+                "type": "string",
+                "source": "field",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "messages": {
+          "success": {
+            "en": "Script evaluated successfully."
+          },
+          "error": {
+            "en": "Failed to evaluate script."
+          }
+        }
+      }
+    },
+    {
+      "key": "none:browser-navigate",
+      "identifier": "@browser-navigate",
+      "alias": "browser-navigate",
+      "chain": "none",
+      "hash": "355baa3db8c3f7a47b0d63d92c7c7ef2b11731f8785da52ffb0ddd5e26024db8",
+      "checksum": "355baa3db8c3f7a47b0d63d92c7c7ef2b11731f8785da52ffb0ddd5e26024db8",
+      "name": "Browser: Navigate",
+      "title": {
+        "en": "Navigate to URL"
+      },
+      "description": {
+        "en": "Navigate Chrome to a specific URL."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "23633e6c5f676878d5423aff68efee6bb4390b8b5efa922d30235244642c57f0",
+        "slug": "browser",
+        "active": false,
+        "protocol": "brand:0.2.0",
+        "name": "Browser",
+        "description": {
+          "en": "Control Chrome on your desktop to automate web tasks, take screenshots, navigate pages, and interact with web content."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/chrome.png"
+        },
+        "urls": {
+          "web": "https://google.com/chrome"
+        },
+        "colors": {
+          "primary": "#4285F4"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "Browser: Navigate",
+        "title": {
+          "en": "Navigate to URL"
+        },
+        "description": {
+          "en": "Navigate Chrome to a specific URL."
+        },
+        "actions": [
+          {
+            "type": "mcp",
+            "label": {
+              "en": "Navigate"
+            },
+            "destination": {
+              "url": "browser://devtools",
+              "tool": "navigate_page"
+            },
+            "inputs": [
+              {
+                "name": "URL",
+                "as": "url",
+                "description": {
+                  "en": "The full URL to navigate to (including https://)"
+                },
+                "type": "url",
+                "source": "field",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "messages": {
+          "success": {
+            "en": "Navigated to {{URL}}."
+          },
+          "error": {
+            "en": "Failed to navigate to {{URL}}."
+          }
+        }
       }
     }
   ],
