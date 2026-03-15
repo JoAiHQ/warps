@@ -44,6 +44,7 @@ type WarpUpsert = {
   preview: string | null
   creator: string
   privileges: string[]
+  listed: boolean
   primaryAddress: string | null
   primaryFunc: string | null
   brand: BrandPayload | null
@@ -401,13 +402,13 @@ function getPathParts(fileName: string): string[] {
   return path.normalize(fileName).split(path.sep).filter(Boolean)
 }
 
-function isDraftFile(fileName: string): boolean {
+export function isDraftFile(fileName: string): boolean {
   const parts = getPathParts(fileName)
   const filename = parts[parts.length - 1] || ''
   return filename.startsWith('@')
 }
 
-function isPrivateFile(fileName: string): boolean {
+export function isPrivateFile(fileName: string): boolean {
   const parts = getPathParts(fileName)
   const filename = parts[parts.length - 1] || ''
   return filename.startsWith('#')
@@ -439,7 +440,7 @@ function getChainNameFromWarpData(warpData: Dict): string {
   return 'none'
 }
 
-function getAliasFromFileName(fileName: string): string {
+export function getAliasFromFileName(fileName: string): string {
   const parts = getPathParts(fileName)
   if (parts.length < 2) {
     throw new Error(`Warp file must be in a brand folder: ${fileName}`)
@@ -448,7 +449,7 @@ function getAliasFromFileName(fileName: string): string {
   const brandName = parts[0].replace(/^@/, '')
   const dirParts = parts.slice(1, -1)
   let filenameBase = parts[parts.length - 1].replace(/\.json$/, '')
-  if (filenameBase.startsWith('@')) filenameBase = filenameBase.slice(1)
+  if (filenameBase.startsWith('@') || filenameBase.startsWith('#')) filenameBase = filenameBase.slice(1)
 
   if (filenameBase === 'warp' && dirParts.length > 0) {
     filenameBase = dirParts.pop() as string
@@ -657,7 +658,7 @@ async function buildManifest(args: CliArgs, network: SyncNetwork): Promise<Catal
   const warps: WarpUpsert[] = []
 
   for (const [fileName, absolutePath] of Object.entries(files)) {
-    if (isPrivateFile(fileName)) continue
+    const isPrivate = isPrivateFile(fileName)
 
     if (network === 'mainnet' && isDraftFile(fileName)) continue
 
@@ -744,6 +745,7 @@ async function buildManifest(args: CliArgs, network: SyncNetwork): Promise<Catal
       preview: typeof workingWarp.preview === 'string' ? workingWarp.preview : null,
       creator: CREATOR,
       privileges: [],
+      listed: !isPrivate,
       primaryAddress: primaryInfo.address,
       primaryFunc: primaryInfo.func,
       brand: brandPayload,
@@ -787,7 +789,9 @@ async function main() {
   )
 }
 
-main().catch((error) => {
-  console.error(error)
-  process.exit(1)
-})
+if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) {
+  main().catch((error) => {
+    console.error(error)
+    process.exit(1)
+  })
+}

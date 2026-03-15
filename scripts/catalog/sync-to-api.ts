@@ -90,6 +90,7 @@ async function main() {
 
   const body = {
     ...delta,
+    upserts: (delta.upserts as any[]).filter((u) => u.listed !== false),
     repo: args.repo,
     commitSha: args.commitSha,
   }
