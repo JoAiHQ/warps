@@ -4,23 +4,23 @@
   "repo": "JoAiHQ/warps",
   "branch": "dev",
   "network": "devnet",
-  "commitSha": "e04deea6bbafbb7f59a5769e1bbfe385419d75bc",
-  "committedAt": "2026-03-15T14:59:22.255Z",
-  "generatedAt": "2026-03-15T14:59:23.835Z",
+  "commitSha": "cefc1a95821da673d4492501c9df8779133c7c2f",
+  "committedAt": "2026-03-15T16:47:02.093Z",
+  "generatedAt": "2026-03-15T16:47:04.382Z",
   "upserts": [
     {
-      "key": "none:boogas-game-guess-number-start",
-      "identifier": "@boogas-game-guess-number-start",
-      "alias": "boogas-game-guess-number-start",
+      "key": "none:boogas-game-guess-number-check",
+      "identifier": "@boogas-game-guess-number-check",
+      "alias": "boogas-game-guess-number-check",
       "chain": "none",
-      "hash": "da5c84c3da12919e226f1f2126e28629a77e0a6d87383e9463cb357162826e2a",
-      "checksum": "da5c84c3da12919e226f1f2126e28629a77e0a6d87383e9463cb357162826e2a",
-      "name": "game-guess-number-start",
+      "hash": "6354d27708856fd843b880a90e60041668e43935705d68b19f80cebb12e9b24e",
+      "checksum": "6354d27708856fd843b880a90e60041668e43935705d68b19f80cebb12e9b24e",
+      "name": "game-guess-number-check",
       "title": {
-        "en": "Start Guessing Game"
+        "en": "Check Guess"
       },
       "description": {
-        "en": "Starts a number guessing game. The agent picks a secret number between 0 and 5."
+        "en": "Checks a numeric guess against the active guessing game secret."
       },
       "preview": null,
       "creator": "github:JoAiHQ/warps",
@@ -51,48 +51,65 @@
       },
       "warp": {
         "protocol": "warp:3.0.0",
-        "name": "game-guess-number-start",
+        "name": "game-guess-number-check",
         "title": {
-          "en": "Start Guessing Game"
+          "en": "Check Guess"
         },
         "description": {
-          "en": "Starts a number guessing game. The agent picks a secret number between 0 and 5."
+          "en": "Checks a numeric guess against the active guessing game secret."
+        },
+        "trigger": {
+          "type": "message",
+          "pattern": "^\\d+$"
         },
         "messages": {
-          "success": "🎮 Game on! I'm thinking of a number between 0 and 5. What's your guess?"
+          "success": "{{message}}"
         },
         "actions": [
           {
+            "type": "state",
+            "label": "Load game state",
+            "op": "read",
+            "store": "guessing-game",
+            "keys": [
+              "secret",
+              "active"
+            ]
+          },
+          {
             "type": "compute",
-            "label": "Generate secret",
+            "label": "Evaluate guess",
+            "when": "{{state.active}} === true",
             "inputs": [
               {
-                "name": "secret",
-                "type": "uint64",
+                "name": "correct",
+                "type": "bool",
                 "source": "hidden",
-                "modifier": "transform:() => Math.floor(Math.random() * 6)"
+                "modifier": "transform:() => parseInt('{{JOAI_MESSAGE_TEXT}}') === parseInt('{{state.secret}}')"
+              },
+              {
+                "name": "message",
+                "type": "string",
+                "source": "hidden",
+                "modifier": "transform:() => parseInt('{{JOAI_MESSAGE_TEXT}}') === parseInt('{{state.secret}}') ? '🎉 {{JOAI_SENDER_NAME}} got it! The number was {{state.secret}}.' : '❌ Nope, try again!'"
               }
             ]
           },
           {
             "type": "state",
-            "label": "Save secret",
+            "label": "Mark game inactive",
             "op": "write",
             "store": "guessing-game",
             "data": {
-              "secret": "{{secret}}",
-              "active": true
-            }
+              "active": false
+            },
+            "when": "{{correct}} === true"
           },
           {
-            "type": "mount",
-            "label": "Mount guess listener",
-            "warp": "@boogas-game-guess-number-check"
-          },
-          {
-            "type": "compute",
-            "label": "Announce",
-            "inputs": []
+            "type": "unmount",
+            "label": "Unmount guess listener",
+            "warp": "@boogas-game-guess-number-check",
+            "when": "{{correct}} === true"
           }
         ]
       }
