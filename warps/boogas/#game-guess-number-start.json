@@ -1,0 +1,44 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "game-guess-number-start",
+  "title": {
+    "en": "Start Guessing Game"
+  },
+  "description": {
+    "en": "Starts a number guessing game. The agent picks a secret number between 1 and 100."
+  },
+  "messages": {
+    "success": "🎮 Game on! I'm thinking of a number between 1 and 100. What's your guess?"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Generate secret",
+      "inputs": [
+        {
+          "name": "secret",
+          "type": "uint64",
+          "source": "hidden",
+          "modifier": "transform:() => Math.floor(Math.random() * 100) + 1"
+        }
+      ]
+    },
+    {
+      "type": "state",
+      "label": "Save secret",
+      "op": "write",
+      "store": "guessing-game",
+      "data": { "secret": "{{secret}}", "active": true }
+    },
+    {
+      "type": "mount",
+      "label": "Mount guess listener",
+      "warp": "@game-guess-number-check"
+    },
+    {
+      "type": "collect",
+      "label": "Announce",
+      "inputs": []
+    }
+  ]
+}
