@@ -4,97 +4,101 @@
   "repo": "JoAiHQ/warps",
   "branch": "dev",
   "network": "devnet",
-  "commitSha": "d4a311e34aa9549c49408779ba24080f57a9e245",
-  "committedAt": "2026-03-15T20:10:34.646Z",
-  "generatedAt": "2026-03-15T20:10:37.419Z",
+  "commitSha": "f4a1d11b564a3e0136d3a3ec9dc8b5a11e6aa811",
+  "committedAt": "2026-03-15T20:35:27.644Z",
+  "generatedAt": "2026-03-15T20:35:29.460Z",
   "upserts": [
     {
-      "key": "none:boogas-game-guess-number-start",
-      "identifier": "@boogas-game-guess-number-start",
-      "alias": "boogas-game-guess-number-start",
+      "key": "none:joai-wallet-create",
+      "identifier": "@joai-wallet-create",
+      "alias": "joai-wallet-create",
       "chain": "none",
-      "hash": "2dee7c52d7858ce2835d4986c0a35eef1a649f21b75292035678eea63534f17d",
-      "checksum": "2dee7c52d7858ce2835d4986c0a35eef1a649f21b75292035678eea63534f17d",
-      "name": "game-guess-number-start",
+      "hash": "416ad8acb5c67d2ac1aaf7e5149d2a24456e83a626b764d23120d6a49c51a5b3",
+      "checksum": "416ad8acb5c67d2ac1aaf7e5149d2a24456e83a626b764d23120d6a49c51a5b3",
+      "name": "JoAi: Create Wallet",
       "title": {
-        "en": "Start Guessing Game"
+        "en": "Create wallet",
+        "de": "Wallet erstellen"
       },
       "description": {
-        "en": "Starts a number guessing game. The agent picks a secret number between 0 and 100."
+        "en": "Create a new cloud wallet for a specific blockchain.",
+        "de": "Erstelle ein neues Cloud-Wallet für eine bestimmte Blockchain."
       },
       "preview": null,
       "creator": "github:JoAiHQ/warps",
       "privileges": [],
-      "listed": false,
+      "listed": true,
       "primaryAddress": null,
       "primaryFunc": null,
       "brand": {
-        "hash": "34b07798145e5ffa86c37e601b39b56fe47b4a5ee805a51a99c260901f3f1796",
-        "slug": "boogas",
+        "hash": "4098667056683890c8f1aad41581885db272e391b0d6170e7e2b73ee7fbbca2e",
+        "slug": "joai",
         "active": true,
         "protocol": "brand:0.2.0",
-        "name": "Boogas",
+        "name": "JoAi",
         "description": {
-          "en": "Put a bounce in your step! A fun-loving collectible NFT project featuring prehistoric caveman characters.",
-          "de": "Gib deinem Schritt einen Schwung! Ein fröhliches Sammler-NFT-Projekt mit prähistorischen Höhlenmensch-Charakteren."
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten."
         },
         "logo": {
-          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/boogas.png"
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
         },
         "urls": {
-          "web": "https://boogas.io"
+          "web": "https://joai.ai"
         },
         "colors": {
-          "primary": "#000000",
-          "secondary": "#ffffff"
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
         }
       },
       "warp": {
         "protocol": "warp:3.0.0",
-        "name": "game-guess-number-start",
+        "name": "JoAi: Create Wallet",
         "title": {
-          "en": "Start Guessing Game"
+          "en": "Create wallet",
+          "de": "Wallet erstellen"
         },
         "description": {
-          "en": "Starts a number guessing game. The agent picks a secret number between 0 and 100."
-        },
-        "messages": {
-          "success": "🎮 Game on! I'm thinking of a number between 0 and 100. What's your guess?"
+          "en": "Create a new cloud wallet for a specific blockchain.",
+          "de": "Erstelle ein neues Cloud-Wallet für eine bestimmte Blockchain."
         },
         "actions": [
           {
-            "type": "compute",
-            "label": "Generate secret",
+            "type": "collect",
+            "label": {
+              "en": "Create wallet",
+              "de": "Wallet erstellen"
+            },
             "inputs": [
               {
-                "name": "secret",
-                "type": "uint64",
-                "source": "hidden",
-                "modifier": "transform:() => Math.floor(Math.random() * 101)"
+                "name": "Chain",
+                "as": "chain",
+                "description": {
+                  "en": "The blockchain to create the wallet for (e.g. multiversx, solana)",
+                  "de": "Die Blockchain, für die das Wallet erstellt werden soll (z.B. multiversx, solana)"
+                },
+                "type": "chain",
+                "position": "arg:1",
+                "source": "field",
+                "required": true
               }
             ]
-          },
-          {
-            "type": "state",
-            "label": "Save secret",
-            "op": "write",
-            "store": "guessing-game",
-            "data": {
-              "secret": "{{secret}}",
-              "active": true
-            }
-          },
-          {
-            "type": "mount",
-            "label": "Mount guess listener",
-            "warp": "@boogas-game-guess-number-check"
-          },
-          {
-            "type": "compute",
-            "label": "Announce",
-            "inputs": []
           }
-        ]
+        ],
+        "messages": {
+          "success": {
+            "en": "Your {{chain}} wallet has been created! You can manage it in your agent settings.",
+            "de": "Dein {{chain}}-Wallet wurde erstellt! Du kannst es in deinen Agent-Einstellungen verwalten."
+          },
+          "already_exists": {
+            "en": "Your agent already has a {{chain}} wallet.",
+            "de": "Dein Agent hat bereits ein {{chain}}-Wallet."
+          },
+          "error": {
+            "en": "Something went wrong while creating your wallet. Please try again.",
+            "de": "Beim Erstellen deines Wallets ist etwas schiefgelaufen. Bitte versuche es erneut."
+          }
+        }
       }
     }
   ],
