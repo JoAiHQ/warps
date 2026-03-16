@@ -4,129 +4,23 @@
   "repo": "JoAiHQ/warps",
   "branch": "main",
   "network": "mainnet",
-  "commitSha": "c81f4592d952610c69ce3affc07b924365082ebb",
-  "committedAt": "2026-03-15T20:06:51.641Z",
-  "generatedAt": "2026-03-15T20:06:52.578Z",
+  "commitSha": "47ff9f5234955baf278bca54629e52f67925e91f",
+  "committedAt": "2026-03-16T11:41:45.325Z",
+  "generatedAt": "2026-03-16T11:41:46.435Z",
   "upserts": [
-    {
-      "key": "none:boogas-game-guess-number-check",
-      "identifier": "@boogas-game-guess-number-check",
-      "alias": "boogas-game-guess-number-check",
-      "chain": "none",
-      "hash": "6354d27708856fd843b880a90e60041668e43935705d68b19f80cebb12e9b24e",
-      "checksum": "6354d27708856fd843b880a90e60041668e43935705d68b19f80cebb12e9b24e",
-      "name": "game-guess-number-check",
-      "title": {
-        "en": "Check Guess"
-      },
-      "description": {
-        "en": "Checks a numeric guess against the active guessing game secret."
-      },
-      "preview": null,
-      "creator": "github:JoAiHQ/warps",
-      "privileges": [],
-      "listed": false,
-      "primaryAddress": null,
-      "primaryFunc": null,
-      "brand": {
-        "hash": "34b07798145e5ffa86c37e601b39b56fe47b4a5ee805a51a99c260901f3f1796",
-        "slug": "boogas",
-        "active": true,
-        "protocol": "brand:0.2.0",
-        "name": "Boogas",
-        "description": {
-          "en": "Put a bounce in your step! A fun-loving collectible NFT project featuring prehistoric caveman characters.",
-          "de": "Gib deinem Schritt einen Schwung! Ein fröhliches Sammler-NFT-Projekt mit prähistorischen Höhlenmensch-Charakteren."
-        },
-        "logo": {
-          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/boogas.png"
-        },
-        "urls": {
-          "web": "https://boogas.io"
-        },
-        "colors": {
-          "primary": "#000000",
-          "secondary": "#ffffff"
-        }
-      },
-      "warp": {
-        "protocol": "warp:3.0.0",
-        "name": "game-guess-number-check",
-        "title": {
-          "en": "Check Guess"
-        },
-        "description": {
-          "en": "Checks a numeric guess against the active guessing game secret."
-        },
-        "trigger": {
-          "type": "message",
-          "pattern": "^\\d+$"
-        },
-        "messages": {
-          "success": "{{message}}"
-        },
-        "actions": [
-          {
-            "type": "state",
-            "label": "Load game state",
-            "op": "read",
-            "store": "guessing-game",
-            "keys": [
-              "secret",
-              "active"
-            ]
-          },
-          {
-            "type": "compute",
-            "label": "Evaluate guess",
-            "when": "{{state.active}} === true",
-            "inputs": [
-              {
-                "name": "correct",
-                "type": "bool",
-                "source": "hidden",
-                "modifier": "transform:() => parseInt('{{JOAI_MESSAGE_TEXT}}') === parseInt('{{state.secret}}')"
-              },
-              {
-                "name": "message",
-                "type": "string",
-                "source": "hidden",
-                "modifier": "transform:() => parseInt('{{JOAI_MESSAGE_TEXT}}') === parseInt('{{state.secret}}') ? '🎉 {{JOAI_SENDER_NAME}} got it! The number was {{state.secret}}.' : '❌ Nope, try again!'"
-              }
-            ]
-          },
-          {
-            "type": "state",
-            "label": "Mark game inactive",
-            "op": "write",
-            "store": "guessing-game",
-            "data": {
-              "active": false
-            },
-            "when": "{{correct}} === true"
-          },
-          {
-            "type": "unmount",
-            "label": "Unmount guess listener",
-            "warp": "@boogas-game-guess-number-check",
-            "when": "{{correct}} === true"
-          }
-        ]
-      }
-    },
     {
       "key": "none:boogas-game-guess-number-start",
       "identifier": "@boogas-game-guess-number-start",
       "alias": "boogas-game-guess-number-start",
       "chain": "none",
-      "hash": "da5c84c3da12919e226f1f2126e28629a77e0a6d87383e9463cb357162826e2a",
-      "checksum": "da5c84c3da12919e226f1f2126e28629a77e0a6d87383e9463cb357162826e2a",
+      "hash": "2dee7c52d7858ce2835d4986c0a35eef1a649f21b75292035678eea63534f17d",
+      "checksum": "2dee7c52d7858ce2835d4986c0a35eef1a649f21b75292035678eea63534f17d",
       "name": "game-guess-number-start",
       "title": {
         "en": "Start Guessing Game"
       },
       "description": {
-        "en": "Starts a number guessing game. The agent picks a secret number between 0 and 5."
+        "en": "Starts a number guessing game. The agent picks a secret number between 0 and 100."
       },
       "preview": null,
       "creator": "github:JoAiHQ/warps",
@@ -162,10 +56,10 @@
           "en": "Start Guessing Game"
         },
         "description": {
-          "en": "Starts a number guessing game. The agent picks a secret number between 0 and 5."
+          "en": "Starts a number guessing game. The agent picks a secret number between 0 and 100."
         },
         "messages": {
-          "success": "🎮 Game on! I'm thinking of a number between 0 and 5. What's your guess?"
+          "success": "🎮 Game on! I'm thinking of a number between 0 and 100. What's your guess?"
         },
         "actions": [
           {
@@ -176,7 +70,7 @@
                 "name": "secret",
                 "type": "uint64",
                 "source": "hidden",
-                "modifier": "transform:() => Math.floor(Math.random() * 6)"
+                "modifier": "transform:() => Math.floor(Math.random() * 101)"
               }
             ]
           },
@@ -204,98 +98,25 @@
       }
     },
     {
-      "key": "none:boogas-game-guess-number-stop",
-      "identifier": "@boogas-game-guess-number-stop",
-      "alias": "boogas-game-guess-number-stop",
+      "key": "none:joai-wallet-create",
+      "identifier": "@joai-wallet-create",
+      "alias": "joai-wallet-create",
       "chain": "none",
-      "hash": "3046e44e1aad2547334b17b255cec0e2bc5a0a0a01c2a1fb97672f64681801f5",
-      "checksum": "3046e44e1aad2547334b17b255cec0e2bc5a0a0a01c2a1fb97672f64681801f5",
-      "name": "game-guess-number-stop",
+      "hash": "7372bc9e250d947be846f1e8c6c49698b44b70535d0642f1d4bb9c7f6f7bd5b2",
+      "checksum": "7372bc9e250d947be846f1e8c6c49698b44b70535d0642f1d4bb9c7f6f7bd5b2",
+      "name": "JoAi: Create Wallet",
       "title": {
-        "en": "Stop Guessing Game"
+        "en": "Create wallet",
+        "de": "Wallet erstellen"
       },
       "description": {
-        "en": "Stops the active guessing game and clears all game state."
+        "en": "Create a new cloud wallet for a specific blockchain.",
+        "de": "Erstelle ein neues Cloud-Wallet für eine bestimmte Blockchain."
       },
       "preview": null,
       "creator": "github:JoAiHQ/warps",
       "privileges": [],
-      "listed": false,
-      "primaryAddress": null,
-      "primaryFunc": null,
-      "brand": {
-        "hash": "34b07798145e5ffa86c37e601b39b56fe47b4a5ee805a51a99c260901f3f1796",
-        "slug": "boogas",
-        "active": true,
-        "protocol": "brand:0.2.0",
-        "name": "Boogas",
-        "description": {
-          "en": "Put a bounce in your step! A fun-loving collectible NFT project featuring prehistoric caveman characters.",
-          "de": "Gib deinem Schritt einen Schwung! Ein fröhliches Sammler-NFT-Projekt mit prähistorischen Höhlenmensch-Charakteren."
-        },
-        "logo": {
-          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/boogas.png"
-        },
-        "urls": {
-          "web": "https://boogas.io"
-        },
-        "colors": {
-          "primary": "#000000",
-          "secondary": "#ffffff"
-        }
-      },
-      "warp": {
-        "protocol": "warp:3.0.0",
-        "name": "game-guess-number-stop",
-        "title": {
-          "en": "Stop Guessing Game"
-        },
-        "description": {
-          "en": "Stops the active guessing game and clears all game state."
-        },
-        "messages": {
-          "success": "🛑 Game stopped."
-        },
-        "actions": [
-          {
-            "type": "state",
-            "label": "Clear game state",
-            "op": "clear",
-            "store": "guessing-game"
-          },
-          {
-            "type": "unmount",
-            "label": "Unmount guess listener",
-            "warp": "@boogas-game-guess-number-check"
-          },
-          {
-            "type": "collect",
-            "label": "Announce",
-            "inputs": []
-          }
-        ]
-      }
-    },
-    {
-      "key": "none:joai-changelog-entry-add",
-      "identifier": "@joai-changelog-entry-add",
-      "alias": "joai-changelog-entry-add",
-      "chain": "none",
-      "hash": "97097427b72f451787ef55e4a61787fecf8478d182a732237508ac64701e9943",
-      "checksum": "97097427b72f451787ef55e4a61787fecf8478d182a732237508ac64701e9943",
-      "name": "JoAi: Changelog Entry Add",
-      "title": {
-        "en": "Add Changelog Entry",
-        "de": "Changelog-Eintrag hinzufügen"
-      },
-      "description": {
-        "en": "Add a new entry to the changelog.",
-        "de": "Einen neuen Eintrag zum Changelog hinzufügen."
-      },
-      "preview": null,
-      "creator": "github:JoAiHQ/warps",
-      "privileges": [],
-      "listed": false,
+      "listed": true,
       "primaryAddress": null,
       "primaryFunc": null,
       "brand": {
@@ -321,76 +142,54 @@
       },
       "warp": {
         "protocol": "warp:3.0.0",
-        "name": "JoAi: Changelog Entry Add",
+        "name": "JoAi: Create Wallet",
         "title": {
-          "en": "Add Changelog Entry",
-          "de": "Changelog-Eintrag hinzufügen"
+          "en": "Create wallet",
+          "de": "Wallet erstellen"
         },
         "description": {
-          "en": "Add a new entry to the changelog.",
-          "de": "Einen neuen Eintrag zum Changelog hinzufügen."
+          "en": "Create a new cloud wallet for a specific blockchain.",
+          "de": "Erstelle ein neues Cloud-Wallet für eine bestimmte Blockchain."
         },
         "actions": [
           {
             "type": "collect",
             "label": {
-              "en": "Add Entry",
-              "de": "Eintrag hinzufügen"
+              "en": "Create wallet",
+              "de": "Wallet erstellen"
             },
             "inputs": [
               {
-                "name": "Type",
-                "as": "type",
-                "type": "string",
-                "options": [
-                  "feature",
-                  "fix",
-                  "improvement",
-                  "update"
-                ],
+                "name": "Chain",
+                "as": "chain",
+                "description": {
+                  "en": "The blockchain to create the wallet for (e.g. multiversx, solana)",
+                  "de": "Die Blockchain, für die das Wallet erstellt werden soll (z.B. multiversx, solana)"
+                },
+                "type": "chain",
+                "position": "arg:1",
                 "source": "field",
                 "required": true
-              },
-              {
-                "name": "Title",
-                "as": "title",
-                "type": "string",
-                "source": "field",
-                "required": true,
-                "description": {
-                  "en": "e.g. 'MultiversX Integration'",
-                  "de": "z.B. 'MultiversX Integration'"
-                }
-              },
-              {
-                "name": "Version",
-                "as": "version",
-                "type": "string",
-                "source": "field",
-                "required": false,
-                "description": {
-                  "en": "e.g. '0.1.0'",
-                  "de": "z.B. '0.1.0'"
-                }
-              },
-              {
-                "name": "Description",
-                "as": "description",
-                "type": "string",
-                "source": "field",
-                "required": true,
-                "description": {
-                  "en": "e.g. 'Added skills for retrieving account information, transaction information...'",
-                  "de": "z.B. 'Skills für den Abruf von Kontoinformationen hinzugefügt...'"
-                }
               }
             ]
           }
         ],
         "messages": {
           "success": {
-            "en": "Changelog entry added.",
-            "de": "Changelog-Eintrag hinzugefügt."
+            "en": "Your {{chain}} wallet has been created! You can manage it in your agent settings.",
+            "de": "Dein {{chain}}-Wallet wurde erstellt! Du kannst es in deinen Agent-Einstellungen verwalten."
+          },
+          "already_exists": {
+            "en": "Your agent already has a {{chain}} wallet.",
+            "de": "Dein Agent hat bereits ein {{chain}}-Wallet."
+          },
+          "provider_error": {
+            "en": "The wallet provider is temporarily unavailable. Please try again later.",
+            "de": "Der Wallet-Anbieter ist vorübergehend nicht verfügbar. Bitte versuche es später erneut."
+          },
+          "error": {
+            "en": "Something went wrong while creating your wallet. Please try again.",
+            "de": "Beim Erstellen deines Wallets ist etwas schiefgelaufen. Bitte versuche es erneut."
           }
         }
       }
