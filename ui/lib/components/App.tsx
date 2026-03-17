@@ -63,8 +63,8 @@ export function App(props: Props) {
   }
 
   if (appResult.paymentRequired) {
-    const meta = appResult.meta as { title: string; description: string; paymentUrl: string }
-    return <UpgradePrompt title={meta.title} description={meta.description} paymentUrl={meta.paymentUrl} />
+    const upgrade = appResult.data as { title: string; description: string; actionLabel?: string; paymentUrl: string; current?: number; limit?: number }
+    return <UpgradePrompt title={upgrade.title} description={upgrade.description} actionLabel={upgrade.actionLabel} paymentUrl={upgrade.paymentUrl} current={upgrade.current} limit={upgrade.limit} />
   }
 
   return <AppContext.Provider value={appResult}>{children}</AppContext.Provider>
