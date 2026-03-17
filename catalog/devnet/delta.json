@@ -4,25 +4,2846 @@
   "repo": "JoAiHQ/warps",
   "branch": "dev",
   "network": "devnet",
-  "commitSha": "e705108e1d0c3561120f4e41e0ea7e103873b7bb",
-  "committedAt": "2026-03-17T20:25:00.319Z",
-  "generatedAt": "2026-03-17T20:25:02.812Z",
+  "commitSha": "846e68d4551e33d55d0fde43a6a2667d9615a4a3",
+  "committedAt": "2026-03-17T23:17:58.109Z",
+  "generatedAt": "2026-03-17T23:17:59.860Z",
   "upserts": [
     {
-      "key": "none:joai-message-generated-send",
-      "identifier": "@joai-message-generated-send",
-      "alias": "joai-message-generated-send",
-      "chain": "none",
-      "hash": "15623511a03dc3bf4a43c9e64ba02970974705a44d2d0d3e83e3664cd5160b79",
-      "checksum": "15623511a03dc3bf4a43c9e64ba02970974705a44d2d0d3e83e3664cd5160b79",
-      "name": "JoAi: Send Generated Message",
+      "key": "arbitrum:omniset-deposit-arbitrum",
+      "identifier": "@omniset-deposit-arbitrum",
+      "alias": "omniset-deposit-arbitrum",
+      "chain": "arbitrum",
+      "hash": "94f8b6577af043aba29cedd9b149631e106c4d4c578eb88dfc36718559b5eab6",
+      "checksum": "94f8b6577af043aba29cedd9b149631e106c4d4c578eb88dfc36718559b5eab6",
+      "name": "OmniSet: Deposit Arbitrum",
       "title": {
-        "en": "Send a generated message",
-        "de": "Generierte Nachricht senden"
+        "en": "Deposit assets on Arbitrum to OmniSet",
+        "de": "Assets auf Arbitrum bei OmniSet einzahlen"
       },
       "description": {
-        "en": "Generate a message from a prompt and send it to a room or social channel.",
-        "de": "Generiere eine Nachricht aus einer Anweisung und sende sie an einen Raum oder sozialen Kanal."
+        "en": "Deposit a blockchain asset from Arbitrum to OmniSet.",
+        "de": "Zahle einen Blockchain-Asset von Arbitrum bei OmniSet ein."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "primaryAddress": "{{primary.asset.token}}",
+      "primaryFunc": "approve",
+      "brand": {
+        "hash": "6b49da5d9256aa0d09e16a1b979b269fdd53a1c179f98d95035810507ec8519b",
+        "slug": "omniset",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "OmniSet",
+        "description": {
+          "en": "The Universal Liquidity Hub: Light-speed asset movement across any chain without bridges."
+        },
+        "logo": {
+          "default": "https://pbs.twimg.com/profile_images/1819428487104454657/HS3g_7bM_400x400.jpg"
+        },
+        "urls": {
+          "web": "https://omniset.fastset.xyz"
+        },
+        "colors": {
+          "primary": "#000000"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "chain": "arbitrum",
+        "name": "OmniSet: Deposit Arbitrum",
+        "title": {
+          "en": "Deposit assets on Arbitrum to OmniSet",
+          "de": "Assets auf Arbitrum bei OmniSet einzahlen"
+        },
+        "description": {
+          "en": "Deposit a blockchain asset from Arbitrum to OmniSet.",
+          "de": "Zahle einen Blockchain-Asset von Arbitrum bei OmniSet ein."
+        },
+        "vars": {
+          "BRIDGE": "0x31a80b9099A0d86D7ed94914bc6856F09e610881"
+        },
+        "actions": [
+          {
+            "type": "contract",
+            "label": {
+              "en": "Approve now",
+              "de": "Jetzt genehmigen"
+            },
+            "address": "{{primary.asset.token}}",
+            "func": "approve",
+            "args": [
+              "address:{{BRIDGE}}",
+              "uint256:{{primary.asset.amount}}"
+            ],
+            "gasLimit": 200000,
+            "abi": "function approve(address spender, uint256 amount) public returns (bool)",
+            "when": "{{primary.asset.token}} !== '0x0000000000000000000000000000000000000000'"
+          },
+          {
+            "type": "contract",
+            "label": {
+              "en": "Deposit now",
+              "de": "Jetzt einzahlen"
+            },
+            "address": "{{BRIDGE}}",
+            "func": "deposit",
+            "args": [],
+            "gasLimit": 200000,
+            "abi": "function deposit(address token, uint256 amount, string calldata receiver) public payable",
+            "primary": true,
+            "inputs": [
+              {
+                "name": "Asset",
+                "as": "asset",
+                "description": {
+                  "en": "The asset to deposit.",
+                  "de": "Der einzuzahlende Asset."
+                },
+                "type": "asset",
+                "position": {
+                  "token": "arg:1",
+                  "amount": "arg:2"
+                },
+                "source": "field",
+                "required": true,
+                "modifier": "transform:(inputs) => inputs.asset?.identifier === 'ETH' ? {identifier: '0x0000000000000000000000000000000000000000', amount: inputs.asset.amount} : inputs.asset"
+              },
+              {
+                "name": "Receiver",
+                "description": {
+                  "en": "The blockchain wallet address of the receiver.",
+                  "de": "Die Blockchain-Wallet-Adresse des Empfängers."
+                },
+                "type": "string",
+                "position": "arg:3",
+                "source": "hidden",
+                "default": "{{USER_WALLET_PUBLICKEY:fastset}}"
+              }
+            ]
+          },
+          {
+            "type": "link",
+            "label": {
+              "en": "Learn more about FastSet",
+              "de": "Mehr über FastSet erfahren"
+            },
+            "url": "https://pi2.network"
+          }
+        ],
+        "messages": {
+          "success": {
+            "en": "Assets deposited successfully",
+            "de": "Assets erfolgreich eingezahlt"
+          }
+        }
+      }
+    },
+    {
+      "key": "ethereum:omniset-deposit-ethereum",
+      "identifier": "@omniset-deposit-ethereum",
+      "alias": "omniset-deposit-ethereum",
+      "chain": "ethereum",
+      "hash": "693d29820f5b858c2b11a250b08c6d6ce068a76d796e89a5a6e10e61ca44f097",
+      "checksum": "693d29820f5b858c2b11a250b08c6d6ce068a76d796e89a5a6e10e61ca44f097",
+      "name": "OmniSet: Deposit Ethereum",
+      "title": {
+        "en": "Deposit assets on Ethereum to OmniSet",
+        "de": "Assets auf Ethereum bei OmniSet einzahlen"
+      },
+      "description": {
+        "en": "Deposit a blockchain asset from Ethereum to OmniSet.",
+        "de": "Zahle einen Blockchain-Asset von Ethereum bei OmniSet ein."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "primaryAddress": "{{primary.asset.token}}",
+      "primaryFunc": "approve",
+      "brand": {
+        "hash": "6b49da5d9256aa0d09e16a1b979b269fdd53a1c179f98d95035810507ec8519b",
+        "slug": "omniset",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "OmniSet",
+        "description": {
+          "en": "The Universal Liquidity Hub: Light-speed asset movement across any chain without bridges."
+        },
+        "logo": {
+          "default": "https://pbs.twimg.com/profile_images/1819428487104454657/HS3g_7bM_400x400.jpg"
+        },
+        "urls": {
+          "web": "https://omniset.fastset.xyz"
+        },
+        "colors": {
+          "primary": "#000000"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "chain": "ethereum",
+        "name": "OmniSet: Deposit Ethereum",
+        "title": {
+          "en": "Deposit assets on Ethereum to OmniSet",
+          "de": "Assets auf Ethereum bei OmniSet einzahlen"
+        },
+        "description": {
+          "en": "Deposit a blockchain asset from Ethereum to OmniSet.",
+          "de": "Zahle einen Blockchain-Asset von Ethereum bei OmniSet ein."
+        },
+        "vars": {
+          "BRIDGE": "0xaDB4f3334825E645dD201de5CF1778a09515936f"
+        },
+        "actions": [
+          {
+            "type": "contract",
+            "label": {
+              "en": "Approve now",
+              "de": "Jetzt genehmigen"
+            },
+            "address": "{{primary.asset.token}}",
+            "func": "approve",
+            "args": [
+              "address:{{BRIDGE}}",
+              "uint256:{{primary.asset.amount}}"
+            ],
+            "gasLimit": 200000,
+            "abi": "function approve(address spender, uint256 amount) public returns (bool)",
+            "when": "{{primary.asset.token}} !== '0x0000000000000000000000000000000000000000'"
+          },
+          {
+            "type": "contract",
+            "label": {
+              "en": "Deposit now",
+              "de": "Jetzt einzahlen"
+            },
+            "address": "{{BRIDGE}}",
+            "func": "deposit",
+            "args": [],
+            "gasLimit": 200000,
+            "abi": "function deposit(address token, uint256 amount, bytes32 receiver) public payable",
+            "primary": true,
+            "inputs": [
+              {
+                "name": "Asset",
+                "as": "asset",
+                "description": {
+                  "en": "The asset to deposit.",
+                  "de": "Der einzuzahlende Asset."
+                },
+                "type": "asset",
+                "position": {
+                  "token": "arg:1",
+                  "amount": "arg:2"
+                },
+                "source": "field",
+                "required": true,
+                "modifier": "transform:(inputs) => inputs.asset?.identifier === 'ETH' ? {identifier: '0x0000000000000000000000000000000000000000', amount: inputs.asset.amount} : inputs.asset"
+              },
+              {
+                "name": "Receiver",
+                "description": {
+                  "en": "The blockchain wallet address of the receiver.",
+                  "de": "Die Blockchain-Wallet-Adresse des Empfängers."
+                },
+                "type": "hex",
+                "position": "arg:3",
+                "source": "hidden",
+                "default": "{{USER_WALLET_PUBLICKEY:fastset}}"
+              }
+            ]
+          },
+          {
+            "type": "link",
+            "label": {
+              "en": "Learn more about FastSet",
+              "de": "Mehr über FastSet erfahren"
+            },
+            "url": "https://pi2.network"
+          }
+        ],
+        "messages": {
+          "success": {
+            "en": "Assets deposited successfully",
+            "de": "Assets erfolgreich eingezahlt"
+          }
+        }
+      }
+    },
+    {
+      "key": "multiversx:multiversx-account-transaction-count",
+      "identifier": "@multiversx-account-transaction-count",
+      "alias": "multiversx-account-transaction-count",
+      "chain": "multiversx",
+      "hash": "6c67b076a35d46599b5951a94d9e98be62fa104ae52b2630ac9215fddd6dc543",
+      "checksum": "6c67b076a35d46599b5951a94d9e98be62fa104ae52b2630ac9215fddd6dc543",
+      "name": "MultiversX: Account Transaction Count",
+      "title": {
+        "en": "View MultiversX transaction count",
+        "de": "MultiversX-Transaktionsanzahl anzeigen"
+      },
+      "description": {
+        "en": "View the total number of transactions for a MultiversX blockchain account.",
+        "de": "Zeige die Gesamtzahl der Transaktionen für ein MultiversX-Blockchain-Konto an."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "596edcb65836ff7a2b4ba24ecfd2893a2433164e9c7e1c4d1b48c4f17f4942f9",
+        "slug": "multiversx",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "MultiversX",
+        "description": {
+          "en": "MultiversX, the EGLD network, is a distributed blockchain network for next-gen applications. Decentralized via 3,000+ nodes, scalable through sharding, fast, secure & green."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/chains/logos/multiversx.svg"
+        },
+        "urls": {
+          "web": "https://multiversx.com"
+        },
+        "colors": {
+          "primary": "#22F7DD"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "chain": "multiversx",
+        "name": "MultiversX: Account Transaction Count",
+        "title": {
+          "en": "View MultiversX transaction count",
+          "de": "MultiversX-Transaktionsanzahl anzeigen"
+        },
+        "description": {
+          "en": "View the total number of transactions for a MultiversX blockchain account.",
+          "de": "Zeige die Gesamtzahl der Transaktionen für ein MultiversX-Blockchain-Konto an."
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Check now",
+              "de": "Jetzt prüfen"
+            },
+            "destination": {
+              "url": "{{CHAIN_API}}/accounts/{{ADDRESS}}/transactions/count"
+            },
+            "inputs": [
+              {
+                "name": "Address",
+                "as": "ADDRESS",
+                "description": {
+                  "en": "The wallet address to check transaction count for.",
+                  "de": "Die Wallet-Adresse, für die die Transaktionsanzahl überprüft werden soll."
+                },
+                "type": "address",
+                "source": "field",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "output": {
+          "COUNT": "transform:() => Number(out || 0)",
+          "COUNT_FORMATTED": "transform:() => results.COUNT.toLocaleString('en-US')"
+        },
+        "messages": {
+          "success": {
+            "en": "The address has made {{COUNT_FORMATTED}} transactions.",
+            "de": "Die Adresse hat {{COUNT_FORMATTED}} Transaktionen durchgeführt."
+          },
+          "card": {
+            "en": "Transaction: {{COUNT_FORMATTED}}",
+            "de": "Transaktion: {{COUNT_FORMATTED}}"
+          },
+          "info": {
+            "en": "This account has executed {{COUNT_FORMATTED}} transactions",
+            "de": "Dieses Konto hat {{COUNT_FORMATTED}} Transaktionen ausgeführt"
+          },
+          "invoking": {
+            "en": "Loading ...",
+            "de": "Wird geladen ..."
+          },
+          "invoked": {
+            "en": "Loaded",
+            "de": "Geladen"
+          }
+        }
+      }
+    },
+    {
+      "key": "multiversx:multiversx-esdt-issue-fungible",
+      "identifier": "@multiversx-esdt-issue-fungible",
+      "alias": "multiversx-esdt-issue-fungible",
+      "chain": "multiversx",
+      "hash": "eb51c475ac7841469f3ff646781a866fbd681dbd9a0bfb6b04ceb93dbfb1bd1b",
+      "checksum": "eb51c475ac7841469f3ff646781a866fbd681dbd9a0bfb6b04ceb93dbfb1bd1b",
+      "name": "MultiversX: Issue Fungible ESDT Token",
+      "title": {
+        "en": "Issue a Fungible ESDT Token on MultiversX",
+        "de": "Fungiblen ESDT-Token auf MultiversX ausgeben"
+      },
+      "description": {
+        "en": "Create and issue a new fungible ESDT token on the MultiversX blockchain. Define the token name, ticker, initial supply, and decimal precision. Requires a 0.05 EGLD issuance fee. After issuance, the token identifier (e.g. MYTICKER-xxxxxx) will be assigned by the protocol.",
+        "de": "Erstelle und gib einen neuen fungiblen ESDT-Token auf der MultiversX Blockchain aus. Definiere Token-Name, Ticker, initiale Versorgung und Dezimalgenauigkeit. Erfordert eine Ausgabegebühr von 0,05 EGLD. Nach der Ausgabe wird der Token-Identifier (z.B. MYTICKER-xxxxxx) vom Protokoll zugewiesen."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "primaryAddress": "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u",
+      "primaryFunc": "issue",
+      "brand": {
+        "hash": "596edcb65836ff7a2b4ba24ecfd2893a2433164e9c7e1c4d1b48c4f17f4942f9",
+        "slug": "multiversx",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "MultiversX",
+        "description": {
+          "en": "MultiversX, the EGLD network, is a distributed blockchain network for next-gen applications. Decentralized via 3,000+ nodes, scalable through sharding, fast, secure & green."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/chains/logos/multiversx.svg"
+        },
+        "urls": {
+          "web": "https://multiversx.com"
+        },
+        "colors": {
+          "primary": "#22F7DD"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "chain": "multiversx",
+        "name": "MultiversX: Issue Fungible ESDT Token",
+        "title": {
+          "en": "Issue a Fungible ESDT Token on MultiversX",
+          "de": "Fungiblen ESDT-Token auf MultiversX ausgeben"
+        },
+        "description": {
+          "en": "Create and issue a new fungible ESDT token on the MultiversX blockchain. Define the token name, ticker, initial supply, and decimal precision. Requires a 0.05 EGLD issuance fee. After issuance, the token identifier (e.g. MYTICKER-xxxxxx) will be assigned by the protocol.",
+          "de": "Erstelle und gib einen neuen fungiblen ESDT-Token auf der MultiversX Blockchain aus. Definiere Token-Name, Ticker, initiale Versorgung und Dezimalgenauigkeit. Erfordert eine Ausgabegebühr von 0,05 EGLD. Nach der Ausgabe wird der Token-Identifier (z.B. MYTICKER-xxxxxx) vom Protokoll zugewiesen."
+        },
+        "actions": [
+          {
+            "type": "contract",
+            "label": {
+              "en": "Issue Token",
+              "de": "Token ausgeben"
+            },
+            "address": "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u",
+            "func": "issue",
+            "args": [],
+            "gasLimit": 60000000,
+            "abi": "https://raw.githubusercontent.com/JoAiHQ/warps/main/warps/multiversx/abis/esdt-system-sc.abi.json",
+            "primary": true,
+            "inputs": [
+              {
+                "name": "Issuance Fee",
+                "type": "biguint",
+                "position": "value",
+                "source": "hidden",
+                "default": "50000000000000000"
+              },
+              {
+                "name": "Token Name",
+                "as": "TOKEN_NAME",
+                "description": {
+                  "en": "The full name of the token (e.g. 'MyToken'). 3–20 alphanumeric characters.",
+                  "de": "Der vollständige Name des Tokens (z.B. 'MeinToken'). 3–20 alphanumerische Zeichen."
+                },
+                "type": "string",
+                "position": "arg:1",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Token Ticker",
+                "as": "TOKEN_TICKER",
+                "description": {
+                  "en": "The uppercase ticker symbol (e.g. 'MTK'). 3–10 uppercase alphanumeric characters.",
+                  "de": "Das Ticker-Symbol in Großbuchstaben (z.B. 'MTK'). 3–10 alphanumerische Großbuchstaben."
+                },
+                "type": "string",
+                "position": "arg:2",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Initial Supply",
+                "as": "INITIAL_SUPPLY",
+                "description": {
+                  "en": "The initial token supply in the smallest unit (no decimal scaling). E.g. for 1000 tokens with 2 decimals, enter 100000.",
+                  "de": "Die initiale Token-Versorgung in der kleinsten Einheit (ohne Dezimal-Skalierung). Z.B. für 1000 Token mit 2 Dezimalstellen: 100000 eingeben."
+                },
+                "type": "biguint",
+                "position": "arg:3",
+                "source": "field",
+                "required": true,
+                "min": 1
+              },
+              {
+                "name": "Decimals",
+                "as": "DECIMALS",
+                "description": {
+                  "en": "Number of decimal places for the token (0–18). E.g. 18 for EGLD-like precision, 2 for cent-like precision.",
+                  "de": "Anzahl der Dezimalstellen des Tokens (0–18). Z.B. 18 für EGLD-ähnliche Genauigkeit, 2 für Cent-ähnliche Genauigkeit."
+                },
+                "type": "uint32",
+                "position": "arg:4",
+                "source": "field",
+                "required": true,
+                "default": "18"
+              }
+            ]
+          }
+        ],
+        "output": {
+          "TX_HASH": "out",
+          "TOKEN_ID": "out.1",
+          "TOKEN_NAME": "in.TOKEN_NAME",
+          "TOKEN_TICKER": "in.TOKEN_TICKER"
+        },
+        "messages": {
+          "success": {
+            "en": "Token {{TOKEN_ID}} issued successfully.",
+            "de": "Token {{TOKEN_ID}} erfolgreich ausgegeben."
+          },
+          "invoking": "Issuing token ...",
+          "invoked": "Token issued"
+        },
+        "related": [
+          "multiversx-token-details"
+        ]
+      }
+    },
+    {
+      "key": "multiversx:multiversx-esdt-issue-nft-collection",
+      "identifier": "@multiversx-esdt-issue-nft-collection",
+      "alias": "multiversx-esdt-issue-nft-collection",
+      "chain": "multiversx",
+      "hash": "9358cf59ea65186d299c79de977681fd6988d4a129a06c81e7b0d3eb28202b70",
+      "checksum": "9358cf59ea65186d299c79de977681fd6988d4a129a06c81e7b0d3eb28202b70",
+      "name": "MultiversX: Issue NFT Collection",
+      "title": {
+        "en": "Issue an NFT Collection on MultiversX",
+        "de": "NFT-Kollektion auf MultiversX ausgeben"
+      },
+      "description": {
+        "en": "Create and issue a new Non-Fungible Token (NFT) collection on the MultiversX blockchain. Each token in the collection will be unique. Requires a 0.05 EGLD issuance fee. After issuance, assign the NFTCreate role to your address, then mint individual NFTs.",
+        "de": "Erstelle und gib eine neue Non-Fungible Token (NFT) Kollektion auf der MultiversX Blockchain aus. Jeder Token in der Kollektion ist einzigartig. Erfordert eine Ausgabegebühr von 0,05 EGLD. Nach der Ausgabe muss die NFTCreate-Rolle zugewiesen werden, um NFTs zu erstellen."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "primaryAddress": "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u",
+      "primaryFunc": "issueNonFungible",
+      "brand": {
+        "hash": "596edcb65836ff7a2b4ba24ecfd2893a2433164e9c7e1c4d1b48c4f17f4942f9",
+        "slug": "multiversx",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "MultiversX",
+        "description": {
+          "en": "MultiversX, the EGLD network, is a distributed blockchain network for next-gen applications. Decentralized via 3,000+ nodes, scalable through sharding, fast, secure & green."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/chains/logos/multiversx.svg"
+        },
+        "urls": {
+          "web": "https://multiversx.com"
+        },
+        "colors": {
+          "primary": "#22F7DD"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "chain": "multiversx",
+        "name": "MultiversX: Issue NFT Collection",
+        "title": {
+          "en": "Issue an NFT Collection on MultiversX",
+          "de": "NFT-Kollektion auf MultiversX ausgeben"
+        },
+        "description": {
+          "en": "Create and issue a new Non-Fungible Token (NFT) collection on the MultiversX blockchain. Each token in the collection will be unique. Requires a 0.05 EGLD issuance fee. After issuance, assign the NFTCreate role to your address, then mint individual NFTs.",
+          "de": "Erstelle und gib eine neue Non-Fungible Token (NFT) Kollektion auf der MultiversX Blockchain aus. Jeder Token in der Kollektion ist einzigartig. Erfordert eine Ausgabegebühr von 0,05 EGLD. Nach der Ausgabe muss die NFTCreate-Rolle zugewiesen werden, um NFTs zu erstellen."
+        },
+        "actions": [
+          {
+            "type": "contract",
+            "label": {
+              "en": "Issue Collection",
+              "de": "Kollektion ausgeben"
+            },
+            "address": "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u",
+            "func": "issueNonFungible",
+            "args": [],
+            "gasLimit": 60000000,
+            "abi": "https://raw.githubusercontent.com/JoAiHQ/warps/main/warps/multiversx/abis/esdt-system-sc.abi.json",
+            "primary": true,
+            "inputs": [
+              {
+                "name": "Issuance Fee",
+                "type": "biguint",
+                "position": "value",
+                "source": "hidden",
+                "default": "50000000000000000"
+              },
+              {
+                "name": "Collection Name",
+                "as": "COLLECTION_NAME",
+                "description": {
+                  "en": "The full name of the NFT collection (e.g. 'MyNFTCollection'). 3–20 alphanumeric characters.",
+                  "de": "Der vollständige Name der NFT-Kollektion (z.B. 'MeineNFTKollektion'). 3–20 alphanumerische Zeichen."
+                },
+                "type": "string",
+                "position": "arg:1",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Collection Ticker",
+                "as": "COLLECTION_TICKER",
+                "description": {
+                  "en": "The uppercase ticker symbol for the collection (e.g. 'MYNFT'). 3–10 uppercase alphanumeric characters.",
+                  "de": "Das Ticker-Symbol der Kollektion in Großbuchstaben (z.B. 'MEINNFT'). 3–10 alphanumerische Großbuchstaben."
+                },
+                "type": "string",
+                "position": "arg:2",
+                "source": "field",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "output": {
+          "TX_HASH": "out",
+          "COLLECTION_ID": "out.1",
+          "COLLECTION_NAME": "in.COLLECTION_NAME",
+          "COLLECTION_TICKER": "in.COLLECTION_TICKER"
+        },
+        "next": "multiversx-esdt-set-nft-create-role?COLLECTION_ID={{COLLECTION_ID}}",
+        "messages": {
+          "success": {
+            "en": "NFT collection {{COLLECTION_ID}} issued successfully.",
+            "de": "NFT-Kollektion {{COLLECTION_ID}} erfolgreich ausgegeben."
+          },
+          "invoking": "Issuing NFT collection ...",
+          "invoked": "Collection issued"
+        },
+        "related": [
+          "multiversx-esdt-set-nft-create-role",
+          "multiversx-esdt-nft-create",
+          "multiversx-esdt-nft-view"
+        ]
+      }
+    },
+    {
+      "key": "multiversx:multiversx-esdt-issue-sft-collection",
+      "identifier": "@multiversx-esdt-issue-sft-collection",
+      "alias": "multiversx-esdt-issue-sft-collection",
+      "chain": "multiversx",
+      "hash": "ebe9db5e4dc1c129ef566a973b59038f05e9089551aceb2e525c11653db7ce9c",
+      "checksum": "ebe9db5e4dc1c129ef566a973b59038f05e9089551aceb2e525c11653db7ce9c",
+      "name": "MultiversX: Issue Semi-Fungible Token Collection",
+      "title": {
+        "en": "Issue an SFT Collection on MultiversX",
+        "de": "SFT-Kollektion auf MultiversX ausgeben"
+      },
+      "description": {
+        "en": "Create and issue a new Semi-Fungible Token (SFT) collection on the MultiversX blockchain. SFTs combine properties of both fungible and non-fungible tokens — multiple copies of the same token can exist with shared metadata. Requires a 0.05 EGLD issuance fee. After issuance, assign the NFTCreate role to your address, then mint SFTs.",
+        "de": "Erstelle und gib eine neue Semi-Fungible Token (SFT) Kollektion auf der MultiversX Blockchain aus. SFTs kombinieren Eigenschaften von fungiblen und non-fungiblen Tokens. Erfordert eine Ausgabegebühr von 0,05 EGLD. Nach der Ausgabe muss die NFTCreate-Rolle zugewiesen werden."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "primaryAddress": "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u",
+      "primaryFunc": "issueSemiFungible",
+      "brand": {
+        "hash": "596edcb65836ff7a2b4ba24ecfd2893a2433164e9c7e1c4d1b48c4f17f4942f9",
+        "slug": "multiversx",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "MultiversX",
+        "description": {
+          "en": "MultiversX, the EGLD network, is a distributed blockchain network for next-gen applications. Decentralized via 3,000+ nodes, scalable through sharding, fast, secure & green."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/chains/logos/multiversx.svg"
+        },
+        "urls": {
+          "web": "https://multiversx.com"
+        },
+        "colors": {
+          "primary": "#22F7DD"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "chain": "multiversx",
+        "name": "MultiversX: Issue Semi-Fungible Token Collection",
+        "title": {
+          "en": "Issue an SFT Collection on MultiversX",
+          "de": "SFT-Kollektion auf MultiversX ausgeben"
+        },
+        "description": {
+          "en": "Create and issue a new Semi-Fungible Token (SFT) collection on the MultiversX blockchain. SFTs combine properties of both fungible and non-fungible tokens — multiple copies of the same token can exist with shared metadata. Requires a 0.05 EGLD issuance fee. After issuance, assign the NFTCreate role to your address, then mint SFTs.",
+          "de": "Erstelle und gib eine neue Semi-Fungible Token (SFT) Kollektion auf der MultiversX Blockchain aus. SFTs kombinieren Eigenschaften von fungiblen und non-fungiblen Tokens. Erfordert eine Ausgabegebühr von 0,05 EGLD. Nach der Ausgabe muss die NFTCreate-Rolle zugewiesen werden."
+        },
+        "actions": [
+          {
+            "type": "contract",
+            "label": {
+              "en": "Issue SFT Collection",
+              "de": "SFT-Kollektion ausgeben"
+            },
+            "address": "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u",
+            "func": "issueSemiFungible",
+            "args": [],
+            "gasLimit": 60000000,
+            "abi": "https://raw.githubusercontent.com/JoAiHQ/warps/main/warps/multiversx/abis/esdt-system-sc.abi.json",
+            "primary": true,
+            "inputs": [
+              {
+                "name": "Issuance Fee",
+                "type": "biguint",
+                "position": "value",
+                "source": "hidden",
+                "default": "50000000000000000"
+              },
+              {
+                "name": "Collection Name",
+                "as": "COLLECTION_NAME",
+                "description": {
+                  "en": "The full name of the SFT collection (e.g. 'MyGameItems'). 3–20 alphanumeric characters.",
+                  "de": "Der vollständige Name der SFT-Kollektion (z.B. 'MeineSpielItems'). 3–20 alphanumerische Zeichen."
+                },
+                "type": "string",
+                "position": "arg:1",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Collection Ticker",
+                "as": "COLLECTION_TICKER",
+                "description": {
+                  "en": "The uppercase ticker symbol for the collection (e.g. 'ITEMS'). 3–10 uppercase alphanumeric characters.",
+                  "de": "Das Ticker-Symbol der Kollektion in Großbuchstaben (z.B. 'ITEMS'). 3–10 alphanumerische Großbuchstaben."
+                },
+                "type": "string",
+                "position": "arg:2",
+                "source": "field",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "output": {
+          "TX_HASH": "out",
+          "COLLECTION_ID": "out.1",
+          "COLLECTION_NAME": "in.COLLECTION_NAME",
+          "COLLECTION_TICKER": "in.COLLECTION_TICKER"
+        },
+        "next": "multiversx-esdt-set-nft-create-role?COLLECTION_ID={{COLLECTION_ID}}",
+        "messages": {
+          "success": {
+            "en": "SFT collection {{COLLECTION_ID}} issued successfully.",
+            "de": "SFT-Kollektion {{COLLECTION_ID}} erfolgreich ausgegeben."
+          },
+          "invoking": "Issuing SFT collection ...",
+          "invoked": "Collection issued"
+        },
+        "related": [
+          "multiversx-esdt-set-nft-create-role",
+          "multiversx-esdt-nft-create",
+          "multiversx-esdt-nft-view"
+        ]
+      }
+    },
+    {
+      "key": "multiversx:multiversx-esdt-nft-create",
+      "identifier": "@multiversx-esdt-nft-create",
+      "alias": "multiversx-esdt-nft-create",
+      "chain": "multiversx",
+      "hash": "0ceb89c3eec161d9be6548706509529571029c9b3b16051a142142e4e4f78fda",
+      "checksum": "0ceb89c3eec161d9be6548706509529571029c9b3b16051a142142e4e4f78fda",
+      "name": "MultiversX: Create NFT",
+      "title": {
+        "en": "Create (Mint) an NFT on MultiversX",
+        "de": "NFT auf MultiversX erstellen (Minten)"
+      },
+      "description": {
+        "en": "Mint a new NFT or SFT within an existing MultiversX collection. You must own the ESDTRoleNFTCreate role for the collection to use this. Provide the collection identifier, quantity, name, royalties, optional metadata hash, attributes, and a media URI. No EGLD fee required — only gas.",
+        "de": "Minte ein neues NFT oder SFT innerhalb einer bestehenden MultiversX-Kollektion. Du musst die ESDTRoleNFTCreate-Rolle für die Kollektion besitzen. Gib die Kollektion-ID, Menge, Name, Royalties, optionalen Metadaten-Hash, Attribute und eine Medien-URI an. Keine EGLD-Gebühr erforderlich — nur Gas."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "primaryAddress": "{{USER_WALLET}}",
+      "primaryFunc": "ESDTNFTCreate",
+      "brand": {
+        "hash": "596edcb65836ff7a2b4ba24ecfd2893a2433164e9c7e1c4d1b48c4f17f4942f9",
+        "slug": "multiversx",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "MultiversX",
+        "description": {
+          "en": "MultiversX, the EGLD network, is a distributed blockchain network for next-gen applications. Decentralized via 3,000+ nodes, scalable through sharding, fast, secure & green."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/chains/logos/multiversx.svg"
+        },
+        "urls": {
+          "web": "https://multiversx.com"
+        },
+        "colors": {
+          "primary": "#22F7DD"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "chain": "multiversx",
+        "name": "MultiversX: Create NFT",
+        "title": {
+          "en": "Create (Mint) an NFT on MultiversX",
+          "de": "NFT auf MultiversX erstellen (Minten)"
+        },
+        "description": {
+          "en": "Mint a new NFT or SFT within an existing MultiversX collection. You must own the ESDTRoleNFTCreate role for the collection to use this. Provide the collection identifier, quantity, name, royalties, optional metadata hash, attributes, and a media URI. No EGLD fee required — only gas.",
+          "de": "Minte ein neues NFT oder SFT innerhalb einer bestehenden MultiversX-Kollektion. Du musst die ESDTRoleNFTCreate-Rolle für die Kollektion besitzen. Gib die Kollektion-ID, Menge, Name, Royalties, optionalen Metadaten-Hash, Attribute und eine Medien-URI an. Keine EGLD-Gebühr erforderlich — nur Gas."
+        },
+        "actions": [
+          {
+            "type": "contract",
+            "label": {
+              "en": "Create NFT",
+              "de": "NFT erstellen"
+            },
+            "address": "{{USER_WALLET}}",
+            "func": "ESDTNFTCreate",
+            "args": [],
+            "gasLimit": 10000000,
+            "primary": true,
+            "inputs": [
+              {
+                "name": "Collection Identifier",
+                "as": "COLLECTION_ID",
+                "description": {
+                  "en": "The collection token identifier (e.g. 'MYNFT-a1b2c3'). Must be an NFT or SFT collection where you hold the create role.",
+                  "de": "Der Kollektion-Token-Identifier (z.B. 'MEINNFT-a1b2c3'). Muss eine NFT- oder SFT-Kollektion sein, für die du die Erstellungsrolle besitzt."
+                },
+                "type": "string",
+                "position": "arg:1",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Quantity",
+                "as": "QUANTITY",
+                "description": {
+                  "en": "Number of tokens to mint. Use 1 for a unique NFT, or more for SFTs where multiple copies exist.",
+                  "de": "Anzahl der zu mintenden Tokens. 1 für ein einzigartiges NFT, oder mehr für SFTs mit mehreren Kopien."
+                },
+                "type": "biguint",
+                "position": "arg:2",
+                "source": "field",
+                "required": true,
+                "default": "1",
+                "min": 1
+              },
+              {
+                "name": "NFT Name",
+                "as": "NFT_NAME",
+                "description": {
+                  "en": "The display name of this specific NFT (e.g. 'My Rare Dragon #1').",
+                  "de": "Der Anzeigename dieses spezifischen NFTs (z.B. 'Mein Seltener Drache #1')."
+                },
+                "type": "string",
+                "position": "arg:3",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Royalties",
+                "as": "ROYALTIES",
+                "description": {
+                  "en": "Creator royalty in basis points (0–10000). E.g. 500 = 5%, 1000 = 10%. Set to 0 for no royalties.",
+                  "de": "Creator-Royalty in Basispunkten (0–10000). Z.B. 500 = 5%, 1000 = 10%. 0 für keine Royalties."
+                },
+                "type": "biguint",
+                "position": "arg:4",
+                "source": "field",
+                "required": true,
+                "default": "0"
+              },
+              {
+                "name": "Metadata Hash",
+                "as": "HASH",
+                "description": {
+                  "en": "Optional content hash (e.g. IPFS CID) for off-chain metadata integrity verification. Leave empty if not needed.",
+                  "de": "Optionaler Inhalts-Hash (z.B. IPFS-CID) zur Integritätsprüfung von Off-Chain-Metadaten. Leer lassen wenn nicht benötigt."
+                },
+                "type": "string",
+                "position": "arg:5",
+                "source": "field",
+                "required": false,
+                "default": ""
+              },
+              {
+                "name": "Attributes",
+                "as": "ATTRIBUTES",
+                "description": {
+                  "en": "Custom NFT attributes as a string (e.g. 'rarity:legendary;power:95'). Leave empty if not needed.",
+                  "de": "Benutzerdefinierte NFT-Attribute als Zeichenkette (z.B. 'seltenheit:legendär;kraft:95'). Leer lassen wenn nicht benötigt."
+                },
+                "type": "string",
+                "position": "arg:6",
+                "source": "field",
+                "required": false,
+                "default": ""
+              },
+              {
+                "name": "Media URI",
+                "as": "URI",
+                "description": {
+                  "en": "The URI pointing to the NFT's media or metadata (e.g. 'https://ipfs.io/ipfs/Qm...' or 'ipfs://Qm...').",
+                  "de": "Die URI, die auf das Medien- oder Metadaten-Asset des NFTs verweist (z.B. 'https://ipfs.io/ipfs/Qm...' oder 'ipfs://Qm...')."
+                },
+                "type": "string",
+                "position": "arg:7",
+                "source": "field",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "output": {
+          "TX_HASH": "out",
+          "COLLECTION_ID": "in.COLLECTION_ID",
+          "NFT_NAME": "in.NFT_NAME",
+          "QUANTITY": "in.QUANTITY",
+          "URI": "in.URI"
+        },
+        "next": "multiversx-esdt-nft-view?COLLECTION_ID={{COLLECTION_ID}}",
+        "messages": {
+          "success": {
+            "en": "NFT '{{NFT_NAME}}' minted successfully in collection {{COLLECTION_ID}} (qty: {{QUANTITY}}).",
+            "de": "NFT '{{NFT_NAME}}' erfolgreich in Kollektion {{COLLECTION_ID}} gemintet (Menge: {{QUANTITY}})."
+          },
+          "invoking": "Minting NFT ...",
+          "invoked": "NFT minted"
+        },
+        "related": [
+          "multiversx-esdt-set-nft-create-role",
+          "multiversx-esdt-issue-nft-collection",
+          "multiversx-esdt-nft-view"
+        ]
+      }
+    },
+    {
+      "key": "multiversx:multiversx-esdt-set-nft-create-role",
+      "identifier": "@multiversx-esdt-set-nft-create-role",
+      "alias": "multiversx-esdt-set-nft-create-role",
+      "chain": "multiversx",
+      "hash": "323824e2bde1dfd3db485d8b2212a0ef88b147878381fe8a34a08949bc378c2e",
+      "checksum": "323824e2bde1dfd3db485d8b2212a0ef88b147878381fe8a34a08949bc378c2e",
+      "name": "MultiversX: Set NFT Create Role",
+      "title": {
+        "en": "Assign NFT Create Role on MultiversX",
+        "de": "NFT-Erstellungsrolle auf MultiversX zuweisen"
+      },
+      "description": {
+        "en": "Assign the ESDTRoleNFTCreate role to an address for an NFT or SFT collection. This role is required before minting NFTs. Only the collection owner (issuer) can assign roles. After assigning, the address can create/mint NFTs in the collection.",
+        "de": "Weise die ESDTRoleNFTCreate-Rolle einer Adresse für eine NFT- oder SFT-Kollektion zu. Diese Rolle ist erforderlich, bevor NFTs geprägt werden können. Nur der Kollektion-Eigentümer kann Rollen zuweisen."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "primaryAddress": "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u",
+      "primaryFunc": "setSpecialRole",
+      "brand": {
+        "hash": "596edcb65836ff7a2b4ba24ecfd2893a2433164e9c7e1c4d1b48c4f17f4942f9",
+        "slug": "multiversx",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "MultiversX",
+        "description": {
+          "en": "MultiversX, the EGLD network, is a distributed blockchain network for next-gen applications. Decentralized via 3,000+ nodes, scalable through sharding, fast, secure & green."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/chains/logos/multiversx.svg"
+        },
+        "urls": {
+          "web": "https://multiversx.com"
+        },
+        "colors": {
+          "primary": "#22F7DD"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "chain": "multiversx",
+        "name": "MultiversX: Set NFT Create Role",
+        "title": {
+          "en": "Assign NFT Create Role on MultiversX",
+          "de": "NFT-Erstellungsrolle auf MultiversX zuweisen"
+        },
+        "description": {
+          "en": "Assign the ESDTRoleNFTCreate role to an address for an NFT or SFT collection. This role is required before minting NFTs. Only the collection owner (issuer) can assign roles. After assigning, the address can create/mint NFTs in the collection.",
+          "de": "Weise die ESDTRoleNFTCreate-Rolle einer Adresse für eine NFT- oder SFT-Kollektion zu. Diese Rolle ist erforderlich, bevor NFTs geprägt werden können. Nur der Kollektion-Eigentümer kann Rollen zuweisen."
+        },
+        "actions": [
+          {
+            "type": "contract",
+            "label": {
+              "en": "Set NFT Create Role",
+              "de": "NFT-Erstellungsrolle setzen"
+            },
+            "address": "erd1qqqqqqqqqqqqqqqpqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqzllls8a5w6u",
+            "func": "setSpecialRole",
+            "args": [],
+            "gasLimit": 60000000,
+            "primary": true,
+            "inputs": [
+              {
+                "name": "Collection Identifier",
+                "as": "COLLECTION_ID",
+                "description": {
+                  "en": "The collection token identifier (e.g. 'MYNFT-a1b2c3').",
+                  "de": "Der Kollektion-Token-Identifier (z.B. 'MEINNFT-a1b2c3')."
+                },
+                "type": "string",
+                "position": "arg:1",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Address",
+                "as": "ADDRESS",
+                "description": {
+                  "en": "The address to assign the NFT create role to. Typically your own wallet address.",
+                  "de": "Die Adresse, der die NFT-Erstellungsrolle zugewiesen werden soll. Typischerweise deine eigene Wallet-Adresse."
+                },
+                "type": "address",
+                "position": "arg:2",
+                "source": "field",
+                "required": true,
+                "default": "{{USER_WALLET}}"
+              },
+              {
+                "name": "Role",
+                "type": "string",
+                "position": "arg:3",
+                "source": "hidden",
+                "default": "ESDTRoleNFTCreate"
+              }
+            ]
+          }
+        ],
+        "output": {
+          "TX_HASH": "out",
+          "COLLECTION_ID": "in.COLLECTION_ID"
+        },
+        "next": "multiversx-esdt-nft-create?COLLECTION_ID={{COLLECTION_ID}}",
+        "messages": {
+          "success": {
+            "en": "NFT create role assigned for collection {{COLLECTION_ID}}.",
+            "de": "NFT-Erstellungsrolle zugewiesen für Kollektion {{COLLECTION_ID}}."
+          },
+          "invoking": "Assigning NFT create role ...",
+          "invoked": "Role assigned"
+        },
+        "related": [
+          "multiversx-esdt-nft-create",
+          "multiversx-esdt-issue-nft-collection",
+          "multiversx-esdt-nft-view"
+        ]
+      }
+    },
+    {
+      "key": "multiversx:multiversx-staking-claim",
+      "identifier": "@multiversx-staking-claim",
+      "alias": "multiversx-staking-claim",
+      "chain": "multiversx",
+      "hash": "bf58330e43e091472e37026560fd8f39ec09ced7ff61dca2afa9c2b444c92504",
+      "checksum": "bf58330e43e091472e37026560fd8f39ec09ced7ff61dca2afa9c2b444c92504",
+      "name": "MultiversX: Staking - Claim Rewards",
+      "title": {
+        "en": "Claim your MultiversX eGold staking rewards from Provider",
+        "de": "Fordere deine MultiversX eGold Staking-Belohnungen von Provider ein"
+      },
+      "description": {
+        "en": "Claim your MultiversX eGold (EGLD) staking rewards – rewards for securing the network.",
+        "de": "Fordere deine MultiversX eGold (EGLD) Staking-Belohnungen ein – Belohnungen für die Sicherung des Netzwerks."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "primaryAddress": "{{PROVIDER}}",
+      "primaryFunc": "claimRewards",
+      "brand": {
+        "hash": "596edcb65836ff7a2b4ba24ecfd2893a2433164e9c7e1c4d1b48c4f17f4942f9",
+        "slug": "multiversx",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "MultiversX",
+        "description": {
+          "en": "MultiversX, the EGLD network, is a distributed blockchain network for next-gen applications. Decentralized via 3,000+ nodes, scalable through sharding, fast, secure & green."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/chains/logos/multiversx.svg"
+        },
+        "urls": {
+          "web": "https://multiversx.com"
+        },
+        "colors": {
+          "primary": "#22F7DD"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "chain": "multiversx",
+        "name": "MultiversX: Staking - Claim Rewards",
+        "title": {
+          "en": "Claim your MultiversX eGold staking rewards from Provider",
+          "de": "Fordere deine MultiversX eGold Staking-Belohnungen von Provider ein"
+        },
+        "description": {
+          "en": "Claim your MultiversX eGold (EGLD) staking rewards – rewards for securing the network.",
+          "de": "Fordere deine MultiversX eGold (EGLD) Staking-Belohnungen ein – Belohnungen für die Sicherung des Netzwerks."
+        },
+        "actions": [
+          {
+            "type": "contract",
+            "label": {
+              "en": "Claim now",
+              "de": "Jetzt einfordern"
+            },
+            "address": "{{PROVIDER}}",
+            "func": "claimRewards",
+            "args": [],
+            "gasLimit": 10000000,
+            "inputs": [
+              {
+                "name": "Provider",
+                "as": "PROVIDER",
+                "description": {
+                  "en": "The address of the staking provider to claim rewards from.",
+                  "de": "Die Adresse des Staking-Providers, von dem Belohnungen eingefordert werden sollen."
+                },
+                "type": "address",
+                "source": "field",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "output": {
+          "TX_HASH": "out",
+          "PROVIDER": "in.PROVIDER",
+          "REWARDS_CLAIMED_EGLD": "transform:() => 0"
+        },
+        "ui": "https://raw.githubusercontent.com/JoAiHQ/warps/main/warps/multiversx/staking-claim/chatapp.dist.html",
+        "messages": {
+          "success": {
+            "en": "Rewards claimed successfully",
+            "de": "Belohnungen erfolgreich eingefordert"
+          }
+        }
+      }
+    },
+    {
+      "key": "multiversx:multiversx-staking-claim-all",
+      "identifier": "@multiversx-staking-claim-all",
+      "alias": "multiversx-staking-claim-all",
+      "chain": "multiversx",
+      "hash": "4df494392254308be763fc7e159d751f98ccdfc2a098b9a298f81e161f1c4ed8",
+      "checksum": "4df494392254308be763fc7e159d751f98ccdfc2a098b9a298f81e161f1c4ed8",
+      "name": "MultiversX: Staking - Claim Rewards - All",
+      "title": {
+        "en": "Claim all your MultiversX eGold staking rewards",
+        "de": "Alle MultiversX eGold-Staking-Belohnungen beanspruchen"
+      },
+      "description": {
+        "en": "Claim all your MultiversX eGold (EGLD) staking rewards across all providers.",
+        "de": "Beanspruche alle deine MultiversX eGold (EGLD) Staking-Belohnungen über alle Anbieter hinweg."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "596edcb65836ff7a2b4ba24ecfd2893a2433164e9c7e1c4d1b48c4f17f4942f9",
+        "slug": "multiversx",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "MultiversX",
+        "description": {
+          "en": "MultiversX, the EGLD network, is a distributed blockchain network for next-gen applications. Decentralized via 3,000+ nodes, scalable through sharding, fast, secure & green."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/chains/logos/multiversx.svg"
+        },
+        "urls": {
+          "web": "https://multiversx.com"
+        },
+        "colors": {
+          "primary": "#22F7DD"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "chain": "multiversx",
+        "name": "MultiversX: Staking - Claim Rewards - All",
+        "title": {
+          "en": "Claim all your MultiversX eGold staking rewards",
+          "de": "Alle MultiversX eGold-Staking-Belohnungen beanspruchen"
+        },
+        "description": {
+          "en": "Claim all your MultiversX eGold (EGLD) staking rewards across all providers.",
+          "de": "Beanspruche alle deine MultiversX eGold (EGLD) Staking-Belohnungen über alle Anbieter hinweg."
+        },
+        "ui": "https://raw.githubusercontent.com/JoAiHQ/warps/main/warps/multiversx/staking-claim-all/chatapp.dist.html",
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Check rewards",
+              "de": "Belohnungen prüfen"
+            },
+            "destination": {
+              "url": "{{CHAIN_API}}/accounts/{{USER_WALLET}}/delegation"
+            }
+          }
+        ],
+        "output": {
+          "CLAIMS": "transform:() => out.filter(d => BigInt(d.claimableRewards || '0') > 0).map(d => ({ provider: d.contract, rewardsClaimedEgld: Number(BigInt(d.claimableRewards))/1e18, txHash: 'pending...' }))",
+          "TOTAL_REWARDS_CLAIMED_EGLD": "transform:() => out.reduce((acc, d) => acc + (BigInt(d.claimableRewards || '0') > 0 ? Number(BigInt(d.claimableRewards))/1e18 : 0), 0)",
+          "PROVIDER_COUNT": "transform:() => out.filter(d => BigInt(d.claimableRewards || '0') > 0).length"
+        },
+        "next": "multiversx-staking-claim?PROVIDER={{out[].contract}}",
+        "schedule": "weekly"
+      }
+    },
+    {
+      "key": "multiversx:multiversx-staking-claimable-rewards",
+      "identifier": "@multiversx-staking-claimable-rewards",
+      "alias": "multiversx-staking-claimable-rewards",
+      "chain": "multiversx",
+      "hash": "2d91059dc0cb719085d6140a32364b30c7c8a5d5a8bd618f685c22d6c03873f4",
+      "checksum": "2d91059dc0cb719085d6140a32364b30c7c8a5d5a8bd618f685c22d6c03873f4",
+      "name": "MultiversX: Staking - Get Claimable Rewards",
+      "title": {
+        "en": "Check your claimable MultiversX eGold staking rewards balance",
+        "de": "Beanspruchbare MultiversX eGold-Staking-Belohnungen prüfen"
+      },
+      "description": {
+        "en": "View and check your claimable MultiversX eGold (EGLD) staking rewards balance on MultiversX. See how much eGold you have available to claim from your staking delegations across all validators. Track your accumulated eGold rewards and claimable balance from multiple staking providers in one place.",
+        "de": "Zeige deine beanspruchbaren MultiversX eGold (EGLD) Staking-Belohnungen an. Sieh, wie viel eGold du von deinen Staking-Delegationen über alle Validatoren hinweg beanspruchen kannst. Verfolge deine angesammelten eGold-Belohnungen und deinen beanspruchbaren Kontostand von mehreren Staking-Anbietern an einem Ort."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "596edcb65836ff7a2b4ba24ecfd2893a2433164e9c7e1c4d1b48c4f17f4942f9",
+        "slug": "multiversx",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "MultiversX",
+        "description": {
+          "en": "MultiversX, the EGLD network, is a distributed blockchain network for next-gen applications. Decentralized via 3,000+ nodes, scalable through sharding, fast, secure & green."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/chains/logos/multiversx.svg"
+        },
+        "urls": {
+          "web": "https://multiversx.com"
+        },
+        "colors": {
+          "primary": "#22F7DD"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "chain": "multiversx",
+        "name": "MultiversX: Staking - Get Claimable Rewards",
+        "title": {
+          "en": "Check your claimable MultiversX eGold staking rewards balance",
+          "de": "Beanspruchbare MultiversX eGold-Staking-Belohnungen prüfen"
+        },
+        "description": {
+          "en": "View and check your claimable MultiversX eGold (EGLD) staking rewards balance on MultiversX. See how much eGold you have available to claim from your staking delegations across all validators. Track your accumulated eGold rewards and claimable balance from multiple staking providers in one place.",
+          "de": "Zeige deine beanspruchbaren MultiversX eGold (EGLD) Staking-Belohnungen an. Sieh, wie viel eGold du von deinen Staking-Delegationen über alle Validatoren hinweg beanspruchen kannst. Verfolge deine angesammelten eGold-Belohnungen und deinen beanspruchbaren Kontostand von mehreren Staking-Anbietern an einem Ort."
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Check claimable balance",
+              "de": "Beanspruchbares Guthaben prüfen"
+            },
+            "destination": {
+              "url": "{{CHAIN_API}}/accounts/{{ADDRESS}}/delegation"
+            },
+            "inputs": [
+              {
+                "name": "Address",
+                "as": "ADDRESS",
+                "description": {
+                  "en": "Your MultiversX wallet address to check claimable eGold staking rewards for.",
+                  "de": "Deine MultiversX-Wallet-Adresse, um beanspruchbare eGold-Staking-Belohnungen zu überprüfen."
+                },
+                "type": "address",
+                "source": "field",
+                "required": true,
+                "default": "{{USER_WALLET}}"
+              }
+            ]
+          }
+        ],
+        "output": {
+          "REWARDS_ACCUMLATED": "transform:() => out.reduce((acc, delegation) => acc + BigInt(delegation.claimableRewards), BigInt(0)).toString()",
+          "REWARDS": "transform:() => Number(results.REWARDS_ACCUMLATED) / 10 ** 18",
+          "REWARDS_FORMATTED": "transform:() => results.REWARDS.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })",
+          "PROVIDER_AMOUNT": "transform:() => out.length"
+        },
+        "messages": {
+          "success": {
+            "en": "Your claimable staking rewards balance: {{REWARDS_FORMATTED}} eGold (EGLD) from {{PROVIDER_AMOUNT}} staking providers.",
+            "de": "Beanspruchbares Staking-Guthaben: {{REWARDS_FORMATTED}} eGold (EGLD) von {{PROVIDER_AMOUNT}} Staking-Anbietern."
+          },
+          "card": {
+            "en": "Pending Rewards: {{REWARDS_FORMATTED}} eGold",
+            "de": "Ausstehende Belohnungen: {{REWARDS_FORMATTED}} eGold"
+          },
+          "info": {
+            "en": "You have {{REWARDS_FORMATTED}} eGold (EGLD) available to claim from {{PROVIDER_AMOUNT}} staking providers on MultiversX",
+            "de": "Du hast {{REWARDS_FORMATTED}} eGold (EGLD) verfügbar zum Beanspruchen von {{PROVIDER_AMOUNT}} Staking-Anbietern auf MultiversX"
+          }
+        },
+        "next": "multiversx-staking-claim?provider={{out[].contract}}"
+      }
+    },
+    {
+      "key": "multiversx:oox-accept-offer",
+      "identifier": "@oox-accept-offer",
+      "alias": "oox-accept-offer",
+      "chain": "multiversx",
+      "hash": "f0c408c6931af3d2281f5b9dee11a7b2ee7f171005ba03b1c7edc54868eecf37",
+      "checksum": "f0c408c6931af3d2281f5b9dee11a7b2ee7f171005ba03b1c7edc54868eecf37",
+      "name": "OOX: Accept Offer",
+      "title": {
+        "en": "Accept Offer for NFT",
+        "de": "Angebot für NFT annehmen"
+      },
+      "description": {
+        "en": "Accept an offer made for your NFT. The NFT will be transferred to the buyer and you will receive the payment.",
+        "de": "Ein Angebot für dein NFT annehmen. Das NFT wird an den Käufer übertragen und du erhältst die Zahlung."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "primaryAddress": "erd1qqqqqqqqqqqqqpgqplaceholderdevnet",
+      "primaryFunc": "acceptOffer",
+      "brand": {
+        "hash": "7653756321da4f2fa9d6ea86035b4971583207b9092c3a12d02c920c14822c10",
+        "slug": "oox",
+        "active": false,
+        "protocol": "brand:0.2.0",
+        "name": "OOX",
+        "description": {
+          "en": "OOX - NFT marketplace on MultiversX. Buy, sell, and trade NFTs through auctions, offers, and vending machines.",
+          "de": "OOX - NFT-Marktplatz auf MultiversX. Kaufe, verkaufe und handele NFTs über Auktionen, Angebote und Verkaufsautomaten."
+        },
+        "logo": {
+          "light": "https://www.oox.art/logo-light.png",
+          "dark": "https://www.oox.art/logo-dark.png"
+        },
+        "urls": {
+          "web": "https://www.oox.art"
+        },
+        "colors": {
+          "primary": "#000000",
+          "secondary": "#ffffff"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "chain": "multiversx",
+        "name": "OOX: Accept Offer",
+        "title": {
+          "en": "Accept Offer for NFT",
+          "de": "Angebot für NFT annehmen"
+        },
+        "description": {
+          "en": "Accept an offer made for your NFT. The NFT will be transferred to the buyer and you will receive the payment.",
+          "de": "Ein Angebot für dein NFT annehmen. Das NFT wird an den Käufer übertragen und du erhältst die Zahlung."
+        },
+        "actions": [
+          {
+            "type": "contract",
+            "label": {
+              "en": "Accept offer",
+              "de": "Angebot annehmen"
+            },
+            "address": "erd1qqqqqqqqqqqqqpgqplaceholderdevnet",
+            "func": "acceptOffer",
+            "args": [],
+            "gasLimit": 10000000,
+            "abi": "hash:2e526ab578e7bcaafd49435f15adc38653eaaa48f048cf1ab4da2cbbcafc13b8",
+            "inputs": [
+              {
+                "name": "Offer ID",
+                "description": {
+                  "en": "The ID of the offer to accept.",
+                  "de": "Die ID des anzunehmenden Angebots."
+                },
+                "type": "number",
+                "position": "arg:1",
+                "source": "field",
+                "required": true,
+                "min": 0
+              },
+              {
+                "name": "NFT",
+                "description": {
+                  "en": "The NFT to transfer to the buyer.",
+                  "de": "Das NFT, das an den Käufer übertragen werden soll."
+                },
+                "type": "asset",
+                "position": "transfer",
+                "source": "field",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "messages": {
+          "success": {
+            "en": "Offer accepted successfully",
+            "de": "Angebot erfolgreich angenommen"
+          }
+        }
+      }
+    },
+    {
+      "key": "multiversx:oox-auction-token",
+      "identifier": "@oox-auction-token",
+      "alias": "oox-auction-token",
+      "chain": "multiversx",
+      "hash": "c894949f2fbcafb1e0ca0207ca29bfcb6eceb4b89c8c789b274cd538e6a45f9a",
+      "checksum": "c894949f2fbcafb1e0ca0207ca29bfcb6eceb4b89c8c789b274cd538e6a45f9a",
+      "name": "OOX: Create Auction",
+      "title": {
+        "en": "Create NFT Auction",
+        "de": "NFT-Auktion erstellen"
+      },
+      "description": {
+        "en": "Create an auction for your NFT or SFT on OOX marketplace. Set minimum and maximum bid prices, deadline, and accepted payment token.",
+        "de": "Eine Auktion für dein NFT oder SFT auf dem OOX-Marktplatz erstellen. Lege Mindest- und Höchstgebote, Frist und akzeptiertes Zahlungstoken fest."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "primaryAddress": "erd1qqqqqqqqqqqqqpgqplaceholderdevnet",
+      "primaryFunc": "auctionToken",
+      "brand": {
+        "hash": "7653756321da4f2fa9d6ea86035b4971583207b9092c3a12d02c920c14822c10",
+        "slug": "oox",
+        "active": false,
+        "protocol": "brand:0.2.0",
+        "name": "OOX",
+        "description": {
+          "en": "OOX - NFT marketplace on MultiversX. Buy, sell, and trade NFTs through auctions, offers, and vending machines.",
+          "de": "OOX - NFT-Marktplatz auf MultiversX. Kaufe, verkaufe und handele NFTs über Auktionen, Angebote und Verkaufsautomaten."
+        },
+        "logo": {
+          "light": "https://www.oox.art/logo-light.png",
+          "dark": "https://www.oox.art/logo-dark.png"
+        },
+        "urls": {
+          "web": "https://www.oox.art"
+        },
+        "colors": {
+          "primary": "#000000",
+          "secondary": "#ffffff"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "chain": "multiversx",
+        "name": "OOX: Create Auction",
+        "title": {
+          "en": "Create NFT Auction",
+          "de": "NFT-Auktion erstellen"
+        },
+        "description": {
+          "en": "Create an auction for your NFT or SFT on OOX marketplace. Set minimum and maximum bid prices, deadline, and accepted payment token.",
+          "de": "Eine Auktion für dein NFT oder SFT auf dem OOX-Marktplatz erstellen. Lege Mindest- und Höchstgebote, Frist und akzeptiertes Zahlungstoken fest."
+        },
+        "actions": [
+          {
+            "type": "contract",
+            "label": {
+              "en": "Create auction",
+              "de": "Auktion erstellen"
+            },
+            "address": "erd1qqqqqqqqqqqqqpgqplaceholderdevnet",
+            "func": "auctionToken",
+            "args": [],
+            "gasLimit": 10000000,
+            "abi": "hash:2e526ab578e7bcaafd49435f15adc38653eaaa48f048cf1ab4da2cbbcafc13b8",
+            "inputs": [
+              {
+                "name": "NFT",
+                "description": {
+                  "en": "The NFT or SFT to auction.",
+                  "de": "Das zu versteigernde NFT oder SFT."
+                },
+                "type": "asset",
+                "position": "transfer",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Min Bid",
+                "description": {
+                  "en": "Minimum bid amount in the accepted payment token.",
+                  "de": "Mindestgebot in dem akzeptierten Zahlungstoken."
+                },
+                "type": "biguint",
+                "position": "arg:1",
+                "source": "field",
+                "required": true,
+                "min": 1
+              },
+              {
+                "name": "Max Bid",
+                "description": {
+                  "en": "Maximum bid amount (set to 0 for no maximum).",
+                  "de": "Höchstgebot (0 für kein Maximum)."
+                },
+                "type": "biguint",
+                "position": "arg:2",
+                "source": "field",
+                "required": true,
+                "min": 0
+              },
+              {
+                "name": "Deadline",
+                "description": {
+                  "en": "Auction deadline timestamp (Unix timestamp in seconds).",
+                  "de": "Auktionsfrist (Unix-Zeitstempel in Sekunden)."
+                },
+                "type": "number",
+                "position": "arg:3",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Payment Token",
+                "description": {
+                  "en": "Accepted payment token identifier (EGLD for eGold, or ESDT token identifier).",
+                  "de": "Akzeptiertes Zahlungstoken (EGLD für eGold oder ESDT-Token-Kennung)."
+                },
+                "type": "string",
+                "position": "arg:4",
+                "source": "field",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "messages": {
+          "success": {
+            "en": "Auction created successfully",
+            "de": "Auktion erfolgreich erstellt"
+          }
+        }
+      }
+    },
+    {
+      "key": "multiversx:oox-claim-tokens",
+      "identifier": "@oox-claim-tokens",
+      "alias": "oox-claim-tokens",
+      "chain": "multiversx",
+      "hash": "671f493844990f78d91d58160b0e90806793c1faf9ff10ddb86d70eaf509bf34",
+      "checksum": "671f493844990f78d91d58160b0e90806793c1faf9ff10ddb86d70eaf509bf34",
+      "name": "OOX: Claim Tokens",
+      "title": {
+        "en": "Claim Tokens from Marketplace",
+        "de": "Token vom Marktplatz beanspruchen"
+      },
+      "description": {
+        "en": "Claim tokens that you have earned from sales or auctions on the marketplace.",
+        "de": "Token beanspruchen, die du durch Verkäufe oder Auktionen auf dem Marktplatz verdient hast."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "primaryAddress": "erd1qqqqqqqqqqqqqpgqplaceholderdevnet",
+      "primaryFunc": "claimTokens",
+      "brand": {
+        "hash": "7653756321da4f2fa9d6ea86035b4971583207b9092c3a12d02c920c14822c10",
+        "slug": "oox",
+        "active": false,
+        "protocol": "brand:0.2.0",
+        "name": "OOX",
+        "description": {
+          "en": "OOX - NFT marketplace on MultiversX. Buy, sell, and trade NFTs through auctions, offers, and vending machines.",
+          "de": "OOX - NFT-Marktplatz auf MultiversX. Kaufe, verkaufe und handele NFTs über Auktionen, Angebote und Verkaufsautomaten."
+        },
+        "logo": {
+          "light": "https://www.oox.art/logo-light.png",
+          "dark": "https://www.oox.art/logo-dark.png"
+        },
+        "urls": {
+          "web": "https://www.oox.art"
+        },
+        "colors": {
+          "primary": "#000000",
+          "secondary": "#ffffff"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "chain": "multiversx",
+        "name": "OOX: Claim Tokens",
+        "title": {
+          "en": "Claim Tokens from Marketplace",
+          "de": "Token vom Marktplatz beanspruchen"
+        },
+        "description": {
+          "en": "Claim tokens that you have earned from sales or auctions on the marketplace.",
+          "de": "Token beanspruchen, die du durch Verkäufe oder Auktionen auf dem Marktplatz verdient hast."
+        },
+        "actions": [
+          {
+            "type": "contract",
+            "label": {
+              "en": "Claim tokens",
+              "de": "Token beanspruchen"
+            },
+            "address": "erd1qqqqqqqqqqqqqpgqplaceholderdevnet",
+            "func": "claimTokens",
+            "args": [],
+            "gasLimit": 10000000,
+            "abi": "hash:2e526ab578e7bcaafd49435f15adc38653eaaa48f048cf1ab4da2cbbcafc13b8",
+            "inputs": [
+              {
+                "name": "Claim Destination",
+                "description": {
+                  "en": "Address to receive the claimed tokens.",
+                  "de": "Adresse, die die beanspruchten Token erhält."
+                },
+                "type": "address",
+                "position": "arg:1",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Token Pairs",
+                "description": {
+                  "en": "Token identifier and nonce pairs to claim (format: tokenId,nonce).",
+                  "de": "Token-Kennung und Nonce-Paare zum Beanspruchen (Format: tokenId,nonce)."
+                },
+                "type": "string",
+                "position": "arg:2",
+                "source": "field",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "messages": {
+          "success": {
+            "en": "Tokens claimed successfully",
+            "de": "Token erfolgreich beansprucht"
+          }
+        }
+      }
+    },
+    {
+      "key": "multiversx:oox-create-vending-machine",
+      "identifier": "@oox-create-vending-machine",
+      "alias": "oox-create-vending-machine",
+      "chain": "multiversx",
+      "hash": "6025c143d9cfd181bd9375cea3330d08a858d80b498cc8ce2d6f2da3d6ae57f5",
+      "checksum": "6025c143d9cfd181bd9375cea3330d08a858d80b498cc8ce2d6f2da3d6ae57f5",
+      "name": "OOX: Create Vending Machine",
+      "title": {
+        "en": "Create Vending Machine",
+        "de": "Verkaufsautomat erstellen"
+      },
+      "description": {
+        "en": "Create a vending machine to sell multiple NFTs at a fixed price. Buyers can mint NFTs directly from your machine.",
+        "de": "Einen Verkaufsautomaten erstellen, um mehrere NFTs zu einem Festpreis zu verkaufen. Käufer können NFTs direkt aus deinem Automaten prägen."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "primaryAddress": "erd1qqqqqqqqqqqqqpgqplaceholderdevnet",
+      "primaryFunc": "createVendingMachine",
+      "brand": {
+        "hash": "7653756321da4f2fa9d6ea86035b4971583207b9092c3a12d02c920c14822c10",
+        "slug": "oox",
+        "active": false,
+        "protocol": "brand:0.2.0",
+        "name": "OOX",
+        "description": {
+          "en": "OOX - NFT marketplace on MultiversX. Buy, sell, and trade NFTs through auctions, offers, and vending machines.",
+          "de": "OOX - NFT-Marktplatz auf MultiversX. Kaufe, verkaufe und handele NFTs über Auktionen, Angebote und Verkaufsautomaten."
+        },
+        "logo": {
+          "light": "https://www.oox.art/logo-light.png",
+          "dark": "https://www.oox.art/logo-dark.png"
+        },
+        "urls": {
+          "web": "https://www.oox.art"
+        },
+        "colors": {
+          "primary": "#000000",
+          "secondary": "#ffffff"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "chain": "multiversx",
+        "name": "OOX: Create Vending Machine",
+        "title": {
+          "en": "Create Vending Machine",
+          "de": "Verkaufsautomat erstellen"
+        },
+        "description": {
+          "en": "Create a vending machine to sell multiple NFTs at a fixed price. Buyers can mint NFTs directly from your machine.",
+          "de": "Einen Verkaufsautomaten erstellen, um mehrere NFTs zu einem Festpreis zu verkaufen. Käufer können NFTs direkt aus deinem Automaten prägen."
+        },
+        "actions": [
+          {
+            "type": "contract",
+            "label": {
+              "en": "Create vending machine",
+              "de": "Verkaufsautomat erstellen"
+            },
+            "address": "erd1qqqqqqqqqqqqqpgqplaceholderdevnet",
+            "func": "createVendingMachine",
+            "args": [],
+            "gasLimit": 10000000,
+            "abi": "hash:2e526ab578e7bcaafd49435f15adc38653eaaa48f048cf1ab4da2cbbcafc13b8",
+            "inputs": [
+              {
+                "name": "Price",
+                "description": {
+                  "en": "Price per NFT in the accepted payment token.",
+                  "de": "Preis pro NFT in dem akzeptierten Zahlungstoken."
+                },
+                "type": "biguint",
+                "position": "arg:1",
+                "source": "field",
+                "required": true,
+                "min": 1
+              },
+              {
+                "name": "Payment Token",
+                "description": {
+                  "en": "Accepted payment token identifier (EGLD for eGold, or ESDT token identifier).",
+                  "de": "Akzeptiertes Zahlungstoken (EGLD für eGold oder ESDT-Token-Kennung)."
+                },
+                "type": "string",
+                "position": "arg:2",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Name",
+                "description": {
+                  "en": "Name of the vending machine (encoded as bytes).",
+                  "de": "Name des Verkaufsautomaten (als Bytes kodiert)."
+                },
+                "type": "string",
+                "position": "arg:3",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "NFTs",
+                "description": {
+                  "en": "NFTs to add to the vending machine.",
+                  "de": "NFTs, die zum Verkaufsautomaten hinzugefügt werden sollen."
+                },
+                "type": "asset",
+                "position": "transfer",
+                "source": "field",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "messages": {
+          "success": {
+            "en": "Vending machine created successfully",
+            "de": "Verkaufsautomat erfolgreich erstellt"
+          }
+        }
+      }
+    },
+    {
+      "key": "multiversx:oox-modify-auction-price",
+      "identifier": "@oox-modify-auction-price",
+      "alias": "oox-modify-auction-price",
+      "chain": "multiversx",
+      "hash": "7dda36b10585ec81ceab75792e9b7aeb2d01fa040eb65b0d3692e37c5d27bcf4",
+      "checksum": "7dda36b10585ec81ceab75792e9b7aeb2d01fa040eb65b0d3692e37c5d27bcf4",
+      "name": "OOX: Modify Auction Price",
+      "title": {
+        "en": "Modify Auction Price",
+        "de": "Auktionspreis ändern"
+      },
+      "description": {
+        "en": "Update the minimum and/or maximum bid price for your active auction.",
+        "de": "Den Mindest- und/oder Höchstgebotspreis deiner aktiven Auktion aktualisieren."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "primaryAddress": "erd1qqqqqqqqqqqqqpgqplaceholderdevnet",
+      "primaryFunc": "modifyAuctionPrice",
+      "brand": {
+        "hash": "7653756321da4f2fa9d6ea86035b4971583207b9092c3a12d02c920c14822c10",
+        "slug": "oox",
+        "active": false,
+        "protocol": "brand:0.2.0",
+        "name": "OOX",
+        "description": {
+          "en": "OOX - NFT marketplace on MultiversX. Buy, sell, and trade NFTs through auctions, offers, and vending machines.",
+          "de": "OOX - NFT-Marktplatz auf MultiversX. Kaufe, verkaufe und handele NFTs über Auktionen, Angebote und Verkaufsautomaten."
+        },
+        "logo": {
+          "light": "https://www.oox.art/logo-light.png",
+          "dark": "https://www.oox.art/logo-dark.png"
+        },
+        "urls": {
+          "web": "https://www.oox.art"
+        },
+        "colors": {
+          "primary": "#000000",
+          "secondary": "#ffffff"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "chain": "multiversx",
+        "name": "OOX: Modify Auction Price",
+        "title": {
+          "en": "Modify Auction Price",
+          "de": "Auktionspreis ändern"
+        },
+        "description": {
+          "en": "Update the minimum and/or maximum bid price for your active auction.",
+          "de": "Den Mindest- und/oder Höchstgebotspreis deiner aktiven Auktion aktualisieren."
+        },
+        "actions": [
+          {
+            "type": "contract",
+            "label": {
+              "en": "Modify price",
+              "de": "Preis ändern"
+            },
+            "address": "erd1qqqqqqqqqqqqqpgqplaceholderdevnet",
+            "func": "modifyAuctionPrice",
+            "args": [],
+            "gasLimit": 10000000,
+            "abi": "hash:2e526ab578e7bcaafd49435f15adc38653eaaa48f048cf1ab4da2cbbcafc13b8",
+            "inputs": [
+              {
+                "name": "Auction ID",
+                "description": {
+                  "en": "The ID of the auction to modify.",
+                  "de": "Die ID der zu ändernden Auktion."
+                },
+                "type": "number",
+                "position": "arg:1",
+                "source": "field",
+                "required": true,
+                "min": 0
+              },
+              {
+                "name": "New Min Bid",
+                "description": {
+                  "en": "New minimum bid amount.",
+                  "de": "Neuer Mindestgebotsbetrag."
+                },
+                "type": "biguint",
+                "position": "arg:2",
+                "source": "field",
+                "required": true,
+                "min": 1
+              },
+              {
+                "name": "New Max Bid",
+                "description": {
+                  "en": "New maximum bid amount (optional, leave empty to keep current).",
+                  "de": "Neuer Höchstgebotsbetrag (optional, leer lassen um aktuellen zu behalten)."
+                },
+                "type": "biguint",
+                "position": "arg:3",
+                "source": "field",
+                "required": false,
+                "min": 1
+              }
+            ]
+          }
+        ],
+        "messages": {
+          "success": {
+            "en": "Auction price modified successfully",
+            "de": "Auktionspreis erfolgreich geändert"
+          }
+        }
+      }
+    },
+    {
+      "key": "multiversx:oox-send-offer",
+      "identifier": "@oox-send-offer",
+      "alias": "oox-send-offer",
+      "chain": "multiversx",
+      "hash": "e1d329562291b4c229a7d8b102e39ee38c126bfa0f5679bb7cfd3af815ff49e3",
+      "checksum": "e1d329562291b4c229a7d8b102e39ee38c126bfa0f5679bb7cfd3af815ff49e3",
+      "name": "OOX: Send Offer",
+      "title": {
+        "en": "Send Offer for NFT",
+        "de": "Angebot für NFT senden"
+      },
+      "description": {
+        "en": "Send an offer to purchase a specific NFT. The NFT owner can accept your offer.",
+        "de": "Ein Angebot zum Kauf eines bestimmten NFT senden. Der NFT-Besitzer kann dein Angebot annehmen."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "primaryAddress": "erd1qqqqqqqqqqqqqpgqplaceholderdevnet",
+      "primaryFunc": "sendOffer",
+      "brand": {
+        "hash": "7653756321da4f2fa9d6ea86035b4971583207b9092c3a12d02c920c14822c10",
+        "slug": "oox",
+        "active": false,
+        "protocol": "brand:0.2.0",
+        "name": "OOX",
+        "description": {
+          "en": "OOX - NFT marketplace on MultiversX. Buy, sell, and trade NFTs through auctions, offers, and vending machines.",
+          "de": "OOX - NFT-Marktplatz auf MultiversX. Kaufe, verkaufe und handele NFTs über Auktionen, Angebote und Verkaufsautomaten."
+        },
+        "logo": {
+          "light": "https://www.oox.art/logo-light.png",
+          "dark": "https://www.oox.art/logo-dark.png"
+        },
+        "urls": {
+          "web": "https://www.oox.art"
+        },
+        "colors": {
+          "primary": "#000000",
+          "secondary": "#ffffff"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "chain": "multiversx",
+        "name": "OOX: Send Offer",
+        "title": {
+          "en": "Send Offer for NFT",
+          "de": "Angebot für NFT senden"
+        },
+        "description": {
+          "en": "Send an offer to purchase a specific NFT. The NFT owner can accept your offer.",
+          "de": "Ein Angebot zum Kauf eines bestimmten NFT senden. Der NFT-Besitzer kann dein Angebot annehmen."
+        },
+        "actions": [
+          {
+            "type": "contract",
+            "label": {
+              "en": "Send offer",
+              "de": "Angebot senden"
+            },
+            "address": "erd1qqqqqqqqqqqqqpgqplaceholderdevnet",
+            "func": "sendOffer",
+            "args": [],
+            "gasLimit": 10000000,
+            "abi": "hash:2e526ab578e7bcaafd49435f15adc38653eaaa48f048cf1ab4da2cbbcafc13b8",
+            "inputs": [
+              {
+                "name": "NFT Identifier",
+                "description": {
+                  "en": "The token identifier of the NFT you want to buy.",
+                  "de": "Die Token-Kennung des NFT, das du kaufen möchtest."
+                },
+                "type": "string",
+                "position": "arg:1",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "NFT Nonce",
+                "description": {
+                  "en": "The nonce of the NFT you want to buy.",
+                  "de": "Die Nonce des NFT, das du kaufen möchtest."
+                },
+                "type": "number",
+                "position": "arg:2",
+                "source": "field",
+                "required": true,
+                "min": 0
+              },
+              {
+                "name": "NFT Amount",
+                "description": {
+                  "en": "The amount of NFTs to buy (for SFTs, use 1 for NFTs).",
+                  "de": "Die Anzahl der zu kaufenden NFTs (für SFTs, verwenden Sie 1 für NFTs)."
+                },
+                "type": "biguint",
+                "position": "arg:3",
+                "source": "field",
+                "required": true,
+                "min": 1
+              },
+              {
+                "name": "Deadline",
+                "description": {
+                  "en": "Offer deadline timestamp (Unix timestamp in seconds).",
+                  "de": "Angebotsfrist (Unix-Zeitstempel in Sekunden)."
+                },
+                "type": "number",
+                "position": "arg:4",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "NFT Owner",
+                "description": {
+                  "en": "The address of the NFT owner.",
+                  "de": "Die Adresse des NFT-Besitzers."
+                },
+                "type": "address",
+                "position": "arg:5",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Payment",
+                "description": {
+                  "en": "Your offer payment amount in the payment token.",
+                  "de": "Dein Angebotszahlungsbetrag im Zahlungstoken."
+                },
+                "type": "asset",
+                "position": "transfer",
+                "source": "field",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "messages": {
+          "success": {
+            "en": "Offer sent successfully",
+            "de": "Angebot erfolgreich gesendet"
+          }
+        }
+      }
+    },
+    {
+      "key": "multiversx:oox-withdraw-offer",
+      "identifier": "@oox-withdraw-offer",
+      "alias": "oox-withdraw-offer",
+      "chain": "multiversx",
+      "hash": "5b3d55cfe1d8f87dbfd63fee4ffd28a484f61ecadc98d51bff547c3454db4a90",
+      "checksum": "5b3d55cfe1d8f87dbfd63fee4ffd28a484f61ecadc98d51bff547c3454db4a90",
+      "name": "OOX: Withdraw Offer",
+      "title": {
+        "en": "Withdraw Offer",
+        "de": "Angebot zurückziehen"
+      },
+      "description": {
+        "en": "Withdraw your offer before it expires or is accepted. Your payment will be returned to you.",
+        "de": "Dein Angebot zurückziehen, bevor es abläuft oder angenommen wird. Deine Zahlung wird dir zurückerstattet."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "primaryAddress": "erd1qqqqqqqqqqqqqpgqplaceholderdevnet",
+      "primaryFunc": "withdrawOffer",
+      "brand": {
+        "hash": "7653756321da4f2fa9d6ea86035b4971583207b9092c3a12d02c920c14822c10",
+        "slug": "oox",
+        "active": false,
+        "protocol": "brand:0.2.0",
+        "name": "OOX",
+        "description": {
+          "en": "OOX - NFT marketplace on MultiversX. Buy, sell, and trade NFTs through auctions, offers, and vending machines.",
+          "de": "OOX - NFT-Marktplatz auf MultiversX. Kaufe, verkaufe und handele NFTs über Auktionen, Angebote und Verkaufsautomaten."
+        },
+        "logo": {
+          "light": "https://www.oox.art/logo-light.png",
+          "dark": "https://www.oox.art/logo-dark.png"
+        },
+        "urls": {
+          "web": "https://www.oox.art"
+        },
+        "colors": {
+          "primary": "#000000",
+          "secondary": "#ffffff"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "chain": "multiversx",
+        "name": "OOX: Withdraw Offer",
+        "title": {
+          "en": "Withdraw Offer",
+          "de": "Angebot zurückziehen"
+        },
+        "description": {
+          "en": "Withdraw your offer before it expires or is accepted. Your payment will be returned to you.",
+          "de": "Dein Angebot zurückziehen, bevor es abläuft oder angenommen wird. Deine Zahlung wird dir zurückerstattet."
+        },
+        "actions": [
+          {
+            "type": "contract",
+            "label": {
+              "en": "Withdraw offer",
+              "de": "Angebot zurückziehen"
+            },
+            "address": "erd1qqqqqqqqqqqqqpgqplaceholderdevnet",
+            "func": "withdrawOffer",
+            "args": [],
+            "gasLimit": 10000000,
+            "abi": "hash:2e526ab578e7bcaafd49435f15adc38653eaaa48f048cf1ab4da2cbbcafc13b8",
+            "inputs": [
+              {
+                "name": "Offer ID",
+                "description": {
+                  "en": "The ID of the offer to withdraw.",
+                  "de": "Die ID des zurückzuziehenden Angebots."
+                },
+                "type": "number",
+                "position": "arg:1",
+                "source": "field",
+                "required": true,
+                "min": 0
+              }
+            ]
+          }
+        ],
+        "messages": {
+          "success": {
+            "en": "Offer withdrawn successfully",
+            "de": "Angebot erfolgreich zurückgezogen"
+          }
+        }
+      }
+    },
+    {
+      "key": "multiversx:peerme-multisig-unsign-action",
+      "identifier": "@peerme-multisig-unsign-action",
+      "alias": "peerme-multisig-unsign-action",
+      "chain": "multiversx",
+      "hash": "487b45ad9942e8ee5177c9652e9a2e17b5e0118d38b72d2b3c866067fb843181",
+      "checksum": "487b45ad9942e8ee5177c9652e9a2e17b5e0118d38b72d2b3c866067fb843181",
+      "name": "PeerMe MultiSig: Unsign Action",
+      "title": {
+        "en": "Withdraw your signature",
+        "de": "Unterschrift zurückziehen"
+      },
+      "description": {
+        "en": "Use when a user wants to withdraw their signature from a multi-sig proposal they previously signed. Only works if the user has already signed the proposal.",
+        "de": "Verwenden, wenn ein Benutzer seine Unterschrift von einem Multi-Sig-Vorschlag zurückziehen möchte, den er zuvor signiert hat. Funktioniert nur, wenn der Benutzer den Vorschlag bereits signiert hat."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "primaryAddress": "{{multisig}}",
+      "primaryFunc": "unsign",
+      "brand": {
+        "hash": "41840ca5f852737ecfeb25156048a19626a6e813c2b91dc92e74f07bdcaed7e8",
+        "slug": "peerme",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "PeerMe",
+        "description": {
+          "en": "Decentralized governance and multi-signature wallet platform for DAOs on MultiversX. Manage organizations and execute secure transactions with advanced multisig capabilities.",
+          "de": "Dezentralisierte Governance- und Multi-Signatur-Wallet-Plattform für DAOs auf MultiversX. Verwalte Organisationen und führe sichere Transaktionen mit erweiterten Multisig-Funktionen aus."
+        },
+        "logo": {
+          "light": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/peerme-black.svg",
+          "dark": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/peerme-white.svg"
+        },
+        "urls": {
+          "web": "https://peerme.io"
+        },
+        "colors": {
+          "primary": "#4fd1c5",
+          "secondary": "#7f8fa6"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "chain": "multiversx",
+        "name": "PeerMe MultiSig: Unsign Action",
+        "title": {
+          "en": "Withdraw your signature",
+          "de": "Unterschrift zurückziehen"
+        },
+        "description": {
+          "en": "Use when a user wants to withdraw their signature from a multi-sig proposal they previously signed. Only works if the user has already signed the proposal.",
+          "de": "Verwenden, wenn ein Benutzer seine Unterschrift von einem Multi-Sig-Vorschlag zurückziehen möchte, den er zuvor signiert hat. Funktioniert nur, wenn der Benutzer den Vorschlag bereits signiert hat."
+        },
+        "actions": [
+          {
+            "type": "contract",
+            "label": {
+              "en": "Withdraw signature",
+              "de": "Unterschrift zurückziehen"
+            },
+            "address": "{{multisig}}",
+            "func": "unsign",
+            "args": [],
+            "gasLimit": 10000000,
+            "abi": "hash:ece6bed484575599abc2707549a972c55c6d439205206c7a14604f309db16b6b",
+            "inputs": [
+              {
+                "name": {
+                  "en": "MultiSig address",
+                  "de": "MultiSig-Adresse"
+                },
+                "as": "multisig",
+                "type": "address",
+                "source": "query"
+              },
+              {
+                "name": {
+                  "en": "Action ID",
+                  "de": "Aktions-ID"
+                },
+                "as": "ACTION_ID",
+                "description": {
+                  "en": "The ID of the proposal to withdraw your signature from.",
+                  "de": "Die ID des Vorschlags, von dem du deine Unterschrift zurückziehen möchtest."
+                },
+                "bot": "If the user hasn't specified an action ID, first run 'Get Pending Actions' to show what's available.",
+                "type": "uint32",
+                "position": "arg:1",
+                "source": "field",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "output": {
+          "SUCCESS": "out"
+        },
+        "messages": {
+          "success": {
+            "en": "Your signature has been withdrawn from proposal {{ACTION_ID}}.",
+            "de": "Deine Unterschrift wurde vom Vorschlag {{ACTION_ID}} zurückgezogen."
+          },
+          "card": {
+            "en": "Withdrawn Signature from Proposal #{{ACTION_ID}}",
+            "de": "Unterschrift zurückgezogen von Vorschlag #{{ACTION_ID}}"
+          }
+        }
+      }
+    },
+    {
+      "key": "multiversx:xalliance-xp-add",
+      "identifier": "@xalliance-xp-add",
+      "alias": "xalliance-xp-add",
+      "chain": "multiversx",
+      "hash": "9e58e523359267573abab773b16ef3230ea5a8b60e84071d23f8f74406dca1ed",
+      "checksum": "9e58e523359267573abab773b16ef3230ea5a8b60e84071d23f8f74406dca1ed",
+      "name": "xAlliance: Experience - Add Points",
+      "title": {
+        "en": "Assign Experience Points (XP)",
+        "de": "Erfahrungspunkte (XP) zuweisen"
+      },
+      "description": {
+        "en": "Assign experience points to an xAlliance member.",
+        "de": "Weise einem xAlliance-Mitglied Erfahrungspunkte zu."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "primaryAddress": "erd1qqqqqqqqqqqqqpgqgweqmv8uyr9gc8e9rfmfd5pltjrr708sl3tsxeqp2e",
+      "primaryFunc": "addPoints",
+      "brand": {
+        "hash": "69eaec2e53e2ff88c88f01773c33b16c3f7312d27753d35c330f560da9fe2da6",
+        "slug": "xalliance",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "xAlliance",
+        "description": {
+          "en": "Community accelerator"
+        },
+        "logo": {
+          "light": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/xalliance-black.svg",
+          "dark": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/xalliance.svg"
+        },
+        "urls": {
+          "web": "https://xalliance.io"
+        },
+        "colors": {
+          "primary": "#4fd1c5",
+          "secondary": "#7f8fa6"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "chain": "multiversx",
+        "name": "xAlliance: Experience - Add Points",
+        "title": {
+          "en": "Assign Experience Points (XP)",
+          "de": "Erfahrungspunkte (XP) zuweisen"
+        },
+        "description": {
+          "en": "Assign experience points to an xAlliance member.",
+          "de": "Weise einem xAlliance-Mitglied Erfahrungspunkte zu."
+        },
+        "actions": [
+          {
+            "type": "contract",
+            "label": {
+              "en": "Add",
+              "de": "Hinzufügen"
+            },
+            "address": "erd1qqqqqqqqqqqqqpgqgweqmv8uyr9gc8e9rfmfd5pltjrr708sl3tsxeqp2e",
+            "func": "addPoints",
+            "args": [],
+            "gasLimit": 5000000,
+            "inputs": [
+              {
+                "name": "user",
+                "description": {
+                  "en": "The address of the user to assign XP to.",
+                  "de": "Die Adresse des Benutzers, dem XP zugewiesen werden soll."
+                },
+                "type": "address",
+                "position": "arg:1",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "amount",
+                "description": {
+                  "en": "The amount of XP to assign.",
+                  "de": "Die Menge an XP, die zugewiesen werden soll."
+                },
+                "type": "biguint",
+                "position": "arg:2",
+                "source": "field",
+                "required": true,
+                "min": 1
+              }
+            ]
+          }
+        ],
+        "messages": {
+          "success": {
+            "en": "XP added successfully",
+            "de": "XP erfolgreich hinzugefügt"
+          }
+        }
+      }
+    },
+    {
+      "key": "none:asset-transfer",
+      "identifier": "@asset-transfer",
+      "alias": "asset-transfer",
+      "chain": "none",
+      "hash": "0836a843858d7ed9afba35c6b34b603f1c6589eb543b8a35adc9e4ed18e3a093",
+      "checksum": "0836a843858d7ed9afba35c6b34b603f1c6589eb543b8a35adc9e4ed18e3a093",
+      "name": "Asset: Transfer",
+      "title": {
+        "en": "Transfer assets",
+        "de": "Assets übertragen"
+      },
+      "description": {
+        "en": "Transfer a blockchain asset from one account to another.",
+        "de": "Übertrage einen Blockchain-Asset von einem Konto auf ein anderes."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "86d915be6e6a5813a7f806bffbf32b20135d50a930437fcc6d2afd86a8875ca8",
+        "slug": "asset",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "Asset",
+        "description": {
+          "en": "The Asset app provides tools and operations for seamless transfer of blockchain assets, including cryptocurrencies and tokens, between different accounts and chains.",
+          "de": "Die Asset App bietet Tools und Operationen für den nahtlosen Transfer von Blockchain-Assets, einschließlich Kryptowährungen und Token, zwischen verschiedenen Konten und Chains."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/iconic/open-iconic/master/svg/globe.svg"
+        },
+        "colors": {
+          "primary": "#000000"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "Asset: Transfer",
+        "title": {
+          "en": "Transfer assets",
+          "de": "Assets übertragen"
+        },
+        "description": {
+          "en": "Transfer a blockchain asset from one account to another.",
+          "de": "Übertrage einen Blockchain-Asset von einem Konto auf ein anderes."
+        },
+        "actions": [
+          {
+            "type": "transfer",
+            "label": {
+              "en": "Send now",
+              "de": "Jetzt senden"
+            },
+            "inputs": [
+              {
+                "name": "Blockchain",
+                "as": "chain",
+                "bot": "The blockchain to transfer the asset from.",
+                "type": "string",
+                "position": "chain",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Receiver",
+                "as": "receiver",
+                "bot": "The blockchain wallet address of the receiver.",
+                "type": "address",
+                "position": "receiver",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Asset",
+                "as": "asset",
+                "description": {
+                  "en": "The asset to transfer.",
+                  "de": "Der zu übertragende Asset."
+                },
+                "bot": "Construct the asset output as follows: 'TOKEN-000000|5.5' (asset identifier|amount)",
+                "type": "asset",
+                "position": "transfer",
+                "source": "field",
+                "required": true
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "key": "none:cloudflare-list-kv-namespaces",
+      "identifier": "@cloudflare-list-kv-namespaces",
+      "alias": "cloudflare-list-kv-namespaces",
+      "chain": "none",
+      "hash": "2fe9fc70019382aed99d9004f796509637e5706380300566410f653f8d8e8cd8",
+      "checksum": "2fe9fc70019382aed99d9004f796509637e5706380300566410f653f8d8e8cd8",
+      "name": "Cloudflare: List KV Namespaces",
+      "title": {
+        "en": "List KV namespaces",
+        "de": "KV-Namespaces auflisten"
+      },
+      "description": {
+        "en": "List all Workers KV namespaces in your Cloudflare account.",
+        "de": "Alle Workers-KV-Namespaces in deinem Cloudflare-Konto auflisten."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "7dddb2945e5fee460821475bf7ff7c18e26a3a6c48ccfbc16e76f4879c24c2b3",
+        "slug": "cloudflare",
+        "active": false,
+        "protocol": "brand:0.2.0",
+        "name": "Cloudflare",
+        "description": {
+          "en": "Manage <strong>DNS records</strong>, <strong>Workers</strong>, <strong>KV storage</strong>, and <strong>cache</strong> with the Cloudflare API. Control your <strong>zones</strong>, deploy <strong>serverless functions</strong>, and purge <strong>CDN cache</strong>.",
+          "de": "Verwalte <strong>DNS-Einträge</strong>, <strong>Workers</strong>, <strong>KV-Speicher</strong> und <strong>Cache</strong> mit der Cloudflare-API. Steuere deine <strong>Zonen</strong>, deploye <strong>serverlose Funktionen</strong> und leere den <strong>CDN-Cache</strong>."
+        },
+        "logo": {
+          "dark": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/cloudflare-white.svg",
+          "light": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/cloudflare-black.svg"
+        },
+        "urls": {
+          "web": "https://cloudflare.com"
+        },
+        "colors": {
+          "primary": "#F6821F"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "Cloudflare: List KV Namespaces",
+        "title": {
+          "en": "List KV namespaces",
+          "de": "KV-Namespaces auflisten"
+        },
+        "description": {
+          "en": "List all Workers KV namespaces in your Cloudflare account.",
+          "de": "Alle Workers-KV-Namespaces in deinem Cloudflare-Konto auflisten."
+        },
+        "vars": {
+          "API_TOKEN": "env:CLOUDFLARE_API_TOKEN|Get your API token from Cloudflare Dashboard > My Profile > API Tokens.",
+          "ACCOUNT_ID": "env:CLOUDFLARE_ACCOUNT_ID|Your Cloudflare Account ID from the dashboard overview page."
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": "List Namespaces",
+            "destination": {
+              "url": "https://api.cloudflare.com/client/v4/accounts/{{ACCOUNT_ID}}/storage/kv/namespaces",
+              "method": "GET",
+              "headers": {
+                "Authorization": "Bearer {{API_TOKEN}}"
+              }
+            },
+            "inputs": []
+          }
+        ],
+        "output": {
+          "NAMESPACES": "out.result",
+          "COUNT": "out.result.length"
+        },
+        "messages": {
+          "success": {
+            "en": "Found {{COUNT}} KV namespace(s).",
+            "de": "{{COUNT}} KV-Namespace(s) gefunden."
+          }
+        }
+      }
+    },
+    {
+      "key": "none:cloudflare-list-workers",
+      "identifier": "@cloudflare-list-workers",
+      "alias": "cloudflare-list-workers",
+      "chain": "none",
+      "hash": "fe27e0ecd9e6e5a95d7083e048aeef02e35e9a723135b15402d80c4466a1de40",
+      "checksum": "fe27e0ecd9e6e5a95d7083e048aeef02e35e9a723135b15402d80c4466a1de40",
+      "name": "Cloudflare: List Workers",
+      "title": {
+        "en": "List Workers",
+        "de": "Workers auflisten"
+      },
+      "description": {
+        "en": "List all Workers scripts in your Cloudflare account.",
+        "de": "Alle Workers-Skripte in deinem Cloudflare-Konto auflisten."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "7dddb2945e5fee460821475bf7ff7c18e26a3a6c48ccfbc16e76f4879c24c2b3",
+        "slug": "cloudflare",
+        "active": false,
+        "protocol": "brand:0.2.0",
+        "name": "Cloudflare",
+        "description": {
+          "en": "Manage <strong>DNS records</strong>, <strong>Workers</strong>, <strong>KV storage</strong>, and <strong>cache</strong> with the Cloudflare API. Control your <strong>zones</strong>, deploy <strong>serverless functions</strong>, and purge <strong>CDN cache</strong>.",
+          "de": "Verwalte <strong>DNS-Einträge</strong>, <strong>Workers</strong>, <strong>KV-Speicher</strong> und <strong>Cache</strong> mit der Cloudflare-API. Steuere deine <strong>Zonen</strong>, deploye <strong>serverlose Funktionen</strong> und leere den <strong>CDN-Cache</strong>."
+        },
+        "logo": {
+          "dark": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/cloudflare-white.svg",
+          "light": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/cloudflare-black.svg"
+        },
+        "urls": {
+          "web": "https://cloudflare.com"
+        },
+        "colors": {
+          "primary": "#F6821F"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "Cloudflare: List Workers",
+        "title": {
+          "en": "List Workers",
+          "de": "Workers auflisten"
+        },
+        "description": {
+          "en": "List all Workers scripts in your Cloudflare account.",
+          "de": "Alle Workers-Skripte in deinem Cloudflare-Konto auflisten."
+        },
+        "vars": {
+          "API_TOKEN": "env:CLOUDFLARE_API_TOKEN|Get your API token from Cloudflare Dashboard > My Profile > API Tokens.",
+          "ACCOUNT_ID": "env:CLOUDFLARE_ACCOUNT_ID|Your Cloudflare Account ID from the dashboard overview page."
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": "List Workers",
+            "destination": {
+              "url": "https://api.cloudflare.com/client/v4/accounts/{{ACCOUNT_ID}}/workers/scripts",
+              "method": "GET",
+              "headers": {
+                "Authorization": "Bearer {{API_TOKEN}}"
+              }
+            },
+            "inputs": []
+          }
+        ],
+        "output": {
+          "WORKERS": "out.result",
+          "COUNT": "out.result.length"
+        },
+        "messages": {
+          "success": {
+            "en": "Found {{COUNT}} Worker(s).",
+            "de": "{{COUNT}} Worker(s) gefunden."
+          }
+        }
+      }
+    },
+    {
+      "key": "none:cloudflare-list-zones",
+      "identifier": "@cloudflare-list-zones",
+      "alias": "cloudflare-list-zones",
+      "chain": "none",
+      "hash": "492504367aa84d51d731fdd8f85d8ff543c215f746469cc5ec6a2855a82af487",
+      "checksum": "492504367aa84d51d731fdd8f85d8ff543c215f746469cc5ec6a2855a82af487",
+      "name": "Cloudflare: List Zones",
+      "title": {
+        "en": "List zones",
+        "de": "Zonen auflisten"
+      },
+      "description": {
+        "en": "List all zones (domains) in your Cloudflare account.",
+        "de": "Alle Zonen (Domains) in deinem Cloudflare-Konto auflisten."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "7dddb2945e5fee460821475bf7ff7c18e26a3a6c48ccfbc16e76f4879c24c2b3",
+        "slug": "cloudflare",
+        "active": false,
+        "protocol": "brand:0.2.0",
+        "name": "Cloudflare",
+        "description": {
+          "en": "Manage <strong>DNS records</strong>, <strong>Workers</strong>, <strong>KV storage</strong>, and <strong>cache</strong> with the Cloudflare API. Control your <strong>zones</strong>, deploy <strong>serverless functions</strong>, and purge <strong>CDN cache</strong>.",
+          "de": "Verwalte <strong>DNS-Einträge</strong>, <strong>Workers</strong>, <strong>KV-Speicher</strong> und <strong>Cache</strong> mit der Cloudflare-API. Steuere deine <strong>Zonen</strong>, deploye <strong>serverlose Funktionen</strong> und leere den <strong>CDN-Cache</strong>."
+        },
+        "logo": {
+          "dark": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/cloudflare-white.svg",
+          "light": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/cloudflare-black.svg"
+        },
+        "urls": {
+          "web": "https://cloudflare.com"
+        },
+        "colors": {
+          "primary": "#F6821F"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "Cloudflare: List Zones",
+        "title": {
+          "en": "List zones",
+          "de": "Zonen auflisten"
+        },
+        "description": {
+          "en": "List all zones (domains) in your Cloudflare account.",
+          "de": "Alle Zonen (Domains) in deinem Cloudflare-Konto auflisten."
+        },
+        "vars": {
+          "API_TOKEN": "env:CLOUDFLARE_API_TOKEN|Get your API token from Cloudflare Dashboard > My Profile > API Tokens."
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": "List Zones",
+            "destination": {
+              "url": "https://api.cloudflare.com/client/v4/zones",
+              "method": "GET",
+              "headers": {
+                "Authorization": "Bearer {{API_TOKEN}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Name",
+                "as": "name",
+                "description": {
+                  "en": "Filter by domain name."
+                },
+                "bot": "Optional domain name to filter zones by, e.g. 'example.com'.",
+                "type": "string",
+                "source": "field",
+                "position": "query:name"
+              },
+              {
+                "name": "Per Page",
+                "as": "per_page",
+                "description": {
+                  "en": "Number of zones to return (max 50)."
+                },
+                "type": "number",
+                "source": "field",
+                "position": "query:per_page",
+                "default": "20"
+              }
+            ]
+          }
+        ],
+        "output": {
+          "ZONES": "out.result",
+          "COUNT": "out.result_info.total_count"
+        },
+        "messages": {
+          "success": {
+            "en": "Found {{COUNT}} zone(s).",
+            "de": "{{COUNT}} Zone(n) gefunden."
+          }
+        }
+      }
+    },
+    {
+      "key": "none:elevenlabs-list-voices",
+      "identifier": "@elevenlabs-list-voices",
+      "alias": "elevenlabs-list-voices",
+      "chain": "none",
+      "hash": "3f33dfbd16d41a54a0dea9e6b70cf2ef9aa8f191d540926c668e3f58f73b7468",
+      "checksum": "3f33dfbd16d41a54a0dea9e6b70cf2ef9aa8f191d540926c668e3f58f73b7468",
+      "name": "ElevenLabs: List Voices",
+      "title": {
+        "en": "List available voices",
+        "de": "Verfügbare Stimmen auflisten"
+      },
+      "description": {
+        "en": "List all available voices in your ElevenLabs account, including premade and cloned voices.",
+        "de": "Alle verfügbaren Stimmen in deinem ElevenLabs-Konto auflisten, einschließlich vorgefertigter und geklonter Stimmen."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "917fb639b1b477f632889436adfdd657d6c403629b1775e7eb4e7d916cc663c1",
+        "slug": "elevenlabs",
+        "active": false,
+        "protocol": "brand:0.2.0",
+        "name": "ElevenLabs",
+        "description": {
+          "en": "Generate <strong>realistic speech</strong> from text with ElevenLabs. Create <strong>voice messages</strong>, <strong>narrations</strong>, and <strong>audio content</strong> using AI <strong>text-to-speech</strong> with multiple voices and languages.",
+          "de": "Erzeuge <strong>realistische Sprache</strong> aus Text mit ElevenLabs. Erstelle <strong>Sprachnachrichten</strong>, <strong>Erzählungen</strong> und <strong>Audioinhalte</strong> mit KI-<strong>Text-to-Speech</strong> in mehreren Stimmen und Sprachen."
+        },
+        "logo": {
+          "dark": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/elevenlabs-white.svg",
+          "light": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/elevenlabs-black.svg"
+        },
+        "urls": {
+          "web": "https://elevenlabs.io"
+        },
+        "colors": {
+          "primary": "#000000"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "ElevenLabs: List Voices",
+        "title": {
+          "en": "List available voices",
+          "de": "Verfügbare Stimmen auflisten"
+        },
+        "description": {
+          "en": "List all available voices in your ElevenLabs account, including premade and cloned voices.",
+          "de": "Alle verfügbaren Stimmen in deinem ElevenLabs-Konto auflisten, einschließlich vorgefertigter und geklonter Stimmen."
+        },
+        "vars": {
+          "API_KEY": "env:ELEVENLABS_API_KEY|Get your API key from ElevenLabs at https://elevenlabs.io/app/settings/api-keys"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": "List Voices",
+            "destination": {
+              "url": "https://api.elevenlabs.io/v1/voices",
+              "method": "GET",
+              "headers": {
+                "xi-api-key": "{{API_KEY}}"
+              }
+            },
+            "inputs": []
+          }
+        ],
+        "output": {
+          "VOICES": "out.voices",
+          "COUNT": "out.voices.length"
+        },
+        "messages": {
+          "success": {
+            "en": "Found {{COUNT}} voice(s).",
+            "de": "{{COUNT}} Stimme(n) gefunden."
+          }
+        }
+      }
+    },
+    {
+      "key": "none:joai-user-onboarding-screen",
+      "identifier": "@joai-user-onboarding-screen",
+      "alias": "joai-user-onboarding-screen",
+      "chain": "none",
+      "hash": "296961fa8125b9a954c694494754a2a26174cce35ceaf555fe08e44cf444f036",
+      "checksum": "296961fa8125b9a954c694494754a2a26174cce35ceaf555fe08e44cf444f036",
+      "name": "JoAi: User Onboarding",
+      "title": {
+        "en": "Let's Get Started!",
+        "de": "Los geht's!"
+      },
+      "description": {
+        "en": "Help us tailor your experience with AI agents by telling us a bit about yourself.",
+        "de": "Hilf uns, deine Erfahrung mit KI-Agenten anzupassen, indem du uns etwas über dich erzählst."
       },
       "preview": null,
       "creator": "github:JoAiHQ/warps",
@@ -53,61 +2874,942 @@
       },
       "warp": {
         "protocol": "warp:3.0.0",
-        "name": "JoAi: Send Generated Message",
+        "name": "JoAi: User Onboarding",
         "title": {
-          "en": "Send a generated message",
-          "de": "Generierte Nachricht senden"
+          "en": "Let's Get Started!",
+          "de": "Los geht's!"
         },
         "description": {
-          "en": "Generate a message from a prompt and send it to a room or social channel.",
-          "de": "Generiere eine Nachricht aus einer Anweisung und sende sie an einen Raum oder sozialen Kanal."
+          "en": "Help us tailor your experience with AI agents by telling us a bit about yourself.",
+          "de": "Hilf uns, deine Erfahrung mit KI-Agenten anzupassen, indem du uns etwas über dich erzählst."
         },
-        "bot": "Use this when the user wants to generate and send a message based on an instruction to a specific room or social channel. The agent generates a unique message each time using its character.",
         "actions": [
           {
-            "type": "prompt",
+            "type": "collect",
             "label": {
-              "en": "Send",
-              "de": "Senden"
+              "en": "Submit Info",
+              "de": "Info senden"
             },
-            "prompt": "{{INSTRUCTION}}",
+            "destination": {
+              "url": "https://devnet-api.joai.ai/warps/flow",
+              "method": "POST"
+            },
             "inputs": [
               {
-                "name": "Instruction",
-                "as": "INSTRUCTION",
-                "description": {
-                  "en": "What kind of message to generate",
-                  "de": "Welche Art von Nachricht generiert werden soll"
-                },
-                "bot": "The instruction for generating the message content. E.g. 'ask how everybody is doing' or 'share a motivational quote'.",
+                "name": "Telegram Username",
+                "as": "telegramUsername",
                 "type": "string",
-                "position": "arg:1",
                 "source": "field",
-                "required": true,
-                "min": 1
+                "required": true
               },
               {
-                "name": "Destination",
-                "as": "DESTINATION",
+                "name": "What is your biggest time-waster?",
+                "as": "biggestTimeWaster",
                 "description": {
-                  "en": "Target room (leave empty to send to current room)",
-                  "de": "Zielraum (leer lassen für aktuellen Raum)"
+                  "en": "Tasks you spend the most time on and feel should be automated. Or just something you don't like doing.",
+                  "de": "Aufgaben, für die du die meiste Zeit aufwendest und die automatisiert werden sollten. Oder einfach etwas, das du nicht gerne tust."
                 },
-                "bot": "The room hash ID to send the generated message to. If omitted, sends to the current room.",
                 "type": "string",
-                "position": "destination",
-                "source": "hidden",
-                "required": false,
-                "default": "room:{{JOAI_ROOM_ID}}"
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Primary Goal with AI Agents",
+                "as": "primaryGoalAI",
+                "description": {
+                  "en": "Do you have a primary goal for using AI agents?",
+                  "de": "Hast du ein primäres Ziel für die Nutzung von KI-Agenten?"
+                },
+                "type": "string",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Technical Comfort Level",
+                "as": "technicalComfortLevel",
+                "description": {
+                  "en": "1 = Beginner (ChatGPT level) ... 5 = Advanced (code APIs/bots).",
+                  "de": "1 = Anfänger (ChatGPT-Niveau) ... 5 = Fortgeschritten (APIs/Bots programmieren)."
+                },
+                "type": "string",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "What blockchain/crypto apps do you use daily or weekly?",
+                "as": "blockchainCryptoApps",
+                "type": "string",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Which AI tools do you currently pay for?",
+                "as": "aiToolsPaid",
+                "type": "string",
+                "source": "field",
+                "required": true
               }
             ]
           }
         ],
         "messages": {
-          "destination": "{{MESSAGE}}",
           "success": {
-            "en": "Message sent.",
-            "de": "Nachricht gesendet."
+            "en": "Your onboarding information has been submitted successfully! We'll be in touch soon.",
+            "de": "Deine Onboarding-Informationen wurden erfolgreich übermittelt! Wir melden uns bald bei dir."
+          }
+        }
+      }
+    },
+    {
+      "key": "none:stripe-get-balance",
+      "identifier": "@stripe-get-balance",
+      "alias": "stripe-get-balance",
+      "chain": "none",
+      "hash": "0ed46edae58d248f49c86fe6286f2e8ff5d0137dc32d8fc8c5e8e5e3465b164f",
+      "checksum": "0ed46edae58d248f49c86fe6286f2e8ff5d0137dc32d8fc8c5e8e5e3465b164f",
+      "name": "Stripe: Get Balance",
+      "title": {
+        "en": "Get balance",
+        "de": "Guthaben abrufen"
+      },
+      "description": {
+        "en": "Retrieve the current balance of your Stripe account.",
+        "de": "Das aktuelle Guthaben deines Stripe-Kontos abrufen."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "72c73767b45b811aafbfd370ebd5f05b4a8168d251f9ef636ebe6b3110ca7b60",
+        "slug": "stripe",
+        "active": false,
+        "protocol": "brand:0.2.0",
+        "name": "Stripe",
+        "description": {
+          "en": "Process <strong>payments</strong>, manage <strong>subscriptions</strong>, and handle <strong>invoices</strong> with Stripe's <strong>payment API</strong>. Accept <strong>credit cards</strong> and manage <strong>recurring billing</strong>.",
+          "de": "Verarbeite <strong>Zahlungen</strong>, verwalte <strong>Abonnements</strong> und bearbeite <strong>Rechnungen</strong> mit Stripes <strong>Zahlungs-API</strong>. Akzeptiere <strong>Kreditkarten</strong> und verwalte <strong>wiederkehrende Abrechnungen</strong>."
+        },
+        "logo": {
+          "default": "https://stripe.com/img/v3/home/social.png"
+        },
+        "urls": {
+          "web": "https://stripe.com"
+        },
+        "colors": {
+          "primary": "#635BFF"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "Stripe: Get Balance",
+        "title": {
+          "en": "Get balance",
+          "de": "Guthaben abrufen"
+        },
+        "description": {
+          "en": "Retrieve the current balance of your Stripe account.",
+          "de": "Das aktuelle Guthaben deines Stripe-Kontos abrufen."
+        },
+        "vars": {
+          "API_KEY": "env:STRIPE_SECRET_KEY|Get your Secret Key from Stripe Dashboard."
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": "Get Balance",
+            "destination": {
+              "url": "https://api.stripe.com/v1/balance",
+              "method": "GET",
+              "headers": {
+                "Authorization": "Bearer {{API_KEY}}"
+              }
+            },
+            "inputs": []
+          }
+        ],
+        "output": {
+          "AVAILABLE": "out.available",
+          "PENDING": "out.pending"
+        },
+        "messages": {
+          "success": {
+            "en": "Balance retrieved.",
+            "de": "Guthaben abgerufen."
+          }
+        }
+      }
+    },
+    {
+      "key": "none:stripe-list-customers",
+      "identifier": "@stripe-list-customers",
+      "alias": "stripe-list-customers",
+      "chain": "none",
+      "hash": "4f3457e1c830fda8e96ab82f2bd1c79fb9e1b3e2e75e24e53a85defa080ca9e5",
+      "checksum": "4f3457e1c830fda8e96ab82f2bd1c79fb9e1b3e2e75e24e53a85defa080ca9e5",
+      "name": "Stripe: List Customers",
+      "title": {
+        "en": "List customers",
+        "de": "Kunden auflisten"
+      },
+      "description": {
+        "en": "List customers in your Stripe account.",
+        "de": "Kunden in deinem Stripe-Konto auflisten."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "72c73767b45b811aafbfd370ebd5f05b4a8168d251f9ef636ebe6b3110ca7b60",
+        "slug": "stripe",
+        "active": false,
+        "protocol": "brand:0.2.0",
+        "name": "Stripe",
+        "description": {
+          "en": "Process <strong>payments</strong>, manage <strong>subscriptions</strong>, and handle <strong>invoices</strong> with Stripe's <strong>payment API</strong>. Accept <strong>credit cards</strong> and manage <strong>recurring billing</strong>.",
+          "de": "Verarbeite <strong>Zahlungen</strong>, verwalte <strong>Abonnements</strong> und bearbeite <strong>Rechnungen</strong> mit Stripes <strong>Zahlungs-API</strong>. Akzeptiere <strong>Kreditkarten</strong> und verwalte <strong>wiederkehrende Abrechnungen</strong>."
+        },
+        "logo": {
+          "default": "https://stripe.com/img/v3/home/social.png"
+        },
+        "urls": {
+          "web": "https://stripe.com"
+        },
+        "colors": {
+          "primary": "#635BFF"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "Stripe: List Customers",
+        "title": {
+          "en": "List customers",
+          "de": "Kunden auflisten"
+        },
+        "description": {
+          "en": "List customers in your Stripe account.",
+          "de": "Kunden in deinem Stripe-Konto auflisten."
+        },
+        "vars": {
+          "API_KEY": "env:STRIPE_SECRET_KEY|Get your Secret Key from Stripe Dashboard."
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": "List Customers",
+            "destination": {
+              "url": "https://api.stripe.com/v1/customers",
+              "method": "GET",
+              "headers": {
+                "Authorization": "Bearer {{API_KEY}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Limit",
+                "as": "limit",
+                "description": {
+                  "en": "Number of customers to return (max 100)."
+                },
+                "type": "number",
+                "source": "field",
+                "position": "query:limit",
+                "default": "25"
+              },
+              {
+                "name": "Email",
+                "as": "email",
+                "description": {
+                  "en": "Filter by customer email address."
+                },
+                "bot": "Optional email to filter customers by.",
+                "type": "string",
+                "source": "field",
+                "position": "query:email"
+              }
+            ]
+          }
+        ],
+        "output": {
+          "CUSTOMERS": "out.data",
+          "HAS_MORE": "out.has_more"
+        },
+        "messages": {
+          "success": {
+            "en": "Customers retrieved.",
+            "de": "Kunden abgerufen."
+          }
+        }
+      }
+    },
+    {
+      "key": "none:stripe-list-payments",
+      "identifier": "@stripe-list-payments",
+      "alias": "stripe-list-payments",
+      "chain": "none",
+      "hash": "481f5ca0a6b5781f0440cc7caa919a2a15ac91ec613d163882c1cd4116b6e5cd",
+      "checksum": "481f5ca0a6b5781f0440cc7caa919a2a15ac91ec613d163882c1cd4116b6e5cd",
+      "name": "Stripe: List Payments",
+      "title": {
+        "en": "List payments",
+        "de": "Zahlungen auflisten"
+      },
+      "description": {
+        "en": "List recent payment intents from your Stripe account.",
+        "de": "Aktuelle Zahlungsabsichten aus deinem Stripe-Konto auflisten."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "72c73767b45b811aafbfd370ebd5f05b4a8168d251f9ef636ebe6b3110ca7b60",
+        "slug": "stripe",
+        "active": false,
+        "protocol": "brand:0.2.0",
+        "name": "Stripe",
+        "description": {
+          "en": "Process <strong>payments</strong>, manage <strong>subscriptions</strong>, and handle <strong>invoices</strong> with Stripe's <strong>payment API</strong>. Accept <strong>credit cards</strong> and manage <strong>recurring billing</strong>.",
+          "de": "Verarbeite <strong>Zahlungen</strong>, verwalte <strong>Abonnements</strong> und bearbeite <strong>Rechnungen</strong> mit Stripes <strong>Zahlungs-API</strong>. Akzeptiere <strong>Kreditkarten</strong> und verwalte <strong>wiederkehrende Abrechnungen</strong>."
+        },
+        "logo": {
+          "default": "https://stripe.com/img/v3/home/social.png"
+        },
+        "urls": {
+          "web": "https://stripe.com"
+        },
+        "colors": {
+          "primary": "#635BFF"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "Stripe: List Payments",
+        "title": {
+          "en": "List payments",
+          "de": "Zahlungen auflisten"
+        },
+        "description": {
+          "en": "List recent payment intents from your Stripe account.",
+          "de": "Aktuelle Zahlungsabsichten aus deinem Stripe-Konto auflisten."
+        },
+        "vars": {
+          "API_KEY": "env:STRIPE_SECRET_KEY|Get your Secret Key from Stripe Dashboard."
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": "List Payments",
+            "destination": {
+              "url": "https://api.stripe.com/v1/payment_intents",
+              "method": "GET",
+              "headers": {
+                "Authorization": "Bearer {{API_KEY}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Limit",
+                "as": "limit",
+                "description": {
+                  "en": "Number of payments to return (max 100)."
+                },
+                "type": "number",
+                "source": "field",
+                "position": "query:limit",
+                "default": "25"
+              },
+              {
+                "name": "Customer",
+                "as": "customer",
+                "description": {
+                  "en": "Filter by customer ID."
+                },
+                "bot": "Optional Stripe customer ID to filter payments by.",
+                "type": "string",
+                "source": "field",
+                "position": "query:customer"
+              }
+            ]
+          }
+        ],
+        "output": {
+          "PAYMENTS": "out.data",
+          "HAS_MORE": "out.has_more"
+        },
+        "messages": {
+          "success": {
+            "en": "Payments retrieved.",
+            "de": "Zahlungen abgerufen."
+          }
+        }
+      }
+    },
+    {
+      "key": "none:stripe-list-subscriptions",
+      "identifier": "@stripe-list-subscriptions",
+      "alias": "stripe-list-subscriptions",
+      "chain": "none",
+      "hash": "90f24176d468aa6fe61d439e1960ddd71be1d2b168b7df80b795301eb2401aa6",
+      "checksum": "90f24176d468aa6fe61d439e1960ddd71be1d2b168b7df80b795301eb2401aa6",
+      "name": "Stripe: List Subscriptions",
+      "title": {
+        "en": "List subscriptions",
+        "de": "Abonnements auflisten"
+      },
+      "description": {
+        "en": "List active subscriptions in your Stripe account.",
+        "de": "Aktive Abonnements in deinem Stripe-Konto auflisten."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "72c73767b45b811aafbfd370ebd5f05b4a8168d251f9ef636ebe6b3110ca7b60",
+        "slug": "stripe",
+        "active": false,
+        "protocol": "brand:0.2.0",
+        "name": "Stripe",
+        "description": {
+          "en": "Process <strong>payments</strong>, manage <strong>subscriptions</strong>, and handle <strong>invoices</strong> with Stripe's <strong>payment API</strong>. Accept <strong>credit cards</strong> and manage <strong>recurring billing</strong>.",
+          "de": "Verarbeite <strong>Zahlungen</strong>, verwalte <strong>Abonnements</strong> und bearbeite <strong>Rechnungen</strong> mit Stripes <strong>Zahlungs-API</strong>. Akzeptiere <strong>Kreditkarten</strong> und verwalte <strong>wiederkehrende Abrechnungen</strong>."
+        },
+        "logo": {
+          "default": "https://stripe.com/img/v3/home/social.png"
+        },
+        "urls": {
+          "web": "https://stripe.com"
+        },
+        "colors": {
+          "primary": "#635BFF"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "Stripe: List Subscriptions",
+        "title": {
+          "en": "List subscriptions",
+          "de": "Abonnements auflisten"
+        },
+        "description": {
+          "en": "List active subscriptions in your Stripe account.",
+          "de": "Aktive Abonnements in deinem Stripe-Konto auflisten."
+        },
+        "vars": {
+          "API_KEY": "env:STRIPE_SECRET_KEY|Get your Secret Key from Stripe Dashboard."
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": "List Subscriptions",
+            "destination": {
+              "url": "https://api.stripe.com/v1/subscriptions",
+              "method": "GET",
+              "headers": {
+                "Authorization": "Bearer {{API_KEY}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Limit",
+                "as": "limit",
+                "description": {
+                  "en": "Number of subscriptions to return (max 100)."
+                },
+                "type": "number",
+                "source": "field",
+                "position": "query:limit",
+                "default": "25"
+              },
+              {
+                "name": "Customer",
+                "as": "customer",
+                "description": {
+                  "en": "Filter by customer ID."
+                },
+                "type": "string",
+                "source": "field",
+                "position": "query:customer"
+              },
+              {
+                "name": "Status",
+                "as": "status",
+                "description": {
+                  "en": "Filter by status: 'active', 'past_due', 'canceled', 'unpaid', 'trialing', or 'all'."
+                },
+                "bot": "Filter by subscription status. Options: active, past_due, canceled, unpaid, trialing, all.",
+                "type": "string",
+                "source": "field",
+                "position": "query:status"
+              }
+            ]
+          }
+        ],
+        "output": {
+          "SUBSCRIPTIONS": "out.data",
+          "HAS_MORE": "out.has_more"
+        },
+        "messages": {
+          "success": {
+            "en": "Subscriptions retrieved.",
+            "de": "Abonnements abgerufen."
+          }
+        }
+      }
+    },
+    {
+      "key": "none:supabase-call-rpc",
+      "identifier": "@supabase-call-rpc",
+      "alias": "supabase-call-rpc",
+      "chain": "none",
+      "hash": "8f7cf4de0fa7a16900407d38a6305ccd14d4a5e192131fe22c466ea4f495041d",
+      "checksum": "8f7cf4de0fa7a16900407d38a6305ccd14d4a5e192131fe22c466ea4f495041d",
+      "name": "Supabase: Call RPC Function",
+      "title": {
+        "en": "Call database function",
+        "de": "Datenbankfunktion aufrufen"
+      },
+      "description": {
+        "en": "Call a PostgreSQL function (RPC) on your Supabase database.",
+        "de": "Eine PostgreSQL-Funktion (RPC) auf deiner Supabase-Datenbank aufrufen."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0edca60b34933b6e2417d0bfd839e4c636f1062bbc8abc218795fc97b5ab059",
+        "slug": "supabase",
+        "active": false,
+        "protocol": "brand:0.2.0",
+        "name": "Supabase",
+        "description": {
+          "en": "<strong>Query</strong>, <strong>insert</strong>, <strong>update</strong>, and <strong>delete</strong> data from your Supabase <strong>PostgreSQL database</strong>. Call <strong>RPC functions</strong> and manage your <strong>backend data</strong> via the Supabase <strong>REST API</strong>.",
+          "de": "<strong>Abfragen</strong>, <strong>einfügen</strong>, <strong>aktualisieren</strong> und <strong>löschen</strong> von Daten aus Ihrer Supabase <strong>PostgreSQL-Datenbank</strong>. <strong>RPC-Funktionen</strong> aufrufen und <strong>Backend-Daten</strong> über die Supabase <strong>REST API</strong> verwalten."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/supabase.svg"
+        },
+        "urls": {
+          "web": "https://supabase.com"
+        },
+        "colors": {
+          "primary": "#3FCF8E"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "Supabase: Call RPC Function",
+        "title": {
+          "en": "Call database function",
+          "de": "Datenbankfunktion aufrufen"
+        },
+        "description": {
+          "en": "Call a PostgreSQL function (RPC) on your Supabase database.",
+          "de": "Eine PostgreSQL-Funktion (RPC) auf deiner Supabase-Datenbank aufrufen."
+        },
+        "vars": {
+          "SUPABASE_URL": "env:SUPABASE_URL|Your Supabase project URL (e.g., https://xxxx.supabase.co).",
+          "SUPABASE_KEY": "env:SUPABASE_KEY|Your Supabase anon or service_role key from Project Settings > API."
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": "Call Function",
+            "destination": {
+              "url": "{{SUPABASE_URL}}/rest/v1/rpc/{{FUNCTION_NAME}}",
+              "method": "POST",
+              "headers": {
+                "apikey": "{{SUPABASE_KEY}}",
+                "Authorization": "Bearer {{SUPABASE_KEY}}",
+                "Content-Type": "application/json"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Function Name",
+                "as": "FUNCTION_NAME",
+                "description": {
+                  "en": "The name of the PostgreSQL function to call."
+                },
+                "bot": "The name of the database function (RPC) to call.",
+                "type": "string",
+                "source": "field",
+                "required": true,
+                "position": "url:FUNCTION_NAME"
+              },
+              {
+                "name": "Arguments",
+                "as": "args",
+                "description": {
+                  "en": "JSON object of function arguments."
+                },
+                "bot": "JSON object of named arguments to pass to the function. Example: {\"user_id\": 123, \"limit_count\": 10}",
+                "type": "string",
+                "source": "field",
+                "position": "body"
+              }
+            ]
+          }
+        ],
+        "output": {
+          "RESULT": "out"
+        },
+        "messages": {
+          "success": {
+            "en": "Function executed successfully.",
+            "de": "Funktion erfolgreich ausgeführt."
+          }
+        }
+      }
+    },
+    {
+      "key": "none:typefully-create-draft",
+      "identifier": "@typefully-create-draft",
+      "alias": "typefully-create-draft",
+      "chain": "none",
+      "hash": "585e5c99472c98436dd7106440afe376f9384cb793f6633dc326d4b149a803ce",
+      "checksum": "585e5c99472c98436dd7106440afe376f9384cb793f6633dc326d4b149a803ce",
+      "name": "Typefully: Create/Schedule Draft",
+      "title": {
+        "en": "Create or schedule a draft post",
+        "de": "Entwurf erstellen oder planen"
+      },
+      "description": {
+        "en": "Create a draft post given some text content and schedule it for a later date.",
+        "de": "Erstelle einen Entwurf anhand von Textinhalt und plane ihn für ein späteres Datum."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "5330f43ba023f8edf65378e9d67077abc143d4456f4dcbdebcbd8194fef57e2f",
+        "slug": "typefully",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "Typefully",
+        "description": {
+          "en": "Create, schedule, and optimize your <strong>Twitter tweets and threads</strong> for maximum engagement. <br />Professional <strong>social media content creation</strong> and <strong>automated scheduling</strong> tool for <strong>Twitter marketing</strong> and <strong>thread writing</strong>.",
+          "de": "Erstelle, plane und optimiere deine <strong>Twitter-Tweets und Threads</strong> für maximale Reichweite. <br />Professionelles Tool für <strong>Social-Media-Content-Erstellung</strong> und <strong>automatisierte Planung</strong> für <strong>Twitter-Marketing</strong> und <strong>Thread-Schreiben</strong>."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/typefully.svg"
+        },
+        "urls": {
+          "web": "https://typefully.com"
+        },
+        "colors": {
+          "primary": "#199BF5"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "Typefully: Create/Schedule Draft",
+        "title": {
+          "en": "Create or schedule a draft post",
+          "de": "Entwurf erstellen oder planen"
+        },
+        "description": {
+          "en": "Create a draft post given some text content and schedule it for a later date.",
+          "de": "Erstelle einen Entwurf anhand von Textinhalt und plane ihn für ein späteres Datum."
+        },
+        "vars": {
+          "API_KEY": "env:TYPEFULLY_API_KEY|Get your API key in the Dashboard of Typefully.com"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Create Draft",
+              "de": "Entwurf erstellen"
+            },
+            "destination": {
+              "url": "https://api.typefully.com/v1/drafts",
+              "method": "POST",
+              "headers": {
+                "X-API-KEY": "Bearer {{API_KEY}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Content",
+                "as": "content",
+                "description": {
+                  "en": "The text content for the draft.",
+                  "de": "Der Textinhalt für den Entwurf."
+                },
+                "bot": "You can split into multiple tweets by adding 4 consecutive newlines between tweets.",
+                "type": "string",
+                "source": "field",
+                "required": true,
+                "position": "payload:content"
+              },
+              {
+                "name": "Threadify",
+                "as": "threadify",
+                "bot": "If true, content will be automatically split into multiple tweets.",
+                "type": "bool",
+                "source": "field",
+                "position": "payload:threadify"
+              },
+              {
+                "name": "Share",
+                "as": "share",
+                "bot": "If true, returned payload will include a share_url.",
+                "type": "bool",
+                "source": "field",
+                "position": "payload:share"
+              },
+              {
+                "name": "Schedule Date",
+                "as": "schedule-date",
+                "bot": "Can either be an ISO formatted date (e.g.: 2022-06-13T11:13:31.662Z) or 'next-free-slot'.",
+                "type": "string",
+                "source": "field",
+                "position": "payload:schedule-date",
+                "default": "next-free-slot"
+              },
+              {
+                "name": "Auto Retweet Enabled",
+                "as": "auto_retweet_enabled",
+                "bot": "If true, the post will have an AutoRT enabled, according to the one set on Typefully for the account.",
+                "type": "bool",
+                "source": "field",
+                "position": "payload:auto_retweet_enabled"
+              },
+              {
+                "name": "Auto Plug Enabled",
+                "as": "auto_plug_enabled",
+                "bot": "If true, the post will have an AutoPlug enabled, according to the one set on Typefully for the account.",
+                "type": "bool",
+                "source": "field",
+                "position": "payload:auto_plug_enabled"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "key": "none:xalliance-project-checkin",
+      "identifier": "@xalliance-project-checkin",
+      "alias": "xalliance-project-checkin",
+      "chain": "none",
+      "hash": "d44bffba695f498eaf12db2f1ac6b9b49a865740dac96fd04a89687d1cc4d26f",
+      "checksum": "d44bffba695f498eaf12db2f1ac6b9b49a865740dac96fd04a89687d1cc4d26f",
+      "name": "xAlliance: Project Checkin",
+      "title": {
+        "en": "Check in with a project",
+        "de": "Projekt-Check-in"
+      },
+      "description": {
+        "en": "Check in with a project.",
+        "de": "Check-in bei einem Projekt durchführen."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "69eaec2e53e2ff88c88f01773c33b16c3f7312d27753d35c330f560da9fe2da6",
+        "slug": "xalliance",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "xAlliance",
+        "description": {
+          "en": "Community accelerator"
+        },
+        "logo": {
+          "light": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/xalliance-black.svg",
+          "dark": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/xalliance.svg"
+        },
+        "urls": {
+          "web": "https://xalliance.io"
+        },
+        "colors": {
+          "primary": "#4fd1c5",
+          "secondary": "#7f8fa6"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "xAlliance: Project Checkin",
+        "title": {
+          "en": "Check in with a project",
+          "de": "Projekt-Check-in"
+        },
+        "description": {
+          "en": "Check in with a project.",
+          "de": "Check-in bei einem Projekt durchführen."
+        },
+        "bot": "Friendly check-in with the builders of the project. Your goal is to see how they're doing, check if everything is going well for the user, and offer help for anything needed. Be warm, conversational, and genuinely interested in the progress. Start your message with a greeting.",
+        "vars": {
+          "ROOM": "env:JOAI_ROOM_NAME",
+          "MESSAGE_TEXT": "env:JOAI_MESSAGE_TEXT"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Submit now",
+              "de": "Jetzt senden"
+            },
+            "inputs": [
+              {
+                "name": "Destination",
+                "description": {
+                  "en": "The integration to send the report to.",
+                  "de": "Die Integration, an die der Bericht gesendet werden soll."
+                },
+                "bot": "Ignore, should be provided by the platform.",
+                "type": "string",
+                "position": "destination",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Report",
+                "as": "report",
+                "description": {
+                  "en": "A brief report sent to the support team and admins who assist and support projects.",
+                  "de": "Ein kurzer Bericht, der an das Support-Team und Administratoren gesendet wird, die Projekte unterstützen."
+                },
+                "bot": "Ask the project representatives how things are going. Find out about their progress, any challenges they're facing, or if they need help with anything. Be friendly and supportive.",
+                "type": "string",
+                "position": "arg:1",
+                "source": "field",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "messages": {
+          "success": {
+            "en": "I submitted your report to the team. Thank you for your feedback!",
+            "de": "Ich habe deinen Bericht an das Team gesendet. Vielen Dank für dein Feedback!"
+          },
+          "destination": {
+            "en": "A new report has been received in '{{ROOM}}': {{MESSAGE_TEXT}}",
+            "de": "Ein neuer Bericht wurde in '{{ROOM}}' empfangen: {{MESSAGE_TEXT}}"
+          }
+        }
+      }
+    },
+    {
+      "key": "solana:jito-liquid-stake",
+      "identifier": "@jito-liquid-stake",
+      "alias": "jito-liquid-stake",
+      "chain": "solana",
+      "hash": "b31cf819f045d02de744ae8c638c77a5ddfef946b9193688881d90f7e1779eca",
+      "checksum": "b31cf819f045d02de744ae8c638c77a5ddfef946b9193688881d90f7e1779eca",
+      "name": "Jito: Liquid Stake",
+      "title": {
+        "en": "Stake SOL using Jito Liquid Staking",
+        "de": "SOL mit Jito Liquid Staking staken"
+      },
+      "description": {
+        "en": "Stake SOL to secure the network and earn rewards using Jito Liquid Staking. Receive JitoSOL tokens in return.",
+        "de": "Stake SOL, um das Netzwerk zu sichern und Belohnungen mit Jito Liquid Staking zu verdienen. Erhalte im Gegenzug JitoSOL-Token."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "primaryAddress": "DPoo15wWDqpPJJtS2MUZ49aRxqz5ZaaJCJP4z8bLuib",
+      "primaryFunc": "deposit",
+      "brand": {
+        "hash": "465caa25d2eb435a5203d98fae41ad8e94a50fc34de70df5e135be52e28addeb",
+        "slug": "jito",
+        "active": false,
+        "protocol": "brand:0.2.0",
+        "name": "Jito",
+        "description": {
+          "en": "Jito is a liquid staking protocol on Solana that provides JitoSOL tokens in exchange for staked SOL."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/jito.svg"
+        },
+        "urls": {
+          "web": "https://jito.network"
+        },
+        "colors": {
+          "primary": "#00D9FF"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "chain": "solana",
+        "name": "Jito: Liquid Stake",
+        "title": {
+          "en": "Stake SOL using Jito Liquid Staking",
+          "de": "SOL mit Jito Liquid Staking staken"
+        },
+        "description": {
+          "en": "Stake SOL to secure the network and earn rewards using Jito Liquid Staking. Receive JitoSOL tokens in return.",
+          "de": "Stake SOL, um das Netzwerk zu sichern und Belohnungen mit Jito Liquid Staking zu verdienen. Erhalte im Gegenzug JitoSOL-Token."
+        },
+        "actions": [
+          {
+            "type": "contract",
+            "label": {
+              "en": "Stake now",
+              "de": "Jetzt staken"
+            },
+            "address": "DPoo15wWDqpPJJtS2MUZ49aRxqz5ZaaJCJP4z8bLuib",
+            "func": "deposit",
+            "args": [
+              "JitoY5pcAxWX6iyP2QdFwTznGb8A99PRCUCVVxB46WZ"
+            ],
+            "inputs": [
+              {
+                "name": "amount",
+                "description": {
+                  "en": "Amount of SOL to stake.",
+                  "de": "Betrag an SOL zum Staken."
+                },
+                "type": "biguint",
+                "position": "value",
+                "source": "field",
+                "required": true,
+                "min": 1,
+                "modifier": "scale:9"
+              }
+            ]
+          },
+          {
+            "type": "link",
+            "label": {
+              "en": "Learn more",
+              "de": "Mehr erfahren"
+            },
+            "description": {
+              "en": "Find more information about Jito liquid staking.",
+              "de": "Weitere Informationen zu Jito Liquid Staking."
+            },
+            "url": "https://jito.network"
+          }
+        ],
+        "messages": {
+          "success": {
+            "en": "SOL staked successfully. You received JitoSOL tokens.",
+            "de": "SOL erfolgreich gestaket. Du hast JitoSOL-Token erhalten."
           }
         }
       }
