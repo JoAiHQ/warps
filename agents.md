@@ -27,3 +27,8 @@
 ### Verified Constraints
 *   **Devnet**: Payments require test credentials (not fully automated without them).
 *   **Form Persistence**: Billing info saves correctly.
+
+## German Localization
+
+- Never use formal "Sie/Ihre" in German translations. Always use informal "du/dein" (lowercase) or rephrase to avoid the pronoun entirely.
+- Lowercase "sie/ihre" referring to things (not users) is fine — e.g. "einer Transaktion anhand ihres Hashes" (its hash).
