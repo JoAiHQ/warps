@@ -78,7 +78,7 @@ Read the rule files for detailed explanations and examples:
 
 ### Supported Chains
 
-`multiversx`, `vibechain`, `sui`, `ethereum`, `base`, `arbitrum`, `polygon`, `somnia`, `fastset`, `solana`, `near`
+`multiversx`, `vibechain`, `sui`, `ethereum`, `base`, `arbitrum`, `polygon`, `somnia`, `tempo`, `fastset`, `solana`, `near`
 
 ## Validation Checklist
 
