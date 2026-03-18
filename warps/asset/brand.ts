@@ -8,7 +8,10 @@ export const brand = async (config: WarpClientConfig): Promise<WarpbaseBrand> =>
       en: 'The Asset app provides tools and operations for seamless transfer of blockchain assets, including cryptocurrencies and tokens, between different accounts and chains.',
       de: 'Die Asset App bietet Tools und Operationen für den nahtlosen Transfer von Blockchain-Assets, einschließlich Kryptowährungen und Token, zwischen verschiedenen Konten und Chains.',
     })
-    .setLogo('https://raw.githubusercontent.com/iconic/open-iconic/master/svg/globe.svg')
+    .setLogo({
+      light: 'https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/asset-black.svg',
+      dark: 'https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/asset-white.svg',
+    })
     .setColors({ primary: '#000000' })
     .build(),
   contracts: {},

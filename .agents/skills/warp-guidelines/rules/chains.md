@@ -1,6 +1,6 @@
 # Multi-Chain Support
 
-Warp Protocol v3 supports 11 blockchain networks. Use the `chain` parameter to target specific chains.
+Warp Protocol v3 supports 12 blockchain networks. Use the `chain` parameter to target specific chains.
 
 ## Supported Chains
 
@@ -14,6 +14,7 @@ Warp Protocol v3 supports 11 blockchain networks. Use the `chain` parameter to t
 | Arbitrum | `arbitrum` | EVM (L2) |
 | Polygon | `polygon` | EVM (L2) |
 | Somnia | `somnia` | EVM |
+| Tempo | `tempo` | EVM (L1) |
 | Fastset | `fastset` | Native |
 | Solana | `solana` | Native |
 | NEAR | `near` | Native |
@@ -84,6 +85,26 @@ Override for specific actions:
 ```
 
 ## Chain-Specific Considerations
+
+### Tempo
+
+- Stablecoin-native L1 by Stripe (no native gas token, fees paid in stablecoins)
+- Native currency is USD (6 decimals)
+- TIP-20 token standard (ERC-20 compatible)
+- Sub-second deterministic finality
+- Supports fee sponsorship (gasless transactions)
+- Supports transaction memos (ISO 20022)
+
+```json
+{
+  "type": "contract",
+  "chain": "tempo",
+  "abi": "function transfer(address to, uint256 amount)",
+  "address": "0x20c0000000000000000000000000000000000000",
+  "func": "transfer",
+  "gasLimit": 65000
+}
+```
 
 ### EVM Chains (Ethereum, Base, Arbitrum, Polygon)
 
@@ -237,6 +258,7 @@ Use global variables for chain-specific URLs:
 | base | https://basescan.org |
 | arbitrum | https://arbiscan.io |
 | polygon | https://polygonscan.com |
+| tempo | https://explore.tempo.xyz |
 | multiversx | https://explorer.multiversx.com |
 | sui | https://suiscan.xyz |
 | solana | https://solscan.io |
