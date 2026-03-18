@@ -1,0 +1,61 @@
+{
+  "protocol": "warp:3.0.0",
+  "chain": "multiversx",
+  "name": "MultiversX: View NFT",
+  "title": {
+    "en": "View an NFT on MultiversX",
+    "de": "NFT auf MultiversX anzeigen"
+  },
+  "description": {
+    "en": "View detailed information about a specific NFT from a MultiversX collection. Shows the NFT image, name, collection, attributes, royalties, and creator. Fetches the most recently created NFT in the given collection.",
+    "de": "Zeige detaillierte Informationen zu einem bestimmten NFT aus einer MultiversX-Kollektion. Zeigt NFT-Bild, Name, Kollektion, Attribute, Royalties und Ersteller. Ruft das zuletzt erstellte NFT in der angegebenen Kollektion ab."
+  },
+  "ui": "https://raw.githubusercontent.com/JoAiHQ/warps/main/warps/multiversx/esdt-nft-view/chatapp.dist.html",
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "View NFT",
+        "de": "NFT anzeigen"
+      },
+      "destination": {
+        "url": "{{CHAIN_API}}/collections/{{COLLECTION_ID}}/nfts?size=1&sort=timestamp&order=desc"
+      },
+      "inputs": [
+        {
+          "name": "Collection Identifier",
+          "as": "COLLECTION_ID",
+          "description": {
+            "en": "The collection token identifier (e.g. 'MYNFT-a1b2c3').",
+            "de": "Der Kollektion-Token-Identifier (z.B. 'MEINNFT-a1b2c3')."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "output": {
+    "NFT_IDENTIFIER": "transform:() => (out?.[0]?.identifier || '')",
+    "NFT_NAME": "transform:() => (out?.[0]?.name || '')",
+    "COLLECTION": "transform:() => (out?.[0]?.collection || '')",
+    "NONCE": "transform:() => (out?.[0]?.nonce || 0)",
+    "ROYALTIES": "transform:() => (out?.[0]?.royalties || 0)",
+    "MEDIA_URL": "transform:() => (out?.[0]?.url || out?.[0]?.media?.[0]?.url || '')",
+    "THUMBNAIL_URL": "transform:() => (out?.[0]?.media?.[0]?.thumbnailUrl || out?.[0]?.url || '')",
+    "ATTRIBUTES": "transform:() => (out?.[0]?.metadata?.attributes || out?.[0]?.attributes || '')",
+    "CREATOR": "transform:() => (out?.[0]?.creator || '')",
+    "OWNER": "transform:() => (out?.[0]?.owner || '')"
+  },
+  "messages": {
+    "success": {
+      "en": "NFT '{{NFT_NAME}}' ({{NFT_IDENTIFIER}}) from collection {{COLLECTION}}.",
+      "de": "NFT '{{NFT_NAME}}' ({{NFT_IDENTIFIER}}) aus Kollektion {{COLLECTION}}."
+    }
+  },
+  "related": [
+    "multiversx-esdt-nft-create",
+    "multiversx-esdt-issue-nft-collection"
+  ]
+}
