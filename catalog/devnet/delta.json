@@ -4,25 +4,25 @@
   "repo": "JoAiHQ/warps",
   "branch": "dev",
   "network": "devnet",
-  "commitSha": "4806d8dd800bfd2e66b0034f208893e7618ab521",
-  "committedAt": "2026-03-18T18:04:18.671Z",
-  "generatedAt": "2026-03-18T18:04:21.264Z",
+  "commitSha": "0c5c5b1b717ac9278f37cc594409f726099632aa",
+  "committedAt": "2026-03-19T11:13:08.995Z",
+  "generatedAt": "2026-03-19T11:13:10.539Z",
   "upserts": [
     {
-      "key": "none:asset-transfer",
-      "identifier": "@asset-transfer",
-      "alias": "asset-transfer",
+      "key": "none:file-convert-to-pdf",
+      "identifier": "@file-convert-to-pdf",
+      "alias": "file-convert-to-pdf",
       "chain": "none",
-      "hash": "0836a843858d7ed9afba35c6b34b603f1c6589eb543b8a35adc9e4ed18e3a093",
-      "checksum": "0836a843858d7ed9afba35c6b34b603f1c6589eb543b8a35adc9e4ed18e3a093",
-      "name": "Asset: Transfer",
+      "hash": "a2f3073c234759f1691538d537fa52f90bbf1a422c5e25f278ebb3da368cf424",
+      "checksum": "a2f3073c234759f1691538d537fa52f90bbf1a422c5e25f278ebb3da368cf424",
+      "name": "File: Convert to PDF",
       "title": {
-        "en": "Transfer assets",
-        "de": "Assets übertragen"
+        "en": "Convert image to PDF",
+        "de": "Bild in PDF umwandeln"
       },
       "description": {
-        "en": "Transfer a blockchain asset from one account to another.",
-        "de": "Übertrage einen Blockchain-Asset von einem Konto auf ein anderes."
+        "en": "Convert a JPG or PNG image file to PDF format.",
+        "de": "Eine JPG- oder PNG-Bilddatei in das PDF-Format umwandeln."
       },
       "preview": null,
       "creator": "github:JoAiHQ/warps",
@@ -31,76 +31,81 @@
       "primaryAddress": null,
       "primaryFunc": null,
       "brand": {
-        "hash": "ff28e43065e457ddbb373337153eb8a19c553fe5b96a758f2b65e5799a580c88",
-        "slug": "asset",
-        "active": true,
+        "hash": "7f7057e3099d3455768ef56c74f6648ad857a68a74f6a4e05c8ee9b078dffb1e",
+        "slug": "file",
+        "active": false,
         "protocol": "brand:0.2.0",
-        "name": "Asset",
+        "name": "File",
         "description": {
-          "en": "The Asset app provides tools and operations for seamless transfer of blockchain assets, including cryptocurrencies and tokens, between different accounts and chains.",
-          "de": "Die Asset App bietet Tools und Operationen für den nahtlosen Transfer von Blockchain-Assets, einschließlich Kryptowährungen und Token, zwischen verschiedenen Konten und Chains."
+          "en": "Convert, transform, and manage files on your desktop.",
+          "de": "Dateien auf dem Desktop konvertieren, transformieren und verwalten."
         },
         "logo": {
-          "light": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/asset-black.svg",
-          "dark": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/asset-white.svg"
+          "light": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/file-black.svg",
+          "dark": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/file-white.svg"
         },
         "colors": {
-          "primary": "#000000"
+          "primary": "#4F46E5",
+          "secondary": "#EEF2FF"
         }
       },
       "warp": {
         "protocol": "warp:3.0.0",
-        "name": "Asset: Transfer",
+        "name": "File: Convert to PDF",
         "title": {
-          "en": "Transfer assets",
-          "de": "Assets übertragen"
+          "en": "Convert image to PDF",
+          "de": "Bild in PDF umwandeln"
         },
         "description": {
-          "en": "Transfer a blockchain asset from one account to another.",
-          "de": "Übertrage einen Blockchain-Asset von einem Konto auf ein anderes."
+          "en": "Convert a JPG or PNG image file to PDF format.",
+          "de": "Eine JPG- oder PNG-Bilddatei in das PDF-Format umwandeln."
         },
         "actions": [
           {
-            "type": "transfer",
+            "type": "prompt",
             "label": {
-              "en": "Send now",
-              "de": "Jetzt senden"
+              "en": "Convert to PDF",
+              "de": "In PDF umwandeln"
+            },
+            "prompt": {
+              "macos": "/sips -s format pdf \"{{INPUT}}\" --out \"{{OUTPUT}}\"",
+              "linux": "/convert \"{{INPUT}}\" \"{{OUTPUT}}\"",
+              "windows": "/powershell -command \"$wsh = New-Object -ComObject WScript.Shell; Add-Type -AssemblyName Microsoft.Office.Interop.Word; $word = New-Object -ComObject Word.Application; $word.Visible = $false; $doc = $word.Documents.Add(); $selection = $word.Selection; $selection.InlineShapes.AddPicture('{{INPUT}}') | Out-Null; $doc.SaveAs2('{{OUTPUT}}', 17); $doc.Close(); $word.Quit()\""
             },
             "inputs": [
               {
-                "name": "Blockchain",
-                "as": "chain",
-                "bot": "The blockchain to transfer the asset from.",
-                "type": "string",
-                "position": "chain",
-                "source": "field",
-                "required": true
-              },
-              {
-                "name": "Receiver",
-                "as": "receiver",
-                "bot": "The blockchain wallet address of the receiver.",
-                "type": "address",
-                "position": "receiver",
-                "source": "field",
-                "required": true
-              },
-              {
-                "name": "Asset",
-                "as": "asset",
+                "name": "Input File",
+                "as": "INPUT",
                 "description": {
-                  "en": "The asset to transfer.",
-                  "de": "Der zu übertragende Asset."
+                  "en": "Path to the JPG or PNG image file",
+                  "de": "Pfad zur JPG- oder PNG-Bilddatei"
                 },
-                "bot": "Construct the asset output as follows: 'TOKEN-000000|5.5' (asset identifier|amount)",
-                "type": "asset",
-                "position": "transfer",
+                "bot": "The source image file path (JPG or PNG). Look for a file path in the context, clipboard, or user message.",
+                "type": "string",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Output File",
+                "as": "OUTPUT",
+                "description": {
+                  "en": "Path for the output PDF file",
+                  "de": "Pfad für die Ausgabe-PDF-Datei"
+                },
+                "bot": "The output PDF file path. If not specified, use the same path as the input file but replace the extension with .pdf.",
+                "type": "string",
                 "source": "field",
                 "required": true
               }
             ]
           }
-        ]
+        ],
+        "messages": {
+          "success": {
+            "en": "Image converted to PDF successfully.",
+            "de": "Bild erfolgreich in PDF umgewandelt."
+          }
+        }
       }
     }
   ],
