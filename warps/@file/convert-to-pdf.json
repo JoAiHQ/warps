@@ -1,0 +1,58 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "File: Convert to PDF",
+  "title": {
+    "en": "Convert image to PDF",
+    "de": "Bild in PDF umwandeln"
+  },
+  "description": {
+    "en": "Convert a JPG or PNG image file to PDF format.",
+    "de": "Eine JPG- oder PNG-Bilddatei in das PDF-Format umwandeln."
+  },
+  "actions": [
+    {
+      "type": "prompt",
+      "label": {
+        "en": "Convert to PDF",
+        "de": "In PDF umwandeln"
+      },
+      "prompt": {
+        "macos": "/sips -s format pdf \"{{INPUT}}\" --out \"{{OUTPUT}}\"",
+        "linux": "/soffice --headless --convert-to pdf \"{{INPUT}}\" --outdir \"$(dirname '{{OUTPUT}}')\"",
+        "windows": "/powershell -command \"soffice --headless --convert-to pdf '{{INPUT}}' --outdir (Split-Path -Parent '{{OUTPUT}}')\""
+      },
+      "inputs": [
+        {
+          "name": "Input File",
+          "as": "INPUT",
+          "description": {
+            "en": "Path to the JPG or PNG image file",
+            "de": "Pfad zur JPG- oder PNG-Bilddatei"
+          },
+          "bot": "The source image file path (JPG or PNG). Look for a file path in the context, clipboard, or user message.",
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Output File",
+          "as": "OUTPUT",
+          "description": {
+            "en": "Path for the output PDF file",
+            "de": "Pfad für die Ausgabe-PDF-Datei"
+          },
+          "bot": "The output PDF file path. If not specified, use the same path as the input file but replace the extension with .pdf.",
+          "type": "string",
+          "source": "field",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Image converted to PDF successfully.",
+      "de": "Bild erfolgreich in PDF umgewandelt."
+    }
+  }
+}

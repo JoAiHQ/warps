@@ -1,0 +1,28 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Sentry: On Error",
+  "title": {
+    "en": "Create task from Sentry error",
+    "de": "Aufgabe aus Sentry-Fehler erstellen"
+  },
+  "description": {
+    "en": "Automatically creates a task when a Sentry error webhook is received. Maps the error title, culprit, and permalink into a trackable task.",
+    "de": "Erstellt automatisch eine Aufgabe, wenn ein Sentry-Fehler-Webhook empfangen wird. Weist den Fehlertitel, Verursacher und Permalink einer verfolgbaren Aufgabe zu."
+  },
+  "trigger": {
+    "type": "webhook",
+    "source": "sentry",
+    "inputs": {
+      "TITLE": "data.issue.title",
+      "DESCRIPTION": "data.issue.culprit",
+      "URL": "data.issue.permalink"
+    }
+  },
+  "next": "@joai-item-create?title={{TITLE}}&description={{DESCRIPTION}}&url={{URL}}",
+  "messages": {
+    "success": {
+      "en": "Task created from Sentry error: {{TITLE}}",
+      "de": "Aufgabe aus Sentry-Fehler erstellt: {{TITLE}}"
+    }
+  }
+}
