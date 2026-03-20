@@ -4,8 +4,8 @@
   "repo": "JoAiHQ/warps",
   "branch": "dev",
   "network": "devnet",
-  "commitSha": "5cab95da09597fa6ce3c64a6b020416ba0f40bd1",
-  "generatedAt": "2026-03-20T16:15:13.845Z",
+  "commitSha": "37b270b51b890cfaddb70ce6b510eb167c468306",
+  "generatedAt": "2026-03-20T22:02:52.859Z",
   "warps": [
     {
       "key": "arbitrum:omniset-deposit-arbitrum",
@@ -3351,8 +3351,8 @@
       "identifier": "@multiversx-esdt-nft-create",
       "alias": "multiversx-esdt-nft-create",
       "chain": "multiversx",
-      "hash": "65d1e6ed5ecbfe6f92073d92dd4332d36755c57f1b07370a1e5d3854d87ae509",
-      "checksum": "65d1e6ed5ecbfe6f92073d92dd4332d36755c57f1b07370a1e5d3854d87ae509",
+      "hash": "26a820db5cbbd49ef59a5eb0d50bed9f05d73ecc0bb58a0b5498235daa4c70be",
+      "checksum": "26a820db5cbbd49ef59a5eb0d50bed9f05d73ecc0bb58a0b5498235daa4c70be",
       "name": "MultiversX: Create NFT",
       "title": {
         "en": "Create (Mint) an NFT on MultiversX",
@@ -3506,12 +3506,11 @@
         ],
         "output": {
           "TX_HASH": "out",
-          "COLLECTION_ID": "in.COLLECTION_ID",
+          "NFT_IDENTIFIER": "out.1",
           "NFT_NAME": "in.NFT_NAME",
-          "QUANTITY": "in.QUANTITY",
-          "URI": "in.URI"
+          "QUANTITY": "in.QUANTITY"
         },
-        "next": "multiversx-esdt-nft-view?COLLECTION_ID={{COLLECTION_ID}}",
+        "next": "multiversx-esdt-nft-view?NFT_IDENTIFIER={{NFT_IDENTIFIER}}",
         "messages": {
           "success": {
             "en": "NFT '{{NFT_NAME}}' minted successfully in collection {{COLLECTION_ID}} (qty: {{QUANTITY}}).",
@@ -3532,16 +3531,16 @@
       "identifier": "@multiversx-esdt-nft-view",
       "alias": "multiversx-esdt-nft-view",
       "chain": "multiversx",
-      "hash": "c38a556681055c1e7a901b1020f67e62caa5bceac25ee20f6e0f3f26d68c0ace",
-      "checksum": "c38a556681055c1e7a901b1020f67e62caa5bceac25ee20f6e0f3f26d68c0ace",
+      "hash": "3a89e67446f86ec96a313f918500e6116bbeb12874dc30c5d3566385af3c4668",
+      "checksum": "3a89e67446f86ec96a313f918500e6116bbeb12874dc30c5d3566385af3c4668",
       "name": "MultiversX: View NFT",
       "title": {
         "en": "View an NFT on MultiversX",
         "de": "NFT auf MultiversX anzeigen"
       },
       "description": {
-        "en": "View detailed information about a specific NFT from a MultiversX collection. Shows the NFT image, name, collection, attributes, royalties, and creator. Fetches the most recently created NFT in the given collection.",
-        "de": "Zeige detaillierte Informationen zu einem bestimmten NFT aus einer MultiversX-Kollektion. Zeigt NFT-Bild, Name, Kollektion, Attribute, Royalties und Ersteller. Ruft das zuletzt erstellte NFT in der angegebenen Kollektion ab."
+        "en": "View detailed information about a specific NFT from a MultiversX collection. Shows the NFT image, name, collection, attributes, royalties, and creator.",
+        "de": "Zeige detaillierte Informationen zu einem bestimmten NFT aus einer MultiversX-Kollektion. Zeigt NFT-Bild, Name, Kollektion, Attribute, Royalties und Ersteller."
       },
       "preview": null,
       "creator": "github:JoAiHQ/warps",
@@ -3577,8 +3576,8 @@
           "de": "NFT auf MultiversX anzeigen"
         },
         "description": {
-          "en": "View detailed information about a specific NFT from a MultiversX collection. Shows the NFT image, name, collection, attributes, royalties, and creator. Fetches the most recently created NFT in the given collection.",
-          "de": "Zeige detaillierte Informationen zu einem bestimmten NFT aus einer MultiversX-Kollektion. Zeigt NFT-Bild, Name, Kollektion, Attribute, Royalties und Ersteller. Ruft das zuletzt erstellte NFT in der angegebenen Kollektion ab."
+          "en": "View detailed information about a specific NFT from a MultiversX collection. Shows the NFT image, name, collection, attributes, royalties, and creator.",
+          "de": "Zeige detaillierte Informationen zu einem bestimmten NFT aus einer MultiversX-Kollektion. Zeigt NFT-Bild, Name, Kollektion, Attribute, Royalties und Ersteller."
         },
         "ui": "https://raw.githubusercontent.com/JoAiHQ/warps/main/warps/multiversx/esdt-nft-view/chatapp.dist.html",
         "actions": [
@@ -3589,15 +3588,15 @@
               "de": "NFT anzeigen"
             },
             "destination": {
-              "url": "{{CHAIN_API}}/collections/{{COLLECTION_ID}}/nfts?size=1&sort=timestamp&order=desc"
+              "url": "{{CHAIN_API}}/nfts/{{NFT_IDENTIFIER}}"
             },
             "inputs": [
               {
-                "name": "Collection Identifier",
-                "as": "COLLECTION_ID",
+                "name": "NFT Identifier",
+                "as": "NFT_IDENTIFIER",
                 "description": {
-                  "en": "The collection token identifier (e.g. 'MYNFT-a1b2c3').",
-                  "de": "Der Kollektion-Token-Identifier (z.B. 'MEINNFT-a1b2c3')."
+                  "en": "The full NFT identifier including nonce (e.g. 'MYNFT-a1b2c3-01').",
+                  "de": "Der vollständige NFT-Identifier inklusive Nonce (z.B. 'MEINNFT-a1b2c3-01')."
                 },
                 "type": "string",
                 "source": "field",
@@ -3607,16 +3606,16 @@
           }
         ],
         "output": {
-          "NFT_IDENTIFIER": "transform:() => (out?.[0]?.identifier || '')",
-          "NFT_NAME": "transform:() => (out?.[0]?.name || '')",
-          "COLLECTION": "transform:() => (out?.[0]?.collection || '')",
-          "NONCE": "transform:() => (out?.[0]?.nonce || 0)",
-          "ROYALTIES": "transform:() => (out?.[0]?.royalties || 0)",
-          "MEDIA_URL": "transform:() => (out?.[0]?.url || out?.[0]?.media?.[0]?.url || '')",
-          "THUMBNAIL_URL": "transform:() => (out?.[0]?.media?.[0]?.thumbnailUrl || out?.[0]?.url || '')",
-          "ATTRIBUTES": "transform:() => (out?.[0]?.metadata?.attributes || out?.[0]?.attributes || '')",
-          "CREATOR": "transform:() => (out?.[0]?.creator || '')",
-          "OWNER": "transform:() => (out?.[0]?.owner || '')"
+          "NFT_IDENTIFIER": "transform:() => (out?.identifier || '')",
+          "NFT_NAME": "transform:() => (out?.name || '')",
+          "COLLECTION": "transform:() => (out?.collection || '')",
+          "NONCE": "transform:() => (out?.nonce || 0)",
+          "ROYALTIES": "transform:() => (out?.royalties || 0)",
+          "MEDIA_URL": "transform:() => (out?.url || out?.media?.[0]?.url || '')",
+          "THUMBNAIL_URL": "transform:() => (out?.media?.[0]?.thumbnailUrl || out?.url || '')",
+          "ATTRIBUTES": "transform:() => (out?.metadata?.attributes || out?.attributes || '')",
+          "CREATOR": "transform:() => (out?.creator || '')",
+          "OWNER": "transform:() => (out?.owner || '')"
         },
         "messages": {
           "success": {
