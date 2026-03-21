@@ -4,8 +4,8 @@
   "repo": "JoAiHQ/warps",
   "branch": "main",
   "network": "mainnet",
-  "commitSha": "436036945c15b08f15ade3678b662f0aa2dfadd3",
-  "generatedAt": "2026-03-20T17:28:03.841Z",
+  "commitSha": "a94e933bbd3af55a76ecfec7eeff5acc07e84566",
+  "generatedAt": "2026-03-21T17:52:45.763Z",
   "warps": [
     {
       "key": "arbitrum:omniset-deposit-arbitrum",
@@ -3351,8 +3351,8 @@
       "identifier": "@multiversx-esdt-nft-create",
       "alias": "multiversx-esdt-nft-create",
       "chain": "multiversx",
-      "hash": "65d1e6ed5ecbfe6f92073d92dd4332d36755c57f1b07370a1e5d3854d87ae509",
-      "checksum": "65d1e6ed5ecbfe6f92073d92dd4332d36755c57f1b07370a1e5d3854d87ae509",
+      "hash": "26a820db5cbbd49ef59a5eb0d50bed9f05d73ecc0bb58a0b5498235daa4c70be",
+      "checksum": "26a820db5cbbd49ef59a5eb0d50bed9f05d73ecc0bb58a0b5498235daa4c70be",
       "name": "MultiversX: Create NFT",
       "title": {
         "en": "Create (Mint) an NFT on MultiversX",
@@ -3506,12 +3506,11 @@
         ],
         "output": {
           "TX_HASH": "out",
-          "COLLECTION_ID": "in.COLLECTION_ID",
+          "NFT_IDENTIFIER": "out.1",
           "NFT_NAME": "in.NFT_NAME",
-          "QUANTITY": "in.QUANTITY",
-          "URI": "in.URI"
+          "QUANTITY": "in.QUANTITY"
         },
-        "next": "multiversx-esdt-nft-view?COLLECTION_ID={{COLLECTION_ID}}",
+        "next": "multiversx-esdt-nft-view?NFT_IDENTIFIER={{NFT_IDENTIFIER}}",
         "messages": {
           "success": {
             "en": "NFT '{{NFT_NAME}}' minted successfully in collection {{COLLECTION_ID}} (qty: {{QUANTITY}}).",
@@ -3532,16 +3531,16 @@
       "identifier": "@multiversx-esdt-nft-view",
       "alias": "multiversx-esdt-nft-view",
       "chain": "multiversx",
-      "hash": "c38a556681055c1e7a901b1020f67e62caa5bceac25ee20f6e0f3f26d68c0ace",
-      "checksum": "c38a556681055c1e7a901b1020f67e62caa5bceac25ee20f6e0f3f26d68c0ace",
+      "hash": "3a89e67446f86ec96a313f918500e6116bbeb12874dc30c5d3566385af3c4668",
+      "checksum": "3a89e67446f86ec96a313f918500e6116bbeb12874dc30c5d3566385af3c4668",
       "name": "MultiversX: View NFT",
       "title": {
         "en": "View an NFT on MultiversX",
         "de": "NFT auf MultiversX anzeigen"
       },
       "description": {
-        "en": "View detailed information about a specific NFT from a MultiversX collection. Shows the NFT image, name, collection, attributes, royalties, and creator. Fetches the most recently created NFT in the given collection.",
-        "de": "Zeige detaillierte Informationen zu einem bestimmten NFT aus einer MultiversX-Kollektion. Zeigt NFT-Bild, Name, Kollektion, Attribute, Royalties und Ersteller. Ruft das zuletzt erstellte NFT in der angegebenen Kollektion ab."
+        "en": "View detailed information about a specific NFT from a MultiversX collection. Shows the NFT image, name, collection, attributes, royalties, and creator.",
+        "de": "Zeige detaillierte Informationen zu einem bestimmten NFT aus einer MultiversX-Kollektion. Zeigt NFT-Bild, Name, Kollektion, Attribute, Royalties und Ersteller."
       },
       "preview": null,
       "creator": "github:JoAiHQ/warps",
@@ -3577,8 +3576,8 @@
           "de": "NFT auf MultiversX anzeigen"
         },
         "description": {
-          "en": "View detailed information about a specific NFT from a MultiversX collection. Shows the NFT image, name, collection, attributes, royalties, and creator. Fetches the most recently created NFT in the given collection.",
-          "de": "Zeige detaillierte Informationen zu einem bestimmten NFT aus einer MultiversX-Kollektion. Zeigt NFT-Bild, Name, Kollektion, Attribute, Royalties und Ersteller. Ruft das zuletzt erstellte NFT in der angegebenen Kollektion ab."
+          "en": "View detailed information about a specific NFT from a MultiversX collection. Shows the NFT image, name, collection, attributes, royalties, and creator.",
+          "de": "Zeige detaillierte Informationen zu einem bestimmten NFT aus einer MultiversX-Kollektion. Zeigt NFT-Bild, Name, Kollektion, Attribute, Royalties und Ersteller."
         },
         "ui": "https://raw.githubusercontent.com/JoAiHQ/warps/main/warps/multiversx/esdt-nft-view/chatapp.dist.html",
         "actions": [
@@ -3589,15 +3588,15 @@
               "de": "NFT anzeigen"
             },
             "destination": {
-              "url": "{{CHAIN_API}}/collections/{{COLLECTION_ID}}/nfts?size=1&sort=timestamp&order=desc"
+              "url": "{{CHAIN_API}}/nfts/{{NFT_IDENTIFIER}}"
             },
             "inputs": [
               {
-                "name": "Collection Identifier",
-                "as": "COLLECTION_ID",
+                "name": "NFT Identifier",
+                "as": "NFT_IDENTIFIER",
                 "description": {
-                  "en": "The collection token identifier (e.g. 'MYNFT-a1b2c3').",
-                  "de": "Der Kollektion-Token-Identifier (z.B. 'MEINNFT-a1b2c3')."
+                  "en": "The full NFT identifier including nonce (e.g. 'MYNFT-a1b2c3-01').",
+                  "de": "Der vollständige NFT-Identifier inklusive Nonce (z.B. 'MEINNFT-a1b2c3-01')."
                 },
                 "type": "string",
                 "source": "field",
@@ -3607,16 +3606,16 @@
           }
         ],
         "output": {
-          "NFT_IDENTIFIER": "transform:() => (out?.[0]?.identifier || '')",
-          "NFT_NAME": "transform:() => (out?.[0]?.name || '')",
-          "COLLECTION": "transform:() => (out?.[0]?.collection || '')",
-          "NONCE": "transform:() => (out?.[0]?.nonce || 0)",
-          "ROYALTIES": "transform:() => (out?.[0]?.royalties || 0)",
-          "MEDIA_URL": "transform:() => (out?.[0]?.url || out?.[0]?.media?.[0]?.url || '')",
-          "THUMBNAIL_URL": "transform:() => (out?.[0]?.media?.[0]?.thumbnailUrl || out?.[0]?.url || '')",
-          "ATTRIBUTES": "transform:() => (out?.[0]?.metadata?.attributes || out?.[0]?.attributes || '')",
-          "CREATOR": "transform:() => (out?.[0]?.creator || '')",
-          "OWNER": "transform:() => (out?.[0]?.owner || '')"
+          "NFT_IDENTIFIER": "transform:() => (out?.identifier || '')",
+          "NFT_NAME": "transform:() => (out?.name || '')",
+          "COLLECTION": "transform:() => (out?.collection || '')",
+          "NONCE": "transform:() => (out?.nonce || 0)",
+          "ROYALTIES": "transform:() => (out?.royalties || 0)",
+          "MEDIA_URL": "transform:() => (out?.url || out?.media?.[0]?.url || '')",
+          "THUMBNAIL_URL": "transform:() => (out?.media?.[0]?.thumbnailUrl || out?.url || '')",
+          "ATTRIBUTES": "transform:() => (out?.metadata?.attributes || out?.attributes || '')",
+          "CREATOR": "transform:() => (out?.creator || '')",
+          "OWNER": "transform:() => (out?.owner || '')"
         },
         "messages": {
           "success": {
@@ -20513,6 +20512,79 @@
           "success": {
             "en": "Reminder set: {{text}}",
             "de": "Erinnerung gesetzt: {{text}}"
+          }
+        }
+      }
+    },
+    {
+      "key": "none:joai-studio-open",
+      "identifier": "@joai-studio-open",
+      "alias": "joai-studio-open",
+      "chain": "none",
+      "hash": "53948b223a63f60fe0d4cc655f36b2caf91dbdc5ca2c2b51e87ebf76ee9ff8d2",
+      "checksum": "53948b223a63f60fe0d4cc655f36b2caf91dbdc5ca2c2b51e87ebf76ee9ff8d2",
+      "name": "JoAi: Open Studio",
+      "title": {
+        "en": "Open Studio",
+        "de": "Studio öffnen"
+      },
+      "description": {
+        "en": "Open Studio to create images, videos, and other project outputs with your agent.",
+        "de": "Öffne das Studio, um mit deinem Agenten Bilder, Videos und andere Projektinhalte zu erstellen."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "4098667056683890c8f1aad41581885db272e391b0d6170e7e2b73ee7fbbca2e",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: Open Studio",
+        "title": {
+          "en": "Open Studio",
+          "de": "Studio öffnen"
+        },
+        "description": {
+          "en": "Open Studio to create images, videos, and other project outputs with your agent.",
+          "de": "Öffne das Studio, um mit deinem Agenten Bilder, Videos und andere Projektinhalte zu erstellen."
+        },
+        "bot": "Use this when the user wants to open Studio, create in Studio, or jump into the Studio workspace.",
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Open Studio",
+              "de": "Studio öffnen"
+            },
+            "inputs": []
+          }
+        ],
+        "messages": {
+          "success": {
+            "en": "Opening Studio now...",
+            "de": "Studio wird geöffnet..."
           }
         }
       }
