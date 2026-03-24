@@ -4,25 +4,25 @@
   "repo": "JoAiHQ/warps",
   "branch": "dev",
   "network": "devnet",
-  "commitSha": "a1236da6006e0dac821586b7b3d6e5be15b40a0a",
-  "committedAt": "2026-03-23T16:41:18.288Z",
-  "generatedAt": "2026-03-23T16:41:20.370Z",
+  "commitSha": "3904e3a83aa6c9563c100f13c7647a81b9b99d2e",
+  "committedAt": "2026-03-24T11:42:55.487Z",
+  "generatedAt": "2026-03-24T11:42:57.840Z",
   "upserts": [
     {
-      "key": "none:joai-train-from-url",
-      "identifier": "@joai-train-from-url",
-      "alias": "joai-train-from-url",
+      "key": "none:apple-imessage-list",
+      "identifier": "@apple-imessage-list",
+      "alias": "apple-imessage-list",
       "chain": "none",
-      "hash": "ca7e13a350927a936d0a30d331ec62ea8c5e1cfb7e4a764601826d85601b2962",
-      "checksum": "ca7e13a350927a936d0a30d331ec62ea8c5e1cfb7e4a764601826d85601b2962",
-      "name": "JoAi: Train from URL",
+      "hash": "609f0a7e7af0f8121cbac7a6b1f6e07f3e0acac6f285a1ce5aa16fd2ff45515f",
+      "checksum": "609f0a7e7af0f8121cbac7a6b1f6e07f3e0acac6f285a1ce5aa16fd2ff45515f",
+      "name": "Apple: List iMessage Chats",
       "title": {
-        "en": "Train agent from URL",
-        "de": "Agenten aus URL trainieren"
+        "en": "List iMessage conversations",
+        "de": "iMessage-Unterhaltungen auflisten"
       },
       "description": {
-        "en": "Crawl a URL and train your agent with the content as documents.",
-        "de": "Eine URL crawlen und deinen Agenten mit dem Inhalt als Dokumente trainieren."
+        "en": "List recent iMessage conversations with the latest message from each.",
+        "de": "Aktuelle iMessage-Unterhaltungen mit der letzten Nachricht auflisten."
       },
       "preview": null,
       "creator": "github:JoAiHQ/warps",
@@ -31,80 +31,247 @@
       "primaryAddress": null,
       "primaryFunc": null,
       "brand": {
-        "hash": "4098667056683890c8f1aad41581885db272e391b0d6170e7e2b73ee7fbbca2e",
-        "slug": "joai",
-        "active": true,
+        "hash": "b80d846860f772d9b3ba188d844366f97951940bf9c1887c61b5c545b7606045",
+        "slug": "apple",
+        "active": false,
         "protocol": "brand:0.2.0",
-        "name": "JoAi",
+        "name": "Apple",
         "description": {
-          "en": "JoAi is a platform for creating and managing your own AI agents.",
-          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten."
+          "en": "Control native Apple apps on macOS.",
+          "de": "Native Apple-Apps auf macOS steuern."
         },
         "logo": {
-          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
-        },
-        "urls": {
-          "web": "https://joai.ai"
+          "light": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/apple-black.svg",
+          "dark": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/apple-white.svg"
         },
         "colors": {
-          "primary": "#98FF98",
-          "secondary": "#FFFF66"
+          "primary": "#000000",
+          "secondary": "#FFFFFF"
         }
       },
       "warp": {
         "protocol": "warp:3.0.0",
-        "name": "JoAi: Train from URL",
+        "name": "Apple: List iMessage Chats",
         "title": {
-          "en": "Train agent from URL",
-          "de": "Agenten aus URL trainieren"
+          "en": "List iMessage conversations",
+          "de": "iMessage-Unterhaltungen auflisten"
         },
         "description": {
-          "en": "Crawl a URL and train your agent with the content as documents.",
-          "de": "Eine URL crawlen und deinen Agenten mit dem Inhalt als Dokumente trainieren."
+          "en": "List recent iMessage conversations with the latest message from each.",
+          "de": "Aktuelle iMessage-Unterhaltungen mit der letzten Nachricht auflisten."
         },
-        "bot": "Use this when the user wants to train their agent by importing content from a website or URL.",
         "actions": [
           {
-            "type": "collect",
+            "type": "prompt",
             "label": {
-              "en": "Train from URL",
-              "de": "Aus URL trainieren"
+              "en": "List Chats",
+              "de": "Chats auflisten"
+            },
+            "prompt": {
+              "macos": "/sqlite3 ~/Library/Messages/chat.db \"SELECT c.chat_identifier, c.display_name, datetime(m.date/1000000000 + 978307200, 'unixepoch', 'localtime') as last_message_date, CASE WHEN m.is_from_me = 1 THEN 'me' ELSE coalesce(h.id, 'unknown') END as sender, substr(m.text, 1, 100) as preview FROM chat c JOIN chat_message_join cmj ON c.rowid = cmj.chat_id JOIN message m ON cmj.message_id = m.rowid LEFT JOIN handle h ON m.handle_id = h.rowid WHERE m.text IS NOT NULL AND m.rowid = (SELECT MAX(m2.rowid) FROM message m2 JOIN chat_message_join cmj2 ON m2.rowid = cmj2.message_id WHERE cmj2.chat_id = c.rowid AND m2.text IS NOT NULL) ORDER BY m.date DESC LIMIT {{LIMIT}};\""
             },
             "inputs": [
               {
-                "name": "URL",
-                "as": "url",
+                "name": "Limit",
+                "as": "LIMIT",
                 "description": {
-                  "en": "The URL to crawl and learn from",
-                  "de": "Die URL, die gecrawlt und gelernt werden soll"
+                  "en": "Number of conversations to list",
+                  "de": "Anzahl der aufzulistenden Unterhaltungen"
                 },
-                "bot": "The full URL of the website or page to crawl for training content.",
+                "bot": "How many recent conversations to list. Default to 15 if the user doesn't specify.",
                 "type": "string",
-                "position": "arg:1",
+                "source": "field",
+                "required": true,
+                "default": "15"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "key": "none:apple-imessage-read",
+      "identifier": "@apple-imessage-read",
+      "alias": "apple-imessage-read",
+      "chain": "none",
+      "hash": "3f00ac9e3d55920fed5b0cbfe05bb3fd7eb39b1817ee6a44c67d6a46379a220c",
+      "checksum": "3f00ac9e3d55920fed5b0cbfe05bb3fd7eb39b1817ee6a44c67d6a46379a220c",
+      "name": "Apple: Read iMessages",
+      "title": {
+        "en": "Read recent iMessages",
+        "de": "Letzte iMessages lesen"
+      },
+      "description": {
+        "en": "Read the most recent messages from a specific iMessage conversation.",
+        "de": "Die neuesten Nachrichten einer bestimmten iMessage-Unterhaltung lesen."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b80d846860f772d9b3ba188d844366f97951940bf9c1887c61b5c545b7606045",
+        "slug": "apple",
+        "active": false,
+        "protocol": "brand:0.2.0",
+        "name": "Apple",
+        "description": {
+          "en": "Control native Apple apps on macOS.",
+          "de": "Native Apple-Apps auf macOS steuern."
+        },
+        "logo": {
+          "light": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/apple-black.svg",
+          "dark": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/apple-white.svg"
+        },
+        "colors": {
+          "primary": "#000000",
+          "secondary": "#FFFFFF"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "Apple: Read iMessages",
+        "title": {
+          "en": "Read recent iMessages",
+          "de": "Letzte iMessages lesen"
+        },
+        "description": {
+          "en": "Read the most recent messages from a specific iMessage conversation.",
+          "de": "Die neuesten Nachrichten einer bestimmten iMessage-Unterhaltung lesen."
+        },
+        "actions": [
+          {
+            "type": "prompt",
+            "label": {
+              "en": "Read Messages",
+              "de": "Nachrichten lesen"
+            },
+            "prompt": {
+              "macos": "/sqlite3 ~/Library/Messages/chat.db \"SELECT m.rowid, datetime(m.date/1000000000 + 978307200, 'unixepoch', 'localtime') as date, CASE WHEN m.is_from_me = 1 THEN 'me' ELSE coalesce(h.id, 'unknown') END as sender, m.text FROM message m LEFT JOIN handle h ON m.handle_id = h.rowid JOIN chat_message_join cmj ON m.rowid = cmj.message_id JOIN chat c ON cmj.chat_id = c.rowid WHERE (h.id = '{{CONTACT}}' OR c.chat_identifier = '{{CONTACT}}') AND m.text IS NOT NULL ORDER BY m.date DESC LIMIT {{LIMIT}};\""
+            },
+            "inputs": [
+              {
+                "name": "Contact",
+                "as": "CONTACT",
+                "description": {
+                  "en": "Phone number or Apple ID email of the contact",
+                  "de": "Telefonnummer oder Apple-ID-E-Mail des Kontakts"
+                },
+                "bot": "The contact's phone number (e.g. '+1234567890') or Apple ID email to read messages from.",
+                "type": "string",
                 "source": "field",
                 "required": true
               },
               {
-                "name": "Max Pages",
-                "as": "maxPages",
+                "name": "Limit",
+                "as": "LIMIT",
                 "description": {
-                  "en": "Maximum number of pages to crawl (1–100)",
-                  "de": "Maximale Anzahl an Seiten zum Crawlen (1–100)"
+                  "en": "Number of recent messages to read",
+                  "de": "Anzahl der zu lesenden Nachrichten"
                 },
-                "bot": "Optional limit on how many pages to crawl. Defaults to no limit.",
-                "type": "integer",
+                "bot": "How many recent messages to fetch. Default to 20 if the user doesn't specify.",
+                "type": "string",
                 "source": "field",
-                "required": false
+                "required": true,
+                "default": "20"
               }
             ]
           }
-        ],
-        "messages": {
-          "success": {
-            "en": "Training started on {{url}}. I'll crawl the pages and show you everything I find in this chat — you can review and edit each document or memory before saving.",
-            "de": "Training gestartet auf {{url}}. Ich crawle die Seiten und zeige dir alles, was ich finde, in diesem Chat — du kannst jedes Dokument oder jede Erinnerung vor dem Speichern prüfen und bearbeiten."
-          }
+        ]
+      }
+    },
+    {
+      "key": "none:apple-imessage-send",
+      "identifier": "@apple-imessage-send",
+      "alias": "apple-imessage-send",
+      "chain": "none",
+      "hash": "f0a86dfe2611d88897a5384c43121fe1825adcf9ef7e69e99e58f8a656cf3be3",
+      "checksum": "f0a86dfe2611d88897a5384c43121fe1825adcf9ef7e69e99e58f8a656cf3be3",
+      "name": "Apple: Send iMessage",
+      "title": {
+        "en": "Send an iMessage",
+        "de": "Eine iMessage senden"
+      },
+      "description": {
+        "en": "Send a message to a contact via iMessage.",
+        "de": "Eine Nachricht über iMessage an einen Kontakt senden."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b80d846860f772d9b3ba188d844366f97951940bf9c1887c61b5c545b7606045",
+        "slug": "apple",
+        "active": false,
+        "protocol": "brand:0.2.0",
+        "name": "Apple",
+        "description": {
+          "en": "Control native Apple apps on macOS.",
+          "de": "Native Apple-Apps auf macOS steuern."
+        },
+        "logo": {
+          "light": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/apple-black.svg",
+          "dark": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/apple-white.svg"
+        },
+        "colors": {
+          "primary": "#000000",
+          "secondary": "#FFFFFF"
         }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "Apple: Send iMessage",
+        "title": {
+          "en": "Send an iMessage",
+          "de": "Eine iMessage senden"
+        },
+        "description": {
+          "en": "Send a message to a contact via iMessage.",
+          "de": "Eine Nachricht über iMessage an einen Kontakt senden."
+        },
+        "actions": [
+          {
+            "type": "prompt",
+            "label": {
+              "en": "Send iMessage",
+              "de": "iMessage senden"
+            },
+            "prompt": {
+              "macos": "/osascript -e 'tell application \"Messages\" to send \"{{MESSAGE}}\" to buddy \"{{RECIPIENT}}\" of (service 1 whose service type is iMessage)'"
+            },
+            "inputs": [
+              {
+                "name": "Recipient",
+                "as": "RECIPIENT",
+                "description": {
+                  "en": "Phone number or Apple ID email of the recipient",
+                  "de": "Telefonnummer oder Apple-ID-E-Mail des Empfängers"
+                },
+                "bot": "The recipient's phone number (e.g. '+1234567890') or Apple ID email address.",
+                "type": "string",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Message",
+                "as": "MESSAGE",
+                "description": {
+                  "en": "The message text to send",
+                  "de": "Der zu sendende Nachrichtentext"
+                },
+                "bot": "The message content to send via iMessage. Keep it concise.",
+                "type": "string",
+                "source": "field",
+                "required": true
+              }
+            ]
+          }
+        ]
       }
     }
   ],
