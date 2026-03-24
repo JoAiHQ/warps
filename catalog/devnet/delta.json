@@ -4,25 +4,25 @@
   "repo": "JoAiHQ/warps",
   "branch": "dev",
   "network": "devnet",
-  "commitSha": "d704e940adb9853c07daf5f15cf0eeb98e3fa1e9",
-  "committedAt": "2026-03-24T13:40:46.608Z",
-  "generatedAt": "2026-03-24T13:40:48.122Z",
+  "commitSha": "a2130a7e571476ba48d039013a32be0d82a7dcbe",
+  "committedAt": "2026-03-24T21:57:33.664Z",
+  "generatedAt": "2026-03-24T21:57:35.273Z",
   "upserts": [
     {
-      "key": "none:apple-imessage-list",
-      "identifier": "@apple-imessage-list",
-      "alias": "apple-imessage-list",
+      "key": "none:#wacli-send-text",
+      "identifier": "@#wacli-send-text",
+      "alias": "#wacli-send-text",
       "chain": "none",
-      "hash": "fc49fa3ba22bb20d7929b2bfff484e59756ee5e68cebc92857bc1beb3202a713",
-      "checksum": "fc49fa3ba22bb20d7929b2bfff484e59756ee5e68cebc92857bc1beb3202a713",
-      "name": "Apple: List iMessage Chats",
+      "hash": "a1c95c765d3a2aed46cf7a302126d77603fe81a2182573a411983dfdb16c20ae",
+      "checksum": "a1c95c765d3a2aed46cf7a302126d77603fe81a2182573a411983dfdb16c20ae",
+      "name": "#wacli: Send Text",
       "title": {
-        "en": "List iMessage conversations",
-        "de": "iMessage-Unterhaltungen auflisten"
+        "en": "Send WhatsApp Message",
+        "de": "WhatsApp-Nachricht senden"
       },
       "description": {
-        "en": "List iMessage conversations with contact identifiers.",
-        "de": "iMessage-Unterhaltungen mit Kontakt-IDs auflisten."
+        "en": "Send a text message via WhatsApp using wacli.",
+        "de": "Eine Textnachricht über WhatsApp mit wacli senden."
       },
       "preview": null,
       "creator": "github:JoAiHQ/warps",
@@ -31,234 +31,55 @@
       "primaryAddress": null,
       "primaryFunc": null,
       "brand": {
-        "hash": "b80d846860f772d9b3ba188d844366f97951940bf9c1887c61b5c545b7606045",
-        "slug": "apple",
-        "active": false,
+        "hash": "3486297172f1a1aa971c7a0950ab73547343f09ebe8aa2b9f0aef400802b62a3",
+        "slug": "wacli",
+        "active": true,
         "protocol": "brand:0.2.0",
-        "name": "Apple",
+        "name": "#wacli",
         "description": {
-          "en": "Control native Apple apps on macOS.",
-          "de": "Native Apple-Apps auf macOS steuern."
+          "en": "Send WhatsApp messages via wacli CLI. Private/hacky tool for outreach automation."
         },
         "logo": {
-          "light": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/apple-black.svg",
-          "dark": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/apple-white.svg"
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/whatsapp.png"
+        },
+        "urls": {
+          "web": "https://whatsapp.com"
         },
         "colors": {
-          "primary": "#000000",
-          "secondary": "#FFFFFF"
+          "primary": "#25D366"
         }
       },
       "warp": {
         "protocol": "warp:3.0.0",
-        "name": "Apple: List iMessage Chats",
+        "name": "#wacli: Send Text",
         "title": {
-          "en": "List iMessage conversations",
-          "de": "iMessage-Unterhaltungen auflisten"
+          "en": "Send WhatsApp Message",
+          "de": "WhatsApp-Nachricht senden"
         },
         "description": {
-          "en": "List iMessage conversations with contact identifiers.",
-          "de": "iMessage-Unterhaltungen mit Kontakt-IDs auflisten."
+          "en": "Send a text message via WhatsApp using wacli.",
+          "de": "Eine Textnachricht über WhatsApp mit wacli senden."
         },
         "actions": [
           {
             "type": "prompt",
             "label": {
-              "en": "List Chats",
-              "de": "Chats auflisten"
+              "en": "Send",
+              "de": "Senden"
             },
-            "prompt": {
-              "macos": "/osascript -e 'tell application \"Messages\"\nset chatList to every chat\nset output to \"\"\nset chatCount to 0\nrepeat with c in chatList\nif chatCount ≥ {{LIMIT}} then exit repeat\ntry\nset chatId to id of c\nset ps to participants of c\nset contactName to \"\"\nset contactHandle to \"\"\nif (count of ps) > 0 then\nset contactName to name of item 1 of ps\nset contactHandle to handle of item 1 of ps\nend if\nset output to output & contactHandle & \" | \" & contactName & linefeed\nset chatCount to chatCount + 1\nend try\nend repeat\nreturn output\nend tell'"
-            },
+            "prompt": "/wacli send text --to \"{{PHONE}}\" --message \"{{MESSAGE}}\"",
             "inputs": [
               {
-                "name": "Limit",
-                "as": "LIMIT",
+                "name": "Phone",
+                "as": "PHONE",
                 "description": {
-                  "en": "Number of conversations to list",
-                  "de": "Anzahl der aufzulistenden Unterhaltungen"
+                  "en": "Recipient phone number with country code (e.g. +43660...)",
+                  "de": "Telefonnummer mit Ländervorwahl (z.B. +43660...)"
                 },
-                "bot": "How many recent conversations to list. Default to 15 if the user doesn't specify.",
                 "type": "string",
                 "source": "field",
                 "required": true,
-                "default": "15"
-              }
-            ]
-          }
-        ]
-      }
-    },
-    {
-      "key": "none:apple-imessage-read",
-      "identifier": "@apple-imessage-read",
-      "alias": "apple-imessage-read",
-      "chain": "none",
-      "hash": "f97c322aef7d7507aa1eaa21d1820a97698d9c5de935cc7b3a98542325452fa4",
-      "checksum": "f97c322aef7d7507aa1eaa21d1820a97698d9c5de935cc7b3a98542325452fa4",
-      "name": "Apple: Read iMessages",
-      "title": {
-        "en": "Read recent iMessages",
-        "de": "Letzte iMessages lesen"
-      },
-      "description": {
-        "en": "Read the most recent messages from a specific iMessage conversation.",
-        "de": "Die neuesten Nachrichten einer bestimmten iMessage-Unterhaltung lesen."
-      },
-      "preview": null,
-      "creator": "github:JoAiHQ/warps",
-      "privileges": [],
-      "listed": true,
-      "primaryAddress": null,
-      "primaryFunc": null,
-      "brand": {
-        "hash": "b80d846860f772d9b3ba188d844366f97951940bf9c1887c61b5c545b7606045",
-        "slug": "apple",
-        "active": false,
-        "protocol": "brand:0.2.0",
-        "name": "Apple",
-        "description": {
-          "en": "Control native Apple apps on macOS.",
-          "de": "Native Apple-Apps auf macOS steuern."
-        },
-        "logo": {
-          "light": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/apple-black.svg",
-          "dark": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/apple-white.svg"
-        },
-        "colors": {
-          "primary": "#000000",
-          "secondary": "#FFFFFF"
-        }
-      },
-      "warp": {
-        "protocol": "warp:3.0.0",
-        "name": "Apple: Read iMessages",
-        "title": {
-          "en": "Read recent iMessages",
-          "de": "Letzte iMessages lesen"
-        },
-        "description": {
-          "en": "Read the most recent messages from a specific iMessage conversation.",
-          "de": "Die neuesten Nachrichten einer bestimmten iMessage-Unterhaltung lesen."
-        },
-        "actions": [
-          {
-            "type": "prompt",
-            "label": {
-              "en": "Read Messages",
-              "de": "Nachrichten lesen"
-            },
-            "prompt": {
-              "macos": "/sqlite3 ~/Library/Messages/chat.db \"SELECT m.rowid, datetime(m.date/1000000000 + 978307200, 'unixepoch', 'localtime') as date, CASE WHEN m.is_from_me = 1 THEN 'me' ELSE coalesce(h.id, 'unknown') END as sender, m.text FROM message m LEFT JOIN handle h ON m.handle_id = h.rowid JOIN chat_message_join cmj ON m.rowid = cmj.message_id JOIN chat c ON cmj.chat_id = c.rowid WHERE (h.id = '{{CONTACT}}' OR c.chat_identifier = '{{CONTACT}}') AND m.text IS NOT NULL ORDER BY m.date DESC LIMIT {{LIMIT}};\""
-            },
-            "inputs": [
-              {
-                "name": "Contact",
-                "as": "CONTACT",
-                "description": {
-                  "en": "Phone number or Apple ID email of the contact",
-                  "de": "Telefonnummer oder Apple-ID-E-Mail des Kontakts"
-                },
-                "bot": "The contact's phone number (e.g. '+1234567890') or Apple ID email to read messages from.",
-                "type": "string",
-                "source": "field",
-                "required": true
-              },
-              {
-                "name": "Limit",
-                "as": "LIMIT",
-                "description": {
-                  "en": "Number of recent messages to read",
-                  "de": "Anzahl der zu lesenden Nachrichten"
-                },
-                "bot": "How many recent messages to fetch. Default to 20 if the user doesn't specify.",
-                "type": "string",
-                "source": "field",
-                "required": true,
-                "default": "20"
-              }
-            ]
-          }
-        ],
-        "next": {
-          "error": "@apple-open-settings?pane=com.apple.preference.security%3FPrivacy_AllFiles"
-        }
-      }
-    },
-    {
-      "key": "none:apple-imessage-send",
-      "identifier": "@apple-imessage-send",
-      "alias": "apple-imessage-send",
-      "chain": "none",
-      "hash": "617aac6b94507679a5cec64f853c12975227394d0ae2b955c10a4c1e02e0cada",
-      "checksum": "617aac6b94507679a5cec64f853c12975227394d0ae2b955c10a4c1e02e0cada",
-      "name": "Apple: Send iMessage",
-      "title": {
-        "en": "Send an iMessage",
-        "de": "Eine iMessage senden"
-      },
-      "description": {
-        "en": "Send a message to a contact via iMessage.",
-        "de": "Eine Nachricht über iMessage an einen Kontakt senden."
-      },
-      "preview": null,
-      "creator": "github:JoAiHQ/warps",
-      "privileges": [],
-      "listed": true,
-      "primaryAddress": null,
-      "primaryFunc": null,
-      "brand": {
-        "hash": "b80d846860f772d9b3ba188d844366f97951940bf9c1887c61b5c545b7606045",
-        "slug": "apple",
-        "active": false,
-        "protocol": "brand:0.2.0",
-        "name": "Apple",
-        "description": {
-          "en": "Control native Apple apps on macOS.",
-          "de": "Native Apple-Apps auf macOS steuern."
-        },
-        "logo": {
-          "light": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/apple-black.svg",
-          "dark": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/apple-white.svg"
-        },
-        "colors": {
-          "primary": "#000000",
-          "secondary": "#FFFFFF"
-        }
-      },
-      "warp": {
-        "protocol": "warp:3.0.0",
-        "name": "Apple: Send iMessage",
-        "title": {
-          "en": "Send an iMessage",
-          "de": "Eine iMessage senden"
-        },
-        "description": {
-          "en": "Send a message to a contact via iMessage.",
-          "de": "Eine Nachricht über iMessage an einen Kontakt senden."
-        },
-        "actions": [
-          {
-            "type": "prompt",
-            "label": {
-              "en": "Send iMessage",
-              "de": "iMessage senden"
-            },
-            "prompt": {
-              "macos": "/osascript -e 'tell application \"Messages\" to send \"{{MESSAGE}}\" to chat id \"any;-;{{RECIPIENT}}\"'"
-            },
-            "inputs": [
-              {
-                "name": "Recipient",
-                "as": "RECIPIENT",
-                "description": {
-                  "en": "Phone number or Apple ID email of the recipient",
-                  "de": "Telefonnummer oder Apple-ID-E-Mail des Empfängers"
-                },
-                "bot": "The recipient's phone number (e.g. '+1234567890') or Apple ID email address. Use the contact handle from imessage-list if available.",
-                "type": "string",
-                "source": "field",
-                "required": true
+                "modifier": "transform:(value) => value.replace(/^\\+/, '')"
               },
               {
                 "name": "Message",
@@ -267,31 +88,40 @@
                   "en": "The message text to send",
                   "de": "Der zu sendende Nachrichtentext"
                 },
-                "bot": "The message content to send via iMessage. Keep it concise.",
                 "type": "string",
                 "source": "field",
                 "required": true
               }
             ]
           }
-        ]
+        ],
+        "messages": {
+          "success": {
+            "en": "Message sent to {{PHONE}}.",
+            "de": "Nachricht an {{PHONE}} gesendet."
+          },
+          "error": {
+            "en": "Failed to send message to {{PHONE}}.",
+            "de": "Nachricht an {{PHONE}} konnte nicht gesendet werden."
+          }
+        }
       }
     },
     {
-      "key": "none:apple-open-settings",
-      "identifier": "@apple-open-settings",
-      "alias": "apple-open-settings",
+      "key": "none:joai-settings-open",
+      "identifier": "@joai-settings-open",
+      "alias": "joai-settings-open",
       "chain": "none",
-      "hash": "690f674016906b812f3f41f69cb3d7d528fdc68911b984dbfbced8b9bf89bbda",
-      "checksum": "690f674016906b812f3f41f69cb3d7d528fdc68911b984dbfbced8b9bf89bbda",
-      "name": "Apple: Open Settings",
+      "hash": "52ccec450956ed0b973478442366eea7e69f8fa53d33cbf134ff9af1c1308515",
+      "checksum": "52ccec450956ed0b973478442366eea7e69f8fa53d33cbf134ff9af1c1308515",
+      "name": "JoAi: Open Settings",
       "title": {
-        "en": "Open a macOS settings pane",
-        "de": "macOS-Einstellungen öffnen"
+        "en": "Open settings",
+        "de": "Einstellungen öffnen"
       },
       "description": {
-        "en": "Open a specific macOS System Settings pane by identifier.",
-        "de": "Ein bestimmtes macOS-Systemeinstellungen-Fenster öffnen."
+        "en": "Open your agent settings to configure integrations, voice, and more.",
+        "de": "Öffne die Einstellungen, um Integrationen, Stimme und mehr zu konfigurieren."
       },
       "preview": null,
       "creator": "github:JoAiHQ/warps",
@@ -300,61 +130,54 @@
       "primaryAddress": null,
       "primaryFunc": null,
       "brand": {
-        "hash": "b80d846860f772d9b3ba188d844366f97951940bf9c1887c61b5c545b7606045",
-        "slug": "apple",
-        "active": false,
+        "hash": "4098667056683890c8f1aad41581885db272e391b0d6170e7e2b73ee7fbbca2e",
+        "slug": "joai",
+        "active": true,
         "protocol": "brand:0.2.0",
-        "name": "Apple",
+        "name": "JoAi",
         "description": {
-          "en": "Control native Apple apps on macOS.",
-          "de": "Native Apple-Apps auf macOS steuern."
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten."
         },
         "logo": {
-          "light": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/apple-black.svg",
-          "dark": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/apple-white.svg"
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
         },
         "colors": {
-          "primary": "#000000",
-          "secondary": "#FFFFFF"
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
         }
       },
       "warp": {
         "protocol": "warp:3.0.0",
-        "name": "Apple: Open Settings",
+        "name": "JoAi: Open Settings",
         "title": {
-          "en": "Open a macOS settings pane",
-          "de": "macOS-Einstellungen öffnen"
+          "en": "Open settings",
+          "de": "Einstellungen öffnen"
         },
         "description": {
-          "en": "Open a specific macOS System Settings pane by identifier.",
-          "de": "Ein bestimmtes macOS-Systemeinstellungen-Fenster öffnen."
+          "en": "Open your agent settings to configure integrations, voice, and more.",
+          "de": "Öffne die Einstellungen, um Integrationen, Stimme und mehr zu konfigurieren."
         },
+        "bot": "Use this when the user wants to open or navigate to the settings page.",
         "actions": [
           {
-            "type": "prompt",
+            "type": "collect",
             "label": {
-              "en": "Open Settings",
+              "en": "Open settings",
               "de": "Einstellungen öffnen"
             },
-            "prompt": {
-              "macos": "/open \"x-apple.systempreferences:{{PANE}}\""
-            },
-            "inputs": [
-              {
-                "name": "Settings Pane",
-                "as": "PANE",
-                "description": {
-                  "en": "The settings pane identifier to open",
-                  "de": "Die zu öffnende Einstellungsseite"
-                },
-                "bot": "The macOS System Settings pane identifier. Common values: 'com.apple.preference.security?Privacy_AllFiles' (Full Disk Access), 'com.apple.preference.security?Privacy_Automation' (Automation), 'com.apple.preference.security?Privacy_Accessibility' (Accessibility), 'com.apple.preference.security' (Privacy & Security main).",
-                "type": "string",
-                "source": "field",
-                "required": true
-              }
-            ]
+            "inputs": []
           }
-        ]
+        ],
+        "messages": {
+          "success": {
+            "en": "Opening your settings now...",
+            "de": "Einstellungen werden jetzt geöffnet..."
+          }
+        }
       }
     }
   ],
