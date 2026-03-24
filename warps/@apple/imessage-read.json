@@ -1,0 +1,54 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Apple: Read iMessages",
+  "title": {
+    "en": "Read recent iMessages",
+    "de": "Letzte iMessages lesen"
+  },
+  "description": {
+    "en": "Read the most recent messages from a specific iMessage conversation.",
+    "de": "Die neuesten Nachrichten einer bestimmten iMessage-Unterhaltung lesen."
+  },
+  "actions": [
+    {
+      "type": "prompt",
+      "label": {
+        "en": "Read Messages",
+        "de": "Nachrichten lesen"
+      },
+      "prompt": {
+        "macos": "/sqlite3 ~/Library/Messages/chat.db \"SELECT m.rowid, datetime(m.date/1000000000 + 978307200, 'unixepoch', 'localtime') as date, CASE WHEN m.is_from_me = 1 THEN 'me' ELSE coalesce(h.id, 'unknown') END as sender, m.text FROM message m LEFT JOIN handle h ON m.handle_id = h.rowid JOIN chat_message_join cmj ON m.rowid = cmj.message_id JOIN chat c ON cmj.chat_id = c.rowid WHERE (h.id = '{{CONTACT}}' OR c.chat_identifier = '{{CONTACT}}') AND m.text IS NOT NULL ORDER BY m.date DESC LIMIT {{LIMIT}};\""
+      },
+      "inputs": [
+        {
+          "name": "Contact",
+          "as": "CONTACT",
+          "description": {
+            "en": "Phone number or Apple ID email of the contact",
+            "de": "Telefonnummer oder Apple-ID-E-Mail des Kontakts"
+          },
+          "bot": "The contact's phone number (e.g. '+1234567890') or Apple ID email to read messages from.",
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Limit",
+          "as": "LIMIT",
+          "description": {
+            "en": "Number of recent messages to read",
+            "de": "Anzahl der zu lesenden Nachrichten"
+          },
+          "bot": "How many recent messages to fetch. Default to 20 if the user doesn't specify.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "default": "20"
+        }
+      ]
+    }
+  ],
+  "next": {
+    "error": "@apple-open-settings?pane=com.apple.preference.security%3FPrivacy_AllFiles"
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Apple: List iMessage Chats",
+  "title": {
+    "en": "List iMessage conversations",
+    "de": "iMessage-Unterhaltungen auflisten"
+  },
+  "description": {
+    "en": "List iMessage conversations with contact identifiers.",
+    "de": "iMessage-Unterhaltungen mit Kontakt-IDs auflisten."
+  },
+  "actions": [
+    {
+      "type": "prompt",
+      "label": {
+        "en": "List Chats",
+        "de": "Chats auflisten"
+      },
+      "prompt": {
+        "macos": "/osascript -e 'tell application \"Messages\"\nset chatList to every chat\nset output to \"\"\nset chatCount to 0\nrepeat with c in chatList\nif chatCount ≥ {{LIMIT}} then exit repeat\ntry\nset chatId to id of c\nset ps to participants of c\nset contactName to \"\"\nset contactHandle to \"\"\nif (count of ps) > 0 then\nset contactName to name of item 1 of ps\nset contactHandle to handle of item 1 of ps\nend if\nset output to output & contactHandle & \" | \" & contactName & linefeed\nset chatCount to chatCount + 1\nend try\nend repeat\nreturn output\nend tell'"
+      },
+      "inputs": [
+        {
+          "name": "Limit",
+          "as": "LIMIT",
+          "description": {
+            "en": "Number of conversations to list",
+            "de": "Anzahl der aufzulistenden Unterhaltungen"
+          },
+          "bot": "How many recent conversations to list. Default to 15 if the user doesn't specify.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "default": "15"
+        }
+      ]
+    }
+  ]
+}
