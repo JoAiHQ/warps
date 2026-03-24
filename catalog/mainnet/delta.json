@@ -4,23 +4,25 @@
   "repo": "JoAiHQ/warps",
   "branch": "main",
   "network": "mainnet",
-  "commitSha": "b975c14e1e7b4978bbe78f1ea48cd25ae650609f",
-  "committedAt": "2026-03-22T20:18:36.153Z",
-  "generatedAt": "2026-03-22T20:18:38.566Z",
+  "commitSha": "13183e0bc31d90580f1e70580682b13ef0a1f972",
+  "committedAt": "2026-03-24T21:57:56.510Z",
+  "generatedAt": "2026-03-24T21:57:57.649Z",
   "upserts": [
     {
-      "key": "none:anthropic-add-followup",
-      "identifier": "@anthropic-add-followup",
-      "alias": "anthropic-add-followup",
+      "key": "none:#wacli-send-text",
+      "identifier": "@#wacli-send-text",
+      "alias": "#wacli-send-text",
       "chain": "none",
-      "hash": "0bc815044160596d2dcfdb663c98dd8260ade13f346a651a5d887a813247c9b3",
-      "checksum": "0bc815044160596d2dcfdb663c98dd8260ade13f346a651a5d887a813247c9b3",
-      "name": "Anthropic: Add Followup",
+      "hash": "a1c95c765d3a2aed46cf7a302126d77603fe81a2182573a411983dfdb16c20ae",
+      "checksum": "a1c95c765d3a2aed46cf7a302126d77603fe81a2182573a411983dfdb16c20ae",
+      "name": "#wacli: Send Text",
       "title": {
-        "en": "Add followup"
+        "en": "Send WhatsApp Message",
+        "de": "WhatsApp-Nachricht senden"
       },
       "description": {
-        "en": "Launch a followup Anthropic run using Message Batches."
+        "en": "Send a text message via WhatsApp using wacli.",
+        "de": "Eine Textnachricht über WhatsApp mit wacli senden."
       },
       "preview": null,
       "creator": "github:JoAiHQ/warps",
@@ -29,139 +31,97 @@
       "primaryAddress": null,
       "primaryFunc": null,
       "brand": {
-        "hash": "55003c48051cb679286eca62ad6b33489fc8ca2cd171ef01c2db09f3d134fb1f",
-        "slug": "anthropic",
+        "hash": "3486297172f1a1aa971c7a0950ab73547343f09ebe8aa2b9f0aef400802b62a3",
+        "slug": "wacli",
         "active": true,
         "protocol": "brand:0.2.0",
-        "name": "Anthropic",
+        "name": "#wacli",
         "description": {
-          "en": "Launch and manage generic task runs through Anthropic Message Batches.",
-          "de": "Starte und verwalte generische Task-Runs über Anthropic Message Batches."
+          "en": "Send WhatsApp messages via wacli CLI. Private/hacky tool for outreach automation."
         },
         "logo": {
-          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/anthropic.svg"
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/whatsapp.png"
         },
         "urls": {
-          "web": "https://www.anthropic.com"
+          "web": "https://whatsapp.com"
         },
         "colors": {
-          "primary": "#191919"
+          "primary": "#25D366"
         }
       },
       "warp": {
         "protocol": "warp:3.0.0",
-        "name": "Anthropic: Add Followup",
+        "name": "#wacli: Send Text",
         "title": {
-          "en": "Add followup"
+          "en": "Send WhatsApp Message",
+          "de": "WhatsApp-Nachricht senden"
         },
         "description": {
-          "en": "Launch a followup Anthropic run using Message Batches."
-        },
-        "vars": {
-          "API_KEY": "env:ANTHROPIC_API_KEY|Anthropic API key"
+          "en": "Send a text message via WhatsApp using wacli.",
+          "de": "Eine Textnachricht über WhatsApp mit wacli senden."
         },
         "actions": [
           {
-            "type": "collect",
+            "type": "prompt",
             "label": {
-              "en": "Add Followup"
+              "en": "Send",
+              "de": "Senden"
             },
-            "destination": {
-              "url": "https://api.anthropic.com/v1/messages/batches",
-              "method": "POST",
-              "headers": {
-                "x-api-key": "{{API_KEY}}",
-                "anthropic-version": "2023-06-01",
-                "Content-Type": "application/json"
-              }
-            },
+            "prompt": "/wacli send text --to \"{{PHONE}}\" --message \"{{MESSAGE}}\"",
             "inputs": [
               {
-                "name": "Run ID",
-                "as": "RUN_ID",
+                "name": "Phone",
+                "as": "PHONE",
                 "description": {
-                  "en": "Previous run ID for traceability."
+                  "en": "Recipient phone number with country code (e.g. +43660...)",
+                  "de": "Telefonnummer mit Ländervorwahl (z.B. +43660...)"
                 },
                 "type": "string",
                 "source": "field",
                 "required": true,
-                "position": "payload:requests.0.custom_id"
+                "modifier": "transform:(value) => value.replace(/^\\+/, '')"
               },
               {
-                "name": "Followup",
-                "as": "FOLLOWUP",
+                "name": "Message",
+                "as": "MESSAGE",
                 "description": {
-                  "en": "Followup instruction."
+                  "en": "The message text to send",
+                  "de": "Der zu sendende Nachrichtentext"
                 },
                 "type": "string",
                 "source": "field",
-                "required": true,
-                "position": "payload:requests.0.params.messages.0.content"
-              },
-              {
-                "name": "Model",
-                "as": "MODEL",
-                "description": {
-                  "en": "Anthropic model to use."
-                },
-                "type": "string",
-                "source": "field",
-                "required": false,
-                "default": "claude-sonnet-4-5",
-                "position": "payload:requests.0.params.model"
-              },
-              {
-                "name": "Max Tokens",
-                "as": "MAX_TOKENS",
-                "description": {
-                  "en": "Maximum output tokens."
-                },
-                "type": "number",
-                "source": "field",
-                "required": false,
-                "default": 2048,
-                "position": "payload:requests.0.params.max_tokens"
-              },
-              {
-                "name": "Role",
-                "as": "ROLE",
-                "description": {
-                  "en": "Message role."
-                },
-                "type": "string",
-                "source": "field",
-                "required": false,
-                "default": "user",
-                "position": "payload:requests.0.params.messages.0.role"
+                "required": true
               }
             ]
           }
         ],
-        "output": {
-          "RUN_ID": "out.id",
-          "RUN_STATUS": "out.processing_status",
-          "SUMMARY": "transform:() => `Followup batch ${out.id} is ${out.processing_status}`"
-        },
         "messages": {
           "success": {
-            "en": "Anthropic followup run {{RUN_ID}} created with status {{RUN_STATUS}}."
+            "en": "Message sent to {{PHONE}}.",
+            "de": "Nachricht an {{PHONE}} gesendet."
+          },
+          "error": {
+            "en": "Failed to send message to {{PHONE}}.",
+            "de": "Nachricht an {{PHONE}} konnte nicht gesendet werden."
           }
         }
       }
     },
     {
-      "key": "none:anthropic-cancel-task",
-      "identifier": "@anthropic-cancel-task",
-      "alias": "anthropic-cancel-task",
+      "key": "none:joai-settings-open",
+      "identifier": "@joai-settings-open",
+      "alias": "joai-settings-open",
       "chain": "none",
-      "hash": "34c972bbe0f5a820974e7281d9e15c1af8d5704e81090b9e98a8c9a88cc44a39",
-      "checksum": "34c972bbe0f5a820974e7281d9e15c1af8d5704e81090b9e98a8c9a88cc44a39",
-      "name": "Anthropic: Cancel Task",
+      "hash": "52ccec450956ed0b973478442366eea7e69f8fa53d33cbf134ff9af1c1308515",
+      "checksum": "52ccec450956ed0b973478442366eea7e69f8fa53d33cbf134ff9af1c1308515",
+      "name": "JoAi: Open Settings",
       "title": {
-        "en": "Cancel task"
+        "en": "Open settings",
+        "de": "Einstellungen öffnen"
       },
       "description": {
-        "en": "Cancel an Anthropic Message Batch run."
+        "en": "Open your agent settings to configure integrations, voice, and more.",
+        "de": "Öffne die Einstellungen, um Integrationen, Stimme und mehr zu konfigurieren."
       },
       "preview": null,
       "creator": "github:JoAiHQ/warps",
@@ -170,92 +130,71 @@
       "primaryAddress": null,
       "primaryFunc": null,
       "brand": {
-        "hash": "55003c48051cb679286eca62ad6b33489fc8ca2cd171ef01c2db09f3d134fb1f",
-        "slug": "anthropic",
+        "hash": "4098667056683890c8f1aad41581885db272e391b0d6170e7e2b73ee7fbbca2e",
+        "slug": "joai",
         "active": true,
         "protocol": "brand:0.2.0",
-        "name": "Anthropic",
+        "name": "JoAi",
         "description": {
-          "en": "Launch and manage generic task runs through Anthropic Message Batches.",
-          "de": "Starte und verwalte generische Task-Runs über Anthropic Message Batches."
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten."
         },
         "logo": {
-          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/anthropic.svg"
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
         },
         "urls": {
-          "web": "https://www.anthropic.com"
+          "web": "https://joai.ai"
         },
         "colors": {
-          "primary": "#191919"
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
         }
       },
       "warp": {
         "protocol": "warp:3.0.0",
-        "name": "Anthropic: Cancel Task",
+        "name": "JoAi: Open Settings",
         "title": {
-          "en": "Cancel task"
+          "en": "Open settings",
+          "de": "Einstellungen öffnen"
         },
         "description": {
-          "en": "Cancel an Anthropic Message Batch run."
+          "en": "Open your agent settings to configure integrations, voice, and more.",
+          "de": "Öffne die Einstellungen, um Integrationen, Stimme und mehr zu konfigurieren."
         },
-        "vars": {
-          "API_KEY": "env:ANTHROPIC_API_KEY|Anthropic API key"
-        },
+        "bot": "Use this when the user wants to open or navigate to the settings page.",
         "actions": [
           {
             "type": "collect",
             "label": {
-              "en": "Cancel Task"
+              "en": "Open settings",
+              "de": "Einstellungen öffnen"
             },
-            "destination": {
-              "url": "https://api.anthropic.com/v1/messages/batches/{{RUN_ID}}/cancel",
-              "method": "POST",
-              "headers": {
-                "x-api-key": "{{API_KEY}}",
-                "anthropic-version": "2023-06-01",
-                "Content-Type": "application/json"
-              }
-            },
-            "inputs": [
-              {
-                "name": "Run ID",
-                "as": "RUN_ID",
-                "description": {
-                  "en": "Message batch ID to cancel."
-                },
-                "type": "string",
-                "position": "path:RUN_ID",
-                "source": "field",
-                "required": true
-              }
-            ]
+            "inputs": []
           }
         ],
-        "output": {
-          "RUN_ID": "out.id",
-          "RUN_STATUS": "out.processing_status",
-          "SUMMARY": "transform:() => `Cancellation requested for batch ${out.id}`"
-        },
         "messages": {
           "success": {
-            "en": "Anthropic run {{RUN_ID}} cancellation requested. Status: {{RUN_STATUS}}."
+            "en": "Opening your settings now...",
+            "de": "Einstellungen werden jetzt geöffnet..."
           }
         }
       }
     },
     {
-      "key": "none:anthropic-code-add-followup",
-      "identifier": "@anthropic-code-add-followup",
-      "alias": "anthropic-code-add-followup",
+      "key": "none:joai-train-from-url",
+      "identifier": "@joai-train-from-url",
+      "alias": "joai-train-from-url",
       "chain": "none",
-      "hash": "6ab0e3bf7c89ed3976c84df0370b27994a5ef5984c59b3b90615efd1555ce4ba",
-      "checksum": "6ab0e3bf7c89ed3976c84df0370b27994a5ef5984c59b3b90615efd1555ce4ba",
-      "name": "Anthropic (Claude Code): Add Follow-up",
+      "hash": "ca7e13a350927a936d0a30d331ec62ea8c5e1cfb7e4a764601826d85601b2962",
+      "checksum": "ca7e13a350927a936d0a30d331ec62ea8c5e1cfb7e4a764601826d85601b2962",
+      "name": "JoAi: Train from URL",
       "title": {
-        "en": "Add follow-up (Claude Code)"
+        "en": "Train agent from URL",
+        "de": "Agenten aus URL trainieren"
       },
       "description": {
-        "en": "Send a follow-up instruction through Claude Code print mode."
+        "en": "Crawl a URL and train your agent with the content as documents.",
+        "de": "Eine URL crawlen und deinen Agenten mit dem Inhalt als Dokumente trainieren."
       },
       "preview": null,
       "creator": "github:JoAiHQ/warps",
@@ -264,1463 +203,78 @@
       "primaryAddress": null,
       "primaryFunc": null,
       "brand": {
-        "hash": "55003c48051cb679286eca62ad6b33489fc8ca2cd171ef01c2db09f3d134fb1f",
-        "slug": "anthropic",
+        "hash": "4098667056683890c8f1aad41581885db272e391b0d6170e7e2b73ee7fbbca2e",
+        "slug": "joai",
         "active": true,
         "protocol": "brand:0.2.0",
-        "name": "Anthropic",
+        "name": "JoAi",
         "description": {
-          "en": "Launch and manage generic task runs through Anthropic Message Batches.",
-          "de": "Starte und verwalte generische Task-Runs über Anthropic Message Batches."
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten."
         },
         "logo": {
-          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/anthropic.svg"
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
         },
         "urls": {
-          "web": "https://www.anthropic.com"
+          "web": "https://joai.ai"
         },
         "colors": {
-          "primary": "#191919"
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
         }
       },
       "warp": {
         "protocol": "warp:3.0.0",
-        "name": "Anthropic (Claude Code): Add Follow-up",
+        "name": "JoAi: Train from URL",
         "title": {
-          "en": "Add follow-up (Claude Code)"
+          "en": "Train agent from URL",
+          "de": "Agenten aus URL trainieren"
         },
         "description": {
-          "en": "Send a follow-up instruction through Claude Code print mode."
+          "en": "Crawl a URL and train your agent with the content as documents.",
+          "de": "Eine URL crawlen und deinen Agenten mit dem Inhalt als Dokumente trainieren."
         },
-        "actions": [
-          {
-            "type": "prompt",
-            "label": {
-              "en": "Add Follow-up"
-            },
-            "prompt": "/claude --print --output-format json \"$(cat <<'JOAI_PROMPT'\nFor run ID {{RUN_ID}}, continue with this follow-up:\n{{FOLLOWUP}}\nJOAI_PROMPT\n)\"",
-            "inputs": [
-              {
-                "name": "Run ID",
-                "as": "RUN_ID",
-                "description": {
-                  "en": "Run identifier to continue."
-                },
-                "type": "string",
-                "source": "field",
-                "required": true
-              },
-              {
-                "name": "Follow-up",
-                "as": "FOLLOWUP",
-                "description": {
-                  "en": "Additional instruction for Claude Code."
-                },
-                "type": "string",
-                "source": "field",
-                "required": true
-              }
-            ]
-          }
-        ],
-        "output": {
-          "RUN_ID": "in.RUN_ID",
-          "RUN_STATUS": "transform:() => 'submitted'",
-          "SUMMARY": "transform:() => 'Follow-up submitted to Claude Code.'"
-        },
-        "messages": {
-          "success": {
-            "en": "Follow-up submitted for {{RUN_ID}}."
-          }
-        }
-      }
-    },
-    {
-      "key": "none:anthropic-code-cancel-task",
-      "identifier": "@anthropic-code-cancel-task",
-      "alias": "anthropic-code-cancel-task",
-      "chain": "none",
-      "hash": "d89fc1b14964a2b75cec3e9e7781bef1aa376cb10d1109b07dac8db02f9684f4",
-      "checksum": "d89fc1b14964a2b75cec3e9e7781bef1aa376cb10d1109b07dac8db02f9684f4",
-      "name": "Anthropic (Claude Code): Cancel Task",
-      "title": {
-        "en": "Cancel task (Claude Code)"
-      },
-      "description": {
-        "en": "Request cancellation through Claude Code print mode."
-      },
-      "preview": null,
-      "creator": "github:JoAiHQ/warps",
-      "privileges": [],
-      "listed": true,
-      "primaryAddress": null,
-      "primaryFunc": null,
-      "brand": {
-        "hash": "55003c48051cb679286eca62ad6b33489fc8ca2cd171ef01c2db09f3d134fb1f",
-        "slug": "anthropic",
-        "active": true,
-        "protocol": "brand:0.2.0",
-        "name": "Anthropic",
-        "description": {
-          "en": "Launch and manage generic task runs through Anthropic Message Batches.",
-          "de": "Starte und verwalte generische Task-Runs über Anthropic Message Batches."
-        },
-        "logo": {
-          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/anthropic.svg"
-        },
-        "urls": {
-          "web": "https://www.anthropic.com"
-        },
-        "colors": {
-          "primary": "#191919"
-        }
-      },
-      "warp": {
-        "protocol": "warp:3.0.0",
-        "name": "Anthropic (Claude Code): Cancel Task",
-        "title": {
-          "en": "Cancel task (Claude Code)"
-        },
-        "description": {
-          "en": "Request cancellation through Claude Code print mode."
-        },
-        "actions": [
-          {
-            "type": "prompt",
-            "label": {
-              "en": "Cancel Task"
-            },
-            "prompt": "/claude --print --output-format json \"$(cat <<'JOAI_PROMPT'\nFor run ID {{RUN_ID}}, stop work now and return only: cancel_requested.\nJOAI_PROMPT\n)\"",
-            "inputs": [
-              {
-                "name": "Run ID",
-                "as": "RUN_ID",
-                "description": {
-                  "en": "Run identifier to cancel."
-                },
-                "type": "string",
-                "source": "field",
-                "required": true
-              }
-            ]
-          }
-        ],
-        "output": {
-          "RUN_ID": "in.RUN_ID",
-          "RUN_STATUS": "transform:() => 'cancel_requested'",
-          "SUMMARY": "transform:() => 'Cancellation requested via Claude Code.'"
-        },
-        "messages": {
-          "success": {
-            "en": "Cancellation requested for {{RUN_ID}}."
-          }
-        }
-      }
-    },
-    {
-      "key": "none:anthropic-code-get-task-status",
-      "identifier": "@anthropic-code-get-task-status",
-      "alias": "anthropic-code-get-task-status",
-      "chain": "none",
-      "hash": "fd579f48f2fa8e55dfecb43b64a56f9fa34b351f37d6ba70550b8f9fac5e14ff",
-      "checksum": "fd579f48f2fa8e55dfecb43b64a56f9fa34b351f37d6ba70550b8f9fac5e14ff",
-      "name": "Anthropic (Claude Code): Get Task Status",
-      "title": {
-        "en": "Get task status (Claude Code)"
-      },
-      "description": {
-        "en": "Check task status by asking Claude Code for a one-line status update."
-      },
-      "preview": null,
-      "creator": "github:JoAiHQ/warps",
-      "privileges": [],
-      "listed": true,
-      "primaryAddress": null,
-      "primaryFunc": null,
-      "brand": {
-        "hash": "55003c48051cb679286eca62ad6b33489fc8ca2cd171ef01c2db09f3d134fb1f",
-        "slug": "anthropic",
-        "active": true,
-        "protocol": "brand:0.2.0",
-        "name": "Anthropic",
-        "description": {
-          "en": "Launch and manage generic task runs through Anthropic Message Batches.",
-          "de": "Starte und verwalte generische Task-Runs über Anthropic Message Batches."
-        },
-        "logo": {
-          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/anthropic.svg"
-        },
-        "urls": {
-          "web": "https://www.anthropic.com"
-        },
-        "colors": {
-          "primary": "#191919"
-        }
-      },
-      "warp": {
-        "protocol": "warp:3.0.0",
-        "name": "Anthropic (Claude Code): Get Task Status",
-        "title": {
-          "en": "Get task status (Claude Code)"
-        },
-        "description": {
-          "en": "Check task status by asking Claude Code for a one-line status update."
-        },
-        "actions": [
-          {
-            "type": "prompt",
-            "label": {
-              "en": "Get Status"
-            },
-            "prompt": "/claude --print --output-format json \"$(cat <<'JOAI_PROMPT'\nFor run ID {{RUN_ID}}, summarize current status in one line using one of: running, blocked, completed.\nJOAI_PROMPT\n)\"",
-            "inputs": [
-              {
-                "name": "Run ID",
-                "as": "RUN_ID",
-                "description": {
-                  "en": "Run identifier returned by launch-task."
-                },
-                "type": "string",
-                "source": "field",
-                "required": true
-              }
-            ]
-          }
-        ],
-        "output": {
-          "RUN_ID": "in.RUN_ID",
-          "RUN_STATUS": "transform:() => 'status_requested'",
-          "SUMMARY": "transform:() => 'Status requested from Claude Code.'"
-        },
-        "messages": {
-          "success": {
-            "en": "Claude Code status requested for {{RUN_ID}}."
-          }
-        }
-      }
-    },
-    {
-      "key": "none:anthropic-code-launch-task",
-      "identifier": "@anthropic-code-launch-task",
-      "alias": "anthropic-code-launch-task",
-      "chain": "none",
-      "hash": "0868a01290d3bedf96cd67fb4c1c585e6557f5490db2a7eb8b3fdc669dbf7746",
-      "checksum": "0868a01290d3bedf96cd67fb4c1c585e6557f5490db2a7eb8b3fdc669dbf7746",
-      "name": "Anthropic (Claude Code): Launch Task",
-      "title": {
-        "en": "Launch task (Claude Code)"
-      },
-      "description": {
-        "en": "Launch a task through Claude Code non-interactive print mode."
-      },
-      "preview": null,
-      "creator": "github:JoAiHQ/warps",
-      "privileges": [],
-      "listed": true,
-      "primaryAddress": null,
-      "primaryFunc": null,
-      "brand": {
-        "hash": "55003c48051cb679286eca62ad6b33489fc8ca2cd171ef01c2db09f3d134fb1f",
-        "slug": "anthropic",
-        "active": true,
-        "protocol": "brand:0.2.0",
-        "name": "Anthropic",
-        "description": {
-          "en": "Launch and manage generic task runs through Anthropic Message Batches.",
-          "de": "Starte und verwalte generische Task-Runs über Anthropic Message Batches."
-        },
-        "logo": {
-          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/anthropic.svg"
-        },
-        "urls": {
-          "web": "https://www.anthropic.com"
-        },
-        "colors": {
-          "primary": "#191919"
-        }
-      },
-      "warp": {
-        "protocol": "warp:3.0.0",
-        "name": "Anthropic (Claude Code): Launch Task",
-        "title": {
-          "en": "Launch task (Claude Code)"
-        },
-        "description": {
-          "en": "Launch a task through Claude Code non-interactive print mode."
-        },
-        "actions": [
-          {
-            "type": "prompt",
-            "label": {
-              "en": "Launch Task"
-            },
-            "prompt": "/claude --print --output-format json \"$(cat <<'JOAI_PROMPT'\nRun ID {{RUN_ID}}.\nExecute this task:\n{{TASK}}\nJOAI_PROMPT\n)\"",
-            "inputs": [
-              {
-                "name": "Run ID",
-                "as": "RUN_ID",
-                "description": {
-                  "en": "Tracking run ID used by JoAi orchestration."
-                },
-                "type": "string",
-                "source": "field",
-                "required": true
-              },
-              {
-                "name": "Task",
-                "as": "TASK",
-                "description": {
-                  "en": "Task instruction to execute with Claude Code CLI."
-                },
-                "type": "string",
-                "source": "field",
-                "required": true
-              }
-            ]
-          }
-        ],
-        "output": {
-          "RUN_ID": "in.RUN_ID",
-          "RUN_STATUS": "transform:() => 'submitted'",
-          "SUMMARY": "transform:() => 'Task submitted to Claude Code print mode.'"
-        },
-        "messages": {
-          "success": {
-            "en": "Claude Code task submitted."
-          }
-        }
-      }
-    },
-    {
-      "key": "none:anthropic-get-task-status",
-      "identifier": "@anthropic-get-task-status",
-      "alias": "anthropic-get-task-status",
-      "chain": "none",
-      "hash": "03a7373af9bb55506c29b3ec475e3f2a271a03eabd9faced01c86d631773466a",
-      "checksum": "03a7373af9bb55506c29b3ec475e3f2a271a03eabd9faced01c86d631773466a",
-      "name": "Anthropic: Get Task Status",
-      "title": {
-        "en": "Get task status"
-      },
-      "description": {
-        "en": "Get status for an Anthropic Message Batch run."
-      },
-      "preview": null,
-      "creator": "github:JoAiHQ/warps",
-      "privileges": [],
-      "listed": true,
-      "primaryAddress": null,
-      "primaryFunc": null,
-      "brand": {
-        "hash": "55003c48051cb679286eca62ad6b33489fc8ca2cd171ef01c2db09f3d134fb1f",
-        "slug": "anthropic",
-        "active": true,
-        "protocol": "brand:0.2.0",
-        "name": "Anthropic",
-        "description": {
-          "en": "Launch and manage generic task runs through Anthropic Message Batches.",
-          "de": "Starte und verwalte generische Task-Runs über Anthropic Message Batches."
-        },
-        "logo": {
-          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/anthropic.svg"
-        },
-        "urls": {
-          "web": "https://www.anthropic.com"
-        },
-        "colors": {
-          "primary": "#191919"
-        }
-      },
-      "warp": {
-        "protocol": "warp:3.0.0",
-        "name": "Anthropic: Get Task Status",
-        "title": {
-          "en": "Get task status"
-        },
-        "description": {
-          "en": "Get status for an Anthropic Message Batch run."
-        },
-        "vars": {
-          "API_KEY": "env:ANTHROPIC_API_KEY|Anthropic API key"
-        },
+        "bot": "Use this when the user wants to train their agent by importing content from a website or URL.",
         "actions": [
           {
             "type": "collect",
             "label": {
-              "en": "Get Status"
-            },
-            "destination": {
-              "url": "https://api.anthropic.com/v1/messages/batches/{{RUN_ID}}",
-              "method": "GET",
-              "headers": {
-                "x-api-key": "{{API_KEY}}",
-                "anthropic-version": "2023-06-01",
-                "Content-Type": "application/json"
-              }
+              "en": "Train from URL",
+              "de": "Aus URL trainieren"
             },
             "inputs": [
               {
-                "name": "Run ID",
-                "as": "RUN_ID",
+                "name": "URL",
+                "as": "url",
                 "description": {
-                  "en": "Message batch ID."
+                  "en": "The URL to crawl and learn from",
+                  "de": "Die URL, die gecrawlt und gelernt werden soll"
                 },
+                "bot": "The full URL of the website or page to crawl for training content.",
                 "type": "string",
-                "position": "path:RUN_ID",
-                "source": "field",
-                "required": true
-              }
-            ]
-          }
-        ],
-        "output": {
-          "RUN_ID": "out.id",
-          "RUN_STATUS": "out.processing_status",
-          "SUMMARY": "transform:() => `Request counts: ${JSON.stringify(out.request_counts || {})}`"
-        },
-        "messages": {
-          "success": {
-            "en": "Anthropic run {{RUN_ID}} is {{RUN_STATUS}}."
-          }
-        }
-      }
-    },
-    {
-      "key": "none:anthropic-joai-plugin-install",
-      "identifier": "@anthropic-joai-plugin-install",
-      "alias": "anthropic-joai-plugin-install",
-      "chain": "none",
-      "hash": "69e13fb034d314c6fca6fac1bd27c66ad7b75b77d5686c0d207b544101cae476",
-      "checksum": "69e13fb034d314c6fca6fac1bd27c66ad7b75b77d5686c0d207b544101cae476",
-      "name": "Anthropic: Install JoAi Plugin",
-      "title": {
-        "en": "Install JoAi plugin for Claude"
-      },
-      "description": {
-        "en": "Connects your Claude to a JoAi agent via MCP."
-      },
-      "preview": null,
-      "creator": "github:JoAiHQ/warps",
-      "privileges": [],
-      "listed": true,
-      "primaryAddress": null,
-      "primaryFunc": null,
-      "brand": {
-        "hash": "55003c48051cb679286eca62ad6b33489fc8ca2cd171ef01c2db09f3d134fb1f",
-        "slug": "anthropic",
-        "active": true,
-        "protocol": "brand:0.2.0",
-        "name": "Anthropic",
-        "description": {
-          "en": "Launch and manage generic task runs through Anthropic Message Batches.",
-          "de": "Starte und verwalte generische Task-Runs über Anthropic Message Batches."
-        },
-        "logo": {
-          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/anthropic.svg"
-        },
-        "urls": {
-          "web": "https://www.anthropic.com"
-        },
-        "colors": {
-          "primary": "#191919"
-        }
-      },
-      "warp": {
-        "protocol": "warp:3.0.0",
-        "name": "Anthropic: Install JoAi Plugin",
-        "title": {
-          "en": "Install JoAi plugin for Claude"
-        },
-        "description": {
-          "en": "Connects your Claude to a JoAi agent via MCP."
-        },
-        "actions": [
-          {
-            "type": "prompt",
-            "label": {
-              "en": "Install"
-            },
-            "prompt": "/claude mcp add -s user --transport http joai https://cortex.joai.ai/mcp/agents/{{JOAI_AGENT_UUID}}"
-          }
-        ]
-      }
-    },
-    {
-      "key": "none:anthropic-launch-task",
-      "identifier": "@anthropic-launch-task",
-      "alias": "anthropic-launch-task",
-      "chain": "none",
-      "hash": "c2e1afa0b3285fcd6a2a44dee6274967a02de38b3d20e8f4ce9a34f436d0c467",
-      "checksum": "c2e1afa0b3285fcd6a2a44dee6274967a02de38b3d20e8f4ce9a34f436d0c467",
-      "name": "Anthropic: Launch Task",
-      "title": {
-        "en": "Launch task"
-      },
-      "description": {
-        "en": "Launch a new task run through Anthropic Message Batches."
-      },
-      "preview": null,
-      "creator": "github:JoAiHQ/warps",
-      "privileges": [],
-      "listed": true,
-      "primaryAddress": null,
-      "primaryFunc": null,
-      "brand": {
-        "hash": "55003c48051cb679286eca62ad6b33489fc8ca2cd171ef01c2db09f3d134fb1f",
-        "slug": "anthropic",
-        "active": true,
-        "protocol": "brand:0.2.0",
-        "name": "Anthropic",
-        "description": {
-          "en": "Launch and manage generic task runs through Anthropic Message Batches.",
-          "de": "Starte und verwalte generische Task-Runs über Anthropic Message Batches."
-        },
-        "logo": {
-          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/anthropic.svg"
-        },
-        "urls": {
-          "web": "https://www.anthropic.com"
-        },
-        "colors": {
-          "primary": "#191919"
-        }
-      },
-      "warp": {
-        "protocol": "warp:3.0.0",
-        "name": "Anthropic: Launch Task",
-        "title": {
-          "en": "Launch task"
-        },
-        "description": {
-          "en": "Launch a new task run through Anthropic Message Batches."
-        },
-        "vars": {
-          "API_KEY": "env:ANTHROPIC_API_KEY|Anthropic API key"
-        },
-        "actions": [
-          {
-            "type": "collect",
-            "label": {
-              "en": "Launch Task"
-            },
-            "destination": {
-              "url": "https://api.anthropic.com/v1/messages/batches",
-              "method": "POST",
-              "headers": {
-                "x-api-key": "{{API_KEY}}",
-                "anthropic-version": "2023-06-01",
-                "Content-Type": "application/json"
-              }
-            },
-            "inputs": [
-              {
-                "name": "Task",
-                "as": "TASK",
-                "description": {
-                  "en": "Task instruction to execute."
-                },
-                "type": "string",
-                "source": "field",
-                "required": true,
-                "position": "payload:requests.0.params.messages.0.content"
-              },
-              {
-                "name": "Model",
-                "as": "MODEL",
-                "description": {
-                  "en": "Anthropic model to use."
-                },
-                "type": "string",
-                "source": "field",
-                "required": false,
-                "default": "claude-sonnet-4-5",
-                "position": "payload:requests.0.params.model"
-              },
-              {
-                "name": "Max Tokens",
-                "as": "MAX_TOKENS",
-                "description": {
-                  "en": "Maximum output tokens."
-                },
-                "type": "number",
-                "source": "field",
-                "required": false,
-                "default": 2048,
-                "position": "payload:requests.0.params.max_tokens"
-              },
-              {
-                "name": "Custom ID",
-                "as": "CUSTOM_ID",
-                "description": {
-                  "en": "Unique custom identifier for this batched request."
-                },
-                "type": "string",
-                "source": "field",
-                "required": true,
-                "position": "payload:requests.0.custom_id"
-              },
-              {
-                "name": "Role",
-                "as": "ROLE",
-                "description": {
-                  "en": "Message role."
-                },
-                "type": "string",
-                "source": "field",
-                "required": false,
-                "default": "user",
-                "position": "payload:requests.0.params.messages.0.role"
-              }
-            ]
-          }
-        ],
-        "output": {
-          "RUN_ID": "out.id",
-          "RUN_STATUS": "out.processing_status",
-          "SUMMARY": "transform:() => `Message batch ${out.id} is ${out.processing_status}`"
-        },
-        "messages": {
-          "success": {
-            "en": "Anthropic run {{RUN_ID}} launched with status {{RUN_STATUS}}."
-          }
-        }
-      }
-    },
-    {
-      "key": "none:openai-add-followup",
-      "identifier": "@openai-add-followup",
-      "alias": "openai-add-followup",
-      "chain": "none",
-      "hash": "41cfd71608f94bb56531e1a113b24c88278de65af96b46e6da9f7fcee6c08404",
-      "checksum": "41cfd71608f94bb56531e1a113b24c88278de65af96b46e6da9f7fcee6c08404",
-      "name": "OpenAI: Add Followup",
-      "title": {
-        "en": "Add followup"
-      },
-      "description": {
-        "en": "Create a followup run continuing from a previous OpenAI run."
-      },
-      "preview": null,
-      "creator": "github:JoAiHQ/warps",
-      "privileges": [],
-      "listed": true,
-      "primaryAddress": null,
-      "primaryFunc": null,
-      "brand": {
-        "hash": "70445bdd059a0d271dc2ce678708044ca3eb172bddde068a0fc2a2ae563272fc",
-        "slug": "openai",
-        "active": true,
-        "protocol": "brand:0.2.0",
-        "name": "OpenAI",
-        "description": {
-          "en": "Launch and manage generic task runs through the OpenAI Responses API.",
-          "de": "Starte und verwalte generische Task-Runs über die OpenAI Responses API."
-        },
-        "logo": {
-          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/openai.png"
-        },
-        "urls": {
-          "web": "https://platform.openai.com"
-        },
-        "colors": {
-          "primary": "#111111"
-        }
-      },
-      "warp": {
-        "protocol": "warp:3.0.0",
-        "name": "OpenAI: Add Followup",
-        "title": {
-          "en": "Add followup"
-        },
-        "description": {
-          "en": "Create a followup run continuing from a previous OpenAI run."
-        },
-        "vars": {
-          "API_KEY": "env:OPENAI_API_KEY|OpenAI API key"
-        },
-        "actions": [
-          {
-            "type": "collect",
-            "label": {
-              "en": "Add Followup"
-            },
-            "destination": {
-              "url": "https://api.openai.com/v1/responses",
-              "method": "POST",
-              "headers": {
-                "Authorization": "Bearer {{API_KEY}}",
-                "Content-Type": "application/json"
-              }
-            },
-            "inputs": [
-              {
-                "name": "Run ID",
-                "as": "RUN_ID",
-                "description": {
-                  "en": "Previous run ID to continue from."
-                },
-                "type": "string",
-                "source": "field",
-                "required": true,
-                "position": "payload:previous_response_id"
-              },
-              {
-                "name": "Followup",
-                "as": "FOLLOWUP",
-                "description": {
-                  "en": "Followup instruction."
-                },
-                "type": "string",
-                "source": "field",
-                "required": true,
-                "position": "payload:input"
-              },
-              {
-                "name": "Model",
-                "as": "MODEL",
-                "description": {
-                  "en": "OpenAI model to use."
-                },
-                "type": "string",
-                "source": "field",
-                "required": false,
-                "default": "gpt-5",
-                "position": "payload:model"
-              },
-              {
-                "name": "Background",
-                "as": "BACKGROUND",
-                "description": {
-                  "en": "Run asynchronously in background mode."
-                },
-                "type": "boolean",
-                "source": "field",
-                "required": false,
-                "default": true,
-                "position": "payload:background"
-              }
-            ]
-          }
-        ],
-        "output": {
-          "RUN_ID": "out.id",
-          "RUN_STATUS": "out.status",
-          "SUMMARY": "out.output_text"
-        },
-        "messages": {
-          "success": {
-            "en": "Created followup run {{RUN_ID}} with status {{RUN_STATUS}}."
-          }
-        }
-      }
-    },
-    {
-      "key": "none:openai-cancel-task",
-      "identifier": "@openai-cancel-task",
-      "alias": "openai-cancel-task",
-      "chain": "none",
-      "hash": "c0671035d1cfe3c9947212c1d3b887d36eab18eff42e7e9a80ee3f569da6a3fa",
-      "checksum": "c0671035d1cfe3c9947212c1d3b887d36eab18eff42e7e9a80ee3f569da6a3fa",
-      "name": "OpenAI: Cancel Task",
-      "title": {
-        "en": "Cancel task"
-      },
-      "description": {
-        "en": "Cancel an in-progress OpenAI run."
-      },
-      "preview": null,
-      "creator": "github:JoAiHQ/warps",
-      "privileges": [],
-      "listed": true,
-      "primaryAddress": null,
-      "primaryFunc": null,
-      "brand": {
-        "hash": "70445bdd059a0d271dc2ce678708044ca3eb172bddde068a0fc2a2ae563272fc",
-        "slug": "openai",
-        "active": true,
-        "protocol": "brand:0.2.0",
-        "name": "OpenAI",
-        "description": {
-          "en": "Launch and manage generic task runs through the OpenAI Responses API.",
-          "de": "Starte und verwalte generische Task-Runs über die OpenAI Responses API."
-        },
-        "logo": {
-          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/openai.png"
-        },
-        "urls": {
-          "web": "https://platform.openai.com"
-        },
-        "colors": {
-          "primary": "#111111"
-        }
-      },
-      "warp": {
-        "protocol": "warp:3.0.0",
-        "name": "OpenAI: Cancel Task",
-        "title": {
-          "en": "Cancel task"
-        },
-        "description": {
-          "en": "Cancel an in-progress OpenAI run."
-        },
-        "vars": {
-          "API_KEY": "env:OPENAI_API_KEY|OpenAI API key"
-        },
-        "actions": [
-          {
-            "type": "collect",
-            "label": {
-              "en": "Cancel Task"
-            },
-            "destination": {
-              "url": "https://api.openai.com/v1/responses/{{RUN_ID}}/cancel",
-              "method": "POST",
-              "headers": {
-                "Authorization": "Bearer {{API_KEY}}",
-                "Content-Type": "application/json"
-              }
-            },
-            "inputs": [
-              {
-                "name": "Run ID",
-                "as": "RUN_ID",
-                "description": {
-                  "en": "Run ID to cancel."
-                },
-                "type": "string",
-                "position": "path:RUN_ID",
-                "source": "field",
-                "required": true
-              }
-            ]
-          }
-        ],
-        "output": {
-          "RUN_ID": "out.id",
-          "RUN_STATUS": "out.status",
-          "SUMMARY": "out.output_text"
-        },
-        "messages": {
-          "success": {
-            "en": "Run {{RUN_ID}} cancellation requested. Current status: {{RUN_STATUS}}."
-          }
-        }
-      }
-    },
-    {
-      "key": "none:openai-codex-add-followup",
-      "identifier": "@openai-codex-add-followup",
-      "alias": "openai-codex-add-followup",
-      "chain": "none",
-      "hash": "0a8463fd6d86ecf7ffe62dc107ae13055bad6b175ec8c879bad112b87bfe39ea",
-      "checksum": "0a8463fd6d86ecf7ffe62dc107ae13055bad6b175ec8c879bad112b87bfe39ea",
-      "name": "OpenAI (Codex CLI): Add Follow-up",
-      "title": {
-        "en": "Add follow-up (Codex)"
-      },
-      "description": {
-        "en": "Send a follow-up instruction through Codex exec mode."
-      },
-      "preview": null,
-      "creator": "github:JoAiHQ/warps",
-      "privileges": [],
-      "listed": true,
-      "primaryAddress": null,
-      "primaryFunc": null,
-      "brand": {
-        "hash": "70445bdd059a0d271dc2ce678708044ca3eb172bddde068a0fc2a2ae563272fc",
-        "slug": "openai",
-        "active": true,
-        "protocol": "brand:0.2.0",
-        "name": "OpenAI",
-        "description": {
-          "en": "Launch and manage generic task runs through the OpenAI Responses API.",
-          "de": "Starte und verwalte generische Task-Runs über die OpenAI Responses API."
-        },
-        "logo": {
-          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/openai.png"
-        },
-        "urls": {
-          "web": "https://platform.openai.com"
-        },
-        "colors": {
-          "primary": "#111111"
-        }
-      },
-      "warp": {
-        "protocol": "warp:3.0.0",
-        "name": "OpenAI (Codex CLI): Add Follow-up",
-        "title": {
-          "en": "Add follow-up (Codex)"
-        },
-        "description": {
-          "en": "Send a follow-up instruction through Codex exec mode."
-        },
-        "actions": [
-          {
-            "type": "prompt",
-            "label": {
-              "en": "Add Follow-up"
-            },
-            "prompt": "/codex exec --json \"$(cat <<'JOAI_PROMPT'\nFor run ID {{RUN_ID}}, continue with this follow-up:\n{{FOLLOWUP}}\nJOAI_PROMPT\n)\"",
-            "inputs": [
-              {
-                "name": "Run ID",
-                "as": "RUN_ID",
-                "description": {
-                  "en": "Run identifier to continue."
-                },
-                "type": "string",
+                "position": "arg:1",
                 "source": "field",
                 "required": true
               },
               {
-                "name": "Follow-up",
-                "as": "FOLLOWUP",
+                "name": "Max Pages",
+                "as": "maxPages",
                 "description": {
-                  "en": "Additional instruction for Codex."
+                  "en": "Maximum number of pages to crawl (1–100)",
+                  "de": "Maximale Anzahl an Seiten zum Crawlen (1–100)"
                 },
-                "type": "string",
+                "bot": "Optional limit on how many pages to crawl. Defaults to no limit.",
+                "type": "integer",
                 "source": "field",
-                "required": true
+                "required": false
               }
             ]
           }
         ],
-        "output": {
-          "RUN_ID": "in.RUN_ID",
-          "RUN_STATUS": "transform:() => 'submitted'",
-          "SUMMARY": "transform:() => 'Follow-up submitted via Codex.'"
-        },
         "messages": {
           "success": {
-            "en": "Follow-up submitted for {{RUN_ID}}."
-          }
-        }
-      }
-    },
-    {
-      "key": "none:openai-codex-cancel-task",
-      "identifier": "@openai-codex-cancel-task",
-      "alias": "openai-codex-cancel-task",
-      "chain": "none",
-      "hash": "2a45c5062fc3cf42753137c9d44a969ba0bdc62f876f5dea31aeed8028acf052",
-      "checksum": "2a45c5062fc3cf42753137c9d44a969ba0bdc62f876f5dea31aeed8028acf052",
-      "name": "OpenAI (Codex CLI): Cancel Task",
-      "title": {
-        "en": "Cancel task (Codex)"
-      },
-      "description": {
-        "en": "Request cancellation through Codex exec mode."
-      },
-      "preview": null,
-      "creator": "github:JoAiHQ/warps",
-      "privileges": [],
-      "listed": true,
-      "primaryAddress": null,
-      "primaryFunc": null,
-      "brand": {
-        "hash": "70445bdd059a0d271dc2ce678708044ca3eb172bddde068a0fc2a2ae563272fc",
-        "slug": "openai",
-        "active": true,
-        "protocol": "brand:0.2.0",
-        "name": "OpenAI",
-        "description": {
-          "en": "Launch and manage generic task runs through the OpenAI Responses API.",
-          "de": "Starte und verwalte generische Task-Runs über die OpenAI Responses API."
-        },
-        "logo": {
-          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/openai.png"
-        },
-        "urls": {
-          "web": "https://platform.openai.com"
-        },
-        "colors": {
-          "primary": "#111111"
-        }
-      },
-      "warp": {
-        "protocol": "warp:3.0.0",
-        "name": "OpenAI (Codex CLI): Cancel Task",
-        "title": {
-          "en": "Cancel task (Codex)"
-        },
-        "description": {
-          "en": "Request cancellation through Codex exec mode."
-        },
-        "actions": [
-          {
-            "type": "prompt",
-            "label": {
-              "en": "Cancel Task"
-            },
-            "prompt": "/codex exec --json \"$(cat <<'JOAI_PROMPT'\nFor run ID {{RUN_ID}}, stop work now and return only: cancel_requested.\nJOAI_PROMPT\n)\"",
-            "inputs": [
-              {
-                "name": "Run ID",
-                "as": "RUN_ID",
-                "description": {
-                  "en": "Run identifier to cancel."
-                },
-                "type": "string",
-                "source": "field",
-                "required": true
-              }
-            ]
-          }
-        ],
-        "output": {
-          "RUN_ID": "in.RUN_ID",
-          "RUN_STATUS": "transform:() => 'cancel_requested'",
-          "SUMMARY": "transform:() => 'Cancellation requested via Codex.'"
-        },
-        "messages": {
-          "success": {
-            "en": "Cancellation requested for {{RUN_ID}}."
-          }
-        }
-      }
-    },
-    {
-      "key": "none:openai-codex-get-task-status",
-      "identifier": "@openai-codex-get-task-status",
-      "alias": "openai-codex-get-task-status",
-      "chain": "none",
-      "hash": "8b64ea4232cc9a5f8264e65f363aa82dca0ab67bc0c35d891564424d4ae69e4f",
-      "checksum": "8b64ea4232cc9a5f8264e65f363aa82dca0ab67bc0c35d891564424d4ae69e4f",
-      "name": "OpenAI (Codex CLI): Get Task Status",
-      "title": {
-        "en": "Get task status (Codex)"
-      },
-      "description": {
-        "en": "Check task status by asking Codex for a one-line status update."
-      },
-      "preview": null,
-      "creator": "github:JoAiHQ/warps",
-      "privileges": [],
-      "listed": true,
-      "primaryAddress": null,
-      "primaryFunc": null,
-      "brand": {
-        "hash": "70445bdd059a0d271dc2ce678708044ca3eb172bddde068a0fc2a2ae563272fc",
-        "slug": "openai",
-        "active": true,
-        "protocol": "brand:0.2.0",
-        "name": "OpenAI",
-        "description": {
-          "en": "Launch and manage generic task runs through the OpenAI Responses API.",
-          "de": "Starte und verwalte generische Task-Runs über die OpenAI Responses API."
-        },
-        "logo": {
-          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/openai.png"
-        },
-        "urls": {
-          "web": "https://platform.openai.com"
-        },
-        "colors": {
-          "primary": "#111111"
-        }
-      },
-      "warp": {
-        "protocol": "warp:3.0.0",
-        "name": "OpenAI (Codex CLI): Get Task Status",
-        "title": {
-          "en": "Get task status (Codex)"
-        },
-        "description": {
-          "en": "Check task status by asking Codex for a one-line status update."
-        },
-        "actions": [
-          {
-            "type": "prompt",
-            "label": {
-              "en": "Get Status"
-            },
-            "prompt": "/codex exec --json \"$(cat <<'JOAI_PROMPT'\nFor run ID {{RUN_ID}}, summarize current status in one line using one of: running, blocked, completed.\nJOAI_PROMPT\n)\"",
-            "inputs": [
-              {
-                "name": "Run ID",
-                "as": "RUN_ID",
-                "description": {
-                  "en": "Run identifier returned by launch-task."
-                },
-                "type": "string",
-                "source": "field",
-                "required": true
-              }
-            ]
-          }
-        ],
-        "output": {
-          "RUN_ID": "in.RUN_ID",
-          "RUN_STATUS": "transform:() => 'status_requested'",
-          "SUMMARY": "transform:() => 'Status requested via Codex.'"
-        },
-        "messages": {
-          "success": {
-            "en": "Codex status requested for {{RUN_ID}}."
-          }
-        }
-      }
-    },
-    {
-      "key": "none:openai-codex-launch-task",
-      "identifier": "@openai-codex-launch-task",
-      "alias": "openai-codex-launch-task",
-      "chain": "none",
-      "hash": "85c56f330719cba0a15bf19a506c1369e38451a7fc399dc238233e82c2021eb0",
-      "checksum": "85c56f330719cba0a15bf19a506c1369e38451a7fc399dc238233e82c2021eb0",
-      "name": "OpenAI (Codex CLI): Launch Task",
-      "title": {
-        "en": "Launch task (Codex)"
-      },
-      "description": {
-        "en": "Launch a task through Codex CLI non-interactive exec mode."
-      },
-      "preview": null,
-      "creator": "github:JoAiHQ/warps",
-      "privileges": [],
-      "listed": true,
-      "primaryAddress": null,
-      "primaryFunc": null,
-      "brand": {
-        "hash": "70445bdd059a0d271dc2ce678708044ca3eb172bddde068a0fc2a2ae563272fc",
-        "slug": "openai",
-        "active": true,
-        "protocol": "brand:0.2.0",
-        "name": "OpenAI",
-        "description": {
-          "en": "Launch and manage generic task runs through the OpenAI Responses API.",
-          "de": "Starte und verwalte generische Task-Runs über die OpenAI Responses API."
-        },
-        "logo": {
-          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/openai.png"
-        },
-        "urls": {
-          "web": "https://platform.openai.com"
-        },
-        "colors": {
-          "primary": "#111111"
-        }
-      },
-      "warp": {
-        "protocol": "warp:3.0.0",
-        "name": "OpenAI (Codex CLI): Launch Task",
-        "title": {
-          "en": "Launch task (Codex)"
-        },
-        "description": {
-          "en": "Launch a task through Codex CLI non-interactive exec mode."
-        },
-        "actions": [
-          {
-            "type": "prompt",
-            "label": {
-              "en": "Launch Task"
-            },
-            "prompt": "/codex exec --json \"$(cat <<'JOAI_PROMPT'\nRun ID {{RUN_ID}}.\nExecute this task:\n{{TASK}}\nJOAI_PROMPT\n)\"",
-            "inputs": [
-              {
-                "name": "Run ID",
-                "as": "RUN_ID",
-                "description": {
-                  "en": "Tracking run ID used by JoAi orchestration."
-                },
-                "type": "string",
-                "source": "field",
-                "required": true
-              },
-              {
-                "name": "Task",
-                "as": "TASK",
-                "description": {
-                  "en": "Task instruction to execute with Codex CLI."
-                },
-                "type": "string",
-                "source": "field",
-                "required": true
-              }
-            ]
-          }
-        ],
-        "output": {
-          "RUN_ID": "in.RUN_ID",
-          "RUN_STATUS": "transform:() => 'submitted'",
-          "SUMMARY": "transform:() => 'Task submitted to Codex exec mode.'"
-        },
-        "messages": {
-          "success": {
-            "en": "Codex task submitted."
-          }
-        }
-      }
-    },
-    {
-      "key": "none:openai-get-task-status",
-      "identifier": "@openai-get-task-status",
-      "alias": "openai-get-task-status",
-      "chain": "none",
-      "hash": "2bd60d808e4561a5fcaa647a4c2b9f2bfe750a3d875f538cf92ddf9ffb0dcd44",
-      "checksum": "2bd60d808e4561a5fcaa647a4c2b9f2bfe750a3d875f538cf92ddf9ffb0dcd44",
-      "name": "OpenAI: Get Task Status",
-      "title": {
-        "en": "Get task status"
-      },
-      "description": {
-        "en": "Get status for an OpenAI task run."
-      },
-      "preview": null,
-      "creator": "github:JoAiHQ/warps",
-      "privileges": [],
-      "listed": true,
-      "primaryAddress": null,
-      "primaryFunc": null,
-      "brand": {
-        "hash": "70445bdd059a0d271dc2ce678708044ca3eb172bddde068a0fc2a2ae563272fc",
-        "slug": "openai",
-        "active": true,
-        "protocol": "brand:0.2.0",
-        "name": "OpenAI",
-        "description": {
-          "en": "Launch and manage generic task runs through the OpenAI Responses API.",
-          "de": "Starte und verwalte generische Task-Runs über die OpenAI Responses API."
-        },
-        "logo": {
-          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/openai.png"
-        },
-        "urls": {
-          "web": "https://platform.openai.com"
-        },
-        "colors": {
-          "primary": "#111111"
-        }
-      },
-      "warp": {
-        "protocol": "warp:3.0.0",
-        "name": "OpenAI: Get Task Status",
-        "title": {
-          "en": "Get task status"
-        },
-        "description": {
-          "en": "Get status for an OpenAI task run."
-        },
-        "vars": {
-          "API_KEY": "env:OPENAI_API_KEY|OpenAI API key"
-        },
-        "actions": [
-          {
-            "type": "collect",
-            "label": {
-              "en": "Get Status"
-            },
-            "destination": {
-              "url": "https://api.openai.com/v1/responses/{{RUN_ID}}",
-              "method": "GET",
-              "headers": {
-                "Authorization": "Bearer {{API_KEY}}",
-                "Content-Type": "application/json"
-              }
-            },
-            "inputs": [
-              {
-                "name": "Run ID",
-                "as": "RUN_ID",
-                "description": {
-                  "en": "Response run ID."
-                },
-                "type": "string",
-                "position": "path:RUN_ID",
-                "source": "field",
-                "required": true
-              }
-            ]
-          }
-        ],
-        "output": {
-          "RUN_ID": "out.id",
-          "RUN_STATUS": "out.status",
-          "SUMMARY": "out.output_text"
-        },
-        "messages": {
-          "success": {
-            "en": "OpenAI run {{RUN_ID}} is {{RUN_STATUS}}."
-          }
-        }
-      }
-    },
-    {
-      "key": "none:openai-joai-plugin-install",
-      "identifier": "@openai-joai-plugin-install",
-      "alias": "openai-joai-plugin-install",
-      "chain": "none",
-      "hash": "8456e727cf40eab3238d2744bd52c68043836fae74f4a0e1b47f8317c8041319",
-      "checksum": "8456e727cf40eab3238d2744bd52c68043836fae74f4a0e1b47f8317c8041319",
-      "name": "OpenAI: Install JoAi Plugin",
-      "title": {
-        "en": "Install JoAi plugin for Codex"
-      },
-      "description": {
-        "en": "Connects your Codex to a JoAi agent via MCP."
-      },
-      "preview": null,
-      "creator": "github:JoAiHQ/warps",
-      "privileges": [],
-      "listed": true,
-      "primaryAddress": null,
-      "primaryFunc": null,
-      "brand": {
-        "hash": "70445bdd059a0d271dc2ce678708044ca3eb172bddde068a0fc2a2ae563272fc",
-        "slug": "openai",
-        "active": true,
-        "protocol": "brand:0.2.0",
-        "name": "OpenAI",
-        "description": {
-          "en": "Launch and manage generic task runs through the OpenAI Responses API.",
-          "de": "Starte und verwalte generische Task-Runs über die OpenAI Responses API."
-        },
-        "logo": {
-          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/openai.png"
-        },
-        "urls": {
-          "web": "https://platform.openai.com"
-        },
-        "colors": {
-          "primary": "#111111"
-        }
-      },
-      "warp": {
-        "protocol": "warp:3.0.0",
-        "name": "OpenAI: Install JoAi Plugin",
-        "title": {
-          "en": "Install JoAi plugin for Codex"
-        },
-        "description": {
-          "en": "Connects your Codex to a JoAi agent via MCP."
-        },
-        "actions": [
-          {
-            "type": "prompt",
-            "label": {
-              "en": "Install"
-            },
-            "prompt": "/codex mcp add joai --url https://cortex.joai.ai/mcp/agents/{{JOAI_AGENT_UUID}}"
-          }
-        ]
-      }
-    },
-    {
-      "key": "none:openai-launch-task",
-      "identifier": "@openai-launch-task",
-      "alias": "openai-launch-task",
-      "chain": "none",
-      "hash": "00d851b04c3d6115cc073b1da2d9afcc7079a8870a04f43afb0dcb793b2a89d9",
-      "checksum": "00d851b04c3d6115cc073b1da2d9afcc7079a8870a04f43afb0dcb793b2a89d9",
-      "name": "OpenAI: Launch Task",
-      "title": {
-        "en": "Launch task"
-      },
-      "description": {
-        "en": "Launch a new background task run using the OpenAI Responses API."
-      },
-      "preview": null,
-      "creator": "github:JoAiHQ/warps",
-      "privileges": [],
-      "listed": true,
-      "primaryAddress": null,
-      "primaryFunc": null,
-      "brand": {
-        "hash": "70445bdd059a0d271dc2ce678708044ca3eb172bddde068a0fc2a2ae563272fc",
-        "slug": "openai",
-        "active": true,
-        "protocol": "brand:0.2.0",
-        "name": "OpenAI",
-        "description": {
-          "en": "Launch and manage generic task runs through the OpenAI Responses API.",
-          "de": "Starte und verwalte generische Task-Runs über die OpenAI Responses API."
-        },
-        "logo": {
-          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/openai.png"
-        },
-        "urls": {
-          "web": "https://platform.openai.com"
-        },
-        "colors": {
-          "primary": "#111111"
-        }
-      },
-      "warp": {
-        "protocol": "warp:3.0.0",
-        "name": "OpenAI: Launch Task",
-        "title": {
-          "en": "Launch task"
-        },
-        "description": {
-          "en": "Launch a new background task run using the OpenAI Responses API."
-        },
-        "vars": {
-          "API_KEY": "env:OPENAI_API_KEY|OpenAI API key"
-        },
-        "actions": [
-          {
-            "type": "collect",
-            "label": {
-              "en": "Launch Task"
-            },
-            "destination": {
-              "url": "https://api.openai.com/v1/responses",
-              "method": "POST",
-              "headers": {
-                "Authorization": "Bearer {{API_KEY}}",
-                "Content-Type": "application/json"
-              }
-            },
-            "inputs": [
-              {
-                "name": "Task",
-                "as": "TASK",
-                "description": {
-                  "en": "Task instruction to execute."
-                },
-                "type": "string",
-                "source": "field",
-                "required": true,
-                "position": "payload:input"
-              },
-              {
-                "name": "Model",
-                "as": "MODEL",
-                "description": {
-                  "en": "OpenAI model to use."
-                },
-                "type": "string",
-                "source": "field",
-                "required": false,
-                "default": "gpt-5",
-                "position": "payload:model"
-              },
-              {
-                "name": "Background",
-                "as": "BACKGROUND",
-                "description": {
-                  "en": "Run asynchronously in background mode."
-                },
-                "type": "boolean",
-                "source": "field",
-                "required": false,
-                "default": true,
-                "position": "payload:background"
-              }
-            ]
-          }
-        ],
-        "output": {
-          "RUN_ID": "out.id",
-          "RUN_STATUS": "out.status",
-          "SUMMARY": "out.output_text"
-        },
-        "messages": {
-          "success": {
-            "en": "OpenAI run {{RUN_ID}} launched with status {{RUN_STATUS}}."
+            "en": "Training started on {{url}}. I'll crawl the pages and show you everything I find in this chat — you can review and edit each document or memory before saving.",
+            "de": "Training gestartet auf {{url}}. Ich crawle die Seiten und zeige dir alles, was ich finde, in diesem Chat — du kannst jedes Dokument oder jede Erinnerung vor dem Speichern prüfen und bearbeiten."
           }
         }
       }
