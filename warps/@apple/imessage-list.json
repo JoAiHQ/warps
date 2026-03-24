@@ -1,0 +1,39 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Apple: List iMessage Chats",
+  "title": {
+    "en": "List iMessage conversations",
+    "de": "iMessage-Unterhaltungen auflisten"
+  },
+  "description": {
+    "en": "List recent iMessage conversations with the latest message from each.",
+    "de": "Aktuelle iMessage-Unterhaltungen mit der letzten Nachricht auflisten."
+  },
+  "actions": [
+    {
+      "type": "prompt",
+      "label": {
+        "en": "List Chats",
+        "de": "Chats auflisten"
+      },
+      "prompt": {
+        "macos": "/sqlite3 ~/Library/Messages/chat.db \"SELECT c.chat_identifier, c.display_name, datetime(m.date/1000000000 + 978307200, 'unixepoch', 'localtime') as last_message_date, CASE WHEN m.is_from_me = 1 THEN 'me' ELSE coalesce(h.id, 'unknown') END as sender, substr(m.text, 1, 100) as preview FROM chat c JOIN chat_message_join cmj ON c.rowid = cmj.chat_id JOIN message m ON cmj.message_id = m.rowid LEFT JOIN handle h ON m.handle_id = h.rowid WHERE m.text IS NOT NULL AND m.rowid = (SELECT MAX(m2.rowid) FROM message m2 JOIN chat_message_join cmj2 ON m2.rowid = cmj2.message_id WHERE cmj2.chat_id = c.rowid AND m2.text IS NOT NULL) ORDER BY m.date DESC LIMIT {{LIMIT}};\""
+      },
+      "inputs": [
+        {
+          "name": "Limit",
+          "as": "LIMIT",
+          "description": {
+            "en": "Number of conversations to list",
+            "de": "Anzahl der aufzulistenden Unterhaltungen"
+          },
+          "bot": "How many recent conversations to list. Default to 15 if the user doesn't specify.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "default": "15"
+        }
+      ]
+    }
+  ]
+}
