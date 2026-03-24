@@ -6,8 +6,8 @@
     "de": "iMessage-Unterhaltungen auflisten"
   },
   "description": {
-    "en": "List recent iMessage conversations with the latest message from each.",
-    "de": "Aktuelle iMessage-Unterhaltungen mit der letzten Nachricht auflisten."
+    "en": "List iMessage conversations with contact identifiers.",
+    "de": "iMessage-Unterhaltungen mit Kontakt-IDs auflisten."
   },
   "actions": [
     {
@@ -17,7 +17,7 @@
         "de": "Chats auflisten"
       },
       "prompt": {
-        "macos": "/sqlite3 ~/Library/Messages/chat.db \"SELECT c.chat_identifier, c.display_name, datetime(m.date/1000000000 + 978307200, 'unixepoch', 'localtime') as last_message_date, CASE WHEN m.is_from_me = 1 THEN 'me' ELSE coalesce(h.id, 'unknown') END as sender, substr(m.text, 1, 100) as preview FROM chat c JOIN chat_message_join cmj ON c.rowid = cmj.chat_id JOIN message m ON cmj.message_id = m.rowid LEFT JOIN handle h ON m.handle_id = h.rowid WHERE m.text IS NOT NULL AND m.rowid = (SELECT MAX(m2.rowid) FROM message m2 JOIN chat_message_join cmj2 ON m2.rowid = cmj2.message_id WHERE cmj2.chat_id = c.rowid AND m2.text IS NOT NULL) ORDER BY m.date DESC LIMIT {{LIMIT}};\""
+        "macos": "/osascript -e 'tell application \"Messages\"\nset chatList to every chat\nset output to \"\"\nset chatCount to 0\nrepeat with c in chatList\nif chatCount ≥ {{LIMIT}} then exit repeat\ntry\nset chatId to id of c\nset ps to participants of c\nset contactName to \"\"\nset contactHandle to \"\"\nif (count of ps) > 0 then\nset contactName to name of item 1 of ps\nset contactHandle to handle of item 1 of ps\nend if\nset output to output & contactHandle & \" | \" & contactName & linefeed\nset chatCount to chatCount + 1\nend try\nend repeat\nreturn output\nend tell'"
       },
       "inputs": [
         {
