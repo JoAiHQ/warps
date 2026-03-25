@@ -1,0 +1,68 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Create User",
+  "title": {
+    "en": "Create user"
+  },
+  "description": {
+    "en": "Create a new user account with a personal team. Returns the user's id for use in subsequent steps."
+  },
+  "bot": "Use this when you need to create a new user account on behalf of an admin. The verified flag marks the email as verified immediately, skipping the email confirmation flow.",
+  "vars": {
+    "JOAI_API_TOKEN": "env:JOAI_API_TOKEN|Admin Sanctum API token"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Create user"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/users",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{JOAI_API_TOKEN}}",
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Email",
+          "as": "email",
+          "description": {
+            "en": "The email address for the new user"
+          },
+          "bot": "The user's email address. If a user with this email already exists, the existing user is returned.",
+          "type": "string",
+          "position": "arg:1",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Verified",
+          "as": "verified",
+          "description": {
+            "en": "Mark email as verified (skips email confirmation)"
+          },
+          "bot": "Set to true to skip email verification for admin-created accounts. Requires admin token.",
+          "type": "boolean",
+          "source": "field",
+          "required": false,
+          "default": true
+        }
+      ]
+    }
+  ],
+  "output": {
+    "userId": "out.data.id"
+  },
+  "messages": {
+    "success": {
+      "en": "User created with id {{userId}}."
+    },
+    "error": {
+      "en": "Failed to create user."
+    }
+  }
+}
