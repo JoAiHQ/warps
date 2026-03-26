@@ -9,7 +9,7 @@
     "en": "Remove a contact from your address book.",
     "de": "Einen Kontakt aus deinem Adressbuch entfernen."
   },
-  "bot": "Help the user delete a contact. Confirm which contact they want to remove.",
+  "bot": "Help the user delete a contact. If the user refers to a contact by name, list contacts first to find the matching ID.",
   "actions": [
     {
       "type": "collect",
@@ -17,17 +17,21 @@
         "en": "Delete contact",
         "de": "Kontakt löschen"
       },
+      "destination": {
+        "url": "INJECT:API_BASE/contacts/{{contactId}}",
+        "method": "DELETE"
+      },
       "inputs": [
         {
-          "name": "Contact Name",
-          "as": "contactName",
+          "name": "Contact ID",
+          "as": "contactId",
           "description": {
-            "en": "The name of the contact to delete",
-            "de": "Der Name des zu löschenden Kontakts"
+            "en": "The ID of the contact to delete",
+            "de": "Die ID des zu löschenden Kontakts"
           },
-          "bot": "The name of the contact to delete. Must match an existing contact.",
+          "bot": "The contact hash ID. If the user refers to a contact by name, list contacts first to find the matching ID.",
           "type": "string",
-          "position": "arg:1",
+          "position": "url:contactId",
           "source": "field",
           "required": true,
           "min": 1
@@ -37,8 +41,8 @@
   ],
   "messages": {
     "success": {
-      "en": "Contact '{{contactName}}' deleted.",
-      "de": "Kontakt '{{contactName}}' gelöscht."
+      "en": "Contact deleted.",
+      "de": "Kontakt gelöscht."
     }
   }
 }
