@@ -4,8 +4,8 @@
   "repo": "JoAiHQ/warps",
   "branch": "dev",
   "network": "devnet",
-  "commitSha": "05bda753c86be6d2a3a7a985c450361b0e0a7347",
-  "generatedAt": "2026-03-26T18:23:27.778Z",
+  "commitSha": "6113389d88db7ad9ea3169262538a0a815677737",
+  "generatedAt": "2026-03-26T18:37:53.905Z",
   "warps": [
     {
       "key": "arbitrum:omniset-deposit-arbitrum",
@@ -36632,8 +36632,8 @@
       "identifier": "@joai-contact-create",
       "alias": "joai-contact-create",
       "chain": "none",
-      "hash": "186731bfe6511f3823078800b2dcd27b3b280bb74bea44550483826537736967",
-      "checksum": "186731bfe6511f3823078800b2dcd27b3b280bb74bea44550483826537736967",
+      "hash": "31653662f93acba31a1db200ce9f8fcec53c4e01c0f72c4273417e49067fd79c",
+      "checksum": "31653662f93acba31a1db200ce9f8fcec53c4e01c0f72c4273417e49067fd79c",
       "name": "JoAi: Create Contact",
       "title": {
         "en": "Add a contact",
@@ -36689,6 +36689,10 @@
               "en": "Add contact",
               "de": "Kontakt hinzufügen"
             },
+            "destination": {
+              "url": "https://devnet-api.joai.ai/contacts",
+              "method": "POST"
+            },
             "inputs": [
               {
                 "name": "Name",
@@ -36727,31 +36731,6 @@
                 "type": "string",
                 "source": "field",
                 "required": false
-              },
-              {
-                "name": "Wallet Address",
-                "as": "walletAddress",
-                "description": {
-                  "en": "Blockchain wallet address",
-                  "de": "Blockchain-Wallet-Adresse"
-                },
-                "bot": "The contact's blockchain wallet address, if provided.",
-                "type": "string",
-                "source": "field",
-                "required": false
-              },
-              {
-                "name": "Chain",
-                "as": "chain",
-                "description": {
-                  "en": "Blockchain network for the wallet",
-                  "de": "Blockchain-Netzwerk für das Wallet"
-                },
-                "bot": "The blockchain network. Default to 'multiversx' unless specified otherwise.",
-                "type": "string",
-                "source": "field",
-                "required": false,
-                "default": "multiversx"
               },
               {
                 "name": "Company",
@@ -36817,8 +36796,8 @@
       "identifier": "@joai-contact-delete",
       "alias": "joai-contact-delete",
       "chain": "none",
-      "hash": "75be89ec84c62879405ba1214feae6ddd7da5bd0c4ab64105ec94de4c667693a",
-      "checksum": "75be89ec84c62879405ba1214feae6ddd7da5bd0c4ab64105ec94de4c667693a",
+      "hash": "0a605db6675417abb341418c77eac0c2d43e5449b374955685a2d315506e9577",
+      "checksum": "0a605db6675417abb341418c77eac0c2d43e5449b374955685a2d315506e9577",
       "name": "JoAi: Delete Contact",
       "title": {
         "en": "Delete a contact",
@@ -36866,7 +36845,7 @@
           "en": "Remove a contact from your address book.",
           "de": "Einen Kontakt aus deinem Adressbuch entfernen."
         },
-        "bot": "Help the user delete a contact. Confirm which contact they want to remove.",
+        "bot": "Help the user delete a contact. If the user refers to a contact by name, list contacts first to find the matching ID.",
         "actions": [
           {
             "type": "collect",
@@ -36874,17 +36853,21 @@
               "en": "Delete contact",
               "de": "Kontakt löschen"
             },
+            "destination": {
+              "url": "https://devnet-api.joai.ai/contacts/{{contactId}}",
+              "method": "DELETE"
+            },
             "inputs": [
               {
-                "name": "Contact Name",
-                "as": "contactName",
+                "name": "Contact ID",
+                "as": "contactId",
                 "description": {
-                  "en": "The name of the contact to delete",
-                  "de": "Der Name des zu löschenden Kontakts"
+                  "en": "The ID of the contact to delete",
+                  "de": "Die ID des zu löschenden Kontakts"
                 },
-                "bot": "The name of the contact to delete. Must match an existing contact.",
+                "bot": "The contact hash ID. If the user refers to a contact by name, list contacts first to find the matching ID.",
                 "type": "string",
-                "position": "arg:1",
+                "position": "url:contactId",
                 "source": "field",
                 "required": true,
                 "min": 1
@@ -36894,8 +36877,8 @@
         ],
         "messages": {
           "success": {
-            "en": "Contact '{{contactName}}' deleted.",
-            "de": "Kontakt '{{contactName}}' gelöscht."
+            "en": "Contact deleted.",
+            "de": "Kontakt gelöscht."
           }
         }
       }
@@ -37011,8 +36994,8 @@
       "identifier": "@joai-contact-update",
       "alias": "joai-contact-update",
       "chain": "none",
-      "hash": "5c3fff2e71f5cd89d91d536af450f199373b840e3bc6ea8a1e6c9ed0138306ff",
-      "checksum": "5c3fff2e71f5cd89d91d536af450f199373b840e3bc6ea8a1e6c9ed0138306ff",
+      "hash": "50b854417ce2815fc050092e415961c12d7d8620c868b7ce58bdddd53ea2332a",
+      "checksum": "50b854417ce2815fc050092e415961c12d7d8620c868b7ce58bdddd53ea2332a",
       "name": "JoAi: Update Contact",
       "title": {
         "en": "Update a contact",
@@ -37060,7 +37043,7 @@
           "en": "Update an existing contact's information.",
           "de": "Informationen eines bestehenden Kontakts aktualisieren."
         },
-        "bot": "Help the user update a contact's details. Ask which contact to update and what fields to change.",
+        "bot": "Help the user update a contact's details. If the user refers to a contact by name, list contacts first to find the matching ID.",
         "actions": [
           {
             "type": "collect",
@@ -37068,23 +37051,27 @@
               "en": "Update contact",
               "de": "Kontakt aktualisieren"
             },
+            "destination": {
+              "url": "https://devnet-api.joai.ai/contacts/{{contactId}}",
+              "method": "PUT"
+            },
             "inputs": [
               {
-                "name": "Contact Name",
-                "as": "contactName",
+                "name": "Contact ID",
+                "as": "contactId",
                 "description": {
-                  "en": "The name of the contact to update",
-                  "de": "Der Name des zu aktualisierenden Kontakts"
+                  "en": "The ID of the contact to update",
+                  "de": "Die ID des zu aktualisierenden Kontakts"
                 },
-                "bot": "The current name of the contact to update. Must match an existing contact.",
+                "bot": "The contact hash ID. If the user refers to a contact by name, list contacts first to find the matching ID.",
                 "type": "string",
-                "position": "arg:1",
+                "position": "url:contactId",
                 "source": "field",
                 "required": true,
                 "min": 1
               },
               {
-                "name": "New Name",
+                "name": "Name",
                 "as": "name",
                 "description": {
                   "en": "New name for the contact",
@@ -37116,29 +37103,6 @@
                 "type": "string",
                 "source": "field",
                 "required": false
-              },
-              {
-                "name": "Wallet Address",
-                "as": "walletAddress",
-                "description": {
-                  "en": "Blockchain wallet address",
-                  "de": "Blockchain-Wallet-Adresse"
-                },
-                "type": "string",
-                "source": "field",
-                "required": false
-              },
-              {
-                "name": "Chain",
-                "as": "chain",
-                "description": {
-                  "en": "Blockchain network",
-                  "de": "Blockchain-Netzwerk"
-                },
-                "type": "string",
-                "source": "field",
-                "required": false,
-                "default": "multiversx"
               },
               {
                 "name": "Company",
@@ -37178,8 +37142,8 @@
         ],
         "messages": {
           "success": {
-            "en": "Contact '{{contactName}}' updated!",
-            "de": "Kontakt '{{contactName}}' aktualisiert!"
+            "en": "Contact updated!",
+            "de": "Kontakt aktualisiert!"
           }
         }
       }
@@ -37189,8 +37153,8 @@
       "identifier": "@joai-document-create",
       "alias": "joai-document-create",
       "chain": "none",
-      "hash": "d0562dc65f5025ece8eca4bfaff2de3afadf037de2bfeaaa31e6fd7b073b83e1",
-      "checksum": "d0562dc65f5025ece8eca4bfaff2de3afadf037de2bfeaaa31e6fd7b073b83e1",
+      "hash": "c5eb1387ad5a4e3c440b192280f3defd1b65ee9acdcc687bb81dbba6235ad726",
+      "checksum": "c5eb1387ad5a4e3c440b192280f3defd1b65ee9acdcc687bb81dbba6235ad726",
       "name": "JoAi: Create Document",
       "title": {
         "en": "Save a document",
@@ -37246,6 +37210,10 @@
               "en": "Save document",
               "de": "Dokument speichern"
             },
+            "destination": {
+              "url": "https://devnet-api.joai.ai/documents",
+              "method": "POST"
+            },
             "inputs": [
               {
                 "name": "Title",
@@ -37291,8 +37259,8 @@
       "identifier": "@joai-goal-create",
       "alias": "joai-goal-create",
       "chain": "none",
-      "hash": "d546cf1312451e06546ebdc0f901717d172f276255ea2e0df92d6b32b90b0dce",
-      "checksum": "d546cf1312451e06546ebdc0f901717d172f276255ea2e0df92d6b32b90b0dce",
+      "hash": "20b0f21905ac738a2b6c4ba9a565caa8a338863adfcee81148e42b2a2be6a62c",
+      "checksum": "20b0f21905ac738a2b6c4ba9a565caa8a338863adfcee81148e42b2a2be6a62c",
       "name": "JoAi: Create Goal",
       "title": {
         "en": "Create a goal",
@@ -37347,6 +37315,10 @@
             "label": {
               "en": "Create goal",
               "de": "Ziel erstellen"
+            },
+            "destination": {
+              "url": "https://devnet-api.joai.ai/goals",
+              "method": "POST"
             },
             "inputs": [
               {
@@ -37569,8 +37541,8 @@
       "identifier": "@joai-item-create",
       "alias": "joai-item-create",
       "chain": "none",
-      "hash": "385be14e980cfd2e600488c7d7adfad39753e8d19b01b34407876d6c56a40fea",
-      "checksum": "385be14e980cfd2e600488c7d7adfad39753e8d19b01b34407876d6c56a40fea",
+      "hash": "fc0c41171fb4426fcc7d1b140929e8d8fe7dfaee9c772ad86cfd9486273f898a",
+      "checksum": "fc0c41171fb4426fcc7d1b140929e8d8fe7dfaee9c772ad86cfd9486273f898a",
       "name": "JoAi: Create Action Item",
       "title": {
         "en": "Create an action item",
@@ -37625,6 +37597,10 @@
             "label": {
               "en": "Create item",
               "de": "Aufgabe erstellen"
+            },
+            "destination": {
+              "url": "https://devnet-api.joai.ai/items",
+              "method": "POST"
             },
             "inputs": [
               {
@@ -37774,8 +37750,8 @@
       "identifier": "@joai-memory-create",
       "alias": "joai-memory-create",
       "chain": "none",
-      "hash": "5bc5c725dcb1eaa9a44d7cde7635535a96c9105a3b6794f671e5ed31b06c2e0f",
-      "checksum": "5bc5c725dcb1eaa9a44d7cde7635535a96c9105a3b6794f671e5ed31b06c2e0f",
+      "hash": "a6188177c176ec6566207a468b37e98f177fe91195a14ffa9c4f403bf3273065",
+      "checksum": "a6188177c176ec6566207a468b37e98f177fe91195a14ffa9c4f403bf3273065",
       "name": "JoAi: Create Memory",
       "title": {
         "en": "Save a memory",
@@ -37830,6 +37806,10 @@
             "label": {
               "en": "Save memory",
               "de": "Erinnerung speichern"
+            },
+            "destination": {
+              "url": "https://devnet-api.joai.ai/memories",
+              "method": "POST"
             },
             "inputs": [
               {
@@ -38125,8 +38105,8 @@
       "identifier": "@joai-reminder-create",
       "alias": "joai-reminder-create",
       "chain": "none",
-      "hash": "a452e3f6f9e31f2efa7b154142cd99da5650b2e5e3c87df62a0d2b352f7d12bc",
-      "checksum": "a452e3f6f9e31f2efa7b154142cd99da5650b2e5e3c87df62a0d2b352f7d12bc",
+      "hash": "55f1df146ac1059bcbcc39c8496b33636a4bfbbdf74819650a7f4d54db496bd9",
+      "checksum": "55f1df146ac1059bcbcc39c8496b33636a4bfbbdf74819650a7f4d54db496bd9",
       "name": "JoAi: Create Reminder",
       "title": {
         "en": "Set a reminder",
@@ -38181,6 +38161,10 @@
             "label": {
               "en": "Set reminder",
               "de": "Erinnerung setzen"
+            },
+            "destination": {
+              "url": "https://devnet-api.joai.ai/reminders",
+              "method": "POST"
             },
             "inputs": [
               {
