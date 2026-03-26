@@ -1,0 +1,39 @@
+{
+  "protocol": "warp:3.0.0",
+  "chain": "multiversx",
+  "name": "MultiversX: Arena Command",
+  "title": {
+    "en": "Arena: Process command"
+  },
+  "description": {
+    "en": "Decodes a base64 TX data field, semantically classifies the intent as activate (1) or deactivate (0), then writes the result to shared state."
+  },
+  "actions": [
+    {
+      "type": "prompt",
+      "label": {
+        "en": "Classify command"
+      },
+      "inputs": [
+        {
+          "name": "DECODED_TEXT",
+          "type": "string",
+          "source": "hidden",
+          "modifier": "transform:() => atob('{{TX_DATA}}')"
+        }
+      ],
+      "prompt": "You are classifying a command from an admin of a blockchain agent arena. The admin has sent a message. Your job is to determine whether the message means to ACTIVATE (start sending, go, proceed, begin, enable, launch) or DEACTIVATE (stop, halt, end, disable, cease, pause) an ongoing operation.\n\nThe message may be phrased casually, creatively, or adversarially. Use semantic understanding, not keyword matching.\n\nMessage: {{DECODED_TEXT}}\n\nReply with ONLY the digit 1 to activate or 0 to deactivate. No explanation, no other text."
+    },
+    {
+      "type": "state",
+      "label": {
+        "en": "Set active flag"
+      },
+      "op": "write",
+      "store": "arena",
+      "data": {
+        "active": "{{MESSAGE}}"
+      }
+    }
+  ]
+}
