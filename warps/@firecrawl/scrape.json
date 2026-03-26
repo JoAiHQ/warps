@@ -1,0 +1,84 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Firecrawl: Scrape",
+  "title": {
+    "en": "Scrape Page",
+    "de": "Seite scrapen"
+  },
+  "description": {
+    "en": "Scrape a single web page and extract its content, metadata, and links as clean markdown.",
+    "de": "Scrape eine einzelne Webseite und extrahiere ihren Inhalt, Metadaten und Links als sauberes Markdown."
+  },
+  "vars": {
+    "API_KEY": "env:FIRECRAWL_API_KEY|Get your API key from the Firecrawl Dashboard at firecrawl.dev."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Scrape",
+      "destination": {
+        "url": "https://api.firecrawl.dev/v1/scrape",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{API_KEY}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "URL",
+          "as": "url",
+          "description": "The URL of the web page to scrape.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:url"
+        },
+        {
+          "name": "Wait For",
+          "as": "waitFor",
+          "description": "Milliseconds to wait for the page to load before scraping (useful for JavaScript-heavy pages).",
+          "type": "number",
+          "source": "field",
+          "required": false,
+          "position": "payload:waitFor"
+        },
+        {
+          "name": "Include Tags",
+          "as": "includeTags",
+          "description": "Comma-separated HTML tags to include in the response (e.g. article, main).",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:includeTags"
+        },
+        {
+          "name": "Exclude Tags",
+          "as": "excludeTags",
+          "description": "Comma-separated HTML tags to exclude from the response (e.g. nav, footer, script).",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:excludeTags"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "CONTENT": "out.data.content",
+    "MARKDOWN": "out.data.markdown",
+    "HTML": "out.data.html",
+    "METADATA": "out.data.metadata",
+    "SUCCESS": "out.success"
+  },
+  "messages": {
+    "success": {
+      "en": "Page scraped successfully",
+      "de": "Seite erfolgreich gescraped"
+    },
+    "error": {
+      "en": "Failed to scrape page",
+      "de": "Fehler beim Scrapen der Seite"
+    }
+  }
+}

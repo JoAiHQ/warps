@@ -1,0 +1,83 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Firecrawl: Map",
+  "title": {
+    "en": "Map Website",
+    "de": "Website kartieren"
+  },
+  "description": {
+    "en": "Discover and list all URLs on a website. Useful for understanding site structure or finding specific pages.",
+    "de": "Entdecke und liste alle URLs einer Website. Nützlich zum Verstehen der Site-Struktur oder zum Finden bestimmter Seiten."
+  },
+  "vars": {
+    "API_KEY": "env:FIRECRAWL_API_KEY|Get your API key from the Firecrawl Dashboard at firecrawl.dev."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Map",
+      "destination": {
+        "url": "https://api.firecrawl.dev/v1/map",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{API_KEY}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "URL",
+          "as": "url",
+          "description": "The URL of the website to map.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:url"
+        },
+        {
+          "name": "Search",
+          "as": "search",
+          "description": "Optional keyword to filter the discovered URLs.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:search"
+        },
+        {
+          "name": "Include Subdomains",
+          "as": "includeSubdomains",
+          "description": "Whether to include URLs from subdomains.",
+          "type": "boolean",
+          "source": "field",
+          "required": false,
+          "position": "payload:includeSubdomains",
+          "default": false
+        },
+        {
+          "name": "Limit",
+          "as": "limit",
+          "description": "Maximum number of URLs to return.",
+          "type": "number",
+          "source": "field",
+          "required": false,
+          "position": "payload:limit",
+          "default": 100
+        }
+      ]
+    }
+  ],
+  "output": {
+    "SUCCESS": "out.success",
+    "LINKS": "out.links"
+  },
+  "messages": {
+    "success": {
+      "en": "Website mapped successfully",
+      "de": "Website erfolgreich kartiert"
+    },
+    "error": {
+      "en": "Failed to map website",
+      "de": "Fehler beim Kartieren der Website"
+    }
+  }
+}

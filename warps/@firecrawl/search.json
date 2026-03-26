@@ -1,0 +1,82 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Firecrawl: Search",
+  "title": {
+    "en": "Search Web",
+    "de": "Web durchsuchen"
+  },
+  "description": {
+    "en": "Search the web and extract content from relevant results.",
+    "de": "Das Web durchsuchen und Inhalte aus relevanten Ergebnissen extrahieren."
+  },
+  "vars": {
+    "API_KEY": "env:FIRECRAWL_API_KEY|Get your API key from Firecrawl Dashboard."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Search",
+      "destination": {
+        "url": "https://api.firecrawl.dev/v1/search",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{API_KEY}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Query",
+          "as": "query",
+          "description": "The search query to execute.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:query"
+        },
+        {
+          "name": "Location",
+          "as": "location",
+          "description": "Geographic location to focus search results (e.g., 'United States', 'Germany').",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:location"
+        },
+        {
+          "name": "Max Results",
+          "as": "limit",
+          "description": "Maximum number of search results to return.",
+          "type": "number",
+          "source": "field",
+          "required": false,
+          "position": "payload:limit",
+          "default": 10
+        },
+        {
+          "name": "Language",
+          "as": "lang",
+          "description": "Language for search results (e.g., 'en', 'de').",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:lang"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "SUCCESS": "out.success",
+    "RESULTS": "out.data"
+  },
+  "messages": {
+    "success": {
+      "en": "Web search completed successfully",
+      "de": "Web-Suche erfolgreich abgeschlossen"
+    },
+    "error": {
+      "en": "Failed to search the web",
+      "de": "Fehler bei der Web-Suche"
+    }
+  }
+}
