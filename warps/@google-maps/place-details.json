@@ -1,0 +1,69 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Google Maps: Place Details",
+  "title": {
+    "en": "Get Place Details",
+    "de": "Ortsdetails abrufen"
+  },
+  "description": {
+    "en": "Get full details for a specific place by its Google Place ID, including phone number, website, address, hours, and ratings.",
+    "de": "Vollständige Details zu einem bestimmten Ort anhand seiner Google Place ID abrufen, einschließlich Telefonnummer, Website, Adresse, Öffnungszeiten und Bewertungen."
+  },
+  "vars": {
+    "API_KEY": "env:GOOGLE_MAPS_API_KEY|Get your API key from the Google Cloud Console at console.cloud.google.com. Enable the Places API (New)."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Get Details",
+        "de": "Details abrufen"
+      },
+      "destination": {
+        "url": "https://places.googleapis.com/v1/places/{{PLACE_ID}}",
+        "method": "GET",
+        "headers": {
+          "X-Goog-Api-Key": "{{API_KEY}}",
+          "X-Goog-FieldMask": "id,displayName,formattedAddress,nationalPhoneNumber,internationalPhoneNumber,rating,userRatingCount,websiteUri,businessStatus,types,currentOpeningHours,regularOpeningHours"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Place ID",
+          "as": "PLACE_ID",
+          "description": {
+            "en": "The Google Place ID (e.g. ChIJ...). Get this from Places Text Search.",
+            "de": "Die Google Place ID (z.B. ChIJ...). Diese kann über die Ortssuche abgerufen werden."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:PLACE_ID"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "ID": "out.id",
+    "NAME": "out.displayName.text",
+    "ADDRESS": "out.formattedAddress",
+    "PHONE": "out.nationalPhoneNumber",
+    "PHONE_INTL": "out.internationalPhoneNumber",
+    "WEBSITE": "out.websiteUri",
+    "RATING": "out.rating",
+    "REVIEW_COUNT": "out.userRatingCount",
+    "STATUS": "out.businessStatus",
+    "TYPES": "out.types",
+    "HOURS": "out.regularOpeningHours"
+  },
+  "messages": {
+    "success": {
+      "en": "Retrieved details for {{out.displayName.text}}.",
+      "de": "Details für {{out.displayName.text}} abgerufen."
+    },
+    "error": {
+      "en": "Failed to get place details.",
+      "de": "Ortsdetails konnten nicht abgerufen werden."
+    }
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Log Contact Activity",
+  "title": {
+    "en": "Log an activity on a contact",
+    "de": "Aktivität bei einem Kontakt protokollieren"
+  },
+  "description": {
+    "en": "Log any type of activity on a contact — note, call, meeting, email, task, or custom event.",
+    "de": "Beliebige Aktivität bei einem Kontakt protokollieren – Notiz, Anruf, Meeting, E-Mail, Aufgabe oder benutzerdefiniertes Ereignis."
+  },
+  "bot": "Use this to log any interaction or touchpoint with a contact. Prefer specific types (call, email, meeting) over custom when applicable.",
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Log activity",
+        "de": "Aktivität protokollieren"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/contacts/{{contactId}}/activities",
+        "method": "POST"
+      },
+      "inputs": [
+        {
+          "name": "Contact ID",
+          "as": "contactId",
+          "description": {
+            "en": "The ID of the contact to log the activity on.",
+            "de": "Die ID des Kontakts, bei dem die Aktivität protokolliert werden soll."
+          },
+          "bot": "The ID of the contact.",
+          "type": "string",
+          "position": "arg:1",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Type",
+          "as": "type",
+          "description": {
+            "en": "The type of activity: note, call, meeting, email, task, or custom.",
+            "de": "Art der Aktivität: note, call, meeting, email, task oder custom."
+          },
+          "bot": "The activity type. Use 'note' for general observations, 'email' for email exchanges, 'call' for calls, 'meeting' for meetings, 'task' for to-dos, 'custom' for anything else.",
+          "type": "string",
+          "position": "payload:type",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Description",
+          "as": "description",
+          "description": {
+            "en": "Details about the activity.",
+            "de": "Details zur Aktivität."
+          },
+          "bot": "A clear description of what happened or what was discussed.",
+          "type": "string",
+          "position": "payload:description",
+          "source": "field",
+          "required": false
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Activity logged on contact.",
+      "de": "Aktivität beim Kontakt protokolliert."
+    }
+  }
+}

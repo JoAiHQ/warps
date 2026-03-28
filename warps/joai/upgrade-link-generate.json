@@ -1,0 +1,72 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Generate Upgrade Link",
+  "title": {
+    "en": "Generate upgrade link"
+  },
+  "description": {
+    "en": "Generate a checkout URL for upgrading a team to a paid plan. Routes to LemonSqueezy for consumers or Stripe for business accounts. Requires billing address to be set first."
+  },
+  "bot": "Use this as the final step after user-create and billing-address-set. The teamSlug comes from the user-create warp output. Returns a direct checkout URL to send to the customer.",
+  "vars": {
+    "JOAI_API_TOKEN": "env:JOAI_API_TOKEN|Admin Sanctum API token"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Generate link"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/teams/{{teamSlug}}/upgrade-link",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{JOAI_API_TOKEN}}",
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Team Slug",
+          "as": "teamSlug",
+          "description": {
+            "en": "The team slug (from user-create output)"
+          },
+          "bot": "The personalTeamSlug returned by the user-create warp.",
+          "type": "string",
+          "position": "url:teamSlug",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Plan",
+          "as": "plan",
+          "description": {
+            "en": "The plan SKU to upgrade to"
+          },
+          "bot": "The plan SKU. Use 'plus-monthly-00' for Plus monthly or 'plus-yearly-00' for Plus yearly.",
+          "type": "string",
+          "position": "arg:1",
+          "source": "field",
+          "required": true,
+          "options": {
+            "plus-monthly-00": "Plus (monthly)",
+            "plus-yearly-00": "Plus (yearly)"
+          }
+        }
+      ]
+    }
+  ],
+  "output": {
+    "checkoutUrl": "out.data.url"
+  },
+  "messages": {
+    "success": {
+      "en": "Checkout link ready: {{checkoutUrl}}"
+    },
+    "error": {
+      "en": "Failed to generate upgrade link."
+    }
+  }
+}

@@ -1,0 +1,168 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Weekly Digest Email",
+  "title": {
+    "en": "Write weekly digest email",
+    "de": "Wöchentliche Digest-E-Mail schreiben"
+  },
+  "description": {
+    "en": "Takes the top digests of the week for a given interest, writes the newsletter copy, then creates a draft campaign in Mailcoach targeting that interest segment.",
+    "de": "Nimmt die Top-Digests der Woche für ein Interessengebiet, schreibt den Newsletter-Text und erstellt einen Kampagnenentwurf in Mailcoach."
+  },
+  "bot": "Used every Sunday per interest category as part of the weekly digest campaign workflow. Receives top digests filtered by interest, writes copy, creates Mailcoach campaign draft targeting that interest segment.",
+  "vars": {
+    "API_TOKEN": "env:MAILCOACH_API_TOKEN|Your Mailcoach API token from /settings/account/tokens",
+    "MAILCOACH_URL": "env:MAILCOACH_URL|Your Mailcoach base URL (e.g. https://yourapp.mailcoach.app)",
+    "EMAIL_LIST_UUID": "env:MAILCOACH_HUB_LIST_USERS_UUID|UUID of the main hub subscribers list in Mailcoach",
+    "TEMPLATE_UUID": "env:MAILCOACH_DIGEST_TEMPLATE_UUID|UUID of the weekly digest email template in Mailcoach",
+    "JOAI_API_BASE": "env:JOAI_API_BASE|Base URL of the JoAi API (e.g. https://api.joai.ai)"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Fetch digests by interest",
+        "de": "Digests nach Interesse abrufen"
+      },
+      "auto": true,
+      "destination": {
+        "url": "{{JOAI_API_BASE}}/v1/ingestions?public=true&period=week&sort=popular&interest={{INTEREST}}",
+        "method": "GET",
+        "headers": {
+          "Accept": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Interest",
+          "as": "INTEREST",
+          "description": {
+            "en": "The interest category to fetch digests for (e.g. business, health, developer)."
+          },
+          "type": "string",
+          "source": "query",
+          "required": true
+        }
+      ],
+      "output": {
+        "DIGESTS": "out.data"
+      }
+    },
+    {
+      "type": "prompt",
+      "label": {
+        "en": "Write newsletter copy",
+        "de": "Newsletter-Text schreiben"
+      },
+      "auto": true,
+      "inputs": [
+        {
+          "name": "Interest",
+          "as": "INTEREST",
+          "description": {
+            "en": "The interest category (e.g. business, health, developer)."
+          },
+          "type": "string",
+          "source": "query",
+          "required": true
+        },
+        {
+          "name": "Digests",
+          "as": "DIGESTS_JSON",
+          "description": {
+            "en": "JSON array of digest objects from the previous step."
+          },
+          "type": "string",
+          "source": "transform",
+          "transform": "() => JSON.stringify(out?.DIGESTS || [])",
+          "required": true
+        }
+      ],
+      "prompt": "You are writing the weekly JoAi Digest newsletter for the '{{INTEREST}}' interest category. JoAi is an AI productivity platform that helps people build their second brain and automate their work.\n\nHere are the top public digests from this week in the {{INTEREST}} category:\n\n{{DIGESTS_JSON}}\n\nWrite the email body for subscribers interested in {{INTEREST}}. Keep it conversational, warm, and inspiring. Use Markdown formatting.\n\nInclude:\n1. A brief 2-3 sentence intro tailored to the {{INTEREST}} audience\n2. Each digest as a section with its name as a link, a 1-sentence hook, and a \"Read →\" link\n3. A short sign-off encouraging readers to publish their own digest on JoAi (https://digests.joai.ai)\n\nDo not include a subject line or email headers. Write only the body content."
+    },
+    {
+      "type": "collect",
+      "label": {
+        "en": "Create Mailcoach campaign draft",
+        "de": "Mailcoach Kampagnenentwurf erstellen"
+      },
+      "auto": true,
+      "destination": {
+        "url": "{{MAILCOACH_URL}}/api/campaigns",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{API_TOKEN}}",
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "name",
+          "as": "name",
+          "type": "string",
+          "source": "transform",
+          "transform": "() => { const d = new Date(); const month = d.toLocaleDateString('en-US', { month: 'short' }); const day = d.getDate(); return `Weekly Digest ({{INTEREST}}) — ${month} ${day}`; }",
+          "required": true,
+          "position": "payload:name"
+        },
+        {
+          "name": "subject",
+          "as": "subject",
+          "type": "string",
+          "source": "transform",
+          "transform": "() => { const d = new Date(); const month = d.toLocaleDateString('en-US', { month: 'short' }); const day = d.getDate(); return `JoAi Weekly Digest — ${month} ${day}`; }",
+          "required": false,
+          "position": "payload:subject"
+        },
+        {
+          "name": "email_list_uuid",
+          "as": "email_list_uuid",
+          "type": "string",
+          "source": "value",
+          "value": "{{EMAIL_LIST_UUID}}",
+          "required": true,
+          "position": "payload:email_list_uuid"
+        },
+        {
+          "name": "segment_uuid",
+          "as": "segment_uuid",
+          "type": "string",
+          "source": "transform",
+          "transform": "() => { const segments = { 'business': '4f229f68-acc6-4b42-9534-e37e2ecc036c', 'health': 'f9695c62-925f-4a26-bac4-108c58183441', 'content': '588f5921-96a1-40f9-8d21-247c7f1fb8d0', 'finance': '2ef233cc-b1ca-4722-806a-d54f6aa47514', 'research': 'a9dff55c-b136-4e51-9771-22d7c3c3716d', 'shopping': 'b7b8bfe2-69eb-4bba-9195-7a71bc9808de', 'web3': '9de6a674-8a8a-49a0-bab4-bb0ffe07e904', 'fitness': '1aa19c57-1751-40a3-ac95-deeb8fff8875', 'developer': 'ae596f81-dcf9-49f2-9e7a-741a2bde4283', 'ecommerce': 'd74ce45a-9794-499a-a31c-0ffd1444891e', 'payments': 'af25ef31-92ec-455d-81f4-5f7aae6da7a8' }; return segments['{{INTEREST}}'] || undefined; }",
+          "required": false,
+          "position": "payload:segment_uuid"
+        },
+        {
+          "name": "template_uuid",
+          "as": "template_uuid",
+          "type": "string",
+          "source": "value",
+          "value": "{{TEMPLATE_UUID}}",
+          "required": true,
+          "position": "payload:template_uuid"
+        },
+        {
+          "name": "fields",
+          "as": "fields",
+          "type": "object",
+          "source": "transform",
+          "transform": "() => ({ content: out?.MESSAGE || '' })",
+          "required": true,
+          "position": "payload:fields"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "CAMPAIGN_UUID": "out.data.uuid",
+    "CAMPAIGN_NAME": "out.data.name"
+  },
+  "messages": {
+    "success": {
+      "en": "Draft campaign '{{CAMPAIGN_NAME}}' created (UUID: {{CAMPAIGN_UUID}}). Review and send it via the send-campaign warp.",
+      "de": "Kampagnenentwurf '{{CAMPAIGN_NAME}}' erstellt (UUID: {{CAMPAIGN_UUID}}). Prüfen und über den send-campaign-Warp senden."
+    }
+  },
+  "next": "@mailcoach/send-campaign?campaign_uuid={{CAMPAIGN_UUID}}"
+}

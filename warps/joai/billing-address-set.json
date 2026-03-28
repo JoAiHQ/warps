@@ -1,0 +1,98 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Set Billing Address",
+  "title": {
+    "en": "Set billing address"
+  },
+  "description": {
+    "en": "Set the billing address for a user. Required before generating an upgrade link. Pass a VAT ID to mark the account as a business (routes to Stripe instead of LemonSqueezy)."
+  },
+  "bot": "Use this after creating a user to set their billing address before generating an upgrade link. The userId comes from the user-create warp output. Include vatId for business accounts.",
+  "vars": {
+    "JOAI_API_TOKEN": "env:JOAI_API_TOKEN|Admin Sanctum API token"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Set billing address"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/users/{{userId}}/billing-address",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{JOAI_API_TOKEN}}",
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "User ID",
+          "as": "userId",
+          "description": {
+            "en": "The id of the user (from user-create output)"
+          },
+          "bot": "The user's id returned by the user-create warp.",
+          "type": "string",
+          "position": "url:userId",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "First Name",
+          "as": "firstName",
+          "description": {
+            "en": "First name or company name"
+          },
+          "type": "string",
+          "position": "arg:1",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Last Name",
+          "as": "lastName",
+          "description": {
+            "en": "Last name or legal entity suffix"
+          },
+          "type": "string",
+          "position": "arg:2",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Country",
+          "as": "country",
+          "description": {
+            "en": "Two-letter ISO country code (e.g. DE, US)"
+          },
+          "bot": "Two-letter ISO 3166-1 alpha-2 country code.",
+          "type": "string",
+          "position": "arg:3",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "VAT ID",
+          "as": "vatId",
+          "description": {
+            "en": "VAT ID for business accounts (e.g. DE123456789)"
+          },
+          "bot": "Optional. Providing a VAT ID marks the account as a business and routes payment through Stripe.",
+          "type": "string",
+          "source": "field",
+          "required": false
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Billing address saved."
+    },
+    "error": {
+      "en": "Failed to save billing address."
+    }
+  }
+}

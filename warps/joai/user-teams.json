@@ -1,0 +1,55 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: List User Teams",
+  "title": {
+    "en": "List user teams"
+  },
+  "description": {
+    "en": "Retrieve the teams a user belongs to. Use this to get the personal team slug needed for generating an upgrade link."
+  },
+  "bot": "Use this after user-create to get the user's personal team slug. Pass the userId from user-create output. The personal team is marked with personal: true.",
+  "vars": {
+    "JOAI_API_TOKEN": "env:JOAI_API_TOKEN|Admin Sanctum API token"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "List teams"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/users/{{userId}}/teams",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{JOAI_API_TOKEN}}",
+          "Accept": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "User ID",
+          "as": "userId",
+          "description": {
+            "en": "The id of the user (from user-create output)"
+          },
+          "bot": "The user's id returned by the user-create warp.",
+          "type": "string",
+          "position": "url:userId",
+          "source": "field",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "output": {
+    "teams": "out.data"
+  },
+  "messages": {
+    "success": {
+      "en": "Found {{teams.length}} team(s)."
+    },
+    "error": {
+      "en": "Failed to list teams."
+    }
+  }
+}

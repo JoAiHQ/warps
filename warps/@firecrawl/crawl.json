@@ -1,0 +1,92 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Firecrawl: Crawl",
+  "title": {
+    "en": "Crawl Website",
+    "de": "Website crawlen"
+  },
+  "description": {
+    "en": "Start an async crawl of a website following links across multiple pages. Returns a job ID to track progress.",
+    "de": "Starte einen asynchronen Crawl einer Website über mehrere Seiten. Gibt eine Job-ID zur Fortschrittsverfolgung zurück."
+  },
+  "vars": {
+    "API_KEY": "env:FIRECRAWL_API_KEY|Get your API key from the Firecrawl Dashboard at firecrawl.dev."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Start Crawl",
+      "destination": {
+        "url": "https://api.firecrawl.dev/v1/crawl",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{API_KEY}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "URL",
+          "as": "url",
+          "description": "The starting URL of the website to crawl.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:url"
+        },
+        {
+          "name": "Max Depth",
+          "as": "maxDepth",
+          "description": "Maximum depth to crawl (how many link levels deep from the start URL).",
+          "type": "number",
+          "source": "field",
+          "required": false,
+          "position": "payload:maxDepth",
+          "default": 2
+        },
+        {
+          "name": "Page Limit",
+          "as": "limit",
+          "description": "Maximum number of pages to crawl.",
+          "type": "number",
+          "source": "field",
+          "required": false,
+          "position": "payload:limit"
+        },
+        {
+          "name": "Include Paths",
+          "as": "includePaths",
+          "description": "URL path patterns to include (e.g. /docs, /blog).",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:includePaths"
+        },
+        {
+          "name": "Exclude Paths",
+          "as": "excludePaths",
+          "description": "URL path patterns to exclude (e.g. /admin, /login).",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:excludePaths"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "SUCCESS": "out.success",
+    "JOB_ID": "out.id",
+    "STATUS_URL": "out.url"
+  },
+  "messages": {
+    "success": {
+      "en": "Crawl job started. Use job ID to check status.",
+      "de": "Crawl-Job gestartet. Job-ID zum Statusabruf verwenden."
+    },
+    "error": {
+      "en": "Failed to start crawl",
+      "de": "Fehler beim Starten des Crawls"
+    }
+  }
+}
