@@ -1,0 +1,101 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Google Maps: Places Text Search",
+  "title": {
+    "en": "Search Places",
+    "de": "Orte suchen"
+  },
+  "description": {
+    "en": "Search for businesses and places on Google Maps by text query. Returns name, address, phone number, website, rating, and review count.",
+    "de": "Suche nach Unternehmen und Orten auf Google Maps per Textsuche. Gibt Name, Adresse, Telefonnummer, Website, Bewertung und Anzahl der Bewertungen zurück."
+  },
+  "vars": {
+    "API_KEY": "env:GOOGLE_MAPS_API_KEY|Get your API key from the Google Cloud Console at console.cloud.google.com. Enable the Places API (New)."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": "Search",
+      "destination": {
+        "url": "https://places.googleapis.com/v1/places:searchText",
+        "method": "POST",
+        "headers": {
+          "X-Goog-Api-Key": "{{API_KEY}}",
+          "X-Goog-FieldMask": "places.id,places.displayName,places.formattedAddress,places.nationalPhoneNumber,places.internationalPhoneNumber,places.rating,places.userRatingCount,places.websiteUri,places.businessStatus,places.types,nextPageToken",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Query",
+          "as": "textQuery",
+          "description": {
+            "en": "The text query to search for (e.g. 'barbers in Vienna Austria', 'dentists in Graz').",
+            "de": "Der Suchbegriff (z.B. 'Friseure in Wien', 'Zahnarzt in Graz')."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Region",
+          "as": "regionCode",
+          "description": {
+            "en": "ISO 3166-1 alpha-2 country code to bias results (e.g. AT for Austria, DE for Germany).",
+            "de": "ISO 3166-1 alpha-2 Ländercode zur Einschränkung der Ergebnisse (z.B. AT für Österreich)."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Language",
+          "as": "languageCode",
+          "description": {
+            "en": "Language code for results (e.g. de, en).",
+            "de": "Sprachcode für die Ergebnisse (z.B. de, en)."
+          },
+          "type": "string",
+          "source": "hidden"
+        },
+        {
+          "name": "Max Results",
+          "as": "pageSize",
+          "description": {
+            "en": "Number of results to return (1–20).",
+            "de": "Anzahl der zurückzugebenden Ergebnisse (1–20)."
+          },
+          "type": "number",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Page Token",
+          "as": "pageToken",
+          "description": {
+            "en": "Token from a previous search to fetch the next page of results.",
+            "de": "Token aus einer vorherigen Suche zum Abrufen der nächsten Ergebnisseite."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        }
+      ]
+    }
+  ],
+  "output": {
+    "PLACES": "out.places",
+    "NEXT_PAGE_TOKEN": "out.nextPageToken"
+  },
+  "ui": "table:displayName.text;formattedAddress;nationalPhoneNumber;rating;userRatingCount;websiteUri;businessStatus",
+  "messages": {
+    "success": {
+      "en": "Found {{out.places.length}} places.",
+      "de": "{{out.places.length}} Orte gefunden."
+    },
+    "error": {
+      "en": "Failed to search places.",
+      "de": "Suche nach Orten fehlgeschlagen."
+    }
+  }
+}
