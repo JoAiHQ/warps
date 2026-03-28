@@ -4,8 +4,8 @@
   "repo": "JoAiHQ/warps",
   "branch": "dev",
   "network": "devnet",
-  "commitSha": "0ce548f9240c11e244f3f49403bbef02ed1f55c9",
-  "generatedAt": "2026-03-28T18:47:01.219Z",
+  "commitSha": "ebbd6c35aa12104c515fa647fd9fe6fecf65cd0e",
+  "generatedAt": "2026-03-28T19:02:06.679Z",
   "warps": [
     {
       "key": "arbitrum:omniset-deposit-arbitrum",
@@ -32255,6 +32255,262 @@
       }
     },
     {
+      "key": "none:google-maps-place-details",
+      "identifier": "@google-maps-place-details",
+      "alias": "google-maps-place-details",
+      "chain": "none",
+      "hash": "548cf89948c1fd755db465007e30dd61b688d40dc22e65dae567a2c8ba411950",
+      "checksum": "548cf89948c1fd755db465007e30dd61b688d40dc22e65dae567a2c8ba411950",
+      "name": "Google Maps: Place Details",
+      "title": {
+        "en": "Get Place Details",
+        "de": "Ortsdetails abrufen"
+      },
+      "description": {
+        "en": "Get full details for a specific place by its Google Place ID, including phone number, website, address, hours, and ratings.",
+        "de": "Vollständige Details zu einem bestimmten Ort anhand seiner Google Place ID abrufen, einschließlich Telefonnummer, Website, Adresse, Öffnungszeiten und Bewertungen."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "3da7f1f19f02564c951fdb785a292bf944cf3cae14dc94c7aa207e283bd831f1",
+        "slug": "google-maps",
+        "active": false,
+        "protocol": "brand:0.2.0",
+        "name": "Google Maps",
+        "description": {
+          "en": "Explore <strong>places</strong>, <strong>routes</strong>, and <strong>locations</strong> worldwide with Google Maps. Search for addresses, get directions, discover nearby spots, and find details like ratings and opening hours.",
+          "de": "Erkunde <strong>Orte</strong>, <strong>Routen</strong> und <strong>Standorte</strong> weltweit mit Google Maps. Suche nach Adressen, erhalte Wegbeschreibungen, entdecke nahegelegene Orte und finde Details wie Bewertungen und Öffnungszeiten."
+        },
+        "logo": {
+          "default": "https://www.google.com/maps/about/images/favicon.ico"
+        },
+        "urls": {
+          "web": "https://maps.google.com"
+        },
+        "colors": {
+          "primary": "#4285F4"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "Google Maps: Place Details",
+        "title": {
+          "en": "Get Place Details",
+          "de": "Ortsdetails abrufen"
+        },
+        "description": {
+          "en": "Get full details for a specific place by its Google Place ID, including phone number, website, address, hours, and ratings.",
+          "de": "Vollständige Details zu einem bestimmten Ort anhand seiner Google Place ID abrufen, einschließlich Telefonnummer, Website, Adresse, Öffnungszeiten und Bewertungen."
+        },
+        "vars": {
+          "API_KEY": "env:GOOGLE_MAPS_API_KEY|Get your API key from the Google Cloud Console at console.cloud.google.com. Enable the Places API (New)."
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Get Details",
+              "de": "Details abrufen"
+            },
+            "destination": {
+              "url": "https://places.googleapis.com/v1/places/{{PLACE_ID}}",
+              "method": "GET",
+              "headers": {
+                "X-Goog-Api-Key": "{{API_KEY}}",
+                "X-Goog-FieldMask": "id,displayName,formattedAddress,nationalPhoneNumber,internationalPhoneNumber,rating,userRatingCount,websiteUri,businessStatus,types,currentOpeningHours,regularOpeningHours"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Place ID",
+                "as": "PLACE_ID",
+                "description": {
+                  "en": "The Google Place ID (e.g. ChIJ...). Get this from Places Text Search.",
+                  "de": "Die Google Place ID (z.B. ChIJ...). Diese kann über die Ortssuche abgerufen werden."
+                },
+                "type": "string",
+                "source": "field",
+                "required": true,
+                "position": "url:PLACE_ID"
+              }
+            ]
+          }
+        ],
+        "output": {
+          "ID": "out.id",
+          "NAME": "out.displayName.text",
+          "ADDRESS": "out.formattedAddress",
+          "PHONE": "out.nationalPhoneNumber",
+          "PHONE_INTL": "out.internationalPhoneNumber",
+          "WEBSITE": "out.websiteUri",
+          "RATING": "out.rating",
+          "REVIEW_COUNT": "out.userRatingCount",
+          "STATUS": "out.businessStatus",
+          "TYPES": "out.types",
+          "HOURS": "out.regularOpeningHours"
+        },
+        "messages": {
+          "success": {
+            "en": "Retrieved details for {{out.displayName.text}}.",
+            "de": "Details für {{out.displayName.text}} abgerufen."
+          },
+          "error": {
+            "en": "Failed to get place details.",
+            "de": "Ortsdetails konnten nicht abgerufen werden."
+          }
+        }
+      }
+    },
+    {
+      "key": "none:google-maps-places-text-search",
+      "identifier": "@google-maps-places-text-search",
+      "alias": "google-maps-places-text-search",
+      "chain": "none",
+      "hash": "b806a45e57e1d5e1d7b8f7676d542006cea32247590403dc14be5dd908e4f25c",
+      "checksum": "b806a45e57e1d5e1d7b8f7676d542006cea32247590403dc14be5dd908e4f25c",
+      "name": "Google Maps: Places Text Search",
+      "title": {
+        "en": "Search Places",
+        "de": "Orte suchen"
+      },
+      "description": {
+        "en": "Search for businesses and places on Google Maps by text query. Returns name, address, phone number, website, rating, and review count.",
+        "de": "Suche nach Unternehmen und Orten auf Google Maps per Textsuche. Gibt Name, Adresse, Telefonnummer, Website, Bewertung und Anzahl der Bewertungen zurück."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "3da7f1f19f02564c951fdb785a292bf944cf3cae14dc94c7aa207e283bd831f1",
+        "slug": "google-maps",
+        "active": false,
+        "protocol": "brand:0.2.0",
+        "name": "Google Maps",
+        "description": {
+          "en": "Explore <strong>places</strong>, <strong>routes</strong>, and <strong>locations</strong> worldwide with Google Maps. Search for addresses, get directions, discover nearby spots, and find details like ratings and opening hours.",
+          "de": "Erkunde <strong>Orte</strong>, <strong>Routen</strong> und <strong>Standorte</strong> weltweit mit Google Maps. Suche nach Adressen, erhalte Wegbeschreibungen, entdecke nahegelegene Orte und finde Details wie Bewertungen und Öffnungszeiten."
+        },
+        "logo": {
+          "default": "https://www.google.com/maps/about/images/favicon.ico"
+        },
+        "urls": {
+          "web": "https://maps.google.com"
+        },
+        "colors": {
+          "primary": "#4285F4"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "Google Maps: Places Text Search",
+        "title": {
+          "en": "Search Places",
+          "de": "Orte suchen"
+        },
+        "description": {
+          "en": "Search for businesses and places on Google Maps by text query. Returns name, address, phone number, website, rating, and review count.",
+          "de": "Suche nach Unternehmen und Orten auf Google Maps per Textsuche. Gibt Name, Adresse, Telefonnummer, Website, Bewertung und Anzahl der Bewertungen zurück."
+        },
+        "vars": {
+          "API_KEY": "env:GOOGLE_MAPS_API_KEY|Get your API key from the Google Cloud Console at console.cloud.google.com. Enable the Places API (New)."
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": "Search",
+            "destination": {
+              "url": "https://places.googleapis.com/v1/places:searchText",
+              "method": "POST",
+              "headers": {
+                "X-Goog-Api-Key": "{{API_KEY}}",
+                "X-Goog-FieldMask": "places.id,places.displayName,places.formattedAddress,places.nationalPhoneNumber,places.internationalPhoneNumber,places.rating,places.userRatingCount,places.websiteUri,places.businessStatus,places.types,nextPageToken",
+                "Content-Type": "application/json"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Query",
+                "as": "textQuery",
+                "description": {
+                  "en": "The text query to search for (e.g. 'barbers in Vienna Austria', 'dentists in Graz').",
+                  "de": "Der Suchbegriff (z.B. 'Friseure in Wien', 'Zahnarzt in Graz')."
+                },
+                "type": "string",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Region",
+                "as": "regionCode",
+                "description": {
+                  "en": "ISO 3166-1 alpha-2 country code to bias results (e.g. AT for Austria, DE for Germany).",
+                  "de": "ISO 3166-1 alpha-2 Ländercode zur Einschränkung der Ergebnisse (z.B. AT für Österreich)."
+                },
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Language",
+                "as": "languageCode",
+                "description": {
+                  "en": "Language code for results (e.g. de, en).",
+                  "de": "Sprachcode für die Ergebnisse (z.B. de, en)."
+                },
+                "type": "string",
+                "source": "hidden"
+              },
+              {
+                "name": "Max Results",
+                "as": "pageSize",
+                "description": {
+                  "en": "Number of results to return (1–20).",
+                  "de": "Anzahl der zurückzugebenden Ergebnisse (1–20)."
+                },
+                "type": "number",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Page Token",
+                "as": "pageToken",
+                "description": {
+                  "en": "Token from a previous search to fetch the next page of results.",
+                  "de": "Token aus einer vorherigen Suche zum Abrufen der nächsten Ergebnisseite."
+                },
+                "type": "string",
+                "source": "field",
+                "required": false
+              }
+            ]
+          }
+        ],
+        "output": {
+          "PLACES": "out.places",
+          "NEXT_PAGE_TOKEN": "out.nextPageToken"
+        },
+        "ui": "table:displayName.text;formattedAddress;nationalPhoneNumber;rating;userRatingCount;websiteUri;businessStatus",
+        "messages": {
+          "success": {
+            "en": "Found {{out.places.length}} places.",
+            "de": "{{out.places.length}} Orte gefunden."
+          },
+          "error": {
+            "en": "Failed to search places.",
+            "de": "Suche nach Orten fehlgeschlagen."
+          }
+        }
+      }
+    },
+    {
       "key": "none:google-meet-create-meeting",
       "identifier": "@google-meet-create-meeting",
       "alias": "google-meet-create-meeting",
@@ -36647,6 +36903,123 @@
             ]
           }
         ]
+      }
+    },
+    {
+      "key": "none:joai-contact-activity-log",
+      "identifier": "@joai-contact-activity-log",
+      "alias": "joai-contact-activity-log",
+      "chain": "none",
+      "hash": "6908cddc4ef9f91222b61e1e1fbfee8aba1d4ef1b9a5e934bcbb7c2e82e624c3",
+      "checksum": "6908cddc4ef9f91222b61e1e1fbfee8aba1d4ef1b9a5e934bcbb7c2e82e624c3",
+      "name": "JoAi: Log Contact Activity",
+      "title": {
+        "en": "Log an activity on a contact",
+        "de": "Aktivität bei einem Kontakt protokollieren"
+      },
+      "description": {
+        "en": "Log any type of activity on a contact — note, call, meeting, email, task, or custom event.",
+        "de": "Beliebige Aktivität bei einem Kontakt protokollieren – Notiz, Anruf, Meeting, E-Mail, Aufgabe oder benutzerdefiniertes Ereignis."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "4098667056683890c8f1aad41581885db272e391b0d6170e7e2b73ee7fbbca2e",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: Log Contact Activity",
+        "title": {
+          "en": "Log an activity on a contact",
+          "de": "Aktivität bei einem Kontakt protokollieren"
+        },
+        "description": {
+          "en": "Log any type of activity on a contact — note, call, meeting, email, task, or custom event.",
+          "de": "Beliebige Aktivität bei einem Kontakt protokollieren – Notiz, Anruf, Meeting, E-Mail, Aufgabe oder benutzerdefiniertes Ereignis."
+        },
+        "bot": "Use this to log any interaction or touchpoint with a contact. Prefer specific types (call, email, meeting) over custom when applicable.",
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Log activity",
+              "de": "Aktivität protokollieren"
+            },
+            "destination": {
+              "url": "https://devnet-api.joai.ai/v1/contacts/{{contactId}}/activities",
+              "method": "POST"
+            },
+            "inputs": [
+              {
+                "name": "Contact ID",
+                "as": "contactId",
+                "description": {
+                  "en": "The ID of the contact to log the activity on.",
+                  "de": "Die ID des Kontakts, bei dem die Aktivität protokolliert werden soll."
+                },
+                "bot": "The ID of the contact.",
+                "type": "string",
+                "position": "arg:1",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Type",
+                "as": "type",
+                "description": {
+                  "en": "The type of activity: note, call, meeting, email, task, or custom.",
+                  "de": "Art der Aktivität: note, call, meeting, email, task oder custom."
+                },
+                "bot": "The activity type. Use 'note' for general observations, 'email' for email exchanges, 'call' for calls, 'meeting' for meetings, 'task' for to-dos, 'custom' for anything else.",
+                "type": "string",
+                "position": "payload:type",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Description",
+                "as": "description",
+                "description": {
+                  "en": "Details about the activity.",
+                  "de": "Details zur Aktivität."
+                },
+                "bot": "A clear description of what happened or what was discussed.",
+                "type": "string",
+                "position": "payload:description",
+                "source": "field",
+                "required": false
+              }
+            ]
+          }
+        ],
+        "messages": {
+          "success": {
+            "en": "Activity logged on contact.",
+            "de": "Aktivität beim Kontakt protokolliert."
+          }
+        }
       }
     },
     {
