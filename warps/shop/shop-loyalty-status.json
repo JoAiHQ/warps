@@ -1,0 +1,56 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Shop: Loyalty Status",
+  "title": {
+    "en": "Your Loyalty Card",
+    "de": "Deine Treuekarte"
+  },
+  "description": {
+    "en": "Check your stamp progress and available rewards.",
+    "de": "Überprüfe deinen Stempelfortschritt und verfügbare Belohnungen."
+  },
+  "bot": "Show the customer their loyalty stamp progress. Query the smart contract for their current status.",
+  "chain": "multiversx",
+  "vars": {
+    "SHOP_ID": "query:shop",
+    "SC_ADDRESS": "env:SHOP_SC_ADDRESS"
+  },
+  "actions": [
+    {
+      "type": "query",
+      "label": {
+        "en": "Loading your card...",
+        "de": "Karte wird geladen..."
+      },
+      "address": "{{SC_ADDRESS}}",
+      "func": "getStatus",
+      "args": [
+        "uint64:{{SHOP_ID}}"
+      ],
+      "inputs": [
+        {
+          "name": "JOAI_TAG_ID",
+          "type": "string",
+          "position": "arg:2",
+          "source": "field",
+          "required": true
+        }
+      ],
+      "auto": true
+    }
+  ],
+  "output": {
+    "NAME": "out.name",
+    "STAMPS": "out.stamps",
+    "NEEDED": "out.stamps_for_reward",
+    "DISCOUNT": "out.discount",
+    "REWARD_READY": "out.reward_ready",
+    "LAST_VISIT": "out.last_visit"
+  },
+  "messages": {
+    "success": {
+      "en": "{{NAME}} — {{STAMPS}}/{{NEEDED}} stamps collected",
+      "de": "{{NAME}} — {{STAMPS}}/{{NEEDED}} Stempel gesammelt"
+    }
+  }
+}

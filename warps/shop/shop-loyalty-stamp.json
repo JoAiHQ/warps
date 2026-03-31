@@ -1,0 +1,72 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Shop: Loyalty Stamp",
+  "title": {
+    "en": "Add Stamp",
+    "de": "Stempel hinzufügen"
+  },
+  "description": {
+    "en": "Scan a customer's loyalty card to add a stamp.",
+    "de": "Scanne die Treuekarte eines Kunden, um einen Stempel hinzuzufügen."
+  },
+  "bot": "This warp is used by the merchant to add a loyalty stamp. The card ID comes from NFC scan injection. After stamping, the agent should log a contact activity on the customer's JoAi contact.",
+  "chain": "multiversx",
+  "vars": {
+    "SHOP_ID": "env:SHOP_ID",
+    "SC_ADDRESS": "env:SHOP_SC_ADDRESS"
+  },
+  "actions": [
+    {
+      "type": "query",
+      "label": {
+        "en": "Looking up customer...",
+        "de": "Kunde wird gesucht..."
+      },
+      "address": "{{SC_ADDRESS}}",
+      "func": "getStatus",
+      "args": [
+        "uint64:{{SHOP_ID}}",
+        "string:{{JOAI_TAG_ID}}"
+      ],
+      "inputs": [
+        {
+          "name": "JOAI_TAG_ID",
+          "type": "string",
+          "position": "arg:2",
+          "source": "field",
+          "required": true
+        }
+      ],
+      "auto": true
+    },
+    {
+      "type": "contract",
+      "label": {
+        "en": "Add stamp",
+        "de": "Stempel hinzufügen"
+      },
+      "address": "{{SC_ADDRESS}}",
+      "func": "addStamp",
+      "args": [
+        "uint64:{{SHOP_ID}}",
+        "string:{{JOAI_TAG_ID}}"
+      ],
+      "gasLimit": 10000000,
+      "auto": true
+    }
+  ],
+  "output": {
+    "NAME": "out.1.name",
+    "STAMPS": "out.1.stamps",
+    "NEEDED": "out.1.stamps_for_reward",
+    "DISCOUNT": "out.1.discount",
+    "REWARD_READY": "out.1.reward_ready"
+  },
+  "messages": {
+    "success": {
+      "en": "{{NAME}} — {{STAMPS}}/{{NEEDED}} stamps",
+      "de": "{{NAME}} — {{STAMPS}}/{{NEEDED}} Stempel"
+    },
+    "bot": "After success, log a visit activity on the customer's JoAi contact."
+  }
+}

@@ -1,0 +1,83 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Query Store Data",
+  "title": {
+    "en": "View tracked data",
+    "de": "Verfolgte Daten anzeigen"
+  },
+  "description": {
+    "en": "Query and view entries from a tracked data store with optional date filters.",
+    "de": "Einträge eines Datenspeichers abfragen und mit optionalen Datumsfiltern anzeigen."
+  },
+  "bot": "Use this when the user wants to see their tracked data, check progress, view history, or look up past entries in a store.",
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Query data",
+        "de": "Daten abfragen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/stores/{{storeName}}/entries",
+        "method": "GET"
+      },
+      "inputs": [
+        {
+          "name": "Store Name",
+          "as": "storeName",
+          "description": {
+            "en": "The name of the store to query",
+            "de": "Name des abzufragenden Speichers"
+          },
+          "bot": "The exact name of the store to query.",
+          "type": "string",
+          "position": "arg:1",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Since",
+          "as": "since",
+          "description": {
+            "en": "Show entries after this date (ISO format)",
+            "de": "Einträge nach diesem Datum anzeigen (ISO-Format)"
+          },
+          "bot": "Optional ISO date to filter entries from this date onwards.",
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Until",
+          "as": "until",
+          "description": {
+            "en": "Show entries before this date (ISO format)",
+            "de": "Einträge vor diesem Datum anzeigen (ISO-Format)"
+          },
+          "bot": "Optional ISO date to filter entries up to this date.",
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Last N",
+          "as": "last",
+          "description": {
+            "en": "Return only the last N entries",
+            "de": "Nur die letzten N Einträge zurückgeben"
+          },
+          "bot": "Optional number to return only the most recent N entries.",
+          "type": "string",
+          "source": "field",
+          "required": false
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Here are your '{{storeName}}' entries.",
+      "de": "Hier sind deine '{{storeName}}'-Einträge."
+    }
+  }
+}

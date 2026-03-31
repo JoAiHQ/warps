@@ -1,0 +1,90 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Create Store",
+  "title": {
+    "en": "Create a data store",
+    "de": "Datenspeicher erstellen"
+  },
+  "description": {
+    "en": "Create a new tracked data store for time-series or scalar data (weight, expenses, habits, etc.).",
+    "de": "Erstelle einen neuen Datenspeicher für Zeitreihen- oder Einzelwerte (Gewicht, Ausgaben, Gewohnheiten usw.)."
+  },
+  "bot": "Use this when the user wants to start tracking something new over time — weight, expenses, habits, metrics, counters, or any recurring measurement.",
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Create store",
+        "de": "Speicher erstellen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/stores",
+        "method": "POST"
+      },
+      "inputs": [
+        {
+          "name": "Name",
+          "as": "name",
+          "description": {
+            "en": "Short lowercase name (e.g. \"weight\", \"expense:food\", \"habit:meditation\")",
+            "de": "Kurzer Name in Kleinbuchstaben (z.B. \"weight\", \"expense:food\", \"habit:meditation\")"
+          },
+          "bot": "Short, lowercase store name. Use colons for namespacing (e.g. \"habit:meditation\", \"expense:food\"). Must be 2-50 chars, alphanumeric with colons/hyphens.",
+          "type": "string",
+          "position": "arg:1",
+          "source": "field",
+          "required": true,
+          "min": 2
+        },
+        {
+          "name": "Description",
+          "as": "description",
+          "description": {
+            "en": "What this store tracks",
+            "de": "Was dieser Speicher verfolgt"
+          },
+          "bot": "A human-readable purpose for this store.",
+          "type": "string",
+          "position": "arg:2",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Value Type",
+          "as": "valueType",
+          "description": {
+            "en": "scalar (single value) or series (time-series data)",
+            "de": "scalar (Einzelwert) oder series (Zeitreihe)"
+          },
+          "bot": "Use 'scalar' for a single changing value (e.g. portfolio balance). Use 'series' for data points over time (e.g. daily weight, expenses).",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "series",
+          "options": {
+            "scalar": "Scalar (single value)",
+            "series": "Series (time-series)"
+          }
+        },
+        {
+          "name": "Unit",
+          "as": "unit",
+          "description": {
+            "en": "Unit of measurement (e.g. \"lbs\", \"USD\", \"minutes\")",
+            "de": "Maßeinheit (z.B. \"kg\", \"EUR\", \"Minuten\")"
+          },
+          "bot": "Optional unit of measurement like 'lbs', 'USD', 'minutes', 'km'.",
+          "type": "string",
+          "source": "field",
+          "required": false
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Now tracking '{{name}}'!",
+      "de": "'{{name}}' wird jetzt verfolgt!"
+    }
+  }
+}
