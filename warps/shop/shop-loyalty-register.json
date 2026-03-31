@@ -9,11 +9,10 @@
     "en": "Register your loyalty card and start earning stamps towards free rewards.",
     "de": "Registriere deine Treuekarte und sammle Stempel für kostenlose Belohnungen."
   },
-  "bot": "Loyalty card registration. The card ID comes from the NFC tag's hardware device ID (injected by the app). Collect the customer's name and email/phone, then register on-chain. If the card is already registered, redirect to status.",
+  "bot": "Loyalty card registration. The card ID comes from the NFC tag's hardware device ID. Collect the customer's name and email/phone, then register on-chain. If the card is already registered, redirect to status.",
   "chain": "multiversx",
   "vars": {
     "SHOP_ID": "query:shop",
-    "CARD_ID": "query:card",
     "SC_ADDRESS": "env:SHOP_SC_ADDRESS"
   },
   "actions": [
@@ -26,12 +25,20 @@
       "address": "{{SC_ADDRESS}}",
       "func": "isCardRegistered",
       "args": [
-        "uint64:{{SHOP_ID}}",
-        "string:{{CARD_ID}}"
+        "uint64:{{SHOP_ID}}"
+      ],
+      "inputs": [
+        {
+          "name": "JOAI_TAG_ID",
+          "type": "string",
+          "position": "arg:2",
+          "source": "field",
+          "required": true
+        }
       ],
       "auto": true,
       "next": {
-        "success": "shop-loyalty-status?shop={{SHOP_ID}}&card={{CARD_ID}}"
+        "success": "shop-loyalty-status?shop={{SHOP_ID}}&JOAI_TAG_ID={{JOAI_TAG_ID}}"
       }
     },
     {
@@ -108,7 +115,7 @@
       "func": "register",
       "args": [
         "uint64:{{SHOP_ID}}",
-        "string:{{CARD_ID}}",
+        "string:{{JOAI_TAG_ID}}",
         "string:{{name}}"
       ],
       "gasLimit": 10000000,
@@ -125,5 +132,5 @@
       "de": "Willkommen bei {{SHOP_NAME}}, {{name}}! Dein erster Stempel wurde gesammelt."
     }
   },
-  "next": "shop-loyalty-review?shop={{SHOP_ID}}&card={{CARD_ID}}"
+  "next": "shop-loyalty-review?shop={{SHOP_ID}}&JOAI_TAG_ID={{JOAI_TAG_ID}}"
 }
