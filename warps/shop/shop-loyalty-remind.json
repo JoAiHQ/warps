@@ -9,14 +9,27 @@
     "en": "Check for customers who haven't visited recently and send them a reminder.",
     "de": "Prüfe auf Kunden, die kürzlich nicht da waren, und sende eine Erinnerung."
   },
-  "bot": "This is a scheduled warp that runs daily. Query the smart contract for stale customers using getStaleCustomers with a timestamp threshold (current time minus the shop's configured reminder_days). For each stale customer, look up their JoAi contact by name or card ID tag, then send a WhatsApp/SMS reminder via Twilio. Log each reminder as a contact activity.",
+  "bot": "Daily scheduled. SHOP_ID in query (get from setting-get when scheduling). STALE_SINCE = now - (reminder_days * 86400). For each stale customer: find contact by card_uuid, send WhatsApp/SMS, log activity.",
   "chain": "multiversx",
   "schedule": "daily",
   "vars": {
-    "SHOP_ID": "env:SHOP_ID",
+    "SHOP_ID": "query:SHOP_ID",
     "SC_ADDRESS": "env:SHOP_SC_ADDRESS"
   },
   "actions": [
+    {
+      "type": "query",
+      "label": {
+        "en": "Loading loyalty config...",
+        "de": "Treue-Konfiguration wird geladen..."
+      },
+      "address": "{{SC_ADDRESS}}",
+      "func": "getLoyaltyConfig",
+      "args": [
+        "uint64:{{SHOP_ID}}"
+      ],
+      "auto": true
+    },
     {
       "type": "query",
       "label": {
@@ -30,13 +43,21 @@
         "uint64:{{STALE_SINCE}}",
         "uint32:50"
       ],
+      "inputs": [
+        {
+          "name": "STALE_SINCE",
+          "type": "uint64",
+          "position": "arg:2",
+          "source": "field",
+          "bot": "Calculate as: current unix timestamp minus (REMINDER_DAYS * 86400)"
+        }
+      ],
       "auto": true
     }
   ],
   "output": {
-    "STALE_CUSTOMERS": "out"
+    "REMINDER_DAYS": "out.1.reminder_days",
+    "STALE_CUSTOMERS": "out.2"
   },
-  "messages": {
-    "bot": "Calculate STALE_SINCE as: current unix timestamp minus (reminder_days * 86400). The reminder_days value should come from the shop's loyalty config (getLoyaltyConfig). For each stale customer in the result, resolve their contact and send a reminder message."
-  }
+  "messages": {}
 }
