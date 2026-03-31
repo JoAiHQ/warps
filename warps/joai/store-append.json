@@ -1,0 +1,72 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Record Store Entry",
+  "title": {
+    "en": "Record a data point",
+    "de": "Datenpunkt erfassen"
+  },
+  "description": {
+    "en": "Record a new data point in a tracked store (e.g. log weight, add expense, track habit).",
+    "de": "Erfasse einen neuen Datenpunkt in einem Datenspeicher (z.B. Gewicht, Ausgabe, Gewohnheit)."
+  },
+  "bot": "Use this when the user reports a new measurement or data point for something they're tracking — a weight reading, an expense amount, a habit completion, etc.",
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Record entry",
+        "de": "Eintrag erfassen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/stores/{{storeName}}/entries",
+        "method": "POST"
+      },
+      "inputs": [
+        {
+          "name": "Store Name",
+          "as": "storeName",
+          "description": {
+            "en": "The name of the store to record to",
+            "de": "Name des Speichers"
+          },
+          "bot": "The exact name of the existing store to append to.",
+          "type": "string",
+          "position": "arg:1",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Value",
+          "as": "value",
+          "description": {
+            "en": "The value to record",
+            "de": "Der zu erfassende Wert"
+          },
+          "bot": "The data point value — a number, string, or boolean.",
+          "type": "string",
+          "position": "arg:2",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Label",
+          "as": "label",
+          "description": {
+            "en": "Optional label for this entry (e.g. \"morning weigh-in\")",
+            "de": "Optionales Label (z.B. \"Morgens\")"
+          },
+          "bot": "Optional label to describe this specific entry.",
+          "type": "string",
+          "source": "field",
+          "required": false
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Recorded {{value}} in '{{storeName}}'.",
+      "de": "{{value}} in '{{storeName}}' erfasst."
+    }
+  }
+}
