@@ -1,0 +1,42 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Shop: Loyalty Reminder",
+  "title": {
+    "en": "Send loyalty reminders",
+    "de": "Treue-Erinnerungen senden"
+  },
+  "description": {
+    "en": "Check for customers who haven't visited recently and send them a reminder.",
+    "de": "Prüfe auf Kunden, die kürzlich nicht da waren, und sende eine Erinnerung."
+  },
+  "bot": "This is a scheduled warp that runs daily. Query the smart contract for stale customers using getStaleCustomers with a timestamp threshold (current time minus the shop's configured reminder_days). For each stale customer, look up their JoAi contact by name or card ID tag, then send a WhatsApp/SMS reminder via Twilio. Log each reminder as a contact activity.",
+  "chain": "multiversx",
+  "schedule": "daily",
+  "vars": {
+    "SHOP_ID": "env:SHOP_ID",
+    "SC_ADDRESS": "env:SHOP_SC_ADDRESS"
+  },
+  "actions": [
+    {
+      "type": "query",
+      "label": {
+        "en": "Fetching overdue customers...",
+        "de": "Überfällige Kunden werden geladen..."
+      },
+      "address": "{{SC_ADDRESS}}",
+      "func": "getStaleCustomers",
+      "args": [
+        "uint64:{{SHOP_ID}}",
+        "uint64:{{STALE_SINCE}}",
+        "uint32:50"
+      ],
+      "auto": true
+    }
+  ],
+  "output": {
+    "STALE_CUSTOMERS": "out"
+  },
+  "messages": {
+    "bot": "Calculate STALE_SINCE as: current unix timestamp minus (reminder_days * 86400). The reminder_days value should come from the shop's loyalty config (getLoyaltyConfig). For each stale customer in the result, resolve their contact and send a reminder message."
+  }
+}

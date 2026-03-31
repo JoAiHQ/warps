@@ -1,0 +1,52 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Shop: Loyalty Review Prompt",
+  "title": {
+    "en": "Leave us a review!",
+    "de": "Bewerte uns!"
+  },
+  "description": {
+    "en": "Rate us on Google and get a discount on your next visit.",
+    "de": "Bewerte uns auf Google und erhalte einen Rabatt auf deinen nächsten Besuch."
+  },
+  "bot": "This warp prompts the customer to leave a Google review after their first visit. The review URL and discount percentage come from the shop's loyalty config on-chain.",
+  "chain": "multiversx",
+  "vars": {
+    "SHOP_ID": "query:shop",
+    "CARD_UUID": "query:card",
+    "SC_ADDRESS": "env:SHOP_SC_ADDRESS"
+  },
+  "actions": [
+    {
+      "type": "query",
+      "label": {
+        "en": "Loading...",
+        "de": "Laden..."
+      },
+      "address": "{{SC_ADDRESS}}",
+      "func": "getLoyaltyConfig",
+      "args": [
+        "uint64:{{SHOP_ID}}"
+      ],
+      "auto": true
+    },
+    {
+      "type": "link",
+      "label": {
+        "en": "Leave a Google Review",
+        "de": "Google-Bewertung abgeben"
+      },
+      "url": "{{REVIEW_URL}}"
+    }
+  ],
+  "output": {
+    "REVIEW_URL": "out.review_url",
+    "REVIEW_DISCOUNT": "out.review_discount"
+  },
+  "messages": {
+    "success": {
+      "en": "Thanks for your review! Show this to your barber to get {{REVIEW_DISCOUNT}}% off next time.",
+      "de": "Danke für deine Bewertung! Zeige das deinem Friseur für {{REVIEW_DISCOUNT}}% Rabatt beim nächsten Mal."
+    }
+  }
+}

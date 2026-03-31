@@ -1,0 +1,129 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Shop: Loyalty Register",
+  "title": {
+    "en": "Join our loyalty program!",
+    "de": "Tritt unserem Treueprogramm bei!"
+  },
+  "description": {
+    "en": "Register your loyalty card and start earning stamps towards free rewards.",
+    "de": "Registriere deine Treuekarte und sammle Stempel für kostenlose Belohnungen."
+  },
+  "bot": "Loyalty card registration. The card ID comes from the NFC tag's hardware device ID (injected by the app). Collect the customer's name and email/phone, then register on-chain. If the card is already registered, redirect to status.",
+  "chain": "multiversx",
+  "vars": {
+    "SHOP_ID": "query:shop",
+    "CARD_ID": "query:card",
+    "SC_ADDRESS": "env:SHOP_SC_ADDRESS"
+  },
+  "actions": [
+    {
+      "type": "query",
+      "label": {
+        "en": "Checking card...",
+        "de": "Karte wird überprüft..."
+      },
+      "address": "{{SC_ADDRESS}}",
+      "func": "isCardRegistered",
+      "args": [
+        "uint64:{{SHOP_ID}}",
+        "string:{{CARD_ID}}"
+      ],
+      "auto": true,
+      "next": {
+        "success": "shop-loyalty-status?shop={{SHOP_ID}}&card={{CARD_ID}}"
+      }
+    },
+    {
+      "type": "query",
+      "label": {
+        "en": "Loading shop...",
+        "de": "Shop wird geladen..."
+      },
+      "address": "{{SC_ADDRESS}}",
+      "func": "getShopInfo",
+      "args": [
+        "uint64:{{SHOP_ID}}"
+      ],
+      "auto": true
+    },
+    {
+      "type": "collect",
+      "label": {
+        "en": "Register",
+        "de": "Registrieren"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/contacts",
+        "method": "POST"
+      },
+      "inputs": [
+        {
+          "name": "Name",
+          "as": "name",
+          "description": {
+            "en": "Your name",
+            "de": "Dein Name"
+          },
+          "bot": "The customer's name.",
+          "type": "string",
+          "position": "arg:1",
+          "source": "field",
+          "required": true,
+          "min": 1
+        },
+        {
+          "name": "Email",
+          "as": "email",
+          "description": {
+            "en": "Your email address",
+            "de": "Deine E-Mail-Adresse"
+          },
+          "bot": "The customer's email address.",
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Phone",
+          "as": "phone",
+          "description": {
+            "en": "Your phone number (optional)",
+            "de": "Deine Telefonnummer (optional)"
+          },
+          "bot": "The customer's phone number, if provided.",
+          "type": "string",
+          "source": "field",
+          "required": false
+        }
+      ]
+    },
+    {
+      "type": "contract",
+      "label": {
+        "en": "Activate card",
+        "de": "Karte aktivieren"
+      },
+      "address": "{{SC_ADDRESS}}",
+      "func": "register",
+      "args": [
+        "uint64:{{SHOP_ID}}",
+        "string:{{CARD_ID}}",
+        "string:{{name}}"
+      ],
+      "gasLimit": 10000000,
+      "auto": true
+    }
+  ],
+  "output": {
+    "IS_REGISTERED": "out.1",
+    "SHOP_NAME": "out.2.name"
+  },
+  "messages": {
+    "success": {
+      "en": "Welcome to {{SHOP_NAME}}, {{name}}! Your first stamp has been earned.",
+      "de": "Willkommen bei {{SHOP_NAME}}, {{name}}! Dein erster Stempel wurde gesammelt."
+    }
+  },
+  "next": "shop-loyalty-review?shop={{SHOP_ID}}&card={{CARD_ID}}"
+}

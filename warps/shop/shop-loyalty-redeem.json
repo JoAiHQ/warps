@@ -1,0 +1,59 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Shop: Loyalty Redeem Reward",
+  "title": {
+    "en": "Redeem Reward",
+    "de": "Belohnung einlösen"
+  },
+  "description": {
+    "en": "Redeem a customer's loyalty reward and reset their stamps.",
+    "de": "Löse die Treuebelohnung eines Kunden ein und setze die Stempel zurück."
+  },
+  "bot": "This warp redeems a customer's loyalty reward. After redeeming, the agent should log a redemption activity on the customer's JoAi contact.",
+  "chain": "multiversx",
+  "vars": {
+    "SHOP_ID": "env:SHOP_ID",
+    "CARD_ID": "query:card",
+    "SC_ADDRESS": "env:SHOP_SC_ADDRESS"
+  },
+  "actions": [
+    {
+      "type": "query",
+      "label": {
+        "en": "Checking reward...",
+        "de": "Belohnung wird überprüft..."
+      },
+      "address": "{{SC_ADDRESS}}",
+      "func": "getStatus",
+      "args": [
+        "uint64:{{SHOP_ID}}",
+        "string:{{CARD_ID}}"
+      ],
+      "auto": true
+    },
+    {
+      "type": "contract",
+      "label": {
+        "en": "Redeem reward",
+        "de": "Belohnung einlösen"
+      },
+      "address": "{{SC_ADDRESS}}",
+      "func": "redeemReward",
+      "args": [
+        "uint64:{{SHOP_ID}}",
+        "string:{{CARD_ID}}"
+      ],
+      "gasLimit": 10000000
+    }
+  ],
+  "output": {
+    "NAME": "out.1.name"
+  },
+  "messages": {
+    "success": {
+      "en": "Reward redeemed for {{NAME}}! Stamps reset to 0.",
+      "de": "Belohnung für {{NAME}} eingelöst! Stempel auf 0 zurückgesetzt."
+    },
+    "bot": "After success, log a reward redemption activity on the customer's JoAi contact."
+  }
+}
