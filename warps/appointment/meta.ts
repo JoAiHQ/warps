@@ -1,7 +1,7 @@
 import type { WarpExtras } from '../types'
 
 export const meta: Record<string, WarpExtras> = {
-  'appointment-book': {
+  'book': {
     keywords: {
       en: ['book appointment', 'schedule appointment', 'make reservation', 'book meeting', 'schedule visit', 'appointment booking'],
       de: ['Termin buchen', 'Termin vereinbaren', 'Reservierung machen', 'Besprechung buchen', 'Besuch planen', 'Terminbuchung'],
@@ -39,7 +39,7 @@ export const meta: Record<string, WarpExtras> = {
     },
   },
 
-  'appointment-cancel': {
+  'cancel': {
     keywords: {
       en: ['cancel appointment', 'remove booking', 'delete appointment', 'unbook slot'],
       de: ['Termin absagen', 'Buchung entfernen', 'Termin löschen', 'Zeitslot freigeben'],
@@ -77,7 +77,7 @@ export const meta: Record<string, WarpExtras> = {
     },
   },
 
-  'appointment-reschedule': {
+  'reschedule': {
     keywords: {
       en: ['reschedule appointment', 'change appointment time', 'move booking', 'update appointment'],
       de: ['Termin verschieben', 'Terminzeit ändern', 'Buchung verlegen', 'Termin aktualisieren'],
@@ -115,7 +115,7 @@ export const meta: Record<string, WarpExtras> = {
     },
   },
 
-  'appointment-availability': {
+  'availability': {
     keywords: {
       en: ['check availability', 'available time slots', 'open appointments', 'free schedule slots'],
       de: ['Verfügbarkeit prüfen', 'verfügbare Zeitslots', 'offene Termine', 'freie Terminslots'],
@@ -153,7 +153,7 @@ export const meta: Record<string, WarpExtras> = {
     },
   },
 
-  'appointment-onboarding': {
+  'onboarding': {
     keywords: {
       en: ['appointment onboarding', 'setup appointments', 'appointment system intro', 'get started appointments'],
       de: ['Termin-Onboarding', 'Termine einrichten', 'Terminsystem Einführung', 'mit Terminen starten'],
@@ -191,7 +191,7 @@ export const meta: Record<string, WarpExtras> = {
     },
   },
 
-  'appointment-request-create': {
+  'request-create': {
     keywords: {
       en: ['request appointment', 'appointment request', 'ask for appointment', 'submit booking request'],
       de: ['Termin anfragen', 'Terminanfrage', 'um Termin bitten', 'Buchungsanfrage einreichen'],
@@ -229,7 +229,7 @@ export const meta: Record<string, WarpExtras> = {
     },
   },
 
-  'appointment-upsert-policy': {
+  'upsert-policy': {
     keywords: {
       en: ['appointment policy', 'booking policy', 'cancellation policy', 'appointment rules'],
       de: ['Terminrichtlinie', 'Buchungsrichtlinie', 'Stornierungsrichtlinie', 'Terminregeln'],
@@ -267,7 +267,7 @@ export const meta: Record<string, WarpExtras> = {
     },
   },
 
-  'appointment-configure': {
+  'configure': {
     keywords: {
       en: ['configure appointments', 'appointment settings', 'setup booking system', 'appointment configuration', 'manage availability'],
       de: ['Termine konfigurieren', 'Termineinstellungen', 'Buchungssystem einrichten', 'Terminkonfiguration', 'Verfügbarkeit verwalten'],
