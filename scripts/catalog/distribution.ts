@@ -87,6 +87,7 @@ export type ResolvedAppDistribution = {
   name: string
   description: Dict<string>
   logo: string | Dict<string>
+  colors: Dict
   urls: Dict
   hash: string
   mcpUrl: string
@@ -109,7 +110,7 @@ export type DistributionCatalogManifest = {
   apps: ResolvedAppDistribution[]
 }
 
-const PROVIDERS: AppDistributionProvider[] = ['claude', 'codex', 'openai']
+const PROVIDERS: AppDistributionProvider[] = ['claude', 'codex', 'cursor', 'openai']
 
 function toMcpUrl(network: SyncNetwork, slug: string): string {
   if (network === 'devnet') return `https://devnet-cortex.joai.ai/mcp/apps/${slug}`
@@ -353,6 +354,7 @@ export async function buildDistributionCatalog(
         name: brand.name,
         description: brand.description,
         logo: brand.logo,
+        colors: brand.colors ?? {},
         urls: brand.urls ?? {},
         hash: brand.hash,
         mcpUrl: toMcpUrl(manifest.network, brand.slug),

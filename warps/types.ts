@@ -7,7 +7,7 @@ export type WarpbaseBrand = {
   discover?: string[]
 }
 
-export type AppDistributionProvider = 'claude' | 'codex' | 'openai'
+export type AppDistributionProvider = 'claude' | 'codex' | 'cursor' | 'openai'
 
 export type AppDistributionProviderStatus =
   | 'disabled'

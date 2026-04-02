@@ -102,6 +102,10 @@ function createDefaultManifest(brandName: string, brand: WarpbaseBrand | null): 
         enabled: true,
         status: 'ready',
       },
+      cursor: {
+        enabled: true,
+        status: 'ready',
+      },
       openai: {
         enabled: true,
         status: 'runtime_ready',
