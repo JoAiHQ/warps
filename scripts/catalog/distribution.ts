@@ -84,6 +84,7 @@ export type ResolvedProviderDistribution = {
 
 export type ResolvedAppDistribution = {
   slug: string
+  visibility: 'public' | 'private'
   name: string
   description: Dict<string>
   logo: string | Dict<string>
@@ -311,14 +312,15 @@ export async function buildDistributionCatalog(
   manifest: CatalogManifest,
   brandFactoryCache: Map<string, WarpbaseBrand | null>,
 ): Promise<DistributionCatalogManifest> {
-  const appEntries = new Map<string, { brand: BrandPayload; brandName: string; warps: WarpUpsert[] }>()
+  const appEntries = new Map<string, { brand: BrandPayload; brandName: string; publicWarps: WarpUpsert[]; privateWarps: WarpUpsert[] }>()
 
   for (const entry of manifest.warps) {
-    if (!entry.listed || !entry.brand || entry.brand.active === false) continue
+    if (!entry.brand || entry.brand.active === false) continue
 
     const current = appEntries.get(entry.brand.slug)
     if (current) {
-      current.warps.push(entry)
+      if (entry.listed) current.publicWarps.push(entry)
+      else current.privateWarps.push(entry)
       continue
     }
 
@@ -328,12 +330,15 @@ export async function buildDistributionCatalog(
     appEntries.set(entry.brand.slug, {
       brand: entry.brand,
       brandName,
-      warps: [entry],
+      publicWarps: entry.listed ? [entry] : [],
+      privateWarps: entry.listed ? [] : [entry],
     })
   }
 
   const apps = await Promise.all(
-    [...appEntries.values()].map(async ({ brand, brandName, warps }) => {
+    [...appEntries.values()].map(async ({ brand, brandName, publicWarps, privateWarps }) => {
+      const visibleWarps = publicWarps.length > 0 ? publicWarps : privateWarps
+      const visibility = publicWarps.length > 0 ? 'public' : 'private'
       const { distribution, mcp } = await resolveBrandManifests(
         repoRoot,
         brandName,
@@ -351,6 +356,7 @@ export async function buildDistributionCatalog(
 
       return {
         slug: brand.slug,
+        visibility,
         name: brand.name,
         description: brand.description,
         logo: brand.logo,
@@ -363,7 +369,7 @@ export async function buildDistributionCatalog(
         review: distribution.review,
         mcp,
         providers,
-        actions: warps
+        actions: visibleWarps
           .slice()
           .sort((a, b) => a.alias.localeCompare(b.alias))
           .map((entry) => toActionSummary(entry)),
@@ -390,6 +396,9 @@ export function validateDistributionCatalog(catalog: DistributionCatalogManifest
 
   for (const app of catalog.apps) {
     if (!app.install.summary) errors.push(`${app.slug}: missing install.summary`)
+    if (!app.visibility || !['public', 'private'].includes(app.visibility)) {
+      errors.push(`${app.slug}: missing or invalid visibility`)
+    }
     if (app.install.examplePrompts.length === 0) errors.push(`${app.slug}: missing install.examplePrompts`)
     if (!app.legal.privacyUrl) errors.push(`${app.slug}: missing legal.privacyUrl`)
     if (!app.legal.supportUrl && !app.legal.supportEmail) {

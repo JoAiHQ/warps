@@ -172,10 +172,12 @@ describe('distribution catalog', () => {
     expect(catalog.apps).toHaveLength(1)
     expect(catalog.apps[0]).toMatchObject({
       slug: 'joai',
+      visibility: 'public',
       mcpUrl: 'https://cortex.joai.ai/mcp/apps/joai',
       providers: {
         claude: { enabled: true, status: 'ready' },
         codex: { enabled: true, status: 'ready' },
+        cursor: { enabled: true, status: 'ready' },
         openai: { enabled: true, status: 'runtime_ready' },
       },
     })
@@ -193,6 +195,74 @@ describe('distribution catalog', () => {
     expect(validateDistributionCatalog(catalog)).toEqual([])
   })
 
+  it('keeps private-only brand apps in the catalog as private', async () => {
+    const catalog = await buildDistributionCatalog(
+      REPO_ROOT,
+      {
+        schemaVersion: 1,
+        source: 'github',
+        repo: 'JoAiHQ/warps',
+        branch: 'main',
+        network: 'mainnet',
+        commitSha: 'test',
+        generatedAt: '2026-04-01T00:00:00.000Z',
+        warps: [
+          {
+            key: 'multiversx:joai-private-warp',
+            identifier: '@multiversx:joai-private-warp',
+            alias: 'joai-private-warp',
+            chain: 'multiversx',
+            hash: 'warp-hash-2',
+            checksum: 'warp-hash-2',
+            name: 'JoAi: Private Warp',
+            title: { en: 'Private Warp' },
+            description: { en: 'Private warp' },
+            preview: null,
+            creator: 'github:JoAiHQ/warps',
+            privileges: [],
+            listed: false,
+            primaryAddress: null,
+            primaryFunc: null,
+            brand: {
+              hash: 'brand-hash-1',
+              slug: 'joai',
+              active: true,
+              protocol: 'brand:1.0.0',
+              name: 'JoAi',
+              description: { en: 'JoAi brand' },
+              logo: { default: 'https://example.com/logo.svg' },
+              urls: { web: 'https://joai.ai' },
+              colors: { primary: '#98FF98' },
+            },
+            warp: {
+              actions: [{ type: 'contract' }],
+            },
+            extras: null,
+          },
+        ],
+      },
+      new Map(),
+    )
+
+    expect(catalog.apps).toHaveLength(1)
+    expect(catalog.apps[0]).toMatchObject({
+      slug: 'joai',
+      visibility: 'private',
+    })
+    expect(catalog.apps[0].actions).toEqual([
+      {
+        alias: 'joai-private-warp',
+        identifier: '@multiversx:joai-private-warp',
+        chain: 'multiversx',
+        name: 'JoAi: Private Warp',
+        title: { en: 'Private Warp' },
+        description: { en: 'Private warp' },
+        actionTypes: ['contract'],
+      },
+    ])
+    expect(validateDistributionCatalog(catalog)).toEqual([])
+  })
+
   it('requires screenshots only for submission-ready OpenAI apps', () => {
     const errors = validateDistributionCatalog({
       schemaVersion: 1,
@@ -205,6 +275,7 @@ describe('distribution catalog', () => {
       apps: [
         {
           slug: 'joai',
+          visibility: 'public',
           name: 'JoAi',
           description: { en: 'JoAi' },
           logo: { default: 'https://example.com/logo.svg' },
@@ -226,7 +297,7 @@ describe('distribution catalog', () => {
             reviewerNotes: ['note'],
             testPrompts: ['prompt'],
           },
-          ui: {
+          mcp: {
             prefersBorder: true,
             csp: {
               connectDomains: [],
@@ -240,6 +311,7 @@ describe('distribution catalog', () => {
           providers: {
             claude: { provider: 'claude', enabled: true, status: 'ready', notes: [] },
             codex: { provider: 'codex', enabled: true, status: 'ready', notes: [] },
+            cursor: { provider: 'cursor', enabled: true, status: 'ready', notes: [] },
             openai: { provider: 'openai', enabled: true, status: 'submission_ready', notes: [] },
           },
           actions: [],
