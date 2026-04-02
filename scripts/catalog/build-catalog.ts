@@ -16,6 +16,11 @@ import {
   SOURCE_REPO,
   type SyncNetwork,
 } from './sync-policy.js'
+import {
+  buildDistributionCatalog,
+  validateDistributionCatalog,
+} from './distribution.js'
+import type { WarpbaseBrand, WarpExtras } from '../../warps/types.js'
 
 type Dict<T = unknown> = Record<string, T>
 
@@ -49,6 +54,7 @@ type WarpUpsert = {
   primaryFunc: string | null
   brand: BrandPayload | null
   warp: Dict
+  extras: WarpExtras | null
 }
 
 type WarpDelete = {
@@ -537,7 +543,7 @@ function listWarpFiles(): Record<string, string> {
 async function getBrandFactoryOutput(
   brandName: string,
   env: SyncNetwork,
-): Promise<any | null> {
+): Promise<WarpbaseBrand | null> {
   const noAtPath = path.join(WARPS_DIR, brandName, 'brand.ts')
   const withAtPath = path.join(WARPS_DIR, `@${brandName}`, 'brand.ts')
   const brandPath = fs.existsSync(noAtPath) ? noAtPath : withAtPath
@@ -562,7 +568,7 @@ async function getBrandFactoryOutput(
   return await brandFactory(config)
 }
 
-function toBrandPayload(brandFactoryOutput: any, active: boolean): BrandPayload {
+function toBrandPayload(brandFactoryOutput: WarpbaseBrand, active: boolean): BrandPayload {
   const info = deepClone((brandFactoryOutput?.info ?? {}) as Dict)
   delete info.meta
 
@@ -580,6 +586,25 @@ function toBrandPayload(brandFactoryOutput: any, active: boolean): BrandPayload 
     ...(info.urls && typeof info.urls === 'object' ? { urls: info.urls as Dict } : {}),
     ...(info.colors && typeof info.colors === 'object' ? { colors: info.colors as Dict } : {}),
   }
+}
+
+async function loadBrandExtras(
+  brandName: string,
+): Promise<Record<string, WarpExtras> | null> {
+  const noAtPath = path.join(WARPS_DIR, brandName, 'meta.ts')
+  const withAtPath = path.join(WARPS_DIR, `@${brandName}`, 'meta.ts')
+  const metaPath = fs.existsSync(noAtPath) ? noAtPath : withAtPath
+
+  if (!fs.existsSync(metaPath)) return null
+
+  const module = await import(pathToFileURL(metaPath).href)
+  const candidate = module.meta ?? module.default
+
+  if (candidate && typeof candidate === 'object' && !Array.isArray(candidate)) {
+    return candidate as Record<string, WarpExtras>
+  }
+
+  return null
 }
 
 function loadPreviousManifest(network: SyncNetwork): CatalogManifest | null {
@@ -651,10 +676,16 @@ function writeJson(filePath: string, data: unknown): void {
   fs.writeFileSync(filePath, `${JSON.stringify(data, null, 2)}\n`)
 }
 
-async function buildManifest(args: CliArgs, network: SyncNetwork): Promise<CatalogManifest> {
+type BuildCatalogResult = {
+  manifest: CatalogManifest
+  brandFactoryCache: Map<string, WarpbaseBrand | null>
+}
+
+async function buildManifest(args: CliArgs, network: SyncNetwork): Promise<BuildCatalogResult> {
   const files = listWarpFiles()
   const brandCache = new Map<string, BrandPayload | null>()
-  const brandFactoryCache = new Map<string, any | null>()
+  const brandFactoryCache = new Map<string, WarpbaseBrand | null>()
+  const extrasCache = new Map<string, Record<string, WarpExtras> | null>()
   const warps: WarpUpsert[] = []
 
   for (const [fileName, absolutePath] of Object.entries(files)) {
@@ -674,10 +705,15 @@ async function buildManifest(args: CliArgs, network: SyncNetwork): Promise<Catal
 
     if (brandName) {
       if (!brandFactoryCache.has(brandName)) {
-        brandFactoryCache.set(
-          brandName,
-          await getBrandFactoryOutput(brandName, network),
-        )
+        try {
+          brandFactoryCache.set(
+            brandName,
+            await getBrandFactoryOutput(brandName, network),
+          )
+        } catch (error) {
+          console.warn(`Skipping brand metadata for ${brandName}:`, error)
+          brandFactoryCache.set(brandName, null)
+        }
       }
 
       const brandFactoryOutput = brandFactoryCache.get(brandName) ?? null
@@ -694,6 +730,15 @@ async function buildManifest(args: CliArgs, network: SyncNetwork): Promise<Catal
       }
 
       brandPayload = brandCache.get(brandName) ?? null
+
+      if (!extrasCache.has(brandName)) {
+        try {
+          extrasCache.set(brandName, await loadBrandExtras(brandName))
+        } catch (error) {
+          console.warn(`Skipping extras for ${brandName}:`, error)
+          extrasCache.set(brandName, null)
+        }
+      }
     }
 
     let workingWarp = deepClone(parsed)
@@ -732,6 +777,15 @@ async function buildManifest(args: CliArgs, network: SyncNetwork): Promise<Catal
     const key = `${chain}:${alias}`
     const primaryInfo = getPrimaryInfo(workingWarp)
 
+    let extras: WarpExtras | null = null
+    if (brandName) {
+      const brandExtras = extrasCache.get(brandName) ?? null
+      if (brandExtras) {
+        const metaKey = alias.startsWith(`${brandName}-`) ? alias.slice(brandName.length + 1) : alias
+        extras = brandExtras[metaKey] ?? null
+      }
+    }
+
     warps.push({
       key,
       identifier,
@@ -750,20 +804,24 @@ async function buildManifest(args: CliArgs, network: SyncNetwork): Promise<Catal
       primaryFunc: primaryInfo.func,
       brand: brandPayload,
       warp: stripNonWarpFields(workingWarp),
+      extras,
     })
   }
 
   warps.sort((a, b) => a.key.localeCompare(b.key))
 
   return {
-    schemaVersion: 1,
-    source: 'github',
-    repo: args.repo,
-    branch: args.branch,
-    network,
-    commitSha: args.commitSha,
-    generatedAt: new Date().toISOString(),
-    warps,
+    manifest: {
+      schemaVersion: 1,
+      source: 'github',
+      repo: args.repo,
+      branch: args.branch,
+      network,
+      commitSha: args.commitSha,
+      generatedAt: new Date().toISOString(),
+      warps,
+    },
+    brandFactoryCache,
   }
 }
 
@@ -776,16 +834,23 @@ async function main() {
     return
   }
 
-  const manifest = await buildManifest(args, network)
+  const { manifest, brandFactoryCache } = await buildManifest(args, network)
   const previousManifest = args.full ? null : loadPreviousManifest(network)
   const delta = computeDelta(manifest, previousManifest, args.committedAt)
+  const distribution = await buildDistributionCatalog(REPO_ROOT, manifest, brandFactoryCache)
+  const distributionErrors = validateDistributionCatalog(distribution)
+
+  if (distributionErrors.length > 0) {
+    throw new Error(`Distribution catalog validation failed:\n- ${distributionErrors.join('\n- ')}`)
+  }
 
   const networkCatalogDir = path.join(CATALOG_DIR, network)
   writeJson(path.join(networkCatalogDir, 'manifest.json'), manifest)
   writeJson(path.join(networkCatalogDir, 'delta.json'), delta)
+  writeJson(path.join(networkCatalogDir, 'distribution.json'), distribution)
 
   console.log(
-    `Catalog generated for ${network}: ${manifest.warps.length} warps, ${delta.upserts.length} upserts, ${delta.deletes.length} deletes.`,
+    `Catalog generated for ${network}: ${manifest.warps.length} warps, ${distribution.apps.length} apps, ${delta.upserts.length} upserts, ${delta.deletes.length} deletes.`,
   )
 }
 

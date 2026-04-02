@@ -89,6 +89,8 @@ export type WarpExtrasFaq = {
 
 export type WarpExtras = {
   keywords?: Record<string, string[]>
+  useCases?: Record<string, string[]>
+  category?: string
   faq?: Record<string, WarpExtrasFaq[]>
 }
 
