@@ -1,0 +1,65 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Shop: Create",
+  "title": {
+    "en": "Create your shop",
+    "de": "Shop erstellen"
+  },
+  "description": {
+    "en": "Register your shop on-chain to get a shop ID, then set up your loyalty program.",
+    "de": "Registriere deinen Shop on-chain, um eine Shop-ID zu erhalten, und richte dann dein Treueprogramm ein."
+  },
+  "bot": "Creates shop on-chain. Chains to configure automatically.",
+  "chain": "multiversx",
+  "vars": {
+    "SC_ADDRESS": "env:SHOP_SC_ADDRESS"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Shop name",
+        "de": "Shop-Name"
+      },
+      "inputs": [
+        {
+          "name": "Shop name",
+          "as": "shopName",
+          "description": {
+            "en": "Your business name (e.g. Joe's Barber)",
+            "de": "Dein Unternehmensname (z.B. Joes Friseur)"
+          },
+          "bot": "Business name.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "min": 1
+        }
+      ]
+    },
+    {
+      "type": "contract",
+      "label": {
+        "en": "Create shop",
+        "de": "Shop erstellen"
+      },
+      "address": "{{SC_ADDRESS}}",
+      "func": "createShop",
+      "args": [
+        "string:{{shopName}}"
+      ],
+      "gasLimit": 10000000,
+      "auto": true
+    }
+  ],
+  "output": {
+    "SHOP_ID": "out.2"
+  },
+  "messages": {
+    "success": {
+      "en": "{{shopName}} created! Setting up loyalty program...",
+      "de": "{{shopName}} erstellt! Treueprogramm wird eingerichtet..."
+    }
+  },
+  "next": "shop-loyalty-configure?SHOP_ID={{SHOP_ID}}"
+}

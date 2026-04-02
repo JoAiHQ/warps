@@ -1,0 +1,115 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Shop: Configure Loyalty",
+  "title": {
+    "en": "Configure loyalty program",
+    "de": "Treueprogramm konfigurieren"
+  },
+  "description": {
+    "en": "Set up your stamp-based loyalty program — rewards, Google review incentive, and reminder frequency.",
+    "de": "Richte dein stempelbasiertes Treueprogramm ein — Belohnungen, Google-Bewertungsanreiz und Erinnerungsfrequenz."
+  },
+  "bot": "Configures loyalty for shop at SHOP_ID.",
+  "chain": "multiversx",
+  "vars": {
+    "SHOP_ID": "query:SHOP_ID",
+    "SC_ADDRESS": "env:SHOP_SC_ADDRESS"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Loyalty settings",
+        "de": "Treue-Einstellungen"
+      },
+      "inputs": [
+        {
+          "name": "Stamps for reward",
+          "as": "stampsForReward",
+          "description": {
+            "en": "How many stamps until a free reward? (e.g. 10)",
+            "de": "Wie viele Stempel bis zur Belohnung? (z.B. 10)"
+          },
+          "bot": "Stamps needed for reward.",
+          "type": "uint32",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Reward label",
+          "as": "rewardLabel",
+          "description": {
+            "en": "What is the reward? (e.g. Free Haircut)",
+            "de": "Was ist die Belohnung? (z.B. Kostenloser Haarschnitt)"
+          },
+          "bot": "Short reward name.",
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Google review URL",
+          "as": "reviewUrl",
+          "description": {
+            "en": "Your Google Maps review link",
+            "de": "Dein Google Maps-Bewertungslink"
+          },
+          "bot": "Google Maps review URL.",
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Review discount (%)",
+          "as": "reviewDiscount",
+          "description": {
+            "en": "Discount % for leaving a Google review (e.g. 10)",
+            "de": "Rabatt % für eine Google-Bewertung (z.B. 10)"
+          },
+          "bot": "Discount % for reviewers.",
+          "type": "uint8",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Reminder after days",
+          "as": "reminderDays",
+          "description": {
+            "en": "Send reminder if customer hasn't visited in X days (e.g. 21)",
+            "de": "Erinnerung senden, wenn Kunde X Tage nicht da war (z.B. 21)"
+          },
+          "bot": "Inactivity days before reminder.",
+          "type": "uint32",
+          "source": "field",
+          "required": true
+        }
+      ]
+    },
+    {
+      "type": "contract",
+      "label": {
+        "en": "Configure loyalty program",
+        "de": "Treueprogramm konfigurieren"
+      },
+      "address": "{{SC_ADDRESS}}",
+      "func": "configureLoyalty",
+      "args": [
+        "uint64:{{SHOP_ID}}",
+        "uint32:{{stampsForReward}}",
+        "string:{{rewardLabel}}",
+        "string:{{reviewUrl}}",
+        "uint8:{{reviewDiscount}}",
+        "uint32:{{reminderDays}}"
+      ],
+      "gasLimit": 10000000,
+      "auto": true
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Loyalty program is live! Now program your NFC cards.",
+      "de": "Treueprogramm ist aktiv! Programmiere jetzt deine NFC-Karten."
+    }
+  },
+  "next": "joai/team-setting-set?key=SHOP_ID&value={{SHOP_ID}}"
+}

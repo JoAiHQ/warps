@@ -1,6 +1,13 @@
 // @vitest-environment node
 import { describe, it, expect } from 'vitest'
+import path from 'path'
+import { fileURLToPath } from 'url'
 import { isDraftFile, isPrivateFile, getAliasFromFileName } from './build-catalog.js'
+import { buildDistributionCatalog, validateDistributionCatalog } from './distribution.js'
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+const REPO_ROOT = path.resolve(__dirname, '../../')
 
 describe('isPrivateFile', () => {
   it('returns true for #-prefixed filenames', () => {
@@ -77,5 +84,169 @@ describe('sync-to-api: listed filtering', () => {
 
     const filtered = upserts.filter((u) => u.listed !== false)
     expect(filtered).toHaveLength(2)
+  })
+})
+
+describe('distribution catalog', () => {
+  it('builds a public app catalog from listed brand warps', async () => {
+    const catalog = await buildDistributionCatalog(
+      REPO_ROOT,
+      {
+        schemaVersion: 1,
+        source: 'github',
+        repo: 'JoAiHQ/warps',
+        branch: 'main',
+        network: 'mainnet',
+        commitSha: 'test',
+        generatedAt: '2026-04-01T00:00:00.000Z',
+        warps: [
+          {
+            key: 'multiversx:joai-agent-create',
+            identifier: '@multiversx:joai-agent-create',
+            alias: 'joai-agent-create',
+            chain: 'multiversx',
+            hash: 'warp-hash-1',
+            checksum: 'warp-hash-1',
+            name: 'JoAi: Create Agent',
+            title: { en: 'Create Agent' },
+            description: { en: 'Create a JoAi agent.' },
+            preview: null,
+            creator: 'github:JoAiHQ/warps',
+            privileges: [],
+            listed: true,
+            primaryAddress: null,
+            primaryFunc: null,
+            brand: {
+              hash: 'brand-hash-1',
+              slug: 'joai',
+              active: true,
+              protocol: 'brand:1.0.0',
+              name: 'JoAi',
+              description: { en: 'JoAi brand' },
+              logo: { default: 'https://example.com/logo.svg' },
+              urls: { web: 'https://joai.ai' },
+              colors: { primary: '#98FF98' },
+            },
+            warp: {
+              actions: [{ type: 'collect' }],
+            },
+            extras: null,
+          },
+          {
+            key: 'multiversx:joai-private-warp',
+            identifier: '@multiversx:joai-private-warp',
+            alias: 'joai-private-warp',
+            chain: 'multiversx',
+            hash: 'warp-hash-2',
+            checksum: 'warp-hash-2',
+            name: 'JoAi: Private Warp',
+            title: { en: 'Private Warp' },
+            description: { en: 'Private warp' },
+            preview: null,
+            creator: 'github:JoAiHQ/warps',
+            privileges: [],
+            listed: false,
+            primaryAddress: null,
+            primaryFunc: null,
+            brand: {
+              hash: 'brand-hash-1',
+              slug: 'joai',
+              active: true,
+              protocol: 'brand:1.0.0',
+              name: 'JoAi',
+              description: { en: 'JoAi brand' },
+              logo: { default: 'https://example.com/logo.svg' },
+              urls: { web: 'https://joai.ai' },
+              colors: { primary: '#98FF98' },
+            },
+            warp: {
+              actions: [{ type: 'contract' }],
+            },
+            extras: null,
+          },
+        ],
+      },
+      new Map(),
+    )
+
+    expect(catalog.apps).toHaveLength(1)
+    expect(catalog.apps[0]).toMatchObject({
+      slug: 'joai',
+      mcpUrl: 'https://cortex.joai.ai/mcp/apps/joai',
+      providers: {
+        claude: { enabled: true, status: 'ready' },
+        codex: { enabled: true, status: 'ready' },
+        openai: { enabled: true, status: 'runtime_ready' },
+      },
+    })
+    expect(catalog.apps[0].actions).toEqual([
+      {
+        alias: 'joai-agent-create',
+        identifier: '@multiversx:joai-agent-create',
+        chain: 'multiversx',
+        name: 'JoAi: Create Agent',
+        title: { en: 'Create Agent' },
+        description: { en: 'Create a JoAi agent.' },
+        actionTypes: ['collect'],
+      },
+    ])
+    expect(validateDistributionCatalog(catalog)).toEqual([])
+  })
+
+  it('requires screenshots only for submission-ready OpenAI apps', () => {
+    const errors = validateDistributionCatalog({
+      schemaVersion: 1,
+      source: 'github',
+      repo: 'JoAiHQ/warps',
+      branch: 'main',
+      network: 'mainnet',
+      commitSha: 'test',
+      generatedAt: '2026-04-01T00:00:00.000Z',
+      apps: [
+        {
+          slug: 'joai',
+          name: 'JoAi',
+          description: { en: 'JoAi' },
+          logo: { default: 'https://example.com/logo.svg' },
+          urls: { web: 'https://joai.ai' },
+          hash: 'brand-hash',
+          mcpUrl: 'https://cortex.joai.ai/mcp/apps/joai',
+          install: {
+            summary: 'summary',
+            examplePrompts: ['prompt'],
+            usageNotes: [],
+            authPrerequisites: [],
+          },
+          legal: {
+            privacyUrl: 'https://legal.vleap.ai/policies/privacy.html',
+            supportEmail: 'support@joai.ai',
+          },
+          review: {
+            screenshots: [],
+            reviewerNotes: ['note'],
+            testPrompts: ['prompt'],
+          },
+          ui: {
+            prefersBorder: true,
+            csp: {
+              connectDomains: [],
+              resourceDomains: [],
+              frameDomains: [],
+              baseUriDomains: [],
+            },
+            permissions: {},
+            domain: undefined,
+          },
+          providers: {
+            claude: { provider: 'claude', enabled: true, status: 'ready', notes: [] },
+            codex: { provider: 'codex', enabled: true, status: 'ready', notes: [] },
+            openai: { provider: 'openai', enabled: true, status: 'submission_ready', notes: [] },
+          },
+          actions: [],
+        },
+      ],
+    })
+
+    expect(errors).toContain('joai: openai marked submission_ready without screenshots')
   })
 })

@@ -1,0 +1,89 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Appointments: Reschedule",
+  "title": {
+    "en": "Reschedule appointment",
+    "de": "Termin verschieben"
+  },
+  "description": {
+    "en": "Reschedule an existing booked appointment to a new confirmed slot.",
+    "de": "Verschiebt einen bestehenden gebuchten Termin auf einen neuen bestaetigten Slot."
+  },
+  "bot": "Use this only after the user has chosen a new specific slot for an existing appointment. Collect the booked meeting id plus the exact new start and end times. If the new slot is rejected, offer fresh availability.",
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Reschedule",
+        "de": "Verschieben"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/agents/{{JOAI_AGENT_UUID}}/appointments/{{meetingId}}/reschedule",
+        "method": "POST"
+      },
+      "inputs": [
+        {
+          "name": "Meeting ID",
+          "as": "meetingId",
+          "description": {
+            "en": "Booked appointment meeting id",
+            "de": "Meeting-ID des gebuchten Termins"
+          },
+          "bot": "The booked meeting id returned by appointment-book.",
+          "type": "string",
+          "position": "arg:1",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Scheduled At",
+          "as": "scheduledAt",
+          "description": {
+            "en": "New exact appointment start in ISO format",
+            "de": "Neuer exakter Startzeitpunkt im ISO-Format"
+          },
+          "bot": "Exact confirmed appointment start in ISO 8601 format.",
+          "type": "string",
+          "position": "arg:2",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "End At",
+          "as": "endAt",
+          "description": {
+            "en": "New exact appointment end in ISO format",
+            "de": "Neues exaktes Ende im ISO-Format"
+          },
+          "bot": "Exact confirmed appointment end in ISO 8601 format.",
+          "type": "string",
+          "position": "arg:3",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Timezone",
+          "as": "timezone",
+          "description": {
+            "en": "Appointment timezone",
+            "de": "Zeitzone des Termins"
+          },
+          "bot": "Timezone identifier like Europe/Vienna, America/New_York, or UTC.",
+          "type": "string",
+          "source": "field",
+          "required": false
+        }
+      ]
+    }
+  ],
+  "output": {
+    "MEETING_ID": "out.data.id",
+    "SCHEDULED_AT": "out.data.scheduledAt"
+  },
+  "messages": {
+    "success": {
+      "en": "Appointment rescheduled successfully.",
+      "de": "Termin erfolgreich verschoben."
+    }
+  }
+}

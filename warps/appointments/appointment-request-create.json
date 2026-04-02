@@ -1,0 +1,157 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Appointments: Create Request",
+  "title": {
+    "en": "Create appointment request",
+    "de": "Terminanfrage erstellen"
+  },
+  "description": {
+    "en": "Create an appointment request when an appointment cannot be booked natively.",
+    "de": "Erstellt eine Terminanfrage, wenn ein Termin nicht direkt gebucht werden kann."
+  },
+  "bot": "Use this when booking cannot be completed because there is no connected calendar, no suitable slots were found, or the user wants manual follow-up. Create a clear appointment request with the requester, preferred time window, duration, timezone, failure reason, and notes.",
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Create request",
+        "de": "Anfrage erstellen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/agents/{{JOAI_AGENT_UUID}}/appointment-requests",
+        "method": "POST"
+      },
+      "inputs": [
+        {
+          "name": "Title",
+          "as": "title",
+          "description": {
+            "en": "Title for the appointment request",
+            "de": "Titel fuer die Terminanfrage"
+          },
+          "bot": "Use a title like 'Appointment request: Intro Call'.",
+          "type": "string",
+          "position": "arg:1",
+          "source": "field",
+          "required": true,
+          "min": 3
+        },
+        {
+          "name": "Service Slug",
+          "as": "serviceSlug",
+          "description": {
+            "en": "Optional configured service identifier",
+            "de": "Optionaler Bezeichner fuer einen konfigurierten Service"
+          },
+          "bot": "If the request belongs to a configured service, pass the service slug.",
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Requester Name",
+          "as": "requesterName",
+          "description": {
+            "en": "Name of the requester",
+            "de": "Name des Anfragenden"
+          },
+          "bot": "Name of the requester if known.",
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Requester Email",
+          "as": "requesterEmail",
+          "description": {
+            "en": "Email of the requester",
+            "de": "E-Mail des Anfragenden"
+          },
+          "bot": "Email address of the requester if known.",
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Window Start",
+          "as": "windowStart",
+          "description": {
+            "en": "Preferred scheduling window start in ISO format",
+            "de": "Beginn des bevorzugten Zeitfensters im ISO-Format"
+          },
+          "bot": "Earliest preferred time in ISO 8601 format.",
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Window End",
+          "as": "windowEnd",
+          "description": {
+            "en": "Preferred scheduling window end in ISO format",
+            "de": "Ende des bevorzugten Zeitfensters im ISO-Format"
+          },
+          "bot": "Latest preferred time in ISO 8601 format.",
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Duration Minutes",
+          "as": "durationMinutes",
+          "description": {
+            "en": "Requested appointment duration",
+            "de": "Gewuenschte Termindauer"
+          },
+          "bot": "Requested appointment duration in minutes.",
+          "type": "number",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Timezone",
+          "as": "timezone",
+          "description": {
+            "en": "Requester timezone",
+            "de": "Zeitzone des Anfragenden"
+          },
+          "bot": "Timezone identifier such as Europe/Vienna or America/New_York.",
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Failure Reason",
+          "as": "failureReason",
+          "description": {
+            "en": "Why direct booking could not complete",
+            "de": "Warum die direkte Buchung nicht abgeschlossen werden konnte"
+          },
+          "bot": "Use a compact machine-readable reason like no_calendar_integration, no_suitable_slots, or stale_slot.",
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Notes",
+          "as": "notes",
+          "description": {
+            "en": "Optional request notes",
+            "de": "Optionale Notizen zur Anfrage"
+          },
+          "bot": "Optional notes or context for manual follow-up.",
+          "type": "string",
+          "position": "arg:2",
+          "source": "field",
+          "required": false
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Appointment request captured for follow-up.",
+      "de": "Terminanfrage fuer die Nachverfolgung erfasst."
+    }
+  }
+}
