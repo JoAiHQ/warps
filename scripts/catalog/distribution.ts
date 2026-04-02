@@ -47,6 +47,7 @@ type WarpUpsert = {
   creator: string
   privileges: string[]
   listed: boolean
+  visibility: 'public' | 'private'
   primaryAddress: string | null
   primaryFunc: string | null
   brand: BrandPayload | null
@@ -312,14 +313,15 @@ export async function buildDistributionCatalog(
   manifest: CatalogManifest,
   brandFactoryCache: Map<string, WarpbaseBrand | null>,
 ): Promise<DistributionCatalogManifest> {
-  const appEntries = new Map<string, { brand: BrandPayload; brandName: string; warps: WarpUpsert[] }>()
+  const appEntries = new Map<string, { brand: BrandPayload; brandName: string; warps: WarpUpsert[]; visibility: 'public' | 'private' }>()
 
   for (const entry of manifest.warps) {
-    if (!entry.listed || !entry.brand || entry.brand.active === false) continue
+    if (!entry.listed || !entry.brand) continue
 
     const current = appEntries.get(entry.brand.slug)
     if (current) {
       current.warps.push(entry)
+      if (entry.visibility === 'public') current.visibility = 'public'
       continue
     }
 
@@ -329,12 +331,13 @@ export async function buildDistributionCatalog(
     appEntries.set(entry.brand.slug, {
       brand: entry.brand,
       brandName,
+      visibility: entry.visibility,
       warps: [entry],
     })
   }
 
   const apps = await Promise.all(
-    [...appEntries.values()].map(async ({ brand, brandName, warps }) => {
+    [...appEntries.values()].map(async ({ brand, brandName, warps, visibility }) => {
       const { distribution, mcp } = await resolveBrandManifests(
         repoRoot,
         brandName,
@@ -352,7 +355,7 @@ export async function buildDistributionCatalog(
 
       return {
         slug: brand.slug,
-        visibility: 'public',
+        visibility,
         name: brand.name,
         description: brand.description,
         logo: brand.logo,

@@ -50,6 +50,7 @@ type WarpUpsert = {
   creator: string
   privileges: string[]
   listed: boolean
+  visibility: 'public' | 'private'
   primaryAddress: string | null
   primaryFunc: string | null
   brand: BrandPayload | null
@@ -689,17 +690,14 @@ async function buildManifest(args: CliArgs, network: SyncNetwork): Promise<Build
   const warps: WarpUpsert[] = []
 
   for (const [fileName, absolutePath] of Object.entries(files)) {
-    const isPrivate = isPrivateFile(fileName)
-
-    if (network === 'mainnet' && isDraftFile(fileName)) continue
+    if (isPrivateFile(fileName)) continue
 
     const raw = fs.readFileSync(absolutePath, 'utf8')
     const parsed = JSON.parse(raw) as Dict
     const brandName = getBrandNameFromFileName(fileName)
-
-    if (network === 'mainnet' && isBrandInactive(fileName)) {
-      continue
-    }
+    const visibility = isDraftFile(fileName) || isBrandInactive(fileName)
+      ? 'private'
+      : 'public'
 
     let brandPayload: BrandPayload | null = null
 
@@ -799,7 +797,8 @@ async function buildManifest(args: CliArgs, network: SyncNetwork): Promise<Build
       preview: typeof workingWarp.preview === 'string' ? workingWarp.preview : null,
       creator: CREATOR,
       privileges: [],
-      listed: !isPrivate,
+      listed: true,
+      visibility,
       primaryAddress: primaryInfo.address,
       primaryFunc: primaryInfo.func,
       brand: brandPayload,

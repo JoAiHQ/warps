@@ -114,6 +114,7 @@ describe('distribution catalog', () => {
             creator: 'github:JoAiHQ/warps',
             privileges: [],
             listed: true,
+            visibility: 'public',
             primaryAddress: null,
             primaryFunc: null,
             brand: {
@@ -146,6 +147,7 @@ describe('distribution catalog', () => {
             creator: 'github:JoAiHQ/warps',
             privileges: [],
             listed: false,
+            visibility: 'public',
             primaryAddress: null,
             primaryFunc: null,
             brand: {
@@ -195,7 +197,7 @@ describe('distribution catalog', () => {
     expect(validateDistributionCatalog(catalog)).toEqual([])
   })
 
-  it('ignores private-only brand apps in the distribution catalog', async () => {
+  it('keeps draft-only brand apps in the distribution catalog as private', async () => {
     const catalog = await buildDistributionCatalog(
       REPO_ROOT,
       {
@@ -220,7 +222,99 @@ describe('distribution catalog', () => {
             preview: null,
             creator: 'github:JoAiHQ/warps',
             privileges: [],
-            listed: false,
+            listed: true,
+            visibility: 'private',
+            primaryAddress: null,
+            primaryFunc: null,
+            brand: {
+              hash: 'brand-hash-1',
+              slug: 'joai',
+              active: false,
+              protocol: 'brand:1.0.0',
+              name: 'JoAi',
+              description: { en: 'JoAi brand' },
+              logo: { default: 'https://example.com/logo.svg' },
+              urls: { web: 'https://joai.ai' },
+              colors: { primary: '#98FF98' },
+            },
+            warp: {
+              actions: [{ type: 'contract' }],
+            },
+            extras: null,
+          },
+        ],
+      },
+      new Map(),
+    )
+
+    expect(catalog.apps).toHaveLength(1)
+    expect(catalog.apps[0]).toMatchObject({
+      slug: 'joai',
+      visibility: 'private',
+    })
+    expect(validateDistributionCatalog(catalog)).toEqual([])
+  })
+
+  it('keeps mixed-visibility brand apps public when any warp is public', async () => {
+    const catalog = await buildDistributionCatalog(
+      REPO_ROOT,
+      {
+        schemaVersion: 1,
+        source: 'github',
+        repo: 'JoAiHQ/warps',
+        branch: 'main',
+        network: 'mainnet',
+        commitSha: 'test',
+        generatedAt: '2026-04-01T00:00:00.000Z',
+        warps: [
+          {
+            key: 'multiversx:joai-public-warp',
+            identifier: '@multiversx:joai-public-warp',
+            alias: 'joai-public-warp',
+            chain: 'multiversx',
+            hash: 'warp-hash-3',
+            checksum: 'warp-hash-3',
+            name: 'JoAi: Public Warp',
+            title: { en: 'Public Warp' },
+            description: { en: 'Public warp' },
+            preview: null,
+            creator: 'github:JoAiHQ/warps',
+            privileges: [],
+            listed: true,
+            visibility: 'public',
+            primaryAddress: null,
+            primaryFunc: null,
+            brand: {
+              hash: 'brand-hash-1',
+              slug: 'joai',
+              active: true,
+              protocol: 'brand:1.0.0',
+              name: 'JoAi',
+              description: { en: 'JoAi brand' },
+              logo: { default: 'https://example.com/logo.svg' },
+              urls: { web: 'https://joai.ai' },
+              colors: { primary: '#98FF98' },
+            },
+            warp: {
+              actions: [{ type: 'collect' }],
+            },
+            extras: null,
+          },
+          {
+            key: 'multiversx:joai-private-warp',
+            identifier: '@multiversx:joai-private-warp',
+            alias: 'joai-private-warp',
+            chain: 'multiversx',
+            hash: 'warp-hash-4',
+            checksum: 'warp-hash-4',
+            name: 'JoAi: Private Warp',
+            title: { en: 'Private Warp' },
+            description: { en: 'Private warp' },
+            preview: null,
+            creator: 'github:JoAiHQ/warps',
+            privileges: [],
+            listed: true,
+            visibility: 'private',
             primaryAddress: null,
             primaryFunc: null,
             brand: {
@@ -244,7 +338,11 @@ describe('distribution catalog', () => {
       new Map(),
     )
 
-    expect(catalog.apps).toHaveLength(0)
+    expect(catalog.apps).toHaveLength(1)
+    expect(catalog.apps[0]).toMatchObject({
+      slug: 'joai',
+      visibility: 'public',
+    })
     expect(validateDistributionCatalog(catalog)).toEqual([])
   })
 
