@@ -312,15 +312,14 @@ export async function buildDistributionCatalog(
   manifest: CatalogManifest,
   brandFactoryCache: Map<string, WarpbaseBrand | null>,
 ): Promise<DistributionCatalogManifest> {
-  const appEntries = new Map<string, { brand: BrandPayload; brandName: string; publicWarps: WarpUpsert[]; privateWarps: WarpUpsert[] }>()
+  const appEntries = new Map<string, { brand: BrandPayload; brandName: string; warps: WarpUpsert[] }>()
 
   for (const entry of manifest.warps) {
-    if (!entry.brand || entry.brand.active === false) continue
+    if (!entry.listed || !entry.brand || entry.brand.active === false) continue
 
     const current = appEntries.get(entry.brand.slug)
     if (current) {
-      if (entry.listed) current.publicWarps.push(entry)
-      else current.privateWarps.push(entry)
+      current.warps.push(entry)
       continue
     }
 
@@ -330,15 +329,12 @@ export async function buildDistributionCatalog(
     appEntries.set(entry.brand.slug, {
       brand: entry.brand,
       brandName,
-      publicWarps: entry.listed ? [entry] : [],
-      privateWarps: entry.listed ? [] : [entry],
+      warps: [entry],
     })
   }
 
   const apps = await Promise.all(
-    [...appEntries.values()].map(async ({ brand, brandName, publicWarps, privateWarps }) => {
-      const visibleWarps = publicWarps.length > 0 ? publicWarps : privateWarps
-      const visibility = publicWarps.length > 0 ? 'public' : 'private'
+    [...appEntries.values()].map(async ({ brand, brandName, warps }) => {
       const { distribution, mcp } = await resolveBrandManifests(
         repoRoot,
         brandName,
@@ -356,7 +352,7 @@ export async function buildDistributionCatalog(
 
       return {
         slug: brand.slug,
-        visibility,
+        visibility: 'public',
         name: brand.name,
         description: brand.description,
         logo: brand.logo,
@@ -369,7 +365,7 @@ export async function buildDistributionCatalog(
         review: distribution.review,
         mcp,
         providers,
-        actions: visibleWarps
+        actions: warps
           .slice()
           .sort((a, b) => a.alias.localeCompare(b.alias))
           .map((entry) => toActionSummary(entry)),

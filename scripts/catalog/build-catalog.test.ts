@@ -195,7 +195,7 @@ describe('distribution catalog', () => {
     expect(validateDistributionCatalog(catalog)).toEqual([])
   })
 
-  it('keeps private-only brand apps in the catalog as private', async () => {
+  it('ignores private-only brand apps in the distribution catalog', async () => {
     const catalog = await buildDistributionCatalog(
       REPO_ROOT,
       {
@@ -244,22 +244,7 @@ describe('distribution catalog', () => {
       new Map(),
     )
 
-    expect(catalog.apps).toHaveLength(1)
-    expect(catalog.apps[0]).toMatchObject({
-      slug: 'joai',
-      visibility: 'private',
-    })
-    expect(catalog.apps[0].actions).toEqual([
-      {
-        alias: 'joai-private-warp',
-        identifier: '@multiversx:joai-private-warp',
-        chain: 'multiversx',
-        name: 'JoAi: Private Warp',
-        title: { en: 'Private Warp' },
-        description: { en: 'Private warp' },
-        actionTypes: ['contract'],
-      },
-    ])
+    expect(catalog.apps).toHaveLength(0)
     expect(validateDistributionCatalog(catalog)).toEqual([])
   })
 
