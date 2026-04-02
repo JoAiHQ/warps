@@ -4,9 +4,1565 @@
   "repo": "JoAiHQ/warps",
   "branch": "main",
   "network": "mainnet",
-  "commitSha": "c4e6063ebafdf51052b02c0d1e07e275095b3696",
-  "committedAt": "2026-04-02T16:24:52.095Z",
-  "generatedAt": "2026-04-02T16:24:54.128Z",
-  "upserts": [],
-  "deletes": []
+  "commitSha": "20d3a79be51da429d95c4d8b1d5cd18cad2ff37b",
+  "committedAt": "2026-04-02T16:59:49.776Z",
+  "generatedAt": "2026-04-02T16:59:51.913Z",
+  "upserts": [
+    {
+      "key": "none:appointment-availability",
+      "identifier": "@appointment-availability",
+      "alias": "appointment-availability",
+      "chain": "none",
+      "hash": "4bbff92c3e0af693df47c6689897db8f31ced11474e8b61f4a5da1f92a435bd5",
+      "checksum": "4bbff92c3e0af693df47c6689897db8f31ced11474e8b61f4a5da1f92a435bd5",
+      "name": "Appointments: Availability",
+      "title": {
+        "en": "Appointment availability",
+        "de": "Terminverfuegbarkeit"
+      },
+      "description": {
+        "en": "Collect booking details and return appointment availability from the current agent calendar.",
+        "de": "Sammelt Buchungsdetails und liefert Terminverfuegbarkeit aus dem Kalender des aktuellen Agenten."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "9f4dafeed0f41dac9c31cda618706a50665a3495f2f5f86dac3717b310a4ca5b",
+        "slug": "appointments",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "Appointments",
+        "description": {
+          "en": "Appointment booking and intake flows for service businesses.",
+          "de": "Terminbuchung und Intake-Abläufe für Dienstleistungsunternehmen."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "Appointments: Availability",
+        "title": {
+          "en": "Appointment availability",
+          "de": "Terminverfuegbarkeit"
+        },
+        "description": {
+          "en": "Collect booking details and return appointment availability from the current agent calendar.",
+          "de": "Sammelt Buchungsdetails und liefert Terminverfuegbarkeit aus dem Kalender des aktuellen Agenten."
+        },
+        "bot": "Use this when the user wants to book an appointment, schedule a call, or find available meeting times. Collect the purpose, requested time window, timezone, duration, and attendee details. Ask only for missing fields. Convert relative dates like tomorrow or next Friday into exact ISO datetimes before submitting.",
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Check availability",
+              "de": "Verfuegbarkeit pruefen"
+            },
+            "destination": {
+              "url": "https://api.joai.ai/v1/agents/{{JOAI_AGENT_UUID}}/appointments/availability",
+              "method": "POST"
+            },
+            "inputs": [
+              {
+                "name": "Appointment Title",
+                "as": "title",
+                "description": {
+                  "en": "The purpose of the appointment",
+                  "de": "Der Zweck des Termins"
+                },
+                "bot": "Short title describing the appointment, such as 'Intro Call', 'Product Demo', or 'Support Session'.",
+                "type": "string",
+                "position": "arg:1",
+                "source": "field",
+                "required": true,
+                "min": 3
+              },
+              {
+                "name": "Window Start",
+                "as": "windowStart",
+                "description": {
+                  "en": "The earliest acceptable start time in ISO format",
+                  "de": "Die frueheste moegliche Startzeit im ISO-Format"
+                },
+                "bot": "Earliest acceptable appointment start in ISO 8601 format, for example 2026-04-03T09:00:00Z.",
+                "type": "string",
+                "position": "arg:2",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Window End",
+                "as": "windowEnd",
+                "description": {
+                  "en": "The latest acceptable end of the scheduling window in ISO format",
+                  "de": "Das spaeteste Ende des Zeitfensters im ISO-Format"
+                },
+                "bot": "End of the acceptable scheduling window in ISO 8601 format, for example 2026-04-03T17:00:00Z.",
+                "type": "string",
+                "position": "arg:3",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Duration Minutes",
+                "as": "durationMinutes",
+                "description": {
+                  "en": "Appointment length in minutes",
+                  "de": "Terminlaenge in Minuten"
+                },
+                "bot": "Meeting duration in minutes. Use 30 unless the user asks for a different length.",
+                "type": "number",
+                "source": "field",
+                "required": true,
+                "default": 30
+              },
+              {
+                "name": "Timezone",
+                "as": "timezone",
+                "description": {
+                  "en": "User timezone such as Europe/Vienna or America/New_York",
+                  "de": "Zeitzone wie Europe/Vienna oder America/New_York"
+                },
+                "bot": "Timezone identifier like Europe/Vienna, America/New_York, or UTC. Use the user's stated timezone if available.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Service Slug",
+                "as": "serviceSlug",
+                "description": {
+                  "en": "Optional configured service identifier",
+                  "de": "Optionaler Bezeichner fuer einen konfigurierten Service"
+                },
+                "bot": "If the business uses named services like cleaning, consultation, or implant-consult, pass the configured service slug.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Attendee Name",
+                "as": "attendeeName",
+                "description": {
+                  "en": "The attendee or requester name",
+                  "de": "Name des Teilnehmers oder Anfragenden"
+                },
+                "bot": "The name of the person requesting or attending the appointment.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Attendee Email",
+                "as": "attendeeEmail",
+                "description": {
+                  "en": "The attendee or requester email",
+                  "de": "E-Mail des Teilnehmers oder Anfragenden"
+                },
+                "bot": "The email address of the attendee if known.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Notes",
+                "as": "description",
+                "description": {
+                  "en": "Optional notes or agenda",
+                  "de": "Optionale Notizen oder Agenda"
+                },
+                "bot": "Optional notes, context, or agenda for the appointment.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Limit",
+                "as": "limit",
+                "description": {
+                  "en": "Maximum number of slot suggestions",
+                  "de": "Maximale Anzahl an Vorschlaegen"
+                },
+                "bot": "How many slot suggestions to return. Use 3 unless the user explicitly asks for more or fewer.",
+                "type": "number",
+                "source": "field",
+                "required": false,
+                "default": 3
+              }
+            ]
+          }
+        ],
+        "output": {
+          "CONNECTED": "out.data.connected",
+          "TIMEZONE": "out.data.timezone",
+          "SERVICE": "out.data.service",
+          "SLOTS": "out.data.slots",
+          "SLOT_COUNT": "out.data.slots.length"
+        },
+        "messages": {
+          "success": {
+            "en": "Found {{SLOT_COUNT}} appointment slot(s).",
+            "de": "{{SLOT_COUNT}} Terminvorschlaege gefunden."
+          }
+        }
+      },
+      "extras": {
+        "keywords": {
+          "en": [
+            "check availability",
+            "available time slots",
+            "open appointments",
+            "free schedule slots"
+          ],
+          "de": [
+            "Verfügbarkeit prüfen",
+            "verfügbare Zeitslots",
+            "offene Termine",
+            "freie Terminslots"
+          ]
+        },
+        "useCases": {
+          "en": [
+            "Browse available slots for next week before booking",
+            "Check if a specific date and time is still open",
+            "Find the earliest available appointment slot"
+          ],
+          "de": [
+            "Verfügbare Slots für nächste Woche vor der Buchung durchsuchen",
+            "Prüfen, ob ein bestimmtes Datum und eine bestimmte Uhrzeit noch frei ist",
+            "Den frühesten verfügbaren Terminslot finden"
+          ]
+        },
+        "category": "productivity",
+        "faq": {
+          "en": [
+            {
+              "question": "How are available appointment slots determined?",
+              "answer": "Available slots are based on the provider's configured working hours, existing bookings, and buffer times between appointments. Only genuinely open slots are shown."
+            },
+            {
+              "question": "Can I check availability for a specific date?",
+              "answer": "Yes, specify a date to see all open time slots for that day. You can also browse multiple days to find the most convenient option."
+            }
+          ],
+          "de": [
+            {
+              "question": "Wie werden verfügbare Terminslots ermittelt?",
+              "answer": "Verfügbare Slots basieren auf den konfigurierten Arbeitszeiten des Anbieters, bestehenden Buchungen und Pufferzeiten zwischen Terminen. Es werden nur tatsächlich freie Slots angezeigt."
+            },
+            {
+              "question": "Kann ich die Verfügbarkeit für ein bestimmtes Datum prüfen?",
+              "answer": "Ja, gib ein Datum an, um alle offenen Zeitslots für diesen Tag zu sehen. Du kannst auch mehrere Tage durchsuchen, um die passendste Option zu finden."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "key": "none:appointment-book",
+      "identifier": "@appointment-book",
+      "alias": "appointment-book",
+      "chain": "none",
+      "hash": "b29edfe41501cb27c0dd8082dce3df5c4989fed569d5321507e8f1a2e39cce64",
+      "checksum": "b29edfe41501cb27c0dd8082dce3df5c4989fed569d5321507e8f1a2e39cce64",
+      "name": "Appointments: Book",
+      "title": {
+        "en": "Book appointment",
+        "de": "Termin buchen"
+      },
+      "description": {
+        "en": "Book a confirmed appointment slot for the current agent.",
+        "de": "Bucht einen bestaetigten Termin fuer den aktuellen Agenten."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "9f4dafeed0f41dac9c31cda618706a50665a3495f2f5f86dac3717b310a4ca5b",
+        "slug": "appointments",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "Appointments",
+        "description": {
+          "en": "Appointment booking and intake flows for service businesses.",
+          "de": "Terminbuchung und Intake-Abläufe für Dienstleistungsunternehmen."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "Appointments: Book",
+        "title": {
+          "en": "Book appointment",
+          "de": "Termin buchen"
+        },
+        "description": {
+          "en": "Book a confirmed appointment slot for the current agent.",
+          "de": "Bucht einen bestaetigten Termin fuer den aktuellen Agenten."
+        },
+        "bot": "Use this only after the user has chosen a specific appointment slot. Collect the title, exact scheduled start and end times, timezone, attendee information, and optional notes. If the user wants a video link, set conferenceProvider to google_meet or zoom. Otherwise leave it empty.",
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Book now",
+              "de": "Jetzt buchen"
+            },
+            "destination": {
+              "url": "https://api.joai.ai/v1/agents/{{JOAI_AGENT_UUID}}/appointments/book",
+              "method": "POST"
+            },
+            "inputs": [
+              {
+                "name": "Appointment Title",
+                "as": "title",
+                "description": {
+                  "en": "The appointment title",
+                  "de": "Der Titel des Termins"
+                },
+                "bot": "Short title describing the booked appointment.",
+                "type": "string",
+                "position": "arg:1",
+                "source": "field",
+                "required": true,
+                "min": 3
+              },
+              {
+                "name": "Scheduled At",
+                "as": "scheduledAt",
+                "description": {
+                  "en": "Exact appointment start in ISO format",
+                  "de": "Exakter Startzeitpunkt im ISO-Format"
+                },
+                "bot": "Exact confirmed appointment start in ISO 8601 format.",
+                "type": "string",
+                "position": "arg:2",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "End At",
+                "as": "endAt",
+                "description": {
+                  "en": "Exact appointment end in ISO format",
+                  "de": "Exaktes Ende im ISO-Format"
+                },
+                "bot": "Exact confirmed appointment end in ISO 8601 format.",
+                "type": "string",
+                "position": "arg:3",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Timezone",
+                "as": "timezone",
+                "description": {
+                  "en": "Appointment timezone",
+                  "de": "Zeitzone des Termins"
+                },
+                "bot": "Timezone identifier like Europe/Vienna, America/New_York, or UTC.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Service Slug",
+                "as": "serviceSlug",
+                "description": {
+                  "en": "Optional configured service identifier",
+                  "de": "Optionaler Bezeichner fuer einen konfigurierten Service"
+                },
+                "bot": "If the booking belongs to a configured service, pass the same service slug used for availability.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Routed Agent UUID",
+                "as": "routedAgentUuid",
+                "description": {
+                  "en": "Optional staff agent UUID for routed bookings",
+                  "de": "Optionale UUID des Mitarbeiter-Agenten fuer geroutete Buchungen"
+                },
+                "bot": "If appointment availability returned a specific agentUuid for the selected slot, pass it here unchanged.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Appointment Request ID",
+                "as": "appointmentRequestId",
+                "description": {
+                  "en": "Optional linked appointment request id",
+                  "de": "Optionale verknuepfte Terminanfrage-ID"
+                },
+                "bot": "If this booking is fulfilling a previously created appointment request, pass that request id.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Attendee Name",
+                "as": "attendeeName",
+                "description": {
+                  "en": "The attendee name",
+                  "de": "Name des Teilnehmers"
+                },
+                "bot": "Name of the main attendee if known.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Attendee Email",
+                "as": "attendeeEmail",
+                "description": {
+                  "en": "The attendee email",
+                  "de": "E-Mail des Teilnehmers"
+                },
+                "bot": "Email address of the main attendee if known.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Notes",
+                "as": "description",
+                "description": {
+                  "en": "Optional notes or agenda",
+                  "de": "Optionale Notizen oder Agenda"
+                },
+                "bot": "Optional notes, context, or agenda to include with the appointment.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Conference Provider",
+                "as": "conferenceProvider",
+                "description": {
+                  "en": "Optional remote meeting provider",
+                  "de": "Optionaler Anbieter fuer Videotermine"
+                },
+                "bot": "Use 'google_meet' or 'zoom' only if the user explicitly wants a remote meeting link. Otherwise leave empty.",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "options": {
+                  "google_meet": "Google Meet",
+                  "zoom": "Zoom"
+                }
+              }
+            ]
+          }
+        ],
+        "output": {
+          "MEETING_ID": "out.data.id",
+          "MEETING_URL": "out.data.inviteUrl",
+          "CALENDAR_EVENT_ID": "out.data.calendarEventId"
+        },
+        "messages": {
+          "success": {
+            "en": "Appointment booked successfully.",
+            "de": "Termin erfolgreich gebucht."
+          }
+        }
+      },
+      "extras": {
+        "keywords": {
+          "en": [
+            "book appointment",
+            "schedule appointment",
+            "make reservation",
+            "book meeting",
+            "schedule visit",
+            "appointment booking"
+          ],
+          "de": [
+            "Termin buchen",
+            "Termin vereinbaren",
+            "Reservierung machen",
+            "Besprechung buchen",
+            "Besuch planen",
+            "Terminbuchung"
+          ]
+        },
+        "useCases": {
+          "en": [
+            "Schedule a consultation with a service provider",
+            "Book a recurring weekly appointment for a client",
+            "Reserve a time slot on behalf of someone else"
+          ],
+          "de": [
+            "Eine Beratung bei einem Dienstleister vereinbaren",
+            "Einen wöchentlich wiederkehrenden Termin für einen Kunden buchen",
+            "Einen Zeitslot im Namen einer anderen Person reservieren"
+          ]
+        },
+        "category": "productivity",
+        "faq": {
+          "en": [
+            {
+              "question": "How do I book an appointment?",
+              "answer": "Simply select an available time slot and provide your details to book an appointment."
+            },
+            {
+              "question": "Can I book an appointment for someone else?",
+              "answer": "Yes, you can book on behalf of someone else by providing their contact details during the booking process."
+            }
+          ],
+          "de": [
+            {
+              "question": "Wie buche ich einen Termin?",
+              "answer": "Wähle einfach einen verfügbaren Zeitslot und gib deine Daten ein, um einen Termin zu buchen."
+            },
+            {
+              "question": "Kann ich einen Termin für jemand anderen buchen?",
+              "answer": "Ja, du kannst im Namen einer anderen Person buchen, indem du deren Kontaktdaten während des Buchungsvorgangs angibst."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "key": "none:appointment-cancel",
+      "identifier": "@appointment-cancel",
+      "alias": "appointment-cancel",
+      "chain": "none",
+      "hash": "1afb6c0ff789d4a9e7b353eb751f07d14397eb18e6a2308978df584a2e7043ca",
+      "checksum": "1afb6c0ff789d4a9e7b353eb751f07d14397eb18e6a2308978df584a2e7043ca",
+      "name": "Appointments: Cancel",
+      "title": {
+        "en": "Cancel appointment",
+        "de": "Termin absagen"
+      },
+      "description": {
+        "en": "Cancel an existing booked appointment and optionally provide a reason. Frees up the time slot so it becomes available for new bookings again.",
+        "de": "Sage einen bestehenden gebuchten Termin ab und gib optional einen Grund an. Der Zeitslot wird wieder freigegeben und steht für neue Buchungen zur Verfügung."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "9f4dafeed0f41dac9c31cda618706a50665a3495f2f5f86dac3717b310a4ca5b",
+        "slug": "appointments",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "Appointments",
+        "description": {
+          "en": "Appointment booking and intake flows for service businesses.",
+          "de": "Terminbuchung und Intake-Abläufe für Dienstleistungsunternehmen."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "Appointments: Cancel",
+        "title": {
+          "en": "Cancel appointment",
+          "de": "Termin absagen"
+        },
+        "description": {
+          "en": "Cancel an existing booked appointment and optionally provide a reason. Frees up the time slot so it becomes available for new bookings again.",
+          "de": "Sage einen bestehenden gebuchten Termin ab und gib optional einen Grund an. Der Zeitslot wird wieder freigegeben und steht für neue Buchungen zur Verfügung."
+        },
+        "bot": "Use this when the user wants to cancel an already booked appointment. Collect the meeting id and an optional cancellation reason.",
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Cancel appointment",
+              "de": "Termin absagen"
+            },
+            "destination": {
+              "url": "https://api.joai.ai/v1/agents/{{JOAI_AGENT_UUID}}/appointments/{{meetingId}}/cancel",
+              "method": "POST"
+            },
+            "inputs": [
+              {
+                "name": "Meeting ID",
+                "as": "meetingId",
+                "description": {
+                  "en": "Booked appointment meeting id",
+                  "de": "Meeting-ID des gebuchten Termins"
+                },
+                "bot": "The booked meeting id returned by appointment-book.",
+                "type": "string",
+                "position": "arg:1",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Reason",
+                "as": "reason",
+                "description": {
+                  "en": "Optional cancellation reason",
+                  "de": "Optionaler Absagegrund"
+                },
+                "bot": "Optional short reason for the cancellation.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              }
+            ]
+          }
+        ],
+        "output": {
+          "MEETING_ID": "out.data.id",
+          "STATUS": "out.data.status"
+        },
+        "messages": {
+          "success": {
+            "en": "Appointment cancelled.",
+            "de": "Termin abgesagt."
+          }
+        }
+      },
+      "extras": {
+        "keywords": {
+          "en": [
+            "cancel appointment",
+            "remove booking",
+            "delete appointment",
+            "unbook slot"
+          ],
+          "de": [
+            "Termin absagen",
+            "Buchung entfernen",
+            "Termin löschen",
+            "Zeitslot freigeben"
+          ]
+        },
+        "useCases": {
+          "en": [
+            "Cancel a meeting you can no longer attend",
+            "Free up a booked slot due to a scheduling conflict",
+            "Remove a duplicate or accidental booking"
+          ],
+          "de": [
+            "Eine Besprechung absagen, an der du nicht mehr teilnehmen kannst",
+            "Einen gebuchten Slot wegen eines Terminkonfikts freigeben",
+            "Eine doppelte oder versehentliche Buchung entfernen"
+          ]
+        },
+        "category": "productivity",
+        "faq": {
+          "en": [
+            {
+              "question": "Can I cancel an appointment at any time?",
+              "answer": "You can cancel anytime before the appointment, but the provider may enforce a cancellation policy with a minimum notice period or a cancellation fee."
+            },
+            {
+              "question": "Is there a cancellation fee for appointments?",
+              "answer": "It depends on the provider's policy. Some require 24-hour notice for free cancellation, while others may charge a fee for late cancellations or no-shows."
+            }
+          ],
+          "de": [
+            {
+              "question": "Kann ich einen Termin jederzeit absagen?",
+              "answer": "Du kannst jederzeit vor dem Termin absagen, aber der Anbieter kann eine Stornierungsrichtlinie mit Mindestfrist oder Stornogebühr haben."
+            },
+            {
+              "question": "Gibt es eine Stornogebühr für Termine?",
+              "answer": "Das hängt von der Richtlinie des Anbieters ab. Manche verlangen eine 24-Stunden-Frist für kostenlose Stornierung, andere berechnen eine Gebühr bei kurzfristiger Absage oder Nichterscheinen."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "key": "none:appointment-configure",
+      "identifier": "@appointment-configure",
+      "alias": "appointment-configure",
+      "chain": "none",
+      "hash": "00aa7b0eed7cc1c9e7cf6ce746734f08a5452b7485c123ce0e92c16baa104157",
+      "checksum": "00aa7b0eed7cc1c9e7cf6ce746734f08a5452b7485c123ce0e92c16baa104157",
+      "name": "Appointments: Configure",
+      "title": {
+        "en": "Configure Appointments",
+        "de": "Termine konfigurieren"
+      },
+      "description": {
+        "en": "Open and update the appointment configuration for this agent.",
+        "de": "Termineinstellungen dieses Agenten anzeigen und bearbeiten."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "9f4dafeed0f41dac9c31cda618706a50665a3495f2f5f86dac3717b310a4ca5b",
+        "slug": "appointments",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "Appointments",
+        "description": {
+          "en": "Appointment booking and intake flows for service businesses.",
+          "de": "Terminbuchung und Intake-Abläufe für Dienstleistungsunternehmen."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "Appointments: Configure",
+        "title": {
+          "en": "Configure Appointments",
+          "de": "Termine konfigurieren"
+        },
+        "description": {
+          "en": "Open and update the appointment configuration for this agent.",
+          "de": "Termineinstellungen dieses Agenten anzeigen und bearbeiten."
+        },
+        "bot": "Use this when the user wants to configure appointment settings, set office hours, change the timezone, manage services, or update booking rules.",
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Configure",
+              "de": "Konfigurieren"
+            },
+            "inputs": [],
+            "destination": {
+              "url": "https://api.joai.ai/v1/agents/{{JOAI_AGENT_UUID}}/appointments/policy",
+              "method": "GET"
+            },
+            "output": {
+              "policy": "out.data.policy",
+              "availableStaff": "out.data.availableStaff"
+            }
+          }
+        ],
+        "ui": "https://raw.githubusercontent.com/JoAiHQ/warps/main/warps/appointment/configure/chatapp.dist.html"
+      },
+      "extras": {
+        "keywords": {
+          "en": [
+            "configure appointments",
+            "appointment settings",
+            "setup booking system",
+            "appointment configuration",
+            "manage availability"
+          ],
+          "de": [
+            "Termine konfigurieren",
+            "Termineinstellungen",
+            "Buchungssystem einrichten",
+            "Terminkonfiguration",
+            "Verfügbarkeit verwalten"
+          ]
+        },
+        "useCases": {
+          "en": [
+            "Set different availability hours for each day of the week",
+            "Configure buffer times between consecutive appointments",
+            "Adjust notification settings for booking confirmations and reminders"
+          ],
+          "de": [
+            "Verschiedene Verfügbarkeitszeiten für jeden Wochentag festlegen",
+            "Pufferzeiten zwischen aufeinanderfolgenden Terminen konfigurieren",
+            "Benachrichtigungseinstellungen für Buchungsbestätigungen und Erinnerungen anpassen"
+          ]
+        },
+        "category": "productivity",
+        "faq": {
+          "en": [
+            {
+              "question": "How do I configure my appointment system?",
+              "answer": "Set up your availability, booking rules, and notification preferences through the configuration action. You can define time slots, buffer times, and cancellation policies."
+            },
+            {
+              "question": "Can I set different availability for different days?",
+              "answer": "Yes, the configuration allows you to set custom availability per day of the week, including different time slots and blocked-off periods."
+            }
+          ],
+          "de": [
+            {
+              "question": "Wie konfiguriere ich mein Terminsystem?",
+              "answer": "Richte deine Verfügbarkeit, Buchungsregeln und Benachrichtigungseinstellungen über die Konfigurationsaktion ein. Du kannst Zeitslots, Pufferzeiten und Stornierungsrichtlinien festlegen."
+            },
+            {
+              "question": "Kann ich verschiedene Verfügbarkeiten für verschiedene Tage festlegen?",
+              "answer": "Ja, die Konfiguration ermöglicht es dir, benutzerdefinierte Verfügbarkeiten pro Wochentag festzulegen, einschließlich verschiedener Zeitslots und gesperrter Zeiträume."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "key": "none:appointment-onboarding",
+      "identifier": "@appointment-onboarding",
+      "alias": "appointment-onboarding",
+      "chain": "none",
+      "hash": "9bc289db95396c6fe5e94b53a0534c7da7fe80aaaf17c8c5ebaae0374740f031",
+      "checksum": "9bc289db95396c6fe5e94b53a0534c7da7fe80aaaf17c8c5ebaae0374740f031",
+      "name": "Appointments: Onboarding",
+      "title": {
+        "en": "Set up appointments",
+        "de": "Termine einrichten"
+      },
+      "description": {
+        "en": "Start appointment onboarding by opening calendar integration setup for this agent.",
+        "de": "Starte das Termin-Onboarding, indem die Kalender-Integration für diesen Agenten geöffnet wird."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "9f4dafeed0f41dac9c31cda618706a50665a3495f2f5f86dac3717b310a4ca5b",
+        "slug": "appointments",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "Appointments",
+        "description": {
+          "en": "Appointment booking and intake flows for service businesses.",
+          "de": "Terminbuchung und Intake-Abläufe für Dienstleistungsunternehmen."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "Appointments: Onboarding",
+        "title": {
+          "en": "Set up appointments",
+          "de": "Termine einrichten"
+        },
+        "description": {
+          "en": "Start appointment onboarding by opening calendar integration setup for this agent.",
+          "de": "Starte das Termin-Onboarding, indem die Kalender-Integration für diesen Agenten geöffnet wird."
+        },
+        "bot": "Use this when the user wants to set up appointment booking for the first time. This opens the calendar integration setup so the agent can book real appointments.",
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Start setup",
+              "de": "Setup starten"
+            },
+            "inputs": [],
+            "auto": true
+          }
+        ],
+        "messages": {
+          "success": {
+            "en": "Opening calendar setup for appointments...",
+            "de": "Kalender-Setup für Termine wird geöffnet..."
+          }
+        },
+        "next": "@joai-settings-integration-open?integration=calendar"
+      },
+      "extras": {
+        "keywords": {
+          "en": [
+            "appointment onboarding",
+            "setup appointments",
+            "appointment system intro",
+            "get started appointments"
+          ],
+          "de": [
+            "Termin-Onboarding",
+            "Termine einrichten",
+            "Terminsystem Einführung",
+            "mit Terminen starten"
+          ]
+        },
+        "useCases": {
+          "en": [
+            "Set up an appointment system for a new business",
+            "Walk through initial configuration of booking rules and hours",
+            "Onboard a team to start accepting appointment bookings"
+          ],
+          "de": [
+            "Ein Terminsystem für ein neues Geschäft einrichten",
+            "Die Erstkonfiguration von Buchungsregeln und Öffnungszeiten durchgehen",
+            "Ein Team onboarden, um Terminbuchungen anzunehmen"
+          ]
+        },
+        "category": "productivity",
+        "faq": {
+          "en": [
+            {
+              "question": "What do I need to set up an appointment system?",
+              "answer": "You need to define your available hours, appointment duration, and basic booking rules. The onboarding walks you through each step so your system is ready to accept bookings."
+            },
+            {
+              "question": "How long does appointment onboarding take?",
+              "answer": "The initial setup takes just a few minutes. You configure your schedule, set policies, and can start accepting bookings immediately afterward."
+            }
+          ],
+          "de": [
+            {
+              "question": "Was brauche ich, um ein Terminsystem einzurichten?",
+              "answer": "Du musst deine verfügbaren Zeiten, die Termindauer und grundlegende Buchungsregeln festlegen. Das Onboarding führt dich durch jeden Schritt, damit dein System bereit ist, Buchungen anzunehmen."
+            },
+            {
+              "question": "Wie lange dauert das Termin-Onboarding?",
+              "answer": "Die Ersteinrichtung dauert nur wenige Minuten. Du konfigurierst deinen Zeitplan, legst Richtlinien fest und kannst danach sofort Buchungen annehmen."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "key": "none:appointment-request-create",
+      "identifier": "@appointment-request-create",
+      "alias": "appointment-request-create",
+      "chain": "none",
+      "hash": "faa64b90808f03cea4f2c3aff8dc463d6004d4a9c96db788b42f32edfcc41b30",
+      "checksum": "faa64b90808f03cea4f2c3aff8dc463d6004d4a9c96db788b42f32edfcc41b30",
+      "name": "Appointments: Create Request",
+      "title": {
+        "en": "Create appointment request",
+        "de": "Terminanfrage erstellen"
+      },
+      "description": {
+        "en": "Create an appointment request when an appointment cannot be booked natively.",
+        "de": "Erstellt eine Terminanfrage, wenn ein Termin nicht direkt gebucht werden kann."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "9f4dafeed0f41dac9c31cda618706a50665a3495f2f5f86dac3717b310a4ca5b",
+        "slug": "appointments",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "Appointments",
+        "description": {
+          "en": "Appointment booking and intake flows for service businesses.",
+          "de": "Terminbuchung und Intake-Abläufe für Dienstleistungsunternehmen."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "Appointments: Create Request",
+        "title": {
+          "en": "Create appointment request",
+          "de": "Terminanfrage erstellen"
+        },
+        "description": {
+          "en": "Create an appointment request when an appointment cannot be booked natively.",
+          "de": "Erstellt eine Terminanfrage, wenn ein Termin nicht direkt gebucht werden kann."
+        },
+        "bot": "Use this when booking cannot be completed because there is no connected calendar, no suitable slots were found, or the user wants manual follow-up. Create a clear appointment request with the requester, preferred time window, duration, timezone, failure reason, and notes.",
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Create request",
+              "de": "Anfrage erstellen"
+            },
+            "destination": {
+              "url": "https://api.joai.ai/v1/agents/{{JOAI_AGENT_UUID}}/appointment-requests",
+              "method": "POST"
+            },
+            "inputs": [
+              {
+                "name": "Title",
+                "as": "title",
+                "description": {
+                  "en": "Title for the appointment request",
+                  "de": "Titel fuer die Terminanfrage"
+                },
+                "bot": "Use a title like 'Appointment request: Intro Call'.",
+                "type": "string",
+                "position": "arg:1",
+                "source": "field",
+                "required": true,
+                "min": 3
+              },
+              {
+                "name": "Service Slug",
+                "as": "serviceSlug",
+                "description": {
+                  "en": "Optional configured service identifier",
+                  "de": "Optionaler Bezeichner fuer einen konfigurierten Service"
+                },
+                "bot": "If the request belongs to a configured service, pass the service slug.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Requester Name",
+                "as": "requesterName",
+                "description": {
+                  "en": "Name of the requester",
+                  "de": "Name des Anfragenden"
+                },
+                "bot": "Name of the requester if known.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Requester Email",
+                "as": "requesterEmail",
+                "description": {
+                  "en": "Email of the requester",
+                  "de": "E-Mail des Anfragenden"
+                },
+                "bot": "Email address of the requester if known.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Window Start",
+                "as": "windowStart",
+                "description": {
+                  "en": "Preferred scheduling window start in ISO format",
+                  "de": "Beginn des bevorzugten Zeitfensters im ISO-Format"
+                },
+                "bot": "Earliest preferred time in ISO 8601 format.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Window End",
+                "as": "windowEnd",
+                "description": {
+                  "en": "Preferred scheduling window end in ISO format",
+                  "de": "Ende des bevorzugten Zeitfensters im ISO-Format"
+                },
+                "bot": "Latest preferred time in ISO 8601 format.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Duration Minutes",
+                "as": "durationMinutes",
+                "description": {
+                  "en": "Requested appointment duration",
+                  "de": "Gewuenschte Termindauer"
+                },
+                "bot": "Requested appointment duration in minutes.",
+                "type": "number",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Timezone",
+                "as": "timezone",
+                "description": {
+                  "en": "Requester timezone",
+                  "de": "Zeitzone des Anfragenden"
+                },
+                "bot": "Timezone identifier such as Europe/Vienna or America/New_York.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Failure Reason",
+                "as": "failureReason",
+                "description": {
+                  "en": "Why direct booking could not complete",
+                  "de": "Warum die direkte Buchung nicht abgeschlossen werden konnte"
+                },
+                "bot": "Use a compact machine-readable reason like no_calendar_integration, no_suitable_slots, or stale_slot.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Notes",
+                "as": "notes",
+                "description": {
+                  "en": "Optional request notes",
+                  "de": "Optionale Notizen zur Anfrage"
+                },
+                "bot": "Optional notes or context for manual follow-up.",
+                "type": "string",
+                "position": "arg:2",
+                "source": "field",
+                "required": false
+              }
+            ]
+          }
+        ],
+        "messages": {
+          "success": {
+            "en": "Appointment request captured for follow-up.",
+            "de": "Terminanfrage fuer die Nachverfolgung erfasst."
+          }
+        }
+      },
+      "extras": {
+        "keywords": {
+          "en": [
+            "request appointment",
+            "appointment request",
+            "ask for appointment",
+            "submit booking request"
+          ],
+          "de": [
+            "Termin anfragen",
+            "Terminanfrage",
+            "um Termin bitten",
+            "Buchungsanfrage einreichen"
+          ]
+        },
+        "useCases": {
+          "en": [
+            "Request a consultation that requires provider approval",
+            "Submit a booking request for a high-demand time slot",
+            "Ask for an appointment outside regular booking hours"
+          ],
+          "de": [
+            "Eine Beratung anfragen, die eine Genehmigung des Anbieters erfordert",
+            "Eine Buchungsanfrage für einen stark nachgefragten Zeitslot einreichen",
+            "Einen Termin außerhalb der regulären Buchungszeiten anfragen"
+          ]
+        },
+        "category": "productivity",
+        "faq": {
+          "en": [
+            {
+              "question": "When should I use an appointment request instead of direct booking?",
+              "answer": "Use a request when the provider needs to manually approve bookings, such as for high-demand slots, consultations requiring preparation, or appointments outside regular hours."
+            },
+            {
+              "question": "What happens after I submit an appointment request?",
+              "answer": "The provider receives your request and can approve or decline it. You are notified once a decision is made, and the slot is reserved only upon approval."
+            }
+          ],
+          "de": [
+            {
+              "question": "Wann sollte ich eine Terminanfrage statt einer direkten Buchung verwenden?",
+              "answer": "Nutze eine Anfrage, wenn der Anbieter Buchungen manuell genehmigen muss, z. B. bei stark nachgefragten Slots, Beratungen mit Vorbereitung oder Terminen außerhalb der regulären Zeiten."
+            },
+            {
+              "question": "Was passiert, nachdem ich eine Terminanfrage eingereicht habe?",
+              "answer": "Der Anbieter erhält deine Anfrage und kann sie annehmen oder ablehnen. Du wirst benachrichtigt, sobald eine Entscheidung getroffen wurde, und der Slot wird erst bei Genehmigung reserviert."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "key": "none:appointment-reschedule",
+      "identifier": "@appointment-reschedule",
+      "alias": "appointment-reschedule",
+      "chain": "none",
+      "hash": "fd8b1b9177109bc7ec21d907fed303421f972108718ad2754e4d8679c21ab01d",
+      "checksum": "fd8b1b9177109bc7ec21d907fed303421f972108718ad2754e4d8679c21ab01d",
+      "name": "Appointments: Reschedule",
+      "title": {
+        "en": "Reschedule appointment",
+        "de": "Termin verschieben"
+      },
+      "description": {
+        "en": "Reschedule an existing booked appointment to a new confirmed slot.",
+        "de": "Verschiebt einen bestehenden gebuchten Termin auf einen neuen bestaetigten Slot."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "9f4dafeed0f41dac9c31cda618706a50665a3495f2f5f86dac3717b310a4ca5b",
+        "slug": "appointments",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "Appointments",
+        "description": {
+          "en": "Appointment booking and intake flows for service businesses.",
+          "de": "Terminbuchung und Intake-Abläufe für Dienstleistungsunternehmen."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "Appointments: Reschedule",
+        "title": {
+          "en": "Reschedule appointment",
+          "de": "Termin verschieben"
+        },
+        "description": {
+          "en": "Reschedule an existing booked appointment to a new confirmed slot.",
+          "de": "Verschiebt einen bestehenden gebuchten Termin auf einen neuen bestaetigten Slot."
+        },
+        "bot": "Use this only after the user has chosen a new specific slot for an existing appointment. Collect the booked meeting id plus the exact new start and end times. If the new slot is rejected, offer fresh availability.",
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Reschedule",
+              "de": "Verschieben"
+            },
+            "destination": {
+              "url": "https://api.joai.ai/v1/agents/{{JOAI_AGENT_UUID}}/appointments/{{meetingId}}/reschedule",
+              "method": "POST"
+            },
+            "inputs": [
+              {
+                "name": "Meeting ID",
+                "as": "meetingId",
+                "description": {
+                  "en": "Booked appointment meeting id",
+                  "de": "Meeting-ID des gebuchten Termins"
+                },
+                "bot": "The booked meeting id returned by appointment-book.",
+                "type": "string",
+                "position": "arg:1",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Scheduled At",
+                "as": "scheduledAt",
+                "description": {
+                  "en": "New exact appointment start in ISO format",
+                  "de": "Neuer exakter Startzeitpunkt im ISO-Format"
+                },
+                "bot": "Exact confirmed appointment start in ISO 8601 format.",
+                "type": "string",
+                "position": "arg:2",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "End At",
+                "as": "endAt",
+                "description": {
+                  "en": "New exact appointment end in ISO format",
+                  "de": "Neues exaktes Ende im ISO-Format"
+                },
+                "bot": "Exact confirmed appointment end in ISO 8601 format.",
+                "type": "string",
+                "position": "arg:3",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Timezone",
+                "as": "timezone",
+                "description": {
+                  "en": "Appointment timezone",
+                  "de": "Zeitzone des Termins"
+                },
+                "bot": "Timezone identifier like Europe/Vienna, America/New_York, or UTC.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              }
+            ]
+          }
+        ],
+        "output": {
+          "MEETING_ID": "out.data.id",
+          "SCHEDULED_AT": "out.data.scheduledAt"
+        },
+        "messages": {
+          "success": {
+            "en": "Appointment rescheduled successfully.",
+            "de": "Termin erfolgreich verschoben."
+          }
+        }
+      },
+      "extras": {
+        "keywords": {
+          "en": [
+            "reschedule appointment",
+            "change appointment time",
+            "move booking",
+            "update appointment"
+          ],
+          "de": [
+            "Termin verschieben",
+            "Terminzeit ändern",
+            "Buchung verlegen",
+            "Termin aktualisieren"
+          ]
+        },
+        "useCases": {
+          "en": [
+            "Move a client meeting to a later time slot",
+            "Reschedule an appointment due to an unexpected conflict",
+            "Shift a recurring booking to a different day of the week"
+          ],
+          "de": [
+            "Ein Kundengespräch auf einen späteren Zeitslot verschieben",
+            "Einen Termin wegen eines unerwarteten Konflikts umplanen",
+            "Eine wiederkehrende Buchung auf einen anderen Wochentag verlegen"
+          ]
+        },
+        "category": "productivity",
+        "faq": {
+          "en": [
+            {
+              "question": "How do I reschedule an existing appointment?",
+              "answer": "Select your booked appointment and choose a new available time slot. The original slot is freed up automatically once you confirm the new time."
+            },
+            {
+              "question": "Are there restrictions on rescheduling appointments?",
+              "answer": "Rescheduling may be limited by the provider's policy, such as a minimum notice period or a maximum number of changes per booking."
+            }
+          ],
+          "de": [
+            {
+              "question": "Wie verschiebe ich einen bestehenden Termin?",
+              "answer": "Wähle deinen gebuchten Termin und suche einen neuen verfügbaren Zeitslot aus. Der ursprüngliche Slot wird automatisch freigegeben, sobald du die neue Zeit bestätigst."
+            },
+            {
+              "question": "Gibt es Einschränkungen beim Verschieben von Terminen?",
+              "answer": "Das Verschieben kann durch die Richtlinie des Anbieters eingeschränkt sein, z. B. durch eine Mindestfrist oder eine maximale Anzahl an Änderungen pro Buchung."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "key": "none:appointment-upsert-policy",
+      "identifier": "@appointment-upsert-policy",
+      "alias": "appointment-upsert-policy",
+      "chain": "none",
+      "hash": "5ed3c7d3bbd1a8e80f6cce98b5e612ce9da9c906aab07dbc9c6f887abe418538",
+      "checksum": "5ed3c7d3bbd1a8e80f6cce98b5e612ce9da9c906aab07dbc9c6f887abe418538",
+      "name": "Appointments: Upsert Policy",
+      "title": {
+        "en": "Update policy",
+        "de": "Einstellungen speichern"
+      },
+      "description": {
+        "en": "Save the appointment booking policy for your agent. Configure timezone, office hours, slot intervals, buffer times, minimum notice periods, and available services.",
+        "de": "Speichere die Terminbuchungsrichtlinie für deinen Agenten. Konfiguriere Zeitzone, Geschäftszeiten, Slot-Intervalle, Pufferzeiten, Mindestvorlaufzeiten und verfügbare Dienstleistungen."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "9f4dafeed0f41dac9c31cda618706a50665a3495f2f5f86dac3717b310a4ca5b",
+        "slug": "appointments",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "Appointments",
+        "description": {
+          "en": "Appointment booking and intake flows for service businesses.",
+          "de": "Terminbuchung und Intake-Abläufe für Dienstleistungsunternehmen."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "Appointments: Upsert Policy",
+        "title": {
+          "en": "Update policy",
+          "de": "Einstellungen speichern"
+        },
+        "description": {
+          "en": "Save the appointment booking policy for your agent. Configure timezone, office hours, slot intervals, buffer times, minimum notice periods, and available services.",
+          "de": "Speichere die Terminbuchungsrichtlinie für deinen Agenten. Konfiguriere Zeitzone, Geschäftszeiten, Slot-Intervalle, Pufferzeiten, Mindestvorlaufzeiten und verfügbare Dienstleistungen."
+        },
+        "bot": "Use this when the user wants to save appointment configuration changes such as timezone, office hours, slot interval, buffer, notice period, or service settings.",
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Save",
+              "de": "Speichern"
+            },
+            "destination": {
+              "url": "https://api.joai.ai/v1/agents/{{JOAI_AGENT_UUID}}/appointments/policy",
+              "method": "PUT"
+            },
+            "inputs": [
+              {
+                "name": "Policy",
+                "as": "policy",
+                "description": {
+                  "en": "JSON-encoded appointment policy object",
+                  "de": "JSON-kodiertes Terminrichtlinien-Objekt"
+                },
+                "bot": "A JSON string containing the full appointment policy. Include all fields: timezone, availability, minNoticeMinutes, bufferMinutes, maxDaysAhead, slotIntervalMinutes, and services.",
+                "type": "string",
+                "source": "field",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "messages": {
+          "success": {
+            "en": "Appointment settings saved.",
+            "de": "Termineinstellungen gespeichert."
+          }
+        }
+      },
+      "extras": {
+        "keywords": {
+          "en": [
+            "appointment policy",
+            "booking policy",
+            "cancellation policy",
+            "appointment rules"
+          ],
+          "de": [
+            "Terminrichtlinie",
+            "Buchungsrichtlinie",
+            "Stornierungsrichtlinie",
+            "Terminregeln"
+          ]
+        },
+        "useCases": {
+          "en": [
+            "Set a 24-hour cancellation policy for appointments",
+            "Define no-show fees to reduce missed bookings",
+            "Update booking terms to require deposits for premium services"
+          ],
+          "de": [
+            "Eine 24-Stunden-Stornierungsrichtlinie für Termine festlegen",
+            "No-Show-Gebühren definieren, um verpasste Buchungen zu reduzieren",
+            "Buchungsbedingungen aktualisieren, um Anzahlungen für Premium-Dienste zu verlangen"
+          ]
+        },
+        "category": "productivity",
+        "faq": {
+          "en": [
+            {
+              "question": "What policies can I configure for my appointments?",
+              "answer": "You can set cancellation deadlines, no-show fees, required deposits, rescheduling limits, and minimum notice periods. Policies are enforced automatically on every booking."
+            },
+            {
+              "question": "Can I update my appointment policy after it is created?",
+              "answer": "Yes, you can update your policy at any time. Changes apply to new bookings immediately; existing bookings follow the policy that was active when they were made."
+            }
+          ],
+          "de": [
+            {
+              "question": "Welche Richtlinien kann ich für meine Termine konfigurieren?",
+              "answer": "Du kannst Stornierungsfristen, No-Show-Gebühren, Anzahlungen, Umbuchungslimits und Mindestvorlaufzeiten festlegen. Richtlinien werden automatisch bei jeder Buchung durchgesetzt."
+            },
+            {
+              "question": "Kann ich meine Terminrichtlinie nachträglich ändern?",
+              "answer": "Ja, du kannst deine Richtlinie jederzeit aktualisieren. Änderungen gelten sofort für neue Buchungen; bestehende Buchungen behalten die zum Buchungszeitpunkt gültige Richtlinie."
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "deletes": [
+    {
+      "key": "none:appointments-appointment-availability",
+      "alias": "appointments-appointment-availability",
+      "chain": "none",
+      "hash": "4bbff92c3e0af693df47c6689897db8f31ced11474e8b61f4a5da1f92a435bd5"
+    },
+    {
+      "key": "none:appointments-appointment-book",
+      "alias": "appointments-appointment-book",
+      "chain": "none",
+      "hash": "b29edfe41501cb27c0dd8082dce3df5c4989fed569d5321507e8f1a2e39cce64"
+    },
+    {
+      "key": "none:appointments-appointment-cancel",
+      "alias": "appointments-appointment-cancel",
+      "chain": "none",
+      "hash": "1afb6c0ff789d4a9e7b353eb751f07d14397eb18e6a2308978df584a2e7043ca"
+    },
+    {
+      "key": "none:appointments-appointment-configure",
+      "alias": "appointments-appointment-configure",
+      "chain": "none",
+      "hash": "63c6588f59ccc789c27e6cbe0f4e24f497bbaf718440a789b951e9ce5a72fa64"
+    },
+    {
+      "key": "none:appointments-appointment-onboarding",
+      "alias": "appointments-appointment-onboarding",
+      "chain": "none",
+      "hash": "9bc289db95396c6fe5e94b53a0534c7da7fe80aaaf17c8c5ebaae0374740f031"
+    },
+    {
+      "key": "none:appointments-appointment-request-create",
+      "alias": "appointments-appointment-request-create",
+      "chain": "none",
+      "hash": "faa64b90808f03cea4f2c3aff8dc463d6004d4a9c96db788b42f32edfcc41b30"
+    },
+    {
+      "key": "none:appointments-appointment-reschedule",
+      "alias": "appointments-appointment-reschedule",
+      "chain": "none",
+      "hash": "fd8b1b9177109bc7ec21d907fed303421f972108718ad2754e4d8679c21ab01d"
+    },
+    {
+      "key": "none:appointments-appointment-upsert-policy",
+      "alias": "appointments-appointment-upsert-policy",
+      "chain": "none",
+      "hash": "5ed3c7d3bbd1a8e80f6cce98b5e612ce9da9c906aab07dbc9c6f887abe418538"
+    }
+  ]
 }
