@@ -49,6 +49,32 @@ export const meta: Record<string, WarpExtras> = {
       de: ['Eine Aufgabe stoppen, die mit falschen Anweisungen gestartet wurde', 'Einen lang laufenden Job abbrechen, dessen Ergebnisse nicht mehr benötigt werden', 'Ressourcen freigeben durch Beenden veralteter Hintergrundaufgaben'],
     },
     category: 'developer',
+    faq: {
+      en: [
+        {
+          question: 'How do I cancel a running Claude task?',
+          answer:
+            'Provide the task ID to cancel it immediately. Any partial results generated before cancellation are discarded and cannot be retrieved.',
+        },
+        {
+          question: 'What happens to partial results when I cancel a Claude task?',
+          answer:
+            'Partial output is not preserved after cancellation. If you need intermediate results, check the task status before cancelling to retrieve any available output.',
+        },
+      ],
+      de: [
+        {
+          question: 'Wie breche ich eine laufende Claude-Aufgabe ab?',
+          answer:
+            'Gib die Aufgaben-ID an, um sie sofort abzubrechen. Teilergebnisse, die vor dem Abbruch erzeugt wurden, werden verworfen und können nicht abgerufen werden.',
+        },
+        {
+          question: 'Was passiert mit Teilergebnissen, wenn ich eine Claude-Aufgabe abbreche?',
+          answer:
+            'Teilausgaben werden nach dem Abbruch nicht gespeichert. Wenn du Zwischenergebnisse brauchst, prüfe den Aufgabenstatus vor dem Abbrechen, um verfügbare Ausgaben abzurufen.',
+        },
+      ],
+    },
   },
 
   'get-task-status': {
@@ -61,6 +87,32 @@ export const meta: Record<string, WarpExtras> = {
       de: ['Prüfen, ob eine Hintergrund-Rechercheaufgabe abgeschlossen ist', 'Die fertige Ausgabe eines Claude-Schreibauftrags abrufen', 'Den Fortschritt einer lang laufenden Analyseaufgabe überwachen'],
     },
     category: 'developer',
+    faq: {
+      en: [
+        {
+          question: 'What are the possible statuses of a Claude task?',
+          answer:
+            'Tasks can be pending, in progress, completed, failed, or cancelled. Checking the status also returns any output generated so far.',
+        },
+        {
+          question: 'How do I check the progress of my Claude task?',
+          answer:
+            'Query the task status using the task ID. You will see the current state and, once completed, the full result.',
+        },
+      ],
+      de: [
+        {
+          question: 'Welche Status kann eine Claude-Aufgabe haben?',
+          answer:
+            'Aufgaben können ausstehend, in Bearbeitung, abgeschlossen, fehlgeschlagen oder abgebrochen sein. Die Statusabfrage liefert auch bisher erzeugte Ausgaben.',
+        },
+        {
+          question: 'Wie prüfe ich den Fortschritt meiner Claude-Aufgabe?',
+          answer:
+            'Frage den Aufgabenstatus mit der Aufgaben-ID ab. Du siehst den aktuellen Zustand und nach Abschluss das vollständige Ergebnis.',
+        },
+      ],
+    },
   },
 
   'add-followup': {
@@ -73,6 +125,22 @@ export const meta: Record<string, WarpExtras> = {
       de: ['Claude bitten, einen Entwurf basierend auf neuem Feedback zu überarbeiten', 'Zusätzlichen Kontext liefern, um die Aufgabenausgabe zu verbessern', 'Ein anderes Format oder einen anderen Fokus für fertige Ergebnisse anfordern'],
     },
     category: 'developer',
+    faq: {
+      en: [
+        {
+          question: 'Can I add more context to a Claude task after it started?',
+          answer:
+            'Yes, send a follow-up message with additional instructions or context. Claude incorporates the new information and continues working on the task.',
+        },
+      ],
+      de: [
+        {
+          question: 'Kann ich einer laufenden Claude-Aufgabe nachträglich Kontext hinzufügen?',
+          answer:
+            'Ja, sende eine Folgenachricht mit zusätzlichen Anweisungen oder Kontext. Claude berücksichtigt die neuen Informationen und arbeitet an der Aufgabe weiter.',
+        },
+      ],
+    },
   },
 
   'code-launch-task': {
@@ -85,6 +153,22 @@ export const meta: Record<string, WarpExtras> = {
       de: ['Claude Code ein neues Feature in der Codebasis implementieren lassen', 'Bug-Fixes und Code-Refactoring an einen KI-Programmieragenten delegieren', 'Code-Reviews und Testgenerierung mit Claude Code automatisieren'],
     },
     category: 'developer',
+    faq: {
+      en: [
+        {
+          question: 'How do I launch a coding task with Claude Code from the CLI?',
+          answer:
+            'Use the Claude Code CLI to submit your coding instructions. The task runs in a sandboxed environment with access to your codebase and returns code changes when complete.',
+        },
+      ],
+      de: [
+        {
+          question: 'Wie starte ich eine Programmieraufgabe mit Claude Code über die CLI?',
+          answer:
+            'Nutze die Claude Code CLI, um deine Programmieranweisungen einzureichen. Die Aufgabe läuft in einer Sandbox-Umgebung mit Zugriff auf deine Codebasis und liefert Codeänderungen nach Abschluss.',
+        },
+      ],
+    },
   },
 
   'code-cancel-task': {
@@ -97,6 +181,22 @@ export const meta: Record<string, WarpExtras> = {
       de: ['Eine Programmieraufgabe stoppen, wenn sich die Anforderungen geändert haben', 'Einen Code-Generierungsjob abbrechen, der den falschen Ansatz verfolgt', 'Eine Claude Code Aufgabe abbrechen, um mit besseren Anweisungen neu zu starten'],
     },
     category: 'developer',
+    faq: {
+      en: [
+        {
+          question: 'Can I cancel a Claude Code task that is modifying files?',
+          answer:
+            'Yes, cancelling stops the task immediately. Any file changes already written remain in your working directory, so review and revert them if needed.',
+        },
+      ],
+      de: [
+        {
+          question: 'Kann ich eine Claude Code Aufgabe abbrechen, die gerade Dateien ändert?',
+          answer:
+            'Ja, das Abbrechen stoppt die Aufgabe sofort. Bereits geschriebene Dateiänderungen bleiben in deinem Arbeitsverzeichnis, also prüfe und setze sie bei Bedarf zurück.',
+        },
+      ],
+    },
   },
 
   'code-get-task-status': {
@@ -109,6 +209,22 @@ export const meta: Record<string, WarpExtras> = {
       de: ['Prüfen, ob Claude Code die Feature-Implementierung abgeschlossen hat', 'Den generierten Code vor dem Zusammenführen überprüfen', 'Eine komplexe Refactoring-Aufgabe im Fortschritt überwachen'],
     },
     category: 'developer',
+    faq: {
+      en: [
+        {
+          question: 'How do I check if Claude Code finished implementing my feature?',
+          answer:
+            'Query the task status with the task ID to see whether it is still running or completed, along with a summary of files changed.',
+        },
+      ],
+      de: [
+        {
+          question: 'Wie prüfe ich, ob Claude Code mein Feature fertig implementiert hat?',
+          answer:
+            'Frage den Aufgabenstatus mit der Aufgaben-ID ab, um zu sehen, ob die Aufgabe noch läuft oder abgeschlossen ist, samt einer Zusammenfassung der geänderten Dateien.',
+        },
+      ],
+    },
   },
 
   'code-add-followup': {
@@ -121,6 +237,22 @@ export const meta: Record<string, WarpExtras> = {
       de: ['Claude Code bitten, Fehlerbehandlung zum generierten Code hinzuzufügen', 'Stil- oder Architekturänderungen während der Implementierung anfordern', 'Klärende Details zu Grenzfällen während des Programmierens liefern'],
     },
     category: 'developer',
+    faq: {
+      en: [
+        {
+          question: 'Can I send follow-up instructions to a Claude Code task via CLI?',
+          answer:
+            'Yes, add a follow-up message referencing the task ID. Claude Code incorporates your feedback and continues modifying code accordingly.',
+        },
+      ],
+      de: [
+        {
+          question: 'Kann ich einer Claude Code Aufgabe über die CLI Folgeanweisungen senden?',
+          answer:
+            'Ja, sende eine Folgenachricht mit der Aufgaben-ID. Claude Code berücksichtigt dein Feedback und ändert den Code entsprechend weiter.',
+        },
+      ],
+    },
   },
 
   'joai-plugin-install': {

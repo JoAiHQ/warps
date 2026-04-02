@@ -450,6 +450,22 @@ export const meta: Record<string, WarpExtras> = {
       de: ['Prüfen, wie aktiv eine MultiversX-Adresse war', 'Konto-Nonce vor dem Einreichen von Transaktionen verifizieren', 'Adressaktivitaet für Recherche oder Compliance analysieren', 'Kontonutzungsmuster über die Zeit überwachen'],
     },
     category: 'analytics',
+    faq: {
+      en: [
+        {
+          question: 'How is the transaction count different from a balance check?',
+          answer:
+            'The transaction count shows how many transactions an address has sent, which reflects account activity. It does not show any balance or token information.',
+        },
+      ],
+      de: [
+        {
+          question: 'Wie unterscheidet sich die Transaktionsanzahl von einer Guthabenabfrage?',
+          answer:
+            'Die Transaktionsanzahl zeigt, wie viele Transaktionen eine Adresse gesendet hat, und spiegelt die Kontoaktivität wider. Sie zeigt keine Guthaben- oder Token-Informationen an.',
+        },
+      ],
+    },
   },
   'account-guardian-data': {
     keywords: {
@@ -461,6 +477,22 @@ export const meta: Record<string, WarpExtras> = {
       de: ['Prüfen, ob ein MultiversX-Konto Guardian-Schutz aktiviert hat', '2FA-Sicherheitsstatus für Wallet-Audits überprüfen', 'Guardian-Adresskonfiguration vor sensiblen Vorgaengen bestaetigen', 'Kontosicherheitsstatus für Compliance-Pruefungen bewerten'],
     },
     category: 'analytics',
+    faq: {
+      en: [
+        {
+          question: 'What is a guardian on MultiversX?',
+          answer:
+            'A guardian is a second address that acts as a co-signer for transactions, adding an extra layer of security similar to two-factor authentication.',
+        },
+      ],
+      de: [
+        {
+          question: 'Was ist ein Guardian bei MultiversX?',
+          answer:
+            'Ein Guardian ist eine zweite Adresse, die als Mitunterzeichner für Transaktionen fungiert und eine zusätzliche Sicherheitsebene ähnlich einer Zwei-Faktor-Authentifizierung bietet.',
+        },
+      ],
+    },
   },
   'network-economics': {
     keywords: {
@@ -472,6 +504,32 @@ export const meta: Record<string, WarpExtras> = {
       de: ['EGLD-Angebots- und Inflationskennzahlen in Echtzeit überwachen', 'Aktuellen Staking-APR für Investitionsentscheidungen verfolgen', 'MultiversX-Marktkapitalisierung und wirtschaftliche Gesundheit analysieren', 'Netzwerkoekonomie-Daten in Dashboards oder Berichte integrieren'],
     },
     category: 'infrastructure',
+    faq: {
+      en: [
+        {
+          question: 'What economic data can I see for the MultiversX network?',
+          answer:
+            'You can view metrics like total EGLD supply, circulating supply, current staking APR, market capitalization, and inflation rate.',
+        },
+        {
+          question: 'How often is the network economics data updated?',
+          answer:
+            'The data reflects the current on-chain state and is updated with each epoch, typically every 24 hours.',
+        },
+      ],
+      de: [
+        {
+          question: 'Welche Wirtschaftsdaten kann ich zum MultiversX-Netzwerk einsehen?',
+          answer:
+            'Du kannst Kennzahlen wie Gesamtmenge an EGLD, Umlaufmenge, aktuellen Staking-APR, Marktkapitalisierung und Inflationsrate einsehen.',
+        },
+        {
+          question: 'Wie oft werden die Netzwerk-Wirtschaftsdaten aktualisiert?',
+          answer:
+            'Die Daten spiegeln den aktuellen On-Chain-Zustand wider und werden mit jeder Epoche aktualisiert, typischerweise alle 24 Stunden.',
+        },
+      ],
+    },
   },
   'network-status': {
     keywords: {
@@ -483,6 +541,22 @@ export const meta: Record<string, WarpExtras> = {
       de: ['MultiversX-Netzwerkzustand vor dem Einreichen von Transaktionen verifizieren', 'Blockhoehe und Epochenfortschritt überwachen', 'Chain-Verfügbarkeit und Rundeninformationen für Validatoren prüfen', 'Netzwerkstatus-Pruefungen in automatisierte Workflows integrieren'],
     },
     category: 'infrastructure',
+    faq: {
+      en: [
+        {
+          question: 'What does the network status tell me?',
+          answer:
+            'It shows the current block height, epoch number, round information, and overall chain health so you can verify the network is operating normally.',
+        },
+      ],
+      de: [
+        {
+          question: 'Was sagt mir der Netzwerkstatus?',
+          answer:
+            'Er zeigt die aktuelle Blockhöhe, Epochennummer, Rundeninformationen und den allgemeinen Chain-Zustand, damit du überprüfen kannst, ob das Netzwerk normal arbeitet.',
+        },
+      ],
+    },
   },
   'staking-claimable-rewards': {
     keywords: {
@@ -494,6 +568,22 @@ export const meta: Record<string, WarpExtras> = {
       de: ['Ausstehende Staking-Belohnungen vor dem Einfordern prüfen', 'Belohnungsansammlung über Staking-Anbieter hinweg überwachen', 'Optimalen Einfordern-Zeitpunkt basierend auf Belohnungsguthaben planen', 'Staking-Rendite-Performance für Portfolio-Management verfolgen'],
     },
     category: 'staking',
+    faq: {
+      en: [
+        {
+          question: 'Can I check my claimable rewards without actually claiming them?',
+          answer:
+            'Yes, this action only shows your pending reward balance across staking providers. No transaction is sent and nothing is claimed.',
+        },
+      ],
+      de: [
+        {
+          question: 'Kann ich meine einforderbaren Belohnungen prüfen, ohne sie tatsächlich einzufordern?',
+          answer:
+            'Ja, diese Aktion zeigt nur dein ausstehendes Belohnungsguthaben über alle Staking-Anbieter hinweg. Es wird keine Transaktion gesendet und nichts eingefordert.',
+        },
+      ],
+    },
   },
   'staking-redelegate-all': {
     keywords: {
@@ -505,6 +595,32 @@ export const meta: Record<string, WarpExtras> = {
       de: ['Staking-Belohnungen automatisch über alle Anbieter compoundieren', 'EGLD-Staking-Rendite durch Redelegation maximieren', 'Belohnungs-Reinvestition mit Ein-Klick-Restaking vereinfachen', 'Staking-Positionen über die Zeit ohne manuelle Verwaltung wachsen lassen'],
     },
     category: 'staking',
+    faq: {
+      en: [
+        {
+          question: 'What does redelegating do with my staking rewards?',
+          answer:
+            'Redelegating takes your accumulated rewards and stakes them back with your providers automatically, compounding your earnings without manual steps.',
+        },
+        {
+          question: 'Does redelegating affect my existing staked amount?',
+          answer:
+            'No, your existing delegation stays untouched. Only the pending rewards are added on top as a new delegation.',
+        },
+      ],
+      de: [
+        {
+          question: 'Was passiert mit meinen Staking-Belohnungen beim Redelegieren?',
+          answer:
+            'Beim Redelegieren werden deine angesammelten Belohnungen automatisch bei deinen Anbietern erneut gestakt, sodass deine Erträge ohne manuelle Schritte verzinst werden.',
+        },
+        {
+          question: 'Beeinflusst das Redelegieren meinen bestehenden gestakten Betrag?',
+          answer:
+            'Nein, deine bestehende Delegation bleibt unberührt. Nur die ausstehenden Belohnungen werden als neue Delegation hinzugefügt.',
+        },
+      ],
+    },
   },
   'staking-claim': {
     keywords: {
@@ -516,6 +632,22 @@ export const meta: Record<string, WarpExtras> = {
       de: ['Belohnungen selektiv von einem bestimmten Staking-Anbieter einfordern', 'Belohnungseinholung pro Delegation für Steuerverfolgung verwalten', 'Belohnungseinfordern mit einem einzelnen Anbieter testen, bevor alles eingefordert wird', 'Separate Belohnungszeitplaene über verschiedene Validatoren beibehalten'],
     },
     category: 'staking',
+    faq: {
+      en: [
+        {
+          question: 'What is the difference between claiming from one provider vs. claiming all?',
+          answer:
+            'Claiming from one provider lets you collect rewards from a specific validator only, while claiming all collects from every provider at once in a single transaction.',
+        },
+      ],
+      de: [
+        {
+          question: 'Was ist der Unterschied zwischen dem Einfordern von einem Anbieter und dem Einfordern aller?',
+          answer:
+            'Beim Einfordern von einem Anbieter erhältst du nur die Belohnungen eines bestimmten Validators, während beim Einfordern aller die Belohnungen aller Anbieter in einer einzigen Transaktion gesammelt werden.',
+        },
+      ],
+    },
   },
   'transaction-details': {
     keywords: {
@@ -527,6 +659,22 @@ export const meta: Record<string, WarpExtras> = {
       de: ['Transaktionsdetails anhand des Hashs für Debugging oder Verifizierung prüfen', 'Smart-Contract-Aufrufergebnisse und Gasverbrauch überprüfen', 'Transferbetraege und Empfaenger für Audits verifizieren', 'Fehlgeschlagene Transaktionen untersuchen, um Fehlerursachen zu verstehen'],
     },
     category: 'analytics',
+    faq: {
+      en: [
+        {
+          question: 'What do I need to look up a transaction?',
+          answer:
+            'You need the transaction hash, which is a unique identifier returned when a transaction is submitted to the network.',
+        },
+      ],
+      de: [
+        {
+          question: 'Was brauche ich, um eine Transaktion nachzuschlagen?',
+          answer:
+            'Du benötigst den Transaktions-Hash, eine eindeutige Kennung, die beim Einreichen einer Transaktion an das Netzwerk zurückgegeben wird.',
+        },
+      ],
+    },
   },
   'transaction-status': {
     keywords: {
@@ -538,6 +686,22 @@ export const meta: Record<string, WarpExtras> = {
       de: ['Bestaetigen, ob eine Transaktion erfolgreich abgeschlossen wurde', 'Ausstehende Transaktionen bis zur Finalitaet überwachen', 'Fehlgeschlagene oder haengende Transaktionen beheben', 'Transaktionsbestaetigung für Zahlungsabwicklung verifizieren'],
     },
     category: 'analytics',
+    faq: {
+      en: [
+        {
+          question: 'What transaction statuses can I expect?',
+          answer:
+            'A transaction can be pending, successful, failed, or invalid. This action shows you the current status so you know if it went through.',
+        },
+      ],
+      de: [
+        {
+          question: 'Welche Transaktionsstatus gibt es?',
+          answer:
+            'Eine Transaktion kann ausstehend, erfolgreich, fehlgeschlagen oder ungültig sein. Diese Aktion zeigt dir den aktuellen Status, damit du weißt, ob sie durchgegangen ist.',
+        },
+      ],
+    },
   },
   'token-details': {
     keywords: {
@@ -549,6 +713,22 @@ export const meta: Record<string, WarpExtras> = {
       de: ['ESDT-Token-Eigenschaften vor dem Handel oder der Investition verifizieren', 'Token-Angebot, Dezimalstellen und Eigentuemerinformationen nachschlagen', 'Token-Konfigurationsflags wie praegbar und brennbar prüfen', 'Token-Details für DeFi-Integration oder Analyse recherchieren'],
     },
     category: 'defi',
+    faq: {
+      en: [
+        {
+          question: 'What information does the token details view show?',
+          answer:
+            'It shows the token name, ticker, supply, decimals, owner address, and configuration properties like whether the token is mintable or burnable.',
+        },
+      ],
+      de: [
+        {
+          question: 'Welche Informationen zeigt die Token-Detailansicht?',
+          answer:
+            'Sie zeigt den Token-Namen, das Kürzel, die Gesamtmenge, Dezimalstellen, die Eigentümeradresse und Konfigurationseigenschaften wie Prägbarkeit oder Brennbarkeit.',
+        },
+      ],
+    },
   },
   'esdt-set-nft-create-role': {
     keywords: {
@@ -560,6 +740,22 @@ export const meta: Record<string, WarpExtras> = {
       de: ['NFT-Prägeberechtigungen für einen Sammlungseigentuemer aktivieren', 'Erstellungsrollen an Mitarbeiter für gemeinsame NFT-Projekte zuweisen', 'Prägezugang nach Ausgabe einer neuen NFT-Sammlung einrichten', 'Rollenbasierte Zugriffskontrolle für NFT-Erstellungs-Workflows verwalten'],
     },
     category: 'nft',
+    faq: {
+      en: [
+        {
+          question: 'Who can assign the NFT create role?',
+          answer:
+            'Only the collection owner (the address that issued the collection) can assign the NFT create role to themselves or other addresses.',
+        },
+      ],
+      de: [
+        {
+          question: 'Wer kann die NFT-Erstellungsrolle zuweisen?',
+          answer:
+            'Nur der Sammlungseigentümer (die Adresse, die die Sammlung ausgegeben hat) kann die NFT-Erstellungsrolle sich selbst oder anderen Adressen zuweisen.',
+        },
+      ],
+    },
   },
   'esdt-issue-sft-collection': {
     keywords: {
@@ -571,6 +767,22 @@ export const meta: Record<string, WarpExtras> = {
       de: ['SFT-Sammlungen für Event-Tickets oder limitierte Editionen erstellen', 'Gaming-Item-Sammlungen mit mehreren Kopien pro Token starten', 'Mitgliedsausweise oder Gutscheine als semi-fungible Token ausgeben', 'Fraktionalisierte Asset-Darstellungen auf MultiversX erstellen'],
     },
     category: 'nft',
+    faq: {
+      en: [
+        {
+          question: 'What is the difference between an SFT and an NFT collection?',
+          answer:
+            'An SFT (semi-fungible token) collection allows multiple copies of the same token, while an NFT collection contains unique one-of-a-kind tokens.',
+        },
+      ],
+      de: [
+        {
+          question: 'Was ist der Unterschied zwischen einer SFT- und einer NFT-Sammlung?',
+          answer:
+            'Eine SFT-Sammlung (semi-fungibler Token) erlaubt mehrere Kopien desselben Tokens, während eine NFT-Sammlung einzigartige Einzelstücke enthält.',
+        },
+      ],
+    },
   },
   'esdt-nft-view': {
     keywords: {
@@ -582,5 +794,21 @@ export const meta: Record<string, WarpExtras> = {
       de: ['NFT-Metadaten einschliesslich Lizenzgebühren und Attribute inspizieren', 'NFT-Authentizitaet und Erstellerinformationen verifizieren', 'Medien-URIs und On-Chain-Eigenschaften für einzelne Token anzeigen', 'NFT-Details vor dem Kauf oder Handel recherchieren'],
     },
     category: 'nft',
+    faq: {
+      en: [
+        {
+          question: 'Can I view any NFT on MultiversX?',
+          answer:
+            'Yes, you can look up any NFT by its collection ticker and nonce. All NFT data is public on-chain.',
+        },
+      ],
+      de: [
+        {
+          question: 'Kann ich jedes NFT auf MultiversX ansehen?',
+          answer:
+            'Ja, du kannst jedes NFT anhand seines Sammlungskürzels und seiner Nonce nachschlagen. Alle NFT-Daten sind öffentlich auf der Blockchain.',
+        },
+      ],
+    },
   },
 }

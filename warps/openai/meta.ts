@@ -49,6 +49,32 @@ export const meta: Record<string, WarpExtras> = {
       de: ['Eine GPT-Aufgabe stoppen, die mit falschen Anweisungen gestartet wurde', 'Einen lang laufenden OpenAI-Job abbrechen, der nicht mehr benötigt wird', 'Ressourcen freigeben durch Beenden veralteter Hintergrundaufgaben'],
     },
     category: 'developer',
+    faq: {
+      en: [
+        {
+          question: 'How do I cancel a running OpenAI task?',
+          answer:
+            'Provide the task ID to cancel it immediately. Partial results generated before cancellation are not preserved.',
+        },
+        {
+          question: 'What happens when I cancel an OpenAI task?',
+          answer:
+            'The task stops processing and is marked as cancelled. If you need any output produced so far, check the task status before cancelling.',
+        },
+      ],
+      de: [
+        {
+          question: 'Wie breche ich eine laufende OpenAI-Aufgabe ab?',
+          answer:
+            'Gib die Aufgaben-ID an, um sie sofort abzubrechen. Teilergebnisse, die vor dem Abbruch erzeugt wurden, werden nicht gespeichert.',
+        },
+        {
+          question: 'Was passiert, wenn ich eine OpenAI-Aufgabe abbreche?',
+          answer:
+            'Die Aufgabe wird gestoppt und als abgebrochen markiert. Wenn du bisherige Ausgaben brauchst, prüfe den Aufgabenstatus vor dem Abbrechen.',
+        },
+      ],
+    },
   },
 
   'get-task-status': {
@@ -61,6 +87,32 @@ export const meta: Record<string, WarpExtras> = {
       de: ['Prüfen, ob eine GPT-Hintergrund-Rechercheaufgabe abgeschlossen ist', 'Die fertige Ausgabe eines OpenAI-Schreibauftrags abrufen', 'Den Fortschritt einer lang laufenden Analyseaufgabe überwachen'],
     },
     category: 'developer',
+    faq: {
+      en: [
+        {
+          question: 'What statuses can an OpenAI task have?',
+          answer:
+            'Tasks can be queued, in progress, completed, failed, or cancelled. The status response includes any output generated so far.',
+        },
+        {
+          question: 'How do I check if my OpenAI task is finished?',
+          answer:
+            'Query the task status with the task ID. A completed status means results are ready for retrieval.',
+        },
+      ],
+      de: [
+        {
+          question: 'Welche Status kann eine OpenAI-Aufgabe haben?',
+          answer:
+            'Aufgaben können in Warteschlange, in Bearbeitung, abgeschlossen, fehlgeschlagen oder abgebrochen sein. Die Statusantwort enthält alle bisher erzeugten Ausgaben.',
+        },
+        {
+          question: 'Wie prüfe ich, ob meine OpenAI-Aufgabe fertig ist?',
+          answer:
+            'Frage den Aufgabenstatus mit der Aufgaben-ID ab. Der Status "abgeschlossen" bedeutet, dass die Ergebnisse bereitstehen.',
+        },
+      ],
+    },
   },
 
   'add-followup': {
@@ -73,6 +125,22 @@ export const meta: Record<string, WarpExtras> = {
       de: ['GPT bitten, einen Entwurf basierend auf neuem Feedback zu überarbeiten', 'Zusätzlichen Kontext liefern, um die Aufgabenausgabe zu verbessern', 'Ein anderes Format oder einen anderen Fokus für fertige Ergebnisse anfordern'],
     },
     category: 'developer',
+    faq: {
+      en: [
+        {
+          question: 'Can I send additional instructions to an OpenAI task after it started?',
+          answer:
+            'Yes, add a follow-up message with new context or revised instructions. The model incorporates the update and continues processing.',
+        },
+      ],
+      de: [
+        {
+          question: 'Kann ich einer laufenden OpenAI-Aufgabe nachträglich Anweisungen senden?',
+          answer:
+            'Ja, sende eine Folgenachricht mit neuem Kontext oder überarbeiteten Anweisungen. Das Modell berücksichtigt die Aktualisierung und arbeitet weiter.',
+        },
+      ],
+    },
   },
 
   'codex-launch-task': {
@@ -85,6 +153,22 @@ export const meta: Record<string, WarpExtras> = {
       de: ['Codex ein neues Feature in der Codebasis implementieren lassen', 'Bug-Fixes und Code-Refactoring an OpenAI Codex delegieren', 'Code-Reviews und Testgenerierung mit Codex automatisieren'],
     },
     category: 'developer',
+    faq: {
+      en: [
+        {
+          question: 'How do I start a coding task with Codex?',
+          answer:
+            'Submit your coding instructions through the Codex CLI. The task runs in a cloud sandbox with access to your repository and delivers code changes when done.',
+        },
+      ],
+      de: [
+        {
+          question: 'Wie starte ich eine Programmieraufgabe mit Codex?',
+          answer:
+            'Reiche deine Programmieranweisungen über die Codex CLI ein. Die Aufgabe läuft in einer Cloud-Sandbox mit Zugriff auf dein Repository und liefert Codeänderungen nach Abschluss.',
+        },
+      ],
+    },
   },
 
   'codex-cancel-task': {
@@ -97,6 +181,22 @@ export const meta: Record<string, WarpExtras> = {
       de: ['Eine Codex-Aufgabe stoppen, wenn sich die Anforderungen geändert haben', 'Einen Code-Generierungsjob abbrechen, der den falschen Ansatz verfolgt', 'Eine Codex-Aufgabe abbrechen, um mit besseren Anweisungen neu zu starten'],
     },
     category: 'developer',
+    faq: {
+      en: [
+        {
+          question: 'Can I cancel a Codex task that is already writing code?',
+          answer:
+            'Yes, cancelling stops the task immediately. Incomplete code changes may remain in the sandbox, so review the output before applying anything.',
+        },
+      ],
+      de: [
+        {
+          question: 'Kann ich eine Codex-Aufgabe abbrechen, die bereits Code schreibt?',
+          answer:
+            'Ja, das Abbrechen stoppt die Aufgabe sofort. Unvollständige Codeänderungen können in der Sandbox verbleiben, also prüfe die Ausgabe, bevor du etwas übernimmst.',
+        },
+      ],
+    },
   },
 
   'codex-get-task-status': {
@@ -109,6 +209,22 @@ export const meta: Record<string, WarpExtras> = {
       de: ['Prüfen, ob Codex die Feature-Implementierung abgeschlossen hat', 'Den generierten Code vor dem Zusammenführen überprüfen', 'Eine komplexe Refactoring-Aufgabe im Fortschritt überwachen'],
     },
     category: 'developer',
+    faq: {
+      en: [
+        {
+          question: 'How do I check whether my Codex coding task is done?',
+          answer:
+            'Query the task status using the task ID. A completed status means the code changes are ready for review and can be applied to your repository.',
+        },
+      ],
+      de: [
+        {
+          question: 'Wie prüfe ich, ob meine Codex-Programmieraufgabe fertig ist?',
+          answer:
+            'Frage den Aufgabenstatus mit der Aufgaben-ID ab. Der Status "abgeschlossen" bedeutet, dass die Codeänderungen zur Überprüfung bereitstehen und auf dein Repository angewendet werden können.',
+        },
+      ],
+    },
   },
 
   'codex-add-followup': {
@@ -121,6 +237,22 @@ export const meta: Record<string, WarpExtras> = {
       de: ['Codex bitten, Fehlerbehandlung zum generierten Code hinzuzufügen', 'Stil- oder Architekturänderungen während der Implementierung anfordern', 'Klärende Details zu Grenzfällen während des Programmierens liefern'],
     },
     category: 'developer',
+    faq: {
+      en: [
+        {
+          question: 'Can I send follow-up instructions to a running Codex task?',
+          answer:
+            'Yes, add a follow-up with the task ID to provide new context or request changes. Codex adjusts its approach based on your updated instructions.',
+        },
+      ],
+      de: [
+        {
+          question: 'Kann ich einer laufenden Codex-Aufgabe Folgeanweisungen senden?',
+          answer:
+            'Ja, sende eine Folgenachricht mit der Aufgaben-ID, um neuen Kontext bereitzustellen oder Änderungen anzufordern. Codex passt seinen Ansatz basierend auf deinen aktualisierten Anweisungen an.',
+        },
+      ],
+    },
   },
 
   'joai-plugin-install': {

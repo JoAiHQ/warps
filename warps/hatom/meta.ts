@@ -49,6 +49,22 @@ export const meta: Record<string, WarpExtras> = {
       de: ['sEGLD zurück in EGLD umwandeln, wenn du Liquidität benötigst', 'Entstaken, nachdem du ausreichende Staking-Belohnungen auf Hatom verdient hast', 'Den Abhebungsprozess starten, um dein ursprüngliches EGLD zurückzufordern'],
     },
     category: 'staking',
+    faq: {
+      en: [
+        {
+          question: 'When do I receive my EGLD back after liquid unstaking?',
+          answer:
+            'After unstaking sEGLD on Hatom, your EGLD enters an unbonding period. Once it completes, you can withdraw your EGLD using the withdraw action.',
+        },
+      ],
+      de: [
+        {
+          question: 'Wann erhalte ich mein EGLD nach dem Liquid Unstaking zurück?',
+          answer:
+            'Nach dem Entstaken von sEGLD auf Hatom durchläuft dein EGLD eine Unbonding-Periode. Sobald diese abgeschlossen ist, kannst du dein EGLD über die Withdraw-Aktion abheben.',
+        },
+      ],
+    },
   },
 
   'liquid-withdraw': {
@@ -61,5 +77,21 @@ export const meta: Record<string, WarpExtras> = {
       de: ['EGLD nach Ablauf der Entstaking-Abklingzeit beanspruchen', 'Deine abgehobenen Staking-Mittel in dein Wallet einsammeln', 'Den Ausstieg aus dem Hatom Liquid Staking abschließen'],
     },
     category: 'staking',
+    faq: {
+      en: [
+        {
+          question: 'When can I withdraw my EGLD after unstaking on Hatom?',
+          answer:
+            'You can withdraw once the unbonding period has ended. This action transfers your EGLD back to your wallet.',
+        },
+      ],
+      de: [
+        {
+          question: 'Wann kann ich mein EGLD nach dem Entstaken auf Hatom abheben?',
+          answer:
+            'Du kannst abheben, sobald die Unbonding-Periode abgelaufen ist. Diese Aktion überträgt dein EGLD zurück in dein Wallet.',
+        },
+      ],
+    },
   },
 }

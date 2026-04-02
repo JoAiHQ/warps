@@ -75,6 +75,22 @@ export const meta: Record<string, WarpExtras> = {
       de: ['Staking-Belohnungen automatisch reinvestieren', 'EGLD-Ertrage langfristig maximieren', 'eGold bei MrEGLD restaken'],
     },
     category: 'staking',
+    faq: {
+      en: [
+        {
+          question: 'What does redelegating EGLD do?',
+          answer:
+            'Redelegating automatically restakes your earned rewards with MrEGLD, compounding your returns over time instead of letting them sit idle.',
+        },
+      ],
+      de: [
+        {
+          question: 'Was bewirkt das Redelegieren von EGLD?',
+          answer:
+            'Beim Redelegieren werden deine verdienten Belohnungen automatisch bei MrEGLD erneut gestakt, sodass sich deine Erträge über die Zeit hinweg verzinsen, anstatt ungenutzt zu bleiben.',
+        },
+      ],
+    },
   },
   'undelegate-egld': {
     keywords: {
@@ -86,5 +102,21 @@ export const meta: Record<string, WarpExtras> = {
       de: ['EGLD von MrEGLD unstaken', 'Gestaktes eGold abheben', 'Staking-Delegationen verwalten'],
     },
     category: 'staking',
+    faq: {
+      en: [
+        {
+          question: 'How long does it take to undelegate EGLD?',
+          answer:
+            'After undelegating, your EGLD goes through a 10-day unbonding period before it becomes available for withdrawal to your wallet.',
+        },
+      ],
+      de: [
+        {
+          question: 'Wie lange dauert es, EGLD zu undelegieren?',
+          answer:
+            'Nach dem Undelegieren durchläuft dein EGLD eine 10-tägige Unbonding-Periode, bevor es zur Auszahlung in dein Wallet verfügbar wird.',
+        },
+      ],
+    },
   },
 }

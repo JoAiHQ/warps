@@ -161,6 +161,22 @@ export const meta: Record<string, WarpExtras> = {
       ],
     },
     category: 'defi',
+    faq: {
+      en: [
+        {
+          question: 'What is the difference between USDT and USDC when swapping from WEGLD?',
+          answer:
+            'Both are USD-pegged stablecoins on MultiversX. USDT (Tether) and USDC (Circle) maintain a 1:1 dollar peg, but they differ in issuer and reserve backing. Choose based on which stablecoin you prefer to hold or need for further transfers.',
+        },
+      ],
+      de: [
+        {
+          question: 'Was ist der Unterschied zwischen USDT und USDC beim Tausch von WEGLD?',
+          answer:
+            'Beide sind USD-gebundene Stablecoins auf MultiversX. USDT (Tether) und USDC (Circle) halten eine 1:1-Dollar-Bindung, unterscheiden sich aber in Herausgeber und Reservedeckung. Wähle je nachdem, welchen Stablecoin du bevorzugst oder für weitere Transfers benötigst.',
+        },
+      ],
+    },
   },
 
   'swap-usdt-to-wegld': {
@@ -181,6 +197,22 @@ export const meta: Record<string, WarpExtras> = {
       ],
     },
     category: 'defi',
+    faq: {
+      en: [
+        {
+          question: 'Can I use Tether (USDT) to buy EGLD on xExchange?',
+          answer:
+            'Yes, you can swap USDT for WEGLD directly on xExchange. USDT on MultiversX is a bridged version of Tether, and the swap gives you WEGLD which can be unwrapped to native EGLD.',
+        },
+      ],
+      de: [
+        {
+          question: 'Kann ich mit Tether (USDT) EGLD auf xExchange kaufen?',
+          answer:
+            'Ja, du kannst USDT direkt auf xExchange gegen WEGLD tauschen. USDT auf MultiversX ist eine gebridgte Version von Tether, und der Tausch liefert dir WEGLD, das du in natives EGLD unwrappen kannst.',
+        },
+      ],
+    },
   },
 
   'swap-wegld-to-wbtc': {
@@ -201,6 +233,22 @@ export const meta: Record<string, WarpExtras> = {
       ],
     },
     category: 'defi',
+    faq: {
+      en: [
+        {
+          question: 'Is WBTC on MultiversX the same as holding real Bitcoin?',
+          answer:
+            'WBTC (Wrapped Bitcoin) is a bridged token that represents Bitcoin on MultiversX. It tracks the BTC price 1:1 and lets you gain Bitcoin exposure while staying within the MultiversX DeFi ecosystem.',
+        },
+      ],
+      de: [
+        {
+          question: 'Ist WBTC auf MultiversX dasselbe wie echtes Bitcoin?',
+          answer:
+            'WBTC (Wrapped Bitcoin) ist ein gebridgter Token, der Bitcoin auf MultiversX repräsentiert. Er bildet den BTC-Preis 1:1 ab und ermöglicht dir Bitcoin-Exposure, ohne das MultiversX-DeFi-Ökosystem verlassen zu müssen.',
+        },
+      ],
+    },
   },
 
   'swap-wbtc-to-wegld': {
@@ -221,6 +269,22 @@ export const meta: Record<string, WarpExtras> = {
       ],
     },
     category: 'defi',
+    faq: {
+      en: [
+        {
+          question: 'Why would I swap my Wrapped Bitcoin for WEGLD instead of holding BTC?',
+          answer:
+            'Swapping WBTC to WEGLD lets you stake EGLD for network rewards, participate in MultiversX DeFi protocols, and use native dApps -- opportunities not available while holding a bridged Bitcoin token.',
+        },
+      ],
+      de: [
+        {
+          question: 'Warum sollte ich mein Wrapped Bitcoin gegen WEGLD tauschen, statt BTC zu halten?',
+          answer:
+            'Der Tausch von WBTC zu WEGLD ermöglicht dir, EGLD zu staken und Netzwerk-Belohnungen zu erhalten, an MultiversX-DeFi-Protokollen teilzunehmen und native dApps zu nutzen -- Möglichkeiten, die mit einem gebridgten Bitcoin-Token nicht verfügbar sind.',
+        },
+      ],
+    },
   },
 
   'swap-wegld-to-weth': {
@@ -241,6 +305,22 @@ export const meta: Record<string, WarpExtras> = {
       ],
     },
     category: 'defi',
+    faq: {
+      en: [
+        {
+          question: 'What is WETH on MultiversX and how does it relate to Ethereum?',
+          answer:
+            'WETH (Wrapped Ether) is a bridged version of Ethereum\'s native ETH token available on MultiversX. It tracks the ETH price and lets you hold Ethereum exposure without leaving the MultiversX network.',
+        },
+      ],
+      de: [
+        {
+          question: 'Was ist WETH auf MultiversX und wie hängt es mit Ethereum zusammen?',
+          answer:
+            'WETH (Wrapped Ether) ist eine gebridgte Version von Ethereums nativem ETH-Token auf MultiversX. Er bildet den ETH-Preis ab und ermöglicht dir Ethereum-Exposure, ohne das MultiversX-Netzwerk verlassen zu müssen.',
+        },
+      ],
+    },
   },
 
   'swap-weth-to-wegld': {
@@ -261,6 +341,22 @@ export const meta: Record<string, WarpExtras> = {
       ],
     },
     category: 'defi',
+    faq: {
+      en: [
+        {
+          question: 'Can I convert my bridged Ethereum to EGLD for staking?',
+          answer:
+            'Yes, you can swap WETH (Wrapped Ether) to WEGLD on xExchange and then unwrap it to native EGLD. This lets you move from a bridged Ethereum position directly into EGLD staking on MultiversX.',
+        },
+      ],
+      de: [
+        {
+          question: 'Kann ich mein gebridgtes Ethereum in EGLD zum Staken umwandeln?',
+          answer:
+            'Ja, du kannst WETH (Wrapped Ether) auf xExchange gegen WEGLD tauschen und es dann in natives EGLD unwrappen. So wechselst du direkt von einer gebridgten Ethereum-Position ins EGLD-Staking auf MultiversX.',
+        },
+      ],
+    },
   },
 
   'swap-mex-to-usdc': {
@@ -281,6 +377,22 @@ export const meta: Record<string, WarpExtras> = {
       ],
     },
     category: 'defi',
+    faq: {
+      en: [
+        {
+          question: 'How do I cash out my MEX governance token rewards to a stablecoin?',
+          answer:
+            'You can swap MEX directly to USDC on xExchange. This converts your xExchange governance token earnings into a dollar-pegged stablecoin, locking in the value of your rewards.',
+        },
+      ],
+      de: [
+        {
+          question: 'Wie löse ich meine MEX-Governance-Token-Belohnungen in einen Stablecoin ein?',
+          answer:
+            'Du kannst MEX direkt auf xExchange gegen USDC tauschen. Damit wandelst du deine xExchange-Governance-Token-Erträge in einen dollargebundenen Stablecoin um und sicherst den Wert deiner Belohnungen.',
+        },
+      ],
+    },
   },
 
   'swap-usdc-to-mex': {
@@ -301,6 +413,22 @@ export const meta: Record<string, WarpExtras> = {
       ],
     },
     category: 'defi',
+    faq: {
+      en: [
+        {
+          question: 'Why would I buy MEX with USDC instead of with EGLD?',
+          answer:
+            'Buying MEX with USDC lets you acquire the xExchange governance token from a stable-value position without selling your EGLD holdings. This is useful if you want to keep your EGLD staked while still participating in xExchange governance.',
+        },
+      ],
+      de: [
+        {
+          question: 'Warum sollte ich MEX mit USDC statt mit EGLD kaufen?',
+          answer:
+            'Der Kauf von MEX mit USDC ermöglicht dir, den xExchange-Governance-Token aus einer wertstabilen Position heraus zu erwerben, ohne deine EGLD-Bestände zu verkaufen. Das ist praktisch, wenn du dein EGLD weiter staken und trotzdem an der xExchange-Governance teilnehmen möchtest.',
+        },
+      ],
+    },
   },
 
   'swap-htm-to-wegld': {
@@ -321,6 +449,22 @@ export const meta: Record<string, WarpExtras> = {
       ],
     },
     category: 'defi',
+    faq: {
+      en: [
+        {
+          question: 'What is HTM and why would I swap it for WEGLD?',
+          answer:
+            'HTM is the governance token of Hatom, the leading lending and liquid staking protocol on MultiversX. Swapping HTM to WEGLD lets you convert your Hatom protocol position into the native MultiversX asset for staking or other DeFi uses.',
+        },
+      ],
+      de: [
+        {
+          question: 'Was ist HTM und warum sollte ich es gegen WEGLD tauschen?',
+          answer:
+            'HTM ist der Governance-Token von Hatom, dem führenden Lending- und Liquid-Staking-Protokoll auf MultiversX. Der Tausch von HTM zu WEGLD ermöglicht dir, deine Hatom-Position in den nativen MultiversX-Vermögenswert umzuwandeln -- zum Staken oder für andere DeFi-Nutzungen.',
+        },
+      ],
+    },
   },
 
   'swap-wegld-to-htm': {
@@ -341,5 +485,21 @@ export const meta: Record<string, WarpExtras> = {
       ],
     },
     category: 'defi',
+    faq: {
+      en: [
+        {
+          question: 'What can I do with HTM tokens after swapping from WEGLD?',
+          answer:
+            'HTM gives you governance rights in the Hatom lending and liquid staking protocol on MultiversX. You can vote on protocol proposals, provide liquidity in HTM pairs, or hold it to benefit from the growth of the Hatom ecosystem.',
+        },
+      ],
+      de: [
+        {
+          question: 'Was kann ich mit HTM-Token machen, nachdem ich von WEGLD getauscht habe?',
+          answer:
+            'HTM gibt dir Governance-Rechte im Hatom-Lending- und Liquid-Staking-Protokoll auf MultiversX. Du kannst über Protokoll-Vorschläge abstimmen, Liquidität in HTM-Paaren bereitstellen oder HTM halten, um vom Wachstum des Hatom-Ökosystems zu profitieren.',
+        },
+      ],
+    },
   },
 }

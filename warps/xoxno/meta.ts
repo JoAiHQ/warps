@@ -75,6 +75,22 @@ export const meta: Record<string, WarpExtras> = {
       de: ['Staking-Belohnungen automatisch reinvestieren', 'EGLD-Ertrage langfristig maximieren', 'eGold bei XOXNO restaken'],
     },
     category: 'staking',
+    faq: {
+      en: [
+        {
+          question: 'What does redelegating EGLD do?',
+          answer:
+            'Redelegating automatically restakes your earned rewards with XOXNO, compounding your returns over time instead of letting them sit idle.',
+        },
+      ],
+      de: [
+        {
+          question: 'Was bewirkt das Redelegieren von EGLD?',
+          answer:
+            'Beim Redelegieren werden deine verdienten Belohnungen automatisch bei XOXNO erneut gestakt, sodass sich deine Erträge über die Zeit hinweg verzinsen, anstatt ungenutzt zu bleiben.',
+        },
+      ],
+    },
   },
   'undelegate-egld': {
     keywords: {
@@ -86,6 +102,22 @@ export const meta: Record<string, WarpExtras> = {
       de: ['EGLD von XOXNO unstaken', 'Gestaktes eGold abheben', 'Staking-Delegationen verwalten'],
     },
     category: 'staking',
+    faq: {
+      en: [
+        {
+          question: 'How long does it take to undelegate EGLD?',
+          answer:
+            'After undelegating, your EGLD goes through a 10-day unbonding period before it becomes available for withdrawal to your wallet.',
+        },
+      ],
+      de: [
+        {
+          question: 'Wie lange dauert es, EGLD zu undelegieren?',
+          answer:
+            'Nach dem Undelegieren durchläuft dein EGLD eine 10-tägige Unbonding-Periode, bevor es zur Auszahlung in dein Wallet verfügbar wird.',
+        },
+      ],
+    },
   },
   'liquid-stake': {
     keywords: {
@@ -124,6 +156,22 @@ export const meta: Record<string, WarpExtras> = {
       de: ['Liquid gestakte EGLD-Token einlosen', 'XOXNO Liquid-Staking-Position verlassen', 'eGold-Auszahlungsprozess starten'],
     },
     category: 'staking',
+    faq: {
+      en: [
+        {
+          question: 'When do I receive my EGLD back after liquid unstaking?',
+          answer:
+            'After liquid unstaking, your tokens enter an unbonding period. Once it completes, you can withdraw your EGLD using the liquid withdraw action.',
+        },
+      ],
+      de: [
+        {
+          question: 'Wann erhalte ich mein EGLD nach dem Liquid Unstaking zurück?',
+          answer:
+            'Nach dem Liquid Unstaking durchlaufen deine Token eine Unbonding-Periode. Sobald diese abgeschlossen ist, kannst du dein EGLD über die Liquid-Withdraw-Aktion abheben.',
+        },
+      ],
+    },
   },
   'liquid-withdraw': {
     keywords: {
@@ -135,5 +183,21 @@ export const meta: Record<string, WarpExtras> = {
       de: ['EGLD Liquid-Unstaking-Auszahlung abschliessen', 'eGold nach Unbonding-Periode einfordern', 'XOXNO Liquid-Staking-Ausstieg abschliessen'],
     },
     category: 'staking',
+    faq: {
+      en: [
+        {
+          question: 'When can I withdraw my EGLD after liquid unstaking?',
+          answer:
+            'You can withdraw once the unbonding period has ended. This action transfers your EGLD back to your wallet.',
+        },
+      ],
+      de: [
+        {
+          question: 'Wann kann ich mein EGLD nach dem Liquid Unstaking abheben?',
+          answer:
+            'Du kannst abheben, sobald die Unbonding-Periode abgelaufen ist. Diese Aktion überträgt dein EGLD zurück in dein Wallet.',
+        },
+      ],
+    },
   },
 }
