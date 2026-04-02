@@ -362,6 +362,7 @@ describe('distribution catalog', () => {
           name: 'JoAi',
           description: { en: 'JoAi' },
           logo: { default: 'https://example.com/logo.svg' },
+          colors: {},
           urls: { web: 'https://joai.ai' },
           hash: 'brand-hash',
           mcpUrl: 'https://cortex.joai.ai/mcp/apps/joai',
