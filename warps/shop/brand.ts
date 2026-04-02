@@ -8,6 +8,7 @@ export const brand = async (config: WarpClientConfig): Promise<WarpbaseBrand> =>
       en: 'Loyalty and customer management for local service businesses.',
       de: 'Treue- und Kundenverwaltung für lokale Dienstleistungsunternehmen.',
     })
+    .setLogo('https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg')
     .setUrls({ web: 'https://joai.ai' })
     .build(),
   contracts: {
