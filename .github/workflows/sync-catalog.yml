@@ -60,3 +60,13 @@ jobs:
         env:
           WARP_GITHUB_SYNC_TOKEN: ${{ secrets.WARP_GITHUB_SYNC_TOKEN }}
         run: node --import tsx scripts/catalog/sync-to-api.ts --branch "${GITHUB_REF_NAME}" --commit "${GITHUB_SHA}" --repo "${GITHUB_REPOSITORY}"
+
+      - name: Dispatch plugin sync
+        if: ${{ secrets.JOAI_PLUGIN_SYNC_TOKEN != '' }}
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.JOAI_PLUGIN_SYNC_TOKEN }}
+          repository: JoAiHQ/joai--plugins
+          event-type: warps_catalog_updated
+          client-payload: >-
+            {"warps_ref":"${{ github.ref_name }}","warps_sha":"${{ github.sha }}"}
