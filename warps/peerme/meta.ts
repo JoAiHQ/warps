@@ -125,6 +125,22 @@ export const meta: Record<string, WarpExtras> = {
       de: ['Dein DAO-Treasury mit EGLD für anstehende Ausgaben aufladen', 'Token in ein Team-Multisig-Wallet für Projektfinanzierung einzahlen', 'Zu einem gemeinsamen Multisig-Wallet für eine Gruppeninvestition beitragen'],
     },
     category: 'security',
+    faq: {
+      en: [
+        {
+          question: 'How do I deposit funds into a multi-sig wallet?',
+          answer:
+            'Send EGLD or any ESDT token directly to your multi-sig wallet address. The deposit appears in the treasury balance immediately and does not require approval from other signers.',
+        },
+      ],
+      de: [
+        {
+          question: 'Wie zahle ich Guthaben in ein Multi-Sig Wallet ein?',
+          answer:
+            'Sende EGLD oder einen beliebigen ESDT-Token direkt an deine Multi-Sig-Wallet-Adresse. Die Einzahlung erscheint sofort im Treasury-Guthaben und erfordert keine Zustimmung anderer Unterzeichner.',
+        },
+      ],
+    },
   },
 
   'multisig-get-pending-actions': {
@@ -137,6 +153,22 @@ export const meta: Record<string, WarpExtras> = {
       de: ['Prüfen, welche Multisig-Transaktionen deine Signatur benötigen', 'Ausstehende DAO-Vorschläge vor dem Unterschreiben überprüfen', 'Die Genehmigungswarteschlange für Team-Wallet-Transaktionen überwachen'],
     },
     category: 'security',
+    faq: {
+      en: [
+        {
+          question: 'How do I see proposals waiting for my signature?',
+          answer:
+            'Open the pending actions list for your multi-sig wallet to see all proposals that still need your signature, along with their details, current approval count, and required threshold.',
+        },
+      ],
+      de: [
+        {
+          question: 'Wie sehe ich Vorschläge, die auf meine Signatur warten?',
+          answer:
+            'Öffne die Liste der ausstehenden Aktionen deines Multi-Sig Wallets, um alle Vorschläge zu sehen, die noch deine Signatur benötigen, inklusive Details, aktuellem Genehmigungsstand und erforderlicher Schwelle.',
+        },
+      ],
+    },
   },
 
   'earn-claim-peerme-dao': {
@@ -149,6 +181,22 @@ export const meta: Record<string, WarpExtras> = {
       de: ['Angesammelte PEER-Staking-Belohnungen in dein Wallet ernten', 'DAO-Belohnungen beanspruchen, bevor du sie wieder ins Staking reinvestierst', 'Verdiente Staking-Rendite einsammeln, ohne deinen Stake abzuheben'],
     },
     category: 'security',
+    faq: {
+      en: [
+        {
+          question: 'When can I claim my SUPER staking rewards?',
+          answer:
+            'Rewards accrue continuously while your SUPER tokens are staked. You can claim them at any time without unstaking, and they are sent directly to your wallet.',
+        },
+      ],
+      de: [
+        {
+          question: 'Wann kann ich meine SUPER-Staking-Belohnungen beanspruchen?',
+          answer:
+            'Belohnungen laufen kontinuierlich auf, solange deine SUPER-Token gestakt sind. Du kannst sie jederzeit beanspruchen, ohne zu entstaken, und sie werden direkt in dein Wallet gesendet.',
+        },
+      ],
+    },
   },
 
   'earn-withdraw-peerme-dao': {
@@ -161,6 +209,22 @@ export const meta: Record<string, WarpExtras> = {
       de: ['PEER-Token entstaken, um sie in einem anderen Protokoll zu verwenden', 'Deinen Stake abheben, um deine PEER-Token zu verkaufen oder zu übertragen', 'Gestakte Token abheben, nachdem du deinen Ziel-Belohnungsbetrag erreicht hast'],
     },
     category: 'security',
+    faq: {
+      en: [
+        {
+          question: 'Is there a cooldown period for withdrawing staked SUPER?',
+          answer:
+            'Yes, after initiating a withdrawal your SUPER tokens enter an unbonding period before they become available in your wallet. During this time they no longer earn rewards.',
+        },
+      ],
+      de: [
+        {
+          question: 'Gibt es eine Wartezeit beim Abheben von gestakten SUPER?',
+          answer:
+            'Ja, nach dem Einleiten einer Abhebung durchlaufen deine SUPER-Token eine Unbonding-Phase, bevor sie in deinem Wallet verfügbar sind. Während dieser Zeit erhältst du keine Belohnungen mehr.',
+        },
+      ],
+    },
   },
 
   'identity-burn-for-trust': {
@@ -173,6 +237,22 @@ export const meta: Record<string, WarpExtras> = {
       de: ['Deinen On-Chain-Vertrauenswert erhöhen, um Glaubwürdigkeit in DAOs zu gewinnen', 'Token verbrennen, um als vertrauenswürdiger Unterzeichner auf Multisig-Wallets qualifiziert zu werden', 'Reputation aufbauen, um Governance-Privilegien im PeerMe-Ökosystem freizuschalten'],
     },
     category: 'security',
+    faq: {
+      en: [
+        {
+          question: 'What does burning SUPER tokens for trust do?',
+          answer:
+            'Burning SUPER permanently removes them from circulation and increases your on-chain trust score. A higher trust score gives you more governance weight in DAOs and signals credibility to other members.',
+        },
+      ],
+      de: [
+        {
+          question: 'Was bewirkt das Verbrennen von SUPER-Token für Vertrauen?',
+          answer:
+            'Das Verbrennen von SUPER entfernt sie dauerhaft aus dem Umlauf und erhöht deinen On-Chain-Vertrauenswert. Ein höherer Vertrauenswert gibt dir mehr Governance-Gewicht in DAOs und signalisiert anderen Mitgliedern Glaubwürdigkeit.',
+        },
+      ],
+    },
   },
 
   'multisig-propose-transfer-execute-egld': {
@@ -185,6 +265,22 @@ export const meta: Record<string, WarpExtras> = {
       de: ['Eine DAO-Zahlung an einen Auftragnehmer oder Dienstleister vorschlagen', 'Eine EGLD-Überweisung für Team-Gehaltszahlungen aus dem Multisig einreichen', 'Eine Multisig-Treasury-Abhebung für Betriebskosten initiieren'],
     },
     category: 'security',
+    faq: {
+      en: [
+        {
+          question: 'How do I propose sending EGLD from a multi-sig wallet?',
+          answer:
+            'Create a transfer proposal by specifying the recipient address and EGLD amount. The proposal enters the pending queue and other signers can then review and approve it before execution.',
+        },
+      ],
+      de: [
+        {
+          question: 'Wie schlage ich eine EGLD-Überweisung aus einem Multi-Sig Wallet vor?',
+          answer:
+            'Erstelle einen Überweisungsvorschlag, indem du die Empfängeradresse und den EGLD-Betrag angibst. Der Vorschlag wird in die Warteschlange gestellt und andere Unterzeichner können ihn prüfen und genehmigen.',
+        },
+      ],
+    },
   },
 
   'multisig-registry-list': {
@@ -197,5 +293,21 @@ export const meta: Record<string, WarpExtras> = {
       de: ['Aktive DAOs auf MultiversX durchsuchen, um Communities zum Beitreten zu finden', 'Team-Wallets und ihre Governance-Strukturen entdecken', 'Das Verzeichnis nach einem bestimmten Multisig-Wallet oder DAO durchsuchen'],
     },
     category: 'security',
+    faq: {
+      en: [
+        {
+          question: 'Where can I see all my multi-sig wallets?',
+          answer:
+            'The multi-sig registry lists every wallet linked to your address. You can browse it to see wallet names, signer counts, and balances for all DAOs and teams you belong to.',
+        },
+      ],
+      de: [
+        {
+          question: 'Wo kann ich alle meine Multi-Sig Wallets sehen?',
+          answer:
+            'Das Multi-Sig-Verzeichnis listet jedes Wallet auf, das mit deiner Adresse verknüpft ist. Du kannst dort Wallet-Namen, Anzahl der Unterzeichner und Guthaben aller DAOs und Teams sehen, denen du angehörst.',
+        },
+      ],
+    },
   },
 }

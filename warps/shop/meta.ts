@@ -49,6 +49,22 @@ export const meta: Record<string, WarpExtras> = {
       de: ['Festlegen, wie viele Stempel Kunden für eine Gratisprämie benötigen', 'Cashback-Prozentsätze für treue Käufer konfigurieren', 'Treueprogramm-Regeln basierend auf saisonalen Aktionen anpassen'],
     },
     category: 'commerce',
+    faq: {
+      en: [
+        {
+          question: 'What can I customize in my loyalty program?',
+          answer:
+            'You can set the number of stamps required for a reward, define the reward type (free item, discount, or cashback), adjust thresholds for different tiers, and enable a Google review incentive that grants bonus stamps or discounts.',
+        },
+      ],
+      de: [
+        {
+          question: 'Was kann ich in meinem Treueprogramm anpassen?',
+          answer:
+            'Du kannst die Anzahl der Stempel für eine Prämie festlegen, die Prämienart wählen (Gratisartikel, Rabatt oder Cashback), Schwellenwerte für verschiedene Stufen anpassen und einen Google-Bewertungsanreiz aktivieren, der Bonusstempel oder Rabatte gewährt.',
+        },
+      ],
+    },
   },
 
   'shop-loyalty-register': {
@@ -99,6 +115,22 @@ export const meta: Record<string, WarpExtras> = {
       de: ['Eine Kundenkarte nach einem Einkauf in deinem Shop abstempeln', 'Bonusstempel während einer Werbeaktion vergeben', 'Den Kundenfortschritt zur nächsten Treueprämie verfolgen'],
     },
     category: 'commerce',
+    faq: {
+      en: [
+        {
+          question: 'How does loyalty stamp scanning work?',
+          answer:
+            'Customers tap their NFC loyalty card at your device or you manually scan their card code. The stamp is recorded instantly and the customer sees their updated progress toward the next reward.',
+        },
+      ],
+      de: [
+        {
+          question: 'Wie funktioniert das Scannen von Treuestempeln?',
+          answer:
+            'Kunden halten ihre NFC-Treuekarte an dein Gerät oder du scannst ihren Kartencode manuell. Der Stempel wird sofort erfasst und der Kunde sieht seinen aktualisierten Fortschritt zur nächsten Prämie.',
+        },
+      ],
+    },
   },
 
   'shop-loyalty-redeem': {
@@ -149,6 +181,22 @@ export const meta: Record<string, WarpExtras> = {
       de: ['Sehen, wie viele Stempel du noch für eine Gratisprämie brauchst', 'Dein Treue-Guthaben vor einem Einkauf prüfen', 'Deinen Prämienfortschritt über mehrere Besuche verfolgen'],
     },
     category: 'commerce',
+    faq: {
+      en: [
+        {
+          question: 'How do I check my loyalty card progress?',
+          answer:
+            'View your loyalty status to see how many stamps you have collected, how many more you need for your next reward, and any available rewards ready to redeem.',
+        },
+      ],
+      de: [
+        {
+          question: 'Wie prüfe ich den Fortschritt meiner Treuekarte?',
+          answer:
+            'Sieh dir deinen Treuestatus an, um zu erfahren, wie viele Stempel du gesammelt hast, wie viele du noch bis zur nächsten Prämie brauchst und welche Prämien du bereits einlösen kannst.',
+        },
+      ],
+    },
   },
 
   'shop-loyalty-review': {
@@ -161,6 +209,22 @@ export const meta: Record<string, WarpExtras> = {
       de: ['Analysieren, wie viele Kunden das Treueprogramm aktiv nutzen', 'Einlösequoten überprüfen, um die Attraktivität der Prämien zu bewerten', 'Trends bei der Stempelsammlung erkennen, um Aktionen zu planen'],
     },
     category: 'commerce',
+    faq: {
+      en: [
+        {
+          question: 'What happens after I leave a Google review?',
+          answer:
+            'Once your Google review is verified, you automatically receive a discount reward or bonus stamps as configured by the shop owner. The reward is applied to your loyalty account instantly.',
+        },
+      ],
+      de: [
+        {
+          question: 'Was passiert, nachdem ich eine Google-Bewertung abgegeben habe?',
+          answer:
+            'Sobald deine Google-Bewertung verifiziert ist, erhältst du automatisch einen Rabatt oder Bonusstempel, wie vom Shop-Betreiber konfiguriert. Die Prämie wird sofort deinem Treuekonto gutgeschrieben.',
+        },
+      ],
+    },
   },
 
   'shop-loyalty-remind': {
@@ -173,6 +237,22 @@ export const meta: Record<string, WarpExtras> = {
       de: ['Kunden benachrichtigen, die nur einen Stempel von einer Prämie entfernt sind', 'Inaktive Treuemitglieder mit einer Erinnerung reaktivieren', 'Werbe-Erinnerungen über ablaufende Treueprämien senden'],
     },
     category: 'commerce',
+    faq: {
+      en: [
+        {
+          question: 'How do loyalty reminders work?',
+          answer:
+            'Automated messages are sent to customers who have not visited in a while, reminding them of their stamp progress and how close they are to a reward. You can configure the inactivity threshold and message content.',
+        },
+      ],
+      de: [
+        {
+          question: 'Wie funktionieren Treue-Erinnerungen?',
+          answer:
+            'Automatische Nachrichten werden an Kunden gesendet, die längere Zeit nicht da waren, und erinnern sie an ihren Stempelfortschritt und wie nah sie an einer Prämie sind. Du kannst die Inaktivitätsschwelle und den Nachrichteninhalt konfigurieren.',
+        },
+      ],
+    },
   },
 
   'shop-loyalty-setup': {
@@ -185,5 +265,21 @@ export const meta: Record<string, WarpExtras> = {
       de: ['Ein Stempelkarten-Treueprogramm für ein neues Café erstellen', 'Ein Prämienprogramm mit Cashback für einen Online-Shop initialisieren', 'Ein punktebasiertes Treuesystem für ein Einzelhandelsgeschäft einrichten'],
     },
     category: 'commerce',
+    faq: {
+      en: [
+        {
+          question: 'How do I set up NFC loyalty cards?',
+          answer:
+            'Program blank NFC cards with your shop identifier using the setup flow. Once programmed, customers simply tap the card at your device to collect stamps automatically.',
+        },
+      ],
+      de: [
+        {
+          question: 'Wie richte ich NFC-Treuekarten ein?',
+          answer:
+            'Programmiere leere NFC-Karten mit deiner Shop-Kennung über den Einrichtungsablauf. Nach der Programmierung halten Kunden die Karte einfach an dein Gerät, um automatisch Stempel zu sammeln.',
+        },
+      ],
+    },
   },
 }

@@ -87,6 +87,22 @@ export const meta: Record<string, WarpExtras> = {
       de: ['Ein Marktsignal von deinem Handelsagenten an Bonder senden', 'Einen automatisierten Workflow zwischen verbundenen Agenten auslösen', 'Ein Statusupdate-Signal für die Agentenüberwachung senden'],
     },
     category: 'defi',
+    faq: {
+      en: [
+        {
+          question: 'What is a network signal and who receives it?',
+          answer:
+            'A network signal is a broadcast message from your agent to all connected nodes and bonders. It can convey market intent, status updates, or trigger coordinated actions across the OpenBond network.',
+        },
+      ],
+      de: [
+        {
+          question: 'Was ist ein Netzwerksignal und wer empfängt es?',
+          answer:
+            'Ein Netzwerksignal ist eine Broadcast-Nachricht von deinem Agenten an alle verbundenen Knoten und Bonder. Es kann Marktabsichten, Statusupdates oder koordinierte Aktionen im OpenBond-Netzwerk übermitteln.',
+        },
+      ],
+    },
   },
 
   'network-overview': {
@@ -99,5 +115,21 @@ export const meta: Record<string, WarpExtras> = {
       de: ['Den gesamten gesperrten Wert aller Agenten auf OpenBond prüfen', 'Trendagenten mit der höchsten Bonding-Aktivität entdecken', 'Netzwerkgesundheit und Agenten-Leistungsmetriken überwachen'],
     },
     category: 'defi',
+    faq: {
+      en: [
+        {
+          question: 'What metrics does the OpenBond network overview show?',
+          answer:
+            'The overview displays real-time telemetry including the number of active agents, total bond volumes, and network-wide performance metrics so you can assess overall ecosystem health at a glance.',
+        },
+      ],
+      de: [
+        {
+          question: 'Welche Metriken zeigt die OpenBond-Netzwerkübersicht?',
+          answer:
+            'Die Übersicht zeigt Echtzeit-Telemetrie wie die Anzahl aktiver Agenten, gesamte Bond-Volumina und netzwerkweite Leistungsmetriken, damit du die Gesundheit des Ökosystems auf einen Blick beurteilen kannst.',
+        },
+      ],
+    },
   },
 }
