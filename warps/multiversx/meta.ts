@@ -8,7 +8,7 @@ export const meta: Record<string, WarpExtras> = {
     },
     useCases: {
       en: ['Check EGLD balance for any MultiversX wallet address', 'Verify account shard assignment and nonce', 'Audit on-chain account properties before transactions', 'Monitor wallet status for portfolio tracking'],
-      de: ['EGLD-Guthaben fuer jede MultiversX-Wallet-Adresse pruefen', 'Shard-Zuweisung und Nonce des Kontos verifizieren', 'On-Chain-Kontoeigenschaften vor Transaktionen pruefen', 'Wallet-Status fuer Portfolio-Tracking ueberwachen'],
+      de: ['EGLD-Guthaben für jede MultiversX-Wallet-Adresse prüfen', 'Shard-Zuweisung und Nonce des Kontos verifizieren', 'On-Chain-Kontoeigenschaften vor Transaktionen prüfen', 'Wallet-Status für Portfolio-Tracking überwachen'],
     },
     category: 'analytics',
     faq: {
@@ -45,7 +45,7 @@ export const meta: Record<string, WarpExtras> = {
     },
     useCases: {
       en: ['Review ESDT token holdings for any MultiversX address', 'Track token portfolio balances across wallets', 'Verify token receipts after trades or transfers', 'Analyze token distribution for research purposes'],
-      de: ['ESDT-Token-Bestaende fuer jede MultiversX-Adresse einsehen', 'Token-Portfolio-Guthaben ueber Wallets hinweg verfolgen', 'Token-Eingaenge nach Trades oder Transfers verifizieren', 'Token-Verteilung fuer Recherchezwecke analysieren'],
+      de: ['ESDT-Token-Bestände für jede MultiversX-Adresse einsehen', 'Token-Portfolio-Guthaben über Wallets hinweg verfolgen', 'Token-Eingänge nach Trades oder Transfers verifizieren', 'Token-Verteilung für Recherchezwecke analysieren'],
     },
     category: 'analytics',
     faq: {
@@ -82,7 +82,7 @@ export const meta: Record<string, WarpExtras> = {
     },
     useCases: {
       en: ['View NFT and SFT collections for any MultiversX address', 'Verify NFT ownership and metadata on-chain', 'Track NFT portfolio value and holdings', 'Explore collection attributes and rarity data'],
-      de: ['NFT- und SFT-Sammlungen fuer jede MultiversX-Adresse anzeigen', 'NFT-Eigentumsrechte und Metadaten on-chain verifizieren', 'NFT-Portfolio-Wert und Bestaende verfolgen', 'Sammlungsattribute und Seltenheitsdaten erkunden'],
+      de: ['NFT- und SFT-Sammlungen für jede MultiversX-Adresse anzeigen', 'NFT-Eigentumsrechte und Metadaten on-chain verifizieren', 'NFT-Portfolio-Wert und Bestände verfolgen', 'Sammlungsattribute und Seltenheitsdaten erkunden'],
     },
     category: 'analytics',
     faq: {
@@ -119,7 +119,7 @@ export const meta: Record<string, WarpExtras> = {
     },
     useCases: {
       en: ['Audit full transaction history for any MultiversX address', 'Track EGLD and token transfers over time', 'Monitor smart contract interactions and staking activity', 'Investigate suspicious or failed transactions'],
-      de: ['Vollstaendigen Transaktionsverlauf fuer jede MultiversX-Adresse pruefen', 'EGLD- und Token-Transfers ueber die Zeit verfolgen', 'Smart-Contract-Interaktionen und Staking-Aktivitaeten ueberwachen', 'Verdaechtige oder fehlgeschlagene Transaktionen untersuchen'],
+      de: ['Vollständigen Transaktionsverlauf für jede MultiversX-Adresse prüfen', 'EGLD- und Token-Transfers über die Zeit verfolgen', 'Smart-Contract-Interaktionen und Staking-Aktivitäten überwachen', 'Verdächtige oder fehlgeschlagene Transaktionen untersuchen'],
     },
     category: 'analytics',
     faq: {
@@ -156,7 +156,7 @@ export const meta: Record<string, WarpExtras> = {
     },
     useCases: {
       en: ['Collect EGLD staking rewards from all providers at once', 'Simplify reward management for multi-provider delegations', 'Harvest staking earnings to reinvest or trade', 'Automate periodic reward claiming for staking portfolios'],
-      de: ['EGLD-Staking-Belohnungen von allen Anbietern auf einmal einfordern', 'Belohnungsverwaltung fuer Multi-Anbieter-Delegationen vereinfachen', 'Staking-Einnahmen zur Reinvestition oder zum Handel ernten', 'Periodisches Einfordern von Belohnungen fuer Staking-Portfolios automatisieren'],
+      de: ['EGLD-Staking-Belohnungen von allen Anbietern auf einmal einfordern', 'Belohnungsverwaltung für Multi-Anbieter-Delegationen vereinfachen', 'Staking-Einnahmen zur Reinvestition oder zum Handel ernten', 'Periodisches Einfordern von Belohnungen für Staking-Portfolios automatisieren'],
     },
     category: 'staking',
     faq: {
@@ -203,7 +203,7 @@ export const meta: Record<string, WarpExtras> = {
     },
     useCases: {
       en: ['Review staking positions across all MultiversX providers', 'Monitor claimable rewards for each delegation', 'Compare delegation amounts between staking providers', 'Track staking portfolio performance over time'],
-      de: ['Staking-Positionen bei allen MultiversX-Anbietern ueberpruefen', 'Einforderbare Belohnungen fuer jede Delegation ueberwachen', 'Delegationsbetraege zwischen Staking-Anbietern vergleichen', 'Staking-Portfolio-Performance ueber die Zeit verfolgen'],
+      de: ['Staking-Positionen bei allen MultiversX-Anbietern überprüfen', 'Einforderbare Belohnungen für jede Delegation überwachen', 'Delegationsbetraege zwischen Staking-Anbietern vergleichen', 'Staking-Portfolio-Performance über die Zeit verfolgen'],
     },
     category: 'staking',
     faq: {
@@ -240,7 +240,7 @@ export const meta: Record<string, WarpExtras> = {
     },
     useCases: {
       en: ['Launch a new fungible token for a DeFi project on MultiversX', 'Create a community or governance token with custom supply', 'Issue reward tokens for loyalty or gaming platforms', 'Prototype tokenomics with configurable mint and burn properties'],
-      de: ['Einen neuen fungiblen Token fuer ein DeFi-Projekt auf MultiversX starten', 'Einen Community- oder Governance-Token mit benutzerdefinierter Menge erstellen', 'Belohnungstoken fuer Treue- oder Gaming-Plattformen ausgeben', 'Tokenomics mit konfigurierbaren Praege- und Burn-Eigenschaften prototypisieren'],
+      de: ['Einen neuen fungiblen Token für ein DeFi-Projekt auf MultiversX starten', 'Einen Community- oder Governance-Token mit benutzerdefinierter Menge erstellen', 'Belohnungstoken für Treue- oder Gaming-Plattformen ausgeben', 'Tokenomics mit konfigurierbaren Präge- und Burn-Eigenschaften prototypisieren'],
     },
     category: 'defi',
     faq: {
@@ -287,7 +287,7 @@ export const meta: Record<string, WarpExtras> = {
     },
     useCases: {
       en: ['Mint individual NFTs within an existing MultiversX collection', 'Create digital art with custom royalties and metadata', 'Issue event tickets or membership passes as NFTs', 'Build NFT-based gaming assets with on-chain attributes'],
-      de: ['Einzelne NFTs innerhalb einer bestehenden MultiversX-Sammlung praegen', 'Digitale Kunst mit individuellen Lizenzgebuehren und Metadaten erstellen', 'Event-Tickets oder Mitgliedsausweise als NFTs ausgeben', 'NFT-basierte Gaming-Assets mit On-Chain-Attributen erstellen'],
+      de: ['Einzelne NFTs innerhalb einer bestehenden MultiversX-Sammlung prägen', 'Digitale Kunst mit individuellen Lizenzgebühren und Metadaten erstellen', 'Event-Tickets oder Mitgliedsausweise als NFTs ausgeben', 'NFT-basierte Gaming-Assets mit On-Chain-Attributen erstellen'],
     },
     category: 'nft',
     faq: {
@@ -324,7 +324,7 @@ export const meta: Record<string, WarpExtras> = {
     },
     useCases: {
       en: ['Launch a new NFT collection or project on MultiversX', 'Set up an on-chain container for minting digital art', 'Create branded NFT collections for communities or events', 'Establish a collection before assigning minting roles and creating NFTs'],
-      de: ['Eine neue NFT-Sammlung oder ein Projekt auf MultiversX starten', 'Einen On-Chain-Container fuer das Praegen digitaler Kunst einrichten', 'Marken-NFT-Sammlungen fuer Communities oder Events erstellen', 'Eine Sammlung einrichten, bevor Praegerollen zugewiesen und NFTs erstellt werden'],
+      de: ['Eine neue NFT-Sammlung oder ein Projekt auf MultiversX starten', 'Einen On-Chain-Container für das Prägen digitaler Kunst einrichten', 'Marken-NFT-Sammlungen für Communities oder Events erstellen', 'Eine Sammlung einrichten, bevor Prägerollen zugewiesen und NFTs erstellt werden'],
     },
     category: 'nft',
     faq: {
@@ -371,7 +371,7 @@ export const meta: Record<string, WarpExtras> = {
     },
     useCases: {
       en: ['Prepare EGLD for use in DeFi protocols and DEX trading', 'Convert to WEGLD for liquidity pool participation', 'Enable smart contract interactions that require ESDT tokens', 'Wrap EGLD before swapping on MultiversX decentralized exchanges'],
-      de: ['EGLD fuer die Nutzung in DeFi-Protokollen und DEX-Handel vorbereiten', 'In WEGLD fuer die Teilnahme an Liquiditaetspools umwandeln', 'Smart-Contract-Interaktionen ermoeglichen, die ESDT-Token erfordern', 'EGLD vor dem Tausch auf MultiversX-dezentralen Boersen wrappen'],
+      de: ['EGLD für die Nutzung in DeFi-Protokollen und DEX-Handel vorbereiten', 'In WEGLD für die Teilnahme an Liquiditaetspools umwandeln', 'Smart-Contract-Interaktionen ermoeglichen, die ESDT-Token erfordern', 'EGLD vor dem Tausch auf MultiversX-dezentralen Boersen wrappen'],
     },
     category: 'defi',
     faq: {
@@ -408,7 +408,7 @@ export const meta: Record<string, WarpExtras> = {
     },
     useCases: {
       en: ['Convert WEGLD back to native EGLD after DeFi trading', 'Reclaim native eGold from liquidity pool exits', 'Unwrap WEGLD for staking or direct transfers', 'Simplify wallet holdings by converting wrapped tokens back'],
-      de: ['WEGLD nach DeFi-Handel zurueck in natives EGLD umwandeln', 'Natives eGold nach Austritt aus Liquiditaetspools zurueckerhalten', 'WEGLD fuer Staking oder direkte Transfers unwrappen', 'Wallet-Bestaende durch Rueckumwandlung gewrappter Token vereinfachen'],
+      de: ['WEGLD nach DeFi-Handel zurück in natives EGLD umwandeln', 'Natives eGold nach Austritt aus Liquiditaetspools zurückerhalten', 'WEGLD für Staking oder direkte Transfers unwrappen', 'Wallet-Bestände durch Rueckumwandlung gewrappter Token vereinfachen'],
     },
     category: 'defi',
     faq: {
@@ -447,7 +447,7 @@ export const meta: Record<string, WarpExtras> = {
     },
     useCases: {
       en: ['Check how active a MultiversX address has been', 'Verify account nonce before submitting transactions', 'Analyze address activity for research or compliance', 'Monitor account usage patterns over time'],
-      de: ['Pruefen, wie aktiv eine MultiversX-Adresse war', 'Konto-Nonce vor dem Einreichen von Transaktionen verifizieren', 'Adressaktivitaet fuer Recherche oder Compliance analysieren', 'Kontonutzungsmuster ueber die Zeit ueberwachen'],
+      de: ['Prüfen, wie aktiv eine MultiversX-Adresse war', 'Konto-Nonce vor dem Einreichen von Transaktionen verifizieren', 'Adressaktivitaet für Recherche oder Compliance analysieren', 'Kontonutzungsmuster über die Zeit überwachen'],
     },
     category: 'analytics',
   },
@@ -458,7 +458,7 @@ export const meta: Record<string, WarpExtras> = {
     },
     useCases: {
       en: ['Verify if a MultiversX account has guardian protection enabled', 'Check 2FA security status for wallet auditing', 'Confirm guardian address configuration before sensitive operations', 'Assess account security posture for compliance reviews'],
-      de: ['Pruefen, ob ein MultiversX-Konto Guardian-Schutz aktiviert hat', '2FA-Sicherheitsstatus fuer Wallet-Audits ueberpruefen', 'Guardian-Adresskonfiguration vor sensiblen Vorgaengen bestaetigen', 'Kontosicherheitsstatus fuer Compliance-Pruefungen bewerten'],
+      de: ['Prüfen, ob ein MultiversX-Konto Guardian-Schutz aktiviert hat', '2FA-Sicherheitsstatus für Wallet-Audits überprüfen', 'Guardian-Adresskonfiguration vor sensiblen Vorgaengen bestaetigen', 'Kontosicherheitsstatus für Compliance-Pruefungen bewerten'],
     },
     category: 'analytics',
   },
@@ -469,7 +469,7 @@ export const meta: Record<string, WarpExtras> = {
     },
     useCases: {
       en: ['Monitor EGLD supply and inflation metrics in real time', 'Track current staking APR for investment decisions', 'Analyze MultiversX market capitalization and economic health', 'Integrate network economics data into dashboards or reports'],
-      de: ['EGLD-Angebots- und Inflationskennzahlen in Echtzeit ueberwachen', 'Aktuellen Staking-APR fuer Investitionsentscheidungen verfolgen', 'MultiversX-Marktkapitalisierung und wirtschaftliche Gesundheit analysieren', 'Netzwerkoekonomie-Daten in Dashboards oder Berichte integrieren'],
+      de: ['EGLD-Angebots- und Inflationskennzahlen in Echtzeit überwachen', 'Aktuellen Staking-APR für Investitionsentscheidungen verfolgen', 'MultiversX-Marktkapitalisierung und wirtschaftliche Gesundheit analysieren', 'Netzwerkoekonomie-Daten in Dashboards oder Berichte integrieren'],
     },
     category: 'infrastructure',
   },
@@ -480,7 +480,7 @@ export const meta: Record<string, WarpExtras> = {
     },
     useCases: {
       en: ['Verify MultiversX network health before submitting transactions', 'Monitor block height and epoch progression', 'Check chain uptime and round information for validators', 'Integrate network status checks into automated workflows'],
-      de: ['MultiversX-Netzwerkzustand vor dem Einreichen von Transaktionen verifizieren', 'Blockhoehe und Epochenfortschritt ueberwachen', 'Chain-Verfuegbarkeit und Rundeninformationen fuer Validatoren pruefen', 'Netzwerkstatus-Pruefungen in automatisierte Workflows integrieren'],
+      de: ['MultiversX-Netzwerkzustand vor dem Einreichen von Transaktionen verifizieren', 'Blockhoehe und Epochenfortschritt überwachen', 'Chain-Verfügbarkeit und Rundeninformationen für Validatoren prüfen', 'Netzwerkstatus-Pruefungen in automatisierte Workflows integrieren'],
     },
     category: 'infrastructure',
   },
@@ -491,7 +491,7 @@ export const meta: Record<string, WarpExtras> = {
     },
     useCases: {
       en: ['Check pending staking rewards before claiming', 'Monitor reward accumulation across staking providers', 'Plan optimal claim timing based on reward balance', 'Track staking yield performance for portfolio management'],
-      de: ['Ausstehende Staking-Belohnungen vor dem Einfordern pruefen', 'Belohnungsansammlung ueber Staking-Anbieter hinweg ueberwachen', 'Optimalen Einfordern-Zeitpunkt basierend auf Belohnungsguthaben planen', 'Staking-Rendite-Performance fuer Portfolio-Management verfolgen'],
+      de: ['Ausstehende Staking-Belohnungen vor dem Einfordern prüfen', 'Belohnungsansammlung über Staking-Anbieter hinweg überwachen', 'Optimalen Einfordern-Zeitpunkt basierend auf Belohnungsguthaben planen', 'Staking-Rendite-Performance für Portfolio-Management verfolgen'],
     },
     category: 'staking',
   },
@@ -502,7 +502,7 @@ export const meta: Record<string, WarpExtras> = {
     },
     useCases: {
       en: ['Compound staking rewards automatically across all providers', 'Maximize EGLD staking yield through redelegation', 'Simplify reward reinvestment with one-click restaking', 'Grow staking positions over time without manual management'],
-      de: ['Staking-Belohnungen automatisch ueber alle Anbieter compoundieren', 'EGLD-Staking-Rendite durch Redelegation maximieren', 'Belohnungs-Reinvestition mit Ein-Klick-Restaking vereinfachen', 'Staking-Positionen ueber die Zeit ohne manuelle Verwaltung wachsen lassen'],
+      de: ['Staking-Belohnungen automatisch über alle Anbieter compoundieren', 'EGLD-Staking-Rendite durch Redelegation maximieren', 'Belohnungs-Reinvestition mit Ein-Klick-Restaking vereinfachen', 'Staking-Positionen über die Zeit ohne manuelle Verwaltung wachsen lassen'],
     },
     category: 'staking',
   },
@@ -513,7 +513,7 @@ export const meta: Record<string, WarpExtras> = {
     },
     useCases: {
       en: ['Claim rewards from a specific staking provider selectively', 'Manage reward collection per delegation for tax tracking', 'Test reward claiming with a single provider before claiming all', 'Maintain separate reward schedules across different validators'],
-      de: ['Belohnungen selektiv von einem bestimmten Staking-Anbieter einfordern', 'Belohnungseinholung pro Delegation fuer Steuerverfolgung verwalten', 'Belohnungseinfordern mit einem einzelnen Anbieter testen, bevor alles eingefordert wird', 'Separate Belohnungszeitplaene ueber verschiedene Validatoren beibehalten'],
+      de: ['Belohnungen selektiv von einem bestimmten Staking-Anbieter einfordern', 'Belohnungseinholung pro Delegation für Steuerverfolgung verwalten', 'Belohnungseinfordern mit einem einzelnen Anbieter testen, bevor alles eingefordert wird', 'Separate Belohnungszeitplaene über verschiedene Validatoren beibehalten'],
     },
     category: 'staking',
   },
@@ -524,7 +524,7 @@ export const meta: Record<string, WarpExtras> = {
     },
     useCases: {
       en: ['Inspect transaction details by hash for debugging or verification', 'Review smart contract call results and gas consumption', 'Verify transfer amounts and recipients for auditing', 'Investigate failed transactions to understand error causes'],
-      de: ['Transaktionsdetails anhand des Hashs fuer Debugging oder Verifizierung pruefen', 'Smart-Contract-Aufrufergebnisse und Gasverbrauch ueberpruefen', 'Transferbetraege und Empfaenger fuer Audits verifizieren', 'Fehlgeschlagene Transaktionen untersuchen, um Fehlerursachen zu verstehen'],
+      de: ['Transaktionsdetails anhand des Hashs für Debugging oder Verifizierung prüfen', 'Smart-Contract-Aufrufergebnisse und Gasverbrauch überprüfen', 'Transferbetraege und Empfaenger für Audits verifizieren', 'Fehlgeschlagene Transaktionen untersuchen, um Fehlerursachen zu verstehen'],
     },
     category: 'analytics',
   },
@@ -535,7 +535,7 @@ export const meta: Record<string, WarpExtras> = {
     },
     useCases: {
       en: ['Confirm whether a transaction completed successfully', 'Monitor pending transactions until finality', 'Troubleshoot failed or stuck transactions', 'Verify transaction confirmation for payment processing'],
-      de: ['Bestaetigen, ob eine Transaktion erfolgreich abgeschlossen wurde', 'Ausstehende Transaktionen bis zur Finalitaet ueberwachen', 'Fehlgeschlagene oder haengende Transaktionen beheben', 'Transaktionsbestaetigung fuer Zahlungsabwicklung verifizieren'],
+      de: ['Bestaetigen, ob eine Transaktion erfolgreich abgeschlossen wurde', 'Ausstehende Transaktionen bis zur Finalitaet überwachen', 'Fehlgeschlagene oder haengende Transaktionen beheben', 'Transaktionsbestaetigung für Zahlungsabwicklung verifizieren'],
     },
     category: 'analytics',
   },
@@ -546,7 +546,7 @@ export const meta: Record<string, WarpExtras> = {
     },
     useCases: {
       en: ['Verify ESDT token properties before trading or investing', 'Look up token supply, decimals, and owner information', 'Check token configuration flags like mintable and burnable', 'Research token details for DeFi integration or analysis'],
-      de: ['ESDT-Token-Eigenschaften vor dem Handel oder der Investition verifizieren', 'Token-Angebot, Dezimalstellen und Eigentuemerinformationen nachschlagen', 'Token-Konfigurationsflags wie praegbar und brennbar pruefen', 'Token-Details fuer DeFi-Integration oder Analyse recherchieren'],
+      de: ['ESDT-Token-Eigenschaften vor dem Handel oder der Investition verifizieren', 'Token-Angebot, Dezimalstellen und Eigentuemerinformationen nachschlagen', 'Token-Konfigurationsflags wie praegbar und brennbar prüfen', 'Token-Details für DeFi-Integration oder Analyse recherchieren'],
     },
     category: 'defi',
   },
@@ -557,7 +557,7 @@ export const meta: Record<string, WarpExtras> = {
     },
     useCases: {
       en: ['Enable NFT minting permissions for a collection owner', 'Assign create roles to collaborators for shared NFT projects', 'Set up minting access after issuing a new NFT collection', 'Manage role-based access control for NFT creation workflows'],
-      de: ['NFT-Praegeberechtigungen fuer einen Sammlungseigentuemer aktivieren', 'Erstellungsrollen an Mitarbeiter fuer gemeinsame NFT-Projekte zuweisen', 'Praegezugang nach Ausgabe einer neuen NFT-Sammlung einrichten', 'Rollenbasierte Zugriffskontrolle fuer NFT-Erstellungs-Workflows verwalten'],
+      de: ['NFT-Prägeberechtigungen für einen Sammlungseigentuemer aktivieren', 'Erstellungsrollen an Mitarbeiter für gemeinsame NFT-Projekte zuweisen', 'Prägezugang nach Ausgabe einer neuen NFT-Sammlung einrichten', 'Rollenbasierte Zugriffskontrolle für NFT-Erstellungs-Workflows verwalten'],
     },
     category: 'nft',
   },
@@ -568,7 +568,7 @@ export const meta: Record<string, WarpExtras> = {
     },
     useCases: {
       en: ['Create SFT collections for event tickets or limited editions', 'Launch gaming item collections with multiple copies per token', 'Issue membership passes or vouchers as semi-fungible tokens', 'Build fractionalized asset representations on MultiversX'],
-      de: ['SFT-Sammlungen fuer Event-Tickets oder limitierte Editionen erstellen', 'Gaming-Item-Sammlungen mit mehreren Kopien pro Token starten', 'Mitgliedsausweise oder Gutscheine als semi-fungible Token ausgeben', 'Fraktionalisierte Asset-Darstellungen auf MultiversX erstellen'],
+      de: ['SFT-Sammlungen für Event-Tickets oder limitierte Editionen erstellen', 'Gaming-Item-Sammlungen mit mehreren Kopien pro Token starten', 'Mitgliedsausweise oder Gutscheine als semi-fungible Token ausgeben', 'Fraktionalisierte Asset-Darstellungen auf MultiversX erstellen'],
     },
     category: 'nft',
   },
@@ -579,7 +579,7 @@ export const meta: Record<string, WarpExtras> = {
     },
     useCases: {
       en: ['Inspect NFT metadata including royalties and attributes', 'Verify NFT authenticity and creator information', 'View media URIs and on-chain properties for individual tokens', 'Research NFT details before purchasing or trading'],
-      de: ['NFT-Metadaten einschliesslich Lizenzgebuehren und Attribute inspizieren', 'NFT-Authentizitaet und Erstellerinformationen verifizieren', 'Medien-URIs und On-Chain-Eigenschaften fuer einzelne Token anzeigen', 'NFT-Details vor dem Kauf oder Handel recherchieren'],
+      de: ['NFT-Metadaten einschliesslich Lizenzgebühren und Attribute inspizieren', 'NFT-Authentizitaet und Erstellerinformationen verifizieren', 'Medien-URIs und On-Chain-Eigenschaften für einzelne Token anzeigen', 'NFT-Details vor dem Kauf oder Handel recherchieren'],
     },
     category: 'nft',
   },
