@@ -1,0 +1,63 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Appointments: Cancel",
+  "title": {
+    "en": "Cancel appointment",
+    "de": "Termin absagen"
+  },
+  "description": {
+    "en": "Cancel an existing booked appointment and optionally provide a reason. Frees up the time slot so it becomes available for new bookings again.",
+    "de": "Sage einen bestehenden gebuchten Termin ab und gib optional einen Grund an. Der Zeitslot wird wieder freigegeben und steht für neue Buchungen zur Verfügung."
+  },
+  "bot": "Use this when the user wants to cancel an already booked appointment. Collect the meeting id and an optional cancellation reason.",
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Cancel appointment",
+        "de": "Termin absagen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/agents/{{JOAI_AGENT_UUID}}/appointments/{{meetingId}}/cancel",
+        "method": "POST"
+      },
+      "inputs": [
+        {
+          "name": "Meeting ID",
+          "as": "meetingId",
+          "description": {
+            "en": "Booked appointment meeting id",
+            "de": "Meeting-ID des gebuchten Termins"
+          },
+          "bot": "The booked meeting id returned by appointment-book.",
+          "type": "string",
+          "position": "arg:1",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Reason",
+          "as": "reason",
+          "description": {
+            "en": "Optional cancellation reason",
+            "de": "Optionaler Absagegrund"
+          },
+          "bot": "Optional short reason for the cancellation.",
+          "type": "string",
+          "source": "field",
+          "required": false
+        }
+      ]
+    }
+  ],
+  "output": {
+    "MEETING_ID": "out.data.id",
+    "STATUS": "out.data.status"
+  },
+  "messages": {
+    "success": {
+      "en": "Appointment cancelled.",
+      "de": "Termin abgesagt."
+    }
+  }
+}
