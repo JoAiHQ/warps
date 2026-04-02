@@ -90,7 +90,9 @@ async function main() {
 
   const body = {
     ...delta,
-    upserts: (delta.upserts as any[]).filter((u) => u.listed !== false),
+    upserts: (delta.upserts as any[])
+      .filter((u) => u.listed !== false)
+      .map(({ visibility: _visibility, ...upsert }) => upsert),
     repo: args.repo,
     commitSha: args.commitSha,
   }
