@@ -177,10 +177,38 @@ describe('distribution catalog', () => {
       visibility: 'public',
       mcpUrl: 'https://cortex.joai.ai/mcp/apps/joai',
       providers: {
-        claude: { enabled: true, status: 'ready' },
-        codex: { enabled: true, status: 'ready' },
-        cursor: { enabled: true, status: 'ready' },
-        openai: { enabled: true, status: 'runtime_ready' },
+        claude: {
+          enabled: true,
+          status: 'ready',
+          warpIdentifier: 'anthropic-joai-plugin-install',
+          title: 'Claude Plugin',
+          primaryAction: {
+            type: 'copy',
+            label: 'Copy marketplace command',
+          },
+        },
+        codex: {
+          enabled: true,
+          status: 'ready',
+          warpIdentifier: 'openai-joai-plugin-install',
+          title: 'Codex Plugin',
+          primaryAction: {
+            type: 'copy',
+            value: 'joai-joai',
+          },
+        },
+        cursor: {
+          enabled: true,
+          status: 'ready',
+          warpIdentifier: 'cursor-joai-plugin-install',
+          title: 'Cursor Plugin',
+        },
+        openai: {
+          enabled: true,
+          status: 'runtime_ready',
+          warpIdentifier: 'openai-joai-app-connect',
+          title: 'ChatGPT App',
+        },
       },
     })
     expect(catalog.apps[0].actions).toEqual([

@@ -257,37 +257,37 @@ export const meta: Record<string, WarpExtras> = {
 
   'joai-plugin-install': {
     keywords: {
-      en: ['install plugin', 'add Claude plugin', 'Anthropic plugin setup', 'Claude MCP install', 'connect tool to Claude'],
-      de: ['Plugin installieren', 'Claude Plugin hinzufügen', 'Anthropic Plugin einrichten', 'Claude MCP installieren', 'Tool mit Claude verbinden'],
+      en: ['install Claude plugin', 'Claude marketplace', 'Claude app plugin', 'Anthropic plugin setup', 'connect app to Claude'],
+      de: ['Claude Plugin installieren', 'Claude Marktplatz', 'Claude App-Plugin', 'Anthropic Plugin einrichten', 'App mit Claude verbinden'],
     },
     useCases: {
-      en: ['Add a blockchain plugin to interact with MultiversX from Claude', 'Install a communication plugin to send emails or messages via Claude', 'Extend Claude with a productivity tool for scheduling or task management'],
-      de: ['Ein Blockchain-Plugin hinzufügen, um von Claude aus mit MultiversX zu interagieren', 'Ein Kommunikations-Plugin installieren, um E-Mails oder Nachrichten über Claude zu senden', 'Claude mit einem Produktivitäts-Tool für Terminplanung oder Aufgabenverwaltung erweitern'],
+      en: ['Add the JoAi Claude marketplace once before installing an app plugin by name', 'Set up a Claude app plugin for blockchain, productivity, or messaging workflows', 'Share the exact install steps a Claude user needs for any JoAi app'],
+      de: ['Den JoAi-Claude-Marktplatz einmal hinzufügen, bevor ein App-Plugin per Namen installiert wird', 'Ein Claude-App-Plugin für Blockchain-, Produktivitäts- oder Messaging-Workflows einrichten', 'Die genauen Installationsschritte für jede JoAi-App in Claude teilen'],
     },
     category: 'developer',
     faq: {
       en: [
         {
-          question: 'How do I install a plugin for Claude?',
+          question: 'How do I install a JoAi app plugin for Claude?',
           answer:
-            'Install a new plugin to your Claude setup with just a few steps. The configuration and connection are handled automatically so the plugin is ready to use immediately.',
+            'Add the JoAi Claude marketplace once, then install the JoAi app plugin you want by name. This keeps the Claude install flow consistent across all JoAi apps.',
         },
         {
-          question: 'What plugins are available for Claude?',
+          question: 'What JoAi plugins are available for Claude?',
           answer:
-            'A variety of plugins are available covering productivity, development, communication, and blockchain tools. Browse the plugin catalog to see what fits your workflow.',
+            'JoAi app plugins cover productivity, development, communication, finance, and blockchain workflows. Browse the JoAi catalog and install the app you need by its plugin name.',
         },
       ],
       de: [
         {
-          question: 'Wie installiere ich ein Plugin für Claude?',
+          question: 'Wie installiere ich ein JoAi-App-Plugin für Claude?',
           answer:
-            'Installiere ein neues Plugin für dein Claude-Setup in wenigen Schritten. Die Konfiguration und Verbindung werden automatisch übernommen, sodass das Plugin sofort einsatzbereit ist.',
+            'Füge den JoAi-Claude-Marktplatz einmal hinzu und installiere danach das gewünschte JoAi-App-Plugin per Namen. So bleibt der Installationsweg für alle JoAi-Apps in Claude gleich.',
         },
         {
-          question: 'Welche Plugins sind für Claude verfügbar?',
+          question: 'Welche JoAi-Plugins gibt es für Claude?',
           answer:
-            'Es gibt eine Vielzahl von Plugins für Produktivität, Entwicklung, Kommunikation und Blockchain-Tools. Durchsuche den Plugin-Katalog, um passende für deinen Workflow zu finden.',
+            'JoAi-App-Plugins decken Produktivität, Entwicklung, Kommunikation, Finanzen und Blockchain-Workflows ab. Durchsuche den JoAi-Katalog und installiere die passende App über ihren Plugin-Namen.',
         },
       ],
     },

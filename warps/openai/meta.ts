@@ -257,37 +257,65 @@ export const meta: Record<string, WarpExtras> = {
 
   'joai-plugin-install': {
     keywords: {
-      en: ['install plugin', 'add OpenAI plugin', 'GPT plugin setup', 'connect tool to ChatGPT', 'OpenAI MCP install'],
-      de: ['Plugin installieren', 'OpenAI Plugin hinzufügen', 'GPT Plugin einrichten', 'Tool mit ChatGPT verbinden', 'OpenAI MCP installieren'],
+      en: ['install Codex plugin', 'Codex marketplace', 'OpenAI Codex plugin', 'connect app to Codex', 'JoAi Codex plugin'],
+      de: ['Codex Plugin installieren', 'Codex Marktplatz', 'OpenAI Codex Plugin', 'App mit Codex verbinden', 'JoAi Codex Plugin'],
     },
     useCases: {
-      en: ['Add a blockchain plugin to interact with MultiversX from ChatGPT', 'Install a communication plugin to send emails or messages via GPT', 'Extend OpenAI with a productivity tool for scheduling or task management'],
-      de: ['Ein Blockchain-Plugin hinzufügen, um von ChatGPT aus mit MultiversX zu interagieren', 'Ein Kommunikations-Plugin installieren, um E-Mails oder Nachrichten über GPT zu senden', 'OpenAI mit einem Produktivitäts-Tool für Terminplanung oder Aufgabenverwaltung erweitern'],
+      en: ['Add the JoAi Codex marketplace before installing an app plugin by name', 'Set up a Codex plugin for coding, blockchain, or productivity workflows', 'Share the exact Codex install flow for any JoAi app plugin'],
+      de: ['Den JoAi-Codex-Marktplatz hinzufügen, bevor ein App-Plugin per Namen installiert wird', 'Ein Codex-Plugin für Coding-, Blockchain- oder Produktivitäts-Workflows einrichten', 'Den genauen Codex-Installationsweg für jedes JoAi-App-Plugin teilen'],
     },
     category: 'developer',
     faq: {
       en: [
         {
-          question: 'How do I install a plugin for OpenAI?',
+          question: 'How do I install a JoAi app plugin for Codex?',
           answer:
-            'Install a new plugin to your OpenAI setup with just a few steps. The configuration and connection are handled automatically so the plugin is ready to use right away.',
+            'Add the JoAi Codex marketplace first, then install the JoAi app plugin you want by name. This keeps the Codex install flow consistent across all JoAi apps.',
         },
         {
-          question: 'What plugins can I add to OpenAI?',
+          question: 'What JoAi plugins can I add to Codex?',
           answer:
-            'Many plugins are available covering productivity, development, communication, and blockchain tools. Browse the plugin catalog to find ones that fit your workflow.',
+            'JoAi app plugins cover coding, productivity, communication, finance, and blockchain workflows. Browse the JoAi catalog and install the app you need by its plugin name.',
         },
       ],
       de: [
         {
-          question: 'Wie installiere ich ein Plugin für OpenAI?',
+          question: 'Wie installiere ich ein JoAi-App-Plugin für Codex?',
           answer:
-            'Installiere ein neues Plugin für dein OpenAI-Setup in wenigen Schritten. Die Konfiguration und Verbindung werden automatisch übernommen, sodass das Plugin sofort einsatzbereit ist.',
+            'Füge zuerst den JoAi-Codex-Marktplatz hinzu und installiere danach das gewünschte JoAi-App-Plugin per Namen. So bleibt der Installationsweg für alle JoAi-Apps in Codex gleich.',
         },
         {
-          question: 'Welche Plugins kann ich zu OpenAI hinzufügen?',
+          question: 'Welche JoAi-Plugins kann ich in Codex verwenden?',
           answer:
-            'Viele Plugins sind verfügbar, die Produktivität, Entwicklung, Kommunikation und Blockchain-Tools abdecken. Durchsuche den Plugin-Katalog, um passende für deinen Workflow zu finden.',
+            'JoAi-App-Plugins decken Coding, Produktivität, Kommunikation, Finanzen und Blockchain-Workflows ab. Durchsuche den JoAi-Katalog und installiere die passende App über ihren Plugin-Namen.',
+        },
+      ],
+    },
+  },
+
+  'joai-app-connect': {
+    keywords: {
+      en: ['connect app to ChatGPT', 'ChatGPT MCP URL', 'connect JoAi app', 'OpenAI app connection', 'ChatGPT app setup'],
+      de: ['App mit ChatGPT verbinden', 'ChatGPT MCP URL', 'JoAi App verbinden', 'OpenAI App-Verbindung', 'ChatGPT App einrichten'],
+    },
+    useCases: {
+      en: ['Copy the hosted MCP URL for a JoAi app into ChatGPT', 'Share the ChatGPT connection flow for any JoAi app', 'Connect a JoAi app in ChatGPT without leaving the hosted runtime path'],
+      de: ['Die gehostete MCP-URL einer JoAi-App in ChatGPT einfügen', 'Den ChatGPT-Verbindungsweg für jede JoAi-App teilen', 'Eine JoAi-App in ChatGPT verbinden, ohne den gehosteten Runtime-Pfad zu verlassen'],
+    },
+    category: 'developer',
+    faq: {
+      en: [
+        {
+          question: 'How do I connect a JoAi app in ChatGPT?',
+          answer:
+            'Copy the hosted MCP URL for the JoAi app and add it in ChatGPT. That connects ChatGPT directly to the hosted JoAi runtime for that app.',
+        },
+      ],
+      de: [
+        {
+          question: 'Wie verbinde ich eine JoAi-App in ChatGPT?',
+          answer:
+            'Kopiere die gehostete MCP-URL der JoAi-App und füge sie in ChatGPT ein. Dadurch verbindet sich ChatGPT direkt mit der gehosteten JoAi-Runtime dieser App.',
         },
       ],
     },

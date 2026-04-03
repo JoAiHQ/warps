@@ -16,9 +16,22 @@ export type AppDistributionProviderStatus =
   | 'runtime_ready'
   | 'submission_ready'
 
+export type AppDistributionProviderAction = {
+  type: 'copy' | 'link' | 'deeplink'
+  label: string
+  value: string
+}
+
 export type AppDistributionProviderConfig = {
   enabled?: boolean
   status?: AppDistributionProviderStatus
+  warpIdentifier?: string
+  title?: string
+  description?: string
+  sourceUrl?: string
+  fallbackUrl?: string
+  primaryAction?: AppDistributionProviderAction
+  secondaryAction?: AppDistributionProviderAction | null
   notes?: string[]
 }
 
@@ -98,6 +111,7 @@ export type AppDistributionFactoryContext = {
   env: WarpChainEnv
   brand: WarpbaseBrand | null
   brandName: string
+  brandSlug: string
 }
 
 export type AppDistributionFactory =

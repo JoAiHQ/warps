@@ -1,6 +1,8 @@
 import {
   AppDistributionFactory,
   AppDistributionManifest,
+  AppDistributionProvider,
+  AppDistributionProviderAction,
   WarpbaseBrand,
 } from './types'
 
@@ -54,8 +56,94 @@ function getBrandDisplayName(brandName: string, brand: WarpbaseBrand | null): st
     .join(' ')
 }
 
-function createDefaultManifest(brandName: string, brand: WarpbaseBrand | null): AppDistributionManifest {
+function getAppPageUrl(brandSlug: string): string {
+  return `https://joai.ai/en/apps/${brandSlug}`
+}
+
+function getPluginName(brandSlug: string): string {
+  return `joai-${brandSlug}`
+}
+
+function getMcpUrl(env: string, brandSlug: string): string {
+  if (env === 'devnet') return `https://devnet-cortex.joai.ai/mcp/apps/${brandSlug}`
+  return `https://cortex.joai.ai/mcp/apps/${brandSlug}`
+}
+
+function createCursorMcpInstallLink(mcpUrl: string, pluginName: string): string {
+  return `https://cursor.com/en-US/install-mcp?name=${encodeURIComponent(pluginName)}&config=${encodeURIComponent(Buffer.from(JSON.stringify({ url: mcpUrl })).toString('base64'))}`
+}
+
+function createAction(type: AppDistributionProviderAction['type'], label: string, value: string): AppDistributionProviderAction {
+  return { type, label, value }
+}
+
+function createDefaultProviderDistribution(
+  provider: AppDistributionProvider,
+  brandSlug: string,
+  mcpUrl: string,
+): AppDistributionManifest['providers'][AppDistributionProvider] {
+  const pluginName = getPluginName(brandSlug)
+  const appPageUrl = getAppPageUrl(brandSlug)
+
+  switch (provider) {
+    case 'claude':
+      return {
+        enabled: true,
+        status: 'ready',
+        warpIdentifier: 'anthropic-joai-plugin-install',
+        title: 'Claude Plugin',
+        description: 'Add the official JoAi Claude marketplace once, then install this app plugin by name.',
+        sourceUrl: 'https://github.com/JoAiHQ/claude-plugins',
+        fallbackUrl: mcpUrl,
+        primaryAction: createAction('copy', 'Copy marketplace command', 'claude plugin marketplace add --scope user JoAiHQ/claude-plugins'),
+        secondaryAction: createAction('copy', 'Copy install command', `claude plugin install --scope user ${pluginName}@joai-claude-plugins`),
+        notes: ['Add the JoAi Claude marketplace once, then install this plugin by name.'],
+      }
+    case 'codex':
+      return {
+        enabled: true,
+        status: 'ready',
+        warpIdentifier: 'openai-joai-plugin-install',
+        title: 'Codex Plugin',
+        description: 'Install this app from the official JoAi Codex marketplace, or use the MCP URL if your Codex build still relies on direct MCP setup.',
+        sourceUrl: 'https://github.com/JoAiHQ/codex-plugins',
+        fallbackUrl: mcpUrl,
+        primaryAction: createAction('copy', 'Copy plugin name', pluginName),
+        secondaryAction: createAction('copy', 'Copy MCP URL', mcpUrl),
+        notes: ['Add the JoAi Codex marketplace in Codex first, then install this plugin by name.'],
+      }
+    case 'cursor':
+      return {
+        enabled: true,
+        status: 'ready',
+        warpIdentifier: 'cursor-joai-plugin-install',
+        title: 'Cursor Plugin',
+        description: 'Install this app in Cursor with one click, or fall back to the hosted MCP URL manually.',
+        sourceUrl: appPageUrl,
+        fallbackUrl: mcpUrl,
+        primaryAction: createAction('deeplink', 'Install in Cursor', createCursorMcpInstallLink(mcpUrl, pluginName)),
+        secondaryAction: createAction('copy', 'Copy MCP URL', mcpUrl),
+        notes: ['The one-click install opens Cursor directly with this app prefilled.'],
+      }
+    case 'openai':
+      return {
+        enabled: true,
+        status: 'runtime_ready',
+        warpIdentifier: 'openai-joai-app-connect',
+        title: 'ChatGPT App',
+        description: 'Use this app in ChatGPT today by connecting the hosted MCP URL.',
+        sourceUrl: appPageUrl,
+        fallbackUrl: mcpUrl,
+        primaryAction: createAction('copy', 'Copy MCP URL', mcpUrl),
+        secondaryAction: null,
+        notes: ['Paste the hosted MCP URL into ChatGPT to connect the app today.'],
+      }
+  }
+}
+
+function createDefaultManifest(brandName: string, brand: WarpbaseBrand | null, brandSlug: string, env: string): AppDistributionManifest {
   const appName = getBrandDisplayName(brandName, brand)
+  const mcpUrl = getMcpUrl(env, brandSlug)
 
   return {
     install: {
@@ -94,22 +182,10 @@ function createDefaultManifest(brandName: string, brand: WarpbaseBrand | null): 
       credentialsReference: 'Use the same provider credentials or OAuth flow that the underlying warp actions already require.',
     },
     providers: {
-      claude: {
-        enabled: true,
-        status: 'ready',
-      },
-      codex: {
-        enabled: true,
-        status: 'ready',
-      },
-      cursor: {
-        enabled: true,
-        status: 'ready',
-      },
-      openai: {
-        enabled: true,
-        status: 'runtime_ready',
-      },
+      claude: createDefaultProviderDistribution('claude', brandSlug, mcpUrl),
+      codex: createDefaultProviderDistribution('codex', brandSlug, mcpUrl),
+      cursor: createDefaultProviderDistribution('cursor', brandSlug, mcpUrl),
+      openai: createDefaultProviderDistribution('openai', brandSlug, mcpUrl),
     },
   }
 }
@@ -117,5 +193,5 @@ function createDefaultManifest(brandName: string, brand: WarpbaseBrand | null): 
 export function createDefaultAppDistribution(
   overrides?: DeepPartial<AppDistributionManifest>,
 ): AppDistributionFactory {
-  return ({ brandName, brand }) => mergeDefined(createDefaultManifest(brandName, brand), overrides)
+  return ({ brandName, brand, brandSlug, env }) => mergeDefined(createDefaultManifest(brandName, brand, brandSlug, env), overrides)
 }
