@@ -4,8 +4,8 @@
   "repo": "JoAiHQ/warps",
   "branch": "main",
   "network": "mainnet",
-  "commitSha": "de470fab2efdcf77c8859f8567a694604dfec302",
-  "generatedAt": "2026-04-03T10:18:39.556Z",
+  "commitSha": "317b1b1a65663e0be83d220380ca4fafad6d6fcb",
+  "generatedAt": "2026-04-03T16:33:42.992Z",
   "warps": [
     {
       "key": "arbitrum:omniset-deposit-arbitrum",
@@ -14162,8 +14162,8 @@
       "identifier": "@shop-create",
       "alias": "shop-create",
       "chain": "multiversx",
-      "hash": "1f53793fd43eeeda247da224527a95de77d7006102a61f2d7ba34e3d306da320",
-      "checksum": "1f53793fd43eeeda247da224527a95de77d7006102a61f2d7ba34e3d306da320",
+      "hash": "0b16fc050514de5bbb2d186318a880115d95d01723ca2c85bd5ac82c5a381f99",
+      "checksum": "0b16fc050514de5bbb2d186318a880115d95d01723ca2c85bd5ac82c5a381f99",
       "name": "Shop: Create",
       "title": {
         "en": "Create your shop",
@@ -14178,8 +14178,8 @@
       "privileges": [],
       "listed": true,
       "visibility": "public",
-      "primaryAddress": null,
-      "primaryFunc": null,
+      "primaryAddress": "{{SC_ADDRESS}}",
+      "primaryFunc": "createShop",
       "brand": {
         "hash": "c15b1fdd3e8eb6f53272b4dff5cc7303912c24dfd441a91ceaeea83f88a92ce1",
         "slug": "shop",
@@ -14211,15 +14211,17 @@
         "bot": "Creates shop on-chain. Chains to configure automatically.",
         "chain": "multiversx",
         "vars": {
-          "SC_ADDRESS": "env:SHOP_SC_ADDRESS"
+          "SC_ADDRESS": "TODO"
         },
         "actions": [
           {
-            "type": "collect",
+            "type": "contract",
             "label": {
-              "en": "Shop name",
-              "de": "Shop-Name"
+              "en": "Create shop",
+              "de": "Shop erstellen"
             },
+            "address": "{{SC_ADDRESS}}",
+            "func": "createShop",
             "inputs": [
               {
                 "name": "Shop name",
@@ -14230,29 +14232,17 @@
                 },
                 "bot": "Business name.",
                 "type": "string",
+                "position": "arg:1",
                 "source": "field",
                 "required": true,
                 "min": 1
               }
-            ]
-          },
-          {
-            "type": "contract",
-            "label": {
-              "en": "Create shop",
-              "de": "Shop erstellen"
-            },
-            "address": "{{SC_ADDRESS}}",
-            "func": "createShop",
-            "args": [
-              "string:{{shopName}}"
             ],
-            "gasLimit": 10000000,
-            "auto": true
+            "gasLimit": 10000000
           }
         ],
         "output": {
-          "SHOP_ID": "out.2"
+          "SHOP_ID": "out"
         },
         "messages": {
           "success": {
@@ -14260,7 +14250,7 @@
             "de": "{{shopName}} erstellt! Treueprogramm wird eingerichtet..."
           }
         },
-        "next": "shop-loyalty-configure?SHOP_ID={{SHOP_ID}}"
+        "next": "joai/team-setting-set?key=SHOP_ID&value={{SHOP_ID}}"
       },
       "extras": null
     },
@@ -14269,8 +14259,8 @@
       "identifier": "@shop-loyalty-configure",
       "alias": "shop-loyalty-configure",
       "chain": "multiversx",
-      "hash": "c9afde4282a4413d0680afbc498cf6da99f81635732394189024afddad0c79ec",
-      "checksum": "c9afde4282a4413d0680afbc498cf6da99f81635732394189024afddad0c79ec",
+      "hash": "7e458b6f86c8dd997e902e83accdc66521fd0b40791d21ea3730915f220c25be",
+      "checksum": "7e458b6f86c8dd997e902e83accdc66521fd0b40791d21ea3730915f220c25be",
       "name": "Shop: Configure Loyalty",
       "title": {
         "en": "Configure loyalty program",
@@ -14285,8 +14275,8 @@
       "privileges": [],
       "listed": true,
       "visibility": "public",
-      "primaryAddress": null,
-      "primaryFunc": null,
+      "primaryAddress": "{{SC_ADDRESS}}",
+      "primaryFunc": "configureLoyalty",
       "brand": {
         "hash": "c15b1fdd3e8eb6f53272b4dff5cc7303912c24dfd441a91ceaeea83f88a92ce1",
         "slug": "shop",
@@ -14319,16 +14309,26 @@
         "chain": "multiversx",
         "vars": {
           "SHOP_ID": "query:SHOP_ID",
-          "SC_ADDRESS": "env:SHOP_SC_ADDRESS"
+          "SC_ADDRESS": "TODO"
         },
         "actions": [
           {
-            "type": "collect",
+            "type": "contract",
             "label": {
-              "en": "Loyalty settings",
-              "de": "Treue-Einstellungen"
+              "en": "Configure loyalty program",
+              "de": "Treueprogramm konfigurieren"
             },
+            "address": "{{SC_ADDRESS}}",
+            "func": "configureLoyalty",
             "inputs": [
+              {
+                "name": "Shop ID",
+                "as": "SHOP_ID",
+                "type": "uint64",
+                "position": "arg:1",
+                "source": "query",
+                "required": true
+              },
               {
                 "name": "Stamps for reward",
                 "as": "stampsForReward",
@@ -14338,6 +14338,7 @@
                 },
                 "bot": "Stamps needed for reward.",
                 "type": "uint32",
+                "position": "arg:2",
                 "source": "field",
                 "required": true
               },
@@ -14350,6 +14351,7 @@
                 },
                 "bot": "Short reward name.",
                 "type": "string",
+                "position": "arg:3",
                 "source": "field",
                 "required": true
               },
@@ -14362,6 +14364,7 @@
                 },
                 "bot": "Google Maps review URL.",
                 "type": "string",
+                "position": "arg:4",
                 "source": "field",
                 "required": true
               },
@@ -14374,6 +14377,7 @@
                 },
                 "bot": "Discount % for reviewers.",
                 "type": "uint8",
+                "position": "arg:5",
                 "source": "field",
                 "required": true
               },
@@ -14386,29 +14390,12 @@
                 },
                 "bot": "Inactivity days before reminder.",
                 "type": "uint32",
+                "position": "arg:6",
                 "source": "field",
                 "required": true
               }
-            ]
-          },
-          {
-            "type": "contract",
-            "label": {
-              "en": "Configure loyalty program",
-              "de": "Treueprogramm konfigurieren"
-            },
-            "address": "{{SC_ADDRESS}}",
-            "func": "configureLoyalty",
-            "args": [
-              "uint64:{{SHOP_ID}}",
-              "uint32:{{stampsForReward}}",
-              "string:{{rewardLabel}}",
-              "string:{{reviewUrl}}",
-              "uint8:{{reviewDiscount}}",
-              "uint32:{{reminderDays}}"
             ],
-            "gasLimit": 10000000,
-            "auto": true
+            "gasLimit": 10000000
           }
         ],
         "messages": {
@@ -14426,8 +14413,8 @@
       "identifier": "@shop-loyalty-redeem",
       "alias": "shop-loyalty-redeem",
       "chain": "multiversx",
-      "hash": "da90ef10e70fce00f7c4e14b273e5acd48885c09fb13b7fb1e0701c8e1a5513f",
-      "checksum": "da90ef10e70fce00f7c4e14b273e5acd48885c09fb13b7fb1e0701c8e1a5513f",
+      "hash": "2f17ee5a530a43ae6f1c859a077b4a179dd4dfcece07e05f0222942e82891f5f",
+      "checksum": "2f17ee5a530a43ae6f1c859a077b4a179dd4dfcece07e05f0222942e82891f5f",
       "name": "Shop: Loyalty Redeem Reward",
       "title": {
         "en": "Redeem Reward",
@@ -14476,7 +14463,7 @@
         "chain": "multiversx",
         "vars": {
           "SHOP_ID": "query:SHOP_ID",
-          "SC_ADDRESS": "env:SHOP_SC_ADDRESS"
+          "SC_ADDRESS": "TODO"
         },
         "actions": [
           {
@@ -14533,8 +14520,8 @@
       "identifier": "@shop-loyalty-register",
       "alias": "shop-loyalty-register",
       "chain": "multiversx",
-      "hash": "7f9646272e984e95b66e8b1b94bf3f1f9b81f2d22cea61db5828aa1f1893f3aa",
-      "checksum": "7f9646272e984e95b66e8b1b94bf3f1f9b81f2d22cea61db5828aa1f1893f3aa",
+      "hash": "62370acc741112698c79aa05a85a88bc243fe836a9ad9aae747e72ec03f264fd",
+      "checksum": "62370acc741112698c79aa05a85a88bc243fe836a9ad9aae747e72ec03f264fd",
       "name": "Shop: Loyalty Register",
       "title": {
         "en": "Join our loyalty program!",
@@ -14583,7 +14570,7 @@
         "chain": "multiversx",
         "vars": {
           "SHOP_ID": "query:shop",
-          "SC_ADDRESS": "env:SHOP_SC_ADDRESS"
+          "SC_ADDRESS": "TODO"
         },
         "actions": [
           {
@@ -14718,8 +14705,8 @@
       "identifier": "@shop-loyalty-remind",
       "alias": "shop-loyalty-remind",
       "chain": "multiversx",
-      "hash": "3fd03dcbab3f359e716b64cf87be4f3d687dbc08204c3ad3ce5f7c21ba52230b",
-      "checksum": "3fd03dcbab3f359e716b64cf87be4f3d687dbc08204c3ad3ce5f7c21ba52230b",
+      "hash": "faa5d6a12cb90e2474f58a3805a504bb384f47ede156ecde22b41900599aaaed",
+      "checksum": "faa5d6a12cb90e2474f58a3805a504bb384f47ede156ecde22b41900599aaaed",
       "name": "Shop: Loyalty Reminder",
       "title": {
         "en": "Send loyalty reminders",
@@ -14769,7 +14756,7 @@
         "schedule": "daily",
         "vars": {
           "SHOP_ID": "query:SHOP_ID",
-          "SC_ADDRESS": "env:SHOP_SC_ADDRESS"
+          "SC_ADDRESS": "TODO"
         },
         "actions": [
           {
@@ -14823,8 +14810,8 @@
       "identifier": "@shop-loyalty-review",
       "alias": "shop-loyalty-review",
       "chain": "multiversx",
-      "hash": "39adec98600f915b91b98d33b3a5d8834ca475301b7c38c9dd51f81ba47e9aef",
-      "checksum": "39adec98600f915b91b98d33b3a5d8834ca475301b7c38c9dd51f81ba47e9aef",
+      "hash": "1c48ec4664b3a088362a99bd8e7cc2c837f18c9130b6dca747e06acf8fb8b885",
+      "checksum": "1c48ec4664b3a088362a99bd8e7cc2c837f18c9130b6dca747e06acf8fb8b885",
       "name": "Shop: Loyalty Review Prompt",
       "title": {
         "en": "Leave us a review!",
@@ -14874,7 +14861,7 @@
         "vars": {
           "SHOP_ID": "query:shop",
           "CARD_UUID": "query:card",
-          "SC_ADDRESS": "env:SHOP_SC_ADDRESS"
+          "SC_ADDRESS": "TODO"
         },
         "actions": [
           {
@@ -14917,8 +14904,8 @@
       "identifier": "@shop-loyalty-stamp",
       "alias": "shop-loyalty-stamp",
       "chain": "multiversx",
-      "hash": "9126ab07775de5395a6a3a44e2cd086d710fa21b7da14294ac4ddd7b8696704c",
-      "checksum": "9126ab07775de5395a6a3a44e2cd086d710fa21b7da14294ac4ddd7b8696704c",
+      "hash": "f2d92ad4ac5d396ad5f47b4f3a7bb5a0e1b47b168afd38e0a2babc2a62047e39",
+      "checksum": "f2d92ad4ac5d396ad5f47b4f3a7bb5a0e1b47b168afd38e0a2babc2a62047e39",
       "name": "Shop: Loyalty Stamp",
       "title": {
         "en": "Add Stamp",
@@ -14967,7 +14954,7 @@
         "chain": "multiversx",
         "vars": {
           "SHOP_ID": "query:SHOP_ID",
-          "SC_ADDRESS": "env:SHOP_SC_ADDRESS"
+          "SC_ADDRESS": "TODO"
         },
         "actions": [
           {
@@ -15030,8 +15017,8 @@
       "identifier": "@shop-loyalty-status",
       "alias": "shop-loyalty-status",
       "chain": "multiversx",
-      "hash": "bb2636b3c98d13bf1bb9d592076600c83346be6c0d6be5b99fb71f78cf0d9073",
-      "checksum": "bb2636b3c98d13bf1bb9d592076600c83346be6c0d6be5b99fb71f78cf0d9073",
+      "hash": "f43fd1ca33517ddc78ff3bbdae050a80ca01a825868d2ab570ac1fcc713b11d0",
+      "checksum": "f43fd1ca33517ddc78ff3bbdae050a80ca01a825868d2ab570ac1fcc713b11d0",
       "name": "Shop: Loyalty Status",
       "title": {
         "en": "Your Loyalty Card",
@@ -15080,7 +15067,7 @@
         "chain": "multiversx",
         "vars": {
           "SHOP_ID": "query:shop",
-          "SC_ADDRESS": "env:SHOP_SC_ADDRESS"
+          "SC_ADDRESS": "TODO"
         },
         "actions": [
           {

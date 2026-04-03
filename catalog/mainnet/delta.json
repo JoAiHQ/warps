@@ -4,100 +4,958 @@
   "repo": "JoAiHQ/warps",
   "branch": "main",
   "network": "mainnet",
-  "commitSha": "de470fab2efdcf77c8859f8567a694604dfec302",
-  "committedAt": "2026-04-03T10:18:37.052Z",
-  "generatedAt": "2026-04-03T10:18:39.556Z",
+  "commitSha": "317b1b1a65663e0be83d220380ca4fafad6d6fcb",
+  "committedAt": "2026-04-03T16:33:41.133Z",
+  "generatedAt": "2026-04-03T16:33:42.992Z",
   "upserts": [
     {
-      "key": "none:joai-hook-respond",
-      "identifier": "@joai-hook-respond",
-      "alias": "joai-hook-respond",
-      "chain": "none",
-      "hash": "aaf1a0e4cb041623ccfe6aa3691f8d3d8da1ed4d0f6b6b5825d409d9b81d7fa9",
-      "checksum": "aaf1a0e4cb041623ccfe6aa3691f8d3d8da1ed4d0f6b6b5825d409d9b81d7fa9",
-      "name": "JoAi: Respond to Hook",
+      "key": "multiversx:shop-create",
+      "identifier": "@shop-create",
+      "alias": "shop-create",
+      "chain": "multiversx",
+      "hash": "0b16fc050514de5bbb2d186318a880115d95d01723ca2c85bd5ac82c5a381f99",
+      "checksum": "0b16fc050514de5bbb2d186318a880115d95d01723ca2c85bd5ac82c5a381f99",
+      "name": "Shop: Create",
       "title": {
-        "en": "Respond to hook request",
-        "de": "Auf Hook-Anfrage antworten"
+        "en": "Create your shop",
+        "de": "Shop erstellen"
       },
       "description": {
-        "en": "Approve or deny an external runtime hook request (e.g. a tool permission request from Claude Code).",
-        "de": "Genehmige oder verweigere eine externe Laufzeitanfrage (z.B. eine Werkzeugberechtigung von Claude Code)."
+        "en": "Register your shop on-chain to get a shop ID, then set up your loyalty program.",
+        "de": "Registriere deinen Shop on-chain, um eine Shop-ID zu erhalten, und richte dann dein Treueprogramm ein."
       },
       "preview": null,
       "creator": "github:JoAiHQ/warps",
       "privileges": [],
       "listed": true,
       "visibility": "public",
-      "primaryAddress": null,
-      "primaryFunc": null,
+      "primaryAddress": "{{SC_ADDRESS}}",
+      "primaryFunc": "createShop",
       "brand": {
-        "hash": "4098667056683890c8f1aad41581885db272e391b0d6170e7e2b73ee7fbbca2e",
-        "slug": "joai",
+        "hash": "c15b1fdd3e8eb6f53272b4dff5cc7303912c24dfd441a91ceaeea83f88a92ce1",
+        "slug": "shop",
         "active": true,
         "protocol": "brand:0.2.0",
-        "name": "JoAi",
+        "name": "Shop",
         "description": {
-          "en": "JoAi is a platform for creating and managing your own AI agents.",
-          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten."
+          "en": "Loyalty and customer management for local service businesses.",
+          "de": "Treue- und Kundenverwaltung für lokale Dienstleistungsunternehmen."
         },
         "logo": {
           "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
         },
         "urls": {
           "web": "https://joai.ai"
-        },
-        "colors": {
-          "primary": "#98FF98",
-          "secondary": "#FFFF66"
         }
       },
       "warp": {
         "protocol": "warp:3.0.0",
-        "name": "JoAi: Respond to Hook",
+        "name": "Shop: Create",
         "title": {
-          "en": "Respond to hook request",
-          "de": "Auf Hook-Anfrage antworten"
+          "en": "Create your shop",
+          "de": "Shop erstellen"
         },
         "description": {
-          "en": "Approve or deny an external runtime hook request (e.g. a tool permission request from Claude Code).",
-          "de": "Genehmige oder verweigere eine externe Laufzeitanfrage (z.B. eine Werkzeugberechtigung von Claude Code)."
+          "en": "Register your shop on-chain to get a shop ID, then set up your loyalty program.",
+          "de": "Registriere deinen Shop on-chain, um eine Shop-ID zu erhalten, und richte dann dein Treueprogramm ein."
         },
-        "bot": "Responds to a pending hook approval request. Used internally when the user approves or denies a permission request from an external runtime like Claude Code.",
+        "bot": "Creates shop on-chain. Chains to configure automatically.",
+        "chain": "multiversx",
+        "vars": {
+          "SC_ADDRESS": "TODO"
+        },
         "actions": [
           {
-            "type": "collect",
+            "type": "contract",
             "label": {
-              "en": "Respond",
-              "de": "Antworten"
+              "en": "Create shop",
+              "de": "Shop erstellen"
             },
-            "destination": {
-              "url": "https://api.joai.ai/v1/hooks/respond",
-              "method": "POST"
-            },
+            "address": "{{SC_ADDRESS}}",
+            "func": "createShop",
             "inputs": [
               {
-                "name": "requestId",
-                "as": "requestId",
+                "name": "Shop name",
+                "as": "shopName",
+                "description": {
+                  "en": "Your business name (e.g. Joe's Barber)",
+                  "de": "Dein Unternehmensname (z.B. Joes Friseur)"
+                },
+                "bot": "Business name.",
                 "type": "string",
+                "position": "arg:1",
+                "source": "field",
+                "required": true,
+                "min": 1
+              }
+            ],
+            "gasLimit": 10000000
+          }
+        ],
+        "output": {
+          "SHOP_ID": "out"
+        },
+        "messages": {
+          "success": {
+            "en": "{{shopName}} created! Setting up loyalty program...",
+            "de": "{{shopName}} erstellt! Treueprogramm wird eingerichtet..."
+          }
+        },
+        "next": "joai/team-setting-set?key=SHOP_ID&value={{SHOP_ID}}"
+      },
+      "extras": null
+    },
+    {
+      "key": "multiversx:shop-loyalty-configure",
+      "identifier": "@shop-loyalty-configure",
+      "alias": "shop-loyalty-configure",
+      "chain": "multiversx",
+      "hash": "7e458b6f86c8dd997e902e83accdc66521fd0b40791d21ea3730915f220c25be",
+      "checksum": "7e458b6f86c8dd997e902e83accdc66521fd0b40791d21ea3730915f220c25be",
+      "name": "Shop: Configure Loyalty",
+      "title": {
+        "en": "Configure loyalty program",
+        "de": "Treueprogramm konfigurieren"
+      },
+      "description": {
+        "en": "Set up your stamp-based loyalty program — rewards, Google review incentive, and reminder frequency.",
+        "de": "Richte dein stempelbasiertes Treueprogramm ein — Belohnungen, Google-Bewertungsanreiz und Erinnerungsfrequenz."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": "{{SC_ADDRESS}}",
+      "primaryFunc": "configureLoyalty",
+      "brand": {
+        "hash": "c15b1fdd3e8eb6f53272b4dff5cc7303912c24dfd441a91ceaeea83f88a92ce1",
+        "slug": "shop",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "Shop",
+        "description": {
+          "en": "Loyalty and customer management for local service businesses.",
+          "de": "Treue- und Kundenverwaltung für lokale Dienstleistungsunternehmen."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "Shop: Configure Loyalty",
+        "title": {
+          "en": "Configure loyalty program",
+          "de": "Treueprogramm konfigurieren"
+        },
+        "description": {
+          "en": "Set up your stamp-based loyalty program — rewards, Google review incentive, and reminder frequency.",
+          "de": "Richte dein stempelbasiertes Treueprogramm ein — Belohnungen, Google-Bewertungsanreiz und Erinnerungsfrequenz."
+        },
+        "bot": "Configures loyalty for shop at SHOP_ID.",
+        "chain": "multiversx",
+        "vars": {
+          "SHOP_ID": "query:SHOP_ID",
+          "SC_ADDRESS": "TODO"
+        },
+        "actions": [
+          {
+            "type": "contract",
+            "label": {
+              "en": "Configure loyalty program",
+              "de": "Treueprogramm konfigurieren"
+            },
+            "address": "{{SC_ADDRESS}}",
+            "func": "configureLoyalty",
+            "inputs": [
+              {
+                "name": "Shop ID",
+                "as": "SHOP_ID",
+                "type": "uint64",
+                "position": "arg:1",
                 "source": "query",
                 "required": true
               },
               {
-                "name": "decision",
-                "as": "decision",
+                "name": "Stamps for reward",
+                "as": "stampsForReward",
+                "description": {
+                  "en": "How many stamps until a free reward? (e.g. 10)",
+                  "de": "Wie viele Stempel bis zur Belohnung? (z.B. 10)"
+                },
+                "bot": "Stamps needed for reward.",
+                "type": "uint32",
+                "position": "arg:2",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Reward label",
+                "as": "rewardLabel",
+                "description": {
+                  "en": "What is the reward? (e.g. Free Haircut)",
+                  "de": "Was ist die Belohnung? (z.B. Kostenloser Haarschnitt)"
+                },
+                "bot": "Short reward name.",
                 "type": "string",
-                "source": "query",
+                "position": "arg:3",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Google review URL",
+                "as": "reviewUrl",
+                "description": {
+                  "en": "Your Google Maps review link",
+                  "de": "Dein Google Maps-Bewertungslink"
+                },
+                "bot": "Google Maps review URL.",
+                "type": "string",
+                "position": "arg:4",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Review discount (%)",
+                "as": "reviewDiscount",
+                "description": {
+                  "en": "Discount % for leaving a Google review (e.g. 10)",
+                  "de": "Rabatt % für eine Google-Bewertung (z.B. 10)"
+                },
+                "bot": "Discount % for reviewers.",
+                "type": "uint8",
+                "position": "arg:5",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Reminder after days",
+                "as": "reminderDays",
+                "description": {
+                  "en": "Send reminder if customer hasn't visited in X days (e.g. 21)",
+                  "de": "Erinnerung senden, wenn Kunde X Tage nicht da war (z.B. 21)"
+                },
+                "bot": "Inactivity days before reminder.",
+                "type": "uint32",
+                "position": "arg:6",
+                "source": "field",
+                "required": true
+              }
+            ],
+            "gasLimit": 10000000
+          }
+        ],
+        "messages": {
+          "success": {
+            "en": "Loyalty program is live! Now program your NFC cards.",
+            "de": "Treueprogramm ist aktiv! Programmiere jetzt deine NFC-Karten."
+          }
+        },
+        "next": "joai/team-setting-set?key=SHOP_ID&value={{SHOP_ID}}"
+      },
+      "extras": null
+    },
+    {
+      "key": "multiversx:shop-loyalty-redeem",
+      "identifier": "@shop-loyalty-redeem",
+      "alias": "shop-loyalty-redeem",
+      "chain": "multiversx",
+      "hash": "2f17ee5a530a43ae6f1c859a077b4a179dd4dfcece07e05f0222942e82891f5f",
+      "checksum": "2f17ee5a530a43ae6f1c859a077b4a179dd4dfcece07e05f0222942e82891f5f",
+      "name": "Shop: Loyalty Redeem Reward",
+      "title": {
+        "en": "Redeem Reward",
+        "de": "Belohnung einlösen"
+      },
+      "description": {
+        "en": "Redeem a customer's loyalty reward and reset their stamps.",
+        "de": "Löse die Treuebelohnung eines Kunden ein und setze die Stempel zurück."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": "{{SC_ADDRESS}}",
+      "primaryFunc": "getStatus",
+      "brand": {
+        "hash": "c15b1fdd3e8eb6f53272b4dff5cc7303912c24dfd441a91ceaeea83f88a92ce1",
+        "slug": "shop",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "Shop",
+        "description": {
+          "en": "Loyalty and customer management for local service businesses.",
+          "de": "Treue- und Kundenverwaltung für lokale Dienstleistungsunternehmen."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "Shop: Loyalty Redeem Reward",
+        "title": {
+          "en": "Redeem Reward",
+          "de": "Belohnung einlösen"
+        },
+        "description": {
+          "en": "Redeem a customer's loyalty reward and reset their stamps.",
+          "de": "Löse die Treuebelohnung eines Kunden ein und setze die Stempel zurück."
+        },
+        "bot": "Redeems reward via NFC. Log redemption activity on contact after success.",
+        "chain": "multiversx",
+        "vars": {
+          "SHOP_ID": "query:SHOP_ID",
+          "SC_ADDRESS": "TODO"
+        },
+        "actions": [
+          {
+            "type": "query",
+            "label": {
+              "en": "Checking reward...",
+              "de": "Belohnung wird überprüft..."
+            },
+            "address": "{{SC_ADDRESS}}",
+            "func": "getStatus",
+            "args": [
+              "uint64:{{SHOP_ID}}"
+            ],
+            "inputs": [
+              {
+                "name": "JOAI_TAG_ID",
+                "type": "string",
+                "position": "arg:2",
+                "source": "field",
+                "required": true
+              }
+            ],
+            "auto": true
+          },
+          {
+            "type": "contract",
+            "label": {
+              "en": "Redeem reward",
+              "de": "Belohnung einlösen"
+            },
+            "address": "{{SC_ADDRESS}}",
+            "func": "redeemReward",
+            "args": [
+              "uint64:{{SHOP_ID}}",
+              "string:{{JOAI_TAG_ID}}"
+            ],
+            "gasLimit": 10000000
+          }
+        ],
+        "output": {
+          "NAME": "out.1.name"
+        },
+        "messages": {
+          "success": {
+            "en": "Reward redeemed for {{NAME}}! Stamps reset to 0.",
+            "de": "Belohnung für {{NAME}} eingelöst! Stempel auf 0 zurückgesetzt."
+          }
+        }
+      },
+      "extras": null
+    },
+    {
+      "key": "multiversx:shop-loyalty-register",
+      "identifier": "@shop-loyalty-register",
+      "alias": "shop-loyalty-register",
+      "chain": "multiversx",
+      "hash": "62370acc741112698c79aa05a85a88bc243fe836a9ad9aae747e72ec03f264fd",
+      "checksum": "62370acc741112698c79aa05a85a88bc243fe836a9ad9aae747e72ec03f264fd",
+      "name": "Shop: Loyalty Register",
+      "title": {
+        "en": "Join our loyalty program!",
+        "de": "Tritt unserem Treueprogramm bei!"
+      },
+      "description": {
+        "en": "Register your loyalty card and start earning stamps towards free rewards.",
+        "de": "Registriere deine Treuekarte und sammle Stempel für kostenlose Belohnungen."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": "{{SC_ADDRESS}}",
+      "primaryFunc": "isCardRegistered",
+      "brand": {
+        "hash": "c15b1fdd3e8eb6f53272b4dff5cc7303912c24dfd441a91ceaeea83f88a92ce1",
+        "slug": "shop",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "Shop",
+        "description": {
+          "en": "Loyalty and customer management for local service businesses.",
+          "de": "Treue- und Kundenverwaltung für lokale Dienstleistungsunternehmen."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "Shop: Loyalty Register",
+        "title": {
+          "en": "Join our loyalty program!",
+          "de": "Tritt unserem Treueprogramm bei!"
+        },
+        "description": {
+          "en": "Register your loyalty card and start earning stamps towards free rewards.",
+          "de": "Registriere deine Treuekarte und sammle Stempel für kostenlose Belohnungen."
+        },
+        "bot": "Registers NFC card on-chain. If already registered, redirects to status.",
+        "chain": "multiversx",
+        "vars": {
+          "SHOP_ID": "query:shop",
+          "SC_ADDRESS": "TODO"
+        },
+        "actions": [
+          {
+            "type": "query",
+            "label": {
+              "en": "Checking card...",
+              "de": "Karte wird überprüft..."
+            },
+            "address": "{{SC_ADDRESS}}",
+            "func": "isCardRegistered",
+            "args": [
+              "uint64:{{SHOP_ID}}"
+            ],
+            "inputs": [
+              {
+                "name": "JOAI_TAG_ID",
+                "type": "string",
+                "position": "arg:2",
+                "source": "field",
+                "required": true
+              }
+            ],
+            "auto": true,
+            "next": {
+              "success": "shop-loyalty-status?shop={{SHOP_ID}}&JOAI_TAG_ID={{JOAI_TAG_ID}}"
+            }
+          },
+          {
+            "type": "query",
+            "label": {
+              "en": "Loading shop...",
+              "de": "Shop wird geladen..."
+            },
+            "address": "{{SC_ADDRESS}}",
+            "func": "getShopInfo",
+            "args": [
+              "uint64:{{SHOP_ID}}"
+            ],
+            "auto": true
+          },
+          {
+            "type": "collect",
+            "label": {
+              "en": "Register",
+              "de": "Registrieren"
+            },
+            "destination": {
+              "url": "https://api.joai.ai/v1/contacts",
+              "method": "POST"
+            },
+            "inputs": [
+              {
+                "name": "Name",
+                "as": "name",
+                "description": {
+                  "en": "Your name",
+                  "de": "Dein Name"
+                },
+                "bot": "Customer name.",
+                "type": "string",
+                "source": "field",
+                "required": true,
+                "min": 1
+              },
+              {
+                "name": "Email",
+                "as": "email",
+                "description": {
+                  "en": "Your email address",
+                  "de": "Deine E-Mail-Adresse"
+                },
+                "bot": "Customer email.",
+                "type": "string",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Phone",
+                "as": "phone",
+                "description": {
+                  "en": "Your phone number (optional)",
+                  "de": "Deine Telefonnummer (optional)"
+                },
+                "bot": "Optional.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Card",
+                "as": "card",
+                "type": "string",
+                "source": "hidden",
+                "default": "{{JOAI_TAG_ID}}",
+                "position": "payload:props"
+              }
+            ]
+          },
+          {
+            "type": "contract",
+            "label": {
+              "en": "Activate card",
+              "de": "Karte aktivieren"
+            },
+            "address": "{{SC_ADDRESS}}",
+            "func": "register",
+            "args": [
+              "uint64:{{SHOP_ID}}",
+              "string:{{JOAI_TAG_ID}}",
+              "string:{{name}}"
+            ],
+            "gasLimit": 10000000,
+            "auto": true
+          }
+        ],
+        "output": {
+          "IS_REGISTERED": "out.1",
+          "SHOP_NAME": "out.2.name"
+        },
+        "messages": {
+          "success": {
+            "en": "Welcome to {{SHOP_NAME}}, {{name}}! Your first stamp has been earned.",
+            "de": "Willkommen bei {{SHOP_NAME}}, {{name}}! Dein erster Stempel wurde gesammelt."
+          }
+        },
+        "next": "shop-loyalty-review?shop={{SHOP_ID}}&JOAI_TAG_ID={{JOAI_TAG_ID}}"
+      },
+      "extras": null
+    },
+    {
+      "key": "multiversx:shop-loyalty-remind",
+      "identifier": "@shop-loyalty-remind",
+      "alias": "shop-loyalty-remind",
+      "chain": "multiversx",
+      "hash": "faa5d6a12cb90e2474f58a3805a504bb384f47ede156ecde22b41900599aaaed",
+      "checksum": "faa5d6a12cb90e2474f58a3805a504bb384f47ede156ecde22b41900599aaaed",
+      "name": "Shop: Loyalty Reminder",
+      "title": {
+        "en": "Send loyalty reminders",
+        "de": "Treue-Erinnerungen senden"
+      },
+      "description": {
+        "en": "Check for customers who haven't visited recently and send them a reminder.",
+        "de": "Prüfe auf Kunden, die kürzlich nicht da waren, und sende eine Erinnerung."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": "{{SC_ADDRESS}}",
+      "primaryFunc": "getLoyaltyConfig",
+      "brand": {
+        "hash": "c15b1fdd3e8eb6f53272b4dff5cc7303912c24dfd441a91ceaeea83f88a92ce1",
+        "slug": "shop",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "Shop",
+        "description": {
+          "en": "Loyalty and customer management for local service businesses.",
+          "de": "Treue- und Kundenverwaltung für lokale Dienstleistungsunternehmen."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "Shop: Loyalty Reminder",
+        "title": {
+          "en": "Send loyalty reminders",
+          "de": "Treue-Erinnerungen senden"
+        },
+        "description": {
+          "en": "Check for customers who haven't visited recently and send them a reminder.",
+          "de": "Prüfe auf Kunden, die kürzlich nicht da waren, und sende eine Erinnerung."
+        },
+        "bot": "Daily scheduled. SHOP_ID in query (get from setting-get when scheduling). STALE_SINCE = now - (reminder_days * 86400). For each stale customer card ID: GET /v1/contacts?propKey=card&propValue={cardId} to find the JoAi contact, get their phone, send WhatsApp reminder via POST /social/send, log activity.",
+        "chain": "multiversx",
+        "schedule": "daily",
+        "vars": {
+          "SHOP_ID": "query:SHOP_ID",
+          "SC_ADDRESS": "TODO"
+        },
+        "actions": [
+          {
+            "type": "query",
+            "label": {
+              "en": "Loading loyalty config...",
+              "de": "Treue-Konfiguration wird geladen..."
+            },
+            "address": "{{SC_ADDRESS}}",
+            "func": "getLoyaltyConfig",
+            "args": [
+              "uint64:{{SHOP_ID}}"
+            ],
+            "auto": true
+          },
+          {
+            "type": "query",
+            "label": {
+              "en": "Fetching overdue customers...",
+              "de": "Überfällige Kunden werden geladen..."
+            },
+            "address": "{{SC_ADDRESS}}",
+            "func": "getStaleCustomers",
+            "args": [
+              "uint64:{{SHOP_ID}}",
+              "uint64:{{STALE_SINCE}}",
+              "uint32:50"
+            ],
+            "inputs": [
+              {
+                "name": "STALE_SINCE",
+                "type": "uint64",
+                "position": "arg:2",
+                "source": "field",
+                "bot": "Calculate as: current unix timestamp minus (REMINDER_DAYS * 86400)"
+              }
+            ],
+            "auto": true
+          }
+        ],
+        "output": {
+          "REMINDER_DAYS": "out.1.reminder_days",
+          "STALE_CUSTOMERS": "out.2"
+        },
+        "messages": {}
+      },
+      "extras": null
+    },
+    {
+      "key": "multiversx:shop-loyalty-review",
+      "identifier": "@shop-loyalty-review",
+      "alias": "shop-loyalty-review",
+      "chain": "multiversx",
+      "hash": "1c48ec4664b3a088362a99bd8e7cc2c837f18c9130b6dca747e06acf8fb8b885",
+      "checksum": "1c48ec4664b3a088362a99bd8e7cc2c837f18c9130b6dca747e06acf8fb8b885",
+      "name": "Shop: Loyalty Review Prompt",
+      "title": {
+        "en": "Leave us a review!",
+        "de": "Bewerte uns!"
+      },
+      "description": {
+        "en": "Rate us on Google and get a discount on your next visit.",
+        "de": "Bewerte uns auf Google und erhalte einen Rabatt auf deinen nächsten Besuch."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": "{{SC_ADDRESS}}",
+      "primaryFunc": "getLoyaltyConfig",
+      "brand": {
+        "hash": "c15b1fdd3e8eb6f53272b4dff5cc7303912c24dfd441a91ceaeea83f88a92ce1",
+        "slug": "shop",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "Shop",
+        "description": {
+          "en": "Loyalty and customer management for local service businesses.",
+          "de": "Treue- und Kundenverwaltung für lokale Dienstleistungsunternehmen."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "Shop: Loyalty Review Prompt",
+        "title": {
+          "en": "Leave us a review!",
+          "de": "Bewerte uns!"
+        },
+        "description": {
+          "en": "Rate us on Google and get a discount on your next visit.",
+          "de": "Bewerte uns auf Google und erhalte einen Rabatt auf deinen nächsten Besuch."
+        },
+        "bot": "Prompts Google review after first visit. URL and discount from on-chain config.",
+        "chain": "multiversx",
+        "vars": {
+          "SHOP_ID": "query:shop",
+          "CARD_UUID": "query:card",
+          "SC_ADDRESS": "TODO"
+        },
+        "actions": [
+          {
+            "type": "query",
+            "label": {
+              "en": "Loading...",
+              "de": "Laden..."
+            },
+            "address": "{{SC_ADDRESS}}",
+            "func": "getLoyaltyConfig",
+            "args": [
+              "uint64:{{SHOP_ID}}"
+            ],
+            "auto": true
+          },
+          {
+            "type": "link",
+            "label": {
+              "en": "Leave a Google Review",
+              "de": "Google-Bewertung abgeben"
+            },
+            "url": "{{REVIEW_URL}}"
+          }
+        ],
+        "output": {
+          "REVIEW_URL": "out.review_url",
+          "REVIEW_DISCOUNT": "out.review_discount"
+        },
+        "messages": {
+          "success": {
+            "en": "Thanks for your review! Show this to your barber to get {{REVIEW_DISCOUNT}}% off next time.",
+            "de": "Danke für deine Bewertung! Zeige das deinem Friseur für {{REVIEW_DISCOUNT}}% Rabatt beim nächsten Mal."
+          }
+        }
+      },
+      "extras": null
+    },
+    {
+      "key": "multiversx:shop-loyalty-stamp",
+      "identifier": "@shop-loyalty-stamp",
+      "alias": "shop-loyalty-stamp",
+      "chain": "multiversx",
+      "hash": "f2d92ad4ac5d396ad5f47b4f3a7bb5a0e1b47b168afd38e0a2babc2a62047e39",
+      "checksum": "f2d92ad4ac5d396ad5f47b4f3a7bb5a0e1b47b168afd38e0a2babc2a62047e39",
+      "name": "Shop: Loyalty Stamp",
+      "title": {
+        "en": "Add Stamp",
+        "de": "Stempel hinzufügen"
+      },
+      "description": {
+        "en": "Scan a customer's loyalty card to add a stamp and track their reward progress. Automatically shows the current stamp count and notifies when a reward is ready to be redeemed.",
+        "de": "Scanne die Treuekarte eines Kunden, um einen Stempel hinzuzufügen und den Prämienfortschritt zu verfolgen. Zeigt automatisch den aktuellen Stempelstand an und informiert, wenn eine Prämie eingelöst werden kann."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": "{{SC_ADDRESS}}",
+      "primaryFunc": "getStatus",
+      "brand": {
+        "hash": "c15b1fdd3e8eb6f53272b4dff5cc7303912c24dfd441a91ceaeea83f88a92ce1",
+        "slug": "shop",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "Shop",
+        "description": {
+          "en": "Loyalty and customer management for local service businesses.",
+          "de": "Treue- und Kundenverwaltung für lokale Dienstleistungsunternehmen."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "Shop: Loyalty Stamp",
+        "title": {
+          "en": "Add Stamp",
+          "de": "Stempel hinzufügen"
+        },
+        "description": {
+          "en": "Scan a customer's loyalty card to add a stamp and track their reward progress. Automatically shows the current stamp count and notifies when a reward is ready to be redeemed.",
+          "de": "Scanne die Treuekarte eines Kunden, um einen Stempel hinzuzufügen und den Prämienfortschritt zu verfolgen. Zeigt automatisch den aktuellen Stempelstand an und informiert, wenn eine Prämie eingelöst werden kann."
+        },
+        "bot": "Adds stamp via NFC. Log visit activity on contact after success.",
+        "chain": "multiversx",
+        "vars": {
+          "SHOP_ID": "query:SHOP_ID",
+          "SC_ADDRESS": "TODO"
+        },
+        "actions": [
+          {
+            "type": "query",
+            "label": {
+              "en": "Looking up customer...",
+              "de": "Kunde wird gesucht..."
+            },
+            "address": "{{SC_ADDRESS}}",
+            "func": "getStatus",
+            "args": [
+              "uint64:{{SHOP_ID}}",
+              "string:{{JOAI_TAG_ID}}"
+            ],
+            "inputs": [
+              {
+                "name": "JOAI_TAG_ID",
+                "type": "string",
+                "position": "arg:2",
+                "source": "field",
+                "required": true
+              }
+            ],
+            "auto": true
+          },
+          {
+            "type": "contract",
+            "label": {
+              "en": "Add stamp",
+              "de": "Stempel hinzufügen"
+            },
+            "address": "{{SC_ADDRESS}}",
+            "func": "addStamp",
+            "args": [
+              "uint64:{{SHOP_ID}}",
+              "string:{{JOAI_TAG_ID}}"
+            ],
+            "gasLimit": 10000000,
+            "auto": true
+          }
+        ],
+        "output": {
+          "NAME": "out.1.name",
+          "STAMPS": "out.1.stamps",
+          "NEEDED": "out.1.stamps_for_reward",
+          "DISCOUNT": "out.1.discount",
+          "REWARD_READY": "out.1.reward_ready"
+        },
+        "messages": {
+          "success": {
+            "en": "{{NAME}} — {{STAMPS}}/{{NEEDED}} stamps",
+            "de": "{{NAME}} — {{STAMPS}}/{{NEEDED}} Stempel"
+          }
+        }
+      },
+      "extras": null
+    },
+    {
+      "key": "multiversx:shop-loyalty-status",
+      "identifier": "@shop-loyalty-status",
+      "alias": "shop-loyalty-status",
+      "chain": "multiversx",
+      "hash": "f43fd1ca33517ddc78ff3bbdae050a80ca01a825868d2ab570ac1fcc713b11d0",
+      "checksum": "f43fd1ca33517ddc78ff3bbdae050a80ca01a825868d2ab570ac1fcc713b11d0",
+      "name": "Shop: Loyalty Status",
+      "title": {
+        "en": "Your Loyalty Card",
+        "de": "Deine Treuekarte"
+      },
+      "description": {
+        "en": "Check your stamp progress and available rewards.",
+        "de": "Überprüfe deinen Stempelfortschritt und verfügbare Belohnungen."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": "{{SC_ADDRESS}}",
+      "primaryFunc": "getStatus",
+      "brand": {
+        "hash": "c15b1fdd3e8eb6f53272b4dff5cc7303912c24dfd441a91ceaeea83f88a92ce1",
+        "slug": "shop",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "Shop",
+        "description": {
+          "en": "Loyalty and customer management for local service businesses.",
+          "de": "Treue- und Kundenverwaltung für lokale Dienstleistungsunternehmen."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "Shop: Loyalty Status",
+        "title": {
+          "en": "Your Loyalty Card",
+          "de": "Deine Treuekarte"
+        },
+        "description": {
+          "en": "Check your stamp progress and available rewards.",
+          "de": "Überprüfe deinen Stempelfortschritt und verfügbare Belohnungen."
+        },
+        "bot": "Shows stamp progress.",
+        "chain": "multiversx",
+        "vars": {
+          "SHOP_ID": "query:shop",
+          "SC_ADDRESS": "TODO"
+        },
+        "actions": [
+          {
+            "type": "query",
+            "label": {
+              "en": "Loading your card...",
+              "de": "Karte wird geladen..."
+            },
+            "address": "{{SC_ADDRESS}}",
+            "func": "getStatus",
+            "args": [
+              "uint64:{{SHOP_ID}}"
+            ],
+            "inputs": [
+              {
+                "name": "JOAI_TAG_ID",
+                "type": "string",
+                "position": "arg:2",
+                "source": "field",
                 "required": true
               }
             ],
             "auto": true
           }
         ],
+        "output": {
+          "NAME": "out.name",
+          "STAMPS": "out.stamps",
+          "NEEDED": "out.stamps_for_reward",
+          "DISCOUNT": "out.discount",
+          "REWARD_READY": "out.reward_ready",
+          "LAST_VISIT": "out.last_visit"
+        },
         "messages": {
           "success": {
-            "en": "Hook request {{decision}}.",
-            "de": "Hook-Anfrage {{decision}}."
+            "en": "{{NAME}} — {{STAMPS}}/{{NEEDED}} stamps collected",
+            "de": "{{NAME}} — {{STAMPS}}/{{NEEDED}} Stempel gesammelt"
           }
         }
       },
