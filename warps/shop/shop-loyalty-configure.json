@@ -13,16 +13,26 @@
   "chain": "multiversx",
   "vars": {
     "SHOP_ID": "query:SHOP_ID",
-    "SC_ADDRESS": "env:SHOP_SC_ADDRESS"
+    "SC_ADDRESS": "INJECT:SHOP_SC_ADDRESS"
   },
   "actions": [
     {
-      "type": "collect",
+      "type": "contract",
       "label": {
-        "en": "Loyalty settings",
-        "de": "Treue-Einstellungen"
+        "en": "Configure loyalty program",
+        "de": "Treueprogramm konfigurieren"
       },
+      "address": "{{SC_ADDRESS}}",
+      "func": "configureLoyalty",
       "inputs": [
+        {
+          "name": "Shop ID",
+          "as": "SHOP_ID",
+          "type": "uint64",
+          "position": "arg:1",
+          "source": "query",
+          "required": true
+        },
         {
           "name": "Stamps for reward",
           "as": "stampsForReward",
@@ -32,6 +42,7 @@
           },
           "bot": "Stamps needed for reward.",
           "type": "uint32",
+          "position": "arg:2",
           "source": "field",
           "required": true
         },
@@ -44,6 +55,7 @@
           },
           "bot": "Short reward name.",
           "type": "string",
+          "position": "arg:3",
           "source": "field",
           "required": true
         },
@@ -56,6 +68,7 @@
           },
           "bot": "Google Maps review URL.",
           "type": "string",
+          "position": "arg:4",
           "source": "field",
           "required": true
         },
@@ -68,6 +81,7 @@
           },
           "bot": "Discount % for reviewers.",
           "type": "uint8",
+          "position": "arg:5",
           "source": "field",
           "required": true
         },
@@ -80,29 +94,12 @@
           },
           "bot": "Inactivity days before reminder.",
           "type": "uint32",
+          "position": "arg:6",
           "source": "field",
           "required": true
         }
-      ]
-    },
-    {
-      "type": "contract",
-      "label": {
-        "en": "Configure loyalty program",
-        "de": "Treueprogramm konfigurieren"
-      },
-      "address": "{{SC_ADDRESS}}",
-      "func": "configureLoyalty",
-      "args": [
-        "uint64:{{SHOP_ID}}",
-        "uint32:{{stampsForReward}}",
-        "string:{{rewardLabel}}",
-        "string:{{reviewUrl}}",
-        "uint8:{{reviewDiscount}}",
-        "uint32:{{reminderDays}}"
       ],
-      "gasLimit": 10000000,
-      "auto": true
+      "gasLimit": 10000000
     }
   ],
   "messages": {

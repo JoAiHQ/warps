@@ -12,15 +12,17 @@
   "bot": "Creates shop on-chain. Chains to configure automatically.",
   "chain": "multiversx",
   "vars": {
-    "SC_ADDRESS": "env:SHOP_SC_ADDRESS"
+    "SC_ADDRESS": "INJECT:SHOP_SC_ADDRESS"
   },
   "actions": [
     {
-      "type": "collect",
+      "type": "contract",
       "label": {
-        "en": "Shop name",
-        "de": "Shop-Name"
+        "en": "Create shop",
+        "de": "Shop erstellen"
       },
+      "address": "{{SC_ADDRESS}}",
+      "func": "createShop",
       "inputs": [
         {
           "name": "Shop name",
@@ -31,29 +33,17 @@
           },
           "bot": "Business name.",
           "type": "string",
+          "position": "arg:1",
           "source": "field",
           "required": true,
           "min": 1
         }
-      ]
-    },
-    {
-      "type": "contract",
-      "label": {
-        "en": "Create shop",
-        "de": "Shop erstellen"
-      },
-      "address": "{{SC_ADDRESS}}",
-      "func": "createShop",
-      "args": [
-        "string:{{shopName}}"
       ],
-      "gasLimit": 10000000,
-      "auto": true
+      "gasLimit": 10000000
     }
   ],
   "output": {
-    "SHOP_ID": "out.2"
+    "SHOP_ID": "out"
   },
   "messages": {
     "success": {
@@ -61,5 +51,5 @@
       "de": "{{shopName}} erstellt! Treueprogramm wird eingerichtet..."
     }
   },
-  "next": "shop-loyalty-configure?SHOP_ID={{SHOP_ID}}"
+  "next": "joai/team-setting-set?key=SHOP_ID&value={{SHOP_ID}}"
 }
