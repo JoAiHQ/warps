@@ -1,0 +1,455 @@
+{
+    "buildInfo": {
+        "rustc": {
+            "version": "1.91.0",
+            "commitHash": "f8297e351a40c1439a467bbbb6879088047f50b3",
+            "commitDate": "2025-10-28",
+            "channel": "Stable",
+            "short": "rustc 1.91.0 (f8297e351 2025-10-28)"
+        },
+        "contractCrate": {
+            "name": "shop",
+            "version": "0.0.1"
+        },
+        "framework": {
+            "name": "multiversx-sc",
+            "version": "0.51.1"
+        }
+    },
+    "name": "ShopContract",
+    "constructor": {
+        "inputs": [],
+        "outputs": []
+    },
+    "upgradeConstructor": {
+        "inputs": [],
+        "outputs": []
+    },
+    "endpoints": [
+        {
+            "name": "createShop",
+            "mutability": "mutable",
+            "inputs": [
+                {
+                    "name": "name",
+                    "type": "bytes"
+                }
+            ],
+            "outputs": [
+                {
+                    "type": "u64"
+                }
+            ]
+        },
+        {
+            "name": "getShopInfo",
+            "mutability": "readonly",
+            "inputs": [
+                {
+                    "name": "shop_id",
+                    "type": "u64"
+                }
+            ],
+            "outputs": [
+                {
+                    "type": "ShopInfo"
+                }
+            ]
+        },
+        {
+            "name": "configureLoyalty",
+            "mutability": "mutable",
+            "inputs": [
+                {
+                    "name": "shop_id",
+                    "type": "u64"
+                },
+                {
+                    "name": "stamps_for_reward",
+                    "type": "u32"
+                },
+                {
+                    "name": "reward_label",
+                    "type": "bytes"
+                },
+                {
+                    "name": "review_url",
+                    "type": "bytes"
+                },
+                {
+                    "name": "review_discount",
+                    "type": "u8"
+                },
+                {
+                    "name": "reminder_days",
+                    "type": "u32"
+                }
+            ],
+            "outputs": []
+        },
+        {
+            "name": "register",
+            "mutability": "mutable",
+            "inputs": [
+                {
+                    "name": "shop_id",
+                    "type": "u64"
+                },
+                {
+                    "name": "card_uuid",
+                    "type": "bytes"
+                },
+                {
+                    "name": "name",
+                    "type": "bytes"
+                }
+            ],
+            "outputs": []
+        },
+        {
+            "name": "addStamp",
+            "mutability": "mutable",
+            "inputs": [
+                {
+                    "name": "shop_id",
+                    "type": "u64"
+                },
+                {
+                    "name": "card_uuid",
+                    "type": "bytes"
+                }
+            ],
+            "outputs": []
+        },
+        {
+            "name": "redeemReward",
+            "mutability": "mutable",
+            "inputs": [
+                {
+                    "name": "shop_id",
+                    "type": "u64"
+                },
+                {
+                    "name": "card_uuid",
+                    "type": "bytes"
+                }
+            ],
+            "outputs": []
+        },
+        {
+            "name": "setDiscount",
+            "mutability": "mutable",
+            "inputs": [
+                {
+                    "name": "shop_id",
+                    "type": "u64"
+                },
+                {
+                    "name": "card_uuid",
+                    "type": "bytes"
+                },
+                {
+                    "name": "percent",
+                    "type": "u8"
+                }
+            ],
+            "outputs": []
+        },
+        {
+            "name": "clearDiscount",
+            "mutability": "mutable",
+            "inputs": [
+                {
+                    "name": "shop_id",
+                    "type": "u64"
+                },
+                {
+                    "name": "card_uuid",
+                    "type": "bytes"
+                }
+            ],
+            "outputs": []
+        },
+        {
+            "name": "getStatus",
+            "mutability": "readonly",
+            "inputs": [
+                {
+                    "name": "shop_id",
+                    "type": "u64"
+                },
+                {
+                    "name": "card_uuid",
+                    "type": "bytes"
+                }
+            ],
+            "outputs": [
+                {
+                    "type": "CustomerStatus"
+                }
+            ]
+        },
+        {
+            "name": "isCardRegistered",
+            "mutability": "readonly",
+            "inputs": [
+                {
+                    "name": "shop_id",
+                    "type": "u64"
+                },
+                {
+                    "name": "card_uuid",
+                    "type": "bytes"
+                }
+            ],
+            "outputs": [
+                {
+                    "type": "bool"
+                }
+            ]
+        },
+        {
+            "name": "getLoyaltyConfig",
+            "mutability": "readonly",
+            "inputs": [
+                {
+                    "name": "shop_id",
+                    "type": "u64"
+                }
+            ],
+            "outputs": [
+                {
+                    "type": "LoyaltyConfig"
+                }
+            ]
+        },
+        {
+            "name": "getStaleCustomers",
+            "mutability": "readonly",
+            "inputs": [
+                {
+                    "name": "shop_id",
+                    "type": "u64"
+                },
+                {
+                    "name": "since_timestamp",
+                    "type": "u64"
+                },
+                {
+                    "name": "limit",
+                    "type": "u32"
+                }
+            ],
+            "outputs": [
+                {
+                    "type": "variadic<StaleCustomer>",
+                    "multi_result": true
+                }
+            ]
+        },
+        {
+            "name": "getCustomerCount",
+            "mutability": "readonly",
+            "inputs": [
+                {
+                    "name": "shop_id",
+                    "type": "u64"
+                }
+            ],
+            "outputs": [
+                {
+                    "type": "u32"
+                }
+            ]
+        }
+    ],
+    "events": [
+        {
+            "identifier": "shopCreated",
+            "inputs": [
+                {
+                    "name": "shop_id",
+                    "type": "u64",
+                    "indexed": true
+                },
+                {
+                    "name": "name",
+                    "type": "bytes",
+                    "indexed": true
+                },
+                {
+                    "name": "owner",
+                    "type": "Address",
+                    "indexed": true
+                }
+            ]
+        },
+        {
+            "identifier": "customerRegistered",
+            "inputs": [
+                {
+                    "name": "shop_id",
+                    "type": "u64",
+                    "indexed": true
+                },
+                {
+                    "name": "card_uuid",
+                    "type": "bytes",
+                    "indexed": true
+                },
+                {
+                    "name": "customer_id",
+                    "type": "u64",
+                    "indexed": true
+                }
+            ]
+        },
+        {
+            "identifier": "stampAdded",
+            "inputs": [
+                {
+                    "name": "shop_id",
+                    "type": "u64",
+                    "indexed": true
+                },
+                {
+                    "name": "card_uuid",
+                    "type": "bytes",
+                    "indexed": true
+                },
+                {
+                    "name": "stamps",
+                    "type": "u32",
+                    "indexed": true
+                }
+            ]
+        },
+        {
+            "identifier": "rewardRedeemed",
+            "inputs": [
+                {
+                    "name": "shop_id",
+                    "type": "u64",
+                    "indexed": true
+                },
+                {
+                    "name": "card_uuid",
+                    "type": "bytes",
+                    "indexed": true
+                }
+            ]
+        },
+        {
+            "identifier": "discountSet",
+            "inputs": [
+                {
+                    "name": "shop_id",
+                    "type": "u64",
+                    "indexed": true
+                },
+                {
+                    "name": "card_uuid",
+                    "type": "bytes",
+                    "indexed": true
+                },
+                {
+                    "name": "percent",
+                    "type": "u8",
+                    "indexed": true
+                }
+            ]
+        }
+    ],
+    "esdtAttributes": [],
+    "hasCallback": false,
+    "types": {
+        "CustomerStatus": {
+            "type": "struct",
+            "fields": [
+                {
+                    "name": "name",
+                    "type": "bytes"
+                },
+                {
+                    "name": "stamps",
+                    "type": "u32"
+                },
+                {
+                    "name": "stamps_for_reward",
+                    "type": "u32"
+                },
+                {
+                    "name": "discount",
+                    "type": "u8"
+                },
+                {
+                    "name": "reward_ready",
+                    "type": "bool"
+                },
+                {
+                    "name": "last_visit",
+                    "type": "u64"
+                }
+            ]
+        },
+        "LoyaltyConfig": {
+            "type": "struct",
+            "fields": [
+                {
+                    "name": "stamps_for_reward",
+                    "type": "u32"
+                },
+                {
+                    "name": "reward_label",
+                    "type": "bytes"
+                },
+                {
+                    "name": "review_url",
+                    "type": "bytes"
+                },
+                {
+                    "name": "review_discount",
+                    "type": "u8"
+                },
+                {
+                    "name": "reminder_days",
+                    "type": "u32"
+                }
+            ]
+        },
+        "ShopInfo": {
+            "type": "struct",
+            "fields": [
+                {
+                    "name": "name",
+                    "type": "bytes"
+                },
+                {
+                    "name": "owner",
+                    "type": "Address"
+                },
+                {
+                    "name": "created_at",
+                    "type": "u64"
+                }
+            ]
+        },
+        "StaleCustomer": {
+            "type": "struct",
+            "fields": [
+                {
+                    "name": "customer_id",
+                    "type": "u64"
+                },
+                {
+                    "name": "card_uuid",
+                    "type": "bytes"
+                },
+                {
+                    "name": "last_visit",
+                    "type": "u64"
+                }
+            ]
+        }
+    }
+}
