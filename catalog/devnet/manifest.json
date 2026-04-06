@@ -4,8 +4,8 @@
   "repo": "JoAiHQ/warps",
   "branch": "dev",
   "network": "devnet",
-  "commitSha": "084bdef72c606ada3c353f66d3976a90f5d6dcdb",
-  "generatedAt": "2026-04-06T09:27:35.376Z",
+  "commitSha": "0c16b8756d724b24d3c409a432d65598412d86c9",
+  "generatedAt": "2026-04-06T17:07:16.627Z",
   "warps": [
     {
       "key": "arbitrum:omniset-deposit-arbitrum",
@@ -14162,8 +14162,8 @@
       "identifier": "@shop-create",
       "alias": "shop-create",
       "chain": "multiversx",
-      "hash": "62a4d38c3b9988e7df5e7f627cda6e2b47ffbe404dacfbb7af3e6ba8c1dafb3c",
-      "checksum": "62a4d38c3b9988e7df5e7f627cda6e2b47ffbe404dacfbb7af3e6ba8c1dafb3c",
+      "hash": "f47181231e2f658c860d404f1d4cf81d3af3fbf1529f1fcab99e9fec7e0dc1a7",
+      "checksum": "f47181231e2f658c860d404f1d4cf81d3af3fbf1529f1fcab99e9fec7e0dc1a7",
       "name": "Shop: Create",
       "title": {
         "en": "Create your shop",
@@ -14250,7 +14250,7 @@
             "de": "{{shopName}} erstellt! Deine Shop-ID ist {{SHOP_ID}}."
           }
         },
-        "next": "joai-team-setting-set?key=SHOP_ID&value={{SHOP_ID}}"
+        "next": "joai-settings-team-set?key=SHOP_ID&value={{SHOP_ID}}"
       },
       "extras": null
     },
@@ -14259,8 +14259,8 @@
       "identifier": "@shop-loyalty-configure",
       "alias": "shop-loyalty-configure",
       "chain": "multiversx",
-      "hash": "f01b2c8e08a15af5eabe765544fa3a3451ec67cce4b020eb968d0ea645601b98",
-      "checksum": "f01b2c8e08a15af5eabe765544fa3a3451ec67cce4b020eb968d0ea645601b98",
+      "hash": "d58519d9de9c5a999029fa61826a6f433c3419b8c7a9714c8caf937d8728609b",
+      "checksum": "d58519d9de9c5a999029fa61826a6f433c3419b8c7a9714c8caf937d8728609b",
       "name": "Shop: Configure Loyalty",
       "title": {
         "en": "Configure loyalty program",
@@ -14404,7 +14404,7 @@
             "de": "Treueprogramm ist aktiv! Programmiere jetzt deine NFC-Karten."
           }
         },
-        "next": "joai-team-setting-set?key=SHOP_ID&value={{SHOP_ID}}"
+        "next": "joai-settings-team-set?key=SHOP_ID&value={{SHOP_ID}}"
       },
       "extras": null
     },
@@ -46160,20 +46160,20 @@
       "extras": null
     },
     {
-      "key": "none:joai-setting-set",
-      "identifier": "@joai-setting-set",
-      "alias": "joai-setting-set",
+      "key": "none:joai-settings-agent-set",
+      "identifier": "@joai-settings-agent-set",
+      "alias": "joai-settings-agent-set",
       "chain": "none",
-      "hash": "adc2165332ccddd559506b3fc2e57a1c89bb32b57afaea7730f375abdf0082f8",
-      "checksum": "adc2165332ccddd559506b3fc2e57a1c89bb32b57afaea7730f375abdf0082f8",
+      "hash": "f3800ff34e7f9557acf637cea032311a9c7ed9dacb75dba1bb635b008ae77793",
+      "checksum": "f3800ff34e7f9557acf637cea032311a9c7ed9dacb75dba1bb635b008ae77793",
       "name": "JoAi: Set Agent Setting",
       "title": {
-        "en": "Save a setting",
-        "de": "Einstellung speichern"
+        "en": "Save an agent setting",
+        "de": "Agent-Einstellung speichern"
       },
       "description": {
-        "en": "Save a key-value setting on this agent for use in other warps.",
-        "de": "Speichere eine Schlüssel-Wert-Einstellung auf diesem Agenten für andere Warps."
+        "en": "Save a key-value setting on this agent. Overrides team settings.",
+        "de": "Speichere eine Schlüssel-Wert-Einstellung auf diesem Agenten. Überschreibt Team-Einstellungen."
       },
       "preview": null,
       "creator": "github:JoAiHQ/warps",
@@ -46207,14 +46207,14 @@
         "protocol": "warp:3.0.0",
         "name": "JoAi: Set Agent Setting",
         "title": {
-          "en": "Save a setting",
-          "de": "Einstellung speichern"
+          "en": "Save an agent setting",
+          "de": "Agent-Einstellung speichern"
         },
         "description": {
-          "en": "Save a key-value setting on this agent for use in other warps.",
-          "de": "Speichere eine Schlüssel-Wert-Einstellung auf diesem Agenten für andere Warps."
+          "en": "Save a key-value setting on this agent. Overrides team settings.",
+          "de": "Speichere eine Schlüssel-Wert-Einstellung auf diesem Agenten. Überschreibt Team-Einstellungen."
         },
-        "bot": "Saves an unencrypted agent config value.",
+        "bot": "Saves an unencrypted agent config value. Brand is auto-scoped from the calling warp.",
         "vars": {
           "AGENT_UUID": "query:agent"
         },
@@ -46233,6 +46233,13 @@
               }
             },
             "inputs": [
+              {
+                "name": "brand",
+                "as": "brand",
+                "type": "string",
+                "source": "hidden",
+                "default": "{{JOAI_WARP_BRAND}}"
+              },
               {
                 "name": "key",
                 "as": "key",
@@ -46421,6 +46428,111 @@
           "success": {
             "en": "Opening your settings now...",
             "de": "Einstellungen werden jetzt geöffnet..."
+          }
+        }
+      },
+      "extras": null
+    },
+    {
+      "key": "none:joai-settings-team-set",
+      "identifier": "@joai-settings-team-set",
+      "alias": "joai-settings-team-set",
+      "chain": "none",
+      "hash": "8e42974fe65ecaece92432da4429b2e8d5a4f722ab467dd0d78cd6c228507424",
+      "checksum": "8e42974fe65ecaece92432da4429b2e8d5a4f722ab467dd0d78cd6c228507424",
+      "name": "JoAi: Set Team Setting",
+      "title": {
+        "en": "Save a team setting",
+        "de": "Team-Einstellung speichern"
+      },
+      "description": {
+        "en": "Save a key-value setting on the team for use across all agents.",
+        "de": "Speichere eine Schlüssel-Wert-Einstellung auf dem Team für alle Agenten."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "4098667056683890c8f1aad41581885db272e391b0d6170e7e2b73ee7fbbca2e",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: Set Team Setting",
+        "title": {
+          "en": "Save a team setting",
+          "de": "Team-Einstellung speichern"
+        },
+        "description": {
+          "en": "Save a key-value setting on the team for use across all agents.",
+          "de": "Speichere eine Schlüssel-Wert-Einstellung auf dem Team für alle Agenten."
+        },
+        "bot": "Saves an unencrypted team-level config value. Brand is auto-scoped from the calling warp.",
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Save setting",
+              "de": "Einstellung speichern"
+            },
+            "destination": {
+              "url": "https://devnet-api.joai.ai/v1/settings",
+              "method": "POST",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "brand",
+                "as": "brand",
+                "type": "string",
+                "source": "hidden",
+                "default": "{{JOAI_WARP_BRAND}}"
+              },
+              {
+                "name": "key",
+                "as": "key",
+                "type": "string",
+                "source": "query",
+                "required": true
+              },
+              {
+                "name": "value",
+                "as": "value",
+                "type": "string",
+                "source": "query",
+                "required": true
+              }
+            ],
+            "auto": true
+          }
+        ],
+        "messages": {
+          "success": {
+            "en": "Saved {{key}} = {{value}} to your team settings.",
+            "de": "{{key}} = {{value}} in deinen Team-Einstellungen gespeichert."
           }
         }
       },
@@ -47310,104 +47422,6 @@
           "success": {
             "en": "Task status updated.",
             "de": "Aufgabenstatus aktualisiert."
-          }
-        }
-      },
-      "extras": null
-    },
-    {
-      "key": "none:joai-team-setting-set",
-      "identifier": "@joai-team-setting-set",
-      "alias": "joai-team-setting-set",
-      "chain": "none",
-      "hash": "afae683a1ed2b332fc9dbd3f55e2ce75cb0b34c0b9f1bf336f1aa640a9007afc",
-      "checksum": "afae683a1ed2b332fc9dbd3f55e2ce75cb0b34c0b9f1bf336f1aa640a9007afc",
-      "name": "JoAi: Set Team Setting",
-      "title": {
-        "en": "Save a team setting",
-        "de": "Team-Einstellung speichern"
-      },
-      "description": {
-        "en": "Save a key-value setting on the team for use across all agents.",
-        "de": "Speichere eine Schlüssel-Wert-Einstellung auf dem Team für alle Agenten."
-      },
-      "preview": null,
-      "creator": "github:JoAiHQ/warps",
-      "privileges": [],
-      "listed": true,
-      "visibility": "public",
-      "primaryAddress": null,
-      "primaryFunc": null,
-      "brand": {
-        "hash": "4098667056683890c8f1aad41581885db272e391b0d6170e7e2b73ee7fbbca2e",
-        "slug": "joai",
-        "active": true,
-        "protocol": "brand:0.2.0",
-        "name": "JoAi",
-        "description": {
-          "en": "JoAi is a platform for creating and managing your own AI agents.",
-          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten."
-        },
-        "logo": {
-          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
-        },
-        "urls": {
-          "web": "https://joai.ai"
-        },
-        "colors": {
-          "primary": "#98FF98",
-          "secondary": "#FFFF66"
-        }
-      },
-      "warp": {
-        "protocol": "warp:3.0.0",
-        "name": "JoAi: Set Team Setting",
-        "title": {
-          "en": "Save a team setting",
-          "de": "Team-Einstellung speichern"
-        },
-        "description": {
-          "en": "Save a key-value setting on the team for use across all agents.",
-          "de": "Speichere eine Schlüssel-Wert-Einstellung auf dem Team für alle Agenten."
-        },
-        "bot": "Saves an unencrypted team-level config value. Agents inherit team settings as defaults.",
-        "actions": [
-          {
-            "type": "collect",
-            "label": {
-              "en": "Save setting",
-              "de": "Einstellung speichern"
-            },
-            "destination": {
-              "url": "https://devnet-api.joai.ai/v1/settings",
-              "method": "POST",
-              "headers": {
-                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
-              }
-            },
-            "inputs": [
-              {
-                "name": "key",
-                "as": "key",
-                "type": "string",
-                "source": "query",
-                "required": true
-              },
-              {
-                "name": "value",
-                "as": "value",
-                "type": "string",
-                "source": "query",
-                "required": true
-              }
-            ],
-            "auto": true
-          }
-        ],
-        "messages": {
-          "success": {
-            "en": "Saved {{key}} = {{value}} to your team settings.",
-            "de": "{{key}} = {{value}} in deinen Team-Einstellungen gespeichert."
           }
         }
       },
