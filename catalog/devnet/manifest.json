@@ -4,8 +4,8 @@
   "repo": "JoAiHQ/warps",
   "branch": "dev",
   "network": "devnet",
-  "commitSha": "6f8e02036867943e885c427f34aca97296da6c14",
-  "generatedAt": "2026-04-07T09:18:13.657Z",
+  "commitSha": "91d806a1f10c5c3c314516ed172272f0fd5fce07",
+  "generatedAt": "2026-04-07T18:31:21.874Z",
   "warps": [
     {
       "key": "arbitrum:omniset-deposit-arbitrum",
@@ -26391,8 +26391,8 @@
       "identifier": "@appointment-availability",
       "alias": "appointment-availability",
       "chain": "none",
-      "hash": "1afc12148a40e4d51ead23efd24ce256db441544b2ad281c4f47fa3a59b2c154",
-      "checksum": "1afc12148a40e4d51ead23efd24ce256db441544b2ad281c4f47fa3a59b2c154",
+      "hash": "ae01837d93c2dfb84844b56b9af45c15a757f8fc695de353eeef01543ef4d5a2",
+      "checksum": "ae01837d93c2dfb84844b56b9af45c15a757f8fc695de353eeef01543ef4d5a2",
       "name": "Appointments: Availability",
       "title": {
         "en": "Appointment availability",
@@ -26437,7 +26437,7 @@
           "en": "Collect booking details and return appointment availability from the current agent calendar.",
           "de": "Sammelt Buchungsdetails und liefert Terminverfuegbarkeit aus dem Kalender des aktuellen Agenten."
         },
-        "bot": "Use this when the user wants to book an appointment, schedule a call, or find available meeting times. Collect the purpose, requested time window, timezone, duration, and attendee details. Ask only for missing fields. Convert relative dates like tomorrow or next Friday into exact ISO datetimes before submitting.",
+        "bot": "REQUIRED first step for any appointment booking. Before invoking, ask the user what time window works for them — never assume a time. Do not create calendar events directly; that bypasses availability checks, policy rules, and attendee tracking. Collect the purpose, their preferred time window, name, and timezone. Convert relative dates to exact ISO datetimes before submitting.",
         "actions": [
           {
             "type": "collect",
@@ -26653,8 +26653,8 @@
       "identifier": "@appointment-book",
       "alias": "appointment-book",
       "chain": "none",
-      "hash": "bdb2ec6d93fb1f3e2ad261904ad16cd9e57519169bac66889cdde2867b9f56e6",
-      "checksum": "bdb2ec6d93fb1f3e2ad261904ad16cd9e57519169bac66889cdde2867b9f56e6",
+      "hash": "8411eaea71db53416a753330885cf2dba7eeaa439335d80ea3769061b4c8527e",
+      "checksum": "8411eaea71db53416a753330885cf2dba7eeaa439335d80ea3769061b4c8527e",
       "name": "Appointments: Book",
       "title": {
         "en": "Book appointment",
@@ -26699,7 +26699,7 @@
           "en": "Book a confirmed appointment slot for the current agent.",
           "de": "Bucht einen bestaetigten Termin fuer den aktuellen Agenten."
         },
-        "bot": "Use this only after the user has chosen a specific appointment slot. Always collect the attendee name and the purpose of the meeting before booking. Build a descriptive title that includes both (e.g. 'Consultation with Anna Schmidt' or 'Demo call with Acme'). Pass exact scheduled start and end times. If the user wants a video link, set conferenceProvider to google_meet, teams, or zoom. Otherwise leave it empty.",
+        "bot": "Use this only after running appointment-availability and the user has explicitly chosen a slot from the results. Never substitute this with direct calendar event creation — that skips booking policy, overlap checks, and attendee tracking. Always have the attendee name before invoking. Build a descriptive title combining purpose and name (e.g. 'Consultation with Anna Schmidt'). Pass exact start and end times from the chosen slot.",
         "actions": [
           {
             "type": "collect",
@@ -26739,19 +26739,6 @@
                 "bot": "Exact confirmed appointment start in ISO 8601 format.",
                 "type": "string",
                 "position": "arg:2",
-                "source": "field",
-                "required": true
-              },
-              {
-                "name": "End At",
-                "as": "endAt",
-                "description": {
-                  "en": "Exact appointment end in ISO format",
-                  "de": "Exaktes Ende im ISO-Format"
-                },
-                "bot": "Exact confirmed appointment end in ISO 8601 format.",
-                "type": "string",
-                "position": "arg:3",
                 "source": "field",
                 "required": true
               },
@@ -27595,8 +27582,8 @@
       "identifier": "@appointment-reschedule",
       "alias": "appointment-reschedule",
       "chain": "none",
-      "hash": "21e40b12edfcde312a17599534356ee86d15f7af5b272905fbb4e2fd4c2277b0",
-      "checksum": "21e40b12edfcde312a17599534356ee86d15f7af5b272905fbb4e2fd4c2277b0",
+      "hash": "e7616c11820f98fbebb5c1b110022e34ea10419e0c3c507c768ebec3105cdf71",
+      "checksum": "e7616c11820f98fbebb5c1b110022e34ea10419e0c3c507c768ebec3105cdf71",
       "name": "Appointments: Reschedule",
       "title": {
         "en": "Reschedule appointment",
@@ -27641,7 +27628,7 @@
           "en": "Reschedule an existing booked appointment to a new confirmed slot.",
           "de": "Verschiebt einen bestehenden gebuchten Termin auf einen neuen bestaetigten Slot."
         },
-        "bot": "Use this only after the user has chosen a new specific slot for an existing appointment. Collect the booked meeting id plus the exact new start and end times. If the new slot is rejected, offer fresh availability.",
+        "bot": "Use this only after the user has chosen a new specific slot from availability results. Collect the meeting id and the new start time. The duration stays the same as the original booking. If the new slot is rejected, offer fresh availability.",
         "actions": [
           {
             "type": "collect",
@@ -27680,19 +27667,6 @@
                 "bot": "Exact confirmed appointment start in ISO 8601 format.",
                 "type": "string",
                 "position": "arg:2",
-                "source": "field",
-                "required": true
-              },
-              {
-                "name": "End At",
-                "as": "endAt",
-                "description": {
-                  "en": "New exact appointment end in ISO format",
-                  "de": "Neues exaktes Ende im ISO-Format"
-                },
-                "bot": "Exact confirmed appointment end in ISO 8601 format.",
-                "type": "string",
-                "position": "arg:3",
                 "source": "field",
                 "required": true
               },
