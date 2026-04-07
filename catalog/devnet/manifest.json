@@ -4,8 +4,8 @@
   "repo": "JoAiHQ/warps",
   "branch": "dev",
   "network": "devnet",
-  "commitSha": "3097946594ae4dd405f37f83528a21e6140e1772",
-  "generatedAt": "2026-04-07T08:57:28.744Z",
+  "commitSha": "d135803f57259d38f5ab5f4f5a061890f9b7e035",
+  "generatedAt": "2026-04-07T09:03:24.931Z",
   "warps": [
     {
       "key": "arbitrum:omniset-deposit-arbitrum",
@@ -26653,8 +26653,8 @@
       "identifier": "@appointment-book",
       "alias": "appointment-book",
       "chain": "none",
-      "hash": "6242e989ec68848831b896e8ec763e1663f648fa1656806a5bad752ead842c06",
-      "checksum": "6242e989ec68848831b896e8ec763e1663f648fa1656806a5bad752ead842c06",
+      "hash": "bdb2ec6d93fb1f3e2ad261904ad16cd9e57519169bac66889cdde2867b9f56e6",
+      "checksum": "bdb2ec6d93fb1f3e2ad261904ad16cd9e57519169bac66889cdde2867b9f56e6",
       "name": "Appointments: Book",
       "title": {
         "en": "Book appointment",
@@ -26699,7 +26699,7 @@
           "en": "Book a confirmed appointment slot for the current agent.",
           "de": "Bucht einen bestaetigten Termin fuer den aktuellen Agenten."
         },
-        "bot": "Use this only after the user has chosen a specific appointment slot. Collect the title, exact scheduled start and end times, timezone, attendee information, and optional notes. If the user wants a video link, set conferenceProvider to google_meet, teams, or zoom. Otherwise leave it empty.",
+        "bot": "Use this only after the user has chosen a specific appointment slot. Always collect the attendee name and the purpose of the meeting before booking. Build a descriptive title that includes both (e.g. 'Consultation with Anna Schmidt' or 'Demo call with Acme'). Pass exact scheduled start and end times. If the user wants a video link, set conferenceProvider to google_meet, teams, or zoom. Otherwise leave it empty.",
         "actions": [
           {
             "type": "collect",
@@ -26719,10 +26719,10 @@
                 "name": "Appointment Title",
                 "as": "title",
                 "description": {
-                  "en": "The appointment title",
-                  "de": "Der Titel des Termins"
+                  "en": "Descriptive title shown on the calendar event",
+                  "de": "Aussagekräftiger Titel für den Kalendereintrag"
                 },
-                "bot": "Short title describing the booked appointment.",
+                "bot": "Required. A descriptive title that identifies the appointment at a glance. Always combine the meeting purpose AND the attendee name, e.g. 'Consultation with Anna Schmidt', 'Demo call with Acme Corp', 'Tax review with John Doe'. Never use generic titles like 'Appointment' or 'Meeting'.",
                 "type": "string",
                 "position": "arg:1",
                 "source": "field",
@@ -26807,13 +26807,14 @@
                 "name": "Attendee Name",
                 "as": "attendeeName",
                 "description": {
-                  "en": "The attendee name",
-                  "de": "Name des Teilnehmers"
+                  "en": "Full name of the person the appointment is for",
+                  "de": "Vollständiger Name der Person, für die der Termin ist"
                 },
-                "bot": "Name of the main attendee if known.",
+                "bot": "Required. Full name of the main attendee. Always ask the user for this if not already provided — never book an appointment without knowing who it is for.",
                 "type": "string",
                 "source": "field",
-                "required": false
+                "required": true,
+                "min": 2
               },
               {
                 "name": "Attendee Email",
