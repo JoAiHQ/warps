@@ -1,5 +1,6 @@
 import { App } from '@modelcontextprotocol/ext-apps'
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import { Translator } from '../i18n'
 
 export type AppExecute = (toolName: string, args?: Record<string, unknown>) => Promise<unknown>
 
@@ -11,6 +12,8 @@ export type UseAppResult<T, I = any> = {
   executeTool: AppExecute
   executePrompt: (prompt: string) => Promise<void>
   meta?: unknown
+  locale: string
+  t: Translator
 }
 
 type ToolOutputEnvelope = {
@@ -45,7 +48,7 @@ function findUpgradeRecord(values: unknown[]): Record<string, unknown> | undefin
   return undefined
 }
 
-export function useApp<T = any, I = any>(app: App, isDevMode = false): UseAppResult<T, I> {
+export function useApp<T = any, I = any>(app: App, isDevMode = false, locale = 'en', t: Translator = (text) => (typeof text === 'string' ? text : (text.en ?? Object.values(text)[0] ?? ''))): UseAppResult<T, I> {
   const [toolResult, setToolResult] = useState<unknown | null>(() => {
     if (typeof window !== 'undefined' && (window as any).WARP_RESULT) {
       return (window as any).WARP_RESULT
@@ -140,5 +143,7 @@ export function useApp<T = any, I = any>(app: App, isDevMode = false): UseAppRes
     executeTool: execute,
     executePrompt: sendFollowUp,
     meta,
+    locale,
+    t,
   }
 }
