@@ -1,6 +1,5 @@
 import { Button } from '@openai/apps-sdk-ui/components/Button'
 import { CheckCircle } from '@openai/apps-sdk-ui/components/Icon'
-import { Input } from '@openai/apps-sdk-ui/components/Input'
 import React, { useEffect, useRef, useState } from 'react'
 import ReactDOM from 'react-dom/client'
 import { App, useAppContext } from '../../../ui/lib/components'
@@ -22,7 +21,6 @@ function stripId({ _id: _, ...service }: ServiceEntry): AppointmentService {
 
 function emptyPolicy(): AppointmentPolicy {
   return {
-    timezone: null,
     availability: {},
     minNoticeMinutes: null,
     bufferMinutes: null,
@@ -67,7 +65,6 @@ function Main() {
     try {
       await executeTool('appointment-upsert-policy', {
         policy: JSON.stringify({
-          timezone: policy.timezone || null,
           availability: policy.availability ?? {},
           minNoticeMinutes: policy.minNoticeMinutes ?? null,
           bufferMinutes: policy.bufferMinutes ?? null,
@@ -85,17 +82,8 @@ function Main() {
   }
 
   return (
-    <div className="flex flex-col gap-6 p-4 max-w-lg mx-auto w-full">
+    <div className="flex flex-col gap-6 p-4 w-full">
       <h1 className="heading-lg">Appointment Settings</h1>
-
-      <section className="flex flex-col gap-2">
-        <h2 className="text-xs font-semibold text-secondary uppercase tracking-wide">Timezone</h2>
-        <Input
-          placeholder="e.g. Europe/Vienna"
-          value={policy.timezone ?? ''}
-          onChange={(e) => updatePolicy({ timezone: e.target.value || null })}
-        />
-      </section>
 
       <OfficeHours
         availability={policy.availability ?? {}}
