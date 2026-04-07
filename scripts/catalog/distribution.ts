@@ -101,6 +101,7 @@ export type ResolvedAppDistribution = {
   urls: Dict
   hash: string
   mcpUrl: string
+  site?: import('../../warps/types.js').Site
   install: AppDistributionManifest['install']
   legal: AppDistributionManifest['legal']
   review: AppDistributionManifest['review']
@@ -370,6 +371,8 @@ export async function buildDistributionCatalog(
         ]),
       ) as Record<AppDistributionProvider, ResolvedProviderDistribution>
 
+      const brandConfig = brandFactoryCache.get(brandName) ?? null
+
       return {
         slug: brand.slug,
         visibility,
@@ -380,6 +383,7 @@ export async function buildDistributionCatalog(
         urls: brand.urls ?? {},
         hash: brand.hash,
         mcpUrl: toMcpUrl(manifest.network, brand.slug),
+        site: brandConfig?.site,
         install: distribution.install,
         legal: distribution.legal,
         review: distribution.review,
