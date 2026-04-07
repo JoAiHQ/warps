@@ -1,17 +1,10 @@
 import { Input } from '@openai/apps-sdk-ui/components/Input'
 import { Switch } from '@openai/apps-sdk-ui/components/Switch'
 import React from 'react'
+import { useTranslations } from '../../../ui/lib/hooks'
+import { translations } from '../i18n'
 
 const DAYS = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'] as const
-const DAY_LABELS: Record<string, string> = {
-  monday: 'Mon',
-  tuesday: 'Tue',
-  wednesday: 'Wed',
-  thursday: 'Thu',
-  friday: 'Fri',
-  saturday: 'Sat',
-  sunday: 'Sun',
-}
 const DEFAULT_HOURS = '09:00-17:00'
 
 function parseTimeRange(range: string): [string, string] {
@@ -27,6 +20,8 @@ type Props = {
 }
 
 export function OfficeHours({ availability, onChange }: Props) {
+  const tr = useTranslations(translations).configure
+
   const toggleDay = (day: string) => {
     const ranges = availability[day] ?? []
     onChange(day, ranges.length > 0 ? [] : [DEFAULT_HOURS])
@@ -40,7 +35,7 @@ export function OfficeHours({ availability, onChange }: Props) {
 
   return (
     <section className="flex flex-col gap-3">
-      <h2 className="text-xs font-semibold text-secondary uppercase tracking-wide">Office Hours</h2>
+      <h2 className="text-xs font-semibold text-secondary uppercase tracking-wide">{tr.officeHours}</h2>
       <div className="flex flex-col gap-2">
         {DAYS.map((day) => {
           const ranges = availability[day] ?? []
@@ -50,7 +45,7 @@ export function OfficeHours({ availability, onChange }: Props) {
           return (
             <div key={day} className="flex items-center gap-3 min-h-8">
               <Switch checked={enabled} onCheckedChange={() => toggleDay(day)} />
-              <span className="text-sm font-medium w-8 shrink-0">{DAY_LABELS[day]}</span>
+              <span className="text-sm font-medium w-8 shrink-0">{tr.days[day]}</span>
               {enabled ? (
                 <div className="flex items-center gap-2">
                   <Input
@@ -68,7 +63,7 @@ export function OfficeHours({ availability, onChange }: Props) {
                   />
                 </div>
               ) : (
-                <span className="text-xs text-secondary">Closed</span>
+                <span className="text-xs text-secondary">{tr.closed}</span>
               )}
             </div>
           )

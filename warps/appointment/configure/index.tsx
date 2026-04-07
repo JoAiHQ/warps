@@ -3,7 +3,9 @@ import { CheckCircle } from '@openai/apps-sdk-ui/components/Icon'
 import React, { useEffect, useRef, useState } from 'react'
 import ReactDOM from 'react-dom/client'
 import { App, useAppContext } from '../../../ui/lib/components'
+import { useTranslations } from '../../../ui/lib/hooks'
 import { EmptyMessageSkeleton } from '../../../ui/lib/skeletons'
+import { translations } from '../i18n'
 import { BookingRules } from './BookingRules'
 import { OfficeHours } from './OfficeHours'
 import { ServicesList } from './ServicesList'
@@ -34,6 +36,7 @@ function emptyPolicy(): AppointmentPolicy {
 
 function Main() {
   const { data, executeTool } = useAppContext<AppointmentConfigureData>()
+  const tr = useTranslations(translations).configure
   const [policy, setPolicy] = useState<AppointmentPolicy>(emptyPolicy())
   const [services, setServices] = useState<ServiceEntry[]>([])
   const [saving, setSaving] = useState(false)
@@ -83,7 +86,7 @@ function Main() {
 
   return (
     <div className="flex flex-col gap-6 p-4 w-full">
-      <h1 className="heading-lg">Appointment Settings</h1>
+      <h1 className="heading-lg">{tr.title}</h1>
 
       <OfficeHours
         availability={policy.availability ?? {}}
@@ -118,12 +121,12 @@ function Main() {
         {saved ? (
           <>
             <CheckCircle />
-            Saved
+            {tr.saved}
           </>
         ) : saving ? (
-          'Saving...'
+          tr.saving
         ) : (
-          'Save Settings'
+          tr.save
         )}
       </Button>
     </div>
