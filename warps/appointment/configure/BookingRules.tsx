@@ -1,5 +1,7 @@
 import { Input } from '@openai/apps-sdk-ui/components/Input'
 import React from 'react'
+import { useTranslations } from '../../../ui/lib/hooks'
+import { translations } from '../i18n'
 import { AppointmentPolicy } from './warp.types'
 
 type Props = {
@@ -8,12 +10,14 @@ type Props = {
 }
 
 export function BookingRules({ policy, onChange }: Props) {
+  const tr = useTranslations(translations).configure
+
   return (
     <section className="flex flex-col gap-3">
-      <h2 className="text-xs font-semibold text-secondary uppercase tracking-wide">Booking Rules</h2>
+      <h2 className="text-xs font-semibold text-secondary uppercase tracking-wide">{tr.bookingRules}</h2>
       <div className="grid grid-cols-2 gap-3">
         <div className="flex flex-col gap-1">
-          <label className="text-xs text-secondary">Slot interval (min)</label>
+          <label className="text-xs text-secondary">{tr.fields.slotInterval}</label>
           <Input
             type="number"
             placeholder="30"
@@ -22,7 +26,7 @@ export function BookingRules({ policy, onChange }: Props) {
           />
         </div>
         <div className="flex flex-col gap-1">
-          <label className="text-xs text-secondary">Buffer after (min)</label>
+          <label className="text-xs text-secondary">{tr.fields.bufferAfter}</label>
           <Input
             type="number"
             placeholder="0"
@@ -31,7 +35,7 @@ export function BookingRules({ policy, onChange }: Props) {
           />
         </div>
         <div className="flex flex-col gap-1">
-          <label className="text-xs text-secondary">Min notice (min)</label>
+          <label className="text-xs text-secondary">{tr.fields.minNotice}</label>
           <Input
             type="number"
             placeholder="60"
@@ -40,7 +44,7 @@ export function BookingRules({ policy, onChange }: Props) {
           />
         </div>
         <div className="flex flex-col gap-1">
-          <label className="text-xs text-secondary">Max days ahead</label>
+          <label className="text-xs text-secondary">{tr.fields.maxDaysAhead}</label>
           <Input
             type="number"
             placeholder="60"

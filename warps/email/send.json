@@ -1,0 +1,89 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Email: Send",
+  "title": {
+    "en": "Send email",
+    "de": "E-Mail senden"
+  },
+  "description": {
+    "en": "Send an email to a contact. Resolves or creates a conversation room for the recipient so replies are tracked.",
+    "de": "Sendet eine E-Mail an einen Kontakt. Erstellt einen Gesprächsraum für den Empfänger, damit Antworten verfolgt werden."
+  },
+  "bot": "Use this to send emails through the agent's email integration. The agent must have an email handle configured. Creates a persistent conversation room for the recipient — replies will route back to that room.",
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Send email",
+        "de": "E-Mail senden"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/agents/{{JOAI_AGENT_UUID}}/room/message",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Integration",
+          "as": "INTEGRATION",
+          "type": "string",
+          "position": "payload:integration",
+          "source": "value",
+          "value": "email",
+          "required": true
+        },
+        {
+          "name": "To",
+          "as": "recipientId",
+          "description": {
+            "en": "Recipient email address",
+            "de": "E-Mail-Adresse des Empfängers"
+          },
+          "bot": "The recipient's email address.",
+          "type": "string",
+          "position": "payload:recipientId",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Recipient Name",
+          "as": "recipientName",
+          "description": {
+            "en": "Recipient's display name",
+            "de": "Anzeigename des Empfängers"
+          },
+          "bot": "Optional display name for the recipient. Used as the room name.",
+          "type": "string",
+          "position": "payload:recipientName",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Message",
+          "as": "message",
+          "description": {
+            "en": "Email body content",
+            "de": "E-Mail-Inhalt"
+          },
+          "bot": "The body content of the email.",
+          "type": "string",
+          "position": "payload:message",
+          "source": "field",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "output": {
+    "EMAIL_ROOM_ID": "out.data.roomId",
+    "EMAIL_MESSAGE_ID": "out.data.externalMessageId"
+  },
+  "messages": {
+    "success": {
+      "en": "Email sent successfully.",
+      "de": "E-Mail erfolgreich gesendet."
+    }
+  }
+}

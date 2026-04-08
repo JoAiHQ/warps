@@ -9,7 +9,7 @@
     "en": "Save a key-value setting on the team for use across all agents.",
     "de": "Speichere eine Schlüssel-Wert-Einstellung auf dem Team für alle Agenten."
   },
-  "bot": "Saves an unencrypted team-level config value. Agents inherit team settings as defaults.",
+  "bot": "Saves an unencrypted team-level config value. Brand is auto-scoped from the calling warp.",
   "actions": [
     {
       "type": "collect",
@@ -19,9 +19,19 @@
       },
       "destination": {
         "url": "INJECT:API_BASE/v1/settings",
-        "method": "POST"
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
       },
       "inputs": [
+        {
+          "name": "brand",
+          "as": "brand",
+          "type": "string",
+          "source": "hidden",
+          "default": "{{JOAI_WARP_BRAND}}"
+        },
         {
           "name": "key",
           "as": "key",
@@ -42,8 +52,8 @@
   ],
   "messages": {
     "success": {
-      "en": "Team setting '{{key}}' saved.",
-      "de": "Team-Einstellung '{{key}}' gespeichert."
+      "en": "Saved {{key}} = {{value}} to your team settings.",
+      "de": "{{key}} = {{value}} in deinen Team-Einstellungen gespeichert."
     }
   }
 }

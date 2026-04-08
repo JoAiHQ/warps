@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { App as McpApp } from '@modelcontextprotocol/ext-apps'
 import { useApp, UseAppResult } from '../hooks/useApp'
 import { useMcpHostContext } from '../hooks/useMcpGlobal'
+import { createTranslator, normalizeLocale } from '../i18n'
 import { UpgradePrompt } from './Billing/UpgradePrompt'
 
 const AppContext = React.createContext<UseAppResult<any, any> | null>(null)
@@ -56,7 +57,9 @@ export function App(props: Props) {
     ;(window as any).openai = { theme }
   }, [hostContext?.theme])
 
-  const appResult = useApp(app as McpApp, isDevMode)
+  const locale = useMemo(() => normalizeLocale(hostContext?.locale ?? (typeof navigator !== 'undefined' ? navigator.language : 'en')), [hostContext?.locale])
+  const t = useMemo(() => createTranslator(locale), [locale])
+  const appResult = useApp(app as McpApp, isDevMode, locale, t)
 
   if (!isDevMode && (!isConnected || !app)) {
     return null

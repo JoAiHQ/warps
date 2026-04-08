@@ -3,30 +3,20 @@ import { WarpbaseBrand } from '../types'
 
 export const brand = async (config: WarpClientConfig): Promise<WarpbaseBrand> => ({
   info: await new WarpBrandBuilder(config)
-    .setName('Shop')
+    .setName('Email')
     .setDescription({
-      en: 'Loyalty and customer management for local service businesses.',
-      de: 'Treue- und Kundenverwaltung für lokale Dienstleistungsunternehmen.',
+      en: 'Send and manage emails through your AI agent.',
+      de: 'E-Mails über deinen AI-Agenten senden und verwalten.',
     })
     .setLogo('https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg')
     .setUrls({ web: 'https://joai.ai' })
     .build(),
-  contracts: {
-    SHOP_SC_ADDRESS: (env: WarpChainEnv) => {
-      if (env === 'devnet') return 'erd1qqqqqqqqqqqqqpgq9gagzdqrjlpp2nqllmcdzuvpjna3llh5tresc3qye8'
-      return 'TODO'
-    },
-  },
+  contracts: {},
   destinations: {
     API_BASE: (env: WarpChainEnv) => {
       if (env === 'devnet') return 'https://devnet-api.joai.ai'
       if (env === 'testnet') return 'https://testnet-api.joai.ai'
       return 'https://api.joai.ai'
-    },
-    APP_BASE: (env: WarpChainEnv) => {
-      if (env === 'devnet') return 'https://devnet.joai.ai'
-      if (env === 'testnet') return 'https://testnet.joai.ai'
-      return 'https://joai.ai'
     },
   },
 })

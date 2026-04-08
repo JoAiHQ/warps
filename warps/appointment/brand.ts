@@ -3,7 +3,7 @@ import { WarpbaseBrand } from '../types'
 
 export const brand = async (config: WarpClientConfig): Promise<WarpbaseBrand> => ({
   info: await new WarpBrandBuilder(config)
-    .setName('Appointments')
+    .setName('Appointment')
     .setDescription({
       en: 'Appointment booking and intake flows for service businesses.',
       de: 'Terminbuchung und Intake-Abläufe für Dienstleistungsunternehmen.',
@@ -23,5 +23,14 @@ export const brand = async (config: WarpClientConfig): Promise<WarpbaseBrand> =>
       if (env === 'testnet') return 'https://testnet.joai.ai'
       return 'https://joai.ai'
     },
+  },
+  site: {
+    enabled: true,
+    auth: true,
+    indexPath: '/',
+    routes: [
+      { path: '/', warp: 'availability', label: { en: 'Book', de: 'Buchen' }, nav: true },
+      { path: '/configure', warp: 'configure', label: { en: 'Settings', de: 'Einstellungen' }, nav: false },
+    ],
   },
 })

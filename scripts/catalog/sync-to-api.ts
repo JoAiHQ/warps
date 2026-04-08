@@ -28,6 +28,18 @@ type CatalogDelta = {
   deletes: unknown[]
 }
 
+type DistributionCatalog = {
+  apps?: Array<{
+    slug: string
+    visibility: 'public' | 'private'
+    install: unknown
+    legal: unknown
+    review: unknown
+    mcp: unknown
+    providers: unknown
+  }>
+}
+
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 const REPO_ROOT = path.resolve(__dirname, '../../')
@@ -67,6 +79,17 @@ function readDelta(network: 'devnet' | 'mainnet'): CatalogDelta {
   return JSON.parse(raw) as CatalogDelta
 }
 
+function readDistribution(network: 'devnet' | 'mainnet'): DistributionCatalog {
+  const filePath = path.join(REPO_ROOT, 'catalog', network, 'distribution.json')
+
+  if (!fs.existsSync(filePath)) {
+    throw new Error(`Missing distribution file: ${filePath}`)
+  }
+
+  const raw = fs.readFileSync(filePath, 'utf8')
+  return JSON.parse(raw) as DistributionCatalog
+}
+
 async function main() {
   const token = process.env.WARP_GITHUB_SYNC_TOKEN
   if (!token) {
@@ -82,6 +105,20 @@ async function main() {
   }
 
   const delta = readDelta(network)
+  const distribution = readDistribution(network)
+  const distributionBySlug = new Map(
+    (distribution.apps ?? []).map((app) => [
+      app.slug,
+      {
+        visibility: app.visibility,
+        install: app.install,
+        legal: app.legal,
+        review: app.review,
+        mcp: app.mcp,
+        providers: app.providers,
+      },
+    ]),
+  )
 
   if ((delta.upserts?.length ?? 0) === 0 && (delta.deletes?.length ?? 0) === 0) {
     console.log(`No delta changes for ${network}. Skipping API sync.`)
@@ -92,7 +129,20 @@ async function main() {
     ...delta,
     upserts: (delta.upserts as any[])
       .filter((u) => u.listed !== false)
-      .map(({ visibility: _visibility, ...upsert }) => upsert),
+      .map(({ visibility: _visibility, ...upsert }) => {
+        const brandSlug = upsert?.brand?.slug
+        const appDistribution = typeof brandSlug === 'string' ? distributionBySlug.get(brandSlug) : undefined
+
+        if (!appDistribution || !upsert?.brand || typeof upsert.brand !== 'object') return upsert
+
+        return {
+          ...upsert,
+          brand: {
+            ...upsert.brand,
+            distribution: appDistribution,
+          },
+        }
+      }),
     repo: args.repo,
     commitSha: args.commitSha,
   }

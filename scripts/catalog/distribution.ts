@@ -8,6 +8,7 @@ import type {
   AppDistributionFactoryContext,
   AppDistributionManifest,
   AppDistributionProvider,
+  AppDistributionProviderAction,
   AppDistributionProviderConfig,
   AppDistributionProviderStatus,
   AppMcpFactory,
@@ -80,6 +81,13 @@ export type ResolvedProviderDistribution = {
   provider: AppDistributionProvider
   enabled: boolean
   status: AppDistributionProviderStatus
+  warpIdentifier?: string
+  title: string
+  description: string
+  sourceUrl?: string
+  fallbackUrl?: string
+  primaryAction?: AppDistributionProviderAction
+  secondaryAction?: AppDistributionProviderAction | null
   notes: string[]
 }
 
@@ -93,6 +101,7 @@ export type ResolvedAppDistribution = {
   urls: Dict
   hash: string
   mcpUrl: string
+  site?: import('../../warps/types.js').Site
   install: AppDistributionManifest['install']
   legal: AppDistributionManifest['legal']
   review: AppDistributionManifest['review']
@@ -156,6 +165,13 @@ function normalizeProviderConfig(
     provider,
     enabled,
     status,
+    warpIdentifier: config?.warpIdentifier?.trim(),
+    title: config?.title?.trim() || '',
+    description: config?.description?.trim() || '',
+    sourceUrl: config?.sourceUrl?.trim(),
+    fallbackUrl: config?.fallbackUrl?.trim(),
+    primaryAction: config?.primaryAction,
+    secondaryAction: config?.secondaryAction ?? undefined,
     notes: normalizeStringList(config?.notes),
   }
 }
@@ -263,11 +279,12 @@ type ResolvedBrandManifests = {
 async function resolveBrandManifests(
   repoRoot: string,
   brandName: string,
+  brandSlug: string,
   displayName: string,
   network: SyncNetwork,
   brand: WarpbaseBrand | null,
 ): Promise<ResolvedBrandManifests> {
-  const context = { env: network, brand, brandName: displayName }
+  const context = { env: network, brand, brandName: displayName, brandSlug }
 
   const [distributionFactory, mcpFactory] = await Promise.all([
     loadDistributionFactory(repoRoot, brandName),
@@ -341,6 +358,7 @@ export async function buildDistributionCatalog(
       const { distribution, mcp } = await resolveBrandManifests(
         repoRoot,
         brandName,
+        brand.slug,
         brand.name,
         manifest.network,
         brandFactoryCache.get(brandName) ?? null,
@@ -353,6 +371,8 @@ export async function buildDistributionCatalog(
         ]),
       ) as Record<AppDistributionProvider, ResolvedProviderDistribution>
 
+      const brandConfig = brandFactoryCache.get(brandName) ?? null
+
       return {
         slug: brand.slug,
         visibility,
@@ -363,6 +383,7 @@ export async function buildDistributionCatalog(
         urls: brand.urls ?? {},
         hash: brand.hash,
         mcpUrl: toMcpUrl(manifest.network, brand.slug),
+        site: brandConfig?.site,
         install: distribution.install,
         legal: distribution.legal,
         review: distribution.review,
@@ -407,6 +428,16 @@ export function validateDistributionCatalog(catalog: DistributionCatalogManifest
     if (!app.mcp.csp) errors.push(`${app.slug}: missing mcp.csp`)
     if (app.providers.openai.enabled && app.providers.openai.status === 'submission_ready' && app.review.screenshots.length === 0) {
       errors.push(`${app.slug}: openai marked submission_ready without screenshots`)
+    }
+    for (const provider of PROVIDERS) {
+      const config = app.providers[provider]
+      if (!config.enabled) continue
+      if (!config.warpIdentifier) errors.push(`${app.slug}: ${provider} missing warpIdentifier`)
+      if (!config.title) errors.push(`${app.slug}: ${provider} missing title`)
+      if (!config.description) errors.push(`${app.slug}: ${provider} missing description`)
+      if (!config.primaryAction?.label || !config.primaryAction?.value) {
+        errors.push(`${app.slug}: ${provider} missing primaryAction`)
+      }
     }
   }
 
