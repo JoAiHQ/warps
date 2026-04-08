@@ -13,7 +13,7 @@ export const brand = async (config: WarpClientConfig): Promise<WarpbaseBrand> =>
     .build(),
   contracts: {
     SHOP_SC_ADDRESS: (env: WarpChainEnv) => {
-      if (env === 'devnet') return 'erd1qqqqqqqqqqqqqpgqsjmve0p0v3m97q7yx4ev6nlr6dktqpf30zcs75wavf'
+      if (env === 'devnet') return 'erd1qqqqqqqqqqqqqpgq9gagzdqrjlpp2nqllmcdzuvpjna3llh5tresc3qye8'
       return 'TODO'
     },
   },
