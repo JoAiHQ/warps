@@ -4,8 +4,8 @@
   "repo": "JoAiHQ/warps",
   "branch": "dev",
   "network": "devnet",
-  "commitSha": "21eae9e66be1603d3033b2981f3a27e09101c12a",
-  "generatedAt": "2026-04-08T11:35:00.712Z",
+  "commitSha": "4ab19827c18dca1965cfa67ad64c576de57b9110",
+  "generatedAt": "2026-04-08T12:57:38.865Z",
   "warps": [
     {
       "key": "arbitrum:omniset-deposit-arbitrum",
@@ -26653,8 +26653,8 @@
       "identifier": "@appointment-book",
       "alias": "appointment-book",
       "chain": "none",
-      "hash": "cf17a7d6542850a904b1b2a7f7e6424375702dd0bccad4045dc5c45220c711dd",
-      "checksum": "cf17a7d6542850a904b1b2a7f7e6424375702dd0bccad4045dc5c45220c711dd",
+      "hash": "5b027f79c5592d50097ddbc89dd6f4feb662906a604220aebc67b906a5da5e39",
+      "checksum": "5b027f79c5592d50097ddbc89dd6f4feb662906a604220aebc67b906a5da5e39",
       "name": "Appointments: Book",
       "title": {
         "en": "Book appointment",
@@ -26699,7 +26699,7 @@
           "en": "Book a confirmed appointment slot for the current agent.",
           "de": "Bucht einen bestaetigten Termin fuer den aktuellen Agenten."
         },
-        "bot": "Use this only after running appointment-availability and the user has explicitly chosen a slot from the results. Never substitute this with direct calendar event creation — that skips booking policy, overlap checks, and attendee tracking. Always have the attendee name before invoking. Build a descriptive title combining purpose and name (e.g. 'Consultation with Anna Schmidt'). Pass exact start and end times from the chosen slot.",
+        "bot": "Use this only after running appointment-availability and the user has explicitly chosen a slot from the results. Never substitute this with direct calendar event creation — that skips booking policy, overlap checks, and attendee tracking. Always refer to bookings as 'appointments', never 'meetings'. The attendee is the person you are talking to — use their name and email from context without asking. Build a descriptive title combining purpose and name (e.g. 'Consultation with Anna Schmidt'). Pass exact start and end times from the chosen slot.",
         "actions": [
           {
             "type": "collect",
@@ -26797,10 +26797,11 @@
                   "en": "Full name of the person the appointment is for",
                   "de": "Vollständiger Name der Person, für die der Termin ist"
                 },
-                "bot": "Required. Full name of the main attendee. Always ask the user for this if not already provided — never book an appointment without knowing who it is for.",
+                "bot": "Full name of the attendee.",
                 "type": "string",
                 "source": "field",
                 "required": true,
+                "default": "{{JOAI_SENDER_NAME}}",
                 "min": 2
               },
               {
@@ -26810,7 +26811,7 @@
                   "en": "The attendee email",
                   "de": "E-Mail des Teilnehmers"
                 },
-                "bot": "Email address of the main attendee if known.",
+                "bot": "Email address of the attendee if available.",
                 "type": "string",
                 "source": "field",
                 "required": false
@@ -27212,8 +27213,8 @@
       "identifier": "@appointment-email-confirm",
       "alias": "appointment-email-confirm",
       "chain": "none",
-      "hash": "ec60c7cfcf59377dc91bc73a1c1bc8ce67148e6afe4997f9a0dcbc74ca988ba8",
-      "checksum": "ec60c7cfcf59377dc91bc73a1c1bc8ce67148e6afe4997f9a0dcbc74ca988ba8",
+      "hash": "42fd970260385cc01797b9fcfa7d8522f3ff40a15911b7c21db35d2f8b457b71",
+      "checksum": "42fd970260385cc01797b9fcfa7d8522f3ff40a15911b7c21db35d2f8b457b71",
       "name": "Appointments: Send Confirmation Email",
       "title": {
         "en": "Send appointment confirmation",
@@ -27267,6 +27268,7 @@
               "de": "Bestätigung senden"
             },
             "auto": true,
+            "when": "{{ATTENDEE_EMAIL}} != ''",
             "destination": {
               "url": "https://devnet-api.joai.ai/v1/agents/{{JOAI_AGENT_UUID}}/room/message",
               "method": "POST",
@@ -27320,19 +27322,19 @@
                 "required": true
               },
               {
-                "name": "Contact ID",
-                "as": "CONTACT_ID",
+                "name": "Recipient ID",
+                "as": "RECIPIENT_ID",
                 "type": "string",
-                "position": "payload:contactId",
+                "position": "payload:recipientId",
                 "source": "value",
                 "value": "{{ATTENDEE_EMAIL}}",
-                "required": true
+                "required": false
               },
               {
-                "name": "Contact Name",
-                "as": "CONTACT_NAME",
+                "name": "Recipient Name",
+                "as": "RECIPIENT_NAME",
                 "type": "string",
-                "position": "payload:contactName",
+                "position": "payload:recipientName",
                 "source": "value",
                 "value": "{{ATTENDEE_NAME}}",
                 "required": false
@@ -35501,8 +35503,8 @@
       "identifier": "@email-send",
       "alias": "email-send",
       "chain": "none",
-      "hash": "db2611d3098956052a08005eb8a0a8db8e9742fdc370f74270320eea8ce6ca86",
-      "checksum": "db2611d3098956052a08005eb8a0a8db8e9742fdc370f74270320eea8ce6ca86",
+      "hash": "faf95cd4d1ae64315ce0d38f8603c1207cba59e7f5a17e641be0edbef68e7221",
+      "checksum": "faf95cd4d1ae64315ce0d38f8603c1207cba59e7f5a17e641be0edbef68e7221",
       "name": "Email: Send",
       "title": {
         "en": "Send email",
@@ -35574,27 +35576,27 @@
               },
               {
                 "name": "To",
-                "as": "contactId",
+                "as": "recipientId",
                 "description": {
                   "en": "Recipient email address",
                   "de": "E-Mail-Adresse des Empfängers"
                 },
                 "bot": "The recipient's email address.",
                 "type": "string",
-                "position": "payload:contactId",
+                "position": "payload:recipientId",
                 "source": "field",
                 "required": true
               },
               {
                 "name": "Recipient Name",
-                "as": "contactName",
+                "as": "recipientName",
                 "description": {
                   "en": "Recipient's display name",
                   "de": "Anzeigename des Empfängers"
                 },
                 "bot": "Optional display name for the recipient. Used as the room name.",
                 "type": "string",
-                "position": "payload:contactName",
+                "position": "payload:recipientName",
                 "source": "field",
                 "required": false
               },

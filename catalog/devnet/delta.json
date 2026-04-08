@@ -4,17 +4,17 @@
   "repo": "JoAiHQ/warps",
   "branch": "dev",
   "network": "devnet",
-  "commitSha": "21eae9e66be1603d3033b2981f3a27e09101c12a",
-  "committedAt": "2026-04-08T11:34:58.860Z",
-  "generatedAt": "2026-04-08T11:35:00.712Z",
+  "commitSha": "4ab19827c18dca1965cfa67ad64c576de57b9110",
+  "committedAt": "2026-04-08T12:57:37.022Z",
+  "generatedAt": "2026-04-08T12:57:38.865Z",
   "upserts": [
     {
       "key": "none:appointment-book",
       "identifier": "@appointment-book",
       "alias": "appointment-book",
       "chain": "none",
-      "hash": "cf17a7d6542850a904b1b2a7f7e6424375702dd0bccad4045dc5c45220c711dd",
-      "checksum": "cf17a7d6542850a904b1b2a7f7e6424375702dd0bccad4045dc5c45220c711dd",
+      "hash": "5b027f79c5592d50097ddbc89dd6f4feb662906a604220aebc67b906a5da5e39",
+      "checksum": "5b027f79c5592d50097ddbc89dd6f4feb662906a604220aebc67b906a5da5e39",
       "name": "Appointments: Book",
       "title": {
         "en": "Book appointment",
@@ -59,7 +59,7 @@
           "en": "Book a confirmed appointment slot for the current agent.",
           "de": "Bucht einen bestaetigten Termin fuer den aktuellen Agenten."
         },
-        "bot": "Use this only after running appointment-availability and the user has explicitly chosen a slot from the results. Never substitute this with direct calendar event creation — that skips booking policy, overlap checks, and attendee tracking. Always have the attendee name before invoking. Build a descriptive title combining purpose and name (e.g. 'Consultation with Anna Schmidt'). Pass exact start and end times from the chosen slot.",
+        "bot": "Use this only after running appointment-availability and the user has explicitly chosen a slot from the results. Never substitute this with direct calendar event creation — that skips booking policy, overlap checks, and attendee tracking. Always refer to bookings as 'appointments', never 'meetings'. The attendee is the person you are talking to — use their name and email from context without asking. Build a descriptive title combining purpose and name (e.g. 'Consultation with Anna Schmidt'). Pass exact start and end times from the chosen slot.",
         "actions": [
           {
             "type": "collect",
@@ -157,10 +157,11 @@
                   "en": "Full name of the person the appointment is for",
                   "de": "Vollständiger Name der Person, für die der Termin ist"
                 },
-                "bot": "Required. Full name of the main attendee. Always ask the user for this if not already provided — never book an appointment without knowing who it is for.",
+                "bot": "Full name of the attendee.",
                 "type": "string",
                 "source": "field",
                 "required": true,
+                "default": "{{JOAI_SENDER_NAME}}",
                 "min": 2
               },
               {
@@ -170,7 +171,7 @@
                   "en": "The attendee email",
                   "de": "E-Mail des Teilnehmers"
                 },
-                "bot": "Email address of the main attendee if known.",
+                "bot": "Email address of the attendee if available.",
                 "type": "string",
                 "source": "field",
                 "required": false
@@ -279,6 +280,292 @@
           ]
         }
       }
+    },
+    {
+      "key": "none:appointment-email-confirm",
+      "identifier": "@appointment-email-confirm",
+      "alias": "appointment-email-confirm",
+      "chain": "none",
+      "hash": "42fd970260385cc01797b9fcfa7d8522f3ff40a15911b7c21db35d2f8b457b71",
+      "checksum": "42fd970260385cc01797b9fcfa7d8522f3ff40a15911b7c21db35d2f8b457b71",
+      "name": "Appointments: Send Confirmation Email",
+      "title": {
+        "en": "Send appointment confirmation",
+        "de": "Terminbestätigung senden"
+      },
+      "description": {
+        "en": "Sends a booking confirmation email to the attendee after an appointment is booked.",
+        "de": "Sendet eine Buchungsbestätigungs-E-Mail an den Teilnehmer nach einer Terminbuchung."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "13e21ae250eea2df29beb08bc9657121ecb459d5a4193fa0d40772aa1ae8694e",
+        "slug": "appointment",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "Appointment",
+        "description": {
+          "en": "Appointment booking and intake flows for service businesses.",
+          "de": "Terminbuchung und Intake-Abläufe für Dienstleistungsunternehmen."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "Appointments: Send Confirmation Email",
+        "title": {
+          "en": "Send appointment confirmation",
+          "de": "Terminbestätigung senden"
+        },
+        "description": {
+          "en": "Sends a booking confirmation email to the attendee after an appointment is booked.",
+          "de": "Sendet eine Buchungsbestätigungs-E-Mail an den Teilnehmer nach einer Terminbuchung."
+        },
+        "bot": "Automatically chained after appointment-book when an attendee email is available. Do not invoke manually unless re-sending a confirmation is explicitly requested.",
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Send confirmation",
+              "de": "Bestätigung senden"
+            },
+            "auto": true,
+            "when": "{{ATTENDEE_EMAIL}} != ''",
+            "destination": {
+              "url": "https://devnet-api.joai.ai/v1/agents/{{JOAI_AGENT_UUID}}/room/message",
+              "method": "POST",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Attendee Email",
+                "as": "ATTENDEE_EMAIL",
+                "type": "string",
+                "source": "query",
+                "required": true
+              },
+              {
+                "name": "Attendee Name",
+                "as": "ATTENDEE_NAME",
+                "type": "string",
+                "source": "query",
+                "required": false
+              },
+              {
+                "name": "Meeting Title",
+                "as": "MEETING_TITLE",
+                "type": "string",
+                "source": "query",
+                "required": true
+              },
+              {
+                "name": "Scheduled At",
+                "as": "SCHEDULED_AT",
+                "type": "string",
+                "source": "query",
+                "required": false
+              },
+              {
+                "name": "Meeting URL",
+                "as": "MEETING_URL",
+                "type": "string",
+                "source": "query",
+                "required": false
+              },
+              {
+                "name": "Integration",
+                "as": "INTEGRATION",
+                "type": "string",
+                "position": "payload:integration",
+                "source": "value",
+                "value": "email",
+                "required": true
+              },
+              {
+                "name": "Recipient ID",
+                "as": "RECIPIENT_ID",
+                "type": "string",
+                "position": "payload:recipientId",
+                "source": "value",
+                "value": "{{ATTENDEE_EMAIL}}",
+                "required": false
+              },
+              {
+                "name": "Recipient Name",
+                "as": "RECIPIENT_NAME",
+                "type": "string",
+                "position": "payload:recipientName",
+                "source": "value",
+                "value": "{{ATTENDEE_NAME}}",
+                "required": false
+              },
+              {
+                "name": "Message",
+                "as": "MESSAGE",
+                "type": "string",
+                "position": "payload:message",
+                "source": "value",
+                "value": "Hi {{ATTENDEE_NAME}},\n\nYour appointment \"{{MEETING_TITLE}}\" has been confirmed for {{SCHEDULED_AT}}.{{#MEETING_URL}}\n\nJoin here: {{MEETING_URL}}{{/MEETING_URL}}\n\nLooking forward to it!",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "output": {
+          "EMAIL_ROOM_ID": "out.data.roomId"
+        },
+        "messages": {
+          "success": {
+            "en": "Confirmation email sent.",
+            "de": "Bestätigungs-E-Mail gesendet."
+          }
+        }
+      },
+      "extras": null
+    },
+    {
+      "key": "none:email-send",
+      "identifier": "@email-send",
+      "alias": "email-send",
+      "chain": "none",
+      "hash": "faf95cd4d1ae64315ce0d38f8603c1207cba59e7f5a17e641be0edbef68e7221",
+      "checksum": "faf95cd4d1ae64315ce0d38f8603c1207cba59e7f5a17e641be0edbef68e7221",
+      "name": "Email: Send",
+      "title": {
+        "en": "Send email",
+        "de": "E-Mail senden"
+      },
+      "description": {
+        "en": "Send an email to a contact. Resolves or creates a conversation room for the recipient so replies are tracked.",
+        "de": "Sendet eine E-Mail an einen Kontakt. Erstellt einen Gesprächsraum für den Empfänger, damit Antworten verfolgt werden."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "47035c1653294872beb8c3895c2330e1faac56aa2f307d0fec8bebba174ddb92",
+        "slug": "email",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "Email",
+        "description": {
+          "en": "Send and manage emails through your AI agent.",
+          "de": "E-Mails über deinen AI-Agenten senden und verwalten."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "Email: Send",
+        "title": {
+          "en": "Send email",
+          "de": "E-Mail senden"
+        },
+        "description": {
+          "en": "Send an email to a contact. Resolves or creates a conversation room for the recipient so replies are tracked.",
+          "de": "Sendet eine E-Mail an einen Kontakt. Erstellt einen Gesprächsraum für den Empfänger, damit Antworten verfolgt werden."
+        },
+        "bot": "Use this to send emails through the agent's email integration. The agent must have an email handle configured. Creates a persistent conversation room for the recipient — replies will route back to that room.",
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Send email",
+              "de": "E-Mail senden"
+            },
+            "destination": {
+              "url": "https://devnet-api.joai.ai/v1/agents/{{JOAI_AGENT_UUID}}/room/message",
+              "method": "POST",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Integration",
+                "as": "INTEGRATION",
+                "type": "string",
+                "position": "payload:integration",
+                "source": "value",
+                "value": "email",
+                "required": true
+              },
+              {
+                "name": "To",
+                "as": "recipientId",
+                "description": {
+                  "en": "Recipient email address",
+                  "de": "E-Mail-Adresse des Empfängers"
+                },
+                "bot": "The recipient's email address.",
+                "type": "string",
+                "position": "payload:recipientId",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Recipient Name",
+                "as": "recipientName",
+                "description": {
+                  "en": "Recipient's display name",
+                  "de": "Anzeigename des Empfängers"
+                },
+                "bot": "Optional display name for the recipient. Used as the room name.",
+                "type": "string",
+                "position": "payload:recipientName",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Message",
+                "as": "message",
+                "description": {
+                  "en": "Email body content",
+                  "de": "E-Mail-Inhalt"
+                },
+                "bot": "The body content of the email.",
+                "type": "string",
+                "position": "payload:message",
+                "source": "field",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "output": {
+          "EMAIL_ROOM_ID": "out.data.roomId",
+          "EMAIL_MESSAGE_ID": "out.data.externalMessageId"
+        },
+        "messages": {
+          "success": {
+            "en": "Email sent successfully.",
+            "de": "E-Mail erfolgreich gesendet."
+          }
+        }
+      },
+      "extras": null
     }
   ],
   "deletes": []
