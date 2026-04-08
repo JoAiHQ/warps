@@ -1,0 +1,112 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Appointments: Send Confirmation Email",
+  "title": {
+    "en": "Send appointment confirmation",
+    "de": "Terminbestätigung senden"
+  },
+  "description": {
+    "en": "Sends a booking confirmation email to the attendee after an appointment is booked.",
+    "de": "Sendet eine Buchungsbestätigungs-E-Mail an den Teilnehmer nach einer Terminbuchung."
+  },
+  "bot": "Automatically chained after appointment-book when an attendee email is available. Do not invoke manually unless re-sending a confirmation is explicitly requested.",
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Send confirmation",
+        "de": "Bestätigung senden"
+      },
+      "auto": true,
+      "destination": {
+        "url": "INJECT:API_BASE/v1/agents/{{JOAI_AGENT_UUID}}/room/message",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Attendee Email",
+          "as": "ATTENDEE_EMAIL",
+          "type": "string",
+          "source": "query",
+          "required": true
+        },
+        {
+          "name": "Attendee Name",
+          "as": "ATTENDEE_NAME",
+          "type": "string",
+          "source": "query",
+          "required": false
+        },
+        {
+          "name": "Meeting Title",
+          "as": "MEETING_TITLE",
+          "type": "string",
+          "source": "query",
+          "required": true
+        },
+        {
+          "name": "Scheduled At",
+          "as": "SCHEDULED_AT",
+          "type": "string",
+          "source": "query",
+          "required": false
+        },
+        {
+          "name": "Meeting URL",
+          "as": "MEETING_URL",
+          "type": "string",
+          "source": "query",
+          "required": false
+        },
+        {
+          "name": "Integration",
+          "as": "INTEGRATION",
+          "type": "string",
+          "position": "payload:integration",
+          "source": "value",
+          "value": "email",
+          "required": true
+        },
+        {
+          "name": "Contact ID",
+          "as": "CONTACT_ID",
+          "type": "string",
+          "position": "payload:contactId",
+          "source": "value",
+          "value": "{{ATTENDEE_EMAIL}}",
+          "required": true
+        },
+        {
+          "name": "Contact Name",
+          "as": "CONTACT_NAME",
+          "type": "string",
+          "position": "payload:contactName",
+          "source": "value",
+          "value": "{{ATTENDEE_NAME}}",
+          "required": false
+        },
+        {
+          "name": "Message",
+          "as": "MESSAGE",
+          "type": "string",
+          "position": "payload:message",
+          "source": "value",
+          "value": "Hi {{ATTENDEE_NAME}},\n\nYour appointment \"{{MEETING_TITLE}}\" has been confirmed for {{SCHEDULED_AT}}.{{#MEETING_URL}}\n\nJoin here: {{MEETING_URL}}{{/MEETING_URL}}\n\nLooking forward to it!",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "output": {
+    "EMAIL_ROOM_ID": "out.data.roomId"
+  },
+  "messages": {
+    "success": {
+      "en": "Confirmation email sent.",
+      "de": "Bestätigungs-E-Mail gesendet."
+    }
+  }
+}
