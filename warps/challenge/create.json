@@ -1,0 +1,90 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Challenge: Create",
+  "title": {
+    "en": "Create a challenge",
+    "de": "Challenge erstellen"
+  },
+  "description": {
+    "en": "Commit to something and stake tokens on it. If you prove it — you keep your stake. If you skip — the challenger takes it.",
+    "de": "Verpflichte dich zu etwas und setze Token darauf. Wenn du es beweist, behältst du deinen Einsatz. Wenn nicht — bekommt ihn der Challenger."
+  },
+  "bot": "Creates an on-chain challenge with a stake. Ask the user what they want to commit to, which token to stake (EGLD or a stablecoin like USDC), how much to stake, and how long the challenge should run.",
+  "chain": "multiversx",
+  "vars": {
+    "SC_ADDRESS": "INJECT:CHALLENGE_SC_ADDRESS"
+  },
+  "actions": [
+    {
+      "type": "contract",
+      "label": {
+        "en": "Create challenge",
+        "de": "Challenge erstellen"
+      },
+      "address": "{{SC_ADDRESS}}",
+      "func": "createChallenge",
+      "gasLimit": 10000000,
+      "abi": "INJECT:abis/challenge.abi.json",
+      "inputs": [
+        {
+          "name": "Stake",
+          "as": "stake",
+          "description": {
+            "en": "Token and amount to stake. If you fail, your challenger wins this.",
+            "de": "Token und Betrag für den Einsatz. Wenn du scheiterst, geht er an den Challenger."
+          },
+          "bot": "Token and amount to stake on the challenge. Can be EGLD or a stablecoin (e.g. USDC). Minimum 0.001 EGLD equivalent.",
+          "type": "asset",
+          "position": "transfer",
+          "source": "field",
+          "required": true,
+          "min": 0.001
+        },
+        {
+          "name": "Title",
+          "as": "title",
+          "description": {
+            "en": "What are you committing to? Be specific.",
+            "de": "Wozu verpflichtest du dich? Sei konkret."
+          },
+          "bot": "Short, specific commitment — e.g. 'Go to the gym tomorrow', '10k steps every day this week', 'No sugar for 3 days'.",
+          "type": "string",
+          "position": "arg:1",
+          "source": "field",
+          "required": true,
+          "min": 3,
+          "max": 128
+        },
+        {
+          "name": "Duration",
+          "as": "durationHours",
+          "description": {
+            "en": "How long does this challenge run?",
+            "de": "Wie lange läuft diese Challenge?"
+          },
+          "bot": "Duration in hours. Use 24 for a day challenge, 72 for 3 days, 168 for a week.",
+          "type": "u64",
+          "position": "arg:2",
+          "source": "field",
+          "required": true,
+          "options": {
+            "24": "1 day",
+            "72": "3 days",
+            "168": "1 week",
+            "336": "2 weeks",
+            "720": "30 days"
+          }
+        }
+      ]
+    }
+  ],
+  "output": {
+    "CHALLENGE_ID": "out.data"
+  },
+  "messages": {
+    "success": {
+      "en": "Challenge created! Share the link so someone can take the bet.",
+      "de": "Challenge erstellt! Teile den Link, damit jemand die Wette annehmen kann."
+    }
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Challenge: Accept",
+  "title": {
+    "en": "Accept challenge",
+    "de": "Challenge annehmen"
+  },
+  "description": {
+    "en": "Match the stake and bet that the challenger will fail. If they skip — you take it.",
+    "de": "Gleiche den Einsatz aus und wette darauf, dass der Challenger scheitert. Wenn er aufgibt — nimmst du den Einsatz."
+  },
+  "bot": "Accepts an open challenge by matching the creator's stake. Requires the exact same token and amount as the creator staked. Query getChallenge first to get the token and exact amount.",
+  "chain": "multiversx",
+  "vars": {
+    "SC_ADDRESS": "INJECT:CHALLENGE_SC_ADDRESS",
+    "CHALLENGE_ID": "query:id"
+  },
+  "actions": [
+    {
+      "type": "contract",
+      "label": {
+        "en": "Accept & match stake",
+        "de": "Annehmen & Einsatz angleichen"
+      },
+      "address": "{{SC_ADDRESS}}",
+      "func": "acceptChallenge",
+      "gasLimit": 10000000,
+      "abi": "INJECT:abis/challenge.abi.json",
+      "inputs": [
+        {
+          "name": "Matching Stake",
+          "as": "stake",
+          "description": {
+            "en": "Match the creator's token and amount exactly.",
+            "de": "Gleiche Token und Betrag des Erstellers genau aus."
+          },
+          "bot": "Must match the challenge stake exactly — same token identifier and same amount. Query getChallenge first to get both.",
+          "type": "asset",
+          "position": "transfer",
+          "source": "field",
+          "required": true,
+          "min": 0.001
+        },
+        {
+          "name": "Challenge ID",
+          "as": "challengeId",
+          "type": "u64",
+          "position": "arg:1",
+          "source": "var",
+          "default": "{{CHALLENGE_ID}}",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "You're in! The clock is ticking.",
+      "de": "Du bist dabei! Die Uhr tickt."
+    }
+  }
+}
