@@ -4,42 +4,42 @@
   "repo": "JoAiHQ/warps",
   "branch": "dev",
   "network": "devnet",
-  "commitSha": "32d407e990b99d191e09bd4c4cc3e9f0b9d22f49",
-  "committedAt": "2026-04-09T15:51:37.675Z",
-  "generatedAt": "2026-04-09T15:51:39.593Z",
+  "commitSha": "93d8be2dffc7839cc417dec5d3a8bc7a6a2ada82",
+  "committedAt": "2026-04-09T16:03:46.585Z",
+  "generatedAt": "2026-04-09T16:03:48.463Z",
   "upserts": [
     {
-      "key": "multiversx:shop-register",
-      "identifier": "@shop-register",
-      "alias": "shop-register",
-      "chain": "multiversx",
-      "hash": "1cc391d98303cdf46e51460c979e10cfdeabccccea085b176d6b283e72d56723",
-      "checksum": "1cc391d98303cdf46e51460c979e10cfdeabccccea085b176d6b283e72d56723",
-      "name": "Shop: Register",
+      "key": "none:appointment-availability",
+      "identifier": "@appointment-availability",
+      "alias": "appointment-availability",
+      "chain": "none",
+      "hash": "f5c47d0299157daaec2c80d1f866a61721049a0abd0faab09ca140087f355ad4",
+      "checksum": "f5c47d0299157daaec2c80d1f866a61721049a0abd0faab09ca140087f355ad4",
+      "name": "Appointments: Availability",
       "title": {
-        "en": "Register shop",
-        "de": "Shop registrieren"
+        "en": "Appointment availability",
+        "de": "Terminverfuegbarkeit"
       },
       "description": {
-        "en": "Register your shop on-chain. Uses your brand slug as the unique identifier.",
-        "de": "Registriere deinen Shop on-chain. Nutzt deinen Brand-Slug als eindeutigen Bezeichner."
+        "en": "Collect booking details and return appointment availability from the current agent calendar.",
+        "de": "Sammelt Buchungsdetails und liefert Terminverfuegbarkeit aus dem Kalender des aktuellen Agenten."
       },
       "preview": null,
       "creator": "github:JoAiHQ/warps",
       "privileges": [],
       "listed": true,
       "visibility": "public",
-      "primaryAddress": "{{SC_ADDRESS}}",
-      "primaryFunc": "registerShop",
+      "primaryAddress": null,
+      "primaryFunc": null,
       "brand": {
-        "hash": "5e0fc6eafc01de8515bc102443cd40c5ee2d8d96003cec05c30158fcee0806da",
-        "slug": "shop",
+        "hash": "13e21ae250eea2df29beb08bc9657121ecb459d5a4193fa0d40772aa1ae8694e",
+        "slug": "appointment",
         "active": true,
         "protocol": "brand:0.2.0",
-        "name": "Shop",
+        "name": "Appointment",
         "description": {
-          "en": "Your services, permanently on the blockchain. No middlemen, no platforms — just a verified storefront customers and AI can trust.",
-          "de": "Deine Dienstleistungen, dauerhaft auf der Blockchain. Keine Mittelsmänner, keine Plattformen — nur ein verifiziertes Schaufenster, dem Kunden und KI vertrauen."
+          "en": "Appointment booking and intake flows for service businesses.",
+          "de": "Terminbuchung und Intake-Abläufe für Dienstleistungsunternehmen."
         },
         "logo": {
           "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
@@ -50,401 +50,232 @@
       },
       "warp": {
         "protocol": "warp:3.0.0",
-        "name": "Shop: Register",
+        "name": "Appointments: Availability",
         "title": {
-          "en": "Register shop",
-          "de": "Shop registrieren"
+          "en": "Appointment availability",
+          "de": "Terminverfuegbarkeit"
         },
         "description": {
-          "en": "Register your shop on-chain. Uses your brand slug as the unique identifier.",
-          "de": "Registriere deinen Shop on-chain. Nutzt deinen Brand-Slug als eindeutigen Bezeichner."
+          "en": "Collect booking details and return appointment availability from the current agent calendar.",
+          "de": "Sammelt Buchungsdetails und liefert Terminverfuegbarkeit aus dem Kalender des aktuellen Agenten."
         },
-        "bot": "Registers the shop on-chain using the brand slug. Run once to set up.",
-        "chain": "multiversx",
-        "vars": {
-          "SC_ADDRESS": "TODO"
-        },
+        "bot": "REQUIRED first step for any appointment booking. Before invoking, ask the user what time window works for them — never assume a time. Do not create calendar events directly; that bypasses availability checks, policy rules, and attendee tracking. Collect the purpose, their preferred time window, name, and timezone. Convert relative dates to exact ISO datetimes before submitting.",
         "actions": [
           {
-            "type": "contract",
+            "type": "collect",
             "label": {
-              "en": "Register shop",
-              "de": "Shop registrieren"
+              "en": "Check availability",
+              "de": "Verfuegbarkeit pruefen"
             },
-            "address": "{{SC_ADDRESS}}",
-            "func": "registerShop",
-            "inputs": [
-              {
-                "name": "SHOP_SLUG",
-                "type": "string",
-                "position": "arg:1",
-                "source": "hidden",
-                "default": "{{JOAI_WARP_BRAND}}",
-                "required": true
+            "destination": {
+              "url": "https://devnet-api.joai.ai/v1/agents/{{JOAI_AGENT_UUID}}/appointments/availability",
+              "method": "POST",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
               }
-            ],
-            "gasLimit": 10000000,
-            "abi": "hash:f47fdd234ea51daebd6c9e16acb2a14695d1ff79e480b949fe53666e5ba46fc0"
-          }
-        ],
-        "messages": {
-          "success": {
-            "en": "Shop registered! Now add your services.",
-            "de": "Shop registriert! Füge jetzt deine Dienstleistungen hinzu."
-          }
-        },
-        "next": "shop-service-add"
-      },
-      "extras": null
-    },
-    {
-      "key": "multiversx:shop-service-add",
-      "identifier": "@shop-service-add",
-      "alias": "shop-service-add",
-      "chain": "multiversx",
-      "hash": "209406bb3de5d9d92eee74d2ca7a3004cb0b77d38e7788a2d5cd02d5de887731",
-      "checksum": "209406bb3de5d9d92eee74d2ca7a3004cb0b77d38e7788a2d5cd02d5de887731",
-      "name": "Shop: Add Service",
-      "title": {
-        "en": "Add service",
-        "de": "Dienstleistung hinzufügen"
-      },
-      "description": {
-        "en": "Add a service to your shop — name, price, and duration.",
-        "de": "Füge eine Dienstleistung hinzu — Name, Preis und Dauer."
-      },
-      "preview": null,
-      "creator": "github:JoAiHQ/warps",
-      "privileges": [],
-      "listed": true,
-      "visibility": "public",
-      "primaryAddress": "{{SC_ADDRESS}}",
-      "primaryFunc": "addService",
-      "brand": {
-        "hash": "5e0fc6eafc01de8515bc102443cd40c5ee2d8d96003cec05c30158fcee0806da",
-        "slug": "shop",
-        "active": true,
-        "protocol": "brand:0.2.0",
-        "name": "Shop",
-        "description": {
-          "en": "Your services, permanently on the blockchain. No middlemen, no platforms — just a verified storefront customers and AI can trust.",
-          "de": "Deine Dienstleistungen, dauerhaft auf der Blockchain. Keine Mittelsmänner, keine Plattformen — nur ein verifiziertes Schaufenster, dem Kunden und KI vertrauen."
-        },
-        "logo": {
-          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
-        },
-        "urls": {
-          "web": "https://joai.ai"
-        }
-      },
-      "warp": {
-        "protocol": "warp:3.0.0",
-        "name": "Shop: Add Service",
-        "title": {
-          "en": "Add service",
-          "de": "Dienstleistung hinzufügen"
-        },
-        "description": {
-          "en": "Add a service to your shop — name, price, and duration.",
-          "de": "Füge eine Dienstleistung hinzu — Name, Preis und Dauer."
-        },
-        "bot": "Adds a service to the shop on-chain. Use slug as a short unique identifier (e.g. haircut, color-treatment).",
-        "chain": "multiversx",
-        "vars": {
-          "SC_ADDRESS": "TODO"
-        },
-        "actions": [
-          {
-            "type": "contract",
-            "label": {
-              "en": "Add service",
-              "de": "Dienstleistung hinzufügen"
             },
-            "address": "{{SC_ADDRESS}}",
-            "func": "addService",
             "inputs": [
               {
-                "name": "SHOP_SLUG",
+                "name": "Appointment Title",
+                "as": "title",
+                "description": {
+                  "en": "The purpose of the appointment",
+                  "de": "Der Zweck des Termins"
+                },
+                "bot": "Short title describing the appointment, such as 'Intro Call', 'Product Demo', or 'Support Session'.",
                 "type": "string",
                 "position": "arg:1",
-                "source": "hidden",
-                "default": "{{JOAI_WARP_BRAND}}",
-                "required": true
+                "source": "field",
+                "required": true,
+                "min": 3
               },
               {
-                "name": "Slug",
-                "as": "serviceSlug",
+                "name": "Window Start",
+                "as": "windowStart",
                 "description": {
-                  "en": "Short unique ID for this service (e.g. haircut)",
-                  "de": "Kurze eindeutige ID für diese Dienstleistung (z.B. haarschnitt)"
+                  "en": "The earliest acceptable start time in ISO format",
+                  "de": "Die frueheste moegliche Startzeit im ISO-Format"
                 },
-                "bot": "Short slug for the service, lowercase, dashes only.",
-                "type": "string",
+                "bot": "Earliest acceptable appointment start in ISO 8601 format, for example 2026-04-03T09:00:00Z.",
+                "type": "datetime",
                 "position": "arg:2",
                 "source": "field",
                 "required": true
               },
               {
-                "name": "Name",
-                "as": "name",
+                "name": "Window End",
+                "as": "windowEnd",
                 "description": {
-                  "en": "Service name (e.g. Haircut)",
-                  "de": "Name der Dienstleistung (z.B. Haarschnitt)"
+                  "en": "The latest acceptable end of the scheduling window in ISO format",
+                  "de": "Das spaeteste Ende des Zeitfensters im ISO-Format"
                 },
-                "bot": "Display name for the service.",
-                "type": "string",
+                "bot": "End of the acceptable scheduling window in ISO 8601 format, for example 2026-04-03T17:00:00Z.",
+                "type": "datetime",
                 "position": "arg:3",
                 "source": "field",
                 "required": true
               },
               {
-                "name": "Price (cents)",
-                "as": "priceCents",
-                "description": {
-                  "en": "Price in cents (e.g. 2500 = €25.00)",
-                  "de": "Preis in Cent (z.B. 2500 = 25,00 €)"
-                },
-                "bot": "Price in smallest currency unit (cents). Use 0 for free.",
-                "type": "uint64",
-                "position": "arg:4",
-                "source": "field",
-                "required": true
-              },
-              {
-                "name": "Duration (minutes)",
+                "name": "Duration Minutes",
                 "as": "durationMinutes",
                 "description": {
-                  "en": "How long does this service take? (e.g. 30)",
-                  "de": "Wie lange dauert diese Dienstleistung? (z.B. 30)"
+                  "en": "Appointment length in minutes",
+                  "de": "Terminlaenge in Minuten"
                 },
-                "bot": "Duration in minutes.",
-                "type": "uint32",
-                "position": "arg:5",
-                "source": "field",
-                "required": true
+                "bot": "Meeting duration in minutes. Use 30 unless the user asks for a different length.",
+                "type": "number",
+                "source": "var",
+                "required": true,
+                "default": 30
               },
               {
-                "name": "Category",
-                "as": "category",
+                "name": "Attendee Name",
+                "as": "attendeeName",
                 "description": {
-                  "en": "Optional category (e.g. hair, nails)",
-                  "de": "Optionale Kategorie (z.B. Haare, Nägel)"
+                  "en": "The attendee or requester name",
+                  "de": "Name des Teilnehmers oder Anfragenden"
                 },
-                "bot": "Category label, optional.",
+                "bot": "The name of the person requesting or attending the appointment.",
                 "type": "string",
-                "position": "arg:6",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Attendee Email",
+                "as": "attendeeEmail",
+                "description": {
+                  "en": "The attendee or requester email",
+                  "de": "E-Mail des Teilnehmers oder Anfragenden"
+                },
+                "bot": "The email address of the attendee if known.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Notes",
+                "as": "description",
+                "description": {
+                  "en": "Optional notes or agenda",
+                  "de": "Optionale Notizen oder Agenda"
+                },
+                "bot": "Optional notes, context, or agenda for the appointment.",
+                "type": "string",
                 "source": "field",
                 "required": false
               }
-            ],
-            "gasLimit": 10000000,
-            "abi": "hash:f47fdd234ea51daebd6c9e16acb2a14695d1ff79e480b949fe53666e5ba46fc0"
+            ]
           }
         ],
-        "messages": {
-          "success": {
-            "en": "Service added to your shop.",
-            "de": "Dienstleistung zum Shop hinzugefügt."
-          }
-        }
-      },
-      "extras": null
-    },
-    {
-      "key": "multiversx:shop-service-remove",
-      "identifier": "@shop-service-remove",
-      "alias": "shop-service-remove",
-      "chain": "multiversx",
-      "hash": "9cba825170f70fb1acd9d8c9d70fa02fa4995dda43031ebc9c1e6b86c516e6a9",
-      "checksum": "9cba825170f70fb1acd9d8c9d70fa02fa4995dda43031ebc9c1e6b86c516e6a9",
-      "name": "Shop: Remove Service",
-      "title": {
-        "en": "Remove service",
-        "de": "Dienstleistung entfernen"
-      },
-      "description": {
-        "en": "Remove a service from your shop.",
-        "de": "Entferne eine Dienstleistung aus deinem Shop."
-      },
-      "preview": null,
-      "creator": "github:JoAiHQ/warps",
-      "privileges": [],
-      "listed": true,
-      "visibility": "public",
-      "primaryAddress": "{{SC_ADDRESS}}",
-      "primaryFunc": "removeService",
-      "brand": {
-        "hash": "5e0fc6eafc01de8515bc102443cd40c5ee2d8d96003cec05c30158fcee0806da",
-        "slug": "shop",
-        "active": true,
-        "protocol": "brand:0.2.0",
-        "name": "Shop",
-        "description": {
-          "en": "Your services, permanently on the blockchain. No middlemen, no platforms — just a verified storefront customers and AI can trust.",
-          "de": "Deine Dienstleistungen, dauerhaft auf der Blockchain. Keine Mittelsmänner, keine Plattformen — nur ein verifiziertes Schaufenster, dem Kunden und KI vertrauen."
-        },
-        "logo": {
-          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
-        },
-        "urls": {
-          "web": "https://joai.ai"
-        }
-      },
-      "warp": {
-        "protocol": "warp:3.0.0",
-        "name": "Shop: Remove Service",
-        "title": {
-          "en": "Remove service",
-          "de": "Dienstleistung entfernen"
-        },
-        "description": {
-          "en": "Remove a service from your shop.",
-          "de": "Entferne eine Dienstleistung aus deinem Shop."
-        },
-        "bot": "Removes a service from the shop on-chain by slug.",
-        "chain": "multiversx",
-        "vars": {
-          "SC_ADDRESS": "TODO"
-        },
-        "actions": [
+        "sections": [
           {
-            "type": "contract",
-            "label": {
-              "en": "Remove service",
-              "de": "Dienstleistung entfernen"
+            "title": {
+              "en": "What's it about?",
+              "de": "Worum geht es?"
             },
-            "address": "{{SC_ADDRESS}}",
-            "func": "removeService",
+            "description": {
+              "en": "Give us a quick idea of the purpose.",
+              "de": "Gib uns eine kurze Idee des Zwecks."
+            },
             "inputs": [
-              {
-                "name": "SHOP_SLUG",
-                "type": "string",
-                "position": "arg:1",
-                "source": "hidden",
-                "default": "{{JOAI_WARP_BRAND}}",
-                "required": true
-              },
-              {
-                "name": "Service slug",
-                "as": "serviceSlug",
-                "description": {
-                  "en": "Slug of the service to remove",
-                  "de": "Slug der zu entfernenden Dienstleistung"
-                },
-                "bot": "The slug of the service to remove.",
-                "type": "string",
-                "position": "arg:2",
-                "source": "field",
-                "required": true
-              }
-            ],
-            "gasLimit": 10000000,
-            "abi": "hash:f47fdd234ea51daebd6c9e16acb2a14695d1ff79e480b949fe53666e5ba46fc0"
-          }
-        ],
-        "messages": {
-          "success": {
-            "en": "Service removed from your shop.",
-            "de": "Dienstleistung aus dem Shop entfernt."
-          }
-        }
-      },
-      "extras": null
-    },
-    {
-      "key": "multiversx:shop-services",
-      "identifier": "@shop-services",
-      "alias": "shop-services",
-      "chain": "multiversx",
-      "hash": "52a2edfe705153612255c40350df32d287a38185a43dd0e492a1750aad942754",
-      "checksum": "52a2edfe705153612255c40350df32d287a38185a43dd0e492a1750aad942754",
-      "name": "Shop: Services",
-      "title": {
-        "en": "{{SHOP_NAME}} — Services",
-        "de": "{{SHOP_NAME}} — Dienstleistungen"
-      },
-      "description": {
-        "en": "Browse available services and book an appointment.",
-        "de": "Dienstleistungen ansehen und Termin buchen."
-      },
-      "preview": null,
-      "creator": "github:JoAiHQ/warps",
-      "privileges": [],
-      "listed": true,
-      "visibility": "public",
-      "primaryAddress": "{{SC_ADDRESS}}",
-      "primaryFunc": "getServices",
-      "brand": {
-        "hash": "5e0fc6eafc01de8515bc102443cd40c5ee2d8d96003cec05c30158fcee0806da",
-        "slug": "shop",
-        "active": true,
-        "protocol": "brand:0.2.0",
-        "name": "Shop",
-        "description": {
-          "en": "Your services, permanently on the blockchain. No middlemen, no platforms — just a verified storefront customers and AI can trust.",
-          "de": "Deine Dienstleistungen, dauerhaft auf der Blockchain. Keine Mittelsmänner, keine Plattformen — nur ein verifiziertes Schaufenster, dem Kunden und KI vertrauen."
-        },
-        "logo": {
-          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
-        },
-        "urls": {
-          "web": "https://joai.ai"
-        }
-      },
-      "warp": {
-        "protocol": "warp:3.0.0",
-        "name": "Shop: Services",
-        "title": {
-          "en": "{{SHOP_NAME}} — Services",
-          "de": "{{SHOP_NAME}} — Dienstleistungen"
-        },
-        "description": {
-          "en": "Browse available services and book an appointment.",
-          "de": "Dienstleistungen ansehen und Termin buchen."
-        },
-        "bot": "Shows all services offered by the shop. SHOP_SLUG from query param or JOAI_WARP_BRAND.",
-        "chain": "multiversx",
-        "vars": {
-          "SHOP_SLUG": "query:slug",
-          "SC_ADDRESS": "TODO"
-        },
-        "actions": [
+              "title"
+            ]
+          },
           {
-            "type": "query",
-            "label": {
-              "en": "Loading services...",
-              "de": "Dienstleistungen werden geladen..."
+            "title": {
+              "en": "When are you free?",
+              "de": "Wann hast du Zeit?"
             },
-            "address": "{{SC_ADDRESS}}",
-            "func": "getServices",
-            "args": [
-              "string:{{SHOP_SLUG}}"
-            ],
+            "description": {
+              "en": "Pick a window and we'll find the best slot.",
+              "de": "Wähle ein Zeitfenster und wir finden den besten Slot."
+            },
             "inputs": [
-              {
-                "name": "SHOP_SLUG",
-                "type": "string",
-                "position": "arg:1",
-                "source": "hidden",
-                "default": "{{JOAI_WARP_BRAND}}",
-                "required": true
-              }
-            ],
-            "auto": true,
-            "abi": "hash:f47fdd234ea51daebd6c9e16acb2a14695d1ff79e480b949fe53666e5ba46fc0"
+              "windowStart",
+              "windowEnd"
+            ]
+          },
+          {
+            "title": {
+              "en": "About you",
+              "de": "Über dich"
+            },
+            "description": {
+              "en": "So we know who to expect.",
+              "de": "Damit wir wissen, wen wir erwarten."
+            },
+            "inputs": [
+              "attendeeName",
+              "attendeeEmail",
+              "description"
+            ]
           }
         ],
         "output": {
-          "SERVICES": "out.1"
+          "CONNECTED": "out.data.connected",
+          "TIMEZONE": "out.data.timezone",
+          "SERVICE": "out.data.service",
+          "SLOTS": "out.data.slots",
+          "SLOT_COUNT": "out.data.slots.length"
         },
         "messages": {
           "success": {
-            "en": "Services loaded.",
-            "de": "Dienstleistungen geladen."
+            "en": "Found {{SLOT_COUNT}} appointment slot(s).",
+            "de": "{{SLOT_COUNT}} Terminvorschlaege gefunden."
           }
         }
       },
-      "extras": null
+      "extras": {
+        "keywords": {
+          "en": [
+            "check availability",
+            "available time slots",
+            "open appointments",
+            "free schedule slots"
+          ],
+          "de": [
+            "Verfügbarkeit prüfen",
+            "verfügbare Zeitslots",
+            "offene Termine",
+            "freie Terminslots"
+          ]
+        },
+        "useCases": {
+          "en": [
+            "Browse available slots for next week before booking",
+            "Check if a specific date and time is still open",
+            "Find the earliest available appointment slot"
+          ],
+          "de": [
+            "Verfügbare Slots für nächste Woche vor der Buchung durchsuchen",
+            "Prüfen, ob ein bestimmtes Datum und eine bestimmte Uhrzeit noch frei ist",
+            "Den frühesten verfügbaren Terminslot finden"
+          ]
+        },
+        "category": "productivity",
+        "faq": {
+          "en": [
+            {
+              "question": "How are available appointment slots determined?",
+              "answer": "Available slots are based on the provider's configured working hours, existing bookings, and buffer times between appointments. Only genuinely open slots are shown."
+            },
+            {
+              "question": "Can I check availability for a specific date?",
+              "answer": "Yes, specify a date to see all open time slots for that day. You can also browse multiple days to find the most convenient option."
+            }
+          ],
+          "de": [
+            {
+              "question": "Wie werden verfügbare Terminslots ermittelt?",
+              "answer": "Verfügbare Slots basieren auf den konfigurierten Arbeitszeiten des Anbieters, bestehenden Buchungen und Pufferzeiten zwischen Terminen. Es werden nur tatsächlich freie Slots angezeigt."
+            },
+            {
+              "question": "Kann ich die Verfügbarkeit für ein bestimmtes Datum prüfen?",
+              "answer": "Ja, gib ein Datum an, um alle offenen Zeitslots für diesen Tag zu sehen. Du kannst auch mehrere Tage durchsuchen, um die passendste Option zu finden."
+            }
+          ]
+        }
+      }
     }
   ],
   "deletes": []
