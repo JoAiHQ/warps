@@ -1,0 +1,152 @@
+{
+    "name": "ChallengeContract",
+    "constructor": {
+        "inputs": [],
+        "outputs": []
+    },
+    "upgradeConstructor": {
+        "inputs": [],
+        "outputs": []
+    },
+    "endpoints": [
+        {
+            "name": "createChallenge",
+            "mutability": "mutable",
+            "payableInTokens": ["*"],
+            "inputs": [
+                { "name": "title", "type": "bytes" },
+                { "name": "duration_hours", "type": "u64" }
+            ],
+            "outputs": [
+                { "type": "u64" }
+            ]
+        },
+        {
+            "name": "acceptChallenge",
+            "mutability": "mutable",
+            "payableInTokens": ["*"],
+            "inputs": [
+                { "name": "challenge_id", "type": "u64" }
+            ],
+            "outputs": []
+        },
+        {
+            "name": "resolveChallenge",
+            "mutability": "mutable",
+            "inputs": [
+                { "name": "challenge_id", "type": "u64" },
+                { "name": "creator_succeeded", "type": "bool" }
+            ],
+            "outputs": []
+        },
+        {
+            "name": "cancelChallenge",
+            "mutability": "mutable",
+            "inputs": [
+                { "name": "challenge_id", "type": "u64" }
+            ],
+            "outputs": []
+        },
+        {
+            "name": "getChallenge",
+            "mutability": "readonly",
+            "inputs": [
+                { "name": "challenge_id", "type": "u64" }
+            ],
+            "outputs": [
+                { "type": "Challenge" }
+            ]
+        },
+        {
+            "name": "getOpenChallenges",
+            "mutability": "readonly",
+            "inputs": [
+                { "name": "offset", "type": "u32" },
+                { "name": "limit", "type": "u32" }
+            ],
+            "outputs": [
+                { "type": "variadic<multi<u64,Challenge>>", "multi_result": true }
+            ]
+        },
+        {
+            "name": "getChallengesByCreator",
+            "mutability": "readonly",
+            "inputs": [
+                { "name": "creator", "type": "Address" },
+                { "name": "offset", "type": "u32" },
+                { "name": "limit", "type": "u32" }
+            ],
+            "outputs": [
+                { "type": "variadic<multi<u64,Challenge>>", "multi_result": true }
+            ]
+        },
+        {
+            "name": "getNextChallengeId",
+            "mutability": "readonly",
+            "inputs": [],
+            "outputs": [
+                { "type": "u64" }
+            ]
+        }
+    ],
+    "events": [
+        {
+            "identifier": "challengeCreated",
+            "inputs": [
+                { "name": "challenge_id", "type": "u64", "indexed": true },
+                { "name": "creator", "type": "Address", "indexed": true },
+                { "name": "title", "type": "bytes" },
+                { "name": "token", "type": "EgldOrEsdtTokenIdentifier" },
+                { "name": "stake", "type": "BigUint" },
+                { "name": "ends_at", "type": "u64" }
+            ]
+        },
+        {
+            "identifier": "challengeAccepted",
+            "inputs": [
+                { "name": "challenge_id", "type": "u64", "indexed": true },
+                { "name": "acceptor", "type": "Address", "indexed": true }
+            ]
+        },
+        {
+            "identifier": "challengeResolved",
+            "inputs": [
+                { "name": "challenge_id", "type": "u64", "indexed": true },
+                { "name": "creator_succeeded", "type": "bool", "indexed": true },
+                { "name": "winner", "type": "Address" }
+            ]
+        },
+        {
+            "identifier": "challengeCancelled",
+            "inputs": [
+                { "name": "challenge_id", "type": "u64", "indexed": true },
+                { "name": "creator", "type": "Address", "indexed": true }
+            ]
+        }
+    ],
+    "types": {
+        "ChallengeStatus": {
+            "type": "enum",
+            "variants": [
+                { "name": "Open", "discriminant": 0 },
+                { "name": "Accepted", "discriminant": 1 },
+                { "name": "CreatorSucceeded", "discriminant": 2 },
+                { "name": "CreatorFailed", "discriminant": 3 },
+                { "name": "Cancelled", "discriminant": 4 }
+            ]
+        },
+        "Challenge": {
+            "type": "struct",
+            "fields": [
+                { "name": "creator", "type": "Address" },
+                { "name": "title", "type": "bytes" },
+                { "name": "token", "type": "EgldOrEsdtTokenIdentifier" },
+                { "name": "stake", "type": "BigUint" },
+                { "name": "ends_at", "type": "u64" },
+                { "name": "created_at", "type": "u64" },
+                { "name": "acceptor", "type": "Address" },
+                { "name": "status", "type": "ChallengeStatus" }
+            ]
+        }
+    }
+}

@@ -1,0 +1,55 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Coupon: View",
+  "title": {
+    "en": "View coupon",
+    "de": "Gutschein ansehen"
+  },
+  "description": {
+    "en": "Check the details, discount, and remaining uses of a coupon code.",
+    "de": "Details, Rabatt und verbleibende Nutzungen eines Gutscheincodes prüfen."
+  },
+  "bot": "Fetches coupon details by code. Shows the discount percentage, usage limits, remaining uses, and current status.",
+  "chain": "multiversx",
+  "vars": {
+    "SC_ADDRESS": "INJECT:COUPON_SC_ADDRESS",
+    "CODE": "query:code"
+  },
+  "actions": [
+    {
+      "type": "query",
+      "label": {
+        "en": "Loading coupon...",
+        "de": "Gutschein wird geladen..."
+      },
+      "address": "{{SC_ADDRESS}}",
+      "func": "getCoupon",
+      "args": [],
+      "inputs": [
+        {
+          "name": "Coupon Code",
+          "as": "code",
+          "type": "string",
+          "position": "arg:1",
+          "source": "var",
+          "default": "{{CODE}}",
+          "required": true
+        }
+      ],
+      "auto": true,
+      "abi": "INJECT:abis/coupon.abi.json"
+    }
+  ],
+  "output": {
+    "DISCOUNT": "out.discount_percent",
+    "MAX_USES": "out.max_uses",
+    "USED_COUNT": "out.used_count",
+    "STATUS": "out.status"
+  },
+  "messages": {
+    "success": {
+      "en": "{{DISCOUNT}}% discount — {{USED_COUNT}}/{{MAX_USES}} uses",
+      "de": "{{DISCOUNT}}% Rabatt — {{USED_COUNT}}/{{MAX_USES}} Nutzungen"
+    }
+  }
+}

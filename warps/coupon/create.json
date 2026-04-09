@@ -1,0 +1,116 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Coupon: Create",
+  "title": {
+    "en": "Create a coupon",
+    "de": "Gutschein erstellen"
+  },
+  "description": {
+    "en": "Issue an on-chain discount coupon code. Set the discount percentage and usage limit.",
+    "de": "On-Chain-Rabattgutscheincode ausstellen. Rabattprozentsatz und Nutzungslimit festlegen."
+  },
+  "bot": "Creates an on-chain discount coupon. Ask the user for the coupon code, discount percentage, and how many times it can be used (0 = unlimited).",
+  "chain": "multiversx",
+  "vars": {
+    "SC_ADDRESS": "INJECT:COUPON_SC_ADDRESS"
+  },
+  "sections": [
+    {
+      "title": { "en": "Coupon Code", "de": "Gutscheincode" },
+      "inputs": ["code", "discountPercent"]
+    },
+    {
+      "title": { "en": "Limits", "de": "Einschränkungen" },
+      "inputs": ["maxUses"]
+    }
+  ],
+  "actions": [
+    {
+      "type": "contract",
+      "label": {
+        "en": "Create coupon",
+        "de": "Gutschein erstellen"
+      },
+      "address": "{{SC_ADDRESS}}",
+      "func": "createCoupon",
+      "gasLimit": 10000000,
+      "abi": "INJECT:abis/coupon.abi.json",
+      "inputs": [
+        {
+          "name": "Code",
+          "as": "code",
+          "description": {
+            "en": "The coupon code customers will enter (e.g. SUMMER20)",
+            "de": "Der Gutscheincode, den Kunden eingeben (z.B. SOMMER20)"
+          },
+          "bot": "Short, memorable coupon code — e.g. LAUNCH10, VIP50, WELCOME.",
+          "type": "string",
+          "position": "arg:1",
+          "source": "field",
+          "required": true,
+          "min": 1,
+          "max": 32
+        },
+        {
+          "name": "Discount",
+          "as": "discountPercent",
+          "description": {
+            "en": "Discount percentage (1–100)",
+            "de": "Rabattprozentsatz (1–100)"
+          },
+          "bot": "Percentage discount the coupon applies.",
+          "type": "u8",
+          "position": "arg:2",
+          "source": "field",
+          "required": true,
+          "options": {
+            "5": "5%",
+            "10": "10%",
+            "15": "15%",
+            "20": "20%",
+            "25": "25%",
+            "50": "50%"
+          }
+        },
+        {
+          "name": "Max Uses",
+          "as": "maxUses",
+          "description": {
+            "en": "How many times can this coupon be redeemed? (0 = unlimited)",
+            "de": "Wie oft kann dieser Gutschein eingelöst werden? (0 = unbegrenzt)"
+          },
+          "bot": "Maximum number of redemptions. Use 0 for unlimited uses.",
+          "type": "u64",
+          "position": "arg:3",
+          "source": "field",
+          "required": true,
+          "options": {
+            "0": "Unlimited",
+            "1": "1 use",
+            "5": "5 uses",
+            "10": "10 uses",
+            "100": "100 uses"
+          }
+        },
+        {
+          "name": "Expires At",
+          "as": "expiresAt",
+          "type": "u64",
+          "position": "arg:4",
+          "source": "hidden",
+          "default": "0",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "output": {
+    "COUPON_ID": "out.data"
+  },
+  "messages": {
+    "success": {
+      "en": "Coupon created on-chain! Share the code and let customers redeem it.",
+      "de": "Gutschein on-chain erstellt! Teile den Code und lass Kunden ihn einlösen."
+    }
+  }
+}

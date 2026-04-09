@@ -1,0 +1,53 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Shop: Services",
+  "title": {
+    "en": "{{SHOP_NAME}} — Services",
+    "de": "{{SHOP_NAME}} — Dienstleistungen"
+  },
+  "description": {
+    "en": "Browse available services and book an appointment.",
+    "de": "Dienstleistungen ansehen und Termin buchen."
+  },
+  "bot": "Shows all services offered by the shop. SHOP_SLUG from query param or JOAI_WARP_BRAND.",
+  "chain": "multiversx",
+  "vars": {
+    "SHOP_SLUG": "query:slug",
+    "SC_ADDRESS": "INJECT:SHOP_SC_ADDRESS"
+  },
+  "actions": [
+    {
+      "type": "query",
+      "label": {
+        "en": "Loading services...",
+        "de": "Dienstleistungen werden geladen..."
+      },
+      "address": "{{SC_ADDRESS}}",
+      "func": "getServices",
+      "args": [
+        "string:{{SHOP_SLUG}}"
+      ],
+      "inputs": [
+        {
+          "name": "SHOP_SLUG",
+          "type": "string",
+          "position": "arg:1",
+          "source": "hidden",
+          "default": "{{JOAI_WARP_BRAND}}",
+          "required": true
+        }
+      ],
+      "auto": true,
+      "abi": "INJECT:abis/shop.abi.json"
+    }
+  ],
+  "output": {
+    "SERVICES": "out.1"
+  },
+  "messages": {
+    "success": {
+      "en": "Services loaded.",
+      "de": "Dienstleistungen geladen."
+    }
+  }
+}

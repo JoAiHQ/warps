@@ -1,0 +1,63 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Challenge: Resolve",
+  "title": {
+    "en": "Resolve challenge",
+    "de": "Challenge auflösen"
+  },
+  "description": {
+    "en": "Mark a challenge as succeeded or failed after verification. Owner only.",
+    "de": "Challenge nach Überprüfung als erfolgreich oder gescheitert markieren. Nur für Eigentümer."
+  },
+  "bot": "Resolves a challenge outcome after the end time. Only callable by the contract owner (JoAi). Use this after verifying the creator's proof. creator_succeeded=true returns stakes to both parties; false sends both stakes to the acceptor.",
+  "chain": "multiversx",
+  "vars": {
+    "SC_ADDRESS": "INJECT:CHALLENGE_SC_ADDRESS"
+  },
+  "actions": [
+    {
+      "type": "contract",
+      "label": {
+        "en": "Resolve challenge",
+        "de": "Challenge auflösen"
+      },
+      "address": "{{SC_ADDRESS}}",
+      "func": "resolveChallenge",
+      "gasLimit": 10000000,
+      "abi": "INJECT:abis/challenge.abi.json",
+      "inputs": [
+        {
+          "name": "Challenge ID",
+          "as": "challengeId",
+          "type": "u64",
+          "position": "arg:1",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Creator Succeeded",
+          "as": "creatorSucceeded",
+          "description": {
+            "en": "Did the creator complete the challenge?",
+            "de": "Hat der Ersteller die Challenge abgeschlossen?"
+          },
+          "bot": "Set to true if the creator provided valid proof of completion, false if they failed or didn't respond.",
+          "type": "bool",
+          "position": "arg:2",
+          "source": "field",
+          "required": true,
+          "options": {
+            "true": "Yes — creator succeeded",
+            "false": "No — creator failed"
+          }
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Challenge resolved. Stakes distributed.",
+      "de": "Challenge aufgelöst. Einsätze verteilt."
+    }
+  }
+}

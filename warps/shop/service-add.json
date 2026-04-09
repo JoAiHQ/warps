@@ -1,0 +1,111 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Shop: Add Service",
+  "title": {
+    "en": "Add service",
+    "de": "Dienstleistung hinzufügen"
+  },
+  "description": {
+    "en": "Add a service to your shop — name, price, and duration.",
+    "de": "Füge eine Dienstleistung hinzu — Name, Preis und Dauer."
+  },
+  "bot": "Adds a service to the shop on-chain. Use slug as a short unique identifier (e.g. haircut, color-treatment).",
+  "chain": "multiversx",
+  "vars": {
+    "SC_ADDRESS": "INJECT:SHOP_SC_ADDRESS"
+  },
+  "actions": [
+    {
+      "type": "contract",
+      "label": {
+        "en": "Add service",
+        "de": "Dienstleistung hinzufügen"
+      },
+      "address": "{{SC_ADDRESS}}",
+      "func": "addService",
+      "inputs": [
+        {
+          "name": "SHOP_SLUG",
+          "type": "string",
+          "position": "arg:1",
+          "source": "hidden",
+          "default": "{{JOAI_WARP_BRAND}}",
+          "required": true
+        },
+        {
+          "name": "Slug",
+          "as": "serviceSlug",
+          "description": {
+            "en": "Short unique ID for this service (e.g. haircut)",
+            "de": "Kurze eindeutige ID für diese Dienstleistung (z.B. haarschnitt)"
+          },
+          "bot": "Short slug for the service, lowercase, dashes only.",
+          "type": "string",
+          "position": "arg:2",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Name",
+          "as": "name",
+          "description": {
+            "en": "Service name (e.g. Haircut)",
+            "de": "Name der Dienstleistung (z.B. Haarschnitt)"
+          },
+          "bot": "Display name for the service.",
+          "type": "string",
+          "position": "arg:3",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Price (cents)",
+          "as": "priceCents",
+          "description": {
+            "en": "Price in cents (e.g. 2500 = €25.00)",
+            "de": "Preis in Cent (z.B. 2500 = 25,00 €)"
+          },
+          "bot": "Price in smallest currency unit (cents). Use 0 for free.",
+          "type": "uint64",
+          "position": "arg:4",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Duration (minutes)",
+          "as": "durationMinutes",
+          "description": {
+            "en": "How long does this service take? (e.g. 30)",
+            "de": "Wie lange dauert diese Dienstleistung? (z.B. 30)"
+          },
+          "bot": "Duration in minutes.",
+          "type": "uint32",
+          "position": "arg:5",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Category",
+          "as": "category",
+          "description": {
+            "en": "Optional category (e.g. hair, nails)",
+            "de": "Optionale Kategorie (z.B. Haare, Nägel)"
+          },
+          "bot": "Category label, optional.",
+          "type": "string",
+          "position": "arg:6",
+          "source": "field",
+          "required": false
+        }
+      ],
+      "gasLimit": 10000000,
+      "abi": "INJECT:abis/shop.abi.json"
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Service added to your shop.",
+      "de": "Dienstleistung zum Shop hinzugefügt."
+    }
+  }
+}
