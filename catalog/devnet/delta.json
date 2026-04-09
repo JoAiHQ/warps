@@ -4,9 +4,260 @@
   "repo": "JoAiHQ/warps",
   "branch": "dev",
   "network": "devnet",
-  "commitSha": "87fbe55c82f3dc101a3f31f3674b2bb40958c974",
-  "committedAt": "2026-04-09T17:39:30.951Z",
-  "generatedAt": "2026-04-09T17:39:33.612Z",
-  "upserts": [],
+  "commitSha": "9551935d3bc8e2a9e6c6aac3e85f30682e8bb66a",
+  "committedAt": "2026-04-09T18:15:28.816Z",
+  "generatedAt": "2026-04-09T18:15:30.822Z",
+  "upserts": [
+    {
+      "key": "multiversx:signature-create",
+      "identifier": "@signature-create",
+      "alias": "signature-create",
+      "chain": "multiversx",
+      "hash": "24fd45687068ca9c7a8ff88edae82823a849585f45a8c5416f9db4b79c4452cf",
+      "checksum": "24fd45687068ca9c7a8ff88edae82823a849585f45a8c5416f9db4b79c4452cf",
+      "name": "Signature: Create",
+      "title": {
+        "en": "Request a signature",
+        "de": "Signatur anfordern"
+      },
+      "description": {
+        "en": "Send an on-chain signature request. The signer receives an email and signs the document with their wallet.",
+        "de": "Sende eine On-Chain-Signaturanfrage. Der Unterzeichner erhält eine E-Mail und unterzeichnet das Dokument mit seiner Wallet."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": "{{SC_ADDRESS}}",
+      "primaryFunc": "createRequest",
+      "brand": {
+        "hash": "672c9890b01fdaff1ac198a78396da910e00d2629b76ef802fde4e346ee7f1f2",
+        "slug": "signature",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "Signature",
+        "description": {
+          "en": "On-chain document signatures. Send signing requests by email. All agreements anchored on the blockchain.",
+          "de": "On-chain-Dokumentensignaturen. Signaturanfragen per E-Mail senden. Alle Vereinbarungen auf der Blockchain verankert."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "Signature: Create",
+        "title": {
+          "en": "Request a signature",
+          "de": "Signatur anfordern"
+        },
+        "description": {
+          "en": "Send an on-chain signature request. The signer receives an email and signs the document with their wallet.",
+          "de": "Sende eine On-Chain-Signaturanfrage. Der Unterzeichner erhält eine E-Mail und unterzeichnet das Dokument mit seiner Wallet."
+        },
+        "bot": "Creates an on-chain signature request and notifies the signer by email. Ask the user for the document title, a SHA-256 hash of the document, a link to the document, the signer's wallet address, the signer's email, and an optional deadline.",
+        "chain": "multiversx",
+        "vars": {
+          "SC_ADDRESS": "erd1qqqqqqqqqqqqqpgqtxwhd7z99tvvrgd38897k9zunrqsgmahtres7648am",
+          "API_BASE": "https://devnet-api.joai.ai",
+          "TITLE": "field:title",
+          "DOCUMENT_HASH": "field:documentHash",
+          "SIGNER_ADDRESS": "field:signerAddress"
+        },
+        "sections": [
+          {
+            "title": {
+              "en": "Document Details",
+              "de": "Dokumentendetails"
+            },
+            "description": {
+              "en": "What document needs to be signed?",
+              "de": "Welches Dokument muss unterzeichnet werden?"
+            },
+            "inputs": [
+              "title",
+              "documentHash",
+              "documentUrl"
+            ]
+          },
+          {
+            "title": {
+              "en": "Signer",
+              "de": "Unterzeichner"
+            },
+            "description": {
+              "en": "Who needs to sign this document?",
+              "de": "Wer muss dieses Dokument unterzeichnen?"
+            },
+            "inputs": [
+              "signerAddress",
+              "signerEmail",
+              "signerName"
+            ]
+          },
+          {
+            "title": {
+              "en": "Settings",
+              "de": "Einstellungen"
+            },
+            "description": {
+              "en": "Set a deadline for the signature request.",
+              "de": "Frist für die Signaturanfrage festlegen."
+            },
+            "inputs": [
+              "deadlineHours"
+            ]
+          }
+        ],
+        "actions": [
+          {
+            "type": "contract",
+            "label": {
+              "en": "Request signature",
+              "de": "Signatur anfordern"
+            },
+            "address": "{{SC_ADDRESS}}",
+            "func": "createRequest",
+            "gasLimit": 10000000,
+            "abi": "hash:7f6bf17e93f44b807be4bccd42a3ad9913011825c2d16806ef7b1232ce2b877f",
+            "inputs": [
+              {
+                "name": "Title",
+                "as": "title",
+                "description": {
+                  "en": "Title of the document to be signed.",
+                  "de": "Titel des zu unterzeichnenden Dokuments."
+                },
+                "bot": "Short, clear document title — e.g. 'Freelance Agreement Q2', 'NDA with Acme Corp'.",
+                "type": "string",
+                "position": "arg:1",
+                "source": "field",
+                "required": true,
+                "min": 1,
+                "max": 128
+              },
+              {
+                "name": "Document Hash",
+                "as": "documentHash",
+                "description": {
+                  "en": "SHA-256 hash of the document. Proves the document hasn't been altered.",
+                  "de": "SHA-256-Hash des Dokuments. Beweist, dass das Dokument nicht verändert wurde."
+                },
+                "bot": "SHA-256 fingerprint of the document file. Generate with: sha256sum <file>.",
+                "type": "string",
+                "position": "arg:2",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Document",
+                "as": "documentUrl",
+                "description": {
+                  "en": "Upload the PDF document to be signed. The SHA-256 fingerprint will be computed automatically.",
+                  "de": "Lade das zu unterzeichnende PDF-Dokument hoch. Der SHA-256-Fingerabdruck wird automatisch berechnet."
+                },
+                "bot": "URL of the document to be signed. Accepts a public URL or an uploaded file URL.",
+                "type": "media",
+                "hashInput": "documentHash",
+                "position": "arg:3",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Deadline",
+                "as": "deadlineHours",
+                "description": {
+                  "en": "How long does the signer have to sign?",
+                  "de": "Wie lange hat der Unterzeichner Zeit zum Unterzeichnen?"
+                },
+                "bot": "Deadline in hours. Use 0 for no deadline, 24 for one day, 168 for a week.",
+                "type": "u64",
+                "position": "arg:4",
+                "source": "field",
+                "required": true,
+                "options": {
+                  "0": "No deadline",
+                  "24": "24 hours",
+                  "72": "3 days",
+                  "168": "1 week",
+                  "336": "2 weeks"
+                }
+              },
+              {
+                "name": "Signer Address",
+                "as": "signerAddress",
+                "description": {
+                  "en": "Wallet address of the signer.",
+                  "de": "Wallet-Adresse des Unterzeichners."
+                },
+                "bot": "MultiversX wallet address (erd1...) of the person who needs to sign.",
+                "type": "Address",
+                "position": "arg:5",
+                "source": "field",
+                "required": true
+              }
+            ]
+          },
+          {
+            "type": "collect",
+            "label": {
+              "en": "Notifying signer...",
+              "de": "Unterzeichner wird benachrichtigt..."
+            },
+            "destination": {
+              "url": "{{API_BASE}}/cortex/agents/{{JOAI_AGENT_UUID}}/message",
+              "method": "POST"
+            },
+            "inputs": [
+              {
+                "name": "Signer Email",
+                "as": "signerEmail",
+                "description": {
+                  "en": "Signer's email address. They will receive a signing link.",
+                  "de": "E-Mail-Adresse des Unterzeichners. Er erhält einen Link zum Unterzeichnen."
+                },
+                "bot": "Email address of the person who needs to sign the document.",
+                "type": "email",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Signer Name",
+                "as": "signerName",
+                "description": {
+                  "en": "Signer's name (optional)",
+                  "de": "Name des Unterzeichners (optional)"
+                },
+                "bot": "Full name of the signer, used in the notification email.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              }
+            ],
+            "body": {
+              "integrationType": "email",
+              "recipientId": "{{signerEmail}}",
+              "recipientName": "{{signerName}}",
+              "message": "You have been requested to sign \"{{TITLE}}\".\n\nSign here: https://joai.ai/warps/signature-sign?id={{REQUEST_ID}}&signer={{SIGNER_ADDRESS}}\n\nDocument hash (SHA-256): {{DOCUMENT_HASH}}"
+            }
+          }
+        ],
+        "output": {
+          "REQUEST_ID": "out.data"
+        },
+        "messages": {
+          "success": {
+            "en": "Signature request sent! The signer will receive an email with a signing link.",
+            "de": "Signaturanfrage gesendet! Der Unterzeichner erhält eine E-Mail mit einem Link zum Unterzeichnen."
+          }
+        }
+      },
+      "extras": null
+    }
+  ],
   "deletes": []
 }
