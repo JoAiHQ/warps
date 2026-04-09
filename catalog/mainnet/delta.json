@@ -4,25 +4,25 @@
   "repo": "JoAiHQ/warps",
   "branch": "main",
   "network": "mainnet",
-  "commitSha": "cee33767f39926d753d46fb7711eabc8813511f2",
-  "committedAt": "2026-04-09T13:07:36.435Z",
-  "generatedAt": "2026-04-09T13:07:38.281Z",
+  "commitSha": "de130a19face283796dc41a3442a6590f93934ba",
+  "committedAt": "2026-04-09T16:11:23.005Z",
+  "generatedAt": "2026-04-09T16:11:25.055Z",
   "upserts": [
     {
-      "key": "multiversx:loyalty-configure",
-      "identifier": "@loyalty-configure",
-      "alias": "loyalty-configure",
+      "key": "multiversx:challenge-accept",
+      "identifier": "@challenge-accept",
+      "alias": "challenge-accept",
       "chain": "multiversx",
-      "hash": "ffc98cfb19ce233bb543abcdfc188986a1438ad010112a63d6be083b56d5fcea",
-      "checksum": "ffc98cfb19ce233bb543abcdfc188986a1438ad010112a63d6be083b56d5fcea",
-      "name": "Loyalty: Configure",
+      "hash": "3ddf884d1d10a6ec474140333dda1b49ed0799aff39944c8dfc8d4ea4ad47fca",
+      "checksum": "3ddf884d1d10a6ec474140333dda1b49ed0799aff39944c8dfc8d4ea4ad47fca",
+      "name": "Challenge: Accept",
       "title": {
-        "en": "Configure loyalty program",
-        "de": "Treueprogramm konfigurieren"
+        "en": "Accept challenge",
+        "de": "Challenge annehmen"
       },
       "description": {
-        "en": "Set up your stamp-based loyalty program — rewards, Google review incentive, and reminder frequency.",
-        "de": "Richte dein stempelbasiertes Treueprogramm ein — Belohnungen, Google-Bewertungsanreiz und Erinnerungsfrequenz."
+        "en": "Match the stake and bet that the challenger will fail. If they skip — you take it.",
+        "de": "Gleiche den Einsatz aus und wette darauf, dass der Challenger scheitert. Wenn er aufgibt — nimmst du den Einsatz."
       },
       "preview": null,
       "creator": "github:JoAiHQ/warps",
@@ -30,16 +30,16 @@
       "listed": true,
       "visibility": "public",
       "primaryAddress": "{{SC_ADDRESS}}",
-      "primaryFunc": "configureLoyalty",
+      "primaryFunc": "acceptChallenge",
       "brand": {
-        "hash": "840d3ef5855c1c1cdcd655e142503f717ceaf334ecfd8d2cc037a8b3b43b8013",
-        "slug": "loyalty",
+        "hash": "f442e1ad06d242b0cb106bc30617a2f4bbbb9450d36e03617dc06db14d4ca88a",
+        "slug": "challenge",
         "active": true,
         "protocol": "brand:0.2.0",
-        "name": "Loyalty",
+        "name": "Challenge",
         "description": {
-          "en": "Stamp-based loyalty programs for local service businesses.",
-          "de": "Stempelbasierte Treueprogramme für lokale Dienstleistungsunternehmen."
+          "en": "Stake-backed personal challenges. Put money on the line and prove it.",
+          "de": "Persönliche Challenges mit echtem Einsatz. Setz etwas aufs Spiel und beweise es."
         },
         "logo": {
           "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
@@ -50,16 +50,120 @@
       },
       "warp": {
         "protocol": "warp:3.0.0",
-        "name": "Loyalty: Configure",
+        "name": "Challenge: Accept",
         "title": {
-          "en": "Configure loyalty program",
-          "de": "Treueprogramm konfigurieren"
+          "en": "Accept challenge",
+          "de": "Challenge annehmen"
         },
         "description": {
-          "en": "Set up your stamp-based loyalty program — rewards, Google review incentive, and reminder frequency.",
-          "de": "Richte dein stempelbasiertes Treueprogramm ein — Belohnungen, Google-Bewertungsanreiz und Erinnerungsfrequenz."
+          "en": "Match the stake and bet that the challenger will fail. If they skip — you take it.",
+          "de": "Gleiche den Einsatz aus und wette darauf, dass der Challenger scheitert. Wenn er aufgibt — nimmst du den Einsatz."
         },
-        "bot": "Configures loyalty program for the current brand.",
+        "bot": "Accepts an open challenge by matching the creator's stake. Requires the exact same token and amount as the creator staked. Query getChallenge first to get the token and exact amount.",
+        "chain": "multiversx",
+        "vars": {
+          "SC_ADDRESS": "TODO",
+          "CHALLENGE_ID": "query:id"
+        },
+        "actions": [
+          {
+            "type": "contract",
+            "label": {
+              "en": "Accept & match stake",
+              "de": "Annehmen & Einsatz angleichen"
+            },
+            "address": "{{SC_ADDRESS}}",
+            "func": "acceptChallenge",
+            "gasLimit": 10000000,
+            "abi": "hash:062f549b5cb332eac8f1233fcd3fee8bff049b2cc4ab7e47fa06a34e2b9d5a4b",
+            "inputs": [
+              {
+                "name": "Matching Stake",
+                "as": "stake",
+                "description": {
+                  "en": "Match the creator's token and amount exactly.",
+                  "de": "Gleiche Token und Betrag des Erstellers genau aus."
+                },
+                "bot": "Must match the challenge stake exactly — same token identifier and same amount. Query getChallenge first to get both.",
+                "type": "asset",
+                "position": "transfer",
+                "source": "field",
+                "required": true,
+                "min": 0.001
+              },
+              {
+                "name": "Challenge ID",
+                "as": "challengeId",
+                "type": "u64",
+                "position": "arg:1",
+                "source": "var",
+                "default": "{{CHALLENGE_ID}}",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "messages": {
+          "success": {
+            "en": "You're in! The clock is ticking.",
+            "de": "Du bist dabei! Die Uhr tickt."
+          }
+        }
+      },
+      "extras": null
+    },
+    {
+      "key": "multiversx:challenge-create",
+      "identifier": "@challenge-create",
+      "alias": "challenge-create",
+      "chain": "multiversx",
+      "hash": "f2505c1c8a16062df2b62e2d2cfd5d80d48053b11e75b7bc135f9d6d311cb2f8",
+      "checksum": "f2505c1c8a16062df2b62e2d2cfd5d80d48053b11e75b7bc135f9d6d311cb2f8",
+      "name": "Challenge: Create",
+      "title": {
+        "en": "Create a challenge",
+        "de": "Challenge erstellen"
+      },
+      "description": {
+        "en": "Commit to something and stake tokens on it. If you prove it — you keep your stake. If you skip — the challenger takes it.",
+        "de": "Verpflichte dich zu etwas und setze Token darauf. Wenn du es beweist, behältst du deinen Einsatz. Wenn nicht — bekommt ihn der Challenger."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": "{{SC_ADDRESS}}",
+      "primaryFunc": "createChallenge",
+      "brand": {
+        "hash": "f442e1ad06d242b0cb106bc30617a2f4bbbb9450d36e03617dc06db14d4ca88a",
+        "slug": "challenge",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "Challenge",
+        "description": {
+          "en": "Stake-backed personal challenges. Put money on the line and prove it.",
+          "de": "Persönliche Challenges mit echtem Einsatz. Setz etwas aufs Spiel und beweise es."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "Challenge: Create",
+        "title": {
+          "en": "Create a challenge",
+          "de": "Challenge erstellen"
+        },
+        "description": {
+          "en": "Commit to something and stake tokens on it. If you prove it — you keep your stake. If you skip — the challenger takes it.",
+          "de": "Verpflichte dich zu etwas und setze Token darauf. Wenn du es beweist, behältst du deinen Einsatz. Wenn nicht — bekommt ihn der Challenger."
+        },
+        "bot": "Creates an on-chain challenge with a stake. Ask the user what they want to commit to, which token to stake (EGLD or a stablecoin like USDC), how much to stake, and how long the challenge should run.",
         "chain": "multiversx",
         "vars": {
           "SC_ADDRESS": "TODO"
@@ -68,14 +172,884 @@
           {
             "type": "contract",
             "label": {
-              "en": "Configure loyalty program",
-              "de": "Treueprogramm konfigurieren"
+              "en": "Create challenge",
+              "de": "Challenge erstellen"
             },
             "address": "{{SC_ADDRESS}}",
-            "func": "configureLoyalty",
+            "func": "createChallenge",
+            "gasLimit": 10000000,
+            "abi": "hash:062f549b5cb332eac8f1233fcd3fee8bff049b2cc4ab7e47fa06a34e2b9d5a4b",
             "inputs": [
               {
-                "name": "LOYALTY_SLUG",
+                "name": "Stake",
+                "as": "stake",
+                "description": {
+                  "en": "Token and amount to stake. If you fail, your challenger wins this.",
+                  "de": "Token und Betrag für den Einsatz. Wenn du scheiterst, geht er an den Challenger."
+                },
+                "bot": "Token and amount to stake on the challenge. Can be EGLD or a stablecoin (e.g. USDC). Minimum 0.001 EGLD equivalent.",
+                "type": "asset",
+                "position": "transfer",
+                "source": "field",
+                "required": true,
+                "min": 0.001
+              },
+              {
+                "name": "Title",
+                "as": "title",
+                "description": {
+                  "en": "What are you committing to? Be specific.",
+                  "de": "Wozu verpflichtest du dich? Sei konkret."
+                },
+                "bot": "Short, specific commitment — e.g. 'Go to the gym tomorrow', '10k steps every day this week', 'No sugar for 3 days'.",
+                "type": "string",
+                "position": "arg:1",
+                "source": "field",
+                "required": true,
+                "min": 3,
+                "max": 128
+              },
+              {
+                "name": "Duration",
+                "as": "durationHours",
+                "description": {
+                  "en": "How long does this challenge run?",
+                  "de": "Wie lange läuft diese Challenge?"
+                },
+                "bot": "Duration in hours. Use 24 for a day challenge, 72 for 3 days, 168 for a week.",
+                "type": "u64",
+                "position": "arg:2",
+                "source": "field",
+                "required": true,
+                "options": {
+                  "24": "1 day",
+                  "72": "3 days",
+                  "168": "1 week",
+                  "336": "2 weeks",
+                  "720": "30 days"
+                }
+              }
+            ]
+          }
+        ],
+        "output": {
+          "CHALLENGE_ID": "out.data"
+        },
+        "messages": {
+          "success": {
+            "en": "Challenge created! Share the link so someone can take the bet.",
+            "de": "Challenge erstellt! Teile den Link, damit jemand die Wette annehmen kann."
+          }
+        }
+      },
+      "extras": null
+    },
+    {
+      "key": "multiversx:challenge-list",
+      "identifier": "@challenge-list",
+      "alias": "challenge-list",
+      "chain": "multiversx",
+      "hash": "daa1ae0015ae49de59cb1b3ca7eb553a6161f73c2434300aed60a4a4b27e1f57",
+      "checksum": "daa1ae0015ae49de59cb1b3ca7eb553a6161f73c2434300aed60a4a4b27e1f57",
+      "name": "Challenge: Browse",
+      "title": {
+        "en": "Live challenges",
+        "de": "Laufende Challenges"
+      },
+      "description": {
+        "en": "Browse open challenges waiting for someone to take the bet.",
+        "de": "Offene Challenges, die auf einen Challenger warten."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": "{{SC_ADDRESS}}",
+      "primaryFunc": "getOpenChallenges",
+      "brand": {
+        "hash": "f442e1ad06d242b0cb106bc30617a2f4bbbb9450d36e03617dc06db14d4ca88a",
+        "slug": "challenge",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "Challenge",
+        "description": {
+          "en": "Stake-backed personal challenges. Put money on the line and prove it.",
+          "de": "Persönliche Challenges mit echtem Einsatz. Setz etwas aufs Spiel und beweise es."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "Challenge: Browse",
+        "title": {
+          "en": "Live challenges",
+          "de": "Laufende Challenges"
+        },
+        "description": {
+          "en": "Browse open challenges waiting for someone to take the bet.",
+          "de": "Offene Challenges, die auf einen Challenger warten."
+        },
+        "bot": "Lists all open challenges on-chain. Show the user what challenges are available to accept.",
+        "chain": "multiversx",
+        "vars": {
+          "SC_ADDRESS": "TODO"
+        },
+        "actions": [
+          {
+            "type": "query",
+            "label": {
+              "en": "Loading challenges...",
+              "de": "Challenges werden geladen..."
+            },
+            "address": "{{SC_ADDRESS}}",
+            "func": "getOpenChallenges",
+            "args": [
+              "u32:0",
+              "u32:20"
+            ],
+            "inputs": [],
+            "auto": true,
+            "abi": "hash:062f549b5cb332eac8f1233fcd3fee8bff049b2cc4ab7e47fa06a34e2b9d5a4b"
+          }
+        ],
+        "output": {
+          "CHALLENGES": "out"
+        },
+        "messages": {
+          "success": {
+            "en": "Open challenges loaded.",
+            "de": "Offene Challenges geladen."
+          }
+        }
+      },
+      "extras": null
+    },
+    {
+      "key": "multiversx:challenge-resolve",
+      "identifier": "@challenge-resolve",
+      "alias": "challenge-resolve",
+      "chain": "multiversx",
+      "hash": "4f99a53fdf97ec3636bcba59b5f41c3fbcd68d23f8d78b16d41d3d944c5cdd61",
+      "checksum": "4f99a53fdf97ec3636bcba59b5f41c3fbcd68d23f8d78b16d41d3d944c5cdd61",
+      "name": "Challenge: Resolve",
+      "title": {
+        "en": "Resolve challenge",
+        "de": "Challenge auflösen"
+      },
+      "description": {
+        "en": "Mark a challenge as succeeded or failed after verification. Owner only.",
+        "de": "Challenge nach Überprüfung als erfolgreich oder gescheitert markieren. Nur für Eigentümer."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": "{{SC_ADDRESS}}",
+      "primaryFunc": "resolveChallenge",
+      "brand": {
+        "hash": "f442e1ad06d242b0cb106bc30617a2f4bbbb9450d36e03617dc06db14d4ca88a",
+        "slug": "challenge",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "Challenge",
+        "description": {
+          "en": "Stake-backed personal challenges. Put money on the line and prove it.",
+          "de": "Persönliche Challenges mit echtem Einsatz. Setz etwas aufs Spiel und beweise es."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "Challenge: Resolve",
+        "title": {
+          "en": "Resolve challenge",
+          "de": "Challenge auflösen"
+        },
+        "description": {
+          "en": "Mark a challenge as succeeded or failed after verification. Owner only.",
+          "de": "Challenge nach Überprüfung als erfolgreich oder gescheitert markieren. Nur für Eigentümer."
+        },
+        "bot": "Resolves a challenge outcome after the end time. Only callable by the contract owner (JoAi). Use this after verifying the creator's proof. creator_succeeded=true returns stakes to both parties; false sends both stakes to the acceptor.",
+        "chain": "multiversx",
+        "vars": {
+          "SC_ADDRESS": "TODO"
+        },
+        "actions": [
+          {
+            "type": "contract",
+            "label": {
+              "en": "Resolve challenge",
+              "de": "Challenge auflösen"
+            },
+            "address": "{{SC_ADDRESS}}",
+            "func": "resolveChallenge",
+            "gasLimit": 10000000,
+            "abi": "hash:062f549b5cb332eac8f1233fcd3fee8bff049b2cc4ab7e47fa06a34e2b9d5a4b",
+            "inputs": [
+              {
+                "name": "Challenge ID",
+                "as": "challengeId",
+                "type": "u64",
+                "position": "arg:1",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Creator Succeeded",
+                "as": "creatorSucceeded",
+                "description": {
+                  "en": "Did the creator complete the challenge?",
+                  "de": "Hat der Ersteller die Challenge abgeschlossen?"
+                },
+                "bot": "Set to true if the creator provided valid proof of completion, false if they failed or didn't respond.",
+                "type": "bool",
+                "position": "arg:2",
+                "source": "field",
+                "required": true,
+                "options": {
+                  "true": "Yes — creator succeeded",
+                  "false": "No — creator failed"
+                }
+              }
+            ]
+          }
+        ],
+        "messages": {
+          "success": {
+            "en": "Challenge resolved. Stakes distributed.",
+            "de": "Challenge aufgelöst. Einsätze verteilt."
+          }
+        }
+      },
+      "extras": null
+    },
+    {
+      "key": "multiversx:challenge-view",
+      "identifier": "@challenge-view",
+      "alias": "challenge-view",
+      "chain": "multiversx",
+      "hash": "406df926da3e0222922798992e6a70ee166d5143f9ac471875fc6ad722d41b9f",
+      "checksum": "406df926da3e0222922798992e6a70ee166d5143f9ac471875fc6ad722d41b9f",
+      "name": "Challenge: View",
+      "title": {
+        "en": "View challenge",
+        "de": "Challenge ansehen"
+      },
+      "description": {
+        "en": "See the details, stake, and status of a challenge.",
+        "de": "Details, Einsatz und Status einer Challenge ansehen."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": "{{SC_ADDRESS}}",
+      "primaryFunc": "getChallenge",
+      "brand": {
+        "hash": "f442e1ad06d242b0cb106bc30617a2f4bbbb9450d36e03617dc06db14d4ca88a",
+        "slug": "challenge",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "Challenge",
+        "description": {
+          "en": "Stake-backed personal challenges. Put money on the line and prove it.",
+          "de": "Persönliche Challenges mit echtem Einsatz. Setz etwas aufs Spiel und beweise es."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "Challenge: View",
+        "title": {
+          "en": "View challenge",
+          "de": "Challenge ansehen"
+        },
+        "description": {
+          "en": "See the details, stake, and status of a challenge.",
+          "de": "Details, Einsatz und Status einer Challenge ansehen."
+        },
+        "bot": "Fetches challenge details by ID. Use this before accepting to see the exact stake amount.",
+        "chain": "multiversx",
+        "vars": {
+          "SC_ADDRESS": "TODO",
+          "CHALLENGE_ID": "query:id"
+        },
+        "actions": [
+          {
+            "type": "query",
+            "label": {
+              "en": "Loading challenge...",
+              "de": "Challenge wird geladen..."
+            },
+            "address": "{{SC_ADDRESS}}",
+            "func": "getChallenge",
+            "args": [],
+            "inputs": [
+              {
+                "name": "Challenge ID",
+                "as": "challengeId",
+                "type": "u64",
+                "position": "arg:1",
+                "source": "var",
+                "default": "{{CHALLENGE_ID}}",
+                "required": true
+              }
+            ],
+            "auto": true,
+            "abi": "hash:062f549b5cb332eac8f1233fcd3fee8bff049b2cc4ab7e47fa06a34e2b9d5a4b"
+          }
+        ],
+        "output": {
+          "CREATOR": "out.creator",
+          "TITLE": "out.title",
+          "STAKE": "out.stake",
+          "ENDS_AT": "out.ends_at",
+          "STATUS": "out.status",
+          "ACCEPTOR": "out.acceptor"
+        },
+        "messages": {
+          "success": {
+            "en": "{{TITLE}} — {{STAKE}} EGLD at stake",
+            "de": "{{TITLE}} — {{STAKE}} EGLD im Einsatz"
+          }
+        }
+      },
+      "extras": null
+    },
+    {
+      "key": "multiversx:coupon-create",
+      "identifier": "@coupon-create",
+      "alias": "coupon-create",
+      "chain": "multiversx",
+      "hash": "a9ea6e93628c670fbb69e7641c11d294ef0241441fb1fb7854b06e101f739106",
+      "checksum": "a9ea6e93628c670fbb69e7641c11d294ef0241441fb1fb7854b06e101f739106",
+      "name": "Coupon: Create",
+      "title": {
+        "en": "Create a coupon",
+        "de": "Gutschein erstellen"
+      },
+      "description": {
+        "en": "Issue an on-chain discount coupon code. Set the discount percentage and usage limit.",
+        "de": "On-Chain-Rabattgutscheincode ausstellen. Rabattprozentsatz und Nutzungslimit festlegen."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": "{{SC_ADDRESS}}",
+      "primaryFunc": "createCoupon",
+      "brand": {
+        "hash": "8227755149d3d2e677f68e8be8e8fbf6b5138b5d08d94cd771b5c5037a44398a",
+        "slug": "coupon",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "Coupon",
+        "description": {
+          "en": "On-chain discount coupons. Create, share, and redeem verifiable coupon codes anchored on the blockchain.",
+          "de": "On-Chain-Rabattgutscheine. Erstelle, teile und löse verifizierbare Gutscheincodes auf der Blockchain ein."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "Coupon: Create",
+        "title": {
+          "en": "Create a coupon",
+          "de": "Gutschein erstellen"
+        },
+        "description": {
+          "en": "Issue an on-chain discount coupon code. Set the discount percentage and usage limit.",
+          "de": "On-Chain-Rabattgutscheincode ausstellen. Rabattprozentsatz und Nutzungslimit festlegen."
+        },
+        "bot": "Creates an on-chain discount coupon. Ask the user for the coupon code, discount percentage, and how many times it can be used (0 = unlimited).",
+        "chain": "multiversx",
+        "vars": {
+          "SC_ADDRESS": "TODO_MAINNET"
+        },
+        "sections": [
+          {
+            "title": {
+              "en": "Coupon Code",
+              "de": "Gutscheincode"
+            },
+            "inputs": [
+              "code",
+              "discountPercent"
+            ]
+          },
+          {
+            "title": {
+              "en": "Limits",
+              "de": "Einschränkungen"
+            },
+            "inputs": [
+              "maxUses"
+            ]
+          }
+        ],
+        "actions": [
+          {
+            "type": "contract",
+            "label": {
+              "en": "Create coupon",
+              "de": "Gutschein erstellen"
+            },
+            "address": "{{SC_ADDRESS}}",
+            "func": "createCoupon",
+            "gasLimit": 10000000,
+            "abi": "hash:7610c55148a1835c1cc7cb4ca8673b81ac4c36f0f6e9f56f27b4f6af8b9c2096",
+            "inputs": [
+              {
+                "name": "Code",
+                "as": "code",
+                "description": {
+                  "en": "The coupon code customers will enter (e.g. SUMMER20)",
+                  "de": "Der Gutscheincode, den Kunden eingeben (z.B. SOMMER20)"
+                },
+                "bot": "Short, memorable coupon code — e.g. LAUNCH10, VIP50, WELCOME.",
+                "type": "string",
+                "position": "arg:1",
+                "source": "field",
+                "required": true,
+                "min": 1,
+                "max": 32
+              },
+              {
+                "name": "Discount",
+                "as": "discountPercent",
+                "description": {
+                  "en": "Discount percentage (1–100)",
+                  "de": "Rabattprozentsatz (1–100)"
+                },
+                "bot": "Percentage discount the coupon applies.",
+                "type": "u8",
+                "position": "arg:2",
+                "source": "field",
+                "required": true,
+                "options": {
+                  "5": "5%",
+                  "10": "10%",
+                  "15": "15%",
+                  "20": "20%",
+                  "25": "25%",
+                  "50": "50%"
+                }
+              },
+              {
+                "name": "Max Uses",
+                "as": "maxUses",
+                "description": {
+                  "en": "How many times can this coupon be redeemed? (0 = unlimited)",
+                  "de": "Wie oft kann dieser Gutschein eingelöst werden? (0 = unbegrenzt)"
+                },
+                "bot": "Maximum number of redemptions. Use 0 for unlimited uses.",
+                "type": "u64",
+                "position": "arg:3",
+                "source": "field",
+                "required": true,
+                "options": {
+                  "0": "Unlimited",
+                  "1": "1 use",
+                  "5": "5 uses",
+                  "10": "10 uses",
+                  "100": "100 uses"
+                }
+              },
+              {
+                "name": "Expires At",
+                "as": "expiresAt",
+                "type": "u64",
+                "position": "arg:4",
+                "source": "hidden",
+                "default": "0",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "output": {
+          "COUPON_ID": "out.data"
+        },
+        "messages": {
+          "success": {
+            "en": "Coupon created on-chain! Share the code and let customers redeem it.",
+            "de": "Gutschein on-chain erstellt! Teile den Code und lass Kunden ihn einlösen."
+          }
+        }
+      },
+      "extras": null
+    },
+    {
+      "key": "multiversx:coupon-redeem",
+      "identifier": "@coupon-redeem",
+      "alias": "coupon-redeem",
+      "chain": "multiversx",
+      "hash": "291ce83f78b1137c7901b798ec058e7646a613540ddbb547505618f0afaea7f9",
+      "checksum": "291ce83f78b1137c7901b798ec058e7646a613540ddbb547505618f0afaea7f9",
+      "name": "Coupon: Redeem",
+      "title": {
+        "en": "Redeem a coupon",
+        "de": "Gutschein einlösen"
+      },
+      "description": {
+        "en": "Apply a discount coupon code on-chain. Your redemption is recorded permanently.",
+        "de": "Rabattgutscheincode on-chain einlösen. Deine Einlösung wird dauerhaft gespeichert."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": "{{SC_ADDRESS}}",
+      "primaryFunc": "redeemCoupon",
+      "brand": {
+        "hash": "8227755149d3d2e677f68e8be8e8fbf6b5138b5d08d94cd771b5c5037a44398a",
+        "slug": "coupon",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "Coupon",
+        "description": {
+          "en": "On-chain discount coupons. Create, share, and redeem verifiable coupon codes anchored on the blockchain.",
+          "de": "On-Chain-Rabattgutscheine. Erstelle, teile und löse verifizierbare Gutscheincodes auf der Blockchain ein."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "Coupon: Redeem",
+        "title": {
+          "en": "Redeem a coupon",
+          "de": "Gutschein einlösen"
+        },
+        "description": {
+          "en": "Apply a discount coupon code on-chain. Your redemption is recorded permanently.",
+          "de": "Rabattgutscheincode on-chain einlösen. Deine Einlösung wird dauerhaft gespeichert."
+        },
+        "bot": "Redeems an on-chain coupon by code. Ask the user for the coupon code they want to apply.",
+        "chain": "multiversx",
+        "vars": {
+          "SC_ADDRESS": "TODO_MAINNET"
+        },
+        "actions": [
+          {
+            "type": "contract",
+            "label": {
+              "en": "Redeem coupon",
+              "de": "Gutschein einlösen"
+            },
+            "address": "{{SC_ADDRESS}}",
+            "func": "redeemCoupon",
+            "gasLimit": 10000000,
+            "abi": "hash:7610c55148a1835c1cc7cb4ca8673b81ac4c36f0f6e9f56f27b4f6af8b9c2096",
+            "inputs": [
+              {
+                "name": "Coupon Code",
+                "as": "code",
+                "description": {
+                  "en": "Enter the coupon code to redeem.",
+                  "de": "Gutscheincode zum Einlösen eingeben."
+                },
+                "bot": "The coupon code to redeem — e.g. SUMMER20, VIP50.",
+                "type": "string",
+                "position": "arg:1",
+                "source": "field",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "messages": {
+          "success": {
+            "en": "Coupon redeemed! Your discount has been recorded on-chain.",
+            "de": "Gutschein eingelöst! Dein Rabatt wurde on-chain gespeichert."
+          }
+        }
+      },
+      "extras": null
+    },
+    {
+      "key": "multiversx:coupon-view",
+      "identifier": "@coupon-view",
+      "alias": "coupon-view",
+      "chain": "multiversx",
+      "hash": "08d23d2c69ad0327000857d238a251ae70c6945eaf8b48ed665e36375966e103",
+      "checksum": "08d23d2c69ad0327000857d238a251ae70c6945eaf8b48ed665e36375966e103",
+      "name": "Coupon: View",
+      "title": {
+        "en": "View coupon",
+        "de": "Gutschein ansehen"
+      },
+      "description": {
+        "en": "Check the details, discount, and remaining uses of a coupon code.",
+        "de": "Details, Rabatt und verbleibende Nutzungen eines Gutscheincodes prüfen."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": "{{SC_ADDRESS}}",
+      "primaryFunc": "getCoupon",
+      "brand": {
+        "hash": "8227755149d3d2e677f68e8be8e8fbf6b5138b5d08d94cd771b5c5037a44398a",
+        "slug": "coupon",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "Coupon",
+        "description": {
+          "en": "On-chain discount coupons. Create, share, and redeem verifiable coupon codes anchored on the blockchain.",
+          "de": "On-Chain-Rabattgutscheine. Erstelle, teile und löse verifizierbare Gutscheincodes auf der Blockchain ein."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "Coupon: View",
+        "title": {
+          "en": "View coupon",
+          "de": "Gutschein ansehen"
+        },
+        "description": {
+          "en": "Check the details, discount, and remaining uses of a coupon code.",
+          "de": "Details, Rabatt und verbleibende Nutzungen eines Gutscheincodes prüfen."
+        },
+        "bot": "Fetches coupon details by code. Shows the discount percentage, usage limits, remaining uses, and current status.",
+        "chain": "multiversx",
+        "vars": {
+          "SC_ADDRESS": "TODO_MAINNET",
+          "CODE": "query:code"
+        },
+        "actions": [
+          {
+            "type": "query",
+            "label": {
+              "en": "Loading coupon...",
+              "de": "Gutschein wird geladen..."
+            },
+            "address": "{{SC_ADDRESS}}",
+            "func": "getCoupon",
+            "args": [],
+            "inputs": [
+              {
+                "name": "Coupon Code",
+                "as": "code",
+                "type": "string",
+                "position": "arg:1",
+                "source": "var",
+                "default": "{{CODE}}",
+                "required": true
+              }
+            ],
+            "auto": true,
+            "abi": "hash:7610c55148a1835c1cc7cb4ca8673b81ac4c36f0f6e9f56f27b4f6af8b9c2096"
+          }
+        ],
+        "output": {
+          "DISCOUNT": "out.discount_percent",
+          "MAX_USES": "out.max_uses",
+          "USED_COUNT": "out.used_count",
+          "STATUS": "out.status"
+        },
+        "messages": {
+          "success": {
+            "en": "{{DISCOUNT}}% discount — {{USED_COUNT}}/{{MAX_USES}} uses",
+            "de": "{{DISCOUNT}}% Rabatt — {{USED_COUNT}}/{{MAX_USES}} Nutzungen"
+          }
+        }
+      },
+      "extras": null
+    },
+    {
+      "key": "multiversx:shop-register",
+      "identifier": "@shop-register",
+      "alias": "shop-register",
+      "chain": "multiversx",
+      "hash": "1cc391d98303cdf46e51460c979e10cfdeabccccea085b176d6b283e72d56723",
+      "checksum": "1cc391d98303cdf46e51460c979e10cfdeabccccea085b176d6b283e72d56723",
+      "name": "Shop: Register",
+      "title": {
+        "en": "Register shop",
+        "de": "Shop registrieren"
+      },
+      "description": {
+        "en": "Register your shop on-chain. Uses your brand slug as the unique identifier.",
+        "de": "Registriere deinen Shop on-chain. Nutzt deinen Brand-Slug als eindeutigen Bezeichner."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": "{{SC_ADDRESS}}",
+      "primaryFunc": "registerShop",
+      "brand": {
+        "hash": "5e0fc6eafc01de8515bc102443cd40c5ee2d8d96003cec05c30158fcee0806da",
+        "slug": "shop",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "Shop",
+        "description": {
+          "en": "Your services, permanently on the blockchain. No middlemen, no platforms — just a verified storefront customers and AI can trust.",
+          "de": "Deine Dienstleistungen, dauerhaft auf der Blockchain. Keine Mittelsmänner, keine Plattformen — nur ein verifiziertes Schaufenster, dem Kunden und KI vertrauen."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "Shop: Register",
+        "title": {
+          "en": "Register shop",
+          "de": "Shop registrieren"
+        },
+        "description": {
+          "en": "Register your shop on-chain. Uses your brand slug as the unique identifier.",
+          "de": "Registriere deinen Shop on-chain. Nutzt deinen Brand-Slug als eindeutigen Bezeichner."
+        },
+        "bot": "Registers the shop on-chain using the brand slug. Run once to set up.",
+        "chain": "multiversx",
+        "vars": {
+          "SC_ADDRESS": "TODO"
+        },
+        "actions": [
+          {
+            "type": "contract",
+            "label": {
+              "en": "Register shop",
+              "de": "Shop registrieren"
+            },
+            "address": "{{SC_ADDRESS}}",
+            "func": "registerShop",
+            "inputs": [
+              {
+                "name": "SHOP_SLUG",
+                "type": "string",
+                "position": "arg:1",
+                "source": "hidden",
+                "default": "{{JOAI_WARP_BRAND}}",
+                "required": true
+              }
+            ],
+            "gasLimit": 10000000,
+            "abi": "hash:f47fdd234ea51daebd6c9e16acb2a14695d1ff79e480b949fe53666e5ba46fc0"
+          }
+        ],
+        "messages": {
+          "success": {
+            "en": "Shop registered! Now add your services.",
+            "de": "Shop registriert! Füge jetzt deine Dienstleistungen hinzu."
+          }
+        },
+        "next": "shop-service-add"
+      },
+      "extras": null
+    },
+    {
+      "key": "multiversx:shop-service-add",
+      "identifier": "@shop-service-add",
+      "alias": "shop-service-add",
+      "chain": "multiversx",
+      "hash": "209406bb3de5d9d92eee74d2ca7a3004cb0b77d38e7788a2d5cd02d5de887731",
+      "checksum": "209406bb3de5d9d92eee74d2ca7a3004cb0b77d38e7788a2d5cd02d5de887731",
+      "name": "Shop: Add Service",
+      "title": {
+        "en": "Add service",
+        "de": "Dienstleistung hinzufügen"
+      },
+      "description": {
+        "en": "Add a service to your shop — name, price, and duration.",
+        "de": "Füge eine Dienstleistung hinzu — Name, Preis und Dauer."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": "{{SC_ADDRESS}}",
+      "primaryFunc": "addService",
+      "brand": {
+        "hash": "5e0fc6eafc01de8515bc102443cd40c5ee2d8d96003cec05c30158fcee0806da",
+        "slug": "shop",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "Shop",
+        "description": {
+          "en": "Your services, permanently on the blockchain. No middlemen, no platforms — just a verified storefront customers and AI can trust.",
+          "de": "Deine Dienstleistungen, dauerhaft auf der Blockchain. Keine Mittelsmänner, keine Plattformen — nur ein verifiziertes Schaufenster, dem Kunden und KI vertrauen."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "Shop: Add Service",
+        "title": {
+          "en": "Add service",
+          "de": "Dienstleistung hinzufügen"
+        },
+        "description": {
+          "en": "Add a service to your shop — name, price, and duration.",
+          "de": "Füge eine Dienstleistung hinzu — Name, Preis und Dauer."
+        },
+        "bot": "Adds a service to the shop on-chain. Use slug as a short unique identifier (e.g. haircut, color-treatment).",
+        "chain": "multiversx",
+        "vars": {
+          "SC_ADDRESS": "TODO"
+        },
+        "actions": [
+          {
+            "type": "contract",
+            "label": {
+              "en": "Add service",
+              "de": "Dienstleistung hinzufügen"
+            },
+            "address": "{{SC_ADDRESS}}",
+            "func": "addService",
+            "inputs": [
+              {
+                "name": "SHOP_SLUG",
                 "type": "string",
                 "position": "arg:1",
                 "source": "hidden",
@@ -83,99 +1057,99 @@
                 "required": true
               },
               {
-                "name": "Stamps for reward",
-                "as": "stampsForReward",
+                "name": "Slug",
+                "as": "serviceSlug",
                 "description": {
-                  "en": "How many stamps until a free reward? (e.g. 10)",
-                  "de": "Wie viele Stempel bis zur Belohnung? (z.B. 10)"
+                  "en": "Short unique ID for this service (e.g. haircut)",
+                  "de": "Kurze eindeutige ID für diese Dienstleistung (z.B. haarschnitt)"
                 },
-                "bot": "Stamps needed for reward.",
-                "type": "uint32",
+                "bot": "Short slug for the service, lowercase, dashes only.",
+                "type": "string",
                 "position": "arg:2",
                 "source": "field",
                 "required": true
               },
               {
-                "name": "Reward label",
-                "as": "rewardLabel",
+                "name": "Name",
+                "as": "name",
                 "description": {
-                  "en": "What is the reward? (e.g. Free Haircut)",
-                  "de": "Was ist die Belohnung? (z.B. Kostenloser Haarschnitt)"
+                  "en": "Service name (e.g. Haircut)",
+                  "de": "Name der Dienstleistung (z.B. Haarschnitt)"
                 },
-                "bot": "Short reward name.",
+                "bot": "Display name for the service.",
                 "type": "string",
                 "position": "arg:3",
                 "source": "field",
                 "required": true
               },
               {
-                "name": "Google review URL",
-                "as": "reviewUrl",
+                "name": "Price (cents)",
+                "as": "priceCents",
                 "description": {
-                  "en": "Your Google Maps review link",
-                  "de": "Dein Google Maps-Bewertungslink"
+                  "en": "Price in cents (e.g. 2500 = €25.00)",
+                  "de": "Preis in Cent (z.B. 2500 = 25,00 €)"
                 },
-                "bot": "Google Maps review URL.",
-                "type": "string",
+                "bot": "Price in smallest currency unit (cents). Use 0 for free.",
+                "type": "uint64",
                 "position": "arg:4",
                 "source": "field",
                 "required": true
               },
               {
-                "name": "Review discount (%)",
-                "as": "reviewDiscount",
+                "name": "Duration (minutes)",
+                "as": "durationMinutes",
                 "description": {
-                  "en": "Discount % for leaving a Google review (e.g. 10)",
-                  "de": "Rabatt % für eine Google-Bewertung (z.B. 10)"
+                  "en": "How long does this service take? (e.g. 30)",
+                  "de": "Wie lange dauert diese Dienstleistung? (z.B. 30)"
                 },
-                "bot": "Discount % for reviewers.",
-                "type": "uint8",
+                "bot": "Duration in minutes.",
+                "type": "uint32",
                 "position": "arg:5",
                 "source": "field",
                 "required": true
               },
               {
-                "name": "Reminder after days",
-                "as": "reminderDays",
+                "name": "Category",
+                "as": "category",
                 "description": {
-                  "en": "Send reminder if customer hasn't visited in X days (e.g. 21)",
-                  "de": "Erinnerung senden, wenn Kunde X Tage nicht da war (z.B. 21)"
+                  "en": "Optional category (e.g. hair, nails)",
+                  "de": "Optionale Kategorie (z.B. Haare, Nägel)"
                 },
-                "bot": "Inactivity days before reminder.",
-                "type": "uint32",
+                "bot": "Category label, optional.",
+                "type": "string",
                 "position": "arg:6",
                 "source": "field",
-                "required": true
+                "required": false
               }
             ],
             "gasLimit": 10000000,
-            "abi": "hash:9caa31566c5755c68dff1020ba51d41f12b246af889a5c67a71a5f9f8af24ce0"
+            "abi": "hash:f47fdd234ea51daebd6c9e16acb2a14695d1ff79e480b949fe53666e5ba46fc0"
           }
         ],
         "messages": {
           "success": {
-            "en": "Loyalty program is live! Now program your NFC cards.",
-            "de": "Treueprogramm ist aktiv! Programmiere jetzt deine NFC-Karten."
+            "en": "Service added to your shop.",
+            "de": "Dienstleistung zum Shop hinzugefügt."
           }
         }
       },
       "extras": null
     },
     {
-      "key": "multiversx:loyalty-create",
-      "identifier": "@loyalty-create",
-      "alias": "loyalty-create",
+      "key": "multiversx:shop-service-remove",
+      "identifier": "@shop-service-remove",
+      "alias": "shop-service-remove",
       "chain": "multiversx",
-      "hash": "a914cc69eadcfca354fa2b480f8da4da264d48b08f1c33fd18ef4f2cbc61248e",
-      "checksum": "a914cc69eadcfca354fa2b480f8da4da264d48b08f1c33fd18ef4f2cbc61248e",
-      "name": "Loyalty: Create",
+      "hash": "9cba825170f70fb1acd9d8c9d70fa02fa4995dda43031ebc9c1e6b86c516e6a9",
+      "checksum": "9cba825170f70fb1acd9d8c9d70fa02fa4995dda43031ebc9c1e6b86c516e6a9",
+      "name": "Shop: Remove Service",
       "title": {
-        "en": "Create loyalty program",
-        "de": "Treueprogramm erstellen"
+        "en": "Remove service",
+        "de": "Dienstleistung entfernen"
       },
       "description": {
-        "en": "Register your loyalty program on-chain. Uses your team slug as the unique identifier.",
-        "de": "Registriere dein Treueprogramm on-chain. Nutzt deinen Team-Slug als eindeutigen Bezeichner."
+        "en": "Remove a service from your shop.",
+        "de": "Entferne eine Dienstleistung aus deinem Shop."
       },
       "preview": null,
       "creator": "github:JoAiHQ/warps",
@@ -183,16 +1157,16 @@
       "listed": true,
       "visibility": "public",
       "primaryAddress": "{{SC_ADDRESS}}",
-      "primaryFunc": "createLoyalty",
+      "primaryFunc": "removeService",
       "brand": {
-        "hash": "840d3ef5855c1c1cdcd655e142503f717ceaf334ecfd8d2cc037a8b3b43b8013",
-        "slug": "loyalty",
+        "hash": "5e0fc6eafc01de8515bc102443cd40c5ee2d8d96003cec05c30158fcee0806da",
+        "slug": "shop",
         "active": true,
         "protocol": "brand:0.2.0",
-        "name": "Loyalty",
+        "name": "Shop",
         "description": {
-          "en": "Stamp-based loyalty programs for local service businesses.",
-          "de": "Stempelbasierte Treueprogramme für lokale Dienstleistungsunternehmen."
+          "en": "Your services, permanently on the blockchain. No middlemen, no platforms — just a verified storefront customers and AI can trust.",
+          "de": "Deine Dienstleistungen, dauerhaft auf der Blockchain. Keine Mittelsmänner, keine Plattformen — nur ein verifiziertes Schaufenster, dem Kunden und KI vertrauen."
         },
         "logo": {
           "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
@@ -203,16 +1177,16 @@
       },
       "warp": {
         "protocol": "warp:3.0.0",
-        "name": "Loyalty: Create",
+        "name": "Shop: Remove Service",
         "title": {
-          "en": "Create loyalty program",
-          "de": "Treueprogramm erstellen"
+          "en": "Remove service",
+          "de": "Dienstleistung entfernen"
         },
         "description": {
-          "en": "Register your loyalty program on-chain. Uses your team slug as the unique identifier.",
-          "de": "Registriere dein Treueprogramm on-chain. Nutzt deinen Team-Slug als eindeutigen Bezeichner."
+          "en": "Remove a service from your shop.",
+          "de": "Entferne eine Dienstleistung aus deinem Shop."
         },
-        "bot": "Creates loyalty program on-chain using the team slug. Chains to configure automatically.",
+        "bot": "Removes a service from the shop on-chain by slug.",
         "chain": "multiversx",
         "vars": {
           "SC_ADDRESS": "TODO"
@@ -221,14 +1195,119 @@
           {
             "type": "contract",
             "label": {
-              "en": "Create loyalty program",
-              "de": "Treueprogramm erstellen"
+              "en": "Remove service",
+              "de": "Dienstleistung entfernen"
             },
             "address": "{{SC_ADDRESS}}",
-            "func": "createLoyalty",
+            "func": "removeService",
             "inputs": [
               {
-                "name": "LOYALTY_SLUG",
+                "name": "SHOP_SLUG",
+                "type": "string",
+                "position": "arg:1",
+                "source": "hidden",
+                "default": "{{JOAI_WARP_BRAND}}",
+                "required": true
+              },
+              {
+                "name": "Service slug",
+                "as": "serviceSlug",
+                "description": {
+                  "en": "Slug of the service to remove",
+                  "de": "Slug der zu entfernenden Dienstleistung"
+                },
+                "bot": "The slug of the service to remove.",
+                "type": "string",
+                "position": "arg:2",
+                "source": "field",
+                "required": true
+              }
+            ],
+            "gasLimit": 10000000,
+            "abi": "hash:f47fdd234ea51daebd6c9e16acb2a14695d1ff79e480b949fe53666e5ba46fc0"
+          }
+        ],
+        "messages": {
+          "success": {
+            "en": "Service removed from your shop.",
+            "de": "Dienstleistung aus dem Shop entfernt."
+          }
+        }
+      },
+      "extras": null
+    },
+    {
+      "key": "multiversx:shop-services",
+      "identifier": "@shop-services",
+      "alias": "shop-services",
+      "chain": "multiversx",
+      "hash": "52a2edfe705153612255c40350df32d287a38185a43dd0e492a1750aad942754",
+      "checksum": "52a2edfe705153612255c40350df32d287a38185a43dd0e492a1750aad942754",
+      "name": "Shop: Services",
+      "title": {
+        "en": "{{SHOP_NAME}} — Services",
+        "de": "{{SHOP_NAME}} — Dienstleistungen"
+      },
+      "description": {
+        "en": "Browse available services and book an appointment.",
+        "de": "Dienstleistungen ansehen und Termin buchen."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": "{{SC_ADDRESS}}",
+      "primaryFunc": "getServices",
+      "brand": {
+        "hash": "5e0fc6eafc01de8515bc102443cd40c5ee2d8d96003cec05c30158fcee0806da",
+        "slug": "shop",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "Shop",
+        "description": {
+          "en": "Your services, permanently on the blockchain. No middlemen, no platforms — just a verified storefront customers and AI can trust.",
+          "de": "Deine Dienstleistungen, dauerhaft auf der Blockchain. Keine Mittelsmänner, keine Plattformen — nur ein verifiziertes Schaufenster, dem Kunden und KI vertrauen."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "Shop: Services",
+        "title": {
+          "en": "{{SHOP_NAME}} — Services",
+          "de": "{{SHOP_NAME}} — Dienstleistungen"
+        },
+        "description": {
+          "en": "Browse available services and book an appointment.",
+          "de": "Dienstleistungen ansehen und Termin buchen."
+        },
+        "bot": "Shows all services offered by the shop. SHOP_SLUG from query param or JOAI_WARP_BRAND.",
+        "chain": "multiversx",
+        "vars": {
+          "SHOP_SLUG": "query:slug",
+          "SC_ADDRESS": "TODO"
+        },
+        "actions": [
+          {
+            "type": "query",
+            "label": {
+              "en": "Loading services...",
+              "de": "Dienstleistungen werden geladen..."
+            },
+            "address": "{{SC_ADDRESS}}",
+            "func": "getServices",
+            "args": [
+              "string:{{SHOP_SLUG}}"
+            ],
+            "inputs": [
+              {
+                "name": "SHOP_SLUG",
                 "type": "string",
                 "position": "arg:1",
                 "source": "hidden",
@@ -236,151 +1315,37 @@
                 "required": true
               }
             ],
-            "gasLimit": 10000000,
-            "abi": "hash:9caa31566c5755c68dff1020ba51d41f12b246af889a5c67a71a5f9f8af24ce0"
-          }
-        ],
-        "messages": {
-          "success": {
-            "en": "Loyalty program created! Now configure your program.",
-            "de": "Treueprogramm erstellt! Konfiguriere jetzt dein Programm."
-          }
-        },
-        "next": "loyalty-configure"
-      },
-      "extras": null
-    },
-    {
-      "key": "multiversx:loyalty-redeem",
-      "identifier": "@loyalty-redeem",
-      "alias": "loyalty-redeem",
-      "chain": "multiversx",
-      "hash": "5a27c2cb717d5d3bd4d9c936a7018d2fc13b10291cc87dd73e85f287a36dc94a",
-      "checksum": "5a27c2cb717d5d3bd4d9c936a7018d2fc13b10291cc87dd73e85f287a36dc94a",
-      "name": "Loyalty: Redeem Reward",
-      "title": {
-        "en": "Redeem Reward",
-        "de": "Belohnung einlösen"
-      },
-      "description": {
-        "en": "Redeem a customer's loyalty reward and reset their stamps.",
-        "de": "Löse die Treuebelohnung eines Kunden ein und setze die Stempel zurück."
-      },
-      "preview": null,
-      "creator": "github:JoAiHQ/warps",
-      "privileges": [],
-      "listed": true,
-      "visibility": "public",
-      "primaryAddress": "{{SC_ADDRESS}}",
-      "primaryFunc": "getStatus",
-      "brand": {
-        "hash": "840d3ef5855c1c1cdcd655e142503f717ceaf334ecfd8d2cc037a8b3b43b8013",
-        "slug": "loyalty",
-        "active": true,
-        "protocol": "brand:0.2.0",
-        "name": "Loyalty",
-        "description": {
-          "en": "Stamp-based loyalty programs for local service businesses.",
-          "de": "Stempelbasierte Treueprogramme für lokale Dienstleistungsunternehmen."
-        },
-        "logo": {
-          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
-        },
-        "urls": {
-          "web": "https://joai.ai"
-        }
-      },
-      "warp": {
-        "protocol": "warp:3.0.0",
-        "name": "Loyalty: Redeem Reward",
-        "title": {
-          "en": "Redeem Reward",
-          "de": "Belohnung einlösen"
-        },
-        "description": {
-          "en": "Redeem a customer's loyalty reward and reset their stamps.",
-          "de": "Löse die Treuebelohnung eines Kunden ein und setze die Stempel zurück."
-        },
-        "bot": "Redeems reward via NFC. Log redemption activity on contact after success.",
-        "chain": "multiversx",
-        "vars": {
-          "SC_ADDRESS": "TODO"
-        },
-        "actions": [
-          {
-            "type": "query",
-            "label": {
-              "en": "Checking reward...",
-              "de": "Belohnung wird überprüft..."
-            },
-            "address": "{{SC_ADDRESS}}",
-            "func": "getStatus",
-            "args": [
-              "string:{{LOYALTY_SLUG}}",
-              "string:{{JOAI_TAG_ID}}"
-            ],
-            "inputs": [
-              {
-                "name": "LOYALTY_SLUG",
-                "type": "string",
-                "position": "arg:1",
-                "source": "hidden",
-                "default": "{{JOAI_WARP_BRAND}}"
-              },
-              {
-                "name": "JOAI_TAG_ID",
-                "type": "string",
-                "position": "arg:2",
-                "source": "field",
-                "required": true
-              }
-            ],
             "auto": true,
-            "abi": "hash:9caa31566c5755c68dff1020ba51d41f12b246af889a5c67a71a5f9f8af24ce0"
-          },
-          {
-            "type": "contract",
-            "label": {
-              "en": "Redeem reward",
-              "de": "Belohnung einlösen"
-            },
-            "address": "{{SC_ADDRESS}}",
-            "func": "redeemReward",
-            "args": [
-              "string:{{LOYALTY_SLUG}}",
-              "string:{{JOAI_TAG_ID}}"
-            ],
-            "gasLimit": 10000000,
-            "abi": "hash:9caa31566c5755c68dff1020ba51d41f12b246af889a5c67a71a5f9f8af24ce0"
+            "abi": "hash:f47fdd234ea51daebd6c9e16acb2a14695d1ff79e480b949fe53666e5ba46fc0"
           }
         ],
         "output": {
-          "NAME": "out.1.name"
+          "SERVICES": "out.1"
         },
         "messages": {
           "success": {
-            "en": "Reward redeemed for {{NAME}}! Stamps reset to 0.",
-            "de": "Belohnung für {{NAME}} eingelöst! Stempel auf 0 zurückgesetzt."
+            "en": "Services loaded.",
+            "de": "Dienstleistungen geladen."
           }
         }
       },
       "extras": null
     },
     {
-      "key": "multiversx:loyalty-register",
-      "identifier": "@loyalty-register",
-      "alias": "loyalty-register",
+      "key": "multiversx:signature-create",
+      "identifier": "@signature-create",
+      "alias": "signature-create",
       "chain": "multiversx",
-      "hash": "3a322e160e45995f726d80f837d8f4821f59777539b3920023966cac98b4fbbb",
-      "checksum": "3a322e160e45995f726d80f837d8f4821f59777539b3920023966cac98b4fbbb",
-      "name": "Loyalty: Register",
+      "hash": "6bf8edc27e35b70540ba859852a786a09f75b83c9f9ec759925ce954d4d7ac6f",
+      "checksum": "6bf8edc27e35b70540ba859852a786a09f75b83c9f9ec759925ce954d4d7ac6f",
+      "name": "Signature: Create",
       "title": {
-        "en": "Join our loyalty program!",
-        "de": "Tritt unserem Treueprogramm bei!"
+        "en": "Request a signature",
+        "de": "Signatur anfordern"
       },
       "description": {
-        "en": "Register your loyalty card and start earning stamps towards free rewards.",
-        "de": "Registriere deine Treuekarte und sammle Stempel für kostenlose Belohnungen."
+        "en": "Send an on-chain signature request. The signer receives an email and signs the document with their wallet.",
+        "de": "Sende eine On-Chain-Signaturanfrage. Der Unterzeichner erhält eine E-Mail und unterzeichnet das Dokument mit seiner Wallet."
       },
       "preview": null,
       "creator": "github:JoAiHQ/warps",
@@ -388,16 +1353,16 @@
       "listed": true,
       "visibility": "public",
       "primaryAddress": "{{SC_ADDRESS}}",
-      "primaryFunc": "isCardRegistered",
+      "primaryFunc": "createRequest",
       "brand": {
-        "hash": "840d3ef5855c1c1cdcd655e142503f717ceaf334ecfd8d2cc037a8b3b43b8013",
-        "slug": "loyalty",
+        "hash": "672c9890b01fdaff1ac198a78396da910e00d2629b76ef802fde4e346ee7f1f2",
+        "slug": "signature",
         "active": true,
         "protocol": "brand:0.2.0",
-        "name": "Loyalty",
+        "name": "Signature",
         "description": {
-          "en": "Stamp-based loyalty programs for local service businesses.",
-          "de": "Stempelbasierte Treueprogramme für lokale Dienstleistungsunternehmen."
+          "en": "On-chain document signatures. Send signing requests by email. All agreements anchored on the blockchain.",
+          "de": "On-chain-Dokumentensignaturen. Signaturanfragen per E-Mail senden. Alle Vereinbarungen auf der Blockchain verankert."
         },
         "logo": {
           "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
@@ -408,486 +1373,228 @@
       },
       "warp": {
         "protocol": "warp:3.0.0",
-        "name": "Loyalty: Register",
+        "name": "Signature: Create",
         "title": {
-          "en": "Join our loyalty program!",
-          "de": "Tritt unserem Treueprogramm bei!"
+          "en": "Request a signature",
+          "de": "Signatur anfordern"
         },
         "description": {
-          "en": "Register your loyalty card and start earning stamps towards free rewards.",
-          "de": "Registriere deine Treuekarte und sammle Stempel für kostenlose Belohnungen."
+          "en": "Send an on-chain signature request. The signer receives an email and signs the document with their wallet.",
+          "de": "Sende eine On-Chain-Signaturanfrage. Der Unterzeichner erhält eine E-Mail und unterzeichnet das Dokument mit seiner Wallet."
         },
-        "bot": "Registers NFC card on-chain. If already registered, redirects to status.",
+        "bot": "Creates an on-chain signature request and notifies the signer by email. Ask the user for the document title, a SHA-256 hash of the document, a link to the document, the signer's wallet address, the signer's email, and an optional deadline.",
         "chain": "multiversx",
         "vars": {
-          "LOYALTY_SLUG": "query:slug",
-          "SC_ADDRESS": "TODO"
+          "SC_ADDRESS": "TODO_MAINNET",
+          "API_BASE": "https://api.joai.ai",
+          "TITLE": "field:title",
+          "DOCUMENT_HASH": "field:documentHash",
+          "SIGNER_ADDRESS": "field:signerAddress"
         },
+        "sections": [
+          {
+            "title": {
+              "en": "Document Details",
+              "de": "Dokumentendetails"
+            },
+            "description": {
+              "en": "What document needs to be signed?",
+              "de": "Welches Dokument muss unterzeichnet werden?"
+            },
+            "inputs": [
+              "title",
+              "documentHash",
+              "documentUrl"
+            ]
+          },
+          {
+            "title": {
+              "en": "Signer",
+              "de": "Unterzeichner"
+            },
+            "description": {
+              "en": "Who needs to sign this document?",
+              "de": "Wer muss dieses Dokument unterzeichnen?"
+            },
+            "inputs": [
+              "signerAddress",
+              "signerEmail",
+              "signerName"
+            ]
+          },
+          {
+            "title": {
+              "en": "Settings",
+              "de": "Einstellungen"
+            },
+            "description": {
+              "en": "Set a deadline for the signature request.",
+              "de": "Frist für die Signaturanfrage festlegen."
+            },
+            "inputs": [
+              "deadlineHours"
+            ]
+          }
+        ],
         "actions": [
           {
-            "type": "query",
+            "type": "contract",
             "label": {
-              "en": "Checking card...",
-              "de": "Karte wird überprüft..."
+              "en": "Request signature",
+              "de": "Signatur anfordern"
             },
             "address": "{{SC_ADDRESS}}",
-            "func": "isCardRegistered",
-            "args": [
-              "string:{{LOYALTY_SLUG}}"
-            ],
+            "func": "createRequest",
+            "gasLimit": 10000000,
+            "abi": "hash:7f6bf17e93f44b807be4bccd42a3ad9913011825c2d16806ef7b1232ce2b877f",
             "inputs": [
               {
-                "name": "JOAI_TAG_ID",
+                "name": "Title",
+                "as": "title",
+                "description": {
+                  "en": "Title of the document to be signed.",
+                  "de": "Titel des zu unterzeichnenden Dokuments."
+                },
+                "bot": "Short, clear document title — e.g. 'Freelance Agreement Q2', 'NDA with Acme Corp'.",
+                "type": "string",
+                "position": "arg:1",
+                "source": "field",
+                "required": true,
+                "min": 1,
+                "max": 128
+              },
+              {
+                "name": "Document Hash",
+                "as": "documentHash",
+                "description": {
+                  "en": "SHA-256 hash of the document. Proves the document hasn't been altered.",
+                  "de": "SHA-256-Hash des Dokuments. Beweist, dass das Dokument nicht verändert wurde."
+                },
+                "bot": "SHA-256 fingerprint of the document file. Generate with: sha256sum <file>.",
                 "type": "string",
                 "position": "arg:2",
                 "source": "field",
                 "required": true
-              }
-            ],
-            "auto": true,
-            "next": {
-              "success": "loyalty-status?slug={{LOYALTY_SLUG}}&JOAI_TAG_ID={{JOAI_TAG_ID}}"
-            },
-            "abi": "hash:9caa31566c5755c68dff1020ba51d41f12b246af889a5c67a71a5f9f8af24ce0"
-          },
-          {
-            "type": "collect",
-            "label": {
-              "en": "Register",
-              "de": "Registrieren"
-            },
-            "destination": {
-              "url": "https://api.joai.ai/v1/contacts",
-              "method": "POST",
-              "headers": {
-                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
-              }
-            },
-            "inputs": [
-              {
-                "name": "Name",
-                "as": "name",
-                "description": {
-                  "en": "Your name",
-                  "de": "Dein Name"
-                },
-                "bot": "Customer name.",
-                "type": "string",
-                "source": "field",
-                "required": true,
-                "min": 1
               },
               {
-                "name": "Email",
-                "as": "email",
+                "name": "Document URL",
+                "as": "documentUrl",
                 "description": {
-                  "en": "Your email address",
-                  "de": "Deine E-Mail-Adresse"
+                  "en": "Link to the document (IPFS, Google Drive, etc.)",
+                  "de": "Link zum Dokument (IPFS, Google Drive, etc.)"
                 },
-                "bot": "Customer email.",
+                "bot": "Public or shared URL where the signer can read the document before signing.",
                 "type": "string",
+                "position": "arg:3",
                 "source": "field",
                 "required": true
               },
               {
-                "name": "Phone",
-                "as": "phone",
+                "name": "Deadline",
+                "as": "deadlineHours",
                 "description": {
-                  "en": "Your phone number (optional)",
-                  "de": "Deine Telefonnummer (optional)"
+                  "en": "How long does the signer have to sign?",
+                  "de": "Wie lange hat der Unterzeichner Zeit zum Unterzeichnen?"
                 },
-                "bot": "Optional.",
-                "type": "string",
+                "bot": "Deadline in hours. Use 0 for no deadline, 24 for one day, 168 for a week.",
+                "type": "u64",
+                "position": "arg:4",
                 "source": "field",
-                "required": false
+                "required": true,
+                "options": {
+                  "0": "No deadline",
+                  "24": "24 hours",
+                  "72": "3 days",
+                  "168": "1 week",
+                  "336": "2 weeks"
+                }
               },
               {
-                "name": "Card",
-                "as": "card",
-                "type": "string",
-                "source": "hidden",
-                "default": "{{JOAI_TAG_ID}}",
-                "position": "payload:props"
+                "name": "Signer Address",
+                "as": "signerAddress",
+                "description": {
+                  "en": "Wallet address of the signer.",
+                  "de": "Wallet-Adresse des Unterzeichners."
+                },
+                "bot": "MultiversX wallet address (erd1...) of the person who needs to sign.",
+                "type": "Address",
+                "position": "arg:5",
+                "source": "field",
+                "required": true
               }
             ]
           },
           {
-            "type": "contract",
+            "type": "collect",
             "label": {
-              "en": "Activate card",
-              "de": "Karte aktivieren"
+              "en": "Notifying signer...",
+              "de": "Unterzeichner wird benachrichtigt..."
             },
-            "address": "{{SC_ADDRESS}}",
-            "func": "register",
-            "args": [
-              "string:{{LOYALTY_SLUG}}",
-              "string:{{JOAI_TAG_ID}}",
-              "string:{{name}}"
-            ],
-            "gasLimit": 10000000,
-            "auto": true,
-            "abi": "hash:9caa31566c5755c68dff1020ba51d41f12b246af889a5c67a71a5f9f8af24ce0"
-          }
-        ],
-        "output": {
-          "IS_REGISTERED": "out.1"
-        },
-        "messages": {
-          "success": {
-            "en": "Welcome, {{name}}! Your first stamp has been earned.",
-            "de": "Willkommen, {{name}}! Dein erster Stempel wurde gesammelt."
-          }
-        },
-        "next": "loyalty-review?slug={{LOYALTY_SLUG}}&JOAI_TAG_ID={{JOAI_TAG_ID}}"
-      },
-      "extras": null
-    },
-    {
-      "key": "multiversx:loyalty-remind",
-      "identifier": "@loyalty-remind",
-      "alias": "loyalty-remind",
-      "chain": "multiversx",
-      "hash": "5dc91ceb70be3e24a711b611c55fc134998b3ae4818e95301286c7f609628a47",
-      "checksum": "5dc91ceb70be3e24a711b611c55fc134998b3ae4818e95301286c7f609628a47",
-      "name": "Loyalty: Reminder",
-      "title": {
-        "en": "Send loyalty reminders",
-        "de": "Treue-Erinnerungen senden"
-      },
-      "description": {
-        "en": "Check for customers who haven't visited recently and send them a reminder.",
-        "de": "Prüfe auf Kunden, die kürzlich nicht da waren, und sende eine Erinnerung."
-      },
-      "preview": null,
-      "creator": "github:JoAiHQ/warps",
-      "privileges": [],
-      "listed": true,
-      "visibility": "public",
-      "primaryAddress": "{{SC_ADDRESS}}",
-      "primaryFunc": "getLoyaltyConfig",
-      "brand": {
-        "hash": "840d3ef5855c1c1cdcd655e142503f717ceaf334ecfd8d2cc037a8b3b43b8013",
-        "slug": "loyalty",
-        "active": true,
-        "protocol": "brand:0.2.0",
-        "name": "Loyalty",
-        "description": {
-          "en": "Stamp-based loyalty programs for local service businesses.",
-          "de": "Stempelbasierte Treueprogramme für lokale Dienstleistungsunternehmen."
-        },
-        "logo": {
-          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
-        },
-        "urls": {
-          "web": "https://joai.ai"
-        }
-      },
-      "warp": {
-        "protocol": "warp:3.0.0",
-        "name": "Loyalty: Reminder",
-        "title": {
-          "en": "Send loyalty reminders",
-          "de": "Treue-Erinnerungen senden"
-        },
-        "description": {
-          "en": "Check for customers who haven't visited recently and send them a reminder.",
-          "de": "Prüfe auf Kunden, die kürzlich nicht da waren, und sende eine Erinnerung."
-        },
-        "bot": "Daily scheduled. LOYALTY_SLUG from JOAI_WARP_BRAND. STALE_SINCE = now - (reminder_days * 86400). For each stale customer card ID: GET /v1/contacts?propKey=card&propValue={cardId} to find the JoAi contact, get their phone, send WhatsApp reminder via POST /social/send, log activity.",
-        "chain": "multiversx",
-        "schedule": "daily",
-        "vars": {
-          "SC_ADDRESS": "TODO"
-        },
-        "actions": [
-          {
-            "type": "query",
-            "label": {
-              "en": "Loading loyalty config...",
-              "de": "Treue-Konfiguration wird geladen..."
+            "destination": {
+              "url": "{{API_BASE}}/cortex/agents/{{JOAI_AGENT_UUID}}/message",
+              "method": "POST"
             },
-            "address": "{{SC_ADDRESS}}",
-            "func": "getLoyaltyConfig",
-            "args": [
-              "string:{{LOYALTY_SLUG}}"
-            ],
             "inputs": [
               {
-                "name": "LOYALTY_SLUG",
-                "type": "string",
-                "position": "arg:1",
-                "source": "hidden",
-                "default": "{{JOAI_WARP_BRAND}}"
-              }
-            ],
-            "auto": true,
-            "abi": "hash:9caa31566c5755c68dff1020ba51d41f12b246af889a5c67a71a5f9f8af24ce0"
-          },
-          {
-            "type": "query",
-            "label": {
-              "en": "Fetching overdue customers...",
-              "de": "Überfällige Kunden werden geladen..."
-            },
-            "address": "{{SC_ADDRESS}}",
-            "func": "getStaleCustomers",
-            "args": [
-              "string:{{LOYALTY_SLUG}}",
-              "uint64:{{STALE_SINCE}}",
-              "uint32:50"
-            ],
-            "inputs": [
-              {
-                "name": "STALE_SINCE",
-                "type": "uint64",
-                "position": "arg:2",
+                "name": "Signer Email",
+                "as": "signerEmail",
+                "description": {
+                  "en": "Signer's email address. They will receive a signing link.",
+                  "de": "E-Mail-Adresse des Unterzeichners. Er erhält einen Link zum Unterzeichnen."
+                },
+                "bot": "Email address of the person who needs to sign the document.",
+                "type": "email",
                 "source": "field",
-                "bot": "Calculate as: current unix timestamp minus (REMINDER_DAYS * 86400)"
-              }
-            ],
-            "auto": true,
-            "abi": "hash:9caa31566c5755c68dff1020ba51d41f12b246af889a5c67a71a5f9f8af24ce0"
-          }
-        ],
-        "output": {
-          "REMINDER_DAYS": "out.1.reminder_days",
-          "STALE_CUSTOMERS": "out.2"
-        },
-        "messages": {}
-      },
-      "extras": null
-    },
-    {
-      "key": "multiversx:loyalty-review",
-      "identifier": "@loyalty-review",
-      "alias": "loyalty-review",
-      "chain": "multiversx",
-      "hash": "e32aee09d48b76fcb373cf1dc16c0076bffdacd11ce2ffa1f7856db706a8e106",
-      "checksum": "e32aee09d48b76fcb373cf1dc16c0076bffdacd11ce2ffa1f7856db706a8e106",
-      "name": "Loyalty: Review Prompt",
-      "title": {
-        "en": "Leave us a review!",
-        "de": "Bewerte uns!"
-      },
-      "description": {
-        "en": "Rate us on Google and get a discount on your next visit.",
-        "de": "Bewerte uns auf Google und erhalte einen Rabatt auf deinen nächsten Besuch."
-      },
-      "preview": null,
-      "creator": "github:JoAiHQ/warps",
-      "privileges": [],
-      "listed": true,
-      "visibility": "public",
-      "primaryAddress": "{{SC_ADDRESS}}",
-      "primaryFunc": "getLoyaltyConfig",
-      "brand": {
-        "hash": "840d3ef5855c1c1cdcd655e142503f717ceaf334ecfd8d2cc037a8b3b43b8013",
-        "slug": "loyalty",
-        "active": true,
-        "protocol": "brand:0.2.0",
-        "name": "Loyalty",
-        "description": {
-          "en": "Stamp-based loyalty programs for local service businesses.",
-          "de": "Stempelbasierte Treueprogramme für lokale Dienstleistungsunternehmen."
-        },
-        "logo": {
-          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
-        },
-        "urls": {
-          "web": "https://joai.ai"
-        }
-      },
-      "warp": {
-        "protocol": "warp:3.0.0",
-        "name": "Loyalty: Review Prompt",
-        "title": {
-          "en": "Leave us a review!",
-          "de": "Bewerte uns!"
-        },
-        "description": {
-          "en": "Rate us on Google and get a discount on your next visit.",
-          "de": "Bewerte uns auf Google und erhalte einen Rabatt auf deinen nächsten Besuch."
-        },
-        "bot": "Prompts Google review after first visit. URL and discount from on-chain config.",
-        "chain": "multiversx",
-        "vars": {
-          "LOYALTY_SLUG": "query:slug",
-          "CARD_UUID": "query:card",
-          "SC_ADDRESS": "TODO"
-        },
-        "actions": [
-          {
-            "type": "query",
-            "label": {
-              "en": "Loading...",
-              "de": "Laden..."
-            },
-            "address": "{{SC_ADDRESS}}",
-            "func": "getLoyaltyConfig",
-            "args": [
-              "string:{{LOYALTY_SLUG}}"
-            ],
-            "auto": true,
-            "abi": "hash:9caa31566c5755c68dff1020ba51d41f12b246af889a5c67a71a5f9f8af24ce0"
-          },
-          {
-            "type": "link",
-            "label": {
-              "en": "Leave a Google Review",
-              "de": "Google-Bewertung abgeben"
-            },
-            "url": "{{REVIEW_URL}}"
-          }
-        ],
-        "output": {
-          "REVIEW_URL": "out.review_url",
-          "REVIEW_DISCOUNT": "out.review_discount"
-        },
-        "messages": {
-          "success": {
-            "en": "Thanks for your review! Show this to get {{REVIEW_DISCOUNT}}% off next time.",
-            "de": "Danke für deine Bewertung! Zeige das für {{REVIEW_DISCOUNT}}% Rabatt beim nächsten Mal."
-          }
-        }
-      },
-      "extras": null
-    },
-    {
-      "key": "multiversx:loyalty-stamp",
-      "identifier": "@loyalty-stamp",
-      "alias": "loyalty-stamp",
-      "chain": "multiversx",
-      "hash": "31835caaa86711c12b180323a408e2223396261cebc12bd7535df348807fbf62",
-      "checksum": "31835caaa86711c12b180323a408e2223396261cebc12bd7535df348807fbf62",
-      "name": "Loyalty: Stamp",
-      "title": {
-        "en": "Add Stamp",
-        "de": "Stempel hinzufügen"
-      },
-      "description": {
-        "en": "Scan a customer's loyalty card to add a stamp and track their reward progress. Automatically shows the current stamp count and notifies when a reward is ready to be redeemed.",
-        "de": "Scanne die Treuekarte eines Kunden, um einen Stempel hinzuzufügen und den Prämienfortschritt zu verfolgen. Zeigt automatisch den aktuellen Stempelstand an und informiert, wenn eine Prämie eingelöst werden kann."
-      },
-      "preview": null,
-      "creator": "github:JoAiHQ/warps",
-      "privileges": [],
-      "listed": true,
-      "visibility": "public",
-      "primaryAddress": "{{SC_ADDRESS}}",
-      "primaryFunc": "getStatus",
-      "brand": {
-        "hash": "840d3ef5855c1c1cdcd655e142503f717ceaf334ecfd8d2cc037a8b3b43b8013",
-        "slug": "loyalty",
-        "active": true,
-        "protocol": "brand:0.2.0",
-        "name": "Loyalty",
-        "description": {
-          "en": "Stamp-based loyalty programs for local service businesses.",
-          "de": "Stempelbasierte Treueprogramme für lokale Dienstleistungsunternehmen."
-        },
-        "logo": {
-          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
-        },
-        "urls": {
-          "web": "https://joai.ai"
-        }
-      },
-      "warp": {
-        "protocol": "warp:3.0.0",
-        "name": "Loyalty: Stamp",
-        "title": {
-          "en": "Add Stamp",
-          "de": "Stempel hinzufügen"
-        },
-        "description": {
-          "en": "Scan a customer's loyalty card to add a stamp and track their reward progress. Automatically shows the current stamp count and notifies when a reward is ready to be redeemed.",
-          "de": "Scanne die Treuekarte eines Kunden, um einen Stempel hinzuzufügen und den Prämienfortschritt zu verfolgen. Zeigt automatisch den aktuellen Stempelstand an und informiert, wenn eine Prämie eingelöst werden kann."
-        },
-        "bot": "Adds stamp via NFC. Log visit activity on contact after success.",
-        "chain": "multiversx",
-        "vars": {
-          "SC_ADDRESS": "TODO"
-        },
-        "actions": [
-          {
-            "type": "query",
-            "label": {
-              "en": "Looking up customer...",
-              "de": "Kunde wird gesucht..."
-            },
-            "address": "{{SC_ADDRESS}}",
-            "func": "getStatus",
-            "args": [
-              "string:{{LOYALTY_SLUG}}",
-              "string:{{JOAI_TAG_ID}}"
-            ],
-            "inputs": [
-              {
-                "name": "LOYALTY_SLUG",
-                "type": "string",
-                "position": "arg:1",
-                "source": "hidden",
-                "default": "{{JOAI_WARP_BRAND}}"
+                "required": true
               },
               {
-                "name": "JOAI_TAG_ID",
+                "name": "Signer Name",
+                "as": "signerName",
+                "description": {
+                  "en": "Signer's name (optional)",
+                  "de": "Name des Unterzeichners (optional)"
+                },
+                "bot": "Full name of the signer, used in the notification email.",
                 "type": "string",
-                "position": "arg:2",
                 "source": "field",
-                "required": true
+                "required": false
               }
             ],
-            "auto": true,
-            "abi": "hash:9caa31566c5755c68dff1020ba51d41f12b246af889a5c67a71a5f9f8af24ce0"
-          },
-          {
-            "type": "contract",
-            "label": {
-              "en": "Add stamp",
-              "de": "Stempel hinzufügen"
-            },
-            "address": "{{SC_ADDRESS}}",
-            "func": "addStamp",
-            "args": [
-              "string:{{LOYALTY_SLUG}}",
-              "string:{{JOAI_TAG_ID}}"
-            ],
-            "gasLimit": 10000000,
-            "auto": true,
-            "abi": "hash:9caa31566c5755c68dff1020ba51d41f12b246af889a5c67a71a5f9f8af24ce0"
+            "body": {
+              "integrationType": "email",
+              "recipientId": "{{signerEmail}}",
+              "recipientName": "{{signerName}}",
+              "message": "You have been requested to sign \"{{TITLE}}\".\n\nSign here: https://joai.ai/warps/signature-sign?id={{REQUEST_ID}}&signer={{SIGNER_ADDRESS}}\n\nDocument hash (SHA-256): {{DOCUMENT_HASH}}"
+            }
           }
         ],
         "output": {
-          "NAME": "out.1.name",
-          "STAMPS": "out.1.stamps",
-          "NEEDED": "out.1.stamps_for_reward",
-          "DISCOUNT": "out.1.discount",
-          "REWARD_READY": "out.1.reward_ready"
+          "REQUEST_ID": "out.data"
         },
         "messages": {
           "success": {
-            "en": "{{NAME}} — {{STAMPS}}/{{NEEDED}} stamps",
-            "de": "{{NAME}} — {{STAMPS}}/{{NEEDED}} Stempel"
+            "en": "Signature request sent! The signer will receive an email with a signing link.",
+            "de": "Signaturanfrage gesendet! Der Unterzeichner erhält eine E-Mail mit einem Link zum Unterzeichnen."
           }
         }
       },
       "extras": null
     },
     {
-      "key": "multiversx:loyalty-status",
-      "identifier": "@loyalty-status",
-      "alias": "loyalty-status",
+      "key": "multiversx:signature-list",
+      "identifier": "@signature-list",
+      "alias": "signature-list",
       "chain": "multiversx",
-      "hash": "52493be98af9009ef1e9b3874a840c53de7e558919006e4d32e3671819906b24",
-      "checksum": "52493be98af9009ef1e9b3874a840c53de7e558919006e4d32e3671819906b24",
-      "name": "Loyalty: Status",
+      "hash": "d867ed6132e3ad8a366638d2381348e0cc646b60b7c00dc6a73721021551708e",
+      "checksum": "d867ed6132e3ad8a366638d2381348e0cc646b60b7c00dc6a73721021551708e",
+      "name": "Signature: List",
       "title": {
-        "en": "Your Loyalty Card",
-        "de": "Deine Treuekarte"
+        "en": "My signature requests",
+        "de": "Meine Signaturanfragen"
       },
       "description": {
-        "en": "Check your stamp progress and available rewards.",
-        "de": "Überprüfe deinen Stempelfortschritt und verfügbare Belohnungen."
+        "en": "View all signature requests you have created.",
+        "de": "Alle von dir erstellten Signaturanfragen ansehen."
       },
       "preview": null,
       "creator": "github:JoAiHQ/warps",
@@ -895,16 +1602,16 @@
       "listed": true,
       "visibility": "public",
       "primaryAddress": "{{SC_ADDRESS}}",
-      "primaryFunc": "getStatus",
+      "primaryFunc": "getRequestsByCreator",
       "brand": {
-        "hash": "840d3ef5855c1c1cdcd655e142503f717ceaf334ecfd8d2cc037a8b3b43b8013",
-        "slug": "loyalty",
+        "hash": "672c9890b01fdaff1ac198a78396da910e00d2629b76ef802fde4e346ee7f1f2",
+        "slug": "signature",
         "active": true,
         "protocol": "brand:0.2.0",
-        "name": "Loyalty",
+        "name": "Signature",
         "description": {
-          "en": "Stamp-based loyalty programs for local service businesses.",
-          "de": "Stempelbasierte Treueprogramme für lokale Dienstleistungsunternehmen."
+          "en": "On-chain document signatures. Send signing requests by email. All agreements anchored on the blockchain.",
+          "de": "On-chain-Dokumentensignaturen. Signaturanfragen per E-Mail senden. Alle Vereinbarungen auf der Blockchain verankert."
         },
         "logo": {
           "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
@@ -915,58 +1622,263 @@
       },
       "warp": {
         "protocol": "warp:3.0.0",
-        "name": "Loyalty: Status",
+        "name": "Signature: List",
         "title": {
-          "en": "Your Loyalty Card",
-          "de": "Deine Treuekarte"
+          "en": "My signature requests",
+          "de": "Meine Signaturanfragen"
         },
         "description": {
-          "en": "Check your stamp progress and available rewards.",
-          "de": "Überprüfe deinen Stempelfortschritt und verfügbare Belohnungen."
+          "en": "View all signature requests you have created.",
+          "de": "Alle von dir erstellten Signaturanfragen ansehen."
         },
-        "bot": "Shows stamp progress.",
+        "bot": "Lists all signature requests created by the connected wallet. Shows pending, completed, cancelled, and expired requests.",
         "chain": "multiversx",
         "vars": {
-          "LOYALTY_SLUG": "query:slug",
-          "SC_ADDRESS": "TODO"
+          "SC_ADDRESS": "TODO_MAINNET"
         },
         "actions": [
           {
             "type": "query",
             "label": {
-              "en": "Loading your card...",
-              "de": "Karte wird geladen..."
+              "en": "Loading your requests...",
+              "de": "Deine Anfragen werden geladen..."
             },
             "address": "{{SC_ADDRESS}}",
-            "func": "getStatus",
+            "func": "getRequestsByCreator",
             "args": [
-              "string:{{LOYALTY_SLUG}}"
+              "Address:{{JOAI_WALLET_ADDRESS}}",
+              "u32:0",
+              "u32:20"
             ],
+            "inputs": [],
+            "auto": true,
+            "abi": "hash:7f6bf17e93f44b807be4bccd42a3ad9913011825c2d16806ef7b1232ce2b877f"
+          }
+        ],
+        "output": {
+          "REQUESTS": "out"
+        },
+        "messages": {
+          "success": {
+            "en": "Signature requests loaded.",
+            "de": "Signaturanfragen geladen."
+          }
+        }
+      },
+      "extras": null
+    },
+    {
+      "key": "multiversx:signature-sign",
+      "identifier": "@signature-sign",
+      "alias": "signature-sign",
+      "chain": "multiversx",
+      "hash": "2696f6417c099af300ac601db011d4ac7fa2dde695227cc688c7361ebb276613",
+      "checksum": "2696f6417c099af300ac601db011d4ac7fa2dde695227cc688c7361ebb276613",
+      "name": "Signature: Sign",
+      "title": {
+        "en": "Sign document",
+        "de": "Dokument unterzeichnen"
+      },
+      "description": {
+        "en": "Review the document details and sign the request with your wallet. Your signature is permanently recorded on-chain.",
+        "de": "Dokumentdetails prüfen und die Anfrage mit deiner Wallet unterzeichnen. Deine Signatur wird dauerhaft on-chain gespeichert."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": "{{SC_ADDRESS}}",
+      "primaryFunc": "getRequest",
+      "brand": {
+        "hash": "672c9890b01fdaff1ac198a78396da910e00d2629b76ef802fde4e346ee7f1f2",
+        "slug": "signature",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "Signature",
+        "description": {
+          "en": "On-chain document signatures. Send signing requests by email. All agreements anchored on the blockchain.",
+          "de": "On-chain-Dokumentensignaturen. Signaturanfragen per E-Mail senden. Alle Vereinbarungen auf der Blockchain verankert."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "Signature: Sign",
+        "title": {
+          "en": "Sign document",
+          "de": "Dokument unterzeichnen"
+        },
+        "description": {
+          "en": "Review the document details and sign the request with your wallet. Your signature is permanently recorded on-chain.",
+          "de": "Dokumentdetails prüfen und die Anfrage mit deiner Wallet unterzeichnen. Deine Signatur wird dauerhaft on-chain gespeichert."
+        },
+        "bot": "Signs a specific signature request by ID. Query getRequest first to show the document title and hash so the user can confirm before signing.",
+        "chain": "multiversx",
+        "vars": {
+          "SC_ADDRESS": "TODO_MAINNET",
+          "REQUEST_ID": "query:id"
+        },
+        "actions": [
+          {
+            "type": "query",
+            "label": {
+              "en": "Loading document details...",
+              "de": "Dokumentdetails werden geladen..."
+            },
+            "address": "{{SC_ADDRESS}}",
+            "func": "getRequest",
+            "args": [],
             "inputs": [
               {
-                "name": "JOAI_TAG_ID",
-                "type": "string",
-                "position": "arg:2",
-                "source": "field",
+                "name": "Request ID",
+                "as": "requestId",
+                "type": "u64",
+                "position": "arg:1",
+                "source": "var",
+                "default": "{{REQUEST_ID}}",
                 "required": true
               }
             ],
             "auto": true,
-            "abi": "hash:9caa31566c5755c68dff1020ba51d41f12b246af889a5c67a71a5f9f8af24ce0"
+            "abi": "hash:7f6bf17e93f44b807be4bccd42a3ad9913011825c2d16806ef7b1232ce2b877f"
+          },
+          {
+            "type": "contract",
+            "label": {
+              "en": "Sign document",
+              "de": "Dokument unterzeichnen"
+            },
+            "address": "{{SC_ADDRESS}}",
+            "func": "sign",
+            "gasLimit": 10000000,
+            "abi": "hash:7f6bf17e93f44b807be4bccd42a3ad9913011825c2d16806ef7b1232ce2b877f",
+            "inputs": [
+              {
+                "name": "Request ID",
+                "as": "requestId",
+                "type": "u64",
+                "position": "arg:1",
+                "source": "var",
+                "default": "{{REQUEST_ID}}",
+                "required": true,
+                "hidden": true
+              }
+            ]
           }
         ],
         "output": {
-          "NAME": "out.name",
-          "STAMPS": "out.stamps",
-          "NEEDED": "out.stamps_for_reward",
-          "DISCOUNT": "out.discount",
-          "REWARD_READY": "out.reward_ready",
-          "LAST_VISIT": "out.last_visit"
+          "REQUEST_TITLE": "out.0.title",
+          "DOCUMENT_HASH": "out.0.document_hash"
         },
         "messages": {
           "success": {
-            "en": "{{NAME}} — {{STAMPS}}/{{NEEDED}} stamps collected",
-            "de": "{{NAME}} — {{STAMPS}}/{{NEEDED}} Stempel gesammelt"
+            "en": "Document signed on-chain. Your signature is permanently recorded.",
+            "de": "Dokument on-chain unterzeichnet. Deine Signatur ist dauerhaft gespeichert."
+          }
+        }
+      },
+      "extras": null
+    },
+    {
+      "key": "multiversx:signature-view",
+      "identifier": "@signature-view",
+      "alias": "signature-view",
+      "chain": "multiversx",
+      "hash": "94187d0f1e83b97c1ced334f65ffa2b58ddc429f246d05f7b89146ea71710aca",
+      "checksum": "94187d0f1e83b97c1ced334f65ffa2b58ddc429f246d05f7b89146ea71710aca",
+      "name": "Signature: View",
+      "title": {
+        "en": "View signature request",
+        "de": "Signaturanfrage ansehen"
+      },
+      "description": {
+        "en": "See the details and current status of a signature request.",
+        "de": "Details und aktuellen Status einer Signaturanfrage ansehen."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": "{{SC_ADDRESS}}",
+      "primaryFunc": "getRequest",
+      "brand": {
+        "hash": "672c9890b01fdaff1ac198a78396da910e00d2629b76ef802fde4e346ee7f1f2",
+        "slug": "signature",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "Signature",
+        "description": {
+          "en": "On-chain document signatures. Send signing requests by email. All agreements anchored on the blockchain.",
+          "de": "On-chain-Dokumentensignaturen. Signaturanfragen per E-Mail senden. Alle Vereinbarungen auf der Blockchain verankert."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "Signature: View",
+        "title": {
+          "en": "View signature request",
+          "de": "Signaturanfrage ansehen"
+        },
+        "description": {
+          "en": "See the details and current status of a signature request.",
+          "de": "Details und aktuellen Status einer Signaturanfrage ansehen."
+        },
+        "bot": "Fetches a signature request by ID. Shows the document title, hash, creator, signer count, and current status.",
+        "chain": "multiversx",
+        "vars": {
+          "SC_ADDRESS": "TODO_MAINNET",
+          "REQUEST_ID": "query:id"
+        },
+        "actions": [
+          {
+            "type": "query",
+            "label": {
+              "en": "Loading request...",
+              "de": "Anfrage wird geladen..."
+            },
+            "address": "{{SC_ADDRESS}}",
+            "func": "getRequest",
+            "args": [],
+            "inputs": [
+              {
+                "name": "Request ID",
+                "as": "requestId",
+                "type": "u64",
+                "position": "arg:1",
+                "source": "var",
+                "default": "{{REQUEST_ID}}",
+                "required": true
+              }
+            ],
+            "auto": true,
+            "abi": "hash:7f6bf17e93f44b807be4bccd42a3ad9913011825c2d16806ef7b1232ce2b877f"
+          }
+        ],
+        "output": {
+          "TITLE": "out.title",
+          "CREATOR": "out.creator",
+          "DOCUMENT_HASH": "out.document_hash",
+          "SIGNER_COUNT": "out.signer_count",
+          "SIGNED_COUNT": "out.signed_count",
+          "STATUS": "out.status"
+        },
+        "messages": {
+          "success": {
+            "en": "{{TITLE}} — {{SIGNED_COUNT}}/{{SIGNER_COUNT}} signed",
+            "de": "{{TITLE}} — {{SIGNED_COUNT}}/{{SIGNER_COUNT}} unterzeichnet"
           }
         }
       },
@@ -977,8 +1889,8 @@
       "identifier": "@appointment-availability",
       "alias": "appointment-availability",
       "chain": "none",
-      "hash": "e120e1f9404cbffc45656b0209524b1f5e9be6aa7291c5fdc606e437ae9d298f",
-      "checksum": "e120e1f9404cbffc45656b0209524b1f5e9be6aa7291c5fdc606e437ae9d298f",
+      "hash": "196b127c1acf2d8c31878d4547bf37c5d4f0374755901fdf0b35177263e0113c",
+      "checksum": "196b127c1acf2d8c31878d4547bf37c5d4f0374755901fdf0b35177263e0113c",
       "name": "Appointments: Availability",
       "title": {
         "en": "Appointment availability",
@@ -1131,6 +2043,50 @@
             ]
           }
         ],
+        "sections": [
+          {
+            "title": {
+              "en": "What's it about?",
+              "de": "Worum geht es?"
+            },
+            "description": {
+              "en": "Give us a quick idea of the purpose.",
+              "de": "Gib uns eine kurze Idee des Zwecks."
+            },
+            "inputs": [
+              "title"
+            ]
+          },
+          {
+            "title": {
+              "en": "When are you free?",
+              "de": "Wann hast du Zeit?"
+            },
+            "description": {
+              "en": "Pick a window and we'll find the best slot.",
+              "de": "Wähle ein Zeitfenster und wir finden den besten Slot."
+            },
+            "inputs": [
+              "windowStart",
+              "windowEnd"
+            ]
+          },
+          {
+            "title": {
+              "en": "About you",
+              "de": "Über dich"
+            },
+            "description": {
+              "en": "So we know who to expect.",
+              "de": "Damit wir wissen, wen wir erwarten."
+            },
+            "inputs": [
+              "attendeeName",
+              "attendeeEmail",
+              "description"
+            ]
+          }
+        ],
         "output": {
           "CONNECTED": "out.data.connected",
           "TIMEZONE": "out.data.timezone",
@@ -1198,20 +2154,20 @@
       }
     },
     {
-      "key": "none:email-send",
-      "identifier": "@email-send",
-      "alias": "email-send",
+      "key": "none:appointment-book",
+      "identifier": "@appointment-book",
+      "alias": "appointment-book",
       "chain": "none",
-      "hash": "55e8248df84389f08adc9862ec2d01c60580d01932592beb8d845cc487ba7917",
-      "checksum": "55e8248df84389f08adc9862ec2d01c60580d01932592beb8d845cc487ba7917",
-      "name": "Email: Send",
+      "hash": "62acd63716f9f822b0e13dd192848d7afced44e81b052288ac85db04d180e55b",
+      "checksum": "62acd63716f9f822b0e13dd192848d7afced44e81b052288ac85db04d180e55b",
+      "name": "Appointments: Book",
       "title": {
-        "en": "Send email",
-        "de": "E-Mail senden"
+        "en": "Book appointment",
+        "de": "Termin buchen"
       },
       "description": {
-        "en": "Send an email to a contact. Resolves or creates a conversation room for the recipient so replies are tracked.",
-        "de": "Sendet eine E-Mail an einen Kontakt. Erstellt einen Gesprächsraum für den Empfänger, damit Antworten verfolgt werden."
+        "en": "Book a confirmed appointment slot for the current agent.",
+        "de": "Bucht einen bestaetigten Termin fuer den aktuellen Agenten."
       },
       "preview": null,
       "creator": "github:JoAiHQ/warps",
@@ -1221,14 +2177,14 @@
       "primaryAddress": null,
       "primaryFunc": null,
       "brand": {
-        "hash": "47035c1653294872beb8c3895c2330e1faac56aa2f307d0fec8bebba174ddb92",
-        "slug": "email",
+        "hash": "13e21ae250eea2df29beb08bc9657121ecb459d5a4193fa0d40772aa1ae8694e",
+        "slug": "appointment",
         "active": true,
         "protocol": "brand:0.2.0",
-        "name": "Email",
+        "name": "Appointment",
         "description": {
-          "en": "Send and manage emails through your AI agent.",
-          "de": "E-Mails über deinen AI-Agenten senden und verwalten."
+          "en": "Appointment booking and intake flows for service businesses.",
+          "de": "Terminbuchung und Intake-Abläufe für Dienstleistungsunternehmen."
         },
         "logo": {
           "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
@@ -1239,25 +2195,25 @@
       },
       "warp": {
         "protocol": "warp:3.0.0",
-        "name": "Email: Send",
+        "name": "Appointments: Book",
         "title": {
-          "en": "Send email",
-          "de": "E-Mail senden"
+          "en": "Book appointment",
+          "de": "Termin buchen"
         },
         "description": {
-          "en": "Send an email to a contact. Resolves or creates a conversation room for the recipient so replies are tracked.",
-          "de": "Sendet eine E-Mail an einen Kontakt. Erstellt einen Gesprächsraum für den Empfänger, damit Antworten verfolgt werden."
+          "en": "Book a confirmed appointment slot for the current agent.",
+          "de": "Bucht einen bestaetigten Termin fuer den aktuellen Agenten."
         },
-        "bot": "Use this to send emails through the agent's email integration. The agent must have an email handle configured. Creates a persistent conversation room for the recipient — replies will route back to that room.",
+        "bot": "Use this only after running appointment-availability and the user has explicitly chosen a slot from the results. Never substitute this with direct calendar event creation — that skips booking policy, overlap checks, and attendee tracking. Always refer to bookings as 'appointments', never 'meetings'. The attendee is the person you are talking to — use their name and email from context without asking. Build a descriptive title combining purpose and name (e.g. 'Consultation with Anna Schmidt'). Pass exact start and end times from the chosen slot.",
         "actions": [
           {
             "type": "collect",
             "label": {
-              "en": "Send email",
-              "de": "E-Mail senden"
+              "en": "Book now",
+              "de": "Jetzt buchen"
             },
             "destination": {
-              "url": "https://api.joai.ai/v1/agents/{{JOAI_AGENT_UUID}}/room/message",
+              "url": "https://api.joai.ai/v1/agents/{{JOAI_AGENT_UUID}}/appointments/book",
               "method": "POST",
               "headers": {
                 "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
@@ -1265,80 +2221,270 @@
             },
             "inputs": [
               {
-                "name": "Integration",
-                "as": "integration",
+                "name": "Appointment Title",
+                "as": "title",
+                "description": {
+                  "en": "Descriptive title shown on the calendar event",
+                  "de": "Aussagekräftiger Titel für den Kalendereintrag"
+                },
+                "bot": "Required. A descriptive title that identifies the appointment at a glance. Always combine the meeting purpose AND the attendee name, e.g. 'Consultation with Anna Schmidt', 'Demo call with Acme Corp', 'Tax review with John Doe'. Never use generic titles like 'Appointment' or 'Meeting'.",
                 "type": "string",
-                "source": "value",
-                "value": "email",
-                "required": true
+                "position": "arg:1",
+                "source": "field",
+                "required": true,
+                "min": 3
               },
               {
-                "name": "To",
-                "as": "recipientId",
+                "name": "Scheduled At",
+                "as": "scheduledAt",
                 "description": {
-                  "en": "Recipient email address",
-                  "de": "E-Mail-Adresse des Empfängers"
+                  "en": "Exact appointment start in ISO format",
+                  "de": "Exakter Startzeitpunkt im ISO-Format"
                 },
-                "bot": "The recipient's email address.",
+                "bot": "Exact confirmed appointment start in ISO 8601 format.",
                 "type": "string",
+                "position": "arg:2",
                 "source": "field",
                 "required": true
               },
               {
-                "name": "Recipient Name",
-                "as": "recipientName",
+                "name": "Timezone",
+                "as": "timezone",
                 "description": {
-                  "en": "Recipient's display name",
-                  "de": "Anzeigename des Empfängers"
+                  "en": "Appointment timezone",
+                  "de": "Zeitzone des Termins"
                 },
-                "bot": "Optional display name for the recipient. Used as the room name.",
+                "bot": "Timezone identifier like Europe/Vienna, America/New_York, or UTC.",
                 "type": "string",
                 "source": "field",
                 "required": false
               },
               {
-                "name": "Message",
-                "as": "message",
+                "name": "Service Slug",
+                "as": "serviceSlug",
                 "description": {
-                  "en": "Email body content",
-                  "de": "E-Mail-Inhalt"
+                  "en": "Optional configured service identifier",
+                  "de": "Optionaler Bezeichner fuer einen konfigurierten Service"
                 },
-                "bot": "The body content of the email.",
+                "bot": "If the booking belongs to a configured service, pass the same service slug used for availability.",
                 "type": "string",
                 "source": "field",
-                "required": true
+                "required": false
+              },
+              {
+                "name": "Routed Agent UUID",
+                "as": "routedAgentUuid",
+                "description": {
+                  "en": "Optional staff agent UUID for routed bookings",
+                  "de": "Optionale UUID des Mitarbeiter-Agenten fuer geroutete Buchungen"
+                },
+                "bot": "If appointment availability returned a specific agentUuid for the selected slot, pass it here unchanged.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Appointment Request ID",
+                "as": "appointmentRequestId",
+                "description": {
+                  "en": "Optional linked appointment request id",
+                  "de": "Optionale verknuepfte Terminanfrage-ID"
+                },
+                "bot": "If this booking is fulfilling a previously created appointment request, pass that request id.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Attendee Name",
+                "as": "attendeeName",
+                "description": {
+                  "en": "Full name of the person the appointment is for",
+                  "de": "Vollständiger Name der Person, für die der Termin ist"
+                },
+                "bot": "Full name of the attendee.",
+                "type": "string",
+                "source": "field",
+                "required": true,
+                "default": "{{JOAI_SENDER_NAME}}",
+                "min": 2
+              },
+              {
+                "name": "Attendee Email",
+                "as": "attendeeEmail",
+                "description": {
+                  "en": "The attendee email",
+                  "de": "E-Mail des Teilnehmers"
+                },
+                "bot": "Email address of the attendee if available.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Notes",
+                "as": "description",
+                "description": {
+                  "en": "Optional notes or agenda",
+                  "de": "Optionale Notizen oder Agenda"
+                },
+                "bot": "Optional notes, context, or agenda to include with the appointment.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Conference Provider",
+                "as": "conferenceProvider",
+                "description": {
+                  "en": "Optional remote meeting provider",
+                  "de": "Optionaler Anbieter fuer Videotermine"
+                },
+                "bot": "Use 'google_meet', 'teams', or 'zoom' only if the user explicitly wants a remote meeting link. Otherwise leave empty.",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "options": {
+                  "google_meet": "Google Meet",
+                  "teams": "Microsoft Teams",
+                  "zoom": "Zoom"
+                }
               }
             ]
           }
         ],
+        "sections": [
+          {
+            "title": {
+              "en": "Who's coming?",
+              "de": "Wer kommt?"
+            },
+            "description": {
+              "en": "We'll send your confirmation here.",
+              "de": "Wir schicken die Bestätigung dorthin."
+            },
+            "inputs": [
+              "attendeeName",
+              "attendeeEmail"
+            ]
+          },
+          {
+            "title": {
+              "en": "When is it?",
+              "de": "Wann ist der Termin?"
+            },
+            "description": {
+              "en": "Confirm the slot you've chosen.",
+              "de": "Bestätige den gewählten Zeitslot."
+            },
+            "inputs": [
+              "scheduledAt",
+              "timezone"
+            ]
+          },
+          {
+            "title": {
+              "en": "Anything else?",
+              "de": "Noch etwas?"
+            },
+            "description": {
+              "en": "Add a note or choose how you'd like to meet.",
+              "de": "Füge eine Notiz hinzu oder wähle, wie ihr euch treffen wollt."
+            },
+            "inputs": [
+              "description",
+              "conferenceProvider"
+            ]
+          }
+        ],
         "output": {
-          "EMAIL_ROOM_ID": "out.data.roomId",
-          "EMAIL_MESSAGE_ID": "out.data.externalMessageId"
+          "MEETING_ID": "out.data.id",
+          "MEETING_URL": "out.data.inviteUrl",
+          "CALENDAR_EVENT_ID": "out.data.calendarEventId",
+          "ATTENDEE_EMAIL": "out.data.participants.0.email",
+          "ATTENDEE_NAME": "out.data.participants.0.name",
+          "MEETING_TITLE": "out.data.name",
+          "SCHEDULED_AT": "out.data.scheduledAt"
         },
+        "next": "appointment/email-confirm?MEETING_ID={{MEETING_ID}}&ATTENDEE_EMAIL={{ATTENDEE_EMAIL}}&ATTENDEE_NAME={{ATTENDEE_NAME}}&MEETING_TITLE={{MEETING_TITLE}}&SCHEDULED_AT={{SCHEDULED_AT}}&MEETING_URL={{MEETING_URL}}",
         "messages": {
           "success": {
-            "en": "Email sent successfully.",
-            "de": "E-Mail erfolgreich gesendet."
+            "en": "Appointment booked successfully.",
+            "de": "Termin erfolgreich gebucht."
           }
         }
       },
-      "extras": null
+      "extras": {
+        "keywords": {
+          "en": [
+            "book appointment",
+            "schedule appointment",
+            "make reservation",
+            "book meeting",
+            "schedule visit",
+            "appointment booking"
+          ],
+          "de": [
+            "Termin buchen",
+            "Termin vereinbaren",
+            "Reservierung machen",
+            "Besprechung buchen",
+            "Besuch planen",
+            "Terminbuchung"
+          ]
+        },
+        "useCases": {
+          "en": [
+            "Schedule a consultation with a service provider",
+            "Book a recurring weekly appointment for a client",
+            "Reserve a time slot on behalf of someone else"
+          ],
+          "de": [
+            "Eine Beratung bei einem Dienstleister vereinbaren",
+            "Einen wöchentlich wiederkehrenden Termin für einen Kunden buchen",
+            "Einen Zeitslot im Namen einer anderen Person reservieren"
+          ]
+        },
+        "category": "productivity",
+        "faq": {
+          "en": [
+            {
+              "question": "How do I book an appointment?",
+              "answer": "Simply select an available time slot and provide your details to book an appointment."
+            },
+            {
+              "question": "Can I book an appointment for someone else?",
+              "answer": "Yes, you can book on behalf of someone else by providing their contact details during the booking process."
+            }
+          ],
+          "de": [
+            {
+              "question": "Wie buche ich einen Termin?",
+              "answer": "Wähle einfach einen verfügbaren Zeitslot und gib deine Daten ein, um einen Termin zu buchen."
+            },
+            {
+              "question": "Kann ich einen Termin für jemand anderen buchen?",
+              "answer": "Ja, du kannst im Namen einer anderen Person buchen, indem du deren Kontaktdaten während des Buchungsvorgangs angibst."
+            }
+          ]
+        }
+      }
     },
     {
-      "key": "none:joai-hook-respond",
-      "identifier": "@joai-hook-respond",
-      "alias": "joai-hook-respond",
+      "key": "none:appointment-request-create",
+      "identifier": "@appointment-request-create",
+      "alias": "appointment-request-create",
       "chain": "none",
-      "hash": "0c043f105000c668567193f94f2458740d396d59a74163aab6550aae7acdef0d",
-      "checksum": "0c043f105000c668567193f94f2458740d396d59a74163aab6550aae7acdef0d",
-      "name": "JoAi: Respond to Hook",
+      "hash": "8c724cea6f95abece09de5b8082f5dda1ffbbb5c20007816d2eb3b9339fbc296",
+      "checksum": "8c724cea6f95abece09de5b8082f5dda1ffbbb5c20007816d2eb3b9339fbc296",
+      "name": "Appointments: Create Request",
       "title": {
-        "en": "Respond to hook request",
-        "de": "Auf Hook-Anfrage antworten"
+        "en": "Create appointment request",
+        "de": "Terminanfrage erstellen"
       },
       "description": {
-        "en": "Approve or deny an external runtime hook request (e.g. a tool permission request from Claude Code).",
-        "de": "Genehmige oder verweigere eine externe Laufzeitanfrage (z.B. eine Werkzeugberechtigung von Claude Code)."
+        "en": "Create an appointment request when an appointment cannot be booked natively.",
+        "de": "Erstellt eine Terminanfrage, wenn ein Termin nicht direkt gebucht werden kann."
       },
       "preview": null,
       "creator": "github:JoAiHQ/warps",
@@ -1348,47 +2494,43 @@
       "primaryAddress": null,
       "primaryFunc": null,
       "brand": {
-        "hash": "4098667056683890c8f1aad41581885db272e391b0d6170e7e2b73ee7fbbca2e",
-        "slug": "joai",
+        "hash": "13e21ae250eea2df29beb08bc9657121ecb459d5a4193fa0d40772aa1ae8694e",
+        "slug": "appointment",
         "active": true,
         "protocol": "brand:0.2.0",
-        "name": "JoAi",
+        "name": "Appointment",
         "description": {
-          "en": "JoAi is a platform for creating and managing your own AI agents.",
-          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten."
+          "en": "Appointment booking and intake flows for service businesses.",
+          "de": "Terminbuchung und Intake-Abläufe für Dienstleistungsunternehmen."
         },
         "logo": {
           "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
         },
         "urls": {
           "web": "https://joai.ai"
-        },
-        "colors": {
-          "primary": "#98FF98",
-          "secondary": "#FFFF66"
         }
       },
       "warp": {
         "protocol": "warp:3.0.0",
-        "name": "JoAi: Respond to Hook",
+        "name": "Appointments: Create Request",
         "title": {
-          "en": "Respond to hook request",
-          "de": "Auf Hook-Anfrage antworten"
+          "en": "Create appointment request",
+          "de": "Terminanfrage erstellen"
         },
         "description": {
-          "en": "Approve or deny an external runtime hook request (e.g. a tool permission request from Claude Code).",
-          "de": "Genehmige oder verweigere eine externe Laufzeitanfrage (z.B. eine Werkzeugberechtigung von Claude Code)."
+          "en": "Create an appointment request when an appointment cannot be booked natively.",
+          "de": "Erstellt eine Terminanfrage, wenn ein Termin nicht direkt gebucht werden kann."
         },
-        "bot": "Responds to a pending hook approval request. Used internally when the user approves or denies a permission request from an external runtime like Claude Code.",
+        "bot": "Use this when booking cannot be completed because there is no connected calendar, no suitable slots were found, or the user wants manual follow-up. Create a clear appointment request with the requester, preferred start time, duration, timezone, failure reason, and notes.",
         "actions": [
           {
             "type": "collect",
             "label": {
-              "en": "Respond",
-              "de": "Antworten"
+              "en": "Create request",
+              "de": "Anfrage erstellen"
             },
             "destination": {
-              "url": "https://api.joai.ai/v1/hooks/respond",
+              "url": "https://api.joai.ai/v1/agents/{{JOAI_AGENT_UUID}}/appointment-requests",
               "method": "POST",
               "headers": {
                 "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
@@ -1396,172 +2538,222 @@
             },
             "inputs": [
               {
-                "name": "requestId",
-                "as": "requestId",
+                "name": "Title",
+                "as": "title",
+                "description": {
+                  "en": "Title for the appointment request",
+                  "de": "Titel fuer die Terminanfrage"
+                },
+                "bot": "Use a title like 'Appointment request: Intro Call'.",
                 "type": "string",
-                "source": "query",
-                "required": true
+                "position": "arg:1",
+                "source": "field",
+                "required": true,
+                "min": 3
               },
               {
-                "name": "decision",
-                "as": "decision",
+                "name": "Service Slug",
+                "as": "serviceSlug",
+                "description": {
+                  "en": "Optional configured service identifier",
+                  "de": "Optionaler Bezeichner fuer einen konfigurierten Service"
+                },
+                "bot": "If the request belongs to a configured service, pass the service slug.",
                 "type": "string",
-                "source": "query",
-                "required": true
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Requester Name",
+                "as": "requesterName",
+                "description": {
+                  "en": "Name of the requester",
+                  "de": "Name des Anfragenden"
+                },
+                "bot": "Name of the requester if known.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Requester Email",
+                "as": "requesterEmail",
+                "description": {
+                  "en": "Email of the requester",
+                  "de": "E-Mail des Anfragenden"
+                },
+                "bot": "Email address of the requester if known.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Window Start",
+                "as": "windowStart",
+                "description": {
+                  "en": "Preferred scheduling window start in ISO format",
+                  "de": "Beginn des bevorzugten Zeitfensters im ISO-Format"
+                },
+                "bot": "Earliest preferred time in ISO 8601 format.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Duration Minutes",
+                "as": "durationMinutes",
+                "description": {
+                  "en": "Requested appointment duration",
+                  "de": "Gewuenschte Termindauer"
+                },
+                "bot": "Requested appointment duration in minutes.",
+                "type": "number",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Timezone",
+                "as": "timezone",
+                "description": {
+                  "en": "Requester timezone",
+                  "de": "Zeitzone des Anfragenden"
+                },
+                "bot": "Timezone identifier such as Europe/Vienna or America/New_York.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Failure Reason",
+                "as": "failureReason",
+                "description": {
+                  "en": "Why direct booking could not complete",
+                  "de": "Warum die direkte Buchung nicht abgeschlossen werden konnte"
+                },
+                "bot": "Use a compact machine-readable reason like no_calendar_integration, no_suitable_slots, or stale_slot.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Notes",
+                "as": "notes",
+                "description": {
+                  "en": "Optional request notes",
+                  "de": "Optionale Notizen zur Anfrage"
+                },
+                "bot": "Optional notes or context for manual follow-up.",
+                "type": "string",
+                "position": "arg:2",
+                "source": "field",
+                "required": false
               }
-            ],
-            "auto": true
+            ]
           }
         ],
-        "messages": {
-          "success": {
-            "en": "Hook request {{decision}}.",
-            "de": "Hook-Anfrage {{decision}}."
-          }
-        }
-      },
-      "extras": null
-    },
-    {
-      "key": "none:loyalty-setup",
-      "identifier": "@loyalty-setup",
-      "alias": "loyalty-setup",
-      "chain": "none",
-      "hash": "9b835f8a901bfda019872c12310555ec44f0ca18a22f79fc5c31b356cb7215b8",
-      "checksum": "9b835f8a901bfda019872c12310555ec44f0ca18a22f79fc5c31b356cb7215b8",
-      "name": "Loyalty: NFC Setup",
-      "title": {
-        "en": "Program loyalty NFC cards",
-        "de": "Treue-NFC-Karten programmieren"
-      },
-      "description": {
-        "en": "Program NFC cards for your loyalty program. All cards get the same agent URL — the NFC chip's hardware ID is the unique card identity.",
-        "de": "Programmiere NFC-Karten für dein Treueprogramm. Alle Karten bekommen dieselbe Agent-URL — die Hardware-ID des NFC-Chips ist die eindeutige Kartenidentität."
-      },
-      "preview": null,
-      "creator": "github:JoAiHQ/warps",
-      "privileges": [],
-      "listed": true,
-      "visibility": "public",
-      "primaryAddress": null,
-      "primaryFunc": null,
-      "brand": {
-        "hash": "840d3ef5855c1c1cdcd655e142503f717ceaf334ecfd8d2cc037a8b3b43b8013",
-        "slug": "loyalty",
-        "active": true,
-        "protocol": "brand:0.2.0",
-        "name": "Loyalty",
-        "description": {
-          "en": "Stamp-based loyalty programs for local service businesses.",
-          "de": "Stempelbasierte Treueprogramme für lokale Dienstleistungsunternehmen."
-        },
-        "logo": {
-          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
-        },
-        "urls": {
-          "web": "https://joai.ai"
-        }
-      },
-      "warp": {
-        "protocol": "warp:3.0.0",
-        "name": "Loyalty: NFC Setup",
-        "title": {
-          "en": "Program loyalty NFC cards",
-          "de": "Treue-NFC-Karten programmieren"
-        },
-        "description": {
-          "en": "Program NFC cards for your loyalty program. All cards get the same agent URL — the NFC chip's hardware ID is the unique card identity.",
-          "de": "Programmiere NFC-Karten für dein Treueprogramm. Alle Karten bekommen dieselbe Agent-URL — die Hardware-ID des NFC-Chips ist die eindeutige Kartenidentität."
-        },
-        "bot": "Programs NFC cards for merchant. Same URL per card; hardware ID is the unique identity.",
-        "vars": {
-          "AGENT_UUID": "query:agent"
-        },
-        "actions": [
+        "sections": [
           {
-            "type": "compute",
-            "label": {
-              "en": "Program card",
-              "de": "Karte programmieren"
+            "title": {
+              "en": "Who are you?",
+              "de": "Wer bist du?"
+            },
+            "description": {
+              "en": "We'll get back to you at these details.",
+              "de": "Wir melden uns unter diesen Angaben bei dir."
             },
             "inputs": [
-              {
-                "name": "LOYALTY_SLUG",
-                "type": "string",
-                "source": "hidden",
-                "default": "{{JOAI_WARP_BRAND}}"
-              }
-            ],
-            "auto": true
+              "requesterName",
+              "requesterEmail"
+            ]
+          },
+          {
+            "title": {
+              "en": "When works for you?",
+              "de": "Wann passt es dir?"
+            },
+            "description": {
+              "en": "Give us a rough idea of your availability.",
+              "de": "Gib uns eine ungefähre Vorstellung deiner Verfügbarkeit."
+            },
+            "inputs": [
+              "windowStart",
+              "durationMinutes",
+              "timezone"
+            ]
+          },
+          {
+            "title": {
+              "en": "Anything to add?",
+              "de": "Noch etwas?"
+            },
+            "description": {
+              "en": "A few words help us prepare for the meeting.",
+              "de": "Ein paar Worte helfen uns, das Treffen vorzubereiten."
+            },
+            "inputs": [
+              "notes"
+            ]
           }
         ],
-        "output": {
-          "nfc": "https://joai.ai/a?agent={{AGENT_UUID}}&warp=loyalty-register&slug={{LOYALTY_SLUG}}"
-        },
         "messages": {
           "success": {
-            "en": "Card programmed! Each card's NFC hardware ID is its unique identity.",
-            "de": "Karte programmiert! Die NFC-Hardware-ID jeder Karte ist ihre eindeutige Identität."
+            "en": "Appointment request captured for follow-up.",
+            "de": "Terminanfrage fuer die Nachverfolgung erfasst."
           }
         }
       },
-      "extras": null
+      "extras": {
+        "keywords": {
+          "en": [
+            "request appointment",
+            "appointment request",
+            "ask for appointment",
+            "submit booking request"
+          ],
+          "de": [
+            "Termin anfragen",
+            "Terminanfrage",
+            "um Termin bitten",
+            "Buchungsanfrage einreichen"
+          ]
+        },
+        "useCases": {
+          "en": [
+            "Request a consultation that requires provider approval",
+            "Submit a booking request for a high-demand time slot",
+            "Ask for an appointment outside regular booking hours"
+          ],
+          "de": [
+            "Eine Beratung anfragen, die eine Genehmigung des Anbieters erfordert",
+            "Eine Buchungsanfrage für einen stark nachgefragten Zeitslot einreichen",
+            "Einen Termin außerhalb der regulären Buchungszeiten anfragen"
+          ]
+        },
+        "category": "productivity",
+        "faq": {
+          "en": [
+            {
+              "question": "When should I use an appointment request instead of direct booking?",
+              "answer": "Use a request when the provider needs to manually approve bookings, such as for high-demand slots, consultations requiring preparation, or appointments outside regular hours."
+            },
+            {
+              "question": "What happens after I submit an appointment request?",
+              "answer": "The provider receives your request and can approve or decline it. You are notified once a decision is made, and the slot is reserved only upon approval."
+            }
+          ],
+          "de": [
+            {
+              "question": "Wann sollte ich eine Terminanfrage statt einer direkten Buchung verwenden?",
+              "answer": "Nutze eine Anfrage, wenn der Anbieter Buchungen manuell genehmigen muss, z. B. bei stark nachgefragten Slots, Beratungen mit Vorbereitung oder Terminen außerhalb der regulären Zeiten."
+            },
+            {
+              "question": "Was passiert, nachdem ich eine Terminanfrage eingereicht habe?",
+              "answer": "Der Anbieter erhält deine Anfrage und kann sie annehmen oder ablehnen. Du wirst benachrichtigt, sobald eine Entscheidung getroffen wurde, und der Slot wird erst bei Genehmigung reserviert."
+            }
+          ]
+        }
+      }
     }
   ],
-  "deletes": [
-    {
-      "key": "multiversx:shop-create",
-      "alias": "shop-create",
-      "chain": "multiversx",
-      "hash": "abddd46275283c5c398b9615ad40fe3317329032051f98c556d645a225f23013"
-    },
-    {
-      "key": "multiversx:shop-loyalty-configure",
-      "alias": "shop-loyalty-configure",
-      "chain": "multiversx",
-      "hash": "4323581a155da908fb7c150b38b469f3593b975b02bfe45506b1f45f35edfc43"
-    },
-    {
-      "key": "multiversx:shop-loyalty-redeem",
-      "alias": "shop-loyalty-redeem",
-      "chain": "multiversx",
-      "hash": "42fa646a9d293c4ee93025f1bff1ec5ad836fd87571675b7a14573f2aadfc678"
-    },
-    {
-      "key": "multiversx:shop-loyalty-register",
-      "alias": "shop-loyalty-register",
-      "chain": "multiversx",
-      "hash": "27c65ddb4aa78d7ec4f63bf348030faafbe630cd2488bd646e4159575fe1d3fb"
-    },
-    {
-      "key": "multiversx:shop-loyalty-remind",
-      "alias": "shop-loyalty-remind",
-      "chain": "multiversx",
-      "hash": "eb706ed3e5b6a0e4617c36143f74f3e8412e0b8f2a6c7ce3f807fac9910b3019"
-    },
-    {
-      "key": "multiversx:shop-loyalty-review",
-      "alias": "shop-loyalty-review",
-      "chain": "multiversx",
-      "hash": "f1fb15aecac9ee757db3741746a55aa102eda9bf87657e127d4e7520fdfb4ee7"
-    },
-    {
-      "key": "multiversx:shop-loyalty-stamp",
-      "alias": "shop-loyalty-stamp",
-      "chain": "multiversx",
-      "hash": "7f2ff31673bccf2a6ef841b7be54fb64f819cf83d7a10a0c0ad9bac17bf7e577"
-    },
-    {
-      "key": "multiversx:shop-loyalty-status",
-      "alias": "shop-loyalty-status",
-      "chain": "multiversx",
-      "hash": "7bfc5cb85144d499c732f3bfa23e5ada9c453d7e1cdb0b80170f345f9010b10d"
-    },
-    {
-      "key": "none:shop-loyalty-setup",
-      "alias": "shop-loyalty-setup",
-      "chain": "none",
-      "hash": "028ff43bc69f6511519a3183809b9a20fa44dc976803eaf001b7f61cb8dd3195"
-    }
-  ]
+  "deletes": []
 }
