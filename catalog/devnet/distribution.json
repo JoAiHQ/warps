@@ -4,8 +4,8 @@
   "repo": "JoAiHQ/warps",
   "branch": "dev",
   "network": "devnet",
-  "commitSha": "31bccd695c196ec4344c485bcee1ddeac6774df1",
-  "generatedAt": "2026-04-09T13:05:08.219Z",
+  "commitSha": "a91fc235715b86cca5a48d1bc129cd6d38b0d242",
+  "generatedAt": "2026-04-09T14:43:45.908Z",
   "apps": [
     {
       "slug": "allowance",
@@ -2081,6 +2081,288 @@
       ]
     },
     {
+      "slug": "challenge",
+      "visibility": "public",
+      "name": "Challenge",
+      "description": {
+        "en": "Stake-backed personal challenges. Put money on the line and prove it.",
+        "de": "Persönliche Challenges mit echtem Einsatz. Setz etwas aufs Spiel und beweise es."
+      },
+      "logo": {
+        "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+      },
+      "colors": {},
+      "urls": {
+        "web": "https://joai.ai"
+      },
+      "hash": "f442e1ad06d242b0cb106bc30617a2f4bbbb9450d36e03617dc06db14d4ca88a",
+      "mcpUrl": "https://devnet-cortex.joai.ai/mcp/apps/challenge",
+      "site": {
+        "enabled": true,
+        "auth": false,
+        "indexPath": "/",
+        "routes": [
+          {
+            "path": "/",
+            "warp": "list",
+            "label": {
+              "en": "Browse",
+              "de": "Entdecken"
+            },
+            "nav": true
+          },
+          {
+            "path": "/create",
+            "warp": "create",
+            "label": {
+              "en": "Create",
+              "de": "Erstellen"
+            },
+            "nav": true
+          },
+          {
+            "path": "/view",
+            "warp": "view",
+            "label": {
+              "en": "Challenge",
+              "de": "Challenge"
+            },
+            "nav": false
+          },
+          {
+            "path": "/accept",
+            "warp": "accept",
+            "label": {
+              "en": "Accept",
+              "de": "Annehmen"
+            },
+            "nav": false
+          }
+        ]
+      },
+      "install": {
+        "summary": "Connect Challenge to Claude, Codex, and ChatGPT through JoAi's hosted MCP app server.",
+        "examplePrompts": [
+          "List the Challenge tools available in this app.",
+          "Explain what setup or authentication Challenge needs before I run an action.",
+          "Use Challenge to help me with the task I describe next."
+        ],
+        "usageNotes": [
+          "Every listed action becomes an MCP tool when the app server is connected.",
+          "Prefer the generated provider plugin when one is available, and fall back to the raw MCP URL otherwise."
+        ],
+        "authPrerequisites": [
+          "Some actions require provider credentials or OAuth on first use."
+        ]
+      },
+      "legal": {
+        "privacyUrl": "https://legal.vleap.ai/policies/privacy.html",
+        "supportUrl": "https://joai.ai",
+        "supportEmail": "support@joai.ai",
+        "termsUrl": "https://legal.vleap.ai/general/legal-notice.html"
+      },
+      "review": {
+        "screenshots": [],
+        "reviewerNotes": [
+          "This app wraps Challenge's public warp actions behind JoAi's hosted MCP app server.",
+          "The generated submission bundle is ready for runtime validation even when marketplace screenshots have not been attached yet."
+        ],
+        "testPrompts": [
+          "List the Challenge tools available in this app.",
+          "What authentication does Challenge require before you can use it?",
+          "Use the best Challenge tool for the task I describe next."
+        ],
+        "demoFlow": "Connect the hosted MCP URL, authenticate if prompted, then call one of the listed app actions.",
+        "credentialsReference": "Use the same provider credentials or OAuth flow that the underlying warp actions already require."
+      },
+      "mcp": {
+        "prefersBorder": true,
+        "csp": {
+          "connectDomains": [],
+          "resourceDomains": [],
+          "frameDomains": [],
+          "baseUriDomains": []
+        },
+        "permissions": {}
+      },
+      "providers": {
+        "claude": {
+          "provider": "claude",
+          "enabled": true,
+          "status": "ready",
+          "warpIdentifier": "anthropic-joai-plugin-install",
+          "title": "Claude Plugin",
+          "description": "Add the official JoAi Claude marketplace once, then install this app plugin by name.",
+          "sourceUrl": "https://github.com/JoAiHQ/claude-plugins",
+          "fallbackUrl": "https://devnet-cortex.joai.ai/mcp/apps/challenge",
+          "primaryAction": {
+            "type": "copy",
+            "label": "Copy marketplace command",
+            "value": "claude plugin marketplace add --scope user JoAiHQ/claude-plugins"
+          },
+          "secondaryAction": {
+            "type": "copy",
+            "label": "Copy install command",
+            "value": "claude plugin install --scope user joai-challenge@joai-claude-plugins"
+          },
+          "notes": [
+            "Add the JoAi Claude marketplace once, then install this plugin by name."
+          ]
+        },
+        "codex": {
+          "provider": "codex",
+          "enabled": true,
+          "status": "ready",
+          "warpIdentifier": "openai-joai-plugin-install",
+          "title": "Codex Plugin",
+          "description": "Install this app from the official JoAi Codex marketplace, or use the MCP URL if your Codex build still relies on direct MCP setup.",
+          "sourceUrl": "https://github.com/JoAiHQ/codex-plugins",
+          "fallbackUrl": "https://devnet-cortex.joai.ai/mcp/apps/challenge",
+          "primaryAction": {
+            "type": "copy",
+            "label": "Copy plugin name",
+            "value": "joai-challenge"
+          },
+          "secondaryAction": {
+            "type": "copy",
+            "label": "Copy MCP URL",
+            "value": "https://devnet-cortex.joai.ai/mcp/apps/challenge"
+          },
+          "notes": [
+            "Add the JoAi Codex marketplace in Codex first, then install this plugin by name."
+          ]
+        },
+        "cursor": {
+          "provider": "cursor",
+          "enabled": true,
+          "status": "ready",
+          "warpIdentifier": "cursor-joai-plugin-install",
+          "title": "Cursor Plugin",
+          "description": "Install this app in Cursor with one click, or fall back to the hosted MCP URL manually.",
+          "sourceUrl": "https://joai.ai/en/apps/challenge",
+          "fallbackUrl": "https://devnet-cortex.joai.ai/mcp/apps/challenge",
+          "primaryAction": {
+            "type": "deeplink",
+            "label": "Install in Cursor",
+            "value": "https://cursor.com/en-US/install-mcp?name=joai-challenge&config=eyJ1cmwiOiJodHRwczovL2Rldm5ldC1jb3J0ZXguam9haS5haS9tY3AvYXBwcy9jaGFsbGVuZ2UifQ%3D%3D"
+          },
+          "secondaryAction": {
+            "type": "copy",
+            "label": "Copy MCP URL",
+            "value": "https://devnet-cortex.joai.ai/mcp/apps/challenge"
+          },
+          "notes": [
+            "The one-click install opens Cursor directly with this app prefilled."
+          ]
+        },
+        "openai": {
+          "provider": "openai",
+          "enabled": true,
+          "status": "runtime_ready",
+          "warpIdentifier": "openai-joai-app-connect",
+          "title": "ChatGPT App",
+          "description": "Use this app in ChatGPT today by connecting the hosted MCP URL.",
+          "sourceUrl": "https://joai.ai/en/apps/challenge",
+          "fallbackUrl": "https://devnet-cortex.joai.ai/mcp/apps/challenge",
+          "primaryAction": {
+            "type": "copy",
+            "label": "Copy MCP URL",
+            "value": "https://devnet-cortex.joai.ai/mcp/apps/challenge"
+          },
+          "notes": [
+            "Paste the hosted MCP URL into ChatGPT to connect the app today."
+          ]
+        }
+      },
+      "actions": [
+        {
+          "alias": "challenge-accept",
+          "identifier": "@challenge-accept",
+          "chain": "multiversx",
+          "name": "Challenge: Accept",
+          "title": {
+            "en": "Accept challenge",
+            "de": "Challenge annehmen"
+          },
+          "description": {
+            "en": "Match the stake and bet that the challenger will fail. If they skip — you take it.",
+            "de": "Gleiche den Einsatz aus und wette darauf, dass der Challenger scheitert. Wenn er aufgibt — nimmst du den Einsatz."
+          },
+          "actionTypes": [
+            "contract"
+          ]
+        },
+        {
+          "alias": "challenge-create",
+          "identifier": "@challenge-create",
+          "chain": "multiversx",
+          "name": "Challenge: Create",
+          "title": {
+            "en": "Create a challenge",
+            "de": "Challenge erstellen"
+          },
+          "description": {
+            "en": "Commit to something and stake tokens on it. If you prove it — you keep your stake. If you skip — the challenger takes it.",
+            "de": "Verpflichte dich zu etwas und setze Token darauf. Wenn du es beweist, behältst du deinen Einsatz. Wenn nicht — bekommt ihn der Challenger."
+          },
+          "actionTypes": [
+            "contract"
+          ]
+        },
+        {
+          "alias": "challenge-list",
+          "identifier": "@challenge-list",
+          "chain": "multiversx",
+          "name": "Challenge: Browse",
+          "title": {
+            "en": "Live challenges",
+            "de": "Laufende Challenges"
+          },
+          "description": {
+            "en": "Browse open challenges waiting for someone to take the bet.",
+            "de": "Offene Challenges, die auf einen Challenger warten."
+          },
+          "actionTypes": [
+            "query"
+          ]
+        },
+        {
+          "alias": "challenge-resolve",
+          "identifier": "@challenge-resolve",
+          "chain": "multiversx",
+          "name": "Challenge: Resolve",
+          "title": {
+            "en": "Resolve challenge",
+            "de": "Challenge auflösen"
+          },
+          "description": {
+            "en": "Mark a challenge as succeeded or failed after verification. Owner only.",
+            "de": "Challenge nach Überprüfung als erfolgreich oder gescheitert markieren. Nur für Eigentümer."
+          },
+          "actionTypes": [
+            "contract"
+          ]
+        },
+        {
+          "alias": "challenge-view",
+          "identifier": "@challenge-view",
+          "chain": "multiversx",
+          "name": "Challenge: View",
+          "title": {
+            "en": "View challenge",
+            "de": "Challenge ansehen"
+          },
+          "description": {
+            "en": "See the details, stake, and status of a challenge.",
+            "de": "Details, Einsatz und Status einer Challenge ansehen."
+          },
+          "actionTypes": [
+            "query"
+          ]
+        }
+      ]
+    },
+    {
       "slug": "cli",
       "visibility": "public",
       "name": "CLI",
@@ -3259,6 +3541,245 @@
           },
           "actionTypes": [
             "contract"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "coupon",
+      "visibility": "public",
+      "name": "Coupon",
+      "description": {
+        "en": "On-chain discount coupons. Create, share, and redeem verifiable coupon codes anchored on the blockchain.",
+        "de": "On-Chain-Rabattgutscheine. Erstelle, teile und löse verifizierbare Gutscheincodes auf der Blockchain ein."
+      },
+      "logo": {
+        "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+      },
+      "colors": {},
+      "urls": {
+        "web": "https://joai.ai"
+      },
+      "hash": "8227755149d3d2e677f68e8be8e8fbf6b5138b5d08d94cd771b5c5037a44398a",
+      "mcpUrl": "https://devnet-cortex.joai.ai/mcp/apps/coupon",
+      "site": {
+        "enabled": true,
+        "auth": false,
+        "indexPath": "/",
+        "routes": [
+          {
+            "path": "/",
+            "warp": "create",
+            "label": {
+              "en": "Create Collection",
+              "de": "Kollektion erstellen"
+            },
+            "nav": true
+          },
+          {
+            "path": "/view",
+            "warp": "view",
+            "label": {
+              "en": "View Coupon",
+              "de": "Gutschein ansehen"
+            },
+            "nav": false
+          },
+          {
+            "path": "/redeem",
+            "warp": "redeem",
+            "label": {
+              "en": "Redeem Coupon",
+              "de": "Gutschein einlösen"
+            },
+            "nav": false
+          }
+        ]
+      },
+      "install": {
+        "summary": "Connect Coupon to Claude, Codex, and ChatGPT through JoAi's hosted MCP app server.",
+        "examplePrompts": [
+          "List the Coupon tools available in this app.",
+          "Explain what setup or authentication Coupon needs before I run an action.",
+          "Use Coupon to help me with the task I describe next."
+        ],
+        "usageNotes": [
+          "Every listed action becomes an MCP tool when the app server is connected.",
+          "Prefer the generated provider plugin when one is available, and fall back to the raw MCP URL otherwise."
+        ],
+        "authPrerequisites": [
+          "Some actions require provider credentials or OAuth on first use."
+        ]
+      },
+      "legal": {
+        "privacyUrl": "https://legal.vleap.ai/policies/privacy.html",
+        "supportUrl": "https://joai.ai",
+        "supportEmail": "support@joai.ai",
+        "termsUrl": "https://legal.vleap.ai/general/legal-notice.html"
+      },
+      "review": {
+        "screenshots": [],
+        "reviewerNotes": [
+          "This app wraps Coupon's public warp actions behind JoAi's hosted MCP app server.",
+          "The generated submission bundle is ready for runtime validation even when marketplace screenshots have not been attached yet."
+        ],
+        "testPrompts": [
+          "List the Coupon tools available in this app.",
+          "What authentication does Coupon require before you can use it?",
+          "Use the best Coupon tool for the task I describe next."
+        ],
+        "demoFlow": "Connect the hosted MCP URL, authenticate if prompted, then call one of the listed app actions.",
+        "credentialsReference": "Use the same provider credentials or OAuth flow that the underlying warp actions already require."
+      },
+      "mcp": {
+        "prefersBorder": true,
+        "csp": {
+          "connectDomains": [],
+          "resourceDomains": [],
+          "frameDomains": [],
+          "baseUriDomains": []
+        },
+        "permissions": {}
+      },
+      "providers": {
+        "claude": {
+          "provider": "claude",
+          "enabled": true,
+          "status": "ready",
+          "warpIdentifier": "anthropic-joai-plugin-install",
+          "title": "Claude Plugin",
+          "description": "Add the official JoAi Claude marketplace once, then install this app plugin by name.",
+          "sourceUrl": "https://github.com/JoAiHQ/claude-plugins",
+          "fallbackUrl": "https://devnet-cortex.joai.ai/mcp/apps/coupon",
+          "primaryAction": {
+            "type": "copy",
+            "label": "Copy marketplace command",
+            "value": "claude plugin marketplace add --scope user JoAiHQ/claude-plugins"
+          },
+          "secondaryAction": {
+            "type": "copy",
+            "label": "Copy install command",
+            "value": "claude plugin install --scope user joai-coupon@joai-claude-plugins"
+          },
+          "notes": [
+            "Add the JoAi Claude marketplace once, then install this plugin by name."
+          ]
+        },
+        "codex": {
+          "provider": "codex",
+          "enabled": true,
+          "status": "ready",
+          "warpIdentifier": "openai-joai-plugin-install",
+          "title": "Codex Plugin",
+          "description": "Install this app from the official JoAi Codex marketplace, or use the MCP URL if your Codex build still relies on direct MCP setup.",
+          "sourceUrl": "https://github.com/JoAiHQ/codex-plugins",
+          "fallbackUrl": "https://devnet-cortex.joai.ai/mcp/apps/coupon",
+          "primaryAction": {
+            "type": "copy",
+            "label": "Copy plugin name",
+            "value": "joai-coupon"
+          },
+          "secondaryAction": {
+            "type": "copy",
+            "label": "Copy MCP URL",
+            "value": "https://devnet-cortex.joai.ai/mcp/apps/coupon"
+          },
+          "notes": [
+            "Add the JoAi Codex marketplace in Codex first, then install this plugin by name."
+          ]
+        },
+        "cursor": {
+          "provider": "cursor",
+          "enabled": true,
+          "status": "ready",
+          "warpIdentifier": "cursor-joai-plugin-install",
+          "title": "Cursor Plugin",
+          "description": "Install this app in Cursor with one click, or fall back to the hosted MCP URL manually.",
+          "sourceUrl": "https://joai.ai/en/apps/coupon",
+          "fallbackUrl": "https://devnet-cortex.joai.ai/mcp/apps/coupon",
+          "primaryAction": {
+            "type": "deeplink",
+            "label": "Install in Cursor",
+            "value": "https://cursor.com/en-US/install-mcp?name=joai-coupon&config=eyJ1cmwiOiJodHRwczovL2Rldm5ldC1jb3J0ZXguam9haS5haS9tY3AvYXBwcy9jb3Vwb24ifQ%3D%3D"
+          },
+          "secondaryAction": {
+            "type": "copy",
+            "label": "Copy MCP URL",
+            "value": "https://devnet-cortex.joai.ai/mcp/apps/coupon"
+          },
+          "notes": [
+            "The one-click install opens Cursor directly with this app prefilled."
+          ]
+        },
+        "openai": {
+          "provider": "openai",
+          "enabled": true,
+          "status": "runtime_ready",
+          "warpIdentifier": "openai-joai-app-connect",
+          "title": "ChatGPT App",
+          "description": "Use this app in ChatGPT today by connecting the hosted MCP URL.",
+          "sourceUrl": "https://joai.ai/en/apps/coupon",
+          "fallbackUrl": "https://devnet-cortex.joai.ai/mcp/apps/coupon",
+          "primaryAction": {
+            "type": "copy",
+            "label": "Copy MCP URL",
+            "value": "https://devnet-cortex.joai.ai/mcp/apps/coupon"
+          },
+          "notes": [
+            "Paste the hosted MCP URL into ChatGPT to connect the app today."
+          ]
+        }
+      },
+      "actions": [
+        {
+          "alias": "coupon-create",
+          "identifier": "@coupon-create",
+          "chain": "multiversx",
+          "name": "Coupon: Create",
+          "title": {
+            "en": "Create a coupon",
+            "de": "Gutschein erstellen"
+          },
+          "description": {
+            "en": "Issue an on-chain discount coupon code. Set the discount percentage and usage limit.",
+            "de": "On-Chain-Rabattgutscheincode ausstellen. Rabattprozentsatz und Nutzungslimit festlegen."
+          },
+          "actionTypes": [
+            "contract"
+          ]
+        },
+        {
+          "alias": "coupon-redeem",
+          "identifier": "@coupon-redeem",
+          "chain": "multiversx",
+          "name": "Coupon: Redeem",
+          "title": {
+            "en": "Redeem a coupon",
+            "de": "Gutschein einlösen"
+          },
+          "description": {
+            "en": "Apply a discount coupon code on-chain. Your redemption is recorded permanently.",
+            "de": "Rabattgutscheincode on-chain einlösen. Deine Einlösung wird dauerhaft gespeichert."
+          },
+          "actionTypes": [
+            "contract"
+          ]
+        },
+        {
+          "alias": "coupon-view",
+          "identifier": "@coupon-view",
+          "chain": "multiversx",
+          "name": "Coupon: View",
+          "title": {
+            "en": "View coupon",
+            "de": "Gutschein ansehen"
+          },
+          "description": {
+            "en": "Check the details, discount, and remaining uses of a coupon code.",
+            "de": "Details, Rabatt und verbleibende Nutzungen eines Gutscheincodes prüfen."
+          },
+          "actionTypes": [
+            "query"
           ]
         }
       ]
@@ -15139,6 +15660,273 @@
           },
           "actionTypes": [
             "collect"
+          ]
+        }
+      ]
+    },
+    {
+      "slug": "signature",
+      "visibility": "public",
+      "name": "Signature",
+      "description": {
+        "en": "On-chain document signatures. Send signing requests by email. All agreements anchored on the blockchain.",
+        "de": "On-chain-Dokumentensignaturen. Signaturanfragen per E-Mail senden. Alle Vereinbarungen auf der Blockchain verankert."
+      },
+      "logo": {
+        "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+      },
+      "colors": {},
+      "urls": {
+        "web": "https://joai.ai"
+      },
+      "hash": "672c9890b01fdaff1ac198a78396da910e00d2629b76ef802fde4e346ee7f1f2",
+      "mcpUrl": "https://devnet-cortex.joai.ai/mcp/apps/signature",
+      "site": {
+        "enabled": true,
+        "auth": false,
+        "indexPath": "/",
+        "routes": [
+          {
+            "path": "/",
+            "warp": "create",
+            "label": {
+              "en": "Request Signature",
+              "de": "Signatur anfordern"
+            },
+            "nav": true
+          },
+          {
+            "path": "/sign",
+            "warp": "sign",
+            "label": {
+              "en": "Sign Document",
+              "de": "Dokument unterzeichnen"
+            },
+            "nav": false
+          },
+          {
+            "path": "/view",
+            "warp": "view",
+            "label": {
+              "en": "View Request",
+              "de": "Anfrage ansehen"
+            },
+            "nav": false
+          },
+          {
+            "path": "/list",
+            "warp": "list",
+            "label": {
+              "en": "My Requests",
+              "de": "Meine Anfragen"
+            },
+            "nav": true
+          }
+        ]
+      },
+      "install": {
+        "summary": "Connect Signature to Claude, Codex, and ChatGPT through JoAi's hosted MCP app server.",
+        "examplePrompts": [
+          "List the Signature tools available in this app.",
+          "Explain what setup or authentication Signature needs before I run an action.",
+          "Use Signature to help me with the task I describe next."
+        ],
+        "usageNotes": [
+          "Every listed action becomes an MCP tool when the app server is connected.",
+          "Prefer the generated provider plugin when one is available, and fall back to the raw MCP URL otherwise."
+        ],
+        "authPrerequisites": [
+          "Some actions require provider credentials or OAuth on first use."
+        ]
+      },
+      "legal": {
+        "privacyUrl": "https://legal.vleap.ai/policies/privacy.html",
+        "supportUrl": "https://joai.ai",
+        "supportEmail": "support@joai.ai",
+        "termsUrl": "https://legal.vleap.ai/general/legal-notice.html"
+      },
+      "review": {
+        "screenshots": [],
+        "reviewerNotes": [
+          "This app wraps Signature's public warp actions behind JoAi's hosted MCP app server.",
+          "The generated submission bundle is ready for runtime validation even when marketplace screenshots have not been attached yet."
+        ],
+        "testPrompts": [
+          "List the Signature tools available in this app.",
+          "What authentication does Signature require before you can use it?",
+          "Use the best Signature tool for the task I describe next."
+        ],
+        "demoFlow": "Connect the hosted MCP URL, authenticate if prompted, then call one of the listed app actions.",
+        "credentialsReference": "Use the same provider credentials or OAuth flow that the underlying warp actions already require."
+      },
+      "mcp": {
+        "prefersBorder": true,
+        "csp": {
+          "connectDomains": [],
+          "resourceDomains": [],
+          "frameDomains": [],
+          "baseUriDomains": []
+        },
+        "permissions": {}
+      },
+      "providers": {
+        "claude": {
+          "provider": "claude",
+          "enabled": true,
+          "status": "ready",
+          "warpIdentifier": "anthropic-joai-plugin-install",
+          "title": "Claude Plugin",
+          "description": "Add the official JoAi Claude marketplace once, then install this app plugin by name.",
+          "sourceUrl": "https://github.com/JoAiHQ/claude-plugins",
+          "fallbackUrl": "https://devnet-cortex.joai.ai/mcp/apps/signature",
+          "primaryAction": {
+            "type": "copy",
+            "label": "Copy marketplace command",
+            "value": "claude plugin marketplace add --scope user JoAiHQ/claude-plugins"
+          },
+          "secondaryAction": {
+            "type": "copy",
+            "label": "Copy install command",
+            "value": "claude plugin install --scope user joai-signature@joai-claude-plugins"
+          },
+          "notes": [
+            "Add the JoAi Claude marketplace once, then install this plugin by name."
+          ]
+        },
+        "codex": {
+          "provider": "codex",
+          "enabled": true,
+          "status": "ready",
+          "warpIdentifier": "openai-joai-plugin-install",
+          "title": "Codex Plugin",
+          "description": "Install this app from the official JoAi Codex marketplace, or use the MCP URL if your Codex build still relies on direct MCP setup.",
+          "sourceUrl": "https://github.com/JoAiHQ/codex-plugins",
+          "fallbackUrl": "https://devnet-cortex.joai.ai/mcp/apps/signature",
+          "primaryAction": {
+            "type": "copy",
+            "label": "Copy plugin name",
+            "value": "joai-signature"
+          },
+          "secondaryAction": {
+            "type": "copy",
+            "label": "Copy MCP URL",
+            "value": "https://devnet-cortex.joai.ai/mcp/apps/signature"
+          },
+          "notes": [
+            "Add the JoAi Codex marketplace in Codex first, then install this plugin by name."
+          ]
+        },
+        "cursor": {
+          "provider": "cursor",
+          "enabled": true,
+          "status": "ready",
+          "warpIdentifier": "cursor-joai-plugin-install",
+          "title": "Cursor Plugin",
+          "description": "Install this app in Cursor with one click, or fall back to the hosted MCP URL manually.",
+          "sourceUrl": "https://joai.ai/en/apps/signature",
+          "fallbackUrl": "https://devnet-cortex.joai.ai/mcp/apps/signature",
+          "primaryAction": {
+            "type": "deeplink",
+            "label": "Install in Cursor",
+            "value": "https://cursor.com/en-US/install-mcp?name=joai-signature&config=eyJ1cmwiOiJodHRwczovL2Rldm5ldC1jb3J0ZXguam9haS5haS9tY3AvYXBwcy9zaWduYXR1cmUifQ%3D%3D"
+          },
+          "secondaryAction": {
+            "type": "copy",
+            "label": "Copy MCP URL",
+            "value": "https://devnet-cortex.joai.ai/mcp/apps/signature"
+          },
+          "notes": [
+            "The one-click install opens Cursor directly with this app prefilled."
+          ]
+        },
+        "openai": {
+          "provider": "openai",
+          "enabled": true,
+          "status": "runtime_ready",
+          "warpIdentifier": "openai-joai-app-connect",
+          "title": "ChatGPT App",
+          "description": "Use this app in ChatGPT today by connecting the hosted MCP URL.",
+          "sourceUrl": "https://joai.ai/en/apps/signature",
+          "fallbackUrl": "https://devnet-cortex.joai.ai/mcp/apps/signature",
+          "primaryAction": {
+            "type": "copy",
+            "label": "Copy MCP URL",
+            "value": "https://devnet-cortex.joai.ai/mcp/apps/signature"
+          },
+          "notes": [
+            "Paste the hosted MCP URL into ChatGPT to connect the app today."
+          ]
+        }
+      },
+      "actions": [
+        {
+          "alias": "signature-create",
+          "identifier": "@signature-create",
+          "chain": "multiversx",
+          "name": "Signature: Create",
+          "title": {
+            "en": "Request a signature",
+            "de": "Signatur anfordern"
+          },
+          "description": {
+            "en": "Send an on-chain signature request. The signer receives an email and signs the document with their wallet.",
+            "de": "Sende eine On-Chain-Signaturanfrage. Der Unterzeichner erhält eine E-Mail und unterzeichnet das Dokument mit seiner Wallet."
+          },
+          "actionTypes": [
+            "contract",
+            "collect"
+          ]
+        },
+        {
+          "alias": "signature-list",
+          "identifier": "@signature-list",
+          "chain": "multiversx",
+          "name": "Signature: List",
+          "title": {
+            "en": "My signature requests",
+            "de": "Meine Signaturanfragen"
+          },
+          "description": {
+            "en": "View all signature requests you have created.",
+            "de": "Alle von dir erstellten Signaturanfragen ansehen."
+          },
+          "actionTypes": [
+            "query"
+          ]
+        },
+        {
+          "alias": "signature-sign",
+          "identifier": "@signature-sign",
+          "chain": "multiversx",
+          "name": "Signature: Sign",
+          "title": {
+            "en": "Sign document",
+            "de": "Dokument unterzeichnen"
+          },
+          "description": {
+            "en": "Review the document details and sign the request with your wallet. Your signature is permanently recorded on-chain.",
+            "de": "Dokumentdetails prüfen und die Anfrage mit deiner Wallet unterzeichnen. Deine Signatur wird dauerhaft on-chain gespeichert."
+          },
+          "actionTypes": [
+            "query",
+            "contract"
+          ]
+        },
+        {
+          "alias": "signature-view",
+          "identifier": "@signature-view",
+          "chain": "multiversx",
+          "name": "Signature: View",
+          "title": {
+            "en": "View signature request",
+            "de": "Signaturanfrage ansehen"
+          },
+          "description": {
+            "en": "See the details and current status of a signature request.",
+            "de": "Details und aktuellen Status einer Signaturanfrage ansehen."
+          },
+          "actionTypes": [
+            "query"
           ]
         }
       ]
