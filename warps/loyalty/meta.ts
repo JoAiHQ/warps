@@ -205,7 +205,7 @@ export const meta: Record<string, WarpExtras> = {
       de: ['Treue-Erinnerung', 'Kunden erinnern', 'Treue-Benachrichtigung', 'Rückgewinnungskampagne'],
     },
     useCases: {
-      en: ['Re-engage customers who haven't visited in weeks', 'Send automated WhatsApp reminders to inactive loyalty members', 'Run a daily win-back campaign for lapsed customers'],
+      en: ["Re-engage customers who haven't visited in weeks", 'Send automated WhatsApp reminders to inactive loyalty members', 'Run a daily win-back campaign for lapsed customers'],
       de: ['Kunden reaktivieren, die seit Wochen nicht da waren', 'Automatische WhatsApp-Erinnerungen an inaktive Treuemitglieder senden', 'Tägliche Rückgewinnungskampagne für abgewanderte Kunden starten'],
     },
     category: 'commerce',
@@ -213,7 +213,7 @@ export const meta: Record<string, WarpExtras> = {
       en: [
         {
           question: 'How do loyalty reminders work?',
-          answer: 'This warp runs daily, fetches customers who haven't visited since the configured threshold, and sends them a WhatsApp reminder via the JoAi agent.',
+          answer: "This warp runs daily, fetches customers who haven't visited since the configured threshold, and sends them a WhatsApp reminder via the JoAi agent.",
         },
       ],
       de: [
@@ -239,7 +239,7 @@ export const meta: Record<string, WarpExtras> = {
       en: [
         {
           question: 'How do NFC loyalty cards work?',
-          answer: 'All cards are programmed with the same URL. The NFC chip's unique hardware ID identifies each card — no individual programming needed per card.',
+          answer: "All cards are programmed with the same URL. The NFC chip's unique hardware ID identifies each card — no individual programming needed per card.",
         },
       ],
       de: [

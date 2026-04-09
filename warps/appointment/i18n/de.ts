@@ -1,6 +1,26 @@
 import { en } from './en'
 
 export const de: typeof en = {
+  book: {
+    title: 'Termin buchen',
+    pickDate: 'Datum wählen',
+    pickSlot: 'Uhrzeit wählen',
+    noSlots: 'Keine verfügbaren Termine an diesem Tag. Probiere einen anderen Tag.',
+    loadingSlots: 'Verfügbarkeit prüfen...',
+    yourDetails: 'Deine Angaben',
+    namePlaceholder: 'Dein Name',
+    emailPlaceholder: 'Deine E-Mail',
+    purposePlaceholder: 'Worum geht es? (optional)',
+    notesPlaceholder: 'Noch etwas, das wir wissen sollten? (optional)',
+    confirm: 'Termin bestätigen',
+    booking: 'Wird gebucht...',
+    confirmed: 'Gebucht!',
+    confirmedMessage: 'Dein Termin ist bestätigt.',
+    backToSlots: 'Zurück',
+    today: 'Heute',
+    tomorrow: 'Morgen',
+    nameRequired: 'Name ist erforderlich.',
+  },
   configure: {
     title: 'Termineinstellungen',
     officeHours: 'Bürozeiten',
