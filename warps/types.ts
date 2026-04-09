@@ -5,6 +5,7 @@ export type SiteRoute = {
   warp: string
   label: WarpText
   nav?: boolean
+  hiddenFields?: string[]
 }
 
 export type Site = {
