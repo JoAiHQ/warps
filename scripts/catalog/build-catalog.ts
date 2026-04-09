@@ -94,7 +94,7 @@ const NON_INSCRIBED_FIELDS = new Set(['meta'])
 const VALID_WARP_FIELDS = new Set([
   'protocol', 'chain', 'name', 'title', 'description', 'bot', 'preview',
   'vars', 'actions', 'next', 'output', 'messages', 'ui', 'alerts',
-  'related', 'schedule', 'trigger', 'meta',
+  'related', 'schedule', 'trigger', 'meta', 'sections',
 ])
 const CREATOR = 'github:JoAiHQ/warps'
 
