@@ -1,0 +1,190 @@
+{
+    "name": "SignatureContract",
+    "constructor": {
+        "inputs": [],
+        "outputs": []
+    },
+    "upgradeConstructor": {
+        "inputs": [],
+        "outputs": []
+    },
+    "endpoints": [
+        {
+            "name": "createRequest",
+            "mutability": "mutable",
+            "inputs": [
+                { "name": "title", "type": "bytes" },
+                { "name": "document_hash", "type": "bytes" },
+                { "name": "document_url", "type": "bytes" },
+                { "name": "deadline_hours", "type": "u64" },
+                { "name": "signers", "type": "variadic<Address>", "multi_arg": true }
+            ],
+            "outputs": [
+                { "type": "u64" }
+            ]
+        },
+        {
+            "name": "sign",
+            "mutability": "mutable",
+            "inputs": [
+                { "name": "request_id", "type": "u64" }
+            ],
+            "outputs": []
+        },
+        {
+            "name": "cancelRequest",
+            "mutability": "mutable",
+            "inputs": [
+                { "name": "request_id", "type": "u64" }
+            ],
+            "outputs": []
+        },
+        {
+            "name": "expireRequest",
+            "mutability": "mutable",
+            "inputs": [
+                { "name": "request_id", "type": "u64" }
+            ],
+            "outputs": []
+        },
+        {
+            "name": "getRequest",
+            "mutability": "readonly",
+            "inputs": [
+                { "name": "request_id", "type": "u64" }
+            ],
+            "outputs": [
+                { "type": "SignatureRequest" }
+            ]
+        },
+        {
+            "name": "getRequestSigners",
+            "mutability": "readonly",
+            "inputs": [
+                { "name": "request_id", "type": "u64" }
+            ],
+            "outputs": [
+                { "type": "variadic<Address>", "multi_result": true }
+            ]
+        },
+        {
+            "name": "getSignedBy",
+            "mutability": "readonly",
+            "inputs": [
+                { "name": "request_id", "type": "u64" }
+            ],
+            "outputs": [
+                { "type": "variadic<Address>", "multi_result": true }
+            ]
+        },
+        {
+            "name": "hasSigned",
+            "mutability": "readonly",
+            "inputs": [
+                { "name": "request_id", "type": "u64" },
+                { "name": "signer", "type": "Address" }
+            ],
+            "outputs": [
+                { "type": "bool" }
+            ]
+        },
+        {
+            "name": "isEligibleSigner",
+            "mutability": "readonly",
+            "inputs": [
+                { "name": "request_id", "type": "u64" },
+                { "name": "address", "type": "Address" }
+            ],
+            "outputs": [
+                { "type": "bool" }
+            ]
+        },
+        {
+            "name": "getRequestsByCreator",
+            "mutability": "readonly",
+            "inputs": [
+                { "name": "creator", "type": "Address" },
+                { "name": "offset", "type": "u32" },
+                { "name": "limit", "type": "u32" }
+            ],
+            "outputs": [
+                { "type": "variadic<multi<u64,SignatureRequest>>", "multi_result": true }
+            ]
+        },
+        {
+            "name": "getNextRequestId",
+            "mutability": "readonly",
+            "inputs": [],
+            "outputs": [
+                { "type": "u64" }
+            ]
+        }
+    ],
+    "events": [
+        {
+            "identifier": "requestCreated",
+            "inputs": [
+                { "name": "id", "type": "u64", "indexed": true },
+                { "name": "creator", "type": "Address", "indexed": true },
+                { "name": "title", "type": "bytes" },
+                { "name": "document_hash", "type": "bytes" },
+                { "name": "deadline", "type": "u64" }
+            ]
+        },
+        {
+            "identifier": "documentSigned",
+            "inputs": [
+                { "name": "id", "type": "u64", "indexed": true },
+                { "name": "signer", "type": "Address", "indexed": true },
+                { "name": "signed_count", "type": "u64" },
+                { "name": "signer_count", "type": "u64" }
+            ]
+        },
+        {
+            "identifier": "requestCompleted",
+            "inputs": [
+                { "name": "id", "type": "u64", "indexed": true },
+                { "name": "creator", "type": "Address", "indexed": true }
+            ]
+        },
+        {
+            "identifier": "requestCancelled",
+            "inputs": [
+                { "name": "id", "type": "u64", "indexed": true },
+                { "name": "creator", "type": "Address", "indexed": true }
+            ]
+        },
+        {
+            "identifier": "requestExpired",
+            "inputs": [
+                { "name": "id", "type": "u64", "indexed": true }
+            ]
+        }
+    ],
+    "types": {
+        "SignatureStatus": {
+            "type": "enum",
+            "variants": [
+                { "name": "Pending", "discriminant": 0 },
+                { "name": "Completed", "discriminant": 1 },
+                { "name": "Cancelled", "discriminant": 2 },
+                { "name": "Expired", "discriminant": 3 }
+            ]
+        },
+        "SignatureRequest": {
+            "type": "struct",
+            "fields": [
+                { "name": "id", "type": "u64" },
+                { "name": "creator", "type": "Address" },
+                { "name": "title", "type": "bytes" },
+                { "name": "document_hash", "type": "bytes" },
+                { "name": "document_url", "type": "bytes" },
+                { "name": "signer_count", "type": "u64" },
+                { "name": "signed_count", "type": "u64" },
+                { "name": "deadline", "type": "u64" },
+                { "name": "created_at", "type": "u64" },
+                { "name": "status", "type": "SignatureStatus" }
+            ]
+        }
+    }
+}
