@@ -4,25 +4,287 @@
   "repo": "JoAiHQ/warps",
   "branch": "dev",
   "network": "devnet",
-  "commitSha": "9551935d3bc8e2a9e6c6aac3e85f30682e8bb66a",
-  "committedAt": "2026-04-09T18:15:28.816Z",
-  "generatedAt": "2026-04-09T18:15:30.822Z",
+  "commitSha": "6442a6bfca80355062583c1c07ba0a446e2389fe",
+  "committedAt": "2026-04-09T19:31:03.851Z",
+  "generatedAt": "2026-04-09T19:31:06.329Z",
   "upserts": [
+    {
+      "key": "multiversx:coupon-create",
+      "identifier": "@coupon-create",
+      "alias": "coupon-create",
+      "chain": "multiversx",
+      "hash": "fbb2d640df10fcbdce3c569ceb24480c8a92e829bf0986526661fcd56e4cba53",
+      "checksum": "fbb2d640df10fcbdce3c569ceb24480c8a92e829bf0986526661fcd56e4cba53",
+      "name": "Coupon: Create",
+      "title": {
+        "en": "Create a coupon",
+        "de": "Gutschein erstellen"
+      },
+      "description": {
+        "en": "Create a discount coupon your customers can redeem at checkout. Set the code, percentage off, and how many times it can be used.",
+        "de": "Erstelle einen Rabattgutschein, den deine Kunden beim Bezahlen einlösen können. Lege Code, Rabatt und die maximale Anzahl an Einlösungen fest."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": "{{SC_ADDRESS}}",
+      "primaryFunc": "createCoupon",
+      "brand": {
+        "hash": "8227755149d3d2e677f68e8be8e8fbf6b5138b5d08d94cd771b5c5037a44398a",
+        "slug": "coupon",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "Coupon",
+        "description": {
+          "en": "On-chain discount coupons. Create, share, and redeem verifiable coupon codes anchored on the blockchain.",
+          "de": "On-Chain-Rabattgutscheine. Erstelle, teile und löse verifizierbare Gutscheincodes auf der Blockchain ein."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "Coupon: Create",
+        "title": {
+          "en": "Create a coupon",
+          "de": "Gutschein erstellen"
+        },
+        "description": {
+          "en": "Create a discount coupon your customers can redeem at checkout. Set the code, percentage off, and how many times it can be used.",
+          "de": "Erstelle einen Rabattgutschein, den deine Kunden beim Bezahlen einlösen können. Lege Code, Rabatt und die maximale Anzahl an Einlösungen fest."
+        },
+        "bot": "Creates a discount coupon. Ask the user for the coupon code, discount percentage, and how many times it can be used (0 = unlimited).",
+        "chain": "multiversx",
+        "vars": {
+          "SC_ADDRESS": "erd1qqqqqqqqqqqqqpgqtxwhd7z99tvvrgd38897k9zunrqsgmahtres7648am"
+        },
+        "sections": [
+          {
+            "title": {
+              "en": "Coupon Code",
+              "de": "Gutscheincode"
+            },
+            "inputs": [
+              "code",
+              "discountPercent"
+            ]
+          },
+          {
+            "title": {
+              "en": "Limits",
+              "de": "Einschränkungen"
+            },
+            "inputs": [
+              "maxUses"
+            ]
+          }
+        ],
+        "actions": [
+          {
+            "type": "contract",
+            "label": {
+              "en": "Create coupon",
+              "de": "Gutschein erstellen"
+            },
+            "address": "{{SC_ADDRESS}}",
+            "func": "createCoupon",
+            "gasLimit": 10000000,
+            "abi": "hash:7610c55148a1835c1cc7cb4ca8673b81ac4c36f0f6e9f56f27b4f6af8b9c2096",
+            "inputs": [
+              {
+                "name": "Code",
+                "as": "code",
+                "description": {
+                  "en": "The coupon code customers will enter (e.g. SUMMER20)",
+                  "de": "Der Gutscheincode, den Kunden eingeben (z.B. SOMMER20)"
+                },
+                "bot": "Short, memorable coupon code — e.g. LAUNCH10, VIP50, WELCOME.",
+                "type": "string",
+                "position": "arg:1",
+                "source": "field",
+                "required": true,
+                "min": 1,
+                "max": 32
+              },
+              {
+                "name": "Discount",
+                "as": "discountPercent",
+                "description": {
+                  "en": "Discount percentage (1–100)",
+                  "de": "Rabattprozentsatz (1–100)"
+                },
+                "bot": "Percentage discount the coupon applies.",
+                "type": "u8",
+                "position": "arg:2",
+                "source": "field",
+                "required": true,
+                "options": {
+                  "5": "5%",
+                  "10": "10%",
+                  "15": "15%",
+                  "20": "20%",
+                  "25": "25%",
+                  "50": "50%"
+                }
+              },
+              {
+                "name": "Max Uses",
+                "as": "maxUses",
+                "description": {
+                  "en": "How many times can this coupon be redeemed? (0 = unlimited)",
+                  "de": "Wie oft kann dieser Gutschein eingelöst werden? (0 = unbegrenzt)"
+                },
+                "bot": "Maximum number of redemptions. Use 0 for unlimited uses.",
+                "type": "u64",
+                "position": "arg:3",
+                "source": "field",
+                "required": true,
+                "options": {
+                  "0": "Unlimited",
+                  "1": "1 use",
+                  "5": "5 uses",
+                  "10": "10 uses",
+                  "100": "100 uses"
+                }
+              },
+              {
+                "name": "Expires At",
+                "as": "expiresAt",
+                "type": "u64",
+                "position": "arg:4",
+                "source": "hidden",
+                "default": "0",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "output": {
+          "COUPON_ID": "out.data"
+        },
+        "messages": {
+          "success": {
+            "en": "Coupon created! Share the code and let customers redeem it.",
+            "de": "Gutschein erstellt! Teile den Code und lass Kunden ihn einlösen."
+          }
+        }
+      },
+      "extras": null
+    },
+    {
+      "key": "multiversx:coupon-redeem",
+      "identifier": "@coupon-redeem",
+      "alias": "coupon-redeem",
+      "chain": "multiversx",
+      "hash": "1fe08f2ba24090ac6c9d2fdb55dcfafdbd767db7f812a834434035eab73e40ea",
+      "checksum": "1fe08f2ba24090ac6c9d2fdb55dcfafdbd767db7f812a834434035eab73e40ea",
+      "name": "Coupon: Redeem",
+      "title": {
+        "en": "Redeem a coupon",
+        "de": "Gutschein einlösen"
+      },
+      "description": {
+        "en": "Apply a discount coupon code at checkout. Your redemption is securely recorded.",
+        "de": "Rabattgutscheincode beim Bezahlen einlösen. Deine Einlösung wird sicher gespeichert."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": "{{SC_ADDRESS}}",
+      "primaryFunc": "redeemCoupon",
+      "brand": {
+        "hash": "8227755149d3d2e677f68e8be8e8fbf6b5138b5d08d94cd771b5c5037a44398a",
+        "slug": "coupon",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "Coupon",
+        "description": {
+          "en": "On-chain discount coupons. Create, share, and redeem verifiable coupon codes anchored on the blockchain.",
+          "de": "On-Chain-Rabattgutscheine. Erstelle, teile und löse verifizierbare Gutscheincodes auf der Blockchain ein."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "Coupon: Redeem",
+        "title": {
+          "en": "Redeem a coupon",
+          "de": "Gutschein einlösen"
+        },
+        "description": {
+          "en": "Apply a discount coupon code at checkout. Your redemption is securely recorded.",
+          "de": "Rabattgutscheincode beim Bezahlen einlösen. Deine Einlösung wird sicher gespeichert."
+        },
+        "bot": "Redeems an on-chain coupon by code. Ask the user for the coupon code they want to apply.",
+        "chain": "multiversx",
+        "vars": {
+          "SC_ADDRESS": "erd1qqqqqqqqqqqqqpgqtxwhd7z99tvvrgd38897k9zunrqsgmahtres7648am"
+        },
+        "actions": [
+          {
+            "type": "contract",
+            "label": {
+              "en": "Redeem coupon",
+              "de": "Gutschein einlösen"
+            },
+            "address": "{{SC_ADDRESS}}",
+            "func": "redeemCoupon",
+            "gasLimit": 10000000,
+            "abi": "hash:7610c55148a1835c1cc7cb4ca8673b81ac4c36f0f6e9f56f27b4f6af8b9c2096",
+            "inputs": [
+              {
+                "name": "Coupon Code",
+                "as": "code",
+                "description": {
+                  "en": "Enter the coupon code to redeem.",
+                  "de": "Gutscheincode zum Einlösen eingeben."
+                },
+                "bot": "The coupon code to redeem — e.g. SUMMER20, VIP50.",
+                "type": "string",
+                "position": "arg:1",
+                "source": "field",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "messages": {
+          "success": {
+            "en": "Coupon redeemed! Your discount has been applied.",
+            "de": "Gutschein eingelöst! Dein Rabatt wurde angewendet."
+          }
+        }
+      },
+      "extras": null
+    },
     {
       "key": "multiversx:signature-create",
       "identifier": "@signature-create",
       "alias": "signature-create",
       "chain": "multiversx",
-      "hash": "24fd45687068ca9c7a8ff88edae82823a849585f45a8c5416f9db4b79c4452cf",
-      "checksum": "24fd45687068ca9c7a8ff88edae82823a849585f45a8c5416f9db4b79c4452cf",
+      "hash": "49d7a1cf9a167f51aac2e5956a2583ed91f0ced65e927b5a090b85fc215a8936",
+      "checksum": "49d7a1cf9a167f51aac2e5956a2583ed91f0ced65e927b5a090b85fc215a8936",
       "name": "Signature: Create",
       "title": {
         "en": "Request a signature",
         "de": "Signatur anfordern"
       },
       "description": {
-        "en": "Send an on-chain signature request. The signer receives an email and signs the document with their wallet.",
-        "de": "Sende eine On-Chain-Signaturanfrage. Der Unterzeichner erhält eine E-Mail und unterzeichnet das Dokument mit seiner Wallet."
+        "en": "Send a legally-binding signature request. The signer receives an email and confirms the document with one click.",
+        "de": "Sende eine rechtsverbindliche Signaturanfrage. Der Unterzeichner erhält eine E-Mail und bestätigt das Dokument mit einem Klick."
       },
       "preview": null,
       "creator": "github:JoAiHQ/warps",
@@ -56,8 +318,8 @@
           "de": "Signatur anfordern"
         },
         "description": {
-          "en": "Send an on-chain signature request. The signer receives an email and signs the document with their wallet.",
-          "de": "Sende eine On-Chain-Signaturanfrage. Der Unterzeichner erhält eine E-Mail und unterzeichnet das Dokument mit seiner Wallet."
+          "en": "Send a legally-binding signature request. The signer receives an email and confirms the document with one click.",
+          "de": "Sende eine rechtsverbindliche Signaturanfrage. Der Unterzeichner erhält eine E-Mail und bestätigt das Dokument mit einem Klick."
         },
         "bot": "Creates an on-chain signature request and notifies the signer by email. Ask the user for the document title, a SHA-256 hash of the document, a link to the document, the signer's wallet address, the signer's email, and an optional deadline.",
         "chain": "multiversx",
@@ -253,6 +515,124 @@
           "success": {
             "en": "Signature request sent! The signer will receive an email with a signing link.",
             "de": "Signaturanfrage gesendet! Der Unterzeichner erhält eine E-Mail mit einem Link zum Unterzeichnen."
+          }
+        }
+      },
+      "extras": null
+    },
+    {
+      "key": "multiversx:signature-sign",
+      "identifier": "@signature-sign",
+      "alias": "signature-sign",
+      "chain": "multiversx",
+      "hash": "81ddf0053e6157180ef527410efbf587d6b58f4fdc1f0ebee1d23d21ac9fd0cf",
+      "checksum": "81ddf0053e6157180ef527410efbf587d6b58f4fdc1f0ebee1d23d21ac9fd0cf",
+      "name": "Signature: Sign",
+      "title": {
+        "en": "Sign document",
+        "de": "Dokument unterzeichnen"
+      },
+      "description": {
+        "en": "Review the document and confirm your signature. Your approval is permanent and tamper-proof.",
+        "de": "Dokument prüfen und deine Signatur bestätigen. Deine Zustimmung ist dauerhaft und fälschungssicher."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": "{{SC_ADDRESS}}",
+      "primaryFunc": "getRequest",
+      "brand": {
+        "hash": "672c9890b01fdaff1ac198a78396da910e00d2629b76ef802fde4e346ee7f1f2",
+        "slug": "signature",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "Signature",
+        "description": {
+          "en": "On-chain document signatures. Send signing requests by email. All agreements anchored on the blockchain.",
+          "de": "On-chain-Dokumentensignaturen. Signaturanfragen per E-Mail senden. Alle Vereinbarungen auf der Blockchain verankert."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "Signature: Sign",
+        "title": {
+          "en": "Sign document",
+          "de": "Dokument unterzeichnen"
+        },
+        "description": {
+          "en": "Review the document and confirm your signature. Your approval is permanent and tamper-proof.",
+          "de": "Dokument prüfen und deine Signatur bestätigen. Deine Zustimmung ist dauerhaft und fälschungssicher."
+        },
+        "bot": "Signs a specific signature request by ID. Query getRequest first to show the document title and hash so the user can confirm before signing.",
+        "chain": "multiversx",
+        "vars": {
+          "SC_ADDRESS": "erd1qqqqqqqqqqqqqpgqtxwhd7z99tvvrgd38897k9zunrqsgmahtres7648am",
+          "REQUEST_ID": "query:id"
+        },
+        "actions": [
+          {
+            "type": "query",
+            "label": {
+              "en": "Loading document details...",
+              "de": "Dokumentdetails werden geladen..."
+            },
+            "address": "{{SC_ADDRESS}}",
+            "func": "getRequest",
+            "args": [],
+            "inputs": [
+              {
+                "name": "Request ID",
+                "as": "requestId",
+                "type": "u64",
+                "position": "arg:1",
+                "source": "var",
+                "default": "{{REQUEST_ID}}",
+                "required": true
+              }
+            ],
+            "auto": true,
+            "abi": "hash:7f6bf17e93f44b807be4bccd42a3ad9913011825c2d16806ef7b1232ce2b877f"
+          },
+          {
+            "type": "contract",
+            "label": {
+              "en": "Sign document",
+              "de": "Dokument unterzeichnen"
+            },
+            "address": "{{SC_ADDRESS}}",
+            "func": "sign",
+            "gasLimit": 10000000,
+            "abi": "hash:7f6bf17e93f44b807be4bccd42a3ad9913011825c2d16806ef7b1232ce2b877f",
+            "inputs": [
+              {
+                "name": "Request ID",
+                "as": "requestId",
+                "type": "u64",
+                "position": "arg:1",
+                "source": "var",
+                "default": "{{REQUEST_ID}}",
+                "required": true,
+                "hidden": true
+              }
+            ]
+          }
+        ],
+        "output": {
+          "REQUEST_TITLE": "out.0.title",
+          "DOCUMENT_HASH": "out.0.document_hash"
+        },
+        "messages": {
+          "success": {
+            "en": "Document signed! Your signature is permanently recorded.",
+            "de": "Dokument unterzeichnet! Deine Signatur ist dauerhaft gespeichert."
           }
         }
       },
