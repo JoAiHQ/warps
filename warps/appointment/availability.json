@@ -1,170 +1,133 @@
 {
-  "protocol": "warp:3.0.0",
-  "name": "Appointments: Availability",
-  "title": {
-    "en": "Appointment availability",
-    "de": "Terminverfuegbarkeit"
-  },
-  "description": {
-    "en": "Collect booking details and return appointment availability from the current agent calendar.",
-    "de": "Sammelt Buchungsdetails und liefert Terminverfuegbarkeit aus dem Kalender des aktuellen Agenten."
-  },
-  "bot": "REQUIRED first step for any appointment booking. Before invoking, ask the user what time window works for them — never assume a time. Do not create calendar events directly; that bypasses availability checks, policy rules, and attendee tracking. Collect the purpose, their preferred time window, name, and timezone. Convert relative dates to exact ISO datetimes before submitting.",
-  "actions": [
-    {
-      "type": "collect",
-      "label": {
-        "en": "Check availability",
-        "de": "Verfuegbarkeit pruefen"
-      },
-      "destination": {
-        "url": "INJECT:API_BASE/v1/agents/{{JOAI_AGENT_UUID}}/appointments/availability",
-        "method": "POST",
-        "headers": {
-          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+    "protocol": "warp:3.0.0",
+    "name": "Appointments: Availability",
+    "title": {
+        "en": "Appointment availability",
+        "de": "Terminverfuegbarkeit"
+    },
+    "description": {
+        "en": "Collect booking details and return appointment availability from the current agent calendar.",
+        "de": "Sammelt Buchungsdetails und liefert Terminverfuegbarkeit aus dem Kalender des aktuellen Agenten."
+    },
+    "bot": "REQUIRED first step for any appointment booking. Before invoking, ask the user what time window works for them — never assume a time. Do not create calendar events directly; that bypasses availability checks, policy rules, and attendee tracking. Collect the purpose, their preferred time window, name, and timezone. Convert relative dates to exact ISO datetimes before submitting.",
+    "actions": [
+        {
+            "type": "collect",
+            "label": {
+                "en": "Check availability",
+                "de": "Verfuegbarkeit pruefen"
+            },
+            "destination": {
+                "url": "INJECT:API_BASE/v1/agents/{{JOAI_AGENT_UUID}}/appointments/availability",
+                "method": "POST",
+                "headers": {
+                    "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+                }
+            },
+            "inputs": [
+                {
+                    "name": "Appointment Title",
+                    "as": "title",
+                    "description": {
+                        "en": "The purpose of the appointment",
+                        "de": "Der Zweck des Termins"
+                    },
+                    "bot": "Short title describing the appointment, such as 'Intro Call', 'Product Demo', or 'Support Session'.",
+                    "type": "string",
+                    "position": "arg:1",
+                    "source": "field",
+                    "required": true,
+                    "min": 3
+                },
+                {
+                    "name": "Window Start",
+                    "as": "windowStart",
+                    "description": {
+                        "en": "The earliest acceptable start time in ISO format",
+                        "de": "Die frueheste moegliche Startzeit im ISO-Format"
+                    },
+                    "bot": "Earliest acceptable appointment start in ISO 8601 format, for example 2026-04-03T09:00:00Z.",
+                    "type": "datetime",
+                    "position": "arg:2",
+                    "source": "field",
+                    "required": true
+                },
+                {
+                    "name": "Window End",
+                    "as": "windowEnd",
+                    "description": {
+                        "en": "The latest acceptable end of the scheduling window in ISO format",
+                        "de": "Das spaeteste Ende des Zeitfensters im ISO-Format"
+                    },
+                    "bot": "End of the acceptable scheduling window in ISO 8601 format, for example 2026-04-03T17:00:00Z.",
+                    "type": "datetime",
+                    "position": "arg:3",
+                    "source": "field",
+                    "required": true
+                },
+                {
+                    "name": "Duration Minutes",
+                    "as": "durationMinutes",
+                    "description": {
+                        "en": "Appointment length in minutes",
+                        "de": "Terminlaenge in Minuten"
+                    },
+                    "bot": "Meeting duration in minutes. Use 30 unless the user asks for a different length.",
+                    "type": "number",
+                    "source": "var",
+                    "required": true,
+                    "default": 30
+                },
+                {
+                    "name": "Attendee Name",
+                    "as": "attendeeName",
+                    "description": {
+                        "en": "The attendee or requester name",
+                        "de": "Name des Teilnehmers oder Anfragenden"
+                    },
+                    "bot": "The name of the person requesting or attending the appointment.",
+                    "type": "string",
+                    "source": "field",
+                    "required": false
+                },
+                {
+                    "name": "Attendee Email",
+                    "as": "attendeeEmail",
+                    "description": {
+                        "en": "The attendee or requester email",
+                        "de": "E-Mail des Teilnehmers oder Anfragenden"
+                    },
+                    "bot": "The email address of the attendee if known.",
+                    "type": "string",
+                    "source": "field",
+                    "required": false
+                },
+                {
+                    "name": "Notes",
+                    "as": "description",
+                    "description": {
+                        "en": "Optional notes or agenda",
+                        "de": "Optionale Notizen oder Agenda"
+                    },
+                    "bot": "Optional notes, context, or agenda for the appointment.",
+                    "type": "string",
+                    "source": "field",
+                    "required": false
+                }
+            ]
         }
-      },
-      "inputs": [
-        {
-          "name": "Appointment Title",
-          "as": "title",
-          "description": {
-            "en": "The purpose of the appointment",
-            "de": "Der Zweck des Termins"
-          },
-          "bot": "Short title describing the appointment, such as 'Intro Call', 'Product Demo', or 'Support Session'.",
-          "type": "string",
-          "position": "arg:1",
-          "source": "field",
-          "required": true,
-          "min": 3
-        },
-        {
-          "name": "Window Start",
-          "as": "windowStart",
-          "description": {
-            "en": "The earliest acceptable start time in ISO format",
-            "de": "Die frueheste moegliche Startzeit im ISO-Format"
-          },
-          "bot": "Earliest acceptable appointment start in ISO 8601 format, for example 2026-04-03T09:00:00Z.",
-          "type": "string",
-          "position": "arg:2",
-          "source": "field",
-          "required": true
-        },
-        {
-          "name": "Window End",
-          "as": "windowEnd",
-          "description": {
-            "en": "The latest acceptable end of the scheduling window in ISO format",
-            "de": "Das spaeteste Ende des Zeitfensters im ISO-Format"
-          },
-          "bot": "End of the acceptable scheduling window in ISO 8601 format, for example 2026-04-03T17:00:00Z.",
-          "type": "string",
-          "position": "arg:3",
-          "source": "field",
-          "required": true
-        },
-        {
-          "name": "Duration Minutes",
-          "as": "durationMinutes",
-          "description": {
-            "en": "Appointment length in minutes",
-            "de": "Terminlaenge in Minuten"
-          },
-          "bot": "Meeting duration in minutes. Use 30 unless the user asks for a different length.",
-          "type": "number",
-          "source": "field",
-          "required": true,
-          "default": 30
-        },
-        {
-          "name": "Timezone",
-          "as": "timezone",
-          "description": {
-            "en": "User timezone such as Europe/Vienna or America/New_York",
-            "de": "Zeitzone wie Europe/Vienna oder America/New_York"
-          },
-          "bot": "Timezone identifier like Europe/Vienna, America/New_York, or UTC. Use the user's stated timezone if available.",
-          "type": "string",
-          "source": "field",
-          "required": false
-        },
-        {
-          "name": "Service Slug",
-          "as": "serviceSlug",
-          "description": {
-            "en": "Optional configured service identifier",
-            "de": "Optionaler Bezeichner fuer einen konfigurierten Service"
-          },
-          "bot": "If the business uses named services like cleaning, consultation, or implant-consult, pass the configured service slug.",
-          "type": "string",
-          "source": "field",
-          "required": false
-        },
-        {
-          "name": "Attendee Name",
-          "as": "attendeeName",
-          "description": {
-            "en": "The attendee or requester name",
-            "de": "Name des Teilnehmers oder Anfragenden"
-          },
-          "bot": "The name of the person requesting or attending the appointment.",
-          "type": "string",
-          "source": "field",
-          "required": false
-        },
-        {
-          "name": "Attendee Email",
-          "as": "attendeeEmail",
-          "description": {
-            "en": "The attendee or requester email",
-            "de": "E-Mail des Teilnehmers oder Anfragenden"
-          },
-          "bot": "The email address of the attendee if known.",
-          "type": "string",
-          "source": "field",
-          "required": false
-        },
-        {
-          "name": "Notes",
-          "as": "description",
-          "description": {
-            "en": "Optional notes or agenda",
-            "de": "Optionale Notizen oder Agenda"
-          },
-          "bot": "Optional notes, context, or agenda for the appointment.",
-          "type": "string",
-          "source": "field",
-          "required": false
-        },
-        {
-          "name": "Limit",
-          "as": "limit",
-          "description": {
-            "en": "Maximum number of slot suggestions",
-            "de": "Maximale Anzahl an Vorschlaegen"
-          },
-          "bot": "How many slot suggestions to return. Use 3 unless the user explicitly asks for more or fewer.",
-          "type": "number",
-          "source": "field",
-          "required": false,
-          "default": 3
+    ],
+    "output": {
+        "CONNECTED": "out.data.connected",
+        "TIMEZONE": "out.data.timezone",
+        "SERVICE": "out.data.service",
+        "SLOTS": "out.data.slots",
+        "SLOT_COUNT": "out.data.slots.length"
+    },
+    "messages": {
+        "success": {
+            "en": "Found {{SLOT_COUNT}} appointment slot(s).",
+            "de": "{{SLOT_COUNT}} Terminvorschlaege gefunden."
         }
-      ]
     }
-  ],
-  "output": {
-    "CONNECTED": "out.data.connected",
-    "TIMEZONE": "out.data.timezone",
-    "SERVICE": "out.data.service",
-    "SLOTS": "out.data.slots",
-    "SLOT_COUNT": "out.data.slots.length"
-  },
-  "messages": {
-    "success": {
-      "en": "Found {{SLOT_COUNT}} appointment slot(s).",
-      "de": "{{SLOT_COUNT}} Terminvorschlaege gefunden."
-    }
-  }
 }

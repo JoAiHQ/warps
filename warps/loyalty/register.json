@@ -1,6 +1,6 @@
 {
   "protocol": "warp:3.0.0",
-  "name": "Shop: Loyalty Register",
+  "name": "Loyalty: Register",
   "title": {
     "en": "Join our loyalty program!",
     "de": "Tritt unserem Treueprogramm bei!"
@@ -12,8 +12,8 @@
   "bot": "Registers NFC card on-chain. If already registered, redirects to status.",
   "chain": "multiversx",
   "vars": {
-    "SHOP_ID": "query:shop",
-    "SC_ADDRESS": "INJECT:SHOP_SC_ADDRESS"
+    "LOYALTY_SLUG": "query:slug",
+    "SC_ADDRESS": "INJECT:LOYALTY_SC_ADDRESS"
   },
   "actions": [
     {
@@ -25,7 +25,7 @@
       "address": "{{SC_ADDRESS}}",
       "func": "isCardRegistered",
       "args": [
-        "uint64:{{SHOP_ID}}"
+        "string:{{LOYALTY_SLUG}}"
       ],
       "inputs": [
         {
@@ -38,23 +38,9 @@
       ],
       "auto": true,
       "next": {
-        "success": "shop-loyalty-status?shop={{SHOP_ID}}&JOAI_TAG_ID={{JOAI_TAG_ID}}"
+        "success": "loyalty-status?slug={{LOYALTY_SLUG}}&JOAI_TAG_ID={{JOAI_TAG_ID}}"
       },
-      "abi": "INJECT:abis/shop.abi.json"
-    },
-    {
-      "type": "query",
-      "label": {
-        "en": "Loading shop...",
-        "de": "Shop wird geladen..."
-      },
-      "address": "{{SC_ADDRESS}}",
-      "func": "getShopInfo",
-      "args": [
-        "uint64:{{SHOP_ID}}"
-      ],
-      "auto": true,
-      "abi": "INJECT:abis/shop.abi.json"
+      "abi": "INJECT:abis/loyalty.abi.json"
     },
     {
       "type": "collect",
@@ -126,24 +112,23 @@
       "address": "{{SC_ADDRESS}}",
       "func": "register",
       "args": [
-        "uint64:{{SHOP_ID}}",
+        "string:{{LOYALTY_SLUG}}",
         "string:{{JOAI_TAG_ID}}",
         "string:{{name}}"
       ],
       "gasLimit": 10000000,
       "auto": true,
-      "abi": "INJECT:abis/shop.abi.json"
+      "abi": "INJECT:abis/loyalty.abi.json"
     }
   ],
   "output": {
-    "IS_REGISTERED": "out.1",
-    "SHOP_NAME": "out.2.name"
+    "IS_REGISTERED": "out.1"
   },
   "messages": {
     "success": {
-      "en": "Welcome to {{SHOP_NAME}}, {{name}}! Your first stamp has been earned.",
-      "de": "Willkommen bei {{SHOP_NAME}}, {{name}}! Dein erster Stempel wurde gesammelt."
+      "en": "Welcome, {{name}}! Your first stamp has been earned.",
+      "de": "Willkommen, {{name}}! Dein erster Stempel wurde gesammelt."
     }
   },
-  "next": "shop-loyalty-review?shop={{SHOP_ID}}&JOAI_TAG_ID={{JOAI_TAG_ID}}"
+  "next": "loyalty-review?slug={{LOYALTY_SLUG}}&JOAI_TAG_ID={{JOAI_TAG_ID}}"
 }

@@ -3,16 +3,16 @@ import { WarpbaseBrand } from '../types'
 
 export const brand = async (config: WarpClientConfig): Promise<WarpbaseBrand> => ({
   info: await new WarpBrandBuilder(config)
-    .setName('Shop')
+    .setName('Loyalty')
     .setDescription({
-      en: 'Loyalty and customer management for local service businesses.',
-      de: 'Treue- und Kundenverwaltung für lokale Dienstleistungsunternehmen.',
+      en: 'Stamp-based loyalty programs for local service businesses.',
+      de: 'Stempelbasierte Treueprogramme für lokale Dienstleistungsunternehmen.',
     })
     .setLogo('https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg')
     .setUrls({ web: 'https://joai.ai' })
     .build(),
   contracts: {
-    SHOP_SC_ADDRESS: (env: WarpChainEnv) => {
+    LOYALTY_SC_ADDRESS: (env: WarpChainEnv) => {
       if (env === 'devnet') return 'erd1qqqqqqqqqqqqqpgq9gagzdqrjlpp2nqllmcdzuvpjna3llh5tresc3qye8'
       return 'TODO'
     },
