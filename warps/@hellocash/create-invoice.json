@@ -1,0 +1,94 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "helloCash: Create Invoice",
+  "title": {
+    "en": "Create invoice",
+    "de": "Rechnung erstellen"
+  },
+  "description": {
+    "en": "Create a new invoice in your helloCash account.",
+    "de": "Eine neue Rechnung in deinem helloCash-Konto erstellen."
+  },
+  "vars": {
+    "API_TOKEN": "env:HELLOCASH_API_TOKEN|Get your API token from helloCash Dashboard under Settings → API."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Create invoice",
+        "de": "Rechnung erstellen"
+      },
+      "destination": {
+        "url": "INJECT:API_URL/invoices",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{API_TOKEN}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Recipient Name",
+          "as": "recipientname",
+          "description": {
+            "en": "Full name of the invoice recipient.",
+            "de": "Vollständiger Name des Rechnungsempfängers."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:recipientname"
+        },
+        {
+          "name": "Recipient Email",
+          "as": "recipientemail",
+          "description": {
+            "en": "Email address of the invoice recipient.",
+            "de": "E-Mail-Adresse des Rechnungsempfängers."
+          },
+          "type": "string",
+          "source": "field",
+          "position": "payload:recipientemail"
+        },
+        {
+          "name": "Invoice Date",
+          "as": "invoicedate",
+          "description": {
+            "en": "Invoice date in YYYY-MM-DD format. Defaults to today.",
+            "de": "Rechnungsdatum im Format JJJJ-MM-TT. Standard: heute."
+          },
+          "type": "string",
+          "source": "field",
+          "position": "payload:invoicedate"
+        },
+        {
+          "name": "Payment Method",
+          "as": "paymentmethod",
+          "description": {
+            "en": "Payment method (e.g. cash, card, transfer).",
+            "de": "Zahlungsmethode (z.B. bar, karte, überweisung)."
+          },
+          "type": "string",
+          "source": "field",
+          "position": "payload:paymentmethod",
+          "default": "cash"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "INVOICE_ID": "out.invoiceid",
+    "INVOICE": "out"
+  },
+  "messages": {
+    "success": {
+      "en": "Invoice created (ID: {{INVOICE_ID}}).",
+      "de": "Rechnung erstellt (ID: {{INVOICE_ID}})."
+    },
+    "error": {
+      "en": "Failed to create invoice.",
+      "de": "Rechnung konnte nicht erstellt werden."
+    }
+  }
+}
