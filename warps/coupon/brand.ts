@@ -13,7 +13,7 @@ export const brand = async (config: WarpClientConfig): Promise<WarpbaseBrand> =>
     .build(),
   contracts: {
     COUPON_SC_ADDRESS: (env: WarpChainEnv) => {
-      if (env === 'devnet') return 'TODO_DEVNET'
+      if (env === 'devnet') return 'erd1qqqqqqqqqqqqqpgqtxwhd7z99tvvrgd38897k9zunrqsgmahtres7648am'
       if (env === 'testnet') return 'TODO_TESTNET'
       return 'TODO_MAINNET'
     },
@@ -24,5 +24,15 @@ export const brand = async (config: WarpClientConfig): Promise<WarpbaseBrand> =>
       if (env === 'testnet') return 'https://testnet-api.joai.ai'
       return 'https://api.joai.ai'
     },
+  },
+  site: {
+    enabled: true,
+    auth: false,
+    indexPath: '/',
+    routes: [
+      { path: '/', warp: 'create', label: { en: 'Create Collection', de: 'Kollektion erstellen' }, nav: true },
+      { path: '/view', warp: 'view', label: { en: 'View Coupon', de: 'Gutschein ansehen' }, nav: false },
+      { path: '/redeem', warp: 'redeem', label: { en: 'Redeem Coupon', de: 'Gutschein einlösen' }, nav: false },
+    ],
   },
 })

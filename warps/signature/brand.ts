@@ -13,7 +13,7 @@ export const brand = async (config: WarpClientConfig): Promise<WarpbaseBrand> =>
     .build(),
   contracts: {
     SIGNATURE_SC_ADDRESS: (env: WarpChainEnv) => {
-      if (env === 'devnet') return 'TODO_DEVNET'
+      if (env === 'devnet') return 'erd1qqqqqqqqqqqqqpgqtxwhd7z99tvvrgd38897k9zunrqsgmahtres7648am'
       if (env === 'testnet') return 'TODO_TESTNET'
       return 'TODO_MAINNET'
     },
