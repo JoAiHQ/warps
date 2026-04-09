@@ -1,6 +1,6 @@
 {
   "protocol": "warp:3.0.0",
-  "name": "Shop: Loyalty Redeem Reward",
+  "name": "Loyalty: Redeem Reward",
   "title": {
     "en": "Redeem Reward",
     "de": "Belohnung einlösen"
@@ -12,8 +12,7 @@
   "bot": "Redeems reward via NFC. Log redemption activity on contact after success.",
   "chain": "multiversx",
   "vars": {
-    "SHOP_ID": "query:SHOP_ID",
-    "SC_ADDRESS": "INJECT:SHOP_SC_ADDRESS"
+    "SC_ADDRESS": "INJECT:LOYALTY_SC_ADDRESS"
   },
   "actions": [
     {
@@ -25,9 +24,17 @@
       "address": "{{SC_ADDRESS}}",
       "func": "getStatus",
       "args": [
-        "uint64:{{SHOP_ID}}"
+        "string:{{LOYALTY_SLUG}}",
+        "string:{{JOAI_TAG_ID}}"
       ],
       "inputs": [
+        {
+          "name": "LOYALTY_SLUG",
+          "type": "string",
+          "position": "arg:1",
+          "source": "hidden",
+          "default": "{{JOAI_WARP_BRAND}}"
+        },
         {
           "name": "JOAI_TAG_ID",
           "type": "string",
@@ -37,7 +44,7 @@
         }
       ],
       "auto": true,
-      "abi": "INJECT:abis/shop.abi.json"
+      "abi": "INJECT:abis/loyalty.abi.json"
     },
     {
       "type": "contract",
@@ -48,11 +55,11 @@
       "address": "{{SC_ADDRESS}}",
       "func": "redeemReward",
       "args": [
-        "uint64:{{SHOP_ID}}",
+        "string:{{LOYALTY_SLUG}}",
         "string:{{JOAI_TAG_ID}}"
       ],
       "gasLimit": 10000000,
-      "abi": "INJECT:abis/shop.abi.json"
+      "abi": "INJECT:abis/loyalty.abi.json"
     }
   ],
   "output": {

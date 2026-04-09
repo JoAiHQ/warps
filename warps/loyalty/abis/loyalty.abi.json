@@ -10,7 +10,7 @@
             "llvmVersion": "21.1"
         },
         "contractCrate": {
-            "name": "shop",
+            "name": "loyalty",
             "version": "0.0.1"
         },
         "framework": {
@@ -18,7 +18,7 @@
             "version": "0.65.1"
         }
     },
-    "name": "ShopContract",
+    "name": "LoyaltyContract",
     "constructor": {
         "inputs": [],
         "outputs": []
@@ -29,34 +29,30 @@
     },
     "endpoints": [
         {
-            "name": "createShop",
-            "rustMethodName": "create_shop",
+            "name": "createLoyalty",
+            "rustMethodName": "create_loyalty",
             "mutability": "mutable",
             "inputs": [
                 {
-                    "name": "name",
+                    "name": "slug",
+                    "type": "bytes"
+                }
+            ],
+            "outputs": []
+        },
+        {
+            "name": "getLoyaltyInfo",
+            "rustMethodName": "get_loyalty_info",
+            "mutability": "readonly",
+            "inputs": [
+                {
+                    "name": "slug",
                     "type": "bytes"
                 }
             ],
             "outputs": [
                 {
-                    "type": "u64"
-                }
-            ]
-        },
-        {
-            "name": "getShopInfo",
-            "rustMethodName": "get_shop_info_view",
-            "mutability": "readonly",
-            "inputs": [
-                {
-                    "name": "shop_id",
-                    "type": "u64"
-                }
-            ],
-            "outputs": [
-                {
-                    "type": "ShopInfo"
+                    "type": "LoyaltyInfo"
                 }
             ]
         },
@@ -66,8 +62,8 @@
             "mutability": "mutable",
             "inputs": [
                 {
-                    "name": "shop_id",
-                    "type": "u64"
+                    "name": "slug",
+                    "type": "bytes"
                 },
                 {
                     "name": "stamps_for_reward",
@@ -97,8 +93,8 @@
             "mutability": "mutable",
             "inputs": [
                 {
-                    "name": "shop_id",
-                    "type": "u64"
+                    "name": "slug",
+                    "type": "bytes"
                 },
                 {
                     "name": "card_uuid",
@@ -117,8 +113,8 @@
             "mutability": "mutable",
             "inputs": [
                 {
-                    "name": "shop_id",
-                    "type": "u64"
+                    "name": "slug",
+                    "type": "bytes"
                 },
                 {
                     "name": "card_uuid",
@@ -133,8 +129,8 @@
             "mutability": "mutable",
             "inputs": [
                 {
-                    "name": "shop_id",
-                    "type": "u64"
+                    "name": "slug",
+                    "type": "bytes"
                 },
                 {
                     "name": "card_uuid",
@@ -149,8 +145,8 @@
             "mutability": "mutable",
             "inputs": [
                 {
-                    "name": "shop_id",
-                    "type": "u64"
+                    "name": "slug",
+                    "type": "bytes"
                 },
                 {
                     "name": "card_uuid",
@@ -169,8 +165,8 @@
             "mutability": "mutable",
             "inputs": [
                 {
-                    "name": "shop_id",
-                    "type": "u64"
+                    "name": "slug",
+                    "type": "bytes"
                 },
                 {
                     "name": "card_uuid",
@@ -185,8 +181,8 @@
             "mutability": "readonly",
             "inputs": [
                 {
-                    "name": "shop_id",
-                    "type": "u64"
+                    "name": "slug",
+                    "type": "bytes"
                 },
                 {
                     "name": "card_uuid",
@@ -205,8 +201,8 @@
             "mutability": "readonly",
             "inputs": [
                 {
-                    "name": "shop_id",
-                    "type": "u64"
+                    "name": "slug",
+                    "type": "bytes"
                 },
                 {
                     "name": "card_uuid",
@@ -225,8 +221,8 @@
             "mutability": "readonly",
             "inputs": [
                 {
-                    "name": "shop_id",
-                    "type": "u64"
+                    "name": "slug",
+                    "type": "bytes"
                 }
             ],
             "outputs": [
@@ -241,8 +237,8 @@
             "mutability": "readonly",
             "inputs": [
                 {
-                    "name": "shop_id",
-                    "type": "u64"
+                    "name": "slug",
+                    "type": "bytes"
                 },
                 {
                     "name": "since_timestamp",
@@ -266,8 +262,8 @@
             "mutability": "readonly",
             "inputs": [
                 {
-                    "name": "shop_id",
-                    "type": "u64"
+                    "name": "slug",
+                    "type": "bytes"
                 }
             ],
             "outputs": [
@@ -279,15 +275,10 @@
     ],
     "events": [
         {
-            "identifier": "shopCreated",
+            "identifier": "loyaltyCreated",
             "inputs": [
                 {
-                    "name": "shop_id",
-                    "type": "u64",
-                    "indexed": true
-                },
-                {
-                    "name": "name",
+                    "name": "slug",
                     "type": "bytes",
                     "indexed": true
                 },
@@ -302,8 +293,8 @@
             "identifier": "customerRegistered",
             "inputs": [
                 {
-                    "name": "shop_id",
-                    "type": "u64",
+                    "name": "slug",
+                    "type": "bytes",
                     "indexed": true
                 },
                 {
@@ -322,8 +313,8 @@
             "identifier": "stampAdded",
             "inputs": [
                 {
-                    "name": "shop_id",
-                    "type": "u64",
+                    "name": "slug",
+                    "type": "bytes",
                     "indexed": true
                 },
                 {
@@ -342,8 +333,8 @@
             "identifier": "rewardRedeemed",
             "inputs": [
                 {
-                    "name": "shop_id",
-                    "type": "u64",
+                    "name": "slug",
+                    "type": "bytes",
                     "indexed": true
                 },
                 {
@@ -357,8 +348,8 @@
             "identifier": "discountSet",
             "inputs": [
                 {
-                    "name": "shop_id",
-                    "type": "u64",
+                    "name": "slug",
+                    "type": "bytes",
                     "indexed": true
                 },
                 {
@@ -431,13 +422,9 @@
                 }
             ]
         },
-        "ShopInfo": {
+        "LoyaltyInfo": {
             "type": "struct",
             "fields": [
-                {
-                    "name": "name",
-                    "type": "bytes"
-                },
                 {
                     "name": "owner",
                     "type": "Address"

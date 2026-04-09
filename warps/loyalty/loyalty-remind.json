@@ -1,6 +1,6 @@
 {
   "protocol": "warp:3.0.0",
-  "name": "Shop: Loyalty Reminder",
+  "name": "Loyalty: Reminder",
   "title": {
     "en": "Send loyalty reminders",
     "de": "Treue-Erinnerungen senden"
@@ -9,12 +9,11 @@
     "en": "Check for customers who haven't visited recently and send them a reminder.",
     "de": "Prüfe auf Kunden, die kürzlich nicht da waren, und sende eine Erinnerung."
   },
-  "bot": "Daily scheduled. SHOP_ID in query (get from setting-get when scheduling). STALE_SINCE = now - (reminder_days * 86400). For each stale customer card ID: GET /v1/contacts?propKey=card&propValue={cardId} to find the JoAi contact, get their phone, send WhatsApp reminder via POST /social/send, log activity.",
+  "bot": "Daily scheduled. LOYALTY_SLUG from JOAI_WARP_BRAND. STALE_SINCE = now - (reminder_days * 86400). For each stale customer card ID: GET /v1/contacts?propKey=card&propValue={cardId} to find the JoAi contact, get their phone, send WhatsApp reminder via POST /social/send, log activity.",
   "chain": "multiversx",
   "schedule": "daily",
   "vars": {
-    "SHOP_ID": "query:SHOP_ID",
-    "SC_ADDRESS": "INJECT:SHOP_SC_ADDRESS"
+    "SC_ADDRESS": "INJECT:LOYALTY_SC_ADDRESS"
   },
   "actions": [
     {
@@ -26,10 +25,19 @@
       "address": "{{SC_ADDRESS}}",
       "func": "getLoyaltyConfig",
       "args": [
-        "uint64:{{SHOP_ID}}"
+        "string:{{LOYALTY_SLUG}}"
+      ],
+      "inputs": [
+        {
+          "name": "LOYALTY_SLUG",
+          "type": "string",
+          "position": "arg:1",
+          "source": "hidden",
+          "default": "{{JOAI_WARP_BRAND}}"
+        }
       ],
       "auto": true,
-      "abi": "INJECT:abis/shop.abi.json"
+      "abi": "INJECT:abis/loyalty.abi.json"
     },
     {
       "type": "query",
@@ -40,7 +48,7 @@
       "address": "{{SC_ADDRESS}}",
       "func": "getStaleCustomers",
       "args": [
-        "uint64:{{SHOP_ID}}",
+        "string:{{LOYALTY_SLUG}}",
         "uint64:{{STALE_SINCE}}",
         "uint32:50"
       ],
@@ -54,7 +62,7 @@
         }
       ],
       "auto": true,
-      "abi": "INJECT:abis/shop.abi.json"
+      "abi": "INJECT:abis/loyalty.abi.json"
     }
   ],
   "output": {
