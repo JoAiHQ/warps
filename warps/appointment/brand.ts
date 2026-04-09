@@ -29,7 +29,7 @@ export const brand = async (config: WarpClientConfig): Promise<WarpbaseBrand> =>
     auth: false,
     indexPath: '/',
     routes: [
-      { path: '/', warp: 'book-public', label: { en: 'Book', de: 'Buchen' }, nav: true },
+      { path: '/', warp: 'book', label: { en: 'Book', de: 'Buchen' }, nav: true },
       { path: '/configure', warp: 'configure', label: { en: 'Settings', de: 'Einstellungen' }, nav: false },
     ],
   },
