@@ -291,10 +291,10 @@ async function main() {
       await screenshotStatic(buildRawHtml(brand, warp, false), `${warp.slug}.png`)
       await screenshotStatic(buildRawHtml(brand, warp, true), `${warp.slug}-dark.png`)
 
-      // 2. Rendered UI (if dist HTML exists)
-      if (warp.distHtml) {
-        await screenshotWarpUi(warp.distHtml, warp.mockData || {}, `${warp.slug}-rendered.png`, warp, false)
-        await screenshotWarpUi(warp.distHtml, warp.mockData || {}, `${warp.slug}-rendered-dark.png`, warp, true)
+      // 2. Rendered UI (only if dist HTML exists AND mockData is provided)
+      if (warp.distHtml && warp.mockData) {
+        await screenshotWarpUi(warp.distHtml, warp.mockData, `${warp.slug}-rendered.png`, warp, false)
+        await screenshotWarpUi(warp.distHtml, warp.mockData, `${warp.slug}-rendered-dark.png`, warp, true)
       }
 
       // 3. Preview (marketing card)
