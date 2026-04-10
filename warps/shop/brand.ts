@@ -29,4 +29,15 @@ export const brand = async (config: WarpClientConfig): Promise<WarpbaseBrand> =>
       return 'https://joai.ai'
     },
   },
+  site: {
+    enabled: true,
+    auth: false,
+    indexPath: '/',
+    routes: [
+      { path: '/', warp: '@shop-services', label: { en: 'Services', de: 'Leistungen' }, nav: true },
+      { path: '/admin/add', warp: '@shop-service-add', label: { en: 'Add Service', de: 'Leistung hinzufügen' }, nav: false },
+      { path: '/admin/remove', warp: '@shop-service-remove', label: { en: 'Remove Service', de: 'Leistung entfernen' }, nav: false },
+      { path: '/admin/setup', warp: '@shop-register', label: { en: 'Setup Shop', de: 'Shop einrichten' }, nav: false },
+    ],
+  },
 })

@@ -34,4 +34,17 @@ export const brand = async (config: WarpClientConfig): Promise<WarpbaseBrand> =>
       return 'https://agents.joai.ai'
     },
   },
+  site: {
+    enabled: true,
+    auth: false,
+    indexPath: '/',
+    routes: [
+      { path: '/', warp: '@loyalty-register', label: { en: 'Join', de: 'Beitreten' }, nav: true },
+      { path: '/card', warp: '@loyalty-status', label: { en: 'My Card', de: 'Meine Karte' }, nav: true },
+      { path: '/redeem', warp: '@loyalty-redeem', label: { en: 'Redeem', de: 'Einlösen' }, nav: false },
+      { path: '/review', warp: '@loyalty-review', label: { en: 'Review', de: 'Bewertung' }, nav: false },
+      { path: '/admin/stamp', warp: '@loyalty-stamp', label: { en: 'Stamp Card', de: 'Karte stempeln' }, nav: false },
+      { path: '/admin/configure', warp: '@loyalty-configure', label: { en: 'Configure', de: 'Konfigurieren' }, nav: false },
+    ],
+  },
 })
