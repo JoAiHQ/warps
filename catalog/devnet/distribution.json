@@ -4,8 +4,8 @@
   "repo": "JoAiHQ/warps",
   "branch": "dev",
   "network": "devnet",
-  "commitSha": "a7826c5145eda02b2d542a12a022c31c076955f3",
-  "generatedAt": "2026-04-10T09:53:21.980Z",
+  "commitSha": "8ac8a23bcd082bd365518ca7d3cfbb564e5b43ad",
+  "generatedAt": "2026-04-10T10:16:26.214Z",
   "apps": [
     {
       "slug": "allowance",
@@ -841,7 +841,7 @@
         "routes": [
           {
             "path": "/",
-            "warp": "@appointment-book",
+            "warp": "@appointment-availability",
             "label": {
               "en": "Book",
               "de": "Buchen"
@@ -850,7 +850,7 @@
           },
           {
             "path": "/configure",
-            "warp": "@appointment-configure",
+            "warp": "@appointment-policy-upsert",
             "label": {
               "en": "Settings",
               "de": "Einstellungen"
@@ -1114,6 +1114,23 @@
           ]
         },
         {
+          "alias": "appointment-policy-upsert",
+          "identifier": "@appointment-policy-upsert",
+          "chain": null,
+          "name": "Appointments: Upsert Policy",
+          "title": {
+            "en": "Update policy",
+            "de": "Einstellungen speichern"
+          },
+          "description": {
+            "en": "Save the appointment booking policy for your agent. Configure timezone, office hours, slot intervals, buffer times, minimum notice periods, and available services.",
+            "de": "Speichere die Terminbuchungsrichtlinie für deinen Agenten. Konfiguriere Zeitzone, Geschäftszeiten, Slot-Intervalle, Pufferzeiten, Mindestvorlaufzeiten und verfügbare Dienstleistungen."
+          },
+          "actionTypes": [
+            "collect"
+          ]
+        },
+        {
           "alias": "appointment-request-create",
           "identifier": "@appointment-request-create",
           "chain": null,
@@ -1142,23 +1159,6 @@
           "description": {
             "en": "Reschedule an existing booked appointment to a new confirmed slot.",
             "de": "Verschiebt einen bestehenden gebuchten Termin auf einen neuen bestaetigten Slot."
-          },
-          "actionTypes": [
-            "collect"
-          ]
-        },
-        {
-          "alias": "appointment-upsert-policy",
-          "identifier": "@appointment-upsert-policy",
-          "chain": null,
-          "name": "Appointments: Upsert Policy",
-          "title": {
-            "en": "Update policy",
-            "de": "Einstellungen speichern"
-          },
-          "description": {
-            "en": "Save the appointment booking policy for your agent. Configure timezone, office hours, slot intervals, buffer times, minimum notice periods, and available services.",
-            "de": "Speichere die Terminbuchungsrichtlinie für deinen Agenten. Konfiguriere Zeitzone, Geschäftszeiten, Slot-Intervalle, Pufferzeiten, Mindestvorlaufzeiten und verfügbare Dienstleistungen."
           },
           "actionTypes": [
             "collect"
@@ -9412,6 +9412,67 @@
       },
       "hash": "840d3ef5855c1c1cdcd655e142503f717ceaf334ecfd8d2cc037a8b3b43b8013",
       "mcpUrl": "https://devnet-cortex.joai.ai/mcp/apps/loyalty",
+      "site": {
+        "enabled": true,
+        "auth": false,
+        "indexPath": "/",
+        "routes": [
+          {
+            "path": "/",
+            "warp": "@loyalty-register",
+            "label": {
+              "en": "Join",
+              "de": "Beitreten"
+            },
+            "nav": true
+          },
+          {
+            "path": "/card",
+            "warp": "@loyalty-status",
+            "label": {
+              "en": "My Card",
+              "de": "Meine Karte"
+            },
+            "nav": true
+          },
+          {
+            "path": "/redeem",
+            "warp": "@loyalty-redeem",
+            "label": {
+              "en": "Redeem",
+              "de": "Einlösen"
+            },
+            "nav": false
+          },
+          {
+            "path": "/review",
+            "warp": "@loyalty-review",
+            "label": {
+              "en": "Review",
+              "de": "Bewertung"
+            },
+            "nav": false
+          },
+          {
+            "path": "/admin/stamp",
+            "warp": "@loyalty-stamp",
+            "label": {
+              "en": "Stamp Card",
+              "de": "Karte stempeln"
+            },
+            "nav": false
+          },
+          {
+            "path": "/admin/configure",
+            "warp": "@loyalty-configure",
+            "label": {
+              "en": "Configure",
+              "de": "Konfigurieren"
+            },
+            "nav": false
+          }
+        ]
+      },
       "install": {
         "summary": "Connect Loyalty to Claude, Codex, and ChatGPT through JoAi's hosted MCP app server.",
         "examplePrompts": [
@@ -13940,6 +14001,631 @@
       ]
     },
     {
+      "slug": "poll",
+      "visibility": "public",
+      "name": "Poll",
+      "description": {
+        "en": "On-chain polls and voting groups for any community — property owners, DAOs, teams, and more.",
+        "de": "On-Chain-Abstimmungen und Voting-Gruppen für jede Gemeinschaft — Eigentümer, DAOs, Teams und mehr."
+      },
+      "logo": {
+        "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+      },
+      "colors": {},
+      "urls": {
+        "web": "https://joai.ai"
+      },
+      "hash": "0847471b0e7d910d18121ee35b0a3dade65963cdbc4f4b4915cde32dea0e1abe",
+      "mcpUrl": "https://devnet-cortex.joai.ai/mcp/apps/poll",
+      "site": {
+        "enabled": true,
+        "auth": false,
+        "indexPath": "/",
+        "routes": [
+          {
+            "path": "/",
+            "warp": "@poll-polls-active",
+            "label": {
+              "en": "Polls",
+              "de": "Abstimmungen"
+            },
+            "nav": true,
+            "hiddenFields": [
+              "SLUG"
+            ]
+          },
+          {
+            "path": "/vote",
+            "warp": "@poll-vote",
+            "label": {
+              "en": "Vote",
+              "de": "Abstimmen"
+            },
+            "nav": false
+          },
+          {
+            "path": "/results",
+            "warp": "@poll-poll-results",
+            "label": {
+              "en": "Results",
+              "de": "Ergebnisse"
+            },
+            "nav": false
+          },
+          {
+            "path": "/join",
+            "warp": "@poll-membership-request",
+            "label": {
+              "en": "Join Group",
+              "de": "Gruppe beitreten"
+            },
+            "nav": true,
+            "hiddenFields": [
+              "SLUG"
+            ]
+          },
+          {
+            "path": "/join-invite",
+            "warp": "@poll-invite-join",
+            "label": {
+              "en": "Join with Invite",
+              "de": "Mit Einladung beitreten"
+            },
+            "nav": false,
+            "hiddenFields": [
+              "SLUG"
+            ]
+          },
+          {
+            "path": "/admin/create",
+            "warp": "@poll-poll-create",
+            "label": {
+              "en": "Create Poll",
+              "de": "Abstimmung erstellen"
+            },
+            "nav": false,
+            "hiddenFields": [
+              "GROUP_SLUG"
+            ]
+          },
+          {
+            "path": "/admin/requests",
+            "warp": "@poll-requests-pending",
+            "label": {
+              "en": "Requests",
+              "de": "Anfragen"
+            },
+            "nav": false,
+            "hiddenFields": [
+              "SLUG"
+            ]
+          },
+          {
+            "path": "/admin/invite",
+            "warp": "@poll-invite-create",
+            "label": {
+              "en": "Invite",
+              "de": "Einladen"
+            },
+            "nav": false,
+            "hiddenFields": [
+              "SLUG"
+            ]
+          }
+        ]
+      },
+      "install": {
+        "summary": "Connect Poll to Claude, Codex, and ChatGPT through JoAi's hosted MCP app server.",
+        "examplePrompts": [
+          "List the Poll tools available in this app.",
+          "Explain what setup or authentication Poll needs before I run an action.",
+          "Use Poll to help me with the task I describe next."
+        ],
+        "usageNotes": [
+          "Every listed action becomes an MCP tool when the app server is connected.",
+          "Prefer the generated provider plugin when one is available, and fall back to the raw MCP URL otherwise."
+        ],
+        "authPrerequisites": [
+          "Some actions require provider credentials or OAuth on first use."
+        ]
+      },
+      "legal": {
+        "privacyUrl": "https://legal.vleap.ai/policies/privacy.html",
+        "supportUrl": "https://joai.ai",
+        "supportEmail": "support@joai.ai",
+        "termsUrl": "https://legal.vleap.ai/general/legal-notice.html"
+      },
+      "review": {
+        "screenshots": [],
+        "reviewerNotes": [
+          "This app wraps Poll's public warp actions behind JoAi's hosted MCP app server.",
+          "The generated submission bundle is ready for runtime validation even when marketplace screenshots have not been attached yet."
+        ],
+        "testPrompts": [
+          "List the Poll tools available in this app.",
+          "What authentication does Poll require before you can use it?",
+          "Use the best Poll tool for the task I describe next."
+        ],
+        "demoFlow": "Connect the hosted MCP URL, authenticate if prompted, then call one of the listed app actions.",
+        "credentialsReference": "Use the same provider credentials or OAuth flow that the underlying warp actions already require."
+      },
+      "mcp": {
+        "prefersBorder": true,
+        "csp": {
+          "connectDomains": [],
+          "resourceDomains": [],
+          "frameDomains": [],
+          "baseUriDomains": []
+        },
+        "permissions": {}
+      },
+      "providers": {
+        "claude": {
+          "provider": "claude",
+          "enabled": true,
+          "status": "ready",
+          "warpIdentifier": "anthropic-joai-plugin-install",
+          "title": "Claude Plugin",
+          "description": "Add the official JoAi Claude marketplace once, then install this app plugin by name.",
+          "sourceUrl": "https://github.com/JoAiHQ/claude-plugins",
+          "fallbackUrl": "https://devnet-cortex.joai.ai/mcp/apps/poll",
+          "primaryAction": {
+            "type": "copy",
+            "label": "Copy marketplace command",
+            "value": "claude plugin marketplace add --scope user JoAiHQ/claude-plugins"
+          },
+          "secondaryAction": {
+            "type": "copy",
+            "label": "Copy install command",
+            "value": "claude plugin install --scope user joai-poll@joai-claude-plugins"
+          },
+          "notes": [
+            "Add the JoAi Claude marketplace once, then install this plugin by name."
+          ]
+        },
+        "codex": {
+          "provider": "codex",
+          "enabled": true,
+          "status": "ready",
+          "warpIdentifier": "openai-joai-plugin-install",
+          "title": "Codex Plugin",
+          "description": "Install this app from the official JoAi Codex marketplace, or use the MCP URL if your Codex build still relies on direct MCP setup.",
+          "sourceUrl": "https://github.com/JoAiHQ/codex-plugins",
+          "fallbackUrl": "https://devnet-cortex.joai.ai/mcp/apps/poll",
+          "primaryAction": {
+            "type": "copy",
+            "label": "Copy plugin name",
+            "value": "joai-poll"
+          },
+          "secondaryAction": {
+            "type": "copy",
+            "label": "Copy MCP URL",
+            "value": "https://devnet-cortex.joai.ai/mcp/apps/poll"
+          },
+          "notes": [
+            "Add the JoAi Codex marketplace in Codex first, then install this plugin by name."
+          ]
+        },
+        "cursor": {
+          "provider": "cursor",
+          "enabled": true,
+          "status": "ready",
+          "warpIdentifier": "cursor-joai-plugin-install",
+          "title": "Cursor Plugin",
+          "description": "Install this app in Cursor with one click, or fall back to the hosted MCP URL manually.",
+          "sourceUrl": "https://joai.ai/en/apps/poll",
+          "fallbackUrl": "https://devnet-cortex.joai.ai/mcp/apps/poll",
+          "primaryAction": {
+            "type": "deeplink",
+            "label": "Install in Cursor",
+            "value": "https://cursor.com/en-US/install-mcp?name=joai-poll&config=eyJ1cmwiOiJodHRwczovL2Rldm5ldC1jb3J0ZXguam9haS5haS9tY3AvYXBwcy9wb2xsIn0%3D"
+          },
+          "secondaryAction": {
+            "type": "copy",
+            "label": "Copy MCP URL",
+            "value": "https://devnet-cortex.joai.ai/mcp/apps/poll"
+          },
+          "notes": [
+            "The one-click install opens Cursor directly with this app prefilled."
+          ]
+        },
+        "openai": {
+          "provider": "openai",
+          "enabled": true,
+          "status": "runtime_ready",
+          "warpIdentifier": "openai-joai-app-connect",
+          "title": "ChatGPT App",
+          "description": "Use this app in ChatGPT today by connecting the hosted MCP URL.",
+          "sourceUrl": "https://joai.ai/en/apps/poll",
+          "fallbackUrl": "https://devnet-cortex.joai.ai/mcp/apps/poll",
+          "primaryAction": {
+            "type": "copy",
+            "label": "Copy MCP URL",
+            "value": "https://devnet-cortex.joai.ai/mcp/apps/poll"
+          },
+          "notes": [
+            "Paste the hosted MCP URL into ChatGPT to connect the app today."
+          ]
+        }
+      },
+      "actions": [
+        {
+          "alias": "poll",
+          "identifier": "@poll",
+          "chain": null,
+          "name": "Poll: Get Poll",
+          "title": {
+            "en": "Poll Details",
+            "de": "Abstimmungsdetails"
+          },
+          "description": {
+            "en": "Query details of a specific poll.",
+            "de": "Details einer bestimmten Abstimmung abfragen."
+          },
+          "actionTypes": [
+            "query"
+          ]
+        },
+        {
+          "alias": "poll-admin-transfer",
+          "identifier": "@poll-admin-transfer",
+          "chain": null,
+          "name": "Poll: Transfer Admin",
+          "title": {
+            "en": "Transfer Admin",
+            "de": "Admin übertragen"
+          },
+          "description": {
+            "en": "Hand over group admin rights to another member.",
+            "de": "Admin-Rechte der Gruppe an ein anderes Mitglied übertragen."
+          },
+          "actionTypes": [
+            "contract"
+          ]
+        },
+        {
+          "alias": "poll-create",
+          "identifier": "@poll-create",
+          "chain": null,
+          "name": "Poll: Create Poll",
+          "title": {
+            "en": "Create Poll",
+            "de": "Abstimmung erstellen"
+          },
+          "description": {
+            "en": "Create a new poll in your group. Provide a question, deadline (Unix timestamp), and up to 4 answer options.",
+            "de": "Neue Abstimmung in der Gruppe erstellen. Frage, Deadline (Unix-Timestamp) und bis zu 4 Antwortoptionen angeben."
+          },
+          "actionTypes": [
+            "contract"
+          ]
+        },
+        {
+          "alias": "poll-group",
+          "identifier": "@poll-group",
+          "chain": null,
+          "name": "Poll: Get Group",
+          "title": {
+            "en": "Group Info",
+            "de": "Gruppeninfo"
+          },
+          "description": {
+            "en": "Query details about a voting group.",
+            "de": "Details einer Abstimmungsgruppe abfragen."
+          },
+          "actionTypes": [
+            "query"
+          ]
+        },
+        {
+          "alias": "poll-group-create",
+          "identifier": "@poll-group-create",
+          "chain": null,
+          "name": "Poll: Create Group",
+          "title": {
+            "en": "Create Group",
+            "de": "Gruppe erstellen"
+          },
+          "description": {
+            "en": "Create a new voting group. You become the admin and first member.",
+            "de": "Neue Abstimmungsgruppe erstellen. Du wirst Admin und erstes Mitglied."
+          },
+          "actionTypes": [
+            "contract"
+          ]
+        },
+        {
+          "alias": "poll-group-polls",
+          "identifier": "@poll-group-polls",
+          "chain": null,
+          "name": "Poll: Get Group Polls",
+          "title": {
+            "en": "All Group Polls",
+            "de": "Alle Gruppenabstimmungen"
+          },
+          "description": {
+            "en": "Query all poll IDs belonging to a group (active and expired).",
+            "de": "Alle Abstimmungs-IDs einer Gruppe abfragen (aktive und abgelaufene)."
+          },
+          "actionTypes": [
+            "query"
+          ]
+        },
+        {
+          "alias": "poll-invite",
+          "identifier": "@poll-invite",
+          "chain": null,
+          "name": "Poll: Get Invite",
+          "title": {
+            "en": "Invite Status",
+            "de": "Einladungsstatus"
+          },
+          "description": {
+            "en": "Check if an invite code is still valid and how many uses remain.",
+            "de": "Prüfen, ob ein Einladungscode noch gültig ist und wie viele Nutzungen verbleiben."
+          },
+          "actionTypes": [
+            "query"
+          ]
+        },
+        {
+          "alias": "poll-invite-create",
+          "identifier": "@poll-invite-create",
+          "chain": null,
+          "name": "Poll: Create Invite",
+          "title": {
+            "en": "Create Invite Link",
+            "de": "Einladungslink erstellen"
+          },
+          "description": {
+            "en": "Generate an invite code that lets people join your space directly without approval.",
+            "de": "Einladungscode generieren, mit dem Personen ohne Genehmigung beitreten können."
+          },
+          "actionTypes": [
+            "contract"
+          ]
+        },
+        {
+          "alias": "poll-invite-join",
+          "identifier": "@poll-invite-join",
+          "chain": null,
+          "name": "Poll: Join With Invite",
+          "title": {
+            "en": "Join With Invite Code",
+            "de": "Mit Einladungscode beitreten"
+          },
+          "description": {
+            "en": "Use an invite code to join a group instantly without waiting for approval.",
+            "de": "Mit einem Einladungscode sofort einer Gruppe beitreten, ohne auf Genehmigung zu warten."
+          },
+          "actionTypes": [
+            "contract"
+          ]
+        },
+        {
+          "alias": "poll-invite-revoke",
+          "identifier": "@poll-invite-revoke",
+          "chain": null,
+          "name": "Poll: Revoke Invite",
+          "title": {
+            "en": "Revoke Invite",
+            "de": "Einladung widerrufen"
+          },
+          "description": {
+            "en": "Revoke an active invite code so it can no longer be used.",
+            "de": "Aktiven Einladungscode widerrufen, sodass er nicht mehr verwendet werden kann."
+          },
+          "actionTypes": [
+            "contract"
+          ]
+        },
+        {
+          "alias": "poll-member-approve",
+          "identifier": "@poll-member-approve",
+          "chain": null,
+          "name": "Poll: Approve Member",
+          "title": {
+            "en": "Approve Member",
+            "de": "Mitglied genehmigen"
+          },
+          "description": {
+            "en": "Approve a pending membership request and add the person to the group.",
+            "de": "Ausstehende Mitgliedschaftsanfrage genehmigen und Person zur Gruppe hinzufügen."
+          },
+          "actionTypes": [
+            "contract"
+          ]
+        },
+        {
+          "alias": "poll-member-check",
+          "identifier": "@poll-member-check",
+          "chain": null,
+          "name": "Poll: Is Member",
+          "title": {
+            "en": "Check Membership",
+            "de": "Mitgliedschaft prüfen"
+          },
+          "description": {
+            "en": "Check if an address is a member of a group.",
+            "de": "Prüfen, ob eine Adresse Mitglied einer Gruppe ist."
+          },
+          "actionTypes": [
+            "query"
+          ]
+        },
+        {
+          "alias": "poll-member-remove",
+          "identifier": "@poll-member-remove",
+          "chain": null,
+          "name": "Poll: Remove Member",
+          "title": {
+            "en": "Remove Member",
+            "de": "Mitglied entfernen"
+          },
+          "description": {
+            "en": "Remove a member from the group. Admin cannot remove themselves.",
+            "de": "Mitglied aus der Gruppe entfernen. Admin kann sich nicht selbst entfernen."
+          },
+          "actionTypes": [
+            "contract"
+          ]
+        },
+        {
+          "alias": "poll-member-vote",
+          "identifier": "@poll-member-vote",
+          "chain": null,
+          "name": "Poll: Get Member Vote",
+          "title": {
+            "en": "Member's Vote",
+            "de": "Stimme des Mitglieds"
+          },
+          "description": {
+            "en": "Query which option an address voted for on a poll.",
+            "de": "Abfragen, für welche Option eine Adresse bei einer Abstimmung gestimmt hat."
+          },
+          "actionTypes": [
+            "query"
+          ]
+        },
+        {
+          "alias": "poll-members",
+          "identifier": "@poll-members",
+          "chain": null,
+          "name": "Poll: Get Members",
+          "title": {
+            "en": "Group Members",
+            "de": "Gruppenmitglieder"
+          },
+          "description": {
+            "en": "List all members of a group.",
+            "de": "Alle Mitglieder einer Gruppe anzeigen."
+          },
+          "actionTypes": [
+            "query"
+          ]
+        },
+        {
+          "alias": "poll-membership-request",
+          "identifier": "@poll-membership-request",
+          "chain": null,
+          "name": "Poll: Join Space",
+          "title": {
+            "en": "Join This Space",
+            "de": "Space beitreten"
+          },
+          "description": {
+            "en": "Request membership to participate in polls. The admin will approve your request.",
+            "de": "Mitgliedschaft beantragen, um an Abstimmungen teilzunehmen. Der Admin genehmigt deine Anfrage."
+          },
+          "actionTypes": [
+            "contract"
+          ]
+        },
+        {
+          "alias": "poll-polls-active",
+          "identifier": "@poll-polls-active",
+          "chain": null,
+          "name": "Poll: Active Polls",
+          "title": {
+            "en": "Active Polls",
+            "de": "Aktive Abstimmungen"
+          },
+          "description": {
+            "en": "See all open polls in this space.",
+            "de": "Alle offenen Abstimmungen in diesem Space anzeigen."
+          },
+          "actionTypes": [
+            "query"
+          ]
+        },
+        {
+          "alias": "poll-request-deny",
+          "identifier": "@poll-request-deny",
+          "chain": null,
+          "name": "Poll: Deny Request",
+          "title": {
+            "en": "Deny Request",
+            "de": "Anfrage ablehnen"
+          },
+          "description": {
+            "en": "Deny a pending membership request.",
+            "de": "Ausstehende Mitgliedschaftsanfrage ablehnen."
+          },
+          "actionTypes": [
+            "contract"
+          ]
+        },
+        {
+          "alias": "poll-requests-pending",
+          "identifier": "@poll-requests-pending",
+          "chain": null,
+          "name": "Poll: Pending Requests",
+          "title": {
+            "en": "Membership Requests",
+            "de": "Mitgliedschaftsanfragen"
+          },
+          "description": {
+            "en": "View all pending membership requests for your space.",
+            "de": "Alle offenen Mitgliedschaftsanfragen im Space anzeigen."
+          },
+          "actionTypes": [
+            "query"
+          ]
+        },
+        {
+          "alias": "poll-results",
+          "identifier": "@poll-results",
+          "chain": null,
+          "name": "Poll: Results",
+          "title": {
+            "en": "Poll Results",
+            "de": "Abstimmungsergebnis"
+          },
+          "description": {
+            "en": "View the current vote counts for each option.",
+            "de": "Die aktuellen Stimmen pro Option anzeigen."
+          },
+          "actionTypes": [
+            "query"
+          ]
+        },
+        {
+          "alias": "poll-vote",
+          "identifier": "@poll-vote",
+          "chain": null,
+          "name": "Poll: Vote",
+          "title": {
+            "en": "Cast Your Vote",
+            "de": "Abstimmen"
+          },
+          "description": {
+            "en": "Vote on an open poll. You need to be a member of the space to vote.",
+            "de": "An einer offenen Abstimmung teilnehmen. Du musst Mitglied des Spaces sein."
+          },
+          "actionTypes": [
+            "contract"
+          ]
+        },
+        {
+          "alias": "poll-vote-check",
+          "identifier": "@poll-vote-check",
+          "chain": null,
+          "name": "Poll: Has Voted",
+          "title": {
+            "en": "Check Vote Status",
+            "de": "Abstimmungsstatus prüfen"
+          },
+          "description": {
+            "en": "Check if an address has already voted on a poll.",
+            "de": "Prüfen, ob eine Adresse bereits an einer Abstimmung teilgenommen hat."
+          },
+          "actionTypes": [
+            "query"
+          ]
+        }
+      ]
+    },
+    {
       "slug": "polymarket",
       "visibility": "private",
       "name": "Polymarket",
@@ -15681,6 +16367,49 @@
       },
       "hash": "5e0fc6eafc01de8515bc102443cd40c5ee2d8d96003cec05c30158fcee0806da",
       "mcpUrl": "https://devnet-cortex.joai.ai/mcp/apps/shop",
+      "site": {
+        "enabled": true,
+        "auth": false,
+        "indexPath": "/",
+        "routes": [
+          {
+            "path": "/",
+            "warp": "@shop-services",
+            "label": {
+              "en": "Services",
+              "de": "Leistungen"
+            },
+            "nav": true
+          },
+          {
+            "path": "/admin/add",
+            "warp": "@shop-service-add",
+            "label": {
+              "en": "Add Service",
+              "de": "Leistung hinzufügen"
+            },
+            "nav": false
+          },
+          {
+            "path": "/admin/remove",
+            "warp": "@shop-service-remove",
+            "label": {
+              "en": "Remove Service",
+              "de": "Leistung entfernen"
+            },
+            "nav": false
+          },
+          {
+            "path": "/admin/setup",
+            "warp": "@shop-register",
+            "label": {
+              "en": "Setup Shop",
+              "de": "Shop einrichten"
+            },
+            "nav": false
+          }
+        ]
+      },
       "install": {
         "summary": "Connect Shop to Claude, Codex, and ChatGPT through JoAi's hosted MCP app server.",
         "examplePrompts": [
