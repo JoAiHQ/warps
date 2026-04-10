@@ -28,5 +28,10 @@ export const brand = async (config: WarpClientConfig): Promise<WarpbaseBrand> =>
       if (env === 'testnet') return 'https://testnet.joai.ai'
       return 'https://joai.ai'
     },
+    AGENT_BASE: (env: WarpChainEnv) => {
+      if (env === 'devnet') return 'https://devnet-agents.joai.ai'
+      if (env === 'testnet') return 'https://testnet-agents.joai.ai'
+      return 'https://agents.joai.ai'
+    },
   },
 })
