@@ -30,10 +30,10 @@ export const brand = async (config: WarpClientConfig): Promise<WarpbaseBrand> =>
     auth: false,
     indexPath: '/',
     routes: [
-      { path: '/', warp: 'create', label: { en: 'Request Signature', de: 'Signatur anfordern' }, nav: true },
-      { path: '/sign', warp: 'sign', label: { en: 'Sign Document', de: 'Dokument unterzeichnen' }, nav: false },
-      { path: '/view', warp: 'view', label: { en: 'View Request', de: 'Anfrage ansehen' }, nav: false },
-      { path: '/list', warp: 'list', label: { en: 'My Requests', de: 'Meine Anfragen' }, nav: true },
+      { path: '/', warp: '@signature-create', label: { en: 'Request Signature', de: 'Signatur anfordern' }, nav: true },
+      { path: '/sign', warp: '@signature-sign', label: { en: 'Sign Document', de: 'Dokument unterzeichnen' }, nav: false },
+      { path: '/view', warp: '@signature-view', label: { en: 'View Request', de: 'Anfrage ansehen' }, nav: false },
+      { path: '/list', warp: '@signature-list', label: { en: 'My Requests', de: 'Meine Anfragen' }, nav: true },
     ],
   },
 })

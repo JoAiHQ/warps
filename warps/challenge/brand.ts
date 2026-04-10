@@ -30,10 +30,10 @@ export const brand = async (config: WarpClientConfig): Promise<WarpbaseBrand> =>
     auth: false,
     indexPath: '/',
     routes: [
-      { path: '/', warp: 'list', label: { en: 'Browse', de: 'Entdecken' }, nav: true },
-      { path: '/create', warp: 'create', label: { en: 'Create', de: 'Erstellen' }, nav: true },
-      { path: '/view', warp: 'view', label: { en: 'Challenge', de: 'Challenge' }, nav: false },
-      { path: '/accept', warp: 'accept', label: { en: 'Accept', de: 'Annehmen' }, nav: false },
+      { path: '/', warp: '@challenge-list', label: { en: 'Browse', de: 'Entdecken' }, nav: true },
+      { path: '/create', warp: '@challenge-create', label: { en: 'Create', de: 'Erstellen' }, nav: true },
+      { path: '/view', warp: '@challenge-view', label: { en: 'Challenge', de: 'Challenge' }, nav: false },
+      { path: '/accept', warp: '@challenge-accept', label: { en: 'Accept', de: 'Annehmen' }, nav: false },
     ],
   },
 })

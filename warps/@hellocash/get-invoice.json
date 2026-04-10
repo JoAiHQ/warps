@@ -1,0 +1,57 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "helloCash: Get Invoice",
+  "title": {
+    "en": "Get invoice",
+    "de": "Rechnung abrufen"
+  },
+  "description": {
+    "en": "Retrieve a specific invoice by ID from your helloCash account.",
+    "de": "Eine bestimmte Rechnung anhand der ID aus deinem helloCash-Konto abrufen."
+  },
+  "vars": {
+    "API_TOKEN": "env:HELLOCASH_API_TOKEN|Get your API token from helloCash Dashboard under Settings → API."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Fetch invoice",
+        "de": "Rechnung abrufen"
+      },
+      "destination": {
+        "url": "INJECT:API_URL/invoices/{{INVOICE_ID}}",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{API_TOKEN}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Invoice ID",
+          "as": "INVOICE_ID",
+          "description": {
+            "en": "The helloCash invoice ID.",
+            "de": "Die helloCash-Rechnungs-ID."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "output": {
+    "INVOICE": "out"
+  },
+  "messages": {
+    "success": {
+      "en": "Invoice retrieved.",
+      "de": "Rechnung abgerufen."
+    },
+    "error": {
+      "en": "Invoice not found.",
+      "de": "Rechnung nicht gefunden."
+    }
+  }
+}

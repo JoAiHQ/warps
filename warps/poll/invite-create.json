@@ -1,0 +1,76 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Poll: Create Invite",
+  "title": {
+    "en": "Create Invite Link",
+    "de": "Einladungslink erstellen"
+  },
+  "description": {
+    "en": "Generate an invite code that lets people join your space directly without approval.",
+    "de": "Einladungscode generieren, mit dem Personen ohne Genehmigung beitreten können."
+  },
+  "vars": {
+    "SC_ADDRESS": "INJECT:POLL_SC_ADDRESS"
+  },
+  "actions": [
+    {
+      "type": "contract",
+      "label": {
+        "en": "Create Invite",
+        "de": "Einladung erstellen"
+      },
+      "address": "{{SC_ADDRESS}}",
+      "func": "createInvite",
+      "args": [
+        "string:{{SLUG}}",
+        "string:{{CODE}}",
+        "u32:{{MAX_USES}}",
+        "u64:{{EXPIRES_AT}}"
+      ],
+      "gasLimit": 10000000,
+      "inputs": [
+        {
+          "name": "SLUG",
+          "type": "string",
+          "position": "arg:1",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "CODE",
+          "type": "string",
+          "position": "arg:2",
+          "source": "field",
+          "required": true,
+          "label": {
+            "en": "Invite code",
+            "de": "Einladungscode"
+          }
+        },
+        {
+          "name": "MAX_USES",
+          "type": "uint32",
+          "position": "arg:3",
+          "source": "field",
+          "required": true,
+          "label": {
+            "en": "Max uses",
+            "de": "Maximale Nutzungen"
+          }
+        },
+        {
+          "name": "EXPIRES_AT",
+          "type": "uint64",
+          "position": "arg:4",
+          "source": "field",
+          "required": true,
+          "label": {
+            "en": "Expires at (Unix timestamp)",
+            "de": "Läuft ab (Unix-Timestamp)"
+          }
+        }
+      ],
+      "abi": "INJECT:abis/poll.abi.json"
+    }
+  ]
+}

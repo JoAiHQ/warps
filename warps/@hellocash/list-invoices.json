@@ -1,0 +1,70 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "helloCash: List Invoices",
+  "title": {
+    "en": "List invoices",
+    "de": "Rechnungen auflisten"
+  },
+  "description": {
+    "en": "Retrieve invoices from your helloCash account.",
+    "de": "Rechnungen aus deinem helloCash-Konto abrufen."
+  },
+  "vars": {
+    "API_TOKEN": "env:HELLOCASH_API_TOKEN|Get your API token from helloCash Dashboard under Settings → API."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Fetch invoices",
+        "de": "Rechnungen abrufen"
+      },
+      "destination": {
+        "url": "INJECT:API_URL/invoices",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{API_TOKEN}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Limit",
+          "as": "limit",
+          "description": {
+            "en": "Number of invoices to return (max 200).",
+            "de": "Anzahl der zurückzugebenden Rechnungen (max. 200)."
+          },
+          "type": "number",
+          "source": "field",
+          "position": "query:limit",
+          "default": "50"
+        },
+        {
+          "name": "Show Details",
+          "as": "showDetails",
+          "description": {
+            "en": "Include invoice line items in the response.",
+            "de": "Rechnungspositionen in der Antwort einbeziehen."
+          },
+          "type": "bool",
+          "source": "field",
+          "position": "query:showDetails",
+          "default": "true"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "INVOICES": "out"
+  },
+  "messages": {
+    "success": {
+      "en": "Invoices retrieved.",
+      "de": "Rechnungen abgerufen."
+    },
+    "error": {
+      "en": "Failed to fetch invoices. Check your API token.",
+      "de": "Rechnungen konnten nicht abgerufen werden. Überprüfe deinen API-Token."
+    }
+  }
+}

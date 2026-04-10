@@ -1,0 +1,69 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "helloCash: List Customers",
+  "title": {
+    "en": "List customers",
+    "de": "Kunden auflisten"
+  },
+  "description": {
+    "en": "Retrieve customers from your helloCash account.",
+    "de": "Kunden aus deinem helloCash-Konto abrufen."
+  },
+  "vars": {
+    "API_TOKEN": "env:HELLOCASH_API_TOKEN|Get your API token from helloCash Dashboard under Settings → API."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Fetch customers",
+        "de": "Kunden abrufen"
+      },
+      "destination": {
+        "url": "INJECT:API_URL/invoicerecipients",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer {{API_TOKEN}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Limit",
+          "as": "limit",
+          "description": {
+            "en": "Number of customers to return (max 500).",
+            "de": "Anzahl der zurückzugebenden Kunden (max. 500)."
+          },
+          "type": "number",
+          "source": "field",
+          "position": "query:limit",
+          "default": "100"
+        },
+        {
+          "name": "Search",
+          "as": "search",
+          "description": {
+            "en": "Filter customers by name or email.",
+            "de": "Kunden nach Name oder E-Mail filtern."
+          },
+          "type": "string",
+          "source": "field",
+          "position": "query:search"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "CUSTOMERS": "out"
+  },
+  "messages": {
+    "success": {
+      "en": "Customers retrieved.",
+      "de": "Kunden abgerufen."
+    },
+    "error": {
+      "en": "Failed to fetch customers. Check your API token.",
+      "de": "Kunden konnten nicht abgerufen werden. Überprüfe deinen API-Token."
+    }
+  }
+}

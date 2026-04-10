@@ -30,9 +30,9 @@ export const brand = async (config: WarpClientConfig): Promise<WarpbaseBrand> =>
     auth: false,
     indexPath: '/',
     routes: [
-      { path: '/', warp: 'redeem', label: { en: 'Redeem', de: 'Einlösen' }, nav: true },
-      { path: '/view', warp: 'view', label: { en: 'View Coupon', de: 'Gutschein ansehen' }, nav: false },
-      { path: '/create', warp: 'create', label: { en: 'Create Coupon', de: 'Gutschein erstellen' }, nav: false },
+      { path: '/', warp: '@coupon-redeem', label: { en: 'Redeem', de: 'Einlösen' }, nav: true },
+      { path: '/view', warp: '@coupon-view', label: { en: 'View Coupon', de: 'Gutschein ansehen' }, nav: false },
+      { path: '/create', warp: '@coupon-create', label: { en: 'Create Coupon', de: 'Gutschein erstellen' }, nav: false },
     ],
   },
 })
