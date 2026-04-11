@@ -16,7 +16,7 @@ export const brand = async (config: WarpClientConfig): Promise<WarpbaseBrand> =>
     .build(),
   contracts: {
     POLL_SC_ADDRESS: (env: WarpChainEnv) => {
-      if (env === 'devnet') return 'TODO'
+      if (env === 'devnet') return 'erd1qqqqqqqqqqqqqpgqtxwhd7z99tvvrgd38897k9zunrqsgmahtres7648am'
       if (env === 'testnet') return 'TODO'
       return 'TODO'
     },
