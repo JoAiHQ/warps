@@ -1,0 +1,12 @@
+pub const ERR_INVALID_NAME: &str = "name must be 1-50 bytes";
+pub const ERR_INVALID_TICKER: &str = "ticker must be 3-10 bytes";
+pub const ERR_INVALID_DISCOUNT: &str = "discount_percent must be between 1 and 100";
+pub const ERR_INVALID_AMOUNT: &str = "amount must be at least 1";
+pub const ERR_WRONG_PAYMENT: &str = "must send exactly 0.05 EGLD to create a collection";
+pub const ERR_COLLECTION_NOT_FOUND: &str = "collection not found";
+pub const ERR_COLLECTION_NOT_READY: &str = "collection token not yet issued";
+pub const ERR_COUPON_NOT_FOUND: &str = "coupon not found";
+pub const ERR_COUPON_REVOKED: &str = "coupon has been revoked";
+pub const ERR_COUPON_EXPIRED: &str = "coupon has expired";
+pub const ERR_NOT_CREATOR: &str = "only the collection creator can perform this action";
+pub const ERR_WRONG_TOKEN: &str = "token is not a registered coupon collection";
