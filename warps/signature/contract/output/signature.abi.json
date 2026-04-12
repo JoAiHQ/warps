@@ -1,0 +1,407 @@
+{
+    "buildInfo": {
+        "rustc": {
+            "version": "1.91.0",
+            "commitHash": "f8297e351a40c1439a467bbbb6879088047f50b3",
+            "commitDate": "2025-10-28",
+            "channel": "Stable",
+            "host": "aarch64-apple-darwin",
+            "short": "rustc 1.91.0 (f8297e351 2025-10-28)",
+            "llvmVersion": "21.1"
+        },
+        "contractCrate": {
+            "name": "signature",
+            "version": "0.0.1"
+        },
+        "framework": {
+            "name": "multiversx-sc",
+            "version": "0.65.1"
+        }
+    },
+    "name": "SignatureContract",
+    "constructor": {
+        "inputs": [],
+        "outputs": []
+    },
+    "upgradeConstructor": {
+        "inputs": [],
+        "outputs": []
+    },
+    "endpoints": [
+        {
+            "docs": [
+                "Create a new multi-party signature request.",
+                "The blockchain transaction signed by the creator anchors their intent on-chain."
+            ],
+            "name": "createRequest",
+            "rustMethodName": "create_request",
+            "mutability": "mutable",
+            "inputs": [
+                {
+                    "name": "title",
+                    "type": "bytes"
+                },
+                {
+                    "name": "document_hash",
+                    "type": "bytes"
+                },
+                {
+                    "name": "document_url",
+                    "type": "bytes"
+                },
+                {
+                    "name": "deadline_hours",
+                    "type": "u64"
+                },
+                {
+                    "name": "signers",
+                    "type": "variadic<Address>",
+                    "multi_arg": true
+                }
+            ],
+            "outputs": [
+                {
+                    "type": "u64"
+                }
+            ]
+        },
+        {
+            "docs": [
+                "Sign a request. The blockchain transaction itself (signed by the caller's private key)",
+                "is the cryptographic proof of consent for the document hash stored on-chain."
+            ],
+            "name": "sign",
+            "mutability": "mutable",
+            "inputs": [
+                {
+                    "name": "request_id",
+                    "type": "u64"
+                }
+            ],
+            "outputs": []
+        },
+        {
+            "docs": [
+                "Cancel a pending request. Only the creator can cancel."
+            ],
+            "name": "cancelRequest",
+            "rustMethodName": "cancel_request",
+            "mutability": "mutable",
+            "inputs": [
+                {
+                    "name": "request_id",
+                    "type": "u64"
+                }
+            ],
+            "outputs": []
+        },
+        {
+            "docs": [
+                "Expire a request whose deadline has passed. Anyone can call this."
+            ],
+            "name": "expireRequest",
+            "rustMethodName": "expire_request",
+            "mutability": "mutable",
+            "inputs": [
+                {
+                    "name": "request_id",
+                    "type": "u64"
+                }
+            ],
+            "outputs": []
+        },
+        {
+            "name": "getRequest",
+            "rustMethodName": "get_request",
+            "mutability": "readonly",
+            "inputs": [
+                {
+                    "name": "request_id",
+                    "type": "u64"
+                }
+            ],
+            "outputs": [
+                {
+                    "type": "SignatureRequest"
+                }
+            ]
+        },
+        {
+            "name": "getRequestSigners",
+            "rustMethodName": "get_request_signers",
+            "mutability": "readonly",
+            "inputs": [
+                {
+                    "name": "request_id",
+                    "type": "u64"
+                }
+            ],
+            "outputs": [
+                {
+                    "type": "variadic<Address>",
+                    "multi_result": true
+                }
+            ]
+        },
+        {
+            "name": "getSignedBy",
+            "rustMethodName": "get_signed_by",
+            "mutability": "readonly",
+            "inputs": [
+                {
+                    "name": "request_id",
+                    "type": "u64"
+                }
+            ],
+            "outputs": [
+                {
+                    "type": "variadic<Address>",
+                    "multi_result": true
+                }
+            ]
+        },
+        {
+            "name": "hasSigned",
+            "rustMethodName": "has_signed",
+            "mutability": "readonly",
+            "inputs": [
+                {
+                    "name": "request_id",
+                    "type": "u64"
+                },
+                {
+                    "name": "signer",
+                    "type": "Address"
+                }
+            ],
+            "outputs": [
+                {
+                    "type": "bool"
+                }
+            ]
+        },
+        {
+            "name": "isEligibleSigner",
+            "rustMethodName": "is_eligible_signer",
+            "mutability": "readonly",
+            "inputs": [
+                {
+                    "name": "request_id",
+                    "type": "u64"
+                },
+                {
+                    "name": "address",
+                    "type": "Address"
+                }
+            ],
+            "outputs": [
+                {
+                    "type": "bool"
+                }
+            ]
+        },
+        {
+            "name": "getRequestsByCreator",
+            "rustMethodName": "get_requests_by_creator",
+            "mutability": "readonly",
+            "inputs": [
+                {
+                    "name": "creator",
+                    "type": "Address"
+                },
+                {
+                    "name": "offset",
+                    "type": "u32"
+                },
+                {
+                    "name": "limit",
+                    "type": "u32"
+                }
+            ],
+            "outputs": [
+                {
+                    "type": "variadic<multi<u64,SignatureRequest>>",
+                    "multi_result": true
+                }
+            ]
+        },
+        {
+            "name": "getNextRequestId",
+            "rustMethodName": "get_next_request_id",
+            "mutability": "readonly",
+            "inputs": [],
+            "outputs": [
+                {
+                    "type": "u64"
+                }
+            ]
+        }
+    ],
+    "events": [
+        {
+            "identifier": "requestCreated",
+            "inputs": [
+                {
+                    "name": "id",
+                    "type": "u64",
+                    "indexed": true
+                },
+                {
+                    "name": "creator",
+                    "type": "Address",
+                    "indexed": true
+                },
+                {
+                    "name": "title",
+                    "type": "bytes",
+                    "indexed": true
+                },
+                {
+                    "name": "document_hash",
+                    "type": "bytes",
+                    "indexed": true
+                },
+                {
+                    "name": "deadline",
+                    "type": "u64",
+                    "indexed": true
+                }
+            ]
+        },
+        {
+            "identifier": "documentSigned",
+            "inputs": [
+                {
+                    "name": "id",
+                    "type": "u64",
+                    "indexed": true
+                },
+                {
+                    "name": "signer",
+                    "type": "Address",
+                    "indexed": true
+                },
+                {
+                    "name": "signed_count",
+                    "type": "u64",
+                    "indexed": true
+                },
+                {
+                    "name": "signer_count",
+                    "type": "u64",
+                    "indexed": true
+                }
+            ]
+        },
+        {
+            "identifier": "requestCompleted",
+            "inputs": [
+                {
+                    "name": "id",
+                    "type": "u64",
+                    "indexed": true
+                },
+                {
+                    "name": "creator",
+                    "type": "Address",
+                    "indexed": true
+                }
+            ]
+        },
+        {
+            "identifier": "requestCancelled",
+            "inputs": [
+                {
+                    "name": "id",
+                    "type": "u64",
+                    "indexed": true
+                },
+                {
+                    "name": "creator",
+                    "type": "Address",
+                    "indexed": true
+                }
+            ]
+        },
+        {
+            "identifier": "requestExpired",
+            "inputs": [
+                {
+                    "name": "id",
+                    "type": "u64",
+                    "indexed": true
+                }
+            ]
+        }
+    ],
+    "esdtAttributes": [],
+    "hasCallback": false,
+    "types": {
+        "SignatureRequest": {
+            "type": "struct",
+            "fields": [
+                {
+                    "name": "id",
+                    "type": "u64"
+                },
+                {
+                    "name": "creator",
+                    "type": "Address"
+                },
+                {
+                    "name": "title",
+                    "type": "bytes"
+                },
+                {
+                    "name": "document_hash",
+                    "type": "bytes"
+                },
+                {
+                    "name": "document_url",
+                    "type": "bytes"
+                },
+                {
+                    "name": "signer_count",
+                    "type": "u64"
+                },
+                {
+                    "name": "signed_count",
+                    "type": "u64"
+                },
+                {
+                    "name": "deadline",
+                    "type": "u64"
+                },
+                {
+                    "name": "created_at",
+                    "type": "u64"
+                },
+                {
+                    "name": "status",
+                    "type": "SignatureStatus"
+                }
+            ]
+        },
+        "SignatureStatus": {
+            "type": "enum",
+            "variants": [
+                {
+                    "name": "Pending",
+                    "discriminant": 0
+                },
+                {
+                    "name": "Completed",
+                    "discriminant": 1
+                },
+                {
+                    "name": "Cancelled",
+                    "discriminant": 2
+                },
+                {
+                    "name": "Expired",
+                    "discriminant": 3
+                }
+            ]
+        }
+    }
+}
