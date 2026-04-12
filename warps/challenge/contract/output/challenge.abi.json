@@ -1,0 +1,338 @@
+{
+    "buildInfo": {
+        "rustc": {
+            "version": "1.91.0",
+            "commitHash": "f8297e351a40c1439a467bbbb6879088047f50b3",
+            "commitDate": "2025-10-28",
+            "channel": "Stable",
+            "host": "aarch64-apple-darwin",
+            "short": "rustc 1.91.0 (f8297e351 2025-10-28)",
+            "llvmVersion": "21.1"
+        },
+        "contractCrate": {
+            "name": "challenge",
+            "version": "0.0.1"
+        },
+        "framework": {
+            "name": "multiversx-sc",
+            "version": "0.65.1"
+        }
+    },
+    "name": "ChallengeContract",
+    "constructor": {
+        "inputs": [],
+        "outputs": []
+    },
+    "upgradeConstructor": {
+        "inputs": [],
+        "outputs": []
+    },
+    "endpoints": [
+        {
+            "docs": [
+                "Create a challenge. Send EGLD or a stablecoin as the stake.",
+                "duration_hours: how long the challenge runs (1–720)"
+            ],
+            "name": "createChallenge",
+            "rustMethodName": "create_challenge",
+            "mutability": "mutable",
+            "payableInTokens": [
+                "*"
+            ],
+            "inputs": [
+                {
+                    "name": "title",
+                    "type": "bytes"
+                },
+                {
+                    "name": "duration_hours",
+                    "type": "u64"
+                }
+            ],
+            "outputs": [
+                {
+                    "type": "u64"
+                }
+            ]
+        },
+        {
+            "docs": [
+                "Accept an open challenge. Send the same token and amount as the creator's stake exactly."
+            ],
+            "name": "acceptChallenge",
+            "rustMethodName": "accept_challenge",
+            "mutability": "mutable",
+            "payableInTokens": [
+                "*"
+            ],
+            "inputs": [
+                {
+                    "name": "challenge_id",
+                    "type": "u64"
+                }
+            ],
+            "outputs": []
+        },
+        {
+            "docs": [
+                "Resolve the outcome of an accepted challenge after it has ended.",
+                "Only callable by the contract owner (JoAi agent verifies off-chain).",
+                "If creator_succeeded: both parties get their stake back.",
+                "If !creator_succeeded: acceptor wins both stakes."
+            ],
+            "name": "resolveChallenge",
+            "rustMethodName": "resolve_challenge",
+            "mutability": "mutable",
+            "inputs": [
+                {
+                    "name": "challenge_id",
+                    "type": "u64"
+                },
+                {
+                    "name": "creator_succeeded",
+                    "type": "bool"
+                }
+            ],
+            "outputs": []
+        },
+        {
+            "docs": [
+                "Cancel an open challenge before it is accepted. Refunds the stake."
+            ],
+            "name": "cancelChallenge",
+            "rustMethodName": "cancel_challenge",
+            "mutability": "mutable",
+            "inputs": [
+                {
+                    "name": "challenge_id",
+                    "type": "u64"
+                }
+            ],
+            "outputs": []
+        },
+        {
+            "name": "getChallenge",
+            "rustMethodName": "get_challenge",
+            "mutability": "readonly",
+            "inputs": [
+                {
+                    "name": "challenge_id",
+                    "type": "u64"
+                }
+            ],
+            "outputs": [
+                {
+                    "type": "Challenge"
+                }
+            ]
+        },
+        {
+            "name": "getOpenChallenges",
+            "rustMethodName": "get_open_challenges",
+            "mutability": "readonly",
+            "inputs": [
+                {
+                    "name": "offset",
+                    "type": "u32"
+                },
+                {
+                    "name": "limit",
+                    "type": "u32"
+                }
+            ],
+            "outputs": [
+                {
+                    "type": "variadic<multi<u64,Challenge>>",
+                    "multi_result": true
+                }
+            ]
+        },
+        {
+            "name": "getChallengesByCreator",
+            "rustMethodName": "get_challenges_by_creator",
+            "mutability": "readonly",
+            "inputs": [
+                {
+                    "name": "creator",
+                    "type": "Address"
+                },
+                {
+                    "name": "offset",
+                    "type": "u32"
+                },
+                {
+                    "name": "limit",
+                    "type": "u32"
+                }
+            ],
+            "outputs": [
+                {
+                    "type": "variadic<multi<u64,Challenge>>",
+                    "multi_result": true
+                }
+            ]
+        },
+        {
+            "name": "getNextChallengeId",
+            "rustMethodName": "get_next_challenge_id",
+            "mutability": "readonly",
+            "inputs": [],
+            "outputs": [
+                {
+                    "type": "u64"
+                }
+            ]
+        }
+    ],
+    "events": [
+        {
+            "identifier": "challengeCreated",
+            "inputs": [
+                {
+                    "name": "challenge_id",
+                    "type": "u64",
+                    "indexed": true
+                },
+                {
+                    "name": "creator",
+                    "type": "Address",
+                    "indexed": true
+                },
+                {
+                    "name": "token",
+                    "type": "EgldOrEsdtTokenIdentifier",
+                    "indexed": true
+                },
+                {
+                    "name": "stake",
+                    "type": "BigUint",
+                    "indexed": true
+                },
+                {
+                    "name": "ends_at",
+                    "type": "u64",
+                    "indexed": true
+                },
+                {
+                    "name": "title",
+                    "type": "bytes"
+                }
+            ]
+        },
+        {
+            "identifier": "challengeAccepted",
+            "inputs": [
+                {
+                    "name": "challenge_id",
+                    "type": "u64",
+                    "indexed": true
+                },
+                {
+                    "name": "acceptor",
+                    "type": "Address",
+                    "indexed": true
+                }
+            ]
+        },
+        {
+            "identifier": "challengeResolved",
+            "inputs": [
+                {
+                    "name": "challenge_id",
+                    "type": "u64",
+                    "indexed": true
+                },
+                {
+                    "name": "creator_succeeded",
+                    "type": "bool",
+                    "indexed": true
+                },
+                {
+                    "name": "winner",
+                    "type": "Address"
+                }
+            ]
+        },
+        {
+            "identifier": "challengeCancelled",
+            "inputs": [
+                {
+                    "name": "challenge_id",
+                    "type": "u64",
+                    "indexed": true
+                },
+                {
+                    "name": "creator",
+                    "type": "Address",
+                    "indexed": true
+                }
+            ]
+        }
+    ],
+    "esdtAttributes": [],
+    "hasCallback": false,
+    "types": {
+        "Challenge": {
+            "type": "struct",
+            "fields": [
+                {
+                    "name": "creator",
+                    "type": "Address"
+                },
+                {
+                    "name": "title",
+                    "type": "bytes"
+                },
+                {
+                    "name": "token",
+                    "type": "EgldOrEsdtTokenIdentifier"
+                },
+                {
+                    "name": "stake",
+                    "type": "BigUint"
+                },
+                {
+                    "name": "ends_at",
+                    "type": "u64"
+                },
+                {
+                    "name": "created_at",
+                    "type": "u64"
+                },
+                {
+                    "name": "acceptor",
+                    "type": "Address"
+                },
+                {
+                    "name": "status",
+                    "type": "ChallengeStatus"
+                }
+            ]
+        },
+        "ChallengeStatus": {
+            "type": "enum",
+            "variants": [
+                {
+                    "name": "Open",
+                    "discriminant": 0
+                },
+                {
+                    "name": "Accepted",
+                    "discriminant": 1
+                },
+                {
+                    "name": "CreatorSucceeded",
+                    "discriminant": 2
+                },
+                {
+                    "name": "CreatorFailed",
+                    "discriminant": 3
+                },
+                {
+                    "name": "Cancelled",
+                    "discriminant": 4
+                }
+            ]
+        }
+    }
+}

@@ -1,0 +1,14 @@
+pub const ERR_INVALID_TITLE: &str = "title must be 1-128 bytes";
+pub const ERR_INVALID_DURATION: &str = "duration must be between 1 and 720 hours";
+pub const ERR_STAKE_REQUIRED: &str = "stake payment required";
+pub const ERR_STAKE_MISMATCH: &str = "payment must match challenge stake exactly";
+pub const ERR_CHALLENGE_NOT_FOUND: &str = "challenge not found";
+pub const ERR_NOT_OPEN: &str = "challenge is not open";
+pub const ERR_NOT_ACCEPTED: &str = "challenge has not been accepted";
+pub const ERR_ALREADY_ACCEPTED: &str = "challenge already accepted";
+pub const ERR_NOT_CREATOR: &str = "only the challenge creator can cancel";
+pub const ERR_CANNOT_ACCEPT_OWN: &str = "cannot accept your own challenge";
+pub const ERR_NOT_ENDED: &str = "challenge has not ended yet";
+pub const ERR_NOT_OWNER: &str = "only the contract owner can resolve challenges";
+pub const ERR_ALREADY_RESOLVED: &str = "challenge is already resolved";
+pub const ERR_TOKEN_MISMATCH: &str = "payment token must match challenge token";
