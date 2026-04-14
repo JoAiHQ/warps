@@ -1,0 +1,53 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Followups: Birthday Scan",
+  "title": {
+    "en": "Scan for upcoming birthdays",
+    "de": "Nach bevorstehenden Geburtstagen scannen",
+    "fr": "Rechercher les anniversaires a venir",
+    "es": "Buscar cumpleanos proximos",
+    "ro": "Scaneaza zilele de nastere viitoare"
+  },
+  "description": {
+    "en": "Automatically identify customers with birthdays in the next 7 days.",
+    "de": "Automatisch Kunden mit Geburtstagen in den naechsten 7 Tagen identifizieren.",
+    "fr": "Identifier automatiquement les clients dont l anniversaire est dans les 7 prochains jours.",
+    "es": "Identificar automaticamente clientes con cumpleanos en los proximos 7 dias.",
+    "ro": "Identifica automat clientii cu zilele de nastere in urmatoarele 7 zile."
+  },
+  "bot": "Scheduled scan that fetches contacts with birthdays in the next 7 days and dispatches a birthday greeting warp for each one automatically.",
+  "output": {
+    "CONTACTS": "out.data"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Scan birthdays",
+        "de": "Geburtstage scannen",
+        "fr": "Analyser les anniversaires",
+        "es": "Escanear cumpleanos",
+        "ro": "Scaneaza zilele de nastere"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/contacts?agent={{JOAI_AGENT_UUID}}&filter[birthday_upcoming]=7",
+        "method": "GET",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [],
+      "auto": true
+    }
+  ],
+  "next": "followups-birthday?contactId={{CONTACTS[].id}}",
+  "messages": {
+    "success": {
+      "en": "Birthday scan completed.",
+      "de": "Geburtstags-Scan abgeschlossen.",
+      "fr": "Analyse des anniversaires terminee.",
+      "es": "Escaneo de cumpleanos completado.",
+      "ro": "Scanarea zilelor de nastere finalizata."
+    }
+  }
+}

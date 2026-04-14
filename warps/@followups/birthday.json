@@ -1,0 +1,148 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Followups: Birthday",
+  "title": {
+    "en": "Send birthday greeting",
+    "de": "Geburtstagsgruss senden",
+    "fr": "Envoyer un voeu d anniversaire",
+    "es": "Enviar saludo de cumpleanos",
+    "ro": "Trimite felicitare de ziua de nastere"
+  },
+  "description": {
+    "en": "Send a birthday greeting to a customer, optionally with a special offer.",
+    "de": "Einen Geburtstagsgruss an einen Kunden senden, optional mit einem Sonderangebot.",
+    "fr": "Envoyer un voeu d anniversaire a un client, avec eventuellement une offre speciale.",
+    "es": "Enviar un saludo de cumpleanos a un cliente, opcionalmente con una oferta especial.",
+    "ro": "Trimite o felicitare de ziua de nastere unui client, optional cu o oferta speciala."
+  },
+  "bot": "When this warp is triggered: fetches the contact, composes a warm birthday greeting, and sends it via WhatsApp.",
+  "output": {
+    "CONTACT_NAME": "out.name",
+    "CONTACT_PHONE": "out.phone",
+    "CONTACT_EMAIL": "out.email"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Send greeting",
+        "de": "Gruss senden",
+        "fr": "Envoyer le voeu",
+        "es": "Enviar saludo",
+        "ro": "Trimite felicitarea"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/contacts/{{contactId}}",
+        "method": "GET",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Contact",
+          "as": "contactId",
+          "description": {
+            "en": "Which customer to send the birthday greeting to?",
+            "de": "An welchen Kunden soll der Geburtstagsgruss gesendet werden?",
+            "fr": "A quel client envoyer le voeu d anniversaire ?",
+            "es": "A cual cliente enviar el saludo de cumpleanos?",
+            "ro": "Caruia client sa trimiti felicitarea de ziua de nastere?"
+          },
+          "bot": "The contact ID of the customer whose birthday it is.",
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Offer",
+          "as": "offer",
+          "description": {
+            "en": "Optional special offer (e.g. '10% discount')",
+            "de": "Optionales Sonderangebot (z.B. '10% Rabatt')",
+            "fr": "Offre speciale optionnelle (ex. '10% de reduction')",
+            "es": "Oferta especial opcional (ej. '10% de descuento')",
+            "ro": "Oferta speciala optionala (ex. '10% reducere')"
+          },
+          "bot": "Optional special offer to include with the birthday greeting, such as a discount or free service.",
+          "type": "string",
+          "source": "field",
+          "position": "local",
+          "required": false
+        }
+      ]
+    },
+    {
+      "type": "prompt",
+      "label": {
+        "en": "Compose greeting",
+        "de": "Gruss verfassen",
+        "fr": "Rediger le voeu",
+        "es": "Redactar saludo",
+        "ro": "Compune felicitarea"
+      },
+      "prompt": "Compose a warm birthday greeting in German (du-form) for {{CONTACT_NAME}}. If an offer is provided, present it as a birthday gift: {{offer}}"
+    },
+    {
+      "type": "collect",
+      "label": {
+        "en": "Send message",
+        "de": "Nachricht senden",
+        "fr": "Envoyer le message",
+        "es": "Enviar mensaje",
+        "ro": "Trimite mesajul"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/agents/{{JOAI_AGENT_UUID}}/message",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "auto": true,
+      "inputs": [
+        {
+          "name": "Integration Type",
+          "as": "integrationType",
+          "type": "string",
+          "source": "field",
+          "value": "whatsapp",
+          "hidden": true
+        },
+        {
+          "name": "Recipient ID",
+          "as": "recipientId",
+          "type": "string",
+          "source": "field",
+          "value": "{{CONTACT_PHONE}}",
+          "hidden": true
+        },
+        {
+          "name": "Recipient Name",
+          "as": "recipientName",
+          "type": "string",
+          "source": "field",
+          "value": "{{CONTACT_NAME}}",
+          "hidden": true
+        },
+        {
+          "name": "Message",
+          "as": "message",
+          "type": "string",
+          "source": "field",
+          "value": "{{MESSAGE}}",
+          "hidden": true
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Sending birthday greeting...",
+      "de": "Geburtstagsgruss wird gesendet...",
+      "fr": "Envoi du voeu d anniversaire...",
+      "es": "Enviando saludo de cumpleanos...",
+      "ro": "Se trimite felicitarea de ziua de nastere..."
+    }
+  }
+}

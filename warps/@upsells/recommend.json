@@ -1,0 +1,94 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Upsells: Recommend",
+  "title": {
+    "en": "Recommend products for a customer",
+    "de": "Produkte fuer einen Kunden empfehlen",
+    "fr": "Recommander des produits pour un client",
+    "es": "Recomendar productos para un cliente",
+    "ro": "Recomanda produse pentru un client"
+  },
+  "description": {
+    "en": "Generate personalized product or service recommendations for a customer based on their history and preferences.",
+    "de": "Personalisierte Produkt- oder Dienstleistungsempfehlungen fuer einen Kunden basierend auf Verlauf und Praeferenzen generieren.",
+    "fr": "Generer des recommandations personnalisees de produits ou services pour un client en fonction de son historique et de ses preferences.",
+    "es": "Generar recomendaciones personalizadas de productos o servicios para un cliente basadas en su historial y preferencias.",
+    "ro": "Genereaza recomandari personalizate de produse sau servicii pentru un client pe baza istoricului si preferintelor sale."
+  },
+  "bot": "When this warp is triggered: fetches the contact's activity history and generates recommendations for the business owner to review.",
+  "output": {
+    "_DATA": "out.1"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Recommend",
+        "de": "Empfehlen",
+        "fr": "Recommander",
+        "es": "Recomendar",
+        "ro": "Recomanda"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/contacts/{{contactId}}/activities",
+        "method": "GET",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Contact",
+          "as": "contactId",
+          "description": {
+            "en": "Which customer to recommend for?",
+            "de": "Fuer welchen Kunden soll empfohlen werden?",
+            "fr": "Pour quel client recommander ?",
+            "es": "Para cual cliente recomendar?",
+            "ro": "Pentru care client sa recomanzi?"
+          },
+          "bot": "The contact ID of the customer to generate recommendations for.",
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Context",
+          "as": "context",
+          "description": {
+            "en": "Additional context (e.g. 'just had a massage')",
+            "de": "Zusaetzlicher Kontext (z.B. 'hatte gerade eine Massage')",
+            "fr": "Contexte supplementaire (ex. 'vient d avoir un massage')",
+            "es": "Contexto adicional (ej. 'acaba de tener un masaje')",
+            "ro": "Context suplimentar (ex. 'tocmai a avut un masaj')"
+          },
+          "bot": "Optional additional context about the customer's current situation to improve recommendations.",
+          "type": "string",
+          "source": "field",
+          "position": "local",
+          "required": false
+        }
+      ]
+    },
+    {
+      "type": "prompt",
+      "label": {
+        "en": "Generate recommendations",
+        "de": "Empfehlungen generieren",
+        "fr": "Generer les recommandations",
+        "es": "Generar recomendaciones",
+        "ro": "Genereaza recomandari"
+      },
+      "prompt": "Based on this customer's activity history: {{_DATA}}, and this context: {{context}}, recommend 2-3 relevant products or services. Explain why each is relevant."
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Generating recommendations...",
+      "de": "Empfehlungen werden generiert...",
+      "fr": "Generation des recommandations en cours...",
+      "es": "Generando recomendaciones...",
+      "ro": "Se genereaza recomandarile..."
+    }
+  }
+}

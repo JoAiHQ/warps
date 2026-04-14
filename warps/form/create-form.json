@@ -1,0 +1,103 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Form: Create Form",
+  "title": {
+    "en": "Create a form",
+    "de": "Formular erstellen"
+  },
+  "description": {
+    "en": "Register a new form on-chain. The form definition (title, type) is stored on the Form smart contract. Add fields next using 'Add Field'.",
+    "de": "Ein neues Formular on-chain registrieren. Die Formulardefinition wird im Form-Smart-Contract gespeichert. Felder danach mit 'Feld hinzufügen' ergänzen."
+  },
+  "bot": "Use this to create a new form. The agent_id should be the current agent's UUID. After creating, use add-field to define the form's inputs.",
+  "vars": {
+    "AGENT_UUID": "INJECT:JOAI_AGENT_UUID"
+  },
+  "actions": [
+    {
+      "type": "contract",
+      "label": {
+        "en": "Create form",
+        "de": "Formular erstellen"
+      },
+      "destination": {
+        "url": "INJECT:FORM_CONTRACT",
+        "func": "createForm"
+      },
+      "inputs": [
+        {
+          "name": "Form ID",
+          "as": "formId",
+          "description": {
+            "en": "Unique identifier for this form (e.g. webinar-apr-2026)",
+            "de": "Eindeutige ID für dieses Formular (z.B. webinar-apr-2026)"
+          },
+          "type": "string",
+          "position": "arg:1",
+          "source": "field",
+          "required": true,
+          "min": 1
+        },
+        {
+          "name": "Agent ID",
+          "as": "agentId",
+          "type": "string",
+          "position": "arg:2",
+          "source": "hidden",
+          "default": "{{AGENT_UUID}}"
+        },
+        {
+          "name": "Title",
+          "as": "title",
+          "description": {
+            "en": "Form title shown to submitters",
+            "de": "Formulartitel, der Einreichenden angezeigt wird"
+          },
+          "type": "string",
+          "position": "arg:3",
+          "source": "field",
+          "required": true,
+          "min": 1
+        },
+        {
+          "name": "Description",
+          "as": "description",
+          "description": {
+            "en": "Short description of the form's purpose",
+            "de": "Kurze Beschreibung des Formularszwecks"
+          },
+          "type": "string",
+          "position": "arg:4",
+          "source": "field",
+          "required": false,
+          "default": ""
+        },
+        {
+          "name": "Type",
+          "as": "formType",
+          "description": {
+            "en": "What the form does with submissions",
+            "de": "Was mit Einreichungen passiert"
+          },
+          "type": "string",
+          "position": "arg:5",
+          "source": "field",
+          "required": true,
+          "default": "lead",
+          "options": {
+            "lead": "Lead capture → creates CRM contact",
+            "feedback": "Feedback → stores as item",
+            "rsvp": "RSVP → creates CRM contact + RSVP tag",
+            "custom": "Custom → configure manually"
+          }
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Form '{{formId}}' created! Add fields next.",
+      "de": "Formular '{{formId}}' erstellt! Jetzt Felder hinzufügen."
+    }
+  }
+}
