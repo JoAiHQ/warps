@@ -6,12 +6,76 @@
     "de": "Formular erstellen"
   },
   "description": {
-    "en": "Register a new form on-chain. The form definition (title, type) is stored on the Form smart contract. Add fields next using 'Add Field'.",
-    "de": "Ein neues Formular on-chain registrieren. Die Formulardefinition wird im Form-Smart-Contract gespeichert. Felder danach mit 'Feld hinzufügen' ergänzen."
+    "en": "Register a new form. The form definition (title, type) is stored on the Form smart contract. Add fields next using 'Add Field'.",
+    "de": "Ein neues Formular registrieren. Die Formulardefinition wird im Form-Smart-Contract gespeichert. Felder danach mit 'Feld hinzufügen' ergänzen."
   },
-  "bot": "Use this to create a new form. The agent_id should be the current agent's UUID. After creating, use add-field to define the form's inputs.",
+  "bot": "Use this to create a new form. Collect the title and type from the user. The form ID is auto-generated — never ask the user for it. After creating, use add-field to define the form's inputs.",
   "vars": {},
   "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Details",
+        "de": "Details"
+      },
+      "inputs": [
+        {
+          "name": "Title",
+          "as": "title",
+          "description": {
+            "en": "Form title shown to submitters",
+            "de": "Formulartitel, der Einreichenden angezeigt wird"
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "min": 1
+        },
+        {
+          "name": "Description",
+          "as": "description",
+          "description": {
+            "en": "Short description of the form's purpose (optional)",
+            "de": "Kurze Beschreibung des Formularszwecks (optional)"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": ""
+        },
+        {
+          "name": "Type",
+          "as": "formType",
+          "description": {
+            "en": "What the form does with submissions",
+            "de": "Was mit Einreichungen passiert"
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "default": "lead",
+          "options": {
+            "lead": "Lead capture",
+            "feedback": "Feedback",
+            "rsvp": "RSVP",
+            "custom": "Custom"
+          }
+        }
+      ]
+    },
+    {
+      "type": "compute",
+      "label": "Generate form ID",
+      "inputs": [
+        {
+          "name": "formId",
+          "type": "string",
+          "source": "hidden",
+          "modifier": "transform:() => '{{title}}'.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') + '-' + Math.random().toString(36).slice(2, 7)"
+        }
+      ],
+      "auto": true
+    },
     {
       "type": "contract",
       "label": {
@@ -26,15 +90,10 @@
         {
           "name": "Form ID",
           "as": "formId",
-          "description": {
-            "en": "Unique identifier for this form (e.g. webinar-apr-2026)",
-            "de": "Eindeutige ID für dieses Formular (z.B. webinar-apr-2026)"
-          },
           "type": "string",
           "position": "arg:1",
-          "source": "field",
-          "required": true,
-          "min": 1
+          "source": "hidden",
+          "default": "{{formId}}"
         },
         {
           "name": "Agent ID",
@@ -47,55 +106,35 @@
         {
           "name": "Title",
           "as": "title",
-          "description": {
-            "en": "Form title shown to submitters",
-            "de": "Formulartitel, der Einreichenden angezeigt wird"
-          },
           "type": "string",
           "position": "arg:3",
-          "source": "field",
-          "required": true,
-          "min": 1
+          "source": "hidden",
+          "default": "{{title}}"
         },
         {
           "name": "Description",
           "as": "description",
-          "description": {
-            "en": "Short description of the form's purpose",
-            "de": "Kurze Beschreibung des Formularszwecks"
-          },
           "type": "string",
           "position": "arg:4",
-          "source": "field",
-          "required": false,
-          "default": ""
+          "source": "hidden",
+          "default": "{{description}}"
         },
         {
           "name": "Type",
           "as": "formType",
-          "description": {
-            "en": "What the form does with submissions",
-            "de": "Was mit Einreichungen passiert"
-          },
           "type": "string",
           "position": "arg:5",
-          "source": "field",
-          "required": true,
-          "default": "lead",
-          "options": {
-            "lead": "Lead capture → creates CRM contact",
-            "feedback": "Feedback → stores as item",
-            "rsvp": "RSVP → creates CRM contact + RSVP tag",
-            "custom": "Custom → configure manually"
-          }
+          "source": "hidden",
+          "default": "{{formType}}"
         }
-      ]
+      ],
+      "gasLimit": 10000000
     }
   ],
   "messages": {
     "success": {
-      "en": "Form '{{formId}}' created! Add fields next.",
-      "de": "Formular '{{formId}}' erstellt! Jetzt Felder hinzufügen."
+      "en": "Form '{{title}}' created! Add fields next.",
+      "de": "Formular '{{title}}' erstellt! Jetzt Felder hinzufügen."
     }
   }
 }
