@@ -90,7 +90,7 @@ where
         Arg5: ProxyArg<ManagedBuffer<Env::Api>>,
     >(
         self,
-        slug: Arg0,
+        id: Arg0,
         category: Arg1,
         location: Arg2,
         description: Arg3,
@@ -100,7 +100,7 @@ where
         self.wrapped_tx
             .payment(NotPayable)
             .raw_call("registerShop")
-            .argument(&slug)
+            .argument(&id)
             .argument(&category)
             .argument(&location)
             .argument(&description)
@@ -118,7 +118,7 @@ where
         Arg5: ProxyArg<ManagedBuffer<Env::Api>>,
     >(
         self,
-        slug: Arg0,
+        id: Arg0,
         category: Arg1,
         location: Arg2,
         description: Arg3,
@@ -128,7 +128,7 @@ where
         self.wrapped_tx
             .payment(NotPayable)
             .raw_call("updateShop")
-            .argument(&slug)
+            .argument(&id)
             .argument(&category)
             .argument(&location)
             .argument(&description)
@@ -141,12 +141,12 @@ where
         Arg0: ProxyArg<ManagedBuffer<Env::Api>>,
     >(
         self,
-        slug: Arg0,
+        id: Arg0,
     ) -> TxTypedCall<Env, From, To, NotPayable, Gas, ShopInfo<Env::Api>> {
         self.wrapped_tx
             .payment(NotPayable)
             .raw_call("getShopInfo")
-            .argument(&slug)
+            .argument(&id)
             .original_result()
     }
 
@@ -204,7 +204,7 @@ where
         Arg6: ProxyArg<ManagedBuffer<Env::Api>>,
     >(
         self,
-        shop_slug: Arg0,
+        id: Arg0,
         service_slug: Arg1,
         name: Arg2,
         price: Arg3,
@@ -215,7 +215,7 @@ where
         self.wrapped_tx
             .payment(NotPayable)
             .raw_call("addService")
-            .argument(&shop_slug)
+            .argument(&id)
             .argument(&service_slug)
             .argument(&name)
             .argument(&price)
@@ -230,13 +230,13 @@ where
         Arg1: ProxyArg<ManagedBuffer<Env::Api>>,
     >(
         self,
-        shop_slug: Arg0,
+        id: Arg0,
         service_slug: Arg1,
     ) -> TxTypedCall<Env, From, To, NotPayable, Gas, ()> {
         self.wrapped_tx
             .payment(NotPayable)
             .raw_call("removeService")
-            .argument(&shop_slug)
+            .argument(&id)
             .argument(&service_slug)
             .original_result()
     }
@@ -245,12 +245,12 @@ where
         Arg0: ProxyArg<ManagedBuffer<Env::Api>>,
     >(
         self,
-        shop_slug: Arg0,
+        id: Arg0,
     ) -> TxTypedCall<Env, From, To, NotPayable, Gas, MultiValueEncoded<Env::Api, ShopService<Env::Api>>> {
         self.wrapped_tx
             .payment(NotPayable)
             .raw_call("getServices")
-            .argument(&shop_slug)
+            .argument(&id)
             .original_result()
     }
 
@@ -263,7 +263,7 @@ where
         Arg5: ProxyArg<ManagedBuffer<Env::Api>>,
     >(
         self,
-        shop_slug: Arg0,
+        id: Arg0,
         product_slug: Arg1,
         name: Arg2,
         price: Arg3,
@@ -273,7 +273,7 @@ where
         self.wrapped_tx
             .payment(NotPayable)
             .raw_call("addProduct")
-            .argument(&shop_slug)
+            .argument(&id)
             .argument(&product_slug)
             .argument(&name)
             .argument(&price)
@@ -288,14 +288,14 @@ where
         Arg2: ProxyArg<bool>,
     >(
         self,
-        shop_slug: Arg0,
+        id: Arg0,
         product_slug: Arg1,
         in_stock: Arg2,
     ) -> TxTypedCall<Env, From, To, NotPayable, Gas, ()> {
         self.wrapped_tx
             .payment(NotPayable)
             .raw_call("updateProductStock")
-            .argument(&shop_slug)
+            .argument(&id)
             .argument(&product_slug)
             .argument(&in_stock)
             .original_result()
@@ -306,13 +306,13 @@ where
         Arg1: ProxyArg<ManagedBuffer<Env::Api>>,
     >(
         self,
-        shop_slug: Arg0,
+        id: Arg0,
         product_slug: Arg1,
     ) -> TxTypedCall<Env, From, To, NotPayable, Gas, ()> {
         self.wrapped_tx
             .payment(NotPayable)
             .raw_call("removeProduct")
-            .argument(&shop_slug)
+            .argument(&id)
             .argument(&product_slug)
             .original_result()
     }
@@ -321,12 +321,12 @@ where
         Arg0: ProxyArg<ManagedBuffer<Env::Api>>,
     >(
         self,
-        shop_slug: Arg0,
+        id: Arg0,
     ) -> TxTypedCall<Env, From, To, NotPayable, Gas, MultiValueEncoded<Env::Api, ShopProduct<Env::Api>>> {
         self.wrapped_tx
             .payment(NotPayable)
             .raw_call("getProducts")
-            .argument(&shop_slug)
+            .argument(&id)
             .original_result()
     }
 
@@ -337,7 +337,7 @@ where
         Arg3: ProxyArg<ManagedBuffer<Env::Api>>,
     >(
         self,
-        slug: Arg0,
+        id: Arg0,
         chain: Arg1,
         address: Arg2,
         token: Arg3,
@@ -345,7 +345,7 @@ where
         self.wrapped_tx
             .payment(NotPayable)
             .raw_call("setPaymentDestination")
-            .argument(&slug)
+            .argument(&id)
             .argument(&chain)
             .argument(&address)
             .argument(&token)
@@ -356,12 +356,12 @@ where
         Arg0: ProxyArg<ManagedBuffer<Env::Api>>,
     >(
         self,
-        slug: Arg0,
+        id: Arg0,
     ) -> TxTypedCall<Env, From, To, NotPayable, Gas, PaymentDestination<Env::Api>> {
         self.wrapped_tx
             .payment(NotPayable)
             .raw_call("getPaymentDestination")
-            .argument(&slug)
+            .argument(&id)
             .original_result()
     }
 }

@@ -1,3 +1,4 @@
+pub const ERR_INVALID_ID: &str = "id must be 1-64 bytes";
 pub const ERR_INVALID_SLUG: &str = "slug must be 1-64 bytes";
 pub const ERR_INVALID_NAME: &str = "name must be 1-128 bytes";
 pub const ERR_INVALID_DURATION: &str = "duration must be between 1 and 1440 minutes";

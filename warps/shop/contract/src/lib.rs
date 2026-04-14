@@ -1,7 +1,7 @@
 #![no_std]
 
 use errors::{
-    ERR_INVALID_CATEGORY, ERR_INVALID_DESCRIPTION, ERR_INVALID_LOCATION, ERR_INVALID_SLUG,
+    ERR_INVALID_CATEGORY, ERR_INVALID_DESCRIPTION, ERR_INVALID_LOCATION, ERR_INVALID_ID,
     ERR_INVALID_URL, ERR_SHOP_ALREADY_EXISTS, ERR_SHOP_NOT_FOUND,
 };
 use types::ShopInfo;
@@ -18,7 +18,7 @@ pub mod services;
 pub mod shop_proxy;
 pub mod types;
 
-const MAX_SLUG_LEN: usize = 64;
+const MAX_ID_LEN: usize = 64;
 const MAX_CATEGORY_LEN: usize = 64;
 const MAX_LOCATION_LEN: usize = 128;
 const MAX_DESCRIPTION_LEN: usize = 512;
@@ -43,15 +43,15 @@ pub trait ShopContract:
     #[endpoint(registerShop)]
     fn register_shop(
         &self,
-        slug: ManagedBuffer,
+        id: ManagedBuffer,
         category: ManagedBuffer,
         location: ManagedBuffer,
         description: ManagedBuffer,
         image_url: ManagedBuffer,
         website: ManagedBuffer,
     ) {
-        require!(slug.len() >= 1 && slug.len() <= MAX_SLUG_LEN, ERR_INVALID_SLUG);
-        require!(self.shop_info(&slug).is_empty(), ERR_SHOP_ALREADY_EXISTS);
+        require!(id.len() >= 1 && id.len() <= MAX_ID_LEN, ERR_INVALID_ID);
+        require!(self.shop_info(&id).is_empty(), ERR_SHOP_ALREADY_EXISTS);
         require!(category.len() >= 1 && category.len() <= MAX_CATEGORY_LEN, ERR_INVALID_CATEGORY);
         require!(location.len() >= 1 && location.len() <= MAX_LOCATION_LEN, ERR_INVALID_LOCATION);
         require!(description.len() <= MAX_DESCRIPTION_LEN, ERR_INVALID_DESCRIPTION);
@@ -71,35 +71,35 @@ pub trait ShopContract:
             website,
         };
 
-        self.shop_info(&slug).set(info);
-        self.all_shops().insert(slug.clone());
-        self.shops_by_category(&category).insert(slug.clone());
+        self.shop_info(&id).set(info);
+        self.all_shops().insert(id.clone());
+        self.shops_by_category(&category).insert(id.clone());
 
-        self.shop_registered_event(slug, caller, category);
+        self.shop_registered_event(id, caller, category);
     }
 
     #[endpoint(updateShop)]
     fn update_shop(
         &self,
-        slug: ManagedBuffer,
+        id: ManagedBuffer,
         category: ManagedBuffer,
         location: ManagedBuffer,
         description: ManagedBuffer,
         image_url: ManagedBuffer,
         website: ManagedBuffer,
     ) {
-        self.require_shop_owner(&slug);
+        self.require_shop_owner(&id);
         require!(category.len() >= 1 && category.len() <= MAX_CATEGORY_LEN, ERR_INVALID_CATEGORY);
         require!(location.len() >= 1 && location.len() <= MAX_LOCATION_LEN, ERR_INVALID_LOCATION);
         require!(description.len() <= MAX_DESCRIPTION_LEN, ERR_INVALID_DESCRIPTION);
         require!(image_url.len() <= MAX_URL_LEN, ERR_INVALID_URL);
         require!(website.len() <= MAX_URL_LEN, ERR_INVALID_URL);
 
-        let mut info = self.shop_info(&slug).get();
+        let mut info = self.shop_info(&id).get();
 
         if info.category != category {
-            self.shops_by_category(&info.category).swap_remove(&slug);
-            self.shops_by_category(&category).insert(slug.clone());
+            self.shops_by_category(&info.category).swap_remove(&id);
+            self.shops_by_category(&category).insert(id.clone());
         }
 
         info.category = category;
@@ -108,16 +108,16 @@ pub trait ShopContract:
         info.image_url = image_url;
         info.website = website;
 
-        self.shop_info(&slug).set(info);
-        self.shop_updated_event(slug);
+        self.shop_info(&id).set(info);
+        self.shop_updated_event(id);
     }
 
     // --- Views ---
 
     #[view(getShopInfo)]
-    fn get_shop_info(&self, slug: ManagedBuffer) -> ShopInfo<Self::Api> {
-        require!(!self.shop_info(&slug).is_empty(), ERR_SHOP_NOT_FOUND);
-        self.shop_info(&slug).get()
+    fn get_shop_info(&self, id: ManagedBuffer) -> ShopInfo<Self::Api> {
+        require!(!self.shop_info(&id).is_empty(), ERR_SHOP_NOT_FOUND);
+        self.shop_info(&id).get()
     }
 
     #[view(getShopCount)]
@@ -131,7 +131,7 @@ pub trait ShopContract:
         let mut skipped = 0usize;
         let mut collected = 0usize;
 
-        for slug in self.all_shops().iter() {
+        for id in self.all_shops().iter() {
             if skipped < offset {
                 skipped += 1;
                 continue;
@@ -139,9 +139,9 @@ pub trait ShopContract:
             if collected >= limit {
                 break;
             }
-            if !self.shop_info(&slug).is_empty() {
-                let info = self.shop_info(&slug).get();
-                result.push(MultiValue2::from((slug, info)));
+            if !self.shop_info(&id).is_empty() {
+                let info = self.shop_info(&id).get();
+                result.push(MultiValue2::from((id, info)));
                 collected += 1;
             }
         }
@@ -160,7 +160,7 @@ pub trait ShopContract:
         let mut skipped = 0usize;
         let mut collected = 0usize;
 
-        for slug in self.shops_by_category(&category).iter() {
+        for id in self.shops_by_category(&category).iter() {
             if skipped < offset {
                 skipped += 1;
                 continue;
@@ -168,9 +168,9 @@ pub trait ShopContract:
             if collected >= limit {
                 break;
             }
-            if !self.shop_info(&slug).is_empty() {
-                let info = self.shop_info(&slug).get();
-                result.push(MultiValue2::from((slug, info)));
+            if !self.shop_info(&id).is_empty() {
+                let info = self.shop_info(&id).get();
+                result.push(MultiValue2::from((id, info)));
                 collected += 1;
             }
         }

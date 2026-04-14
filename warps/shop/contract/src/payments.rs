@@ -17,12 +17,12 @@ pub trait PaymentsModule: config::ConfigModule + events::EventsModule {
     #[endpoint(setPaymentDestination)]
     fn set_payment_destination(
         &self,
-        slug: ManagedBuffer,
+        id: ManagedBuffer,
         chain: ManagedBuffer,
         address: ManagedBuffer,
         token: ManagedBuffer,
     ) {
-        self.require_shop_owner(&slug);
+        self.require_shop_owner(&id);
         require!(chain.len() >= 1 && chain.len() <= MAX_CHAIN_LEN, ERR_INVALID_CHAIN);
         require!(address.len() >= 1 && address.len() <= MAX_ADDRESS_LEN, ERR_INVALID_ADDRESS);
         require!(token.len() >= 1 && token.len() <= MAX_TOKEN_LEN, ERR_INVALID_TOKEN);
@@ -33,13 +33,13 @@ pub trait PaymentsModule: config::ConfigModule + events::EventsModule {
             token: token.clone(),
         };
 
-        self.payment_destination(&slug).set(destination);
-        self.payment_destination_set_event(slug, chain, address);
+        self.payment_destination(&id).set(destination);
+        self.payment_destination_set_event(id, chain, address);
     }
 
     #[view(getPaymentDestination)]
-    fn get_payment_destination(&self, slug: ManagedBuffer) -> PaymentDestination<Self::Api> {
-        require!(!self.payment_destination(&slug).is_empty(), ERR_NO_PAYMENT_DESTINATION);
-        self.payment_destination(&slug).get()
+    fn get_payment_destination(&self, id: ManagedBuffer) -> PaymentDestination<Self::Api> {
+        require!(!self.payment_destination(&id).is_empty(), ERR_NO_PAYMENT_DESTINATION);
+        self.payment_destination(&id).get()
     }
 }

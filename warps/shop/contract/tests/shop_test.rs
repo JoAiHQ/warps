@@ -5,7 +5,7 @@ const OTHER: &str = "address:other";
 const SHOP_SC: &str = "sc:shop";
 const CODE_PATH: &str = "file:output/shop.wasm";
 
-const SHOP_SLUG: &str = "my-shop";
+const SHOP_ID: &str = "my-shop";
 const CATEGORY: &str = "hotel";
 const LOCATION: &str = "Vienna, AT";
 const DESCRIPTION: &str = "A lovely hotel in Vienna";
@@ -51,13 +51,13 @@ fn setup_world() -> ScenarioWorld {
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
-fn register_shop(world: &mut ScenarioWorld, from: &str, slug: &str) {
+fn register_shop(world: &mut ScenarioWorld, from: &str, id: &str) {
     world.sc_call(
         ScCallStep::new()
             .from(from)
             .to(SHOP_SC)
             .function("registerShop")
-            .argument(format!("str:{slug}").as_str())
+            .argument(format!("str:{id}").as_str())
             .argument(format!("str:{CATEGORY}").as_str())
             .argument(format!("str:{LOCATION}").as_str())
             .argument(format!("str:{DESCRIPTION}").as_str())
@@ -68,13 +68,13 @@ fn register_shop(world: &mut ScenarioWorld, from: &str, slug: &str) {
     );
 }
 
-fn register_shop_full(world: &mut ScenarioWorld, from: &str, slug: &str, category: &str, location: &str, description: &str, image_url: &str, website: &str) {
+fn register_shop_full(world: &mut ScenarioWorld, from: &str, id: &str, category: &str, location: &str, description: &str, image_url: &str, website: &str) {
     world.sc_call(
         ScCallStep::new()
             .from(from)
             .to(SHOP_SC)
             .function("registerShop")
-            .argument(format!("str:{slug}").as_str())
+            .argument(format!("str:{id}").as_str())
             .argument(format!("str:{category}").as_str())
             .argument(format!("str:{location}").as_str())
             .argument(format!("str:{description}").as_str())
@@ -85,13 +85,13 @@ fn register_shop_full(world: &mut ScenarioWorld, from: &str, slug: &str, categor
     );
 }
 
-fn register_shop_err(world: &mut ScenarioWorld, from: &str, slug: &str, category: &str, location: &str, err: &str) {
+fn register_shop_err(world: &mut ScenarioWorld, from: &str, id: &str, category: &str, location: &str, err: &str) {
     world.sc_call(
         ScCallStep::new()
             .from(from)
             .to(SHOP_SC)
             .function("registerShop")
-            .argument(format!("str:{slug}").as_str())
+            .argument(format!("str:{id}").as_str())
             .argument(format!("str:{category}").as_str())
             .argument(format!("str:{location}").as_str())
             .argument("str:")
@@ -102,13 +102,13 @@ fn register_shop_err(world: &mut ScenarioWorld, from: &str, slug: &str, category
     );
 }
 
-fn update_shop(world: &mut ScenarioWorld, from: &str, slug: &str, category: &str, location: &str) {
+fn update_shop(world: &mut ScenarioWorld, from: &str, id: &str, category: &str, location: &str) {
     world.sc_call(
         ScCallStep::new()
             .from(from)
             .to(SHOP_SC)
             .function("updateShop")
-            .argument(format!("str:{slug}").as_str())
+            .argument(format!("str:{id}").as_str())
             .argument(format!("str:{category}").as_str())
             .argument(format!("str:{location}").as_str())
             .argument(format!("str:{DESCRIPTION}").as_str())
@@ -119,13 +119,13 @@ fn update_shop(world: &mut ScenarioWorld, from: &str, slug: &str, category: &str
     );
 }
 
-fn update_shop_err(world: &mut ScenarioWorld, from: &str, slug: &str, err: &str) {
+fn update_shop_err(world: &mut ScenarioWorld, from: &str, id: &str, err: &str) {
     world.sc_call(
         ScCallStep::new()
             .from(from)
             .to(SHOP_SC)
             .function("updateShop")
-            .argument(format!("str:{slug}").as_str())
+            .argument(format!("str:{id}").as_str())
             .argument(format!("str:{CATEGORY}").as_str())
             .argument(format!("str:{LOCATION}").as_str())
             .argument("str:")
@@ -136,13 +136,13 @@ fn update_shop_err(world: &mut ScenarioWorld, from: &str, slug: &str, err: &str)
     );
 }
 
-fn set_payment(world: &mut ScenarioWorld, from: &str, slug: &str, chain: &str, address: &str, token: &str) {
+fn set_payment(world: &mut ScenarioWorld, from: &str, id: &str, chain: &str, address: &str, token: &str) {
     world.sc_call(
         ScCallStep::new()
             .from(from)
             .to(SHOP_SC)
             .function("setPaymentDestination")
-            .argument(format!("str:{slug}").as_str())
+            .argument(format!("str:{id}").as_str())
             .argument(format!("str:{chain}").as_str())
             .argument(format!("str:{address}").as_str())
             .argument(format!("str:{token}").as_str())
@@ -151,13 +151,13 @@ fn set_payment(world: &mut ScenarioWorld, from: &str, slug: &str, chain: &str, a
     );
 }
 
-fn set_payment_err(world: &mut ScenarioWorld, from: &str, slug: &str, chain: &str, address: &str, token: &str, err: &str) {
+fn set_payment_err(world: &mut ScenarioWorld, from: &str, id: &str, chain: &str, address: &str, token: &str, err: &str) {
     world.sc_call(
         ScCallStep::new()
             .from(from)
             .to(SHOP_SC)
             .function("setPaymentDestination")
-            .argument(format!("str:{slug}").as_str())
+            .argument(format!("str:{id}").as_str())
             .argument(format!("str:{chain}").as_str())
             .argument(format!("str:{address}").as_str())
             .argument(format!("str:{token}").as_str())
@@ -166,13 +166,13 @@ fn set_payment_err(world: &mut ScenarioWorld, from: &str, slug: &str, chain: &st
     );
 }
 
-fn add_service(world: &mut ScenarioWorld, from: &str, shop_slug: &str, service_slug: &str) {
+fn add_service(world: &mut ScenarioWorld, from: &str, id: &str, service_slug: &str) {
     world.sc_call(
         ScCallStep::new()
             .from(from)
             .to(SHOP_SC)
             .function("addService")
-            .argument(format!("str:{shop_slug}").as_str())
+            .argument(format!("str:{id}").as_str())
             .argument(format!("str:{service_slug}").as_str())
             .argument(format!("str:{SERVICE_NAME}").as_str())
             .argument(format!("{SERVICE_PRICE}").as_str())
@@ -184,13 +184,13 @@ fn add_service(world: &mut ScenarioWorld, from: &str, shop_slug: &str, service_s
     );
 }
 
-fn add_service_err(world: &mut ScenarioWorld, from: &str, shop_slug: &str, service_slug: &str, err: &str) {
+fn add_service_err(world: &mut ScenarioWorld, from: &str, id: &str, service_slug: &str, err: &str) {
     world.sc_call(
         ScCallStep::new()
             .from(from)
             .to(SHOP_SC)
             .function("addService")
-            .argument(format!("str:{shop_slug}").as_str())
+            .argument(format!("str:{id}").as_str())
             .argument(format!("str:{service_slug}").as_str())
             .argument(format!("str:{SERVICE_NAME}").as_str())
             .argument(format!("{SERVICE_PRICE}").as_str())
@@ -202,26 +202,26 @@ fn add_service_err(world: &mut ScenarioWorld, from: &str, shop_slug: &str, servi
     );
 }
 
-fn remove_service(world: &mut ScenarioWorld, from: &str, shop_slug: &str, service_slug: &str) {
+fn remove_service(world: &mut ScenarioWorld, from: &str, id: &str, service_slug: &str) {
     world.sc_call(
         ScCallStep::new()
             .from(from)
             .to(SHOP_SC)
             .function("removeService")
-            .argument(format!("str:{shop_slug}").as_str())
+            .argument(format!("str:{id}").as_str())
             .argument(format!("str:{service_slug}").as_str())
             .gas_limit("10,000,000")
             .expect(TxExpect::ok()),
     );
 }
 
-fn add_product(world: &mut ScenarioWorld, from: &str, shop_slug: &str, product_slug: &str) {
+fn add_product(world: &mut ScenarioWorld, from: &str, id: &str, product_slug: &str) {
     world.sc_call(
         ScCallStep::new()
             .from(from)
             .to(SHOP_SC)
             .function("addProduct")
-            .argument(format!("str:{shop_slug}").as_str())
+            .argument(format!("str:{id}").as_str())
             .argument(format!("str:{product_slug}").as_str())
             .argument(format!("str:{PRODUCT_NAME}").as_str())
             .argument(format!("{PRODUCT_PRICE}").as_str())
@@ -232,13 +232,13 @@ fn add_product(world: &mut ScenarioWorld, from: &str, shop_slug: &str, product_s
     );
 }
 
-fn add_product_err(world: &mut ScenarioWorld, from: &str, shop_slug: &str, product_slug: &str, err: &str) {
+fn add_product_err(world: &mut ScenarioWorld, from: &str, id: &str, product_slug: &str, err: &str) {
     world.sc_call(
         ScCallStep::new()
             .from(from)
             .to(SHOP_SC)
             .function("addProduct")
-            .argument(format!("str:{shop_slug}").as_str())
+            .argument(format!("str:{id}").as_str())
             .argument(format!("str:{product_slug}").as_str())
             .argument(format!("str:{PRODUCT_NAME}").as_str())
             .argument(format!("{PRODUCT_PRICE}").as_str())
@@ -249,26 +249,26 @@ fn add_product_err(world: &mut ScenarioWorld, from: &str, shop_slug: &str, produ
     );
 }
 
-fn remove_product(world: &mut ScenarioWorld, from: &str, shop_slug: &str, product_slug: &str) {
+fn remove_product(world: &mut ScenarioWorld, from: &str, id: &str, product_slug: &str) {
     world.sc_call(
         ScCallStep::new()
             .from(from)
             .to(SHOP_SC)
             .function("removeProduct")
-            .argument(format!("str:{shop_slug}").as_str())
+            .argument(format!("str:{id}").as_str())
             .argument(format!("str:{product_slug}").as_str())
             .gas_limit("10,000,000")
             .expect(TxExpect::ok()),
     );
 }
 
-fn update_product_stock(world: &mut ScenarioWorld, from: &str, shop_slug: &str, product_slug: &str, in_stock: bool) {
+fn update_product_stock(world: &mut ScenarioWorld, from: &str, id: &str, product_slug: &str, in_stock: bool) {
     world.sc_call(
         ScCallStep::new()
             .from(from)
             .to(SHOP_SC)
             .function("updateProductStock")
-            .argument(format!("str:{shop_slug}").as_str())
+            .argument(format!("str:{id}").as_str())
             .argument(format!("str:{product_slug}").as_str())
             .argument(if in_stock { "1" } else { "0" })
             .gas_limit("10,000,000")
@@ -281,38 +281,38 @@ fn update_product_stock(world: &mut ScenarioWorld, from: &str, shop_slug: &str, 
 #[test]
 fn test_register_shop() {
     let mut world = setup_world();
-    register_shop(&mut world, OWNER, SHOP_SLUG);
+    register_shop(&mut world, OWNER, SHOP_ID);
 }
 
 #[test]
 fn test_register_shop_any_account() {
     let mut world = setup_world();
-    register_shop(&mut world, OTHER, SHOP_SLUG);
+    register_shop(&mut world, OTHER, SHOP_ID);
 }
 
 #[test]
-fn test_register_shop_empty_slug_fails() {
+fn test_register_shop_empty_id_fails() {
     let mut world = setup_world();
-    register_shop_err(&mut world, OWNER, "", CATEGORY, LOCATION, shop::errors::ERR_INVALID_SLUG);
+    register_shop_err(&mut world, OWNER, "", CATEGORY, LOCATION, shop::errors::ERR_INVALID_ID);
 }
 
 #[test]
 fn test_register_shop_empty_category_fails() {
     let mut world = setup_world();
-    register_shop_err(&mut world, OWNER, SHOP_SLUG, "", LOCATION, shop::errors::ERR_INVALID_CATEGORY);
+    register_shop_err(&mut world, OWNER, SHOP_ID, "", LOCATION, shop::errors::ERR_INVALID_CATEGORY);
 }
 
 #[test]
 fn test_register_shop_empty_location_fails() {
     let mut world = setup_world();
-    register_shop_err(&mut world, OWNER, SHOP_SLUG, CATEGORY, "", shop::errors::ERR_INVALID_LOCATION);
+    register_shop_err(&mut world, OWNER, SHOP_ID, CATEGORY, "", shop::errors::ERR_INVALID_LOCATION);
 }
 
 #[test]
 fn test_register_shop_duplicate_fails() {
     let mut world = setup_world();
-    register_shop(&mut world, OWNER, SHOP_SLUG);
-    register_shop_err(&mut world, OWNER, SHOP_SLUG, CATEGORY, LOCATION, shop::errors::ERR_SHOP_ALREADY_EXISTS);
+    register_shop(&mut world, OWNER, SHOP_ID);
+    register_shop_err(&mut world, OWNER, SHOP_ID, CATEGORY, LOCATION, shop::errors::ERR_SHOP_ALREADY_EXISTS);
 }
 
 #[test]
@@ -328,15 +328,15 @@ fn test_register_multiple_shops() {
 #[test]
 fn test_update_shop() {
     let mut world = setup_world();
-    register_shop(&mut world, OWNER, SHOP_SLUG);
-    update_shop(&mut world, OWNER, SHOP_SLUG, "restaurant", "Salzburg, AT");
+    register_shop(&mut world, OWNER, SHOP_ID);
+    update_shop(&mut world, OWNER, SHOP_ID, "restaurant", "Salzburg, AT");
 }
 
 #[test]
 fn test_update_shop_not_owner_fails() {
     let mut world = setup_world();
-    register_shop(&mut world, OWNER, SHOP_SLUG);
-    update_shop_err(&mut world, OTHER, SHOP_SLUG, shop::errors::ERR_NOT_SHOP_OWNER);
+    register_shop(&mut world, OWNER, SHOP_ID);
+    update_shop_err(&mut world, OTHER, SHOP_ID, shop::errors::ERR_NOT_SHOP_OWNER);
 }
 
 #[test]
@@ -350,51 +350,51 @@ fn test_update_shop_not_found_fails() {
 #[test]
 fn test_set_payment_destination() {
     let mut world = setup_world();
-    register_shop(&mut world, OWNER, SHOP_SLUG);
-    set_payment(&mut world, OWNER, SHOP_SLUG, "base", "0x1234567890abcdef", "USDC");
+    register_shop(&mut world, OWNER, SHOP_ID);
+    set_payment(&mut world, OWNER, SHOP_ID, "base", "0x1234567890abcdef", "USDC");
 }
 
 #[test]
 fn test_set_payment_multiversx() {
     let mut world = setup_world();
-    register_shop(&mut world, OWNER, SHOP_SLUG);
-    set_payment(&mut world, OWNER, SHOP_SLUG, "multiversx", "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th", "USDC-c76f8e");
+    register_shop(&mut world, OWNER, SHOP_ID);
+    set_payment(&mut world, OWNER, SHOP_ID, "multiversx", "erd1qyu5wthldzr8wx5c9ucg8kjagg0jfs53s8nr3zpz3hypefsdd8ssycr6th", "USDC-c76f8e");
 }
 
 #[test]
 fn test_set_payment_not_owner_fails() {
     let mut world = setup_world();
-    register_shop(&mut world, OWNER, SHOP_SLUG);
-    set_payment_err(&mut world, OTHER, SHOP_SLUG, "base", "0x123", "USDC", shop::errors::ERR_NOT_SHOP_OWNER);
+    register_shop(&mut world, OWNER, SHOP_ID);
+    set_payment_err(&mut world, OTHER, SHOP_ID, "base", "0x123", "USDC", shop::errors::ERR_NOT_SHOP_OWNER);
 }
 
 #[test]
 fn test_set_payment_empty_chain_fails() {
     let mut world = setup_world();
-    register_shop(&mut world, OWNER, SHOP_SLUG);
-    set_payment_err(&mut world, OWNER, SHOP_SLUG, "", "0x123", "USDC", shop::errors::ERR_INVALID_CHAIN);
+    register_shop(&mut world, OWNER, SHOP_ID);
+    set_payment_err(&mut world, OWNER, SHOP_ID, "", "0x123", "USDC", shop::errors::ERR_INVALID_CHAIN);
 }
 
 #[test]
 fn test_set_payment_empty_address_fails() {
     let mut world = setup_world();
-    register_shop(&mut world, OWNER, SHOP_SLUG);
-    set_payment_err(&mut world, OWNER, SHOP_SLUG, "base", "", "USDC", shop::errors::ERR_INVALID_ADDRESS);
+    register_shop(&mut world, OWNER, SHOP_ID);
+    set_payment_err(&mut world, OWNER, SHOP_ID, "base", "", "USDC", shop::errors::ERR_INVALID_ADDRESS);
 }
 
 #[test]
 fn test_set_payment_empty_token_fails() {
     let mut world = setup_world();
-    register_shop(&mut world, OWNER, SHOP_SLUG);
-    set_payment_err(&mut world, OWNER, SHOP_SLUG, "base", "0x123", "", shop::errors::ERR_INVALID_TOKEN);
+    register_shop(&mut world, OWNER, SHOP_ID);
+    set_payment_err(&mut world, OWNER, SHOP_ID, "base", "0x123", "", shop::errors::ERR_INVALID_TOKEN);
 }
 
 #[test]
 fn test_set_payment_update_destination() {
     let mut world = setup_world();
-    register_shop(&mut world, OWNER, SHOP_SLUG);
-    set_payment(&mut world, OWNER, SHOP_SLUG, "base", "0x111", "USDC");
-    set_payment(&mut world, OWNER, SHOP_SLUG, "solana", "So1111111111111111111111111111111111111111111", "SOL");
+    register_shop(&mut world, OWNER, SHOP_ID);
+    set_payment(&mut world, OWNER, SHOP_ID, "base", "0x111", "USDC");
+    set_payment(&mut world, OWNER, SHOP_ID, "solana", "So1111111111111111111111111111111111111111111", "SOL");
 }
 
 // ─── addService ──────────────────────────────────────────────────────────────
@@ -402,24 +402,24 @@ fn test_set_payment_update_destination() {
 #[test]
 fn test_add_service() {
     let mut world = setup_world();
-    register_shop(&mut world, OWNER, SHOP_SLUG);
-    add_service(&mut world, OWNER, SHOP_SLUG, SERVICE_SLUG);
+    register_shop(&mut world, OWNER, SHOP_ID);
+    add_service(&mut world, OWNER, SHOP_ID, SERVICE_SLUG);
 }
 
 #[test]
 fn test_add_multiple_services() {
     let mut world = setup_world();
-    register_shop(&mut world, OWNER, SHOP_SLUG);
-    add_service(&mut world, OWNER, SHOP_SLUG, "spa-60min");
-    add_service(&mut world, OWNER, SHOP_SLUG, "spa-90min");
-    add_service(&mut world, OWNER, SHOP_SLUG, "massage");
+    register_shop(&mut world, OWNER, SHOP_ID);
+    add_service(&mut world, OWNER, SHOP_ID, "spa-60min");
+    add_service(&mut world, OWNER, SHOP_ID, "spa-90min");
+    add_service(&mut world, OWNER, SHOP_ID, "massage");
 }
 
 #[test]
 fn test_add_service_not_owner_fails() {
     let mut world = setup_world();
-    register_shop(&mut world, OWNER, SHOP_SLUG);
-    add_service_err(&mut world, OTHER, SHOP_SLUG, SERVICE_SLUG, shop::errors::ERR_NOT_SHOP_OWNER);
+    register_shop(&mut world, OWNER, SHOP_ID);
+    add_service_err(&mut world, OTHER, SHOP_ID, SERVICE_SLUG, shop::errors::ERR_NOT_SHOP_OWNER);
 }
 
 #[test]
@@ -431,9 +431,9 @@ fn test_add_service_shop_not_found_fails() {
 #[test]
 fn test_add_duplicate_service_fails() {
     let mut world = setup_world();
-    register_shop(&mut world, OWNER, SHOP_SLUG);
-    add_service(&mut world, OWNER, SHOP_SLUG, SERVICE_SLUG);
-    add_service_err(&mut world, OWNER, SHOP_SLUG, SERVICE_SLUG, shop::errors::ERR_SERVICE_ALREADY_EXISTS);
+    register_shop(&mut world, OWNER, SHOP_ID);
+    add_service(&mut world, OWNER, SHOP_ID, SERVICE_SLUG);
+    add_service_err(&mut world, OWNER, SHOP_ID, SERVICE_SLUG, shop::errors::ERR_SERVICE_ALREADY_EXISTS);
 }
 
 // ─── removeService ───────────────────────────────────────────────────────────
@@ -441,18 +441,18 @@ fn test_add_duplicate_service_fails() {
 #[test]
 fn test_remove_service() {
     let mut world = setup_world();
-    register_shop(&mut world, OWNER, SHOP_SLUG);
-    add_service(&mut world, OWNER, SHOP_SLUG, SERVICE_SLUG);
-    remove_service(&mut world, OWNER, SHOP_SLUG, SERVICE_SLUG);
+    register_shop(&mut world, OWNER, SHOP_ID);
+    add_service(&mut world, OWNER, SHOP_ID, SERVICE_SLUG);
+    remove_service(&mut world, OWNER, SHOP_ID, SERVICE_SLUG);
 }
 
 #[test]
 fn test_remove_then_re_add_service() {
     let mut world = setup_world();
-    register_shop(&mut world, OWNER, SHOP_SLUG);
-    add_service(&mut world, OWNER, SHOP_SLUG, SERVICE_SLUG);
-    remove_service(&mut world, OWNER, SHOP_SLUG, SERVICE_SLUG);
-    add_service(&mut world, OWNER, SHOP_SLUG, SERVICE_SLUG);
+    register_shop(&mut world, OWNER, SHOP_ID);
+    add_service(&mut world, OWNER, SHOP_ID, SERVICE_SLUG);
+    remove_service(&mut world, OWNER, SHOP_ID, SERVICE_SLUG);
+    add_service(&mut world, OWNER, SHOP_ID, SERVICE_SLUG);
 }
 
 // ─── addProduct ──────────────────────────────────────────────────────────────
@@ -460,24 +460,24 @@ fn test_remove_then_re_add_service() {
 #[test]
 fn test_add_product() {
     let mut world = setup_world();
-    register_shop(&mut world, OWNER, SHOP_SLUG);
-    add_product(&mut world, OWNER, SHOP_SLUG, PRODUCT_SLUG);
+    register_shop(&mut world, OWNER, SHOP_ID);
+    add_product(&mut world, OWNER, SHOP_ID, PRODUCT_SLUG);
 }
 
 #[test]
 fn test_add_multiple_products() {
     let mut world = setup_world();
-    register_shop(&mut world, OWNER, SHOP_SLUG);
-    add_product(&mut world, OWNER, SHOP_SLUG, "single-room");
-    add_product(&mut world, OWNER, SHOP_SLUG, "double-room");
-    add_product(&mut world, OWNER, SHOP_SLUG, "suite");
+    register_shop(&mut world, OWNER, SHOP_ID);
+    add_product(&mut world, OWNER, SHOP_ID, "single-room");
+    add_product(&mut world, OWNER, SHOP_ID, "double-room");
+    add_product(&mut world, OWNER, SHOP_ID, "suite");
 }
 
 #[test]
 fn test_add_product_not_owner_fails() {
     let mut world = setup_world();
-    register_shop(&mut world, OWNER, SHOP_SLUG);
-    add_product_err(&mut world, OTHER, SHOP_SLUG, PRODUCT_SLUG, shop::errors::ERR_NOT_SHOP_OWNER);
+    register_shop(&mut world, OWNER, SHOP_ID);
+    add_product_err(&mut world, OTHER, SHOP_ID, PRODUCT_SLUG, shop::errors::ERR_NOT_SHOP_OWNER);
 }
 
 #[test]
@@ -489,9 +489,9 @@ fn test_add_product_shop_not_found_fails() {
 #[test]
 fn test_add_duplicate_product_fails() {
     let mut world = setup_world();
-    register_shop(&mut world, OWNER, SHOP_SLUG);
-    add_product(&mut world, OWNER, SHOP_SLUG, PRODUCT_SLUG);
-    add_product_err(&mut world, OWNER, SHOP_SLUG, PRODUCT_SLUG, shop::errors::ERR_PRODUCT_ALREADY_EXISTS);
+    register_shop(&mut world, OWNER, SHOP_ID);
+    add_product(&mut world, OWNER, SHOP_ID, PRODUCT_SLUG);
+    add_product_err(&mut world, OWNER, SHOP_ID, PRODUCT_SLUG, shop::errors::ERR_PRODUCT_ALREADY_EXISTS);
 }
 
 // ─── removeProduct ───────────────────────────────────────────────────────────
@@ -499,18 +499,18 @@ fn test_add_duplicate_product_fails() {
 #[test]
 fn test_remove_product() {
     let mut world = setup_world();
-    register_shop(&mut world, OWNER, SHOP_SLUG);
-    add_product(&mut world, OWNER, SHOP_SLUG, PRODUCT_SLUG);
-    remove_product(&mut world, OWNER, SHOP_SLUG, PRODUCT_SLUG);
+    register_shop(&mut world, OWNER, SHOP_ID);
+    add_product(&mut world, OWNER, SHOP_ID, PRODUCT_SLUG);
+    remove_product(&mut world, OWNER, SHOP_ID, PRODUCT_SLUG);
 }
 
 #[test]
 fn test_remove_then_re_add_product() {
     let mut world = setup_world();
-    register_shop(&mut world, OWNER, SHOP_SLUG);
-    add_product(&mut world, OWNER, SHOP_SLUG, PRODUCT_SLUG);
-    remove_product(&mut world, OWNER, SHOP_SLUG, PRODUCT_SLUG);
-    add_product(&mut world, OWNER, SHOP_SLUG, PRODUCT_SLUG);
+    register_shop(&mut world, OWNER, SHOP_ID);
+    add_product(&mut world, OWNER, SHOP_ID, PRODUCT_SLUG);
+    remove_product(&mut world, OWNER, SHOP_ID, PRODUCT_SLUG);
+    add_product(&mut world, OWNER, SHOP_ID, PRODUCT_SLUG);
 }
 
 // ─── updateProductStock ──────────────────────────────────────────────────────
@@ -518,10 +518,10 @@ fn test_remove_then_re_add_product() {
 #[test]
 fn test_update_product_stock() {
     let mut world = setup_world();
-    register_shop(&mut world, OWNER, SHOP_SLUG);
-    add_product(&mut world, OWNER, SHOP_SLUG, PRODUCT_SLUG);
-    update_product_stock(&mut world, OWNER, SHOP_SLUG, PRODUCT_SLUG, false);
-    update_product_stock(&mut world, OWNER, SHOP_SLUG, PRODUCT_SLUG, true);
+    register_shop(&mut world, OWNER, SHOP_ID);
+    add_product(&mut world, OWNER, SHOP_ID, PRODUCT_SLUG);
+    update_product_stock(&mut world, OWNER, SHOP_ID, PRODUCT_SLUG, false);
+    update_product_stock(&mut world, OWNER, SHOP_ID, PRODUCT_SLUG, true);
 }
 
 // ─── Full flow ───────────────────────────────────────────────────────────────
@@ -529,11 +529,11 @@ fn test_update_product_stock() {
 #[test]
 fn test_full_shop_setup_flow() {
     let mut world = setup_world();
-    register_shop(&mut world, OWNER, SHOP_SLUG);
-    set_payment(&mut world, OWNER, SHOP_SLUG, "base", "0xABCDEF1234567890", "USDC");
-    add_product(&mut world, OWNER, SHOP_SLUG, "single-room");
-    add_product(&mut world, OWNER, SHOP_SLUG, "double-room");
-    add_service(&mut world, OWNER, SHOP_SLUG, "spa-60min");
-    update_product_stock(&mut world, OWNER, SHOP_SLUG, "single-room", false);
-    update_shop(&mut world, OWNER, SHOP_SLUG, "boutique-hotel", "Vienna, AT");
+    register_shop(&mut world, OWNER, SHOP_ID);
+    set_payment(&mut world, OWNER, SHOP_ID, "base", "0xABCDEF1234567890", "USDC");
+    add_product(&mut world, OWNER, SHOP_ID, "single-room");
+    add_product(&mut world, OWNER, SHOP_ID, "double-room");
+    add_service(&mut world, OWNER, SHOP_ID, "spa-60min");
+    update_product_stock(&mut world, OWNER, SHOP_ID, "single-room", false);
+    update_shop(&mut world, OWNER, SHOP_ID, "boutique-hotel", "Vienna, AT");
 }
