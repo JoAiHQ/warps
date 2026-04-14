@@ -64,25 +64,25 @@ export const brand = async (config: WarpClientConfig): Promise<WarpbaseBrand> =>
       // --- Admin (agent-authenticated) ---
       {
         path: '/admin/create',
-        warp: '@form-create-form',
+        warp: '@form-create',
         label: { en: 'Create Form', de: 'Formular erstellen' },
         nav: false,
       },
       {
         path: '/admin/field/add',
-        warp: '@form-add-field',
+        warp: '@form-field-add',
         label: { en: 'Add Field', de: 'Feld hinzufügen' },
         nav: false,
       },
       {
         path: '/admin/field/update',
-        warp: '@form-update-field',
+        warp: '@form-field-update',
         label: { en: 'Edit Field', de: 'Feld bearbeiten' },
         nav: false,
       },
       {
         path: '/admin/field/remove',
-        warp: '@form-remove-field',
+        warp: '@form-field-remove',
         label: { en: 'Remove Field', de: 'Feld entfernen' },
         nav: false,
       },

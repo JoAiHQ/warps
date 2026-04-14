@@ -242,7 +242,7 @@ export const meta: Record<string, WarpExtras> = {
 
   // ── Admin warps ──────────────────────────────────────────────────────────
 
-  'create-form': {
+  'create': {
     keywords: {
       en: ['create form', 'on-chain form', 'register form', 'blockchain form builder', 'lead form setup', 'event form create', 'no-code form builder'],
       de: ['Formular erstellen', 'On-Chain-Formular', 'Formular registrieren', 'Blockchain-Formular', 'Lead-Formular einrichten', 'Event-Formular erstellen'],
@@ -315,7 +315,7 @@ export const meta: Record<string, WarpExtras> = {
     },
   },
 
-  'add-field': {
+  'field-add': {
     keywords: {
       en: ['add form field', 'custom form field', 'form builder field', 'on-chain field', 'form customization'],
       de: ['Formularfeld hinzufügen', 'benutzerdefiniertes Feld', 'Formular anpassen', 'On-Chain-Feld'],
@@ -380,7 +380,7 @@ export const meta: Record<string, WarpExtras> = {
     },
   },
 
-  'update-field': {
+  'field-update': {
     keywords: {
       en: ['edit form field', 'update field label', 'reorder form fields', 'change field required'],
       de: ['Formularfeld bearbeiten', 'Feldbezeichnung ändern', 'Felder neu anordnen', 'Pflichtfeld ändern'],
@@ -432,7 +432,7 @@ export const meta: Record<string, WarpExtras> = {
     },
   },
 
-  'remove-field': {
+  'field-remove': {
     keywords: {
       en: ['remove form field', 'delete field', 'form cleanup'],
       de: ['Formularfeld entfernen', 'Feld löschen', 'Formular bereinigen'],
