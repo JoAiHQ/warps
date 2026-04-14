@@ -4,8 +4,8 @@
   "repo": "JoAiHQ/warps",
   "branch": "dev",
   "network": "devnet",
-  "commitSha": "f2f43e1921da0bacd6c90a82a0e60ab6117c3b62",
-  "generatedAt": "2026-04-14T20:17:03.609Z",
+  "commitSha": "d329a50c2dd831e83a5e6c2a3cae51f1eac28bfc",
+  "generatedAt": "2026-04-14T20:49:20.961Z",
   "warps": [
     {
       "key": "arbitrum:omniset-deposit-arbitrum",
@@ -43383,8 +43383,8 @@
       "identifier": "@form-add-field",
       "alias": "form-add-field",
       "chain": "none",
-      "hash": "a29659c5d2126ddaa1d3fcc16333bd76365f55cfb2f37357b3908239ec6056eb",
-      "checksum": "a29659c5d2126ddaa1d3fcc16333bd76365f55cfb2f37357b3908239ec6056eb",
+      "hash": "c4b38cc8419d5277e753b7e2d081dc23fca0ce15d984593ca14b674276b37d6c",
+      "checksum": "c4b38cc8419d5277e753b7e2d081dc23fca0ce15d984593ca14b674276b37d6c",
       "name": "Form: Add Field",
       "title": {
         "en": "Add a field",
@@ -43530,7 +43530,8 @@
                 "required": true,
                 "default": "0"
               }
-            ]
+            ],
+            "gasLimit": 10000000
           }
         ],
         "messages": {
@@ -43821,16 +43822,16 @@
       "identifier": "@form-create-form",
       "alias": "form-create-form",
       "chain": "none",
-      "hash": "6fb8ab33f9a30bf575aa3c842174acd2f6fdbb1bd1fa8ac2b0ef998a5b25f8b4",
-      "checksum": "6fb8ab33f9a30bf575aa3c842174acd2f6fdbb1bd1fa8ac2b0ef998a5b25f8b4",
+      "hash": "7b0baf2ff4280e80358a806511f4e3d48913483ee1681d30a5b3910519d0dee2",
+      "checksum": "7b0baf2ff4280e80358a806511f4e3d48913483ee1681d30a5b3910519d0dee2",
       "name": "Form: Create Form",
       "title": {
         "en": "Create a form",
         "de": "Formular erstellen"
       },
       "description": {
-        "en": "Register a new form on-chain. The form definition (title, type) is stored on the Form smart contract. Add fields next using 'Add Field'.",
-        "de": "Ein neues Formular on-chain registrieren. Die Formulardefinition wird im Form-Smart-Contract gespeichert. Felder danach mit 'Feld hinzufügen' ergänzen."
+        "en": "Register a new form. The form definition (title, type) is stored on the Form smart contract. Add fields next using 'Add Field'.",
+        "de": "Ein neues Formular registrieren. Die Formulardefinition wird im Form-Smart-Contract gespeichert. Felder danach mit 'Feld hinzufügen' ergänzen."
       },
       "preview": null,
       "creator": "github:JoAiHQ/warps",
@@ -43867,12 +43868,76 @@
           "de": "Formular erstellen"
         },
         "description": {
-          "en": "Register a new form on-chain. The form definition (title, type) is stored on the Form smart contract. Add fields next using 'Add Field'.",
-          "de": "Ein neues Formular on-chain registrieren. Die Formulardefinition wird im Form-Smart-Contract gespeichert. Felder danach mit 'Feld hinzufügen' ergänzen."
+          "en": "Register a new form. The form definition (title, type) is stored on the Form smart contract. Add fields next using 'Add Field'.",
+          "de": "Ein neues Formular registrieren. Die Formulardefinition wird im Form-Smart-Contract gespeichert. Felder danach mit 'Feld hinzufügen' ergänzen."
         },
-        "bot": "Use this to create a new form. The agent_id should be the current agent's UUID. After creating, use add-field to define the form's inputs.",
+        "bot": "Use this to create a new form. Collect the title and type from the user. The form ID is auto-generated — never ask the user for it. After creating, use add-field to define the form's inputs.",
         "vars": {},
         "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Details",
+              "de": "Details"
+            },
+            "inputs": [
+              {
+                "name": "Title",
+                "as": "title",
+                "description": {
+                  "en": "Form title shown to submitters",
+                  "de": "Formulartitel, der Einreichenden angezeigt wird"
+                },
+                "type": "string",
+                "source": "field",
+                "required": true,
+                "min": 1
+              },
+              {
+                "name": "Description",
+                "as": "description",
+                "description": {
+                  "en": "Short description of the form's purpose (optional)",
+                  "de": "Kurze Beschreibung des Formularszwecks (optional)"
+                },
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "default": ""
+              },
+              {
+                "name": "Type",
+                "as": "formType",
+                "description": {
+                  "en": "What the form does with submissions",
+                  "de": "Was mit Einreichungen passiert"
+                },
+                "type": "string",
+                "source": "field",
+                "required": true,
+                "default": "lead",
+                "options": {
+                  "lead": "Lead capture",
+                  "feedback": "Feedback",
+                  "rsvp": "RSVP",
+                  "custom": "Custom"
+                }
+              }
+            ]
+          },
+          {
+            "type": "compute",
+            "label": "Generate form ID",
+            "inputs": [
+              {
+                "name": "formId",
+                "type": "string",
+                "source": "hidden",
+                "modifier": "transform:() => '{{title}}'.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') + '-' + Math.random().toString(36).slice(2, 7)"
+              }
+            ],
+            "auto": true
+          },
           {
             "type": "contract",
             "label": {
@@ -43887,15 +43952,10 @@
               {
                 "name": "Form ID",
                 "as": "formId",
-                "description": {
-                  "en": "Unique identifier for this form (e.g. webinar-apr-2026)",
-                  "de": "Eindeutige ID für dieses Formular (z.B. webinar-apr-2026)"
-                },
                 "type": "string",
                 "position": "arg:1",
-                "source": "field",
-                "required": true,
-                "min": 1
+                "source": "hidden",
+                "default": "{{formId}}"
               },
               {
                 "name": "Agent ID",
@@ -43908,55 +43968,35 @@
               {
                 "name": "Title",
                 "as": "title",
-                "description": {
-                  "en": "Form title shown to submitters",
-                  "de": "Formulartitel, der Einreichenden angezeigt wird"
-                },
                 "type": "string",
                 "position": "arg:3",
-                "source": "field",
-                "required": true,
-                "min": 1
+                "source": "hidden",
+                "default": "{{title}}"
               },
               {
                 "name": "Description",
                 "as": "description",
-                "description": {
-                  "en": "Short description of the form's purpose",
-                  "de": "Kurze Beschreibung des Formularszwecks"
-                },
                 "type": "string",
                 "position": "arg:4",
-                "source": "field",
-                "required": false,
-                "default": ""
+                "source": "hidden",
+                "default": "{{description}}"
               },
               {
                 "name": "Type",
                 "as": "formType",
-                "description": {
-                  "en": "What the form does with submissions",
-                  "de": "Was mit Einreichungen passiert"
-                },
                 "type": "string",
                 "position": "arg:5",
-                "source": "field",
-                "required": true,
-                "default": "lead",
-                "options": {
-                  "lead": "Lead capture → creates CRM contact",
-                  "feedback": "Feedback → stores as item",
-                  "rsvp": "RSVP → creates CRM contact + RSVP tag",
-                  "custom": "Custom → configure manually"
-                }
+                "source": "hidden",
+                "default": "{{formType}}"
               }
-            ]
+            ],
+            "gasLimit": 10000000
           }
         ],
         "messages": {
           "success": {
-            "en": "Form '{{formId}}' created! Add fields next.",
-            "de": "Formular '{{formId}}' erstellt! Jetzt Felder hinzufügen."
+            "en": "Form '{{title}}' created! Add fields next.",
+            "de": "Formular '{{title}}' erstellt! Jetzt Felder hinzufügen."
           }
         }
       },
@@ -44071,8 +44111,8 @@
       "identifier": "@form-remove-field",
       "alias": "form-remove-field",
       "chain": "none",
-      "hash": "69dae074d6fa91d433f26b5cdc6a137bd4c21703e7d4a33fda1f11281069e27f",
-      "checksum": "69dae074d6fa91d433f26b5cdc6a137bd4c21703e7d4a33fda1f11281069e27f",
+      "hash": "ad83e472607593bf2fb8389686317ea2048cc6745cf4484519b5b040850a5d3d",
+      "checksum": "ad83e472607593bf2fb8389686317ea2048cc6745cf4484519b5b040850a5d3d",
       "name": "Form: Remove Field",
       "title": {
         "en": "Remove a field",
@@ -44159,7 +44199,8 @@
                 "required": true,
                 "min": 1
               }
-            ]
+            ],
+            "gasLimit": 10000000
           }
         ],
         "messages": {
@@ -44246,8 +44287,8 @@
       "identifier": "@form-set-active",
       "alias": "form-set-active",
       "chain": "none",
-      "hash": "0e0f4f0b4a7ae6fbee60f89ae97e7ef7e73b3c225a2d74111bc7652452ade40e",
-      "checksum": "0e0f4f0b4a7ae6fbee60f89ae97e7ef7e73b3c225a2d74111bc7652452ade40e",
+      "hash": "2af44693242153c56923b9e7c318298003b0eb2a66f360052eb4e31f11430d6a",
+      "checksum": "2af44693242153c56923b9e7c318298003b0eb2a66f360052eb4e31f11430d6a",
       "name": "Form: Activate / Pause",
       "title": {
         "en": "Activate or pause form",
@@ -44334,7 +44375,8 @@
                 "required": true,
                 "default": "true"
               }
-            ]
+            ],
+            "gasLimit": 10000000
           }
         ],
         "messages": {
@@ -44437,8 +44479,8 @@
       "identifier": "@form-set-complete-message",
       "alias": "form-set-complete-message",
       "chain": "none",
-      "hash": "b5b732f87a77ed6ef2148286304372a38c30b747ed08868701cf8db7fa5b2633",
-      "checksum": "b5b732f87a77ed6ef2148286304372a38c30b747ed08868701cf8db7fa5b2633",
+      "hash": "df2f66b3e4bf7648ebf756e27984c403a0af011466cb3bca5cb02e3ed668a0bd",
+      "checksum": "df2f66b3e4bf7648ebf756e27984c403a0af011466cb3bca5cb02e3ed668a0bd",
       "name": "Form: Set Complete Message",
       "title": {
         "en": "Set completion message",
@@ -44525,7 +44567,8 @@
                 "required": false,
                 "default": ""
               }
-            ]
+            ],
+            "gasLimit": 10000000
           }
         ],
         "messages": {
@@ -45030,8 +45073,8 @@
       "identifier": "@form-update-field",
       "alias": "form-update-field",
       "chain": "none",
-      "hash": "b0ebc70bcccce28882b14bf8d5823645a39723f3312bc13933781d1e178d0a39",
-      "checksum": "b0ebc70bcccce28882b14bf8d5823645a39723f3312bc13933781d1e178d0a39",
+      "hash": "1a6ff876d54f8761ac3c6347ad7334445e4dc6f8117f505474d77c4a40bc78f5",
+      "checksum": "1a6ff876d54f8761ac3c6347ad7334445e4dc6f8117f505474d77c4a40bc78f5",
       "name": "Form: Update Field",
       "title": {
         "en": "Edit a field",
@@ -45157,7 +45200,8 @@
                 "required": true,
                 "default": "0"
               }
-            ]
+            ],
+            "gasLimit": 10000000
           }
         ],
         "messages": {
