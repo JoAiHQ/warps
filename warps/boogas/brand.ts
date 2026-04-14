@@ -1,15 +1,7 @@
 import { WarpBrandBuilder, WarpChainEnv, WarpClientConfig } from '@joai/warps'
 import { WarpbaseBrand } from '../types'
 
-const BOOGAS_AGENT_IDS = {
-  mainnet: '4ef02c52-22bd-4ccf-9bef-a611577f2ede',
-}
-
-export const BoogasPrivileges: Record<string, Partial<Record<WarpChainEnv, string[]>>> = {
-  'boogas-give-bonus': {
-    mainnet: [BOOGAS_AGENT_IDS.mainnet],
-  },
-}
+export const BoogasPrivileges: Record<string, Partial<Record<WarpChainEnv, string[]>>> = {}
 
 export const brand = async (config: WarpClientConfig): Promise<WarpbaseBrand> => ({
   info: await new WarpBrandBuilder(config)
