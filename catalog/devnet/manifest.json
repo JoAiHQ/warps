@@ -4,8 +4,8 @@
   "repo": "JoAiHQ/warps",
   "branch": "dev",
   "network": "devnet",
-  "commitSha": "d329a50c2dd831e83a5e6c2a3cae51f1eac28bfc",
-  "generatedAt": "2026-04-14T20:49:20.961Z",
+  "commitSha": "5c0ebc027595498741048cb67a82fcdcde9dafaf",
+  "generatedAt": "2026-04-14T20:54:43.351Z",
   "warps": [
     {
       "key": "arbitrum:omniset-deposit-arbitrum",
@@ -43822,15 +43822,15 @@
       "identifier": "@form-create-form",
       "alias": "form-create-form",
       "chain": "none",
-      "hash": "7b0baf2ff4280e80358a806511f4e3d48913483ee1681d30a5b3910519d0dee2",
-      "checksum": "7b0baf2ff4280e80358a806511f4e3d48913483ee1681d30a5b3910519d0dee2",
+      "hash": "376754950576eae3f4b98b93859bc007ab4777ddc600de13d539741116a1489e",
+      "checksum": "376754950576eae3f4b98b93859bc007ab4777ddc600de13d539741116a1489e",
       "name": "Form: Create Form",
       "title": {
         "en": "Create a form",
         "de": "Formular erstellen"
       },
       "description": {
-        "en": "Register a new form. The form definition (title, type) is stored on the Form smart contract. Add fields next using 'Add Field'.",
+        "en": "Register a new form. The form definition is stored on the Form smart contract. Add fields next using 'Add Field'.",
         "de": "Ein neues Formular registrieren. Die Formulardefinition wird im Form-Smart-Contract gespeichert. Felder danach mit 'Feld hinzufügen' ergänzen."
       },
       "preview": null,
@@ -43868,76 +43868,12 @@
           "de": "Formular erstellen"
         },
         "description": {
-          "en": "Register a new form. The form definition (title, type) is stored on the Form smart contract. Add fields next using 'Add Field'.",
+          "en": "Register a new form. The form definition is stored on the Form smart contract. Add fields next using 'Add Field'.",
           "de": "Ein neues Formular registrieren. Die Formulardefinition wird im Form-Smart-Contract gespeichert. Felder danach mit 'Feld hinzufügen' ergänzen."
         },
         "bot": "Use this to create a new form. Collect the title and type from the user. The form ID is auto-generated — never ask the user for it. After creating, use add-field to define the form's inputs.",
         "vars": {},
         "actions": [
-          {
-            "type": "collect",
-            "label": {
-              "en": "Details",
-              "de": "Details"
-            },
-            "inputs": [
-              {
-                "name": "Title",
-                "as": "title",
-                "description": {
-                  "en": "Form title shown to submitters",
-                  "de": "Formulartitel, der Einreichenden angezeigt wird"
-                },
-                "type": "string",
-                "source": "field",
-                "required": true,
-                "min": 1
-              },
-              {
-                "name": "Description",
-                "as": "description",
-                "description": {
-                  "en": "Short description of the form's purpose (optional)",
-                  "de": "Kurze Beschreibung des Formularszwecks (optional)"
-                },
-                "type": "string",
-                "source": "field",
-                "required": false,
-                "default": ""
-              },
-              {
-                "name": "Type",
-                "as": "formType",
-                "description": {
-                  "en": "What the form does with submissions",
-                  "de": "Was mit Einreichungen passiert"
-                },
-                "type": "string",
-                "source": "field",
-                "required": true,
-                "default": "lead",
-                "options": {
-                  "lead": "Lead capture",
-                  "feedback": "Feedback",
-                  "rsvp": "RSVP",
-                  "custom": "Custom"
-                }
-              }
-            ]
-          },
-          {
-            "type": "compute",
-            "label": "Generate form ID",
-            "inputs": [
-              {
-                "name": "formId",
-                "type": "string",
-                "source": "hidden",
-                "modifier": "transform:() => '{{title}}'.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') + '-' + Math.random().toString(36).slice(2, 7)"
-              }
-            ],
-            "auto": true
-          },
           {
             "type": "contract",
             "label": {
@@ -43955,7 +43891,7 @@
                 "type": "string",
                 "position": "arg:1",
                 "source": "hidden",
-                "default": "{{formId}}"
+                "modifier": "transform:() => '{{title}}'.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') + '-' + Math.random().toString(36).slice(2, 7)"
               },
               {
                 "name": "Agent ID",
@@ -43968,26 +43904,47 @@
               {
                 "name": "Title",
                 "as": "title",
+                "description": {
+                  "en": "Form title shown to submitters",
+                  "de": "Formulartitel, der Einreichenden angezeigt wird"
+                },
                 "type": "string",
                 "position": "arg:3",
-                "source": "hidden",
-                "default": "{{title}}"
+                "source": "field",
+                "required": true,
+                "min": 1
               },
               {
                 "name": "Description",
                 "as": "description",
+                "description": {
+                  "en": "Short description of the form's purpose (optional)",
+                  "de": "Kurze Beschreibung des Formularszwecks (optional)"
+                },
                 "type": "string",
                 "position": "arg:4",
-                "source": "hidden",
-                "default": "{{description}}"
+                "source": "field",
+                "required": false,
+                "default": ""
               },
               {
                 "name": "Type",
                 "as": "formType",
+                "description": {
+                  "en": "What the form does with submissions",
+                  "de": "Was mit Einreichungen passiert"
+                },
                 "type": "string",
                 "position": "arg:5",
-                "source": "hidden",
-                "default": "{{formType}}"
+                "source": "field",
+                "required": true,
+                "default": "lead",
+                "options": {
+                  "lead": "Lead capture",
+                  "feedback": "Feedback",
+                  "rsvp": "RSVP",
+                  "custom": "Custom"
+                }
               }
             ],
             "gasLimit": 10000000
