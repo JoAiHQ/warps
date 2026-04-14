@@ -36,6 +36,58 @@
                 {
                     "name": "slug",
                     "type": "bytes"
+                },
+                {
+                    "name": "category",
+                    "type": "bytes"
+                },
+                {
+                    "name": "location",
+                    "type": "bytes"
+                },
+                {
+                    "name": "description",
+                    "type": "bytes"
+                },
+                {
+                    "name": "image_url",
+                    "type": "bytes"
+                },
+                {
+                    "name": "website",
+                    "type": "bytes"
+                }
+            ],
+            "outputs": []
+        },
+        {
+            "name": "updateShop",
+            "rustMethodName": "update_shop",
+            "mutability": "mutable",
+            "inputs": [
+                {
+                    "name": "slug",
+                    "type": "bytes"
+                },
+                {
+                    "name": "category",
+                    "type": "bytes"
+                },
+                {
+                    "name": "location",
+                    "type": "bytes"
+                },
+                {
+                    "name": "description",
+                    "type": "bytes"
+                },
+                {
+                    "name": "image_url",
+                    "type": "bytes"
+                },
+                {
+                    "name": "website",
+                    "type": "bytes"
                 }
             ],
             "outputs": []
@@ -57,6 +109,63 @@
             ]
         },
         {
+            "name": "getShopCount",
+            "rustMethodName": "get_shop_count",
+            "mutability": "readonly",
+            "inputs": [],
+            "outputs": [
+                {
+                    "type": "u32"
+                }
+            ]
+        },
+        {
+            "name": "getShops",
+            "rustMethodName": "get_shops",
+            "mutability": "readonly",
+            "inputs": [
+                {
+                    "name": "offset",
+                    "type": "u32"
+                },
+                {
+                    "name": "limit",
+                    "type": "u32"
+                }
+            ],
+            "outputs": [
+                {
+                    "type": "variadic<multi<bytes,ShopInfo>>",
+                    "multi_result": true
+                }
+            ]
+        },
+        {
+            "name": "getShopsByCategory",
+            "rustMethodName": "get_shops_by_category",
+            "mutability": "readonly",
+            "inputs": [
+                {
+                    "name": "category",
+                    "type": "bytes"
+                },
+                {
+                    "name": "offset",
+                    "type": "u32"
+                },
+                {
+                    "name": "limit",
+                    "type": "u32"
+                }
+            ],
+            "outputs": [
+                {
+                    "type": "variadic<multi<bytes,ShopInfo>>",
+                    "multi_result": true
+                }
+            ]
+        },
+        {
             "name": "addService",
             "rustMethodName": "add_service",
             "mutability": "mutable",
@@ -74,7 +183,7 @@
                     "type": "bytes"
                 },
                 {
-                    "name": "price_cents",
+                    "name": "price",
                     "type": "u64"
                 },
                 {
@@ -83,6 +192,10 @@
                 },
                 {
                     "name": "category",
+                    "type": "bytes"
+                },
+                {
+                    "name": "description",
                     "type": "bytes"
                 }
             ],
@@ -120,6 +233,131 @@
                     "multi_result": true
                 }
             ]
+        },
+        {
+            "name": "addProduct",
+            "rustMethodName": "add_product",
+            "mutability": "mutable",
+            "inputs": [
+                {
+                    "name": "shop_slug",
+                    "type": "bytes"
+                },
+                {
+                    "name": "product_slug",
+                    "type": "bytes"
+                },
+                {
+                    "name": "name",
+                    "type": "bytes"
+                },
+                {
+                    "name": "price",
+                    "type": "u64"
+                },
+                {
+                    "name": "category",
+                    "type": "bytes"
+                },
+                {
+                    "name": "description",
+                    "type": "bytes"
+                }
+            ],
+            "outputs": []
+        },
+        {
+            "name": "updateProductStock",
+            "rustMethodName": "update_product_stock",
+            "mutability": "mutable",
+            "inputs": [
+                {
+                    "name": "shop_slug",
+                    "type": "bytes"
+                },
+                {
+                    "name": "product_slug",
+                    "type": "bytes"
+                },
+                {
+                    "name": "in_stock",
+                    "type": "bool"
+                }
+            ],
+            "outputs": []
+        },
+        {
+            "name": "removeProduct",
+            "rustMethodName": "remove_product",
+            "mutability": "mutable",
+            "inputs": [
+                {
+                    "name": "shop_slug",
+                    "type": "bytes"
+                },
+                {
+                    "name": "product_slug",
+                    "type": "bytes"
+                }
+            ],
+            "outputs": []
+        },
+        {
+            "name": "getProducts",
+            "rustMethodName": "get_products",
+            "mutability": "readonly",
+            "inputs": [
+                {
+                    "name": "shop_slug",
+                    "type": "bytes"
+                }
+            ],
+            "outputs": [
+                {
+                    "type": "variadic<ShopProduct>",
+                    "multi_result": true
+                }
+            ]
+        },
+        {
+            "name": "setPaymentDestination",
+            "rustMethodName": "set_payment_destination",
+            "mutability": "mutable",
+            "inputs": [
+                {
+                    "name": "slug",
+                    "type": "bytes"
+                },
+                {
+                    "name": "chain",
+                    "type": "bytes"
+                },
+                {
+                    "name": "address",
+                    "type": "bytes"
+                },
+                {
+                    "name": "token",
+                    "type": "bytes"
+                }
+            ],
+            "outputs": []
+        },
+        {
+            "name": "getPaymentDestination",
+            "rustMethodName": "get_payment_destination",
+            "mutability": "readonly",
+            "inputs": [
+                {
+                    "name": "slug",
+                    "type": "bytes"
+                }
+            ],
+            "outputs": [
+                {
+                    "type": "PaymentDestination"
+                }
+            ]
         }
     ],
     "events": [
@@ -134,6 +372,41 @@
                 {
                     "name": "owner",
                     "type": "Address",
+                    "indexed": true
+                },
+                {
+                    "name": "category",
+                    "type": "bytes",
+                    "indexed": true
+                }
+            ]
+        },
+        {
+            "identifier": "shopUpdated",
+            "inputs": [
+                {
+                    "name": "slug",
+                    "type": "bytes",
+                    "indexed": true
+                }
+            ]
+        },
+        {
+            "identifier": "paymentDestinationSet",
+            "inputs": [
+                {
+                    "name": "slug",
+                    "type": "bytes",
+                    "indexed": true
+                },
+                {
+                    "name": "chain",
+                    "type": "bytes",
+                    "indexed": true
+                },
+                {
+                    "name": "address",
+                    "type": "bytes",
                     "indexed": true
                 }
             ]
@@ -167,11 +440,77 @@
                     "indexed": true
                 }
             ]
+        },
+        {
+            "identifier": "productAdded",
+            "inputs": [
+                {
+                    "name": "shop_slug",
+                    "type": "bytes",
+                    "indexed": true
+                },
+                {
+                    "name": "product_slug",
+                    "type": "bytes",
+                    "indexed": true
+                }
+            ]
+        },
+        {
+            "identifier": "productRemoved",
+            "inputs": [
+                {
+                    "name": "shop_slug",
+                    "type": "bytes",
+                    "indexed": true
+                },
+                {
+                    "name": "product_slug",
+                    "type": "bytes",
+                    "indexed": true
+                }
+            ]
+        },
+        {
+            "identifier": "productStockUpdated",
+            "inputs": [
+                {
+                    "name": "shop_slug",
+                    "type": "bytes",
+                    "indexed": true
+                },
+                {
+                    "name": "product_slug",
+                    "type": "bytes",
+                    "indexed": true
+                },
+                {
+                    "name": "in_stock",
+                    "type": "bool"
+                }
+            ]
         }
     ],
     "esdtAttributes": [],
     "hasCallback": false,
     "types": {
+        "PaymentDestination": {
+            "type": "struct",
+            "fields": [
+                {
+                    "name": "chain",
+                    "type": "bytes"
+                },
+                {
+                    "name": "address",
+                    "type": "bytes"
+                },
+                {
+                    "name": "token",
+                    "type": "bytes"
+                }
+            ]
+        },
         "ShopInfo": {
             "type": "struct",
             "fields": [
@@ -182,6 +521,55 @@
                 {
                     "name": "created_at",
                     "type": "u64"
+                },
+                {
+                    "name": "category",
+                    "type": "bytes"
+                },
+                {
+                    "name": "location",
+                    "type": "bytes"
+                },
+                {
+                    "name": "description",
+                    "type": "bytes"
+                },
+                {
+                    "name": "image_url",
+                    "type": "bytes"
+                },
+                {
+                    "name": "website",
+                    "type": "bytes"
+                }
+            ]
+        },
+        "ShopProduct": {
+            "type": "struct",
+            "fields": [
+                {
+                    "name": "slug",
+                    "type": "bytes"
+                },
+                {
+                    "name": "name",
+                    "type": "bytes"
+                },
+                {
+                    "name": "price",
+                    "type": "u64"
+                },
+                {
+                    "name": "category",
+                    "type": "bytes"
+                },
+                {
+                    "name": "description",
+                    "type": "bytes"
+                },
+                {
+                    "name": "in_stock",
+                    "type": "bool"
                 }
             ]
         },
@@ -197,7 +585,7 @@
                     "type": "bytes"
                 },
                 {
-                    "name": "price_cents",
+                    "name": "price",
                     "type": "u64"
                 },
                 {
@@ -206,6 +594,10 @@
                 },
                 {
                     "name": "category",
+                    "type": "bytes"
+                },
+                {
+                    "name": "description",
                     "type": "bytes"
                 }
             ]

@@ -1,8 +1,8 @@
 use crate::{
     config,
     errors::{
-        ERR_INVALID_CATEGORY, ERR_INVALID_DURATION, ERR_INVALID_NAME, ERR_INVALID_SLUG, ERR_NOT_SHOP_OWNER,
-        ERR_SERVICE_ALREADY_EXISTS, ERR_SERVICE_NOT_FOUND, ERR_SHOP_NOT_FOUND,
+        ERR_INVALID_CATEGORY, ERR_INVALID_DESCRIPTION, ERR_INVALID_DURATION, ERR_INVALID_NAME,
+        ERR_INVALID_SLUG, ERR_SERVICE_ALREADY_EXISTS, ERR_SERVICE_NOT_FOUND, ERR_SHOP_NOT_FOUND,
     },
     events,
     types::ShopService,
@@ -11,6 +11,7 @@ use crate::{
 pub const MAX_SLUG_LEN: usize = 64;
 pub const MAX_NAME_LEN: usize = 128;
 pub const MAX_CATEGORY_LEN: usize = 64;
+pub const MAX_DESCRIPTION_LEN: usize = 512;
 pub const MAX_DURATION_MINUTES: u32 = 1440;
 
 multiversx_sc::imports!();
@@ -24,15 +25,17 @@ pub trait ServicesModule: config::ConfigModule + events::EventsModule {
         shop_slug: ManagedBuffer,
         service_slug: ManagedBuffer,
         name: ManagedBuffer,
-        price_cents: u64,
+        price: u64,
         duration_minutes: u32,
         category: ManagedBuffer,
+        description: ManagedBuffer,
     ) {
         self.require_shop_owner(&shop_slug);
         require!(service_slug.len() >= 1 && service_slug.len() <= MAX_SLUG_LEN, ERR_INVALID_SLUG);
         require!(name.len() >= 1 && name.len() <= MAX_NAME_LEN, ERR_INVALID_NAME);
         require!(duration_minutes >= 1 && duration_minutes <= MAX_DURATION_MINUTES, ERR_INVALID_DURATION);
         require!(category.len() <= MAX_CATEGORY_LEN, ERR_INVALID_CATEGORY);
+        require!(description.len() <= MAX_DESCRIPTION_LEN, ERR_INVALID_DESCRIPTION);
         require!(
             self.shop_service(&shop_slug, &service_slug).is_empty(),
             ERR_SERVICE_ALREADY_EXISTS
@@ -41,9 +44,10 @@ pub trait ServicesModule: config::ConfigModule + events::EventsModule {
         let service = ShopService {
             slug: service_slug.clone(),
             name,
-            price_cents,
+            price,
             duration_minutes,
             category,
+            description,
         };
 
         self.shop_service(&shop_slug, &service_slug).set(service);
@@ -68,20 +72,11 @@ pub trait ServicesModule: config::ConfigModule + events::EventsModule {
         require!(!self.shop_info(&shop_slug).is_empty(), ERR_SHOP_NOT_FOUND);
 
         let mut result = MultiValueEncoded::new();
-
         for service_slug in self.shop_service_slugs(&shop_slug).iter() {
             if !self.shop_service(&shop_slug, &service_slug).is_empty() {
                 result.push(self.shop_service(&shop_slug, &service_slug).get());
             }
         }
-
         result
-    }
-
-    fn require_shop_owner(&self, slug: &ManagedBuffer) {
-        require!(!self.shop_info(slug).is_empty(), ERR_SHOP_NOT_FOUND);
-        let info = self.shop_info(slug).get();
-        let caller = self.blockchain().get_caller();
-        require!(info.owner == caller, ERR_NOT_SHOP_OWNER);
     }
 }
