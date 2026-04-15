@@ -4,9 +4,312 @@
   "repo": "JoAiHQ/warps",
   "branch": "dev",
   "network": "devnet",
-  "commitSha": "a58d667af7a467bb29b45c7fae02bccd9d6bc038",
-  "committedAt": "2026-04-15T09:09:04.211Z",
-  "generatedAt": "2026-04-15T09:09:06.097Z",
-  "upserts": [],
+  "commitSha": "a6f617d6ffe26b88aa73ec70b9649629e76e9ec8",
+  "committedAt": "2026-04-15T09:15:51.343Z",
+  "generatedAt": "2026-04-15T09:15:53.242Z",
+  "upserts": [
+    {
+      "key": "none:joai-kyc-business-submit",
+      "identifier": "@joai-kyc-business-submit",
+      "alias": "joai-kyc-business-submit",
+      "chain": "none",
+      "hash": "6af8979eadee73372f614cf22c0f4c0f2451847aeb8082e31269943f95489faf",
+      "checksum": "6af8979eadee73372f614cf22c0f4c0f2451847aeb8082e31269943f95489faf",
+      "name": "JoAi: Business Identity Verification",
+      "title": {
+        "en": "Verify Your Business",
+        "de": "Unternehmen verifizieren"
+      },
+      "description": {
+        "en": "Submit your business information to unlock payouts. Required once per account.",
+        "de": "Reiche deine Unternehmensdaten ein, um Auszahlungen freizuschalten. Einmalig pro Konto erforderlich."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: Business Identity Verification",
+        "title": {
+          "en": "Verify Your Business",
+          "de": "Unternehmen verifizieren"
+        },
+        "description": {
+          "en": "Submit your business information to unlock payouts. Required once per account.",
+          "de": "Reiche deine Unternehmensdaten ein, um Auszahlungen freizuschalten. Einmalig pro Konto erforderlich."
+        },
+        "bot": "Guide the user through submitting their business identity for payout verification. Frame this as a business onboarding step — ask for the legal business name, the owner's name, registered country, business address, and VAT/tax ID. Explain this is required once to comply with legal obligations and unlock payouts. Ask for the country naturally and convert the answer to the correct two-letter ISO 3166-1 alpha-2 code yourself before submitting.",
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Submit for review",
+              "de": "Zur Prüfung einreichen"
+            },
+            "destination": {
+              "url": "https://devnet-api.joai.ai/v1/me/kyc",
+              "method": "POST",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Legal Representative Name",
+                "as": "fullName",
+                "description": {
+                  "en": "Full legal name of the business owner or authorized representative.",
+                  "de": "Vollständiger rechtlicher Name des Geschäftsinhabers oder bevollmächtigten Vertreters."
+                },
+                "type": "string",
+                "position": "arg:1",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Country",
+                "as": "country",
+                "description": {
+                  "en": "Country where the business is registered.",
+                  "de": "Land, in dem das Unternehmen registriert ist."
+                },
+                "type": "string",
+                "position": "arg:2",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Business Address",
+                "as": "address",
+                "description": {
+                  "en": "The registered business address including city and postal code.",
+                  "de": "Die eingetragene Geschäftsadresse mit Stadt und Postleitzahl."
+                },
+                "type": "string",
+                "position": "arg:3",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "VAT / Tax ID",
+                "as": "taxId",
+                "description": {
+                  "en": "The company's VAT number or tax identification number (e.g. ATU12345678, DE123456789).",
+                  "de": "Die UID-Nummer oder Steueridentifikationsnummer des Unternehmens (z.B. ATU12345678, DE123456789)."
+                },
+                "type": "string",
+                "position": "arg:4",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Company Name",
+                "as": "companyName",
+                "description": {
+                  "en": "The registered legal company name.",
+                  "de": "Der eingetragene rechtliche Unternehmensname."
+                },
+                "type": "string",
+                "source": "field",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "messages": {
+          "success": {
+            "en": "Business identity submitted. We will review your information and notify you once approved.",
+            "de": "Unternehmensidentität eingereicht. Wir prüfen deine Angaben und benachrichtigen dich nach der Freigabe."
+          },
+          "error": {
+            "en": "Failed to submit business information. Please try again.",
+            "de": "Unternehmensdaten konnten nicht eingereicht werden. Bitte erneut versuchen."
+          }
+        }
+      },
+      "extras": null
+    },
+    {
+      "key": "none:joai-kyc-submit",
+      "identifier": "@joai-kyc-submit",
+      "alias": "joai-kyc-submit",
+      "chain": "none",
+      "hash": "08acb2de1d296ff27b076dd6373aa2ffe77f775576130138d769e235e631dd7c",
+      "checksum": "08acb2de1d296ff27b076dd6373aa2ffe77f775576130138d769e235e631dd7c",
+      "name": "JoAi: Identity Verification",
+      "title": {
+        "en": "Verify Your Identity",
+        "de": "Identität verifizieren"
+      },
+      "description": {
+        "en": "Submit your identity information to unlock payouts. Required once per account.",
+        "de": "Reiche deine Identitätsdaten ein, um Auszahlungen freizuschalten. Einmalig pro Konto erforderlich."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: Identity Verification",
+        "title": {
+          "en": "Verify Your Identity",
+          "de": "Identität verifizieren"
+        },
+        "description": {
+          "en": "Submit your identity information to unlock payouts. Required once per account.",
+          "de": "Reiche deine Identitätsdaten ein, um Auszahlungen freizuschalten. Einmalig pro Konto erforderlich."
+        },
+        "bot": "Guide the user through submitting their identity for payout verification. Explain that this is required once to comply with legal obligations and unlock payouts. Ask for the country naturally and convert the answer to the correct two-letter ISO 3166-1 alpha-2 code yourself before submitting.",
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Submit for review",
+              "de": "Zur Prüfung einreichen"
+            },
+            "destination": {
+              "url": "https://devnet-api.joai.ai/v1/me/kyc",
+              "method": "POST",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Full Legal Name",
+                "as": "fullName",
+                "description": {
+                  "en": "Your full legal name as it appears on your ID.",
+                  "de": "Dein vollständiger rechtlicher Name, wie er auf deinem Ausweis steht."
+                },
+                "type": "string",
+                "position": "arg:1",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Country",
+                "as": "country",
+                "description": {
+                  "en": "Country of residence.",
+                  "de": "Wohnsitzland."
+                },
+                "type": "string",
+                "position": "arg:2",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Address",
+                "as": "address",
+                "description": {
+                  "en": "Your full residential address including city and postal code.",
+                  "de": "Deine vollständige Wohnadresse mit Stadt und Postleitzahl."
+                },
+                "type": "string",
+                "position": "arg:3",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Tax / VAT ID",
+                "as": "taxId",
+                "description": {
+                  "en": "Your tax identification number or VAT ID. For individuals: national tax ID. For businesses: VAT number.",
+                  "de": "Deine Steueridentifikationsnummer oder USt-IdNr. Für Privatpersonen: Steuer-ID. Für Unternehmen: UID-Nummer."
+                },
+                "type": "string",
+                "position": "arg:4",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Company Name",
+                "as": "companyName",
+                "description": {
+                  "en": "Your company or business name, if applicable.",
+                  "de": "Dein Unternehmensname, falls zutreffend."
+                },
+                "type": "string",
+                "source": "field",
+                "required": false
+              }
+            ]
+          }
+        ],
+        "messages": {
+          "success": {
+            "en": "Identity submitted. We will review your information and notify you once approved.",
+            "de": "Identität eingereicht. Wir prüfen deine Angaben und benachrichtigen dich nach der Freigabe."
+          },
+          "error": {
+            "en": "Failed to submit identity information. Please try again.",
+            "de": "Identitätsdaten konnten nicht eingereicht werden. Bitte erneut versuchen."
+          }
+        }
+      },
+      "extras": null
+    }
+  ],
   "deletes": []
 }
