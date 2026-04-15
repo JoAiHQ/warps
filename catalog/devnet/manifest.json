@@ -4,8 +4,8 @@
   "repo": "JoAiHQ/warps",
   "branch": "dev",
   "network": "devnet",
-  "commitSha": "06dc723843b1c44424bd9be663664cfc9a5febdf",
-  "generatedAt": "2026-04-15T08:49:51.544Z",
+  "commitSha": "1e3378aca0560b2e96b8618861c64158c0304274",
+  "generatedAt": "2026-04-15T09:08:18.559Z",
   "warps": [
     {
       "key": "arbitrum:omniset-deposit-arbitrum",
@@ -43387,8 +43387,8 @@
       "identifier": "@form-create",
       "alias": "form-create",
       "chain": "none",
-      "hash": "74110163ea5b1e0842f3537f168294bfb173f3cb6c44a59fb57f4444674bd667",
-      "checksum": "74110163ea5b1e0842f3537f168294bfb173f3cb6c44a59fb57f4444674bd667",
+      "hash": "8984bb726aa911908d22a23f288762f888418d4dfb9630412781119571f45a65",
+      "checksum": "8984bb726aa911908d22a23f288762f888418d4dfb9630412781119571f45a65",
       "name": "Form: Create",
       "title": {
         "en": "Create a form",
@@ -43436,7 +43436,7 @@
           "en": "Create a new form. After creating, use 'Add Field' to define the inputs.",
           "de": "Ein neues Formular erstellen. Danach mit 'Feld hinzufügen' die Felder definieren."
         },
-        "bot": "Use this to create a new form. Collect title and type from the user. After creating, use field-add to define the form's inputs.",
+        "bot": "Use this to create a new form. After creating, use form-field-add to define the form's inputs.",
         "actions": [
           {
             "type": "collect",
@@ -43453,56 +43453,133 @@
             },
             "inputs": [
               {
+                "name": "Brand",
+                "as": "brand",
+                "bot": "Always 'form'.",
+                "type": "string",
+                "position": "arg:0",
+                "source": "field",
+                "required": true,
+                "default": "form"
+              },
+              {
+                "name": "Name",
+                "as": "definition.name",
+                "bot": "Internal name of the form, same as the English title.",
+                "type": "string",
+                "position": "arg:1",
+                "source": "field",
+                "required": true
+              },
+              {
                 "name": "Title",
-                "as": "title",
+                "as": "definition.title.en",
                 "description": {
                   "en": "Form title shown to submitters",
                   "de": "Formulartitel für Einreichende"
                 },
                 "type": "string",
-                "position": "arg:1",
-                "source": "field",
-                "required": true,
-                "min": 1
-              },
-              {
-                "name": "Description",
-                "as": "description",
-                "description": {
-                  "en": "Short description of the form's purpose (optional)",
-                  "de": "Kurze Beschreibung des Formularszwecks (optional)"
-                },
-                "type": "string",
                 "position": "arg:2",
                 "source": "field",
-                "required": false
+                "required": true
               },
               {
-                "name": "Type",
-                "as": "type",
+                "name": "Title (DE)",
+                "as": "definition.title.de",
                 "description": {
-                  "en": "What the form does with submissions",
-                  "de": "Was mit Einreichungen passiert"
+                  "en": "German translation of the title",
+                  "de": "Deutsche Übersetzung des Titels"
                 },
                 "type": "string",
                 "position": "arg:3",
                 "source": "field",
+                "required": false
+              },
+              {
+                "name": "Description",
+                "as": "definition.description.en",
+                "description": {
+                  "en": "Short description of the form's purpose",
+                  "de": "Kurze Beschreibung des Formularszwecks"
+                },
+                "type": "string",
+                "position": "arg:4",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Submit Label",
+                "as": "definition.actions.0.label.en",
+                "description": {
+                  "en": "Text on the submit button",
+                  "de": "Text auf dem Absende-Button"
+                },
+                "bot": "Default: 'Submit'",
+                "type": "string",
+                "position": "arg:5",
+                "source": "field",
                 "required": true,
-                "default": "lead",
-                "options": {
-                  "lead": "Lead capture",
-                  "feedback": "Feedback",
-                  "rsvp": "RSVP",
-                  "custom": "Custom"
-                }
+                "default": "Submit"
+              },
+              {
+                "name": "Submit Label (DE)",
+                "as": "definition.actions.0.label.de",
+                "description": {
+                  "en": "German translation of the submit label",
+                  "de": "Deutsche Übersetzung des Absende-Buttons"
+                },
+                "bot": "Default: 'Absenden'",
+                "type": "string",
+                "position": "arg:6",
+                "source": "field",
+                "required": false,
+                "default": "Absenden"
+              },
+              {
+                "name": "Success Message",
+                "as": "definition.messages.success.en",
+                "description": {
+                  "en": "Message shown after successful submission",
+                  "de": "Nachricht nach erfolgreicher Einreichung"
+                },
+                "bot": "Default: 'Thanks! We\\'ll be in touch soon.'",
+                "type": "string",
+                "position": "arg:7",
+                "source": "field",
+                "required": true,
+                "default": "Thanks! We'll be in touch soon."
+              },
+              {
+                "name": "Success Message (DE)",
+                "as": "definition.messages.success.de",
+                "description": {
+                  "en": "German translation of the success message",
+                  "de": "Deutsche Übersetzung der Erfolgsmeldung"
+                },
+                "bot": "Default: 'Danke! Wir melden uns bald.'",
+                "type": "string",
+                "position": "arg:8",
+                "source": "field",
+                "required": false,
+                "default": "Danke! Wir melden uns bald."
+              },
+              {
+                "name": "Action Type",
+                "as": "definition.actions.0.type",
+                "bot": "Always 'collect'.",
+                "type": "string",
+                "position": "arg:9",
+                "source": "field",
+                "required": true,
+                "default": "collect"
               }
             ]
           }
         ],
         "messages": {
           "success": {
-            "en": "Form '{{title}}' created! Add fields next.",
-            "de": "Formular '{{title}}' erstellt! Jetzt Felder hinzufügen."
+            "en": "Form created! Add fields next.",
+            "de": "Formular erstellt! Jetzt Felder hinzufügen."
           }
         }
       },
@@ -43612,8 +43689,8 @@
       "identifier": "@form-field-add",
       "alias": "form-field-add",
       "chain": "none",
-      "hash": "b626e7c05857a5d9546bf6b92837ff06fa80217bce69f5271fe7de29bd7d2b26",
-      "checksum": "b626e7c05857a5d9546bf6b92837ff06fa80217bce69f5271fe7de29bd7d2b26",
+      "hash": "140780dc48ee94bdc9d8ca22b0cd4d338c81461bc9c4dcb9b00287e973d8e99f",
+      "checksum": "140780dc48ee94bdc9d8ca22b0cd4d338c81461bc9c4dcb9b00287e973d8e99f",
       "name": "Form: Add Field",
       "title": {
         "en": "Add a field",
@@ -43661,7 +43738,7 @@
           "en": "Add an input field to an existing form.",
           "de": "Ein Eingabefeld zu einem bestehenden Formular hinzufügen."
         },
-        "bot": "Use this to add a field to a form. The formId comes from the form creation response. Auto-generate the slug from the label as lowercase kebab-case.",
+        "bot": "Use this to add a field to a form. Call form-get first to read the current definition, then append the new field to definition.actions[0].inputs and submit the full updated definition.",
         "actions": [
           {
             "type": "collect",
@@ -43670,8 +43747,8 @@
               "de": "Feld hinzufügen"
             },
             "destination": {
-              "url": "https://devnet-api.joai.ai/v1/warps/{{formId}}/inputs",
-              "method": "POST",
+              "url": "https://devnet-api.joai.ai/v1/warps/{{formId}}",
+              "method": "PATCH",
               "headers": {
                 "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
               }
@@ -43680,78 +43757,28 @@
               {
                 "name": "Form ID",
                 "as": "formId",
-                "bot": "The form's ID from the create response. Never ask the user — carry it from the previous step.",
+                "bot": "The form's ID. Never ask the user — carry it from the previous step.",
                 "type": "string",
                 "position": "arg:1",
                 "source": "field",
                 "required": true
               },
               {
-                "name": "Slug",
-                "as": "slug",
-                "description": {
-                  "en": "Internal key for this field (e.g. company, job-title)",
-                  "de": "Interner Schlüssel (z.B. firma, berufsbezeichnung)"
-                },
-                "bot": "Lowercase kebab-case key. Auto-generate from label.",
-                "type": "string",
+                "name": "Definition",
+                "as": "definition",
+                "bot": "The full updated warp definition with the new field appended to definition.actions[0].inputs. Preserve all existing fields.",
+                "type": "json",
                 "position": "arg:2",
-                "source": "field",
+                "source": "computed",
                 "required": true
-              },
-              {
-                "name": "Label",
-                "as": "label",
-                "description": {
-                  "en": "Label shown to the submitter",
-                  "de": "Beschriftung für Einreichende"
-                },
-                "type": "string",
-                "position": "arg:3",
-                "source": "field",
-                "required": true
-              },
-              {
-                "name": "Field Type",
-                "as": "fieldType",
-                "description": {
-                  "en": "Input type",
-                  "de": "Eingabetyp"
-                },
-                "type": "string",
-                "position": "arg:4",
-                "source": "field",
-                "required": false,
-                "default": "string",
-                "options": {
-                  "string": "Short text",
-                  "email": "Email address",
-                  "phone": "Phone number",
-                  "text": "Long text",
-                  "select": "Dropdown",
-                  "bool": "Yes / No"
-                }
-              },
-              {
-                "name": "Required",
-                "as": "required",
-                "description": {
-                  "en": "Must the submitter fill this in?",
-                  "de": "Pflichtfeld?"
-                },
-                "type": "bool",
-                "position": "arg:5",
-                "source": "field",
-                "required": false,
-                "default": "false"
               }
             ]
           }
         ],
         "messages": {
           "success": {
-            "en": "Field '{{label}}' added.",
-            "de": "Feld '{{label}}' hinzugefügt."
+            "en": "Field added.",
+            "de": "Feld hinzugefügt."
           }
         }
       },
@@ -43846,8 +43873,8 @@
       "identifier": "@form-field-remove",
       "alias": "form-field-remove",
       "chain": "none",
-      "hash": "6b0e91c04fde2d85de4ccaee939f5c397ddfecae4be4e1995685af197698487d",
-      "checksum": "6b0e91c04fde2d85de4ccaee939f5c397ddfecae4be4e1995685af197698487d",
+      "hash": "e4738f31bca96bf4a0f313a63e5c96385c5cf4e1fd43ba6f32376fe6803deb8d",
+      "checksum": "e4738f31bca96bf4a0f313a63e5c96385c5cf4e1fd43ba6f32376fe6803deb8d",
       "name": "Form: Remove Field",
       "title": {
         "en": "Remove a field",
@@ -43895,7 +43922,7 @@
           "en": "Permanently remove a field from a form.",
           "de": "Ein Feld dauerhaft aus einem Formular entfernen."
         },
-        "bot": "Use this to remove a field from an existing form.",
+        "bot": "Use this to remove a field from a form. Call form-get first to read the current definition, then remove the target field from definition.actions[0].inputs and submit the full updated definition.",
         "actions": [
           {
             "type": "collect",
@@ -43904,8 +43931,8 @@
               "de": "Feld entfernen"
             },
             "destination": {
-              "url": "https://devnet-api.joai.ai/v1/warps/{{formId}}/inputs/{{slug}}",
-              "method": "DELETE",
+              "url": "https://devnet-api.joai.ai/v1/warps/{{formId}}",
+              "method": "PATCH",
               "headers": {
                 "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
               }
@@ -43920,15 +43947,12 @@
                 "required": true
               },
               {
-                "name": "Slug",
-                "as": "slug",
-                "description": {
-                  "en": "The slug of the field to remove",
-                  "de": "Der Slug des zu entfernenden Felds"
-                },
-                "type": "string",
+                "name": "Definition",
+                "as": "definition",
+                "bot": "The full updated warp definition with the target field removed from definition.actions[0].inputs. Keep all other fields intact.",
+                "type": "json",
                 "position": "arg:2",
-                "source": "field",
+                "source": "computed",
                 "required": true
               }
             ]
@@ -43936,8 +43960,8 @@
         ],
         "messages": {
           "success": {
-            "en": "Field '{{slug}}' removed.",
-            "de": "Feld '{{slug}}' entfernt."
+            "en": "Field removed.",
+            "de": "Feld entfernt."
           }
         }
       },
@@ -44018,16 +44042,16 @@
       "identifier": "@form-field-update",
       "alias": "form-field-update",
       "chain": "none",
-      "hash": "83fcfa70d75982598aa85ba8254bcb2ef61e63fd7d202e6ca6c1e23e985e9044",
-      "checksum": "83fcfa70d75982598aa85ba8254bcb2ef61e63fd7d202e6ca6c1e23e985e9044",
+      "hash": "705a5583dde25962ee8f4fcf8baa5241222974d62bdd13ec9b7784c4e8aabd3f",
+      "checksum": "705a5583dde25962ee8f4fcf8baa5241222974d62bdd13ec9b7784c4e8aabd3f",
       "name": "Form: Update Field",
       "title": {
         "en": "Edit a field",
         "de": "Feld bearbeiten"
       },
       "description": {
-        "en": "Update the label or required flag of an existing field.",
-        "de": "Beschriftung oder Pflichtfeld-Status eines bestehenden Felds aktualisieren."
+        "en": "Update a field in an existing form.",
+        "de": "Ein Feld eines bestehenden Formulars aktualisieren."
       },
       "preview": null,
       "creator": "github:JoAiHQ/warps",
@@ -44064,10 +44088,10 @@
           "de": "Feld bearbeiten"
         },
         "description": {
-          "en": "Update the label or required flag of an existing field.",
-          "de": "Beschriftung oder Pflichtfeld-Status eines bestehenden Felds aktualisieren."
+          "en": "Update a field in an existing form.",
+          "de": "Ein Feld eines bestehenden Formulars aktualisieren."
         },
-        "bot": "Use this to update a field's label or required setting on an existing form.",
+        "bot": "Use this to update a field on a form. Call form-get first to read the current definition, then modify the target field in definition.actions[0].inputs and submit the full updated definition.",
         "actions": [
           {
             "type": "collect",
@@ -44076,7 +44100,7 @@
               "de": "Feld aktualisieren"
             },
             "destination": {
-              "url": "https://devnet-api.joai.ai/v1/warps/{{formId}}/inputs/{{slug}}",
+              "url": "https://devnet-api.joai.ai/v1/warps/{{formId}}",
               "method": "PATCH",
               "headers": {
                 "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
@@ -44092,48 +44116,21 @@
                 "required": true
               },
               {
-                "name": "Slug",
-                "as": "slug",
-                "description": {
-                  "en": "The field's slug (cannot be changed)",
-                  "de": "Der Slug des Felds (unveränderlich)"
-                },
-                "type": "string",
+                "name": "Definition",
+                "as": "definition",
+                "bot": "The full updated warp definition with the target field modified in definition.actions[0].inputs. Keep all other fields intact.",
+                "type": "json",
                 "position": "arg:2",
-                "source": "field",
+                "source": "computed",
                 "required": true
-              },
-              {
-                "name": "Label",
-                "as": "label",
-                "description": {
-                  "en": "New label shown to submitters",
-                  "de": "Neue Beschriftung für Einreichende"
-                },
-                "type": "string",
-                "position": "arg:3",
-                "source": "field",
-                "required": false
-              },
-              {
-                "name": "Required",
-                "as": "required",
-                "description": {
-                  "en": "Must submitters fill this in?",
-                  "de": "Pflichtfeld?"
-                },
-                "type": "bool",
-                "position": "arg:4",
-                "source": "field",
-                "required": false
               }
             ]
           }
         ],
         "messages": {
           "success": {
-            "en": "Field '{{slug}}' updated.",
-            "de": "Feld '{{slug}}' aktualisiert."
+            "en": "Field updated.",
+            "de": "Feld aktualisiert."
           }
         }
       },
@@ -44200,6 +44197,96 @@
           ]
         }
       }
+    },
+    {
+      "key": "none:form-get",
+      "identifier": "@form-get",
+      "alias": "form-get",
+      "chain": "none",
+      "hash": "399948e9e31855293ae8ffc5920724403d468909ac8ec0f4dbedbcc4f744937b",
+      "checksum": "399948e9e31855293ae8ffc5920724403d468909ac8ec0f4dbedbcc4f744937b",
+      "name": "Form: Get",
+      "title": {
+        "en": "Get a form",
+        "de": "Formular abrufen"
+      },
+      "description": {
+        "en": "Fetch the current definition of a form.",
+        "de": "Aktuelle Definition eines Formulars abrufen."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "9d2185484475294d3c6a6aaad17bda94b4c5bcd360aab56f2234fe7a52eaa771",
+        "slug": "form",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "Form",
+        "description": {
+          "en": "Custom forms that capture leads, RSVPs, feedback, and sign-ups — powered by private warps.",
+          "de": "Maßgeschneiderte Formulare, die Leads, RSVPs, Feedback und Anmeldungen erfassen — mit privaten Warps.",
+          "fr": "Formulaires personnalisés qui capturent leads, RSVPs, feedbacks et inscriptions — avec des warps privés.",
+          "es": "Formularios personalizados que capturan leads, RSVPs, comentarios e inscripciones — con warps privados.",
+          "ro": "Formulare personalizate care capteaza lead-uri, RSVPs, feedback si inscrieri — cu warps private."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "Form: Get",
+        "title": {
+          "en": "Get a form",
+          "de": "Formular abrufen"
+        },
+        "description": {
+          "en": "Fetch the current definition of a form.",
+          "de": "Aktuelle Definition eines Formulars abrufen."
+        },
+        "bot": "Use this to read the current definition of a form before modifying it.",
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Get form",
+              "de": "Formular abrufen"
+            },
+            "destination": {
+              "url": "https://devnet-api.joai.ai/v1/warps/{{formId}}",
+              "method": "GET",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Form ID",
+                "as": "formId",
+                "type": "string",
+                "position": "arg:1",
+                "source": "field",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "messages": {
+          "success": {
+            "en": "Form retrieved.",
+            "de": "Formular abgerufen."
+          }
+        }
+      },
+      "extras": null
     },
     {
       "key": "none:gemini-add-followup",
