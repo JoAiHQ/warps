@@ -56,7 +56,12 @@ Every warp must meet these requirements before it can be considered complete:
 - German translations must sound natural (informal "du" form, not robotic/literal). See the German Localization section.
 - Never expose the internal term "warp" in user-facing text. Users know these as "actions".
 
-### 2. meta.ts — SEO Extras (Required)
+### 2. Surfacing Response Data
+
+- If the response contains data the user needs (IDs, URLs, codes), map it via `output` and surface it in `messages.success` using `{{VAR}}` — never via the `bot` field.
+- `bot` is strictly for LLM guidance on when/how to invoke the warp.
+
+### 3. meta.ts — SEO Extras (Required)
 
 Every brand that has warps must have a `meta.ts` file in its directory. When adding or updating warps, always update the corresponding `meta.ts`.
 
