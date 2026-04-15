@@ -4,23 +4,25 @@
   "repo": "JoAiHQ/warps",
   "branch": "dev",
   "network": "devnet",
-  "commitSha": "83aa3da0416176992d703c84f4451ea524e79ea6",
-  "committedAt": "2026-04-15T09:21:43.444Z",
-  "generatedAt": "2026-04-15T09:21:45.812Z",
+  "commitSha": "4548f80db66f13ed44da2ddd6d77cca585bc9478",
+  "committedAt": "2026-04-15T09:43:29.597Z",
+  "generatedAt": "2026-04-15T09:43:32.234Z",
   "upserts": [
     {
-      "key": "none:joai-billing-address-set",
-      "identifier": "@joai-billing-address-set",
-      "alias": "joai-billing-address-set",
+      "key": "none:form-create",
+      "identifier": "@form-create",
+      "alias": "form-create",
       "chain": "none",
-      "hash": "4cb8f5e112ed5a7e97498423c7c903ff8770d0e41ec34ceecded748536e7e872",
-      "checksum": "4cb8f5e112ed5a7e97498423c7c903ff8770d0e41ec34ceecded748536e7e872",
-      "name": "JoAi: Set Billing Address",
+      "hash": "3ff6e402654e0432251f3d53b106f9855d5ab0f4126986a9f19f32ff15de1a9e",
+      "checksum": "3ff6e402654e0432251f3d53b106f9855d5ab0f4126986a9f19f32ff15de1a9e",
+      "name": "Form: Create",
       "title": {
-        "en": "Set billing address"
+        "en": "Create a form",
+        "de": "Formular erstellen"
       },
       "description": {
-        "en": "Set the billing address for a user. Required before generating an upgrade link. Pass a VAT ID to mark the account as a business (routes to Stripe instead of LemonSqueezy)."
+        "en": "Create a new form. After creating, use 'Add Field' to define the inputs.",
+        "de": "Ein neues Formular erstellen. Danach mit 'Feld hinzufügen' die Felder definieren."
       },
       "preview": null,
       "creator": "github:JoAiHQ/warps",
@@ -30,501 +32,46 @@
       "primaryAddress": null,
       "primaryFunc": null,
       "brand": {
-        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
-        "slug": "joai",
+        "hash": "9d2185484475294d3c6a6aaad17bda94b4c5bcd360aab56f2234fe7a52eaa771",
+        "slug": "form",
         "active": true,
         "protocol": "brand:0.2.0",
-        "name": "JoAi",
+        "name": "Form",
         "description": {
-          "en": "JoAi is a platform for creating and managing your own AI agents.",
-          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
-          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
-          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
-          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+          "en": "Custom forms that capture leads, RSVPs, feedback, and sign-ups — powered by private warps.",
+          "de": "Maßgeschneiderte Formulare, die Leads, RSVPs, Feedback und Anmeldungen erfassen — mit privaten Warps.",
+          "fr": "Formulaires personnalisés qui capturent leads, RSVPs, feedbacks et inscriptions — avec des warps privés.",
+          "es": "Formularios personalizados que capturan leads, RSVPs, comentarios e inscripciones — con warps privados.",
+          "ro": "Formulare personalizate care capteaza lead-uri, RSVPs, feedback si inscrieri — cu warps private."
         },
         "logo": {
           "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
         },
         "urls": {
           "web": "https://joai.ai"
-        },
-        "colors": {
-          "primary": "#98FF98",
-          "secondary": "#FFFF66"
         }
       },
       "warp": {
         "protocol": "warp:3.0.0",
-        "name": "JoAi: Set Billing Address",
+        "name": "Form: Create",
         "title": {
-          "en": "Set billing address"
+          "en": "Create a form",
+          "de": "Formular erstellen"
         },
         "description": {
-          "en": "Set the billing address for a user. Required before generating an upgrade link. Pass a VAT ID to mark the account as a business (routes to Stripe instead of LemonSqueezy)."
+          "en": "Create a new form. After creating, use 'Add Field' to define the inputs.",
+          "de": "Ein neues Formular erstellen. Danach mit 'Feld hinzufügen' die Felder definieren."
         },
-        "bot": "Use this after creating a user to set their billing address before generating an upgrade link. The userId comes from the user-create warp output. Include vatId for business accounts.",
-        "vars": {
-          "JOAI_API_TOKEN": "env:JOAI_API_TOKEN|Admin Sanctum API token"
-        },
+        "bot": "Use this to create a new form. After creating, use form-field-add to add each field one by one.",
         "actions": [
           {
             "type": "collect",
             "label": {
-              "en": "Set billing address"
+              "en": "Create form",
+              "de": "Formular erstellen"
             },
             "destination": {
-              "url": "https://devnet-api.joai.ai/v1/users/{{userId}}/billing-address",
-              "method": "POST",
-              "headers": {
-                "Authorization": "Bearer {{JOAI_API_TOKEN}}",
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-              }
-            },
-            "inputs": [
-              {
-                "name": "User ID",
-                "as": "userId",
-                "description": {
-                  "en": "The id of the user (from user-create output)"
-                },
-                "bot": "The user's id returned by the user-create warp.",
-                "type": "string",
-                "position": "url:userId",
-                "source": "field",
-                "required": true
-              },
-              {
-                "name": "First Name",
-                "as": "firstName",
-                "description": {
-                  "en": "First name or company name"
-                },
-                "type": "string",
-                "position": "arg:1",
-                "source": "field",
-                "required": true
-              },
-              {
-                "name": "Last Name",
-                "as": "lastName",
-                "description": {
-                  "en": "Last name or legal entity suffix"
-                },
-                "type": "string",
-                "position": "arg:2",
-                "source": "field",
-                "required": true
-              },
-              {
-                "name": "Country",
-                "as": "country",
-                "description": {
-                  "en": "Country"
-                },
-                "bot": "Convert the country to the two-letter ISO 3166-1 alpha-2 code (e.g. Austria → AT, Germany → DE) before submitting.",
-                "type": "string",
-                "position": "arg:3",
-                "source": "field",
-                "required": true
-              },
-              {
-                "name": "VAT ID",
-                "as": "vatId",
-                "description": {
-                  "en": "VAT ID for business accounts (e.g. DE123456789)"
-                },
-                "bot": "Optional. Providing a VAT ID marks the account as a business and routes payment through Stripe.",
-                "type": "string",
-                "source": "field",
-                "required": false
-              }
-            ]
-          }
-        ],
-        "messages": {
-          "success": {
-            "en": "Billing address saved."
-          },
-          "error": {
-            "en": "Failed to save billing address."
-          }
-        }
-      },
-      "extras": null
-    },
-    {
-      "key": "none:joai-kyc-business-submit",
-      "identifier": "@joai-kyc-business-submit",
-      "alias": "joai-kyc-business-submit",
-      "chain": "none",
-      "hash": "89c903f84607b1c50cd207cf286a2cef81699ac66c399d63b7d166c1d754fc68",
-      "checksum": "89c903f84607b1c50cd207cf286a2cef81699ac66c399d63b7d166c1d754fc68",
-      "name": "JoAi: Business Identity Verification",
-      "title": {
-        "en": "Verify Your Business",
-        "de": "Unternehmen verifizieren"
-      },
-      "description": {
-        "en": "Submit your business information to unlock payouts. Required once per account.",
-        "de": "Reiche deine Unternehmensdaten ein, um Auszahlungen freizuschalten. Einmalig pro Konto erforderlich."
-      },
-      "preview": null,
-      "creator": "github:JoAiHQ/warps",
-      "privileges": [],
-      "listed": true,
-      "visibility": "public",
-      "primaryAddress": null,
-      "primaryFunc": null,
-      "brand": {
-        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
-        "slug": "joai",
-        "active": true,
-        "protocol": "brand:0.2.0",
-        "name": "JoAi",
-        "description": {
-          "en": "JoAi is a platform for creating and managing your own AI agents.",
-          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
-          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
-          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
-          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
-        },
-        "logo": {
-          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
-        },
-        "urls": {
-          "web": "https://joai.ai"
-        },
-        "colors": {
-          "primary": "#98FF98",
-          "secondary": "#FFFF66"
-        }
-      },
-      "warp": {
-        "protocol": "warp:3.0.0",
-        "name": "JoAi: Business Identity Verification",
-        "title": {
-          "en": "Verify Your Business",
-          "de": "Unternehmen verifizieren"
-        },
-        "description": {
-          "en": "Submit your business information to unlock payouts. Required once per account.",
-          "de": "Reiche deine Unternehmensdaten ein, um Auszahlungen freizuschalten. Einmalig pro Konto erforderlich."
-        },
-        "bot": "Guide the user through submitting their business identity for payout verification. Frame this as a business onboarding step — ask for the legal business name, the owner's name, registered country, business address, and VAT/tax ID. Explain this is required once to comply with legal obligations and unlock payouts.",
-        "actions": [
-          {
-            "type": "collect",
-            "label": {
-              "en": "Submit for review",
-              "de": "Zur Prüfung einreichen"
-            },
-            "destination": {
-              "url": "https://devnet-api.joai.ai/v1/me/kyc",
-              "method": "POST",
-              "headers": {
-                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-              }
-            },
-            "inputs": [
-              {
-                "name": "Legal Representative Name",
-                "as": "fullName",
-                "description": {
-                  "en": "Full legal name of the business owner or authorized representative.",
-                  "de": "Vollständiger rechtlicher Name des Geschäftsinhabers oder bevollmächtigten Vertreters."
-                },
-                "type": "string",
-                "position": "arg:1",
-                "source": "field",
-                "required": true
-              },
-              {
-                "name": "Country",
-                "as": "country",
-                "description": {
-                  "en": "Country where the business is registered.",
-                  "de": "Land, in dem das Unternehmen registriert ist."
-                },
-                "bot": "Ask for the country naturally. Convert the answer to the two-letter ISO 3166-1 alpha-2 code (e.g. Austria → AT, Germany → DE) before submitting.",
-                "type": "string",
-                "position": "arg:2",
-                "source": "field",
-                "required": true
-              },
-              {
-                "name": "Business Address",
-                "as": "address",
-                "description": {
-                  "en": "The registered business address including city and postal code.",
-                  "de": "Die eingetragene Geschäftsadresse mit Stadt und Postleitzahl."
-                },
-                "type": "string",
-                "position": "arg:3",
-                "source": "field",
-                "required": true
-              },
-              {
-                "name": "VAT / Tax ID",
-                "as": "taxId",
-                "description": {
-                  "en": "The company's VAT number or tax identification number (e.g. ATU12345678, DE123456789).",
-                  "de": "Die UID-Nummer oder Steueridentifikationsnummer des Unternehmens (z.B. ATU12345678, DE123456789)."
-                },
-                "type": "string",
-                "position": "arg:4",
-                "source": "field",
-                "required": true
-              },
-              {
-                "name": "Company Name",
-                "as": "companyName",
-                "description": {
-                  "en": "The registered legal company name.",
-                  "de": "Der eingetragene rechtliche Unternehmensname."
-                },
-                "type": "string",
-                "source": "field",
-                "required": true
-              }
-            ]
-          }
-        ],
-        "messages": {
-          "success": {
-            "en": "Business identity submitted. We will review your information and notify you once approved.",
-            "de": "Unternehmensidentität eingereicht. Wir prüfen deine Angaben und benachrichtigen dich nach der Freigabe."
-          },
-          "error": {
-            "en": "Failed to submit business information. Please try again.",
-            "de": "Unternehmensdaten konnten nicht eingereicht werden. Bitte erneut versuchen."
-          }
-        }
-      },
-      "extras": null
-    },
-    {
-      "key": "none:joai-kyc-submit",
-      "identifier": "@joai-kyc-submit",
-      "alias": "joai-kyc-submit",
-      "chain": "none",
-      "hash": "337d642363eb47def407739110299c73898ecbf14f0ae52eec699f029c1e8cab",
-      "checksum": "337d642363eb47def407739110299c73898ecbf14f0ae52eec699f029c1e8cab",
-      "name": "JoAi: Identity Verification",
-      "title": {
-        "en": "Verify Your Identity",
-        "de": "Identität verifizieren"
-      },
-      "description": {
-        "en": "Submit your identity information to unlock payouts. Required once per account.",
-        "de": "Reiche deine Identitätsdaten ein, um Auszahlungen freizuschalten. Einmalig pro Konto erforderlich."
-      },
-      "preview": null,
-      "creator": "github:JoAiHQ/warps",
-      "privileges": [],
-      "listed": true,
-      "visibility": "public",
-      "primaryAddress": null,
-      "primaryFunc": null,
-      "brand": {
-        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
-        "slug": "joai",
-        "active": true,
-        "protocol": "brand:0.2.0",
-        "name": "JoAi",
-        "description": {
-          "en": "JoAi is a platform for creating and managing your own AI agents.",
-          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
-          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
-          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
-          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
-        },
-        "logo": {
-          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
-        },
-        "urls": {
-          "web": "https://joai.ai"
-        },
-        "colors": {
-          "primary": "#98FF98",
-          "secondary": "#FFFF66"
-        }
-      },
-      "warp": {
-        "protocol": "warp:3.0.0",
-        "name": "JoAi: Identity Verification",
-        "title": {
-          "en": "Verify Your Identity",
-          "de": "Identität verifizieren"
-        },
-        "description": {
-          "en": "Submit your identity information to unlock payouts. Required once per account.",
-          "de": "Reiche deine Identitätsdaten ein, um Auszahlungen freizuschalten. Einmalig pro Konto erforderlich."
-        },
-        "bot": "Guide the user through submitting their identity for payout verification. Explain that this is required once to comply with legal obligations and unlock payouts.",
-        "actions": [
-          {
-            "type": "collect",
-            "label": {
-              "en": "Submit for review",
-              "de": "Zur Prüfung einreichen"
-            },
-            "destination": {
-              "url": "https://devnet-api.joai.ai/v1/me/kyc",
-              "method": "POST",
-              "headers": {
-                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-              }
-            },
-            "inputs": [
-              {
-                "name": "Full Legal Name",
-                "as": "fullName",
-                "description": {
-                  "en": "Your full legal name as it appears on your ID.",
-                  "de": "Dein vollständiger rechtlicher Name, wie er auf deinem Ausweis steht."
-                },
-                "type": "string",
-                "position": "arg:1",
-                "source": "field",
-                "required": true
-              },
-              {
-                "name": "Country",
-                "as": "country",
-                "description": {
-                  "en": "Country of residence.",
-                  "de": "Wohnsitzland."
-                },
-                "bot": "Ask for the country naturally. Convert the answer to the two-letter ISO 3166-1 alpha-2 code (e.g. Austria → AT, Germany → DE) before submitting.",
-                "type": "string",
-                "position": "arg:2",
-                "source": "field",
-                "required": true
-              },
-              {
-                "name": "Address",
-                "as": "address",
-                "description": {
-                  "en": "Your full residential address including city and postal code.",
-                  "de": "Deine vollständige Wohnadresse mit Stadt und Postleitzahl."
-                },
-                "type": "string",
-                "position": "arg:3",
-                "source": "field",
-                "required": true
-              },
-              {
-                "name": "Tax / VAT ID",
-                "as": "taxId",
-                "description": {
-                  "en": "Your tax identification number or VAT ID. For individuals: national tax ID. For businesses: VAT number.",
-                  "de": "Deine Steueridentifikationsnummer oder USt-IdNr. Für Privatpersonen: Steuer-ID. Für Unternehmen: UID-Nummer."
-                },
-                "type": "string",
-                "position": "arg:4",
-                "source": "field",
-                "required": true
-              },
-              {
-                "name": "Company Name",
-                "as": "companyName",
-                "description": {
-                  "en": "Your company or business name, if applicable.",
-                  "de": "Dein Unternehmensname, falls zutreffend."
-                },
-                "type": "string",
-                "source": "field",
-                "required": false
-              }
-            ]
-          }
-        ],
-        "messages": {
-          "success": {
-            "en": "Identity submitted. We will review your information and notify you once approved.",
-            "de": "Identität eingereicht. Wir prüfen deine Angaben und benachrichtigen dich nach der Freigabe."
-          },
-          "error": {
-            "en": "Failed to submit identity information. Please try again.",
-            "de": "Identitätsdaten konnten nicht eingereicht werden. Bitte erneut versuchen."
-          }
-        }
-      },
-      "extras": null
-    },
-    {
-      "key": "none:joai-store-create",
-      "identifier": "@joai-store-create",
-      "alias": "joai-store-create",
-      "chain": "none",
-      "hash": "ef74449e4a191e5a6610de3679826e7bf43f5f92b1a9a7306af8ce142befc1e6",
-      "checksum": "ef74449e4a191e5a6610de3679826e7bf43f5f92b1a9a7306af8ce142befc1e6",
-      "name": "JoAi: Create Store",
-      "title": {
-        "en": "Create a data store",
-        "de": "Datenspeicher erstellen"
-      },
-      "description": {
-        "en": "Create a new tracked data store for time-series or scalar data (weight, expenses, habits, etc.).",
-        "de": "Erstelle einen neuen Datenspeicher für Zeitreihen- oder Einzelwerte (Gewicht, Ausgaben, Gewohnheiten usw.)."
-      },
-      "preview": null,
-      "creator": "github:JoAiHQ/warps",
-      "privileges": [],
-      "listed": true,
-      "visibility": "public",
-      "primaryAddress": null,
-      "primaryFunc": null,
-      "brand": {
-        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
-        "slug": "joai",
-        "active": true,
-        "protocol": "brand:0.2.0",
-        "name": "JoAi",
-        "description": {
-          "en": "JoAi is a platform for creating and managing your own AI agents.",
-          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
-          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
-          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
-          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
-        },
-        "logo": {
-          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
-        },
-        "urls": {
-          "web": "https://joai.ai"
-        },
-        "colors": {
-          "primary": "#98FF98",
-          "secondary": "#FFFF66"
-        }
-      },
-      "warp": {
-        "protocol": "warp:3.0.0",
-        "name": "JoAi: Create Store",
-        "title": {
-          "en": "Create a data store",
-          "de": "Datenspeicher erstellen"
-        },
-        "description": {
-          "en": "Create a new tracked data store for time-series or scalar data (weight, expenses, habits, etc.).",
-          "de": "Erstelle einen neuen Datenspeicher für Zeitreihen- oder Einzelwerte (Gewicht, Ausgaben, Gewohnheiten usw.)."
-        },
-        "bot": "Use this when the user wants to start tracking something new over time — weight, expenses, habits, metrics, counters, or any recurring measurement.",
-        "actions": [
-          {
-            "type": "collect",
-            "label": {
-              "en": "Create store",
-              "de": "Speicher erstellen"
-            },
-            "destination": {
-              "url": "https://devnet-api.joai.ai/v1/stores",
+              "url": "https://devnet-api.joai.ai/v1/warps",
               "method": "POST",
               "headers": {
                 "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
@@ -532,204 +79,241 @@
             },
             "inputs": [
               {
-                "name": "Name",
-                "as": "name",
-                "description": {
-                  "en": "Store name (e.g. \"weight\", \"expense:food\", \"habit:meditation\")",
-                  "de": "Name des Speichers (z.B. \"weight\", \"expense:food\", \"habit:meditation\")"
-                },
-                "bot": "Short, lowercase store name. Use colons for namespacing (e.g. \"habit:meditation\", \"expense:food\"). Must be 2-50 chars, alphanumeric with colons/hyphens.",
+                "name": "Brand",
+                "as": "brand",
+                "bot": "Always 'form'.",
                 "type": "string",
-                "position": "arg:1",
+                "position": "arg:0",
                 "source": "field",
                 "required": true,
-                "min": 2
+                "default": "form"
               },
               {
-                "name": "Description",
-                "as": "description",
-                "description": {
-                  "en": "What this store tracks",
-                  "de": "Was dieser Speicher verfolgt"
-                },
-                "bot": "A human-readable purpose for this store.",
-                "type": "string",
-                "position": "arg:2",
-                "source": "field",
-                "required": false
-              },
-              {
-                "name": "Value Type",
-                "as": "valueType",
-                "description": {
-                  "en": "scalar (single value) or series (time-series data)",
-                  "de": "scalar (Einzelwert) oder series (Zeitreihe)"
-                },
-                "bot": "Use 'scalar' for a single changing value (e.g. portfolio balance). Use 'series' for data points over time (e.g. daily weight, expenses).",
-                "type": "string",
-                "source": "field",
-                "required": false,
-                "default": "series",
-                "options": {
-                  "scalar": "Scalar (single value)",
-                  "series": "Series (time-series)"
-                }
-              },
-              {
-                "name": "Unit",
-                "as": "unit",
-                "description": {
-                  "en": "Unit of measurement (e.g. \"lbs\", \"USD\", \"minutes\")",
-                  "de": "Maßeinheit (z.B. \"kg\", \"EUR\", \"Minuten\")"
-                },
-                "bot": "Optional unit of measurement like 'lbs', 'USD', 'minutes', 'km'.",
-                "type": "string",
-                "source": "field",
-                "required": false
-              }
-            ]
-          }
-        ],
-        "messages": {
-          "success": {
-            "en": "Now tracking '{{name}}'!",
-            "de": "'{{name}}' wird jetzt verfolgt!"
-          }
-        }
-      },
-      "extras": null
-    },
-    {
-      "key": "none:joai-store-query",
-      "identifier": "@joai-store-query",
-      "alias": "joai-store-query",
-      "chain": "none",
-      "hash": "305c5ba79ab6bc18bffbb5708194a8d851212d6484fcc1ddb01f1b13ee4dfaa8",
-      "checksum": "305c5ba79ab6bc18bffbb5708194a8d851212d6484fcc1ddb01f1b13ee4dfaa8",
-      "name": "JoAi: Query Store Data",
-      "title": {
-        "en": "View tracked data",
-        "de": "Verfolgte Daten anzeigen"
-      },
-      "description": {
-        "en": "Query and view entries from a tracked data store with optional date filters.",
-        "de": "Einträge eines Datenspeichers abfragen und mit optionalen Datumsfiltern anzeigen."
-      },
-      "preview": null,
-      "creator": "github:JoAiHQ/warps",
-      "privileges": [],
-      "listed": true,
-      "visibility": "public",
-      "primaryAddress": null,
-      "primaryFunc": null,
-      "brand": {
-        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
-        "slug": "joai",
-        "active": true,
-        "protocol": "brand:0.2.0",
-        "name": "JoAi",
-        "description": {
-          "en": "JoAi is a platform for creating and managing your own AI agents.",
-          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
-          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
-          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
-          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
-        },
-        "logo": {
-          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
-        },
-        "urls": {
-          "web": "https://joai.ai"
-        },
-        "colors": {
-          "primary": "#98FF98",
-          "secondary": "#FFFF66"
-        }
-      },
-      "warp": {
-        "protocol": "warp:3.0.0",
-        "name": "JoAi: Query Store Data",
-        "title": {
-          "en": "View tracked data",
-          "de": "Verfolgte Daten anzeigen"
-        },
-        "description": {
-          "en": "Query and view entries from a tracked data store with optional date filters.",
-          "de": "Einträge eines Datenspeichers abfragen und mit optionalen Datumsfiltern anzeigen."
-        },
-        "bot": "Use this when the user wants to see their tracked data, check progress, view history, or look up past entries in a store.",
-        "actions": [
-          {
-            "type": "collect",
-            "label": {
-              "en": "Query data",
-              "de": "Daten abfragen"
-            },
-            "destination": {
-              "url": "https://devnet-api.joai.ai/v1/stores/{{storeName}}/entries",
-              "method": "GET"
-            },
-            "inputs": [
-              {
-                "name": "Store Name",
-                "as": "storeName",
-                "description": {
-                  "en": "The name of the store to query",
-                  "de": "Name des abzufragenden Speichers"
-                },
-                "bot": "The exact name of the store to query.",
+                "name": "Name",
+                "as": "definition.name",
+                "bot": "Internal name of the form, same as the English title.",
                 "type": "string",
                 "position": "arg:1",
                 "source": "field",
                 "required": true
               },
               {
-                "name": "Since",
-                "as": "since",
+                "name": "Title",
+                "as": "definition.title.en",
                 "description": {
-                  "en": "Show entries after this date.",
-                  "de": "Einträge nach diesem Datum anzeigen."
+                  "en": "Form title shown to submitters",
+                  "de": "Formulartitel für Einreichende"
                 },
-                "bot": "Optional start date filter. Convert to ISO 8601 format before submitting.",
                 "type": "string",
+                "position": "arg:2",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Title (DE)",
+                "as": "definition.title.de",
+                "description": {
+                  "en": "German translation of the title",
+                  "de": "Deutsche Übersetzung des Titels"
+                },
+                "type": "string",
+                "position": "arg:3",
                 "source": "field",
                 "required": false
               },
               {
-                "name": "Until",
-                "as": "until",
+                "name": "Description",
+                "as": "definition.description.en",
                 "description": {
-                  "en": "Show entries before this date.",
-                  "de": "Einträge vor diesem Datum anzeigen."
+                  "en": "Short description of the form's purpose",
+                  "de": "Kurze Beschreibung des Formularszwecks"
                 },
-                "bot": "Optional end date filter. Convert to ISO 8601 format before submitting.",
                 "type": "string",
+                "position": "arg:4",
                 "source": "field",
                 "required": false
               },
               {
-                "name": "Last N",
-                "as": "last",
+                "name": "Submit Label",
+                "as": "definition.actions.0.label.en",
                 "description": {
-                  "en": "Return only the last N entries",
-                  "de": "Nur die letzten N Einträge zurückgeben"
+                  "en": "Text on the submit button",
+                  "de": "Text auf dem Absende-Button"
                 },
-                "bot": "Optional number to return only the most recent N entries.",
+                "bot": "Default: 'Submit'",
                 "type": "string",
+                "position": "arg:5",
                 "source": "field",
-                "required": false
+                "required": true,
+                "default": "Submit"
+              },
+              {
+                "name": "Submit Label (DE)",
+                "as": "definition.actions.0.label.de",
+                "description": {
+                  "en": "German translation of the submit label",
+                  "de": "Deutsche Übersetzung des Absende-Buttons"
+                },
+                "bot": "Default: 'Absenden'",
+                "type": "string",
+                "position": "arg:6",
+                "source": "field",
+                "required": false,
+                "default": "Absenden"
+              },
+              {
+                "name": "Success Message",
+                "as": "definition.messages.success.en",
+                "description": {
+                  "en": "Message shown after successful submission",
+                  "de": "Nachricht nach erfolgreicher Einreichung"
+                },
+                "bot": "Default: 'Thanks! We\\'ll be in touch soon.'",
+                "type": "string",
+                "position": "arg:7",
+                "source": "field",
+                "required": true,
+                "default": "Thanks! We'll be in touch soon."
+              },
+              {
+                "name": "Success Message (DE)",
+                "as": "definition.messages.success.de",
+                "description": {
+                  "en": "German translation of the success message",
+                  "de": "Deutsche Übersetzung der Erfolgsmeldung"
+                },
+                "bot": "Default: 'Danke! Wir melden uns bald.'",
+                "type": "string",
+                "position": "arg:8",
+                "source": "field",
+                "required": false,
+                "default": "Danke! Wir melden uns bald."
+              },
+              {
+                "name": "Action Type",
+                "as": "definition.actions.0.type",
+                "bot": "Always 'collect'.",
+                "type": "string",
+                "position": "arg:9",
+                "source": "field",
+                "required": true,
+                "default": "collect"
               }
             ]
           }
         ],
+        "output": {
+          "FORM_ID": "out.data.id",
+          "FORM_URL": "out.data.url"
+        },
+        "next": "form/field-add?formId={{FORM_ID}}",
         "messages": {
           "success": {
-            "en": "Here are your '{{storeName}}' entries.",
-            "de": "Hier sind deine '{{storeName}}'-Einträge."
+            "en": "Form created! Your public link: {{FORM_URL}}",
+            "de": "Formular erstellt! Dein öffentlicher Link: {{FORM_URL}}"
           }
         }
       },
-      "extras": null
+      "extras": {
+        "keywords": {
+          "en": [
+            "create form",
+            "new form",
+            "form builder",
+            "lead form setup",
+            "event form create",
+            "no-code form builder"
+          ],
+          "de": [
+            "Formular erstellen",
+            "neues Formular",
+            "Formular-Builder",
+            "Lead-Formular einrichten",
+            "Event-Formular erstellen"
+          ],
+          "fr": [
+            "creer formulaire",
+            "nouveau formulaire",
+            "constructeur de formulaire",
+            "creer formulaire evenement"
+          ],
+          "es": [
+            "crear formulario",
+            "nuevo formulario",
+            "constructor de formularios",
+            "crear formulario de evento"
+          ],
+          "ro": [
+            "crea formular",
+            "formular nou",
+            "constructor de formulare",
+            "creare formular eveniment"
+          ]
+        },
+        "useCases": {
+          "en": [
+            "Create a lead capture form for a webinar or event",
+            "Set up an RSVP form for a product launch or workshop",
+            "Create a feedback form for post-visit NPS collection",
+            "Build a waitlist form for a new product or service"
+          ],
+          "de": [
+            "Ein Lead-Erfassungsformular für ein Webinar oder Event erstellen",
+            "Ein RSVP-Formular für eine Produkteinführung oder einen Workshop einrichten",
+            "Ein Feedback-Formular für die NPS-Erfassung nach einem Besuch erstellen",
+            "Ein Wartelisten-Formular für ein neues Produkt oder eine Dienstleistung erstellen"
+          ],
+          "fr": [
+            "Créer un formulaire de capture de leads pour un webinaire ou un événement",
+            "Configurer un formulaire RSVP pour un lancement de produit ou un atelier",
+            "Créer un formulaire de feedback pour la collecte NPS après une visite",
+            "Construire un formulaire de liste d attente pour un nouveau produit ou service"
+          ],
+          "es": [
+            "Crear un formulario de captura de leads para un webinar o evento",
+            "Configurar un formulario RSVP para un lanzamiento de producto o taller",
+            "Crear un formulario de feedback para la recopilación NPS después de una visita",
+            "Construir un formulario de lista de espera para un nuevo producto o servicio"
+          ],
+          "ro": [
+            "Creaza un formular de captare a lead-urilor pentru un webinar sau eveniment",
+            "Configureaza un formular RSVP pentru un lansare de produs sau workshop",
+            "Creaza un formular de feedback pentru colectarea NPS dupa o vizita",
+            "Construieste un formular de lista de asteptare pentru un produs sau serviciu nou"
+          ]
+        },
+        "category": "sales",
+        "faq": {
+          "en": [
+            {
+              "question": "What is the form type for?",
+              "answer": "\"lead\" forms automatically chain to @joai-contact-create after submission — every submission becomes a CRM contact. \"feedback\" chains to @joai-store-append. \"rsvp\" creates a tagged contact. \"custom\" lets you configure the chain manually."
+            },
+            {
+              "question": "Can I have multiple forms per agent?",
+              "answer": "Yes. Each form is a separate private warp with its own unique ID. An agent can own any number of forms — one per event, one for a contact page, one for a waitlist."
+            },
+            {
+              "question": "How do submitters access the form?",
+              "answer": "Every form gets a public URL at joai.ai/w/{formId}. Share it as a link, embed it in a QR code, or link from a landing page — no account required to submit."
+            }
+          ],
+          "de": [
+            {
+              "question": "Wofür ist der Formulartyp?",
+              "answer": "\"lead\"-Formulare verketten nach der Einreichung automatisch mit @joai-contact-create — jede Einreichung wird ein CRM-Kontakt. \"feedback\" verbindet mit @joai-store-append. \"rsvp\" erstellt einen getaggten Kontakt. \"custom\" ermöglicht manuelle Konfiguration."
+            },
+            {
+              "question": "Kann ich mehrere Formulare pro Agent haben?",
+              "answer": "Ja. Jedes Formular ist ein eigener privater Warp mit eindeutiger ID. Ein Agent kann beliebig viele Formulare besitzen — eines pro Event, eines für eine Kontaktseite, eines für eine Warteliste."
+            },
+            {
+              "question": "Wie greifen Einsender auf das Formular zu?",
+              "answer": "Jedes Formular erhält eine öffentliche URL unter joai.ai/w/{formId}. Als Link teilen, in einen QR-Code einbetten oder von einer Landingpage verlinken — kein Konto erforderlich."
+            }
+          ]
+        }
+      }
     }
   ],
   "deletes": []
