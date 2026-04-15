@@ -4,17 +4,162 @@
   "repo": "JoAiHQ/warps",
   "branch": "dev",
   "network": "devnet",
-  "commitSha": "a6f617d6ffe26b88aa73ec70b9649629e76e9ec8",
-  "committedAt": "2026-04-15T09:15:51.343Z",
-  "generatedAt": "2026-04-15T09:15:53.242Z",
+  "commitSha": "83aa3da0416176992d703c84f4451ea524e79ea6",
+  "committedAt": "2026-04-15T09:21:43.444Z",
+  "generatedAt": "2026-04-15T09:21:45.812Z",
   "upserts": [
+    {
+      "key": "none:joai-billing-address-set",
+      "identifier": "@joai-billing-address-set",
+      "alias": "joai-billing-address-set",
+      "chain": "none",
+      "hash": "4cb8f5e112ed5a7e97498423c7c903ff8770d0e41ec34ceecded748536e7e872",
+      "checksum": "4cb8f5e112ed5a7e97498423c7c903ff8770d0e41ec34ceecded748536e7e872",
+      "name": "JoAi: Set Billing Address",
+      "title": {
+        "en": "Set billing address"
+      },
+      "description": {
+        "en": "Set the billing address for a user. Required before generating an upgrade link. Pass a VAT ID to mark the account as a business (routes to Stripe instead of LemonSqueezy)."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: Set Billing Address",
+        "title": {
+          "en": "Set billing address"
+        },
+        "description": {
+          "en": "Set the billing address for a user. Required before generating an upgrade link. Pass a VAT ID to mark the account as a business (routes to Stripe instead of LemonSqueezy)."
+        },
+        "bot": "Use this after creating a user to set their billing address before generating an upgrade link. The userId comes from the user-create warp output. Include vatId for business accounts.",
+        "vars": {
+          "JOAI_API_TOKEN": "env:JOAI_API_TOKEN|Admin Sanctum API token"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Set billing address"
+            },
+            "destination": {
+              "url": "https://devnet-api.joai.ai/v1/users/{{userId}}/billing-address",
+              "method": "POST",
+              "headers": {
+                "Authorization": "Bearer {{JOAI_API_TOKEN}}",
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+              }
+            },
+            "inputs": [
+              {
+                "name": "User ID",
+                "as": "userId",
+                "description": {
+                  "en": "The id of the user (from user-create output)"
+                },
+                "bot": "The user's id returned by the user-create warp.",
+                "type": "string",
+                "position": "url:userId",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "First Name",
+                "as": "firstName",
+                "description": {
+                  "en": "First name or company name"
+                },
+                "type": "string",
+                "position": "arg:1",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Last Name",
+                "as": "lastName",
+                "description": {
+                  "en": "Last name or legal entity suffix"
+                },
+                "type": "string",
+                "position": "arg:2",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Country",
+                "as": "country",
+                "description": {
+                  "en": "Country"
+                },
+                "bot": "Convert the country to the two-letter ISO 3166-1 alpha-2 code (e.g. Austria → AT, Germany → DE) before submitting.",
+                "type": "string",
+                "position": "arg:3",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "VAT ID",
+                "as": "vatId",
+                "description": {
+                  "en": "VAT ID for business accounts (e.g. DE123456789)"
+                },
+                "bot": "Optional. Providing a VAT ID marks the account as a business and routes payment through Stripe.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              }
+            ]
+          }
+        ],
+        "messages": {
+          "success": {
+            "en": "Billing address saved."
+          },
+          "error": {
+            "en": "Failed to save billing address."
+          }
+        }
+      },
+      "extras": null
+    },
     {
       "key": "none:joai-kyc-business-submit",
       "identifier": "@joai-kyc-business-submit",
       "alias": "joai-kyc-business-submit",
       "chain": "none",
-      "hash": "6af8979eadee73372f614cf22c0f4c0f2451847aeb8082e31269943f95489faf",
-      "checksum": "6af8979eadee73372f614cf22c0f4c0f2451847aeb8082e31269943f95489faf",
+      "hash": "89c903f84607b1c50cd207cf286a2cef81699ac66c399d63b7d166c1d754fc68",
+      "checksum": "89c903f84607b1c50cd207cf286a2cef81699ac66c399d63b7d166c1d754fc68",
       "name": "JoAi: Business Identity Verification",
       "title": {
         "en": "Verify Your Business",
@@ -66,7 +211,7 @@
           "en": "Submit your business information to unlock payouts. Required once per account.",
           "de": "Reiche deine Unternehmensdaten ein, um Auszahlungen freizuschalten. Einmalig pro Konto erforderlich."
         },
-        "bot": "Guide the user through submitting their business identity for payout verification. Frame this as a business onboarding step — ask for the legal business name, the owner's name, registered country, business address, and VAT/tax ID. Explain this is required once to comply with legal obligations and unlock payouts. Ask for the country naturally and convert the answer to the correct two-letter ISO 3166-1 alpha-2 code yourself before submitting.",
+        "bot": "Guide the user through submitting their business identity for payout verification. Frame this as a business onboarding step — ask for the legal business name, the owner's name, registered country, business address, and VAT/tax ID. Explain this is required once to comply with legal obligations and unlock payouts.",
         "actions": [
           {
             "type": "collect",
@@ -103,6 +248,7 @@
                   "en": "Country where the business is registered.",
                   "de": "Land, in dem das Unternehmen registriert ist."
                 },
+                "bot": "Ask for the country naturally. Convert the answer to the two-letter ISO 3166-1 alpha-2 code (e.g. Austria → AT, Germany → DE) before submitting.",
                 "type": "string",
                 "position": "arg:2",
                 "source": "field",
@@ -164,8 +310,8 @@
       "identifier": "@joai-kyc-submit",
       "alias": "joai-kyc-submit",
       "chain": "none",
-      "hash": "08acb2de1d296ff27b076dd6373aa2ffe77f775576130138d769e235e631dd7c",
-      "checksum": "08acb2de1d296ff27b076dd6373aa2ffe77f775576130138d769e235e631dd7c",
+      "hash": "337d642363eb47def407739110299c73898ecbf14f0ae52eec699f029c1e8cab",
+      "checksum": "337d642363eb47def407739110299c73898ecbf14f0ae52eec699f029c1e8cab",
       "name": "JoAi: Identity Verification",
       "title": {
         "en": "Verify Your Identity",
@@ -217,7 +363,7 @@
           "en": "Submit your identity information to unlock payouts. Required once per account.",
           "de": "Reiche deine Identitätsdaten ein, um Auszahlungen freizuschalten. Einmalig pro Konto erforderlich."
         },
-        "bot": "Guide the user through submitting their identity for payout verification. Explain that this is required once to comply with legal obligations and unlock payouts. Ask for the country naturally and convert the answer to the correct two-letter ISO 3166-1 alpha-2 code yourself before submitting.",
+        "bot": "Guide the user through submitting their identity for payout verification. Explain that this is required once to comply with legal obligations and unlock payouts.",
         "actions": [
           {
             "type": "collect",
@@ -254,6 +400,7 @@
                   "en": "Country of residence.",
                   "de": "Wohnsitzland."
                 },
+                "bot": "Ask for the country naturally. Convert the answer to the two-letter ISO 3166-1 alpha-2 code (e.g. Austria → AT, Germany → DE) before submitting.",
                 "type": "string",
                 "position": "arg:2",
                 "source": "field",
@@ -305,6 +452,280 @@
           "error": {
             "en": "Failed to submit identity information. Please try again.",
             "de": "Identitätsdaten konnten nicht eingereicht werden. Bitte erneut versuchen."
+          }
+        }
+      },
+      "extras": null
+    },
+    {
+      "key": "none:joai-store-create",
+      "identifier": "@joai-store-create",
+      "alias": "joai-store-create",
+      "chain": "none",
+      "hash": "ef74449e4a191e5a6610de3679826e7bf43f5f92b1a9a7306af8ce142befc1e6",
+      "checksum": "ef74449e4a191e5a6610de3679826e7bf43f5f92b1a9a7306af8ce142befc1e6",
+      "name": "JoAi: Create Store",
+      "title": {
+        "en": "Create a data store",
+        "de": "Datenspeicher erstellen"
+      },
+      "description": {
+        "en": "Create a new tracked data store for time-series or scalar data (weight, expenses, habits, etc.).",
+        "de": "Erstelle einen neuen Datenspeicher für Zeitreihen- oder Einzelwerte (Gewicht, Ausgaben, Gewohnheiten usw.)."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: Create Store",
+        "title": {
+          "en": "Create a data store",
+          "de": "Datenspeicher erstellen"
+        },
+        "description": {
+          "en": "Create a new tracked data store for time-series or scalar data (weight, expenses, habits, etc.).",
+          "de": "Erstelle einen neuen Datenspeicher für Zeitreihen- oder Einzelwerte (Gewicht, Ausgaben, Gewohnheiten usw.)."
+        },
+        "bot": "Use this when the user wants to start tracking something new over time — weight, expenses, habits, metrics, counters, or any recurring measurement.",
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Create store",
+              "de": "Speicher erstellen"
+            },
+            "destination": {
+              "url": "https://devnet-api.joai.ai/v1/stores",
+              "method": "POST",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Name",
+                "as": "name",
+                "description": {
+                  "en": "Store name (e.g. \"weight\", \"expense:food\", \"habit:meditation\")",
+                  "de": "Name des Speichers (z.B. \"weight\", \"expense:food\", \"habit:meditation\")"
+                },
+                "bot": "Short, lowercase store name. Use colons for namespacing (e.g. \"habit:meditation\", \"expense:food\"). Must be 2-50 chars, alphanumeric with colons/hyphens.",
+                "type": "string",
+                "position": "arg:1",
+                "source": "field",
+                "required": true,
+                "min": 2
+              },
+              {
+                "name": "Description",
+                "as": "description",
+                "description": {
+                  "en": "What this store tracks",
+                  "de": "Was dieser Speicher verfolgt"
+                },
+                "bot": "A human-readable purpose for this store.",
+                "type": "string",
+                "position": "arg:2",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Value Type",
+                "as": "valueType",
+                "description": {
+                  "en": "scalar (single value) or series (time-series data)",
+                  "de": "scalar (Einzelwert) oder series (Zeitreihe)"
+                },
+                "bot": "Use 'scalar' for a single changing value (e.g. portfolio balance). Use 'series' for data points over time (e.g. daily weight, expenses).",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "default": "series",
+                "options": {
+                  "scalar": "Scalar (single value)",
+                  "series": "Series (time-series)"
+                }
+              },
+              {
+                "name": "Unit",
+                "as": "unit",
+                "description": {
+                  "en": "Unit of measurement (e.g. \"lbs\", \"USD\", \"minutes\")",
+                  "de": "Maßeinheit (z.B. \"kg\", \"EUR\", \"Minuten\")"
+                },
+                "bot": "Optional unit of measurement like 'lbs', 'USD', 'minutes', 'km'.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              }
+            ]
+          }
+        ],
+        "messages": {
+          "success": {
+            "en": "Now tracking '{{name}}'!",
+            "de": "'{{name}}' wird jetzt verfolgt!"
+          }
+        }
+      },
+      "extras": null
+    },
+    {
+      "key": "none:joai-store-query",
+      "identifier": "@joai-store-query",
+      "alias": "joai-store-query",
+      "chain": "none",
+      "hash": "305c5ba79ab6bc18bffbb5708194a8d851212d6484fcc1ddb01f1b13ee4dfaa8",
+      "checksum": "305c5ba79ab6bc18bffbb5708194a8d851212d6484fcc1ddb01f1b13ee4dfaa8",
+      "name": "JoAi: Query Store Data",
+      "title": {
+        "en": "View tracked data",
+        "de": "Verfolgte Daten anzeigen"
+      },
+      "description": {
+        "en": "Query and view entries from a tracked data store with optional date filters.",
+        "de": "Einträge eines Datenspeichers abfragen und mit optionalen Datumsfiltern anzeigen."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: Query Store Data",
+        "title": {
+          "en": "View tracked data",
+          "de": "Verfolgte Daten anzeigen"
+        },
+        "description": {
+          "en": "Query and view entries from a tracked data store with optional date filters.",
+          "de": "Einträge eines Datenspeichers abfragen und mit optionalen Datumsfiltern anzeigen."
+        },
+        "bot": "Use this when the user wants to see their tracked data, check progress, view history, or look up past entries in a store.",
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Query data",
+              "de": "Daten abfragen"
+            },
+            "destination": {
+              "url": "https://devnet-api.joai.ai/v1/stores/{{storeName}}/entries",
+              "method": "GET"
+            },
+            "inputs": [
+              {
+                "name": "Store Name",
+                "as": "storeName",
+                "description": {
+                  "en": "The name of the store to query",
+                  "de": "Name des abzufragenden Speichers"
+                },
+                "bot": "The exact name of the store to query.",
+                "type": "string",
+                "position": "arg:1",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Since",
+                "as": "since",
+                "description": {
+                  "en": "Show entries after this date.",
+                  "de": "Einträge nach diesem Datum anzeigen."
+                },
+                "bot": "Optional start date filter. Convert to ISO 8601 format before submitting.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Until",
+                "as": "until",
+                "description": {
+                  "en": "Show entries before this date.",
+                  "de": "Einträge vor diesem Datum anzeigen."
+                },
+                "bot": "Optional end date filter. Convert to ISO 8601 format before submitting.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Last N",
+                "as": "last",
+                "description": {
+                  "en": "Return only the last N entries",
+                  "de": "Nur die letzten N Einträge zurückgeben"
+                },
+                "bot": "Optional number to return only the most recent N entries.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              }
+            ]
+          }
+        ],
+        "messages": {
+          "success": {
+            "en": "Here are your '{{storeName}}' entries.",
+            "de": "Hier sind deine '{{storeName}}'-Einträge."
           }
         }
       },
