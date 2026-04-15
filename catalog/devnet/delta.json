@@ -4,25 +4,25 @@
   "repo": "JoAiHQ/warps",
   "branch": "dev",
   "network": "devnet",
-  "commitSha": "7f76e40f680528dc42c1c75e6cc88b8498b6125d",
-  "committedAt": "2026-04-15T09:59:25.625Z",
-  "generatedAt": "2026-04-15T09:59:27.648Z",
+  "commitSha": "b8cc829b88e15d2629fb961d82b2b6eee8050847",
+  "committedAt": "2026-04-15T20:26:20.456Z",
+  "generatedAt": "2026-04-15T20:26:23.346Z",
   "upserts": [
     {
       "key": "none:form-create",
       "identifier": "@form-create",
       "alias": "form-create",
       "chain": "none",
-      "hash": "97be99246eb534f4b0b28267b0b95fdb3acb55597d966081137978973dc2eef6",
-      "checksum": "97be99246eb534f4b0b28267b0b95fdb3acb55597d966081137978973dc2eef6",
+      "hash": "e1c09e7eec65e1f78e2efc33fdfca2d7a6bb0adb65854bc15ae26af74cd47911",
+      "checksum": "e1c09e7eec65e1f78e2efc33fdfca2d7a6bb0adb65854bc15ae26af74cd47911",
       "name": "Form: Create",
       "title": {
         "en": "Create a form",
         "de": "Formular erstellen"
       },
       "description": {
-        "en": "Create a new form. After creating, use 'Add Field' to define the inputs.",
-        "de": "Ein neues Formular erstellen. Danach mit 'Feld hinzufügen' die Felder definieren."
+        "en": "Create a new lead capture, RSVP, or feedback form. Returns a public link ready to share.",
+        "de": "Erstellt ein neues Lead-, RSVP- oder Feedback-Formular. Gibt einen öffentlichen Link zum Teilen zurück."
       },
       "preview": null,
       "creator": "github:JoAiHQ/warps",
@@ -59,11 +59,45 @@
           "de": "Formular erstellen"
         },
         "description": {
-          "en": "Create a new form. After creating, use 'Add Field' to define the inputs.",
-          "de": "Ein neues Formular erstellen. Danach mit 'Feld hinzufügen' die Felder definieren."
+          "en": "Create a new lead capture, RSVP, or feedback form. Returns a public link ready to share.",
+          "de": "Erstellt ein neues Lead-, RSVP- oder Feedback-Formular. Gibt einen öffentlichen Link zum Teilen zurück."
         },
-        "bot": "Use this to create a new form. Build a complete definition object with: name (internal, English), title (en/de), description.en (optional), actions[0] with type 'collect' and label (en/de), and messages.success (en/de). Defaults: submit label 'Submit'/'Absenden', success message 'Thanks! We\\'ll be in touch soon.'/'Danke! Wir melden uns bald.' After creating, use form-field-add to add each field.",
+        "bot": "Use this to create a new form. After creating, use form-field-add to add each field.",
         "actions": [
+          {
+            "type": "prompt",
+            "label": {
+              "en": "Configure form",
+              "de": "Formular konfigurieren"
+            },
+            "prompt": "Generate the HTTP request body as valid JSON for creating a form. Return ONLY the raw JSON object — no markdown fences, no explanation.\n\nUse this EXACT structure and fill in name, title, and messages from the user's inputs:\n{\"brand\":\"form\",\"definition\":{\"name\":\"<English internal name>\",\"title\":{\"en\":\"<English title>\",\"de\":\"<German title>\"},\"actions\":[{\"type\":\"collect\",\"label\":{\"en\":\"Submit\",\"de\":\"Absenden\"},\"inputs\":[]}],\"messages\":{\"success\":{\"en\":\"<English success message>\",\"de\":\"<German success message>\"}}}}\n\nRules:\n- Do not add, remove, or rename any keys\n- Keep the inputs array empty (fields are added separately)\n- Derive name and title from the user's title input\n- Write a friendly success message appropriate for the form type",
+            "inputs": [
+              {
+                "name": "Title",
+                "as": "title",
+                "description": {
+                  "en": "Form title",
+                  "de": "Formular-Titel"
+                },
+                "type": "string",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Description",
+                "as": "description",
+                "description": {
+                  "en": "What is this form for? (optional)",
+                  "de": "Wofür ist dieses Formular? (optional)"
+                },
+                "type": "string",
+                "source": "field",
+                "required": false
+              }
+            ],
+            "expect": "https://raw.githubusercontent.com/JoAiHQ/warps/main/schemas/form/create-body.json",
+            "auto": true
+          },
           {
             "type": "collect",
             "label": {
@@ -79,23 +113,12 @@
             },
             "inputs": [
               {
-                "name": "Brand",
-                "as": "brand",
-                "bot": "Always 'form'.",
+                "name": "PAYLOAD",
+                "as": "PAYLOAD",
                 "type": "string",
-                "position": "arg:0",
-                "source": "field",
+                "source": "hidden",
                 "required": true,
-                "default": "form"
-              },
-              {
-                "name": "Definition",
-                "as": "definition",
-                "bot": "The full warp definition object for this form.",
-                "type": "json",
-                "position": "arg:1",
-                "source": "computed",
-                "required": true
+                "default": "{{PROMPT}}"
               }
             ]
           }
@@ -208,6 +231,636 @@
             {
               "question": "Wie greifen Einsender auf das Formular zu?",
               "answer": "Jedes Formular erhält eine öffentliche URL unter joai.ai/w/{formId}. Als Link teilen, in einen QR-Code einbetten oder von einer Landingpage verlinken — kein Konto erforderlich."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "key": "none:form-field-add",
+      "identifier": "@form-field-add",
+      "alias": "form-field-add",
+      "chain": "none",
+      "hash": "b2b543c16da3648213bcbca6810ffdb66eca79f3d4d18d5c28dae49df52c8bef",
+      "checksum": "b2b543c16da3648213bcbca6810ffdb66eca79f3d4d18d5c28dae49df52c8bef",
+      "name": "Form: Add Field",
+      "title": {
+        "en": "Add a field",
+        "de": "Feld hinzufügen"
+      },
+      "description": {
+        "en": "Add an input field to an existing form.",
+        "de": "Ein Eingabefeld zu einem bestehenden Formular hinzufügen."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "9d2185484475294d3c6a6aaad17bda94b4c5bcd360aab56f2234fe7a52eaa771",
+        "slug": "form",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "Form",
+        "description": {
+          "en": "Custom forms that capture leads, RSVPs, feedback, and sign-ups — powered by private warps.",
+          "de": "Maßgeschneiderte Formulare, die Leads, RSVPs, Feedback und Anmeldungen erfassen — mit privaten Warps.",
+          "fr": "Formulaires personnalisés qui capturent leads, RSVPs, feedbacks et inscriptions — avec des warps privés.",
+          "es": "Formularios personalizados que capturan leads, RSVPs, comentarios e inscripciones — con warps privados.",
+          "ro": "Formulare personalizate care capteaza lead-uri, RSVPs, feedback si inscrieri — cu warps private."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "Form: Add Field",
+        "title": {
+          "en": "Add a field",
+          "de": "Feld hinzufügen"
+        },
+        "description": {
+          "en": "Add an input field to an existing form.",
+          "de": "Ein Eingabefeld zu einem bestehenden Formular hinzufügen."
+        },
+        "bot": "Call form-get first to read the current definition. Then use this warp to add a new field.",
+        "actions": [
+          {
+            "type": "prompt",
+            "label": {
+              "en": "Configure field",
+              "de": "Feld konfigurieren"
+            },
+            "prompt": "Generate the HTTP PATCH body as valid JSON for adding a field to a form. Return ONLY the raw JSON object — no markdown fences, no explanation.\n\nThe current form definition is:\n{{currentDefinition}}\n\nAppend a new field to definition.actions[0].inputs using this exact schema:\n{\"name\":\"<display label>\",\"as\":\"<camelCaseKey>\",\"description\":{\"en\":\"...\",\"de\":\"...\"},\"type\":\"{{fieldType}}\",\"source\":\"field\",\"required\":{{required}}}\n\nReturn the full updated definition:\n{\"definition\":{...full current definition with the new field appended to actions[0].inputs...}}\n\nRules:\n- Preserve all existing fields exactly — do not modify anything else\n- Derive the `as` key from the field name in camelCase\n- Write a concise description in both English and German\n- `required` must be a boolean (true or false), not a string",
+            "inputs": [
+              {
+                "name": "Field Name",
+                "as": "fieldName",
+                "description": {
+                  "en": "Label shown to the user (e.g. Email Address)",
+                  "de": "Bezeichnung für den Benutzer (z.B. E-Mail-Adresse)"
+                },
+                "type": "string",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Field Type",
+                "as": "fieldType",
+                "description": {
+                  "en": "Input type: string, email, phone, number, textarea, date, or checkbox",
+                  "de": "Eingabetyp: string, email, phone, number, textarea, date oder checkbox"
+                },
+                "type": "string",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Required",
+                "as": "required",
+                "description": {
+                  "en": "Is this field required? (true or false)",
+                  "de": "Ist dieses Feld ein Pflichtfeld? (true oder false)"
+                },
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Current Definition",
+                "as": "currentDefinition",
+                "bot": "The full current form definition JSON string. Fetch it from form-get and pass it here verbatim.",
+                "type": "string",
+                "source": "computed",
+                "required": true
+              }
+            ],
+            "expect": "https://raw.githubusercontent.com/JoAiHQ/warps/main/schemas/form/patch-body.json",
+            "auto": true
+          },
+          {
+            "type": "collect",
+            "label": {
+              "en": "Add field",
+              "de": "Feld hinzufügen"
+            },
+            "destination": {
+              "url": "https://devnet-api.joai.ai/v1/warps/{{formId}}",
+              "method": "PATCH",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Form ID",
+                "as": "formId",
+                "bot": "The form's hash ID. Carry it from context — never ask the user.",
+                "type": "string",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "PAYLOAD",
+                "as": "PAYLOAD",
+                "type": "string",
+                "source": "hidden",
+                "required": true,
+                "default": "{{PROMPT}}"
+              }
+            ]
+          }
+        ],
+        "messages": {
+          "success": {
+            "en": "Field added.",
+            "de": "Feld hinzugefügt."
+          }
+        }
+      },
+      "extras": {
+        "keywords": {
+          "en": [
+            "add form field",
+            "custom form field",
+            "form builder field",
+            "form customization"
+          ],
+          "de": [
+            "Formularfeld hinzufügen",
+            "benutzerdefiniertes Feld",
+            "Formular anpassen"
+          ],
+          "fr": [
+            "ajouter champ formulaire",
+            "champ personnalise",
+            "personnalisation formulaire"
+          ],
+          "es": [
+            "agregar campo formulario",
+            "campo personalizado",
+            "personalizacion de formulario"
+          ],
+          "ro": [
+            "adauga camp formular",
+            "camp personalizat",
+            "personalizare formular"
+          ]
+        },
+        "useCases": {
+          "en": [
+            "Add a \"Company\" field to a lead capture form for B2B events",
+            "Add a \"Job Title\" field to segment professional contacts after a conference",
+            "Add a \"Message\" text field to a contact form for open-ended inquiries",
+            "Add an \"Interest\" select field to route leads to the right follow-up sequence"
+          ],
+          "de": [
+            "Ein \"Unternehmen\"-Feld zu einem Lead-Formular für B2B-Events hinzufügen",
+            "Ein \"Jobtitel\"-Feld hinzufügen, um Profi-Kontakte nach einer Konferenz zu segmentieren",
+            "Ein \"Nachricht\"-Textfeld zu einem Kontaktformular für offene Anfragen hinzufügen",
+            "Ein \"Interesse\"-Auswahlfeld hinzufügen, um Leads zur richtigen Follow-up-Sequenz zu routen"
+          ],
+          "fr": [
+            "Ajouter un champ \"Entreprise\" à un formulaire de capture de leads pour des événements B2B",
+            "Ajouter un champ \"Titre du poste\" pour segmenter les contacts professionnels après une conférence",
+            "Ajouter un champ texte \"Message\" à un formulaire de contact pour des demandes ouvertes",
+            "Ajouter un champ select \"Intérêt\" pour router les leads vers la bonne séquence de suivi"
+          ],
+          "es": [
+            "Agregar un campo \"Empresa\" a un formulario de captura de leads para eventos B2B",
+            "Agregar un campo \"Cargo\" para segmentar contactos profesionales después de una conferencia",
+            "Agregar un campo de texto \"Mensaje\" a un formulario de contacto para consultas abiertas",
+            "Agregar un campo select \"Interés\" para enrutar leads a la secuencia de seguimiento correcta"
+          ],
+          "ro": [
+            "Adauga un camp \"Companie\" la un formular de captare a lead-urilor pentru evenimente B2B",
+            "Adauga un camp \"Titlu job\" pentru a segmenta contactele profesionale dupa o conferinta",
+            "Adauga un camp text \"Mesaj\" la un formular de contact pentru cereri deschise",
+            "Adauga un camp select \"Interes\" pentru a direcţiona lead-urile catre secventa de follow-up potrivita"
+          ]
+        },
+        "category": "sales",
+        "faq": {
+          "en": [
+            {
+              "question": "Can I change a field's type after adding it?",
+              "answer": "Field type cannot be changed once set. To change a type, remove the field and add a new one with the correct type."
+            },
+            {
+              "question": "What field types are available?",
+              "answer": "`string` (short text), `email` (validated email), `phone` (phone number), `text` (multi-line), `select` (dropdown), `bool` (yes/no toggle)."
+            }
+          ],
+          "de": [
+            {
+              "question": "Kann ich den Feldtyp nach dem Hinzufügen ändern?",
+              "answer": "Der Feldtyp kann nach dem Setzen nicht geändert werden. Um den Typ zu ändern, entferne das Feld und füge es mit dem korrekten Typ neu hinzu."
+            },
+            {
+              "question": "Welche Feldtypen sind verfügbar?",
+              "answer": "`string` (kurzer Text), `email` (validierte E-Mail), `phone` (Telefonnummer), `text` (mehrzeilig), `select` (Dropdown), `bool` (Ja/Nein)."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "key": "none:form-field-remove",
+      "identifier": "@form-field-remove",
+      "alias": "form-field-remove",
+      "chain": "none",
+      "hash": "c034b5502ca80841d946baa55b60ed729a7c37a02a779f7fb6dfd7c22bc62fc3",
+      "checksum": "c034b5502ca80841d946baa55b60ed729a7c37a02a779f7fb6dfd7c22bc62fc3",
+      "name": "Form: Remove Field",
+      "title": {
+        "en": "Remove a field",
+        "de": "Feld entfernen"
+      },
+      "description": {
+        "en": "Permanently remove a field from a form.",
+        "de": "Ein Feld dauerhaft aus einem Formular entfernen."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "9d2185484475294d3c6a6aaad17bda94b4c5bcd360aab56f2234fe7a52eaa771",
+        "slug": "form",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "Form",
+        "description": {
+          "en": "Custom forms that capture leads, RSVPs, feedback, and sign-ups — powered by private warps.",
+          "de": "Maßgeschneiderte Formulare, die Leads, RSVPs, Feedback und Anmeldungen erfassen — mit privaten Warps.",
+          "fr": "Formulaires personnalisés qui capturent leads, RSVPs, feedbacks et inscriptions — avec des warps privés.",
+          "es": "Formularios personalizados que capturan leads, RSVPs, comentarios e inscripciones — con warps privados.",
+          "ro": "Formulare personalizate care capteaza lead-uri, RSVPs, feedback si inscrieri — cu warps private."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "Form: Remove Field",
+        "title": {
+          "en": "Remove a field",
+          "de": "Feld entfernen"
+        },
+        "description": {
+          "en": "Permanently remove a field from a form.",
+          "de": "Ein Feld dauerhaft aus einem Formular entfernen."
+        },
+        "bot": "Call form-get first to read the current definition. Then use this warp to remove a specific field.",
+        "actions": [
+          {
+            "type": "prompt",
+            "label": {
+              "en": "Confirm removal",
+              "de": "Entfernung bestätigen"
+            },
+            "prompt": "Generate the HTTP PATCH body as valid JSON for removing a field from a form. Return ONLY the raw JSON object — no markdown fences, no explanation.\n\nThe current form definition is:\n{{currentDefinition}}\n\nRemove the field with `as` value \"{{fieldKey}}\" from definition.actions[0].inputs.\n\nReturn the full updated definition:\n{\"definition\":{...full current definition with the target field removed from actions[0].inputs...}}\n\nRules:\n- Remove only the target field — preserve all other fields exactly\n- Do not modify any other part of the definition",
+            "inputs": [
+              {
+                "name": "Field Key",
+                "as": "fieldKey",
+                "bot": "The `as` value (camelCase key) of the field to remove. Read it from the current definition.",
+                "type": "string",
+                "source": "computed",
+                "required": true
+              },
+              {
+                "name": "Current Definition",
+                "as": "currentDefinition",
+                "bot": "The full current form definition JSON string. Fetch it from form-get and pass it here verbatim.",
+                "type": "string",
+                "source": "computed",
+                "required": true
+              }
+            ],
+            "expect": "https://raw.githubusercontent.com/JoAiHQ/warps/main/schemas/form/patch-body.json",
+            "auto": true
+          },
+          {
+            "type": "collect",
+            "label": {
+              "en": "Remove field",
+              "de": "Feld entfernen"
+            },
+            "destination": {
+              "url": "https://devnet-api.joai.ai/v1/warps/{{formId}}",
+              "method": "PATCH",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Form ID",
+                "as": "formId",
+                "bot": "The form's hash ID. Carry it from context — never ask the user.",
+                "type": "string",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "PAYLOAD",
+                "as": "PAYLOAD",
+                "type": "string",
+                "source": "hidden",
+                "required": true,
+                "default": "{{PROMPT}}"
+              }
+            ]
+          }
+        ],
+        "messages": {
+          "success": {
+            "en": "Field removed.",
+            "de": "Feld entfernt."
+          }
+        }
+      },
+      "extras": {
+        "keywords": {
+          "en": [
+            "remove form field",
+            "delete field",
+            "form cleanup"
+          ],
+          "de": [
+            "Formularfeld entfernen",
+            "Feld löschen",
+            "Formular bereinigen"
+          ],
+          "fr": [
+            "supprimer champ formulaire",
+            "effacer champ",
+            "nettoyage formulaire"
+          ],
+          "es": [
+            "eliminar campo formulario",
+            "borrar campo",
+            "limpiar formulario"
+          ],
+          "ro": [
+            "sterge camp formular",
+            "elimina camp",
+            "curata formular"
+          ]
+        },
+        "useCases": {
+          "en": [
+            "Remove a field that is no longer relevant after an event is over",
+            "Clean up a form by removing unused optional fields",
+            "Remove a field before re-adding it with a corrected type"
+          ],
+          "de": [
+            "Ein nicht mehr relevantes Feld nach einem Event entfernen",
+            "Ein Formular durch Entfernen nicht genutzter optionaler Felder bereinigen",
+            "Ein Feld entfernen, bevor es mit dem korrekten Typ neu hinzugefügt wird"
+          ],
+          "fr": [
+            "Supprimer un champ qui n est plus pertinent après la fin d un événement",
+            "Nettoyer un formulaire en supprimant les champs optionnels inutilisés",
+            "Supprimer un champ avant de le rajouter avec le bon type"
+          ],
+          "es": [
+            "Eliminar un campo que ya no es relevante después de que un evento haya terminado",
+            "Limpiar un formulario eliminando campos opcionales no utilizados",
+            "Eliminar un campo antes de volver a agregarlo con el tipo correcto"
+          ],
+          "ro": [
+            "Sterge un camp care nu mai este relevant dupa incheierea unui eveniment",
+            "Curata un formular prin eliminarea campurilor optionale neutilizate",
+            "Sterge un camp inainte de a-l readauga cu tipul corect"
+          ]
+        },
+        "category": "sales",
+        "faq": {
+          "en": [
+            {
+              "question": "Is removing a field reversible?",
+              "answer": "No — the removal is permanent. The slug can be re-registered with `field-add` but any submissions that already included that field will have had their data carried through the CRM chain."
+            }
+          ],
+          "de": [
+            {
+              "question": "Ist das Entfernen eines Felds umkehrbar?",
+              "answer": "Nein — die Entfernung ist dauerhaft. Der Slug kann mit `field-add` neu registriert werden, aber frühere Einreichungen haben die Daten bereits durch die CRM-Kette weitergegeben."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "key": "none:form-field-update",
+      "identifier": "@form-field-update",
+      "alias": "form-field-update",
+      "chain": "none",
+      "hash": "b5d5c8764019674b40a53fdab4a5cce3e24b18e904273be1f70bfc7724b5911a",
+      "checksum": "b5d5c8764019674b40a53fdab4a5cce3e24b18e904273be1f70bfc7724b5911a",
+      "name": "Form: Update Field",
+      "title": {
+        "en": "Edit a field",
+        "de": "Feld bearbeiten"
+      },
+      "description": {
+        "en": "Update a field in an existing form.",
+        "de": "Ein Feld eines bestehenden Formulars aktualisieren."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "9d2185484475294d3c6a6aaad17bda94b4c5bcd360aab56f2234fe7a52eaa771",
+        "slug": "form",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "Form",
+        "description": {
+          "en": "Custom forms that capture leads, RSVPs, feedback, and sign-ups — powered by private warps.",
+          "de": "Maßgeschneiderte Formulare, die Leads, RSVPs, Feedback und Anmeldungen erfassen — mit privaten Warps.",
+          "fr": "Formulaires personnalisés qui capturent leads, RSVPs, feedbacks et inscriptions — avec des warps privés.",
+          "es": "Formularios personalizados que capturan leads, RSVPs, comentarios e inscripciones — con warps privados.",
+          "ro": "Formulare personalizate care capteaza lead-uri, RSVPs, feedback si inscrieri — cu warps private."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "Form: Update Field",
+        "title": {
+          "en": "Edit a field",
+          "de": "Feld bearbeiten"
+        },
+        "description": {
+          "en": "Update a field in an existing form.",
+          "de": "Ein Feld eines bestehenden Formulars aktualisieren."
+        },
+        "bot": "Call form-get first to read the current definition. Then use this warp to update a specific field.",
+        "actions": [
+          {
+            "type": "prompt",
+            "label": {
+              "en": "Configure changes",
+              "de": "Änderungen konfigurieren"
+            },
+            "prompt": "Generate the HTTP PATCH body as valid JSON for updating a field in a form. Return ONLY the raw JSON object — no markdown fences, no explanation.\n\nThe current form definition is:\n{{currentDefinition}}\n\nFind the field with `as` value \"{{fieldKey}}\" in definition.actions[0].inputs and apply these changes:\n{{changes}}\n\nReturn the full updated definition:\n{\"definition\":{...full current definition with the target field updated in actions[0].inputs...}}\n\nRules:\n- Only modify the target field — preserve all other fields exactly\n- Keep the `as` key unchanged unless renaming is explicitly requested\n- If updating descriptions, provide both English and German\n- `required` must be a boolean (true or false), not a string",
+            "inputs": [
+              {
+                "name": "Field Key",
+                "as": "fieldKey",
+                "bot": "The `as` value (camelCase key) of the field to update. Read it from the current definition.",
+                "type": "string",
+                "source": "computed",
+                "required": true
+              },
+              {
+                "name": "Changes",
+                "as": "changes",
+                "description": {
+                  "en": "What to change (e.g. make it required, rename to 'Mobile Number', change type to email)",
+                  "de": "Was geändert werden soll (z.B. Pflichtfeld machen, umbenennen in 'Handynummer', Typ auf email ändern)"
+                },
+                "type": "string",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Current Definition",
+                "as": "currentDefinition",
+                "bot": "The full current form definition JSON string. Fetch it from form-get and pass it here verbatim.",
+                "type": "string",
+                "source": "computed",
+                "required": true
+              }
+            ],
+            "expect": "https://raw.githubusercontent.com/JoAiHQ/warps/main/schemas/form/patch-body.json",
+            "auto": true
+          },
+          {
+            "type": "collect",
+            "label": {
+              "en": "Update field",
+              "de": "Feld aktualisieren"
+            },
+            "destination": {
+              "url": "https://devnet-api.joai.ai/v1/warps/{{formId}}",
+              "method": "PATCH",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Form ID",
+                "as": "formId",
+                "bot": "The form's hash ID. Carry it from context — never ask the user.",
+                "type": "string",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "PAYLOAD",
+                "as": "PAYLOAD",
+                "type": "string",
+                "source": "hidden",
+                "required": true,
+                "default": "{{PROMPT}}"
+              }
+            ]
+          }
+        ],
+        "messages": {
+          "success": {
+            "en": "Field updated.",
+            "de": "Feld aktualisiert."
+          }
+        }
+      },
+      "extras": {
+        "keywords": {
+          "en": [
+            "edit form field",
+            "update field label",
+            "change field required"
+          ],
+          "de": [
+            "Formularfeld bearbeiten",
+            "Feldbezeichnung ändern",
+            "Pflichtfeld ändern"
+          ],
+          "fr": [
+            "modifier champ formulaire",
+            "changer libelle champ"
+          ],
+          "es": [
+            "editar campo formulario",
+            "cambiar etiqueta campo"
+          ],
+          "ro": [
+            "edita camp formular",
+            "schimba eticheta camp"
+          ]
+        },
+        "useCases": {
+          "en": [
+            "Rename a field label from \"Notes\" to \"Message\" without removing and re-adding the field",
+            "Change a field from optional to required after testing the form"
+          ],
+          "de": [
+            "Eine Feldbezeichnung von \"Notizen\" auf \"Nachricht\" umbenennen, ohne das Feld zu entfernen und neu hinzuzufügen",
+            "Ein Feld nach dem Testen von optional auf Pflichtfeld ändern"
+          ],
+          "fr": [
+            "Renommer un libellé de champ de \"Notes\" à \"Message\" sans supprimer et rajouter le champ",
+            "Changer un champ de facultatif à obligatoire après avoir testé le formulaire"
+          ],
+          "es": [
+            "Renombrar una etiqueta de campo de \"Notas\" a \"Mensaje\" sin eliminar y volver a agregar el campo",
+            "Cambiar un campo de opcional a obligatorio después de probar el formulario"
+          ],
+          "ro": [
+            "Redenumeste o eticheta de camp din \"Note\" in \"Mesaj\" fara a sterge si readauga campul",
+            "Schimba un camp din optional in obligatoriu dupa testarea formularului"
+          ]
+        },
+        "category": "sales",
+        "faq": {
+          "en": [
+            {
+              "question": "Can I change the field type with this warp?",
+              "answer": "No — field type is immutable once set. Only the label and required flag can be updated. To change a type, use `field-remove` then `field-add`."
+            }
+          ],
+          "de": [
+            {
+              "question": "Kann ich den Feldtyp mit diesem Warp ändern?",
+              "answer": "Nein — der Feldtyp ist unveränderlich. Nur Beschriftung und Pflichtfeld-Status können aktualisiert werden. Um den Typ zu ändern, `field-remove` und `field-add` verwenden."
             }
           ]
         }
