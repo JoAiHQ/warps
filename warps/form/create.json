@@ -6,11 +6,52 @@
     "de": "Formular erstellen"
   },
   "description": {
-    "en": "Create a new form. After creating, use 'Add Field' to define the inputs.",
-    "de": "Ein neues Formular erstellen. Danach mit 'Feld hinzufügen' die Felder definieren."
+    "en": "Create a new lead capture, RSVP, or feedback form. Returns a public link ready to share.",
+    "de": "Erstellt ein neues Lead-, RSVP- oder Feedback-Formular. Gibt einen öffentlichen Link zum Teilen zurück."
   },
-  "bot": "Use this to create a new form. The definition must follow the warp definition schema exactly: { \"name\": \"<internal English name>\", \"title\": { \"en\": \"...\", \"de\": \"...\" }, \"description\": { \"en\": \"...\" }, \"actions\": [{ \"type\": \"collect\", \"label\": { \"en\": \"Submit\", \"de\": \"Absenden\" }, \"inputs\": [] }], \"messages\": { \"success\": { \"en\": \"Thanks! We'll be in touch soon.\", \"de\": \"Danke! Wir melden uns bald.\" } } }. Do not invent other fields. After creating, use form-field-add to add each field.",
+  "bot": "Use this to create a new form. After creating, use form-field-add to add each field.",
   "actions": [
+    {
+      "type": "prompt",
+      "label": {
+        "en": "Configure form",
+        "de": "Formular konfigurieren"
+      },
+      "prompt": "Generate the HTTP request body as valid JSON for creating a form. Return ONLY the raw JSON object — no markdown fences, no explanation.\n\nUse this EXACT structure and fill in name, title, and messages from the user's inputs:\n{\"brand\":\"form\",\"definition\":{\"name\":\"<English internal name>\",\"title\":{\"en\":\"<English title>\",\"de\":\"<German title>\"},\"actions\":[{\"type\":\"collect\",\"label\":{\"en\":\"Submit\",\"de\":\"Absenden\"},\"inputs\":[]}],\"messages\":{\"success\":{\"en\":\"<English success message>\",\"de\":\"<German success message>\"}}}}\n\nRules:\n- Do not add, remove, or rename any keys\n- Keep the inputs array empty (fields are added separately)\n- Derive name and title from the user's title input\n- Write a friendly success message appropriate for the form type",
+      "inputs": [
+        {
+          "name": "Title",
+          "as": "title",
+          "description": {
+            "en": "Form title",
+            "de": "Formular-Titel"
+          },
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Description",
+          "as": "description",
+          "description": {
+            "en": "What is this form for? (optional)",
+            "de": "Wofür ist dieses Formular? (optional)"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        }
+      ],
+      "expect": {
+        "type": "object",
+        "required": ["brand", "definition"],
+        "properties": {
+          "brand": { "type": "string" },
+          "definition": { "type": "object" }
+        }
+      },
+      "auto": true
+    },
     {
       "type": "collect",
       "label": {
@@ -26,23 +67,12 @@
       },
       "inputs": [
         {
-          "name": "Brand",
-          "as": "brand",
-          "bot": "Always 'form'.",
+          "name": "PAYLOAD",
+          "as": "PAYLOAD",
           "type": "string",
-          "position": "arg:0",
-          "source": "field",
+          "source": "hidden",
           "required": true,
-          "default": "form"
-        },
-        {
-          "name": "Definition",
-          "as": "definition",
-          "bot": "The full warp definition object for this form.",
-          "type": "json",
-          "position": "arg:1",
-          "source": "computed",
-          "required": true
+          "default": "{{PROMPT}}"
         }
       ]
     }

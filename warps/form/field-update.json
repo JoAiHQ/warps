@@ -9,8 +9,53 @@
     "en": "Update a field in an existing form.",
     "de": "Ein Feld eines bestehenden Formulars aktualisieren."
   },
-  "bot": "Use this to update a field on a form. Call form-get first to read the current definition, then modify the target field in definition.actions[0].inputs and submit the full updated definition.",
+  "bot": "Call form-get first to read the current definition. Then use this warp to update a specific field.",
   "actions": [
+    {
+      "type": "prompt",
+      "label": {
+        "en": "Configure changes",
+        "de": "Änderungen konfigurieren"
+      },
+      "prompt": "Generate the HTTP PATCH body as valid JSON for updating a field in a form. Return ONLY the raw JSON object — no markdown fences, no explanation.\n\nThe current form definition is:\n{{currentDefinition}}\n\nFind the field with `as` value \"{{fieldKey}}\" in definition.actions[0].inputs and apply these changes:\n{{changes}}\n\nReturn the full updated definition:\n{\"definition\":{...full current definition with the target field updated in actions[0].inputs...}}\n\nRules:\n- Only modify the target field — preserve all other fields exactly\n- Keep the `as` key unchanged unless renaming is explicitly requested\n- If updating descriptions, provide both English and German\n- `required` must be a boolean (true or false), not a string",
+      "inputs": [
+        {
+          "name": "Field Key",
+          "as": "fieldKey",
+          "bot": "The `as` value (camelCase key) of the field to update. Read it from the current definition.",
+          "type": "string",
+          "source": "computed",
+          "required": true
+        },
+        {
+          "name": "Changes",
+          "as": "changes",
+          "description": {
+            "en": "What to change (e.g. make it required, rename to 'Mobile Number', change type to email)",
+            "de": "Was geändert werden soll (z.B. Pflichtfeld machen, umbenennen in 'Handynummer', Typ auf email ändern)"
+          },
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Current Definition",
+          "as": "currentDefinition",
+          "bot": "The full current form definition JSON string. Fetch it from form-get and pass it here verbatim.",
+          "type": "string",
+          "source": "computed",
+          "required": true
+        }
+      ],
+      "expect": {
+        "type": "object",
+        "required": ["definition"],
+        "properties": {
+          "definition": { "type": "object" }
+        }
+      },
+      "auto": true
+    },
     {
       "type": "collect",
       "label": {
@@ -28,19 +73,18 @@
         {
           "name": "Form ID",
           "as": "formId",
+          "bot": "The form's hash ID. Carry it from context — never ask the user.",
           "type": "string",
-          "position": "arg:1",
           "source": "field",
           "required": true
         },
         {
-          "name": "Definition",
-          "as": "definition",
-          "bot": "The full updated warp definition with the target field modified in definition.actions[0].inputs. Keep all other fields intact.",
-          "type": "json",
-          "position": "arg:2",
-          "source": "computed",
-          "required": true
+          "name": "PAYLOAD",
+          "as": "PAYLOAD",
+          "type": "string",
+          "source": "hidden",
+          "required": true,
+          "default": "{{PROMPT}}"
         }
       ]
     }

@@ -9,8 +9,67 @@
     "en": "Add an input field to an existing form.",
     "de": "Ein Eingabefeld zu einem bestehenden Formular hinzufügen."
   },
-  "bot": "Use this to add a field to a form. Call form-get first to read the current definition, then append the new field to definition.actions[0].inputs and submit the full updated definition.",
+  "bot": "Call form-get first to read the current definition. Then use this warp to add a new field.",
   "actions": [
+    {
+      "type": "prompt",
+      "label": {
+        "en": "Configure field",
+        "de": "Feld konfigurieren"
+      },
+      "prompt": "Generate the HTTP PATCH body as valid JSON for adding a field to a form. Return ONLY the raw JSON object — no markdown fences, no explanation.\n\nThe current form definition is:\n{{currentDefinition}}\n\nAppend a new field to definition.actions[0].inputs using this exact schema:\n{\"name\":\"<display label>\",\"as\":\"<camelCaseKey>\",\"description\":{\"en\":\"...\",\"de\":\"...\"},\"type\":\"{{fieldType}}\",\"source\":\"field\",\"required\":{{required}}}\n\nReturn the full updated definition:\n{\"definition\":{...full current definition with the new field appended to actions[0].inputs...}}\n\nRules:\n- Preserve all existing fields exactly — do not modify anything else\n- Derive the `as` key from the field name in camelCase\n- Write a concise description in both English and German\n- `required` must be a boolean (true or false), not a string",
+      "inputs": [
+        {
+          "name": "Field Name",
+          "as": "fieldName",
+          "description": {
+            "en": "Label shown to the user (e.g. Email Address)",
+            "de": "Bezeichnung für den Benutzer (z.B. E-Mail-Adresse)"
+          },
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Field Type",
+          "as": "fieldType",
+          "description": {
+            "en": "Input type: string, email, phone, number, textarea, date, or checkbox",
+            "de": "Eingabetyp: string, email, phone, number, textarea, date oder checkbox"
+          },
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Required",
+          "as": "required",
+          "description": {
+            "en": "Is this field required? (true or false)",
+            "de": "Ist dieses Feld ein Pflichtfeld? (true oder false)"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Current Definition",
+          "as": "currentDefinition",
+          "bot": "The full current form definition JSON string. Fetch it from form-get and pass it here verbatim.",
+          "type": "string",
+          "source": "computed",
+          "required": true
+        }
+      ],
+      "expect": {
+        "type": "object",
+        "required": ["definition"],
+        "properties": {
+          "definition": { "type": "object" }
+        }
+      },
+      "auto": true
+    },
     {
       "type": "collect",
       "label": {
@@ -28,20 +87,18 @@
         {
           "name": "Form ID",
           "as": "formId",
-          "bot": "The form's ID. Never ask the user — carry it from the previous step.",
+          "bot": "The form's hash ID. Carry it from context — never ask the user.",
           "type": "string",
-          "position": "arg:1",
           "source": "field",
           "required": true
         },
         {
-          "name": "Definition",
-          "as": "definition",
-          "bot": "The full updated warp definition with the new field appended to definition.actions[0].inputs. Preserve all existing fields.",
-          "type": "json",
-          "position": "arg:2",
-          "source": "computed",
-          "required": true
+          "name": "PAYLOAD",
+          "as": "PAYLOAD",
+          "type": "string",
+          "source": "hidden",
+          "required": true,
+          "default": "{{PROMPT}}"
         }
       ]
     }
