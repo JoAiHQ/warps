@@ -1,55 +1,39 @@
 {
   "protocol": "warp:3.0.0",
-  "name": "Form: Create Form",
+  "name": "Form: Create",
   "title": {
     "en": "Create a form",
     "de": "Formular erstellen"
   },
   "description": {
-    "en": "Register a new form. The form definition is stored on the Form smart contract. Add fields next using 'Add Field'.",
-    "de": "Ein neues Formular registrieren. Die Formulardefinition wird im Form-Smart-Contract gespeichert. Felder danach mit 'Feld hinzufügen' ergänzen."
+    "en": "Create a new form. After creating, use 'Add Field' to define the inputs.",
+    "de": "Ein neues Formular erstellen. Danach mit 'Feld hinzufügen' die Felder definieren."
   },
-  "bot": "Use this to create a new form. Collect the title and type from the user. The form ID is auto-generated — never ask the user for it. After creating, use add-field to define the form's inputs.",
-  "vars": {},
+  "bot": "Use this to create a new form. Collect title and type from the user. After creating, use field-add to define the form's inputs.",
   "actions": [
     {
-      "type": "contract",
+      "type": "collect",
       "label": {
         "en": "Create form",
         "de": "Formular erstellen"
       },
       "destination": {
-        "url": "INJECT:FORM_CONTRACT",
-        "func": "createForm"
+        "url": "INJECT:API_BASE/v1/warps",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
       },
       "inputs": [
-        {
-          "name": "Form ID",
-          "as": "formId",
-          "bot": "Auto-generate as kebab-case slug from title + 4 random alphanumeric chars. Never ask the user.",
-          "type": "string",
-          "position": "arg:1",
-          "source": "field",
-          "required": true,
-          "min": 1
-        },
-        {
-          "name": "Agent ID",
-          "as": "agentId",
-          "type": "string",
-          "position": "arg:2",
-          "source": "hidden",
-          "default": "{{JOAI_AGENT_UUID}}"
-        },
         {
           "name": "Title",
           "as": "title",
           "description": {
             "en": "Form title shown to submitters",
-            "de": "Formulartitel, der Einreichenden angezeigt wird"
+            "de": "Formulartitel für Einreichende"
           },
           "type": "string",
-          "position": "arg:3",
+          "position": "arg:1",
           "source": "field",
           "required": true,
           "min": 1
@@ -62,20 +46,19 @@
             "de": "Kurze Beschreibung des Formularszwecks (optional)"
           },
           "type": "string",
-          "position": "arg:4",
+          "position": "arg:2",
           "source": "field",
-          "required": false,
-          "default": ""
+          "required": false
         },
         {
           "name": "Type",
-          "as": "formType",
+          "as": "type",
           "description": {
             "en": "What the form does with submissions",
             "de": "Was mit Einreichungen passiert"
           },
           "type": "string",
-          "position": "arg:5",
+          "position": "arg:3",
           "source": "field",
           "required": true,
           "default": "lead",
@@ -86,8 +69,7 @@
             "custom": "Custom"
           }
         }
-      ],
-      "gasLimit": 10000000
+      ]
     }
   ],
   "messages": {
@@ -95,6 +77,5 @@
       "en": "Form '{{title}}' created! Add fields next.",
       "de": "Formular '{{title}}' erstellt! Jetzt Felder hinzufügen."
     }
-  },
-  "next": "@form-field-add?formId={{formId}}"
+  }
 }

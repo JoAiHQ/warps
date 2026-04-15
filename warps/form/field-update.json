@@ -6,34 +6,32 @@
     "de": "Feld bearbeiten"
   },
   "description": {
-    "en": "Update the label, required flag, or display position of an existing field.",
-    "de": "Beschriftung, Pflichtfeld-Status oder Anzeigeposition eines bestehenden Felds aktualisieren."
+    "en": "Update the label or required flag of an existing field.",
+    "de": "Beschriftung oder Pflichtfeld-Status eines bestehenden Felds aktualisieren."
   },
-  "bot": "Use this to change a field's label, required setting, or position on an existing form.",
+  "bot": "Use this to update a field's label or required setting on an existing form.",
   "actions": [
     {
-      "type": "contract",
+      "type": "collect",
       "label": {
         "en": "Update field",
         "de": "Feld aktualisieren"
       },
       "destination": {
-        "url": "INJECT:FORM_CONTRACT",
-        "func": "updateField"
+        "url": "INJECT:API_BASE/v1/warps/{{formId}}/inputs/{{slug}}",
+        "method": "PATCH",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
       },
       "inputs": [
         {
           "name": "Form ID",
           "as": "formId",
-          "description": {
-            "en": "The form containing the field",
-            "de": "Das Formular mit dem Feld"
-          },
           "type": "string",
           "position": "arg:1",
           "source": "field",
-          "required": true,
-          "min": 1
+          "required": true
         },
         {
           "name": "Slug",
@@ -45,8 +43,7 @@
           "type": "string",
           "position": "arg:2",
           "source": "field",
-          "required": true,
-          "min": 1
+          "required": true
         },
         {
           "name": "Label",
@@ -58,8 +55,7 @@
           "type": "string",
           "position": "arg:3",
           "source": "field",
-          "required": true,
-          "min": 1
+          "required": false
         },
         {
           "name": "Required",
@@ -71,24 +67,9 @@
           "type": "bool",
           "position": "arg:4",
           "source": "field",
-          "required": true,
-          "default": "false"
-        },
-        {
-          "name": "Position",
-          "as": "position",
-          "description": {
-            "en": "Display order (0 = first)",
-            "de": "Anzeigereihenfolge (0 = erstes)"
-          },
-          "type": "uint32",
-          "position": "arg:5",
-          "source": "field",
-          "required": true,
-          "default": "0"
+          "required": false
         }
-      ],
-      "gasLimit": 10000000
+      ]
     }
   ],
   "messages": {

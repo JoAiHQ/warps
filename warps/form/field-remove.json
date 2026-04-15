@@ -9,31 +9,29 @@
     "en": "Permanently remove a field from a form.",
     "de": "Ein Feld dauerhaft aus einem Formular entfernen."
   },
-  "bot": "Use this to remove a field from an existing form. The change is permanent and on-chain.",
+  "bot": "Use this to remove a field from an existing form.",
   "actions": [
     {
-      "type": "contract",
+      "type": "collect",
       "label": {
         "en": "Remove field",
         "de": "Feld entfernen"
       },
       "destination": {
-        "url": "INJECT:FORM_CONTRACT",
-        "func": "removeField"
+        "url": "INJECT:API_BASE/v1/warps/{{formId}}/inputs/{{slug}}",
+        "method": "DELETE",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
       },
       "inputs": [
         {
           "name": "Form ID",
           "as": "formId",
-          "description": {
-            "en": "The form to remove the field from",
-            "de": "Das Formular, aus dem das Feld entfernt wird"
-          },
           "type": "string",
           "position": "arg:1",
           "source": "field",
-          "required": true,
-          "min": 1
+          "required": true
         },
         {
           "name": "Slug",
@@ -45,17 +43,15 @@
           "type": "string",
           "position": "arg:2",
           "source": "field",
-          "required": true,
-          "min": 1
+          "required": true
         }
-      ],
-      "gasLimit": 10000000
+      ]
     }
   ],
   "messages": {
     "success": {
-      "en": "Field '{{slug}}' removed from form '{{formId}}'.",
-      "de": "Feld '{{slug}}' aus Formular '{{formId}}' entfernt."
+      "en": "Field '{{slug}}' removed.",
+      "de": "Feld '{{slug}}' entfernt."
     }
   }
 }
