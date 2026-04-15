@@ -1,6 +1,40 @@
 import type { WarpExtras } from '../types'
 
 export const meta: Record<string, WarpExtras> = {
+  'get': {
+    keywords: {
+      en: ['get form', 'fetch form', 'read form definition', 'form details'],
+      de: ['Formular abrufen', 'Formular lesen', 'Formulardefinition'],
+      fr: ['obtenir formulaire', 'lire formulaire'],
+      es: ['obtener formulario', 'leer formulario'],
+      ro: ['obtine formular', 'citeste formular'],
+    },
+    useCases: {
+      en: [
+        'Read the current definition of a form before adding or editing fields',
+        'Check which fields a form currently has',
+      ],
+      de: [
+        'Aktuelle Definition eines Formulars lesen, bevor Felder hinzugefügt oder bearbeitet werden',
+        'Prüfen, welche Felder ein Formular aktuell hat',
+      ],
+      fr: [
+        'Lire la définition actuelle d\'un formulaire avant d\'ajouter ou de modifier des champs',
+        'Vérifier quels champs un formulaire contient actuellement',
+      ],
+      es: [
+        'Leer la definición actual de un formulario antes de agregar o editar campos',
+        'Verificar qué campos tiene actualmente un formulario',
+      ],
+      ro: [
+        'Citeste definitia curenta a unui formular inainte de a adauga sau edita campuri',
+        'Verifica ce campuri are in prezent un formular',
+      ],
+    },
+    category: 'sales',
+    faq: {},
+  },
+
   'create': {
     keywords: {
       en: ['create form', 'new form', 'form builder', 'lead form setup', 'event form create', 'no-code form builder'],
