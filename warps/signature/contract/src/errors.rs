@@ -1,0 +1,15 @@
+pub const ERR_INVALID_TITLE: &str = "title must be 1-128 bytes";
+pub const ERR_INVALID_DOCUMENT_HASH: &str = "document_hash must be 1-128 bytes";
+pub const ERR_INVALID_DOCUMENT_URL: &str = "document_url must be 1-256 bytes";
+pub const ERR_INVALID_DEADLINE: &str = "deadline_hours must be 0 or between 1 and 8760";
+pub const ERR_NO_SIGNERS: &str = "at least one signer is required";
+pub const ERR_TOO_MANY_SIGNERS: &str = "maximum 10 signers allowed";
+pub const ERR_DUPLICATE_SIGNER: &str = "duplicate signer address";
+pub const ERR_REQUEST_NOT_FOUND: &str = "signature request not found";
+pub const ERR_NOT_PENDING: &str = "request is not in pending status";
+pub const ERR_NOT_ELIGIBLE_SIGNER: &str = "caller is not an eligible signer for this request";
+pub const ERR_ALREADY_SIGNED: &str = "caller has already signed this request";
+pub const ERR_NOT_CREATOR: &str = "only the request creator can cancel";
+pub const ERR_DEADLINE_PASSED: &str = "signing deadline has passed";
+pub const ERR_DEADLINE_NOT_PASSED: &str = "deadline has not passed yet";
+pub const ERR_NO_DEADLINE: &str = "request has no deadline";

@@ -7,6 +7,9 @@ export const brand = async (config: WarpClientConfig): Promise<WarpbaseBrand> =>
     .setDescription({
       en: 'Appointment booking and intake flows for service businesses.',
       de: 'Terminbuchung und Intake-Abläufe für Dienstleistungsunternehmen.',
+      fr: 'Prise de rendez-vous et parcours de reservation pour les entreprises de services.',
+      es: 'Reservas de citas y flujos de atencion para negocios de servicios.',
+      ro: 'Programari si fluxuri de preluare pentru afaceri de servicii.',
     })
     .setLogo('https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg')
     .setUrls({ web: 'https://joai.ai' })
@@ -29,8 +32,8 @@ export const brand = async (config: WarpClientConfig): Promise<WarpbaseBrand> =>
     auth: false,
     indexPath: '/',
     routes: [
-      { path: '/', warp: '@appointment-availability', label: { en: 'Book', de: 'Buchen' }, nav: true },
-      { path: '/configure', warp: '@appointment-policy-upsert', label: { en: 'Settings', de: 'Einstellungen' }, nav: false },
+      { path: '/', warp: '@appointment-availability', label: { en: 'Book', de: 'Buchen', fr: 'Prendre rendez-vous', es: 'Reservar', ro: 'Programeaza' }, nav: true },
+      { path: '/configure', warp: '@appointment-policy-upsert', label: { en: 'Settings', de: 'Einstellungen', fr: 'Parametres', es: 'Ajustes', ro: 'Setari' }, nav: false },
     ],
   },
 })

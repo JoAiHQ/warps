@@ -1,0 +1,103 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Identity Verification",
+  "title": {
+    "en": "Verify Your Identity",
+    "de": "Identität verifizieren"
+  },
+  "description": {
+    "en": "Submit your identity information to unlock payouts. Required once per account.",
+    "de": "Reiche deine Identitätsdaten ein, um Auszahlungen freizuschalten. Einmalig pro Konto erforderlich."
+  },
+  "bot": "Guide the user through submitting their identity for payout verification. Explain that this is required once to comply with legal obligations and unlock payouts.",
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Submit for review",
+        "de": "Zur Prüfung einreichen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/me/kyc",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Full Legal Name",
+          "as": "fullName",
+          "description": {
+            "en": "Your full legal name as it appears on your ID.",
+            "de": "Dein vollständiger rechtlicher Name, wie er auf deinem Ausweis steht."
+          },
+          "type": "string",
+          "position": "arg:1",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Country",
+          "as": "country",
+          "description": {
+            "en": "Country of residence.",
+            "de": "Wohnsitzland."
+          },
+          "bot": "Ask for the country naturally. Convert the answer to the two-letter ISO 3166-1 alpha-2 code (e.g. Austria → AT, Germany → DE) before submitting.",
+          "type": "string",
+          "position": "arg:2",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Address",
+          "as": "address",
+          "description": {
+            "en": "Your full residential address including city and postal code.",
+            "de": "Deine vollständige Wohnadresse mit Stadt und Postleitzahl."
+          },
+          "type": "string",
+          "position": "arg:3",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Tax / VAT ID",
+          "as": "taxId",
+          "description": {
+            "en": "Your tax identification number or VAT ID. For individuals: national tax ID. For businesses: VAT number.",
+            "de": "Deine Steueridentifikationsnummer oder USt-IdNr. Für Privatpersonen: Steuer-ID. Für Unternehmen: UID-Nummer."
+          },
+          "type": "string",
+          "position": "arg:4",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Company Name",
+          "as": "companyName",
+          "description": {
+            "en": "Your company or business name, if applicable.",
+            "de": "Dein Unternehmensname, falls zutreffend."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Identity submitted. We will review your information and notify you once approved.",
+      "de": "Identität eingereicht. Wir prüfen deine Angaben und benachrichtigen dich nach der Freigabe."
+    },
+    "error": {
+      "en": "Failed to submit identity information. Please try again.",
+      "de": "Identitätsdaten konnten nicht eingereicht werden. Bitte erneut versuchen."
+    }
+  }
+}

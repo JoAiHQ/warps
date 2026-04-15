@@ -1,0 +1,54 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Form: Remove Field",
+  "title": {
+    "en": "Remove a field",
+    "de": "Feld entfernen"
+  },
+  "description": {
+    "en": "Permanently remove a field from a form.",
+    "de": "Ein Feld dauerhaft aus einem Formular entfernen."
+  },
+  "bot": "Use this to remove a field from a form. Call form-get first to read the current definition, then remove the target field from definition.actions[0].inputs and submit the full updated definition.",
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Remove field",
+        "de": "Feld entfernen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/warps/{{formId}}",
+        "method": "PATCH",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Form ID",
+          "as": "formId",
+          "type": "string",
+          "position": "arg:1",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Definition",
+          "as": "definition",
+          "bot": "The full updated warp definition with the target field removed from definition.actions[0].inputs. Keep all other fields intact.",
+          "type": "json",
+          "position": "arg:2",
+          "source": "computed",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Field removed.",
+      "de": "Feld entfernt."
+    }
+  }
+}

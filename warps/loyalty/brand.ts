@@ -7,6 +7,9 @@ export const brand = async (config: WarpClientConfig): Promise<WarpbaseBrand> =>
     .setDescription({
       en: 'Stamp-based loyalty programs for local service businesses.',
       de: 'Stempelbasierte Treueprogramme für lokale Dienstleistungsunternehmen.',
+      fr: 'Programmes de fidelite a tampons pour les entreprises de services locales.',
+      es: 'Programas de fidelizacion con sellos para negocios locales de servicios.',
+      ro: 'Programe de loialitate cu stampile pentru afacerile locale de servicii.',
     })
     .setLogo('https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg')
     .setUrls({ web: 'https://joai.ai' })
@@ -39,12 +42,12 @@ export const brand = async (config: WarpClientConfig): Promise<WarpbaseBrand> =>
     auth: false,
     indexPath: '/',
     routes: [
-      { path: '/', warp: '@loyalty-register', label: { en: 'Join', de: 'Beitreten' }, nav: true },
-      { path: '/card', warp: '@loyalty-status', label: { en: 'My Card', de: 'Meine Karte' }, nav: true },
-      { path: '/redeem', warp: '@loyalty-redeem', label: { en: 'Redeem', de: 'Einlösen' }, nav: false },
-      { path: '/review', warp: '@loyalty-review', label: { en: 'Review', de: 'Bewertung' }, nav: false },
-      { path: '/admin/stamp', warp: '@loyalty-stamp', label: { en: 'Stamp Card', de: 'Karte stempeln' }, nav: false },
-      { path: '/admin/configure', warp: '@loyalty-configure', label: { en: 'Configure', de: 'Konfigurieren' }, nav: false },
+      { path: '/', warp: '@loyalty-register', label: { en: 'Join', de: 'Beitreten', fr: 'Rejoindre', es: 'Unirse', ro: 'Inscrie-te' }, nav: true },
+      { path: '/card', warp: '@loyalty-status', label: { en: 'My Card', de: 'Meine Karte', fr: 'Ma carte', es: 'Mi tarjeta', ro: 'Cardul meu' }, nav: true },
+      { path: '/redeem', warp: '@loyalty-redeem', label: { en: 'Redeem', de: 'Einlösen', fr: 'Utiliser', es: 'Canjear', ro: 'Foloseste' }, nav: false },
+      { path: '/review', warp: '@loyalty-review', label: { en: 'Review', de: 'Bewertung', fr: 'Avis', es: 'Resena', ro: 'Recenzie' }, nav: false },
+      { path: '/admin/stamp', warp: '@loyalty-stamp', label: { en: 'Stamp Card', de: 'Karte stempeln', fr: 'Tamponner la carte', es: 'Sellar tarjeta', ro: 'Stampileaza cardul' }, nav: false },
+      { path: '/admin/configure', warp: '@loyalty-configure', label: { en: 'Configure', de: 'Konfigurieren', fr: 'Configurer', es: 'Configurar', ro: 'Configureaza' }, nav: false },
     ],
   },
 })

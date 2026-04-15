@@ -7,6 +7,9 @@ export const brand = async (config: WarpClientConfig): Promise<WarpbaseBrand> =>
     .setDescription({
       en: 'On-chain document signatures. Send signing requests by email. All agreements anchored on the blockchain.',
       de: 'On-chain-Dokumentensignaturen. Signaturanfragen per E-Mail senden. Alle Vereinbarungen auf der Blockchain verankert.',
+      fr: 'Signatures de documents on-chain. Envoyez des demandes de signature par e-mail. Tous les accords sont ancrés sur la blockchain.',
+      es: 'Firmas de documentos on-chain. Envia solicitudes de firma por correo electronico. Todos los acuerdos quedan anclados en la blockchain.',
+      ro: 'Semnaturi de documente on-chain. Trimite cereri de semnare prin e-mail. Toate acordurile sunt ancorate pe blockchain.',
     })
     .setLogo('https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg')
     .setUrls({ web: 'https://joai.ai' })
@@ -30,10 +33,10 @@ export const brand = async (config: WarpClientConfig): Promise<WarpbaseBrand> =>
     auth: false,
     indexPath: '/',
     routes: [
-      { path: '/', warp: '@signature-create', label: { en: 'Request Signature', de: 'Signatur anfordern' }, nav: true },
-      { path: '/sign', warp: '@signature-sign', label: { en: 'Sign Document', de: 'Dokument unterzeichnen' }, nav: false },
-      { path: '/view', warp: '@signature-view', label: { en: 'View Request', de: 'Anfrage ansehen' }, nav: false },
-      { path: '/list', warp: '@signature-list', label: { en: 'My Requests', de: 'Meine Anfragen' }, nav: true },
+      { path: '/', warp: '@signature-create', label: { en: 'Request Signature', de: 'Signatur anfordern', fr: 'Demander une signature', es: 'Solicitar firma', ro: 'Solicita semnatura' }, nav: true },
+      { path: '/sign', warp: '@signature-sign', label: { en: 'Sign Document', de: 'Dokument unterzeichnen', fr: 'Signer le document', es: 'Firmar documento', ro: 'Semneaza documentul' }, nav: false },
+      { path: '/view', warp: '@signature-view', label: { en: 'View Request', de: 'Anfrage ansehen', fr: 'Voir la demande', es: 'Ver solicitud', ro: 'Vezi cererea' }, nav: false },
+      { path: '/list', warp: '@signature-list', label: { en: 'My Requests', de: 'Meine Anfragen', fr: 'Mes demandes', es: 'Mis solicitudes', ro: 'Cererile mele' }, nav: true },
     ],
   },
 })

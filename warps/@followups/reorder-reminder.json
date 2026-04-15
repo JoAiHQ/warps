@@ -1,0 +1,164 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Followups: Reorder Reminder",
+  "title": {
+    "en": "Send reorder reminder",
+    "de": "Nachbestellungs-Erinnerung senden",
+    "fr": "Envoyer un rappel de recommande",
+    "es": "Enviar recordatorio de reorden",
+    "ro": "Trimite memento de recomanda"
+  },
+  "description": {
+    "en": "Remind a customer that it's time to reorder a product they purchased previously.",
+    "de": "Einen Kunden daran erinnern, dass es Zeit ist, ein zuvor gekauftes Produkt nachzubestellen.",
+    "fr": "Rappeler a un client qu il est temps de recommander un produit achete precedemment.",
+    "es": "Recordar a un cliente que es hora de reordenar un producto que compro anteriormente.",
+    "ro": "Aminteste unui client ca este timpul sa recomande un produs cumparat anterior."
+  },
+  "bot": "When this warp is triggered: fetches the contact, composes a friendly reorder reminder, and sends it via WhatsApp.",
+  "output": {
+    "CONTACT_NAME": "out.name",
+    "CONTACT_PHONE": "out.phone",
+    "CONTACT_EMAIL": "out.email"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Send reminder",
+        "de": "Erinnerung senden",
+        "fr": "Envoyer le rappel",
+        "es": "Enviar recordatorio",
+        "ro": "Trimite memento-ul"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/contacts/{{contactId}}",
+        "method": "GET",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Contact",
+          "as": "contactId",
+          "description": {
+            "en": "Which customer to remind?",
+            "de": "Welchen Kunden erinnern?",
+            "fr": "Quel client rappeler ?",
+            "es": "A cual cliente recordar?",
+            "ro": "Care client sa fie amintit?"
+          },
+          "bot": "The contact ID of the customer to send the reorder reminder to.",
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Product Name",
+          "as": "productName",
+          "description": {
+            "en": "Which product to reorder?",
+            "de": "Welches Produkt nachbestellen?",
+            "fr": "Quel produit recommander ?",
+            "es": "Que producto reordenar?",
+            "ro": "Ce produs sa recomande?"
+          },
+          "bot": "The name of the product the customer should reorder.",
+          "type": "string",
+          "source": "field",
+          "position": "local",
+          "required": true
+        },
+        {
+          "name": "Last Purchased",
+          "as": "lastPurchased",
+          "description": {
+            "en": "When was it last purchased?",
+            "de": "Wann wurde es zuletzt gekauft?",
+            "fr": "Quand a-t-il ete achete pour la derniere fois ?",
+            "es": "Cuando fue comprado por ultima vez?",
+            "ro": "Cand a fost cumparat ultima data?"
+          },
+          "bot": "The date when the product was last purchased.",
+          "type": "string",
+          "source": "field",
+          "position": "local",
+          "required": false
+        }
+      ]
+    },
+    {
+      "type": "prompt",
+      "label": {
+        "en": "Compose reminder",
+        "de": "Erinnerung verfassen",
+        "fr": "Rediger le rappel",
+        "es": "Redactar recordatorio",
+        "ro": "Compune memento-ul"
+      },
+      "prompt": "Compose a friendly product reorder reminder in German (du-form) for {{CONTACT_NAME}} about {{productName}}. If last purchase date is known ({{lastPurchased}}), mention how long it's been."
+    },
+    {
+      "type": "collect",
+      "label": {
+        "en": "Send message",
+        "de": "Nachricht senden",
+        "fr": "Envoyer le message",
+        "es": "Enviar mensaje",
+        "ro": "Trimite mesajul"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/agents/{{JOAI_AGENT_UUID}}/message",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "auto": true,
+      "inputs": [
+        {
+          "name": "Integration Type",
+          "as": "integrationType",
+          "type": "string",
+          "source": "field",
+          "value": "whatsapp",
+          "hidden": true
+        },
+        {
+          "name": "Recipient ID",
+          "as": "recipientId",
+          "type": "string",
+          "source": "field",
+          "value": "{{CONTACT_PHONE}}",
+          "hidden": true
+        },
+        {
+          "name": "Recipient Name",
+          "as": "recipientName",
+          "type": "string",
+          "source": "field",
+          "value": "{{CONTACT_NAME}}",
+          "hidden": true
+        },
+        {
+          "name": "Message",
+          "as": "message",
+          "type": "string",
+          "source": "field",
+          "value": "{{MESSAGE}}",
+          "hidden": true
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Sending reorder reminder...",
+      "de": "Nachbestellungs-Erinnerung wird gesendet...",
+      "fr": "Envoi du rappel de recommande...",
+      "es": "Enviando recordatorio de reorden...",
+      "ro": "Se trimite memento-ul de recomanda..."
+    }
+  }
+}

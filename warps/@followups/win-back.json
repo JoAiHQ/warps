@@ -1,0 +1,164 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Followups: Win Back",
+  "title": {
+    "en": "Send win-back message",
+    "de": "Win-back-Nachricht senden",
+    "fr": "Envoyer un message de reconquete",
+    "es": "Enviar mensaje de recuperacion",
+    "ro": "Trimite mesaj de recuperare"
+  },
+  "description": {
+    "en": "Reach out to an inactive customer with a personalized win-back message and optional offer.",
+    "de": "Einen inaktiven Kunden mit einer personalisierten Win-back-Nachricht und optionalem Angebot kontaktieren.",
+    "fr": "Contacter un client inactif avec un message de reconquete personnalise et une offre optionnelle.",
+    "es": "Contactar a un cliente inactivo con un mensaje personalizado de recuperacion y una oferta opcional.",
+    "ro": "Contacteaza un client inactiv cu un mesaj personalizat de recuperare si o oferta optionala."
+  },
+  "bot": "When this warp is triggered: fetches the contact, composes a personalized win-back message, and sends it via WhatsApp.",
+  "output": {
+    "CONTACT_NAME": "out.name",
+    "CONTACT_PHONE": "out.phone",
+    "CONTACT_EMAIL": "out.email"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Send win-back",
+        "de": "Win-back senden",
+        "fr": "Envoyer la reconquete",
+        "es": "Enviar recuperacion",
+        "ro": "Trimite recuperarea"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/contacts/{{contactId}}",
+        "method": "GET",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Contact",
+          "as": "contactId",
+          "description": {
+            "en": "Which customer to win back?",
+            "de": "Welchen Kunden zurueckgewinnen?",
+            "fr": "Quel client reconquerir ?",
+            "es": "Cual cliente recuperar?",
+            "ro": "Care client sa fie recuperat?"
+          },
+          "bot": "The contact ID of the inactive customer to reach out to.",
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Days Inactive",
+          "as": "daysInactive",
+          "description": {
+            "en": "How many days since their last visit?",
+            "de": "Wie viele Tage seit dem letzten Besuch?",
+            "fr": "Combien de jours depuis leur derniere visite ?",
+            "es": "Cuantos dias desde su ultima visita?",
+            "ro": "Cate zile de la ultima vizita?"
+          },
+          "bot": "Number of days since the customer's last visit. Used to personalize the win-back message.",
+          "type": "string",
+          "source": "field",
+          "position": "local",
+          "required": true
+        },
+        {
+          "name": "Offer",
+          "as": "offer",
+          "description": {
+            "en": "Optional coupon or discount to include",
+            "de": "Optionaler Gutschein oder Rabatt",
+            "fr": "Coupon ou reduction optionnel a inclure",
+            "es": "Cupon o descuento opcional a incluir",
+            "ro": "Cupon sau reducere optionala de inclus"
+          },
+          "bot": "Optional incentive to include in the win-back message, such as a discount or coupon code.",
+          "type": "string",
+          "source": "field",
+          "position": "local",
+          "required": false
+        }
+      ]
+    },
+    {
+      "type": "prompt",
+      "label": {
+        "en": "Compose message",
+        "de": "Nachricht verfassen",
+        "fr": "Rediger le message",
+        "es": "Redactar mensaje",
+        "ro": "Compune mesajul"
+      },
+      "prompt": "Compose a warm, personalized win-back message in German (du-form) for {{CONTACT_NAME}} who hasn't visited in {{daysInactive}} days. If an offer is provided, include it naturally: {{offer}}"
+    },
+    {
+      "type": "collect",
+      "label": {
+        "en": "Send message",
+        "de": "Nachricht senden",
+        "fr": "Envoyer le message",
+        "es": "Enviar mensaje",
+        "ro": "Trimite mesajul"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/agents/{{JOAI_AGENT_UUID}}/message",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "auto": true,
+      "inputs": [
+        {
+          "name": "Integration Type",
+          "as": "integrationType",
+          "type": "string",
+          "source": "field",
+          "value": "whatsapp",
+          "hidden": true
+        },
+        {
+          "name": "Recipient ID",
+          "as": "recipientId",
+          "type": "string",
+          "source": "field",
+          "value": "{{CONTACT_PHONE}}",
+          "hidden": true
+        },
+        {
+          "name": "Recipient Name",
+          "as": "recipientName",
+          "type": "string",
+          "source": "field",
+          "value": "{{CONTACT_NAME}}",
+          "hidden": true
+        },
+        {
+          "name": "Message",
+          "as": "message",
+          "type": "string",
+          "source": "field",
+          "value": "{{MESSAGE}}",
+          "hidden": true
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Sending win-back message...",
+      "de": "Win-back-Nachricht wird gesendet...",
+      "fr": "Envoi du message de reconquete...",
+      "es": "Enviando mensaje de recuperacion...",
+      "ro": "Se trimite mesajul de recuperare..."
+    }
+  }
+}

@@ -1,0 +1,148 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Upsells: After Visit",
+  "title": {
+    "en": "Post-visit upsell message",
+    "de": "Upsell-Nachricht nach dem Besuch",
+    "fr": "Message de vente additionnelle apres la visite",
+    "es": "Mensaje de venta adicional despues de la visita",
+    "ro": "Mesaj de upsell dupa vizita"
+  },
+  "description": {
+    "en": "Send a personalized follow-up with product recommendations after a customer visit.",
+    "de": "Eine personalisierte Nachricht mit Produktempfehlungen nach einem Kundenbesuch senden.",
+    "fr": "Envoyer un suivi personnalise avec des recommandations de produits apres la visite d un client.",
+    "es": "Enviar un seguimiento personalizado con recomendaciones de productos despues de la visita de un cliente.",
+    "ro": "Trimite un follow-up personalizat cu recomandari de produse dupa vizita unui client."
+  },
+  "bot": "When this warp is triggered: fetches the contact, composes a thank-you message with upsell recommendations, and sends it via WhatsApp.",
+  "output": {
+    "CONTACT_NAME": "out.name",
+    "CONTACT_PHONE": "out.phone",
+    "CONTACT_EMAIL": "out.email"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Send upsell",
+        "de": "Upsell senden",
+        "fr": "Envoyer la vente additionnelle",
+        "es": "Enviar venta adicional",
+        "ro": "Trimite upsell"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/contacts/{{contactId}}",
+        "method": "GET",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Contact",
+          "as": "contactId",
+          "description": {
+            "en": "Which customer to follow up with?",
+            "de": "Bei welchem Kunden nachfassen?",
+            "fr": "Quel client relancer ?",
+            "es": "Con cual cliente hacer seguimiento?",
+            "ro": "Cu care client sa faci follow-up?"
+          },
+          "bot": "The contact ID of the customer who just visited.",
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Service Completed",
+          "as": "serviceCompleted",
+          "description": {
+            "en": "What service did they just have?",
+            "de": "Welche Dienstleistung hatten sie gerade?",
+            "fr": "Quel service viennent-ils de recevoir ?",
+            "es": "Que servicio acaban de recibir?",
+            "ro": "Ce serviciu tocmai au primit?"
+          },
+          "bot": "The service or treatment the customer just completed. Used to recommend complementary products.",
+          "type": "string",
+          "source": "field",
+          "position": "local",
+          "required": true
+        }
+      ]
+    },
+    {
+      "type": "prompt",
+      "label": {
+        "en": "Compose message",
+        "de": "Nachricht verfassen",
+        "fr": "Rediger le message",
+        "es": "Redactar mensaje",
+        "ro": "Compune mesajul"
+      },
+      "prompt": "Compose a thank-you message in German (du-form) for {{CONTACT_NAME}} who just had: {{serviceCompleted}}. Recommend a related product or complementary service naturally."
+    },
+    {
+      "type": "collect",
+      "label": {
+        "en": "Send message",
+        "de": "Nachricht senden",
+        "fr": "Envoyer le message",
+        "es": "Enviar mensaje",
+        "ro": "Trimite mesajul"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/agents/{{JOAI_AGENT_UUID}}/message",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "auto": true,
+      "inputs": [
+        {
+          "name": "Integration Type",
+          "as": "integrationType",
+          "type": "string",
+          "source": "field",
+          "value": "whatsapp",
+          "hidden": true
+        },
+        {
+          "name": "Recipient ID",
+          "as": "recipientId",
+          "type": "string",
+          "source": "field",
+          "value": "{{CONTACT_PHONE}}",
+          "hidden": true
+        },
+        {
+          "name": "Recipient Name",
+          "as": "recipientName",
+          "type": "string",
+          "source": "field",
+          "value": "{{CONTACT_NAME}}",
+          "hidden": true
+        },
+        {
+          "name": "Message",
+          "as": "message",
+          "type": "string",
+          "source": "field",
+          "value": "{{MESSAGE}}",
+          "hidden": true
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Sending post-visit recommendations...",
+      "de": "Empfehlungen nach dem Besuch werden gesendet...",
+      "fr": "Envoi des recommandations apres la visite...",
+      "es": "Enviando recomendaciones post-visita...",
+      "ro": "Se trimit recomandarile dupa vizita..."
+    }
+  }
+}

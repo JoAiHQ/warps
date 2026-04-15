@@ -1,0 +1,164 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Upsells: Product Alert",
+  "title": {
+    "en": "Notify customer about a product",
+    "de": "Kunden ueber ein Produkt benachrichtigen",
+    "fr": "Notifier un client a propos d un produit",
+    "es": "Notificar a un cliente sobre un producto",
+    "ro": "Notifica un client despre un produs"
+  },
+  "description": {
+    "en": "Send a targeted product recommendation to a specific customer.",
+    "de": "Eine gezielte Produktempfehlung an einen bestimmten Kunden senden.",
+    "fr": "Envoyer une recommandation de produit ciblee a un client specifique.",
+    "es": "Enviar una recomendacion de producto dirigida a un cliente especifico.",
+    "ro": "Trimite o recomandare de produs tintita catre un client specific."
+  },
+  "bot": "When this warp is triggered: fetches the contact, composes a personalized product recommendation, and sends it via WhatsApp.",
+  "output": {
+    "CONTACT_NAME": "out.name",
+    "CONTACT_PHONE": "out.phone",
+    "CONTACT_EMAIL": "out.email"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Send alert",
+        "de": "Benachrichtigung senden",
+        "fr": "Envoyer l alerte",
+        "es": "Enviar alerta",
+        "ro": "Trimite alerta"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/contacts/{{contactId}}",
+        "method": "GET",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Contact",
+          "as": "contactId",
+          "description": {
+            "en": "Which customer to notify?",
+            "de": "Welchen Kunden benachrichtigen?",
+            "fr": "Quel client notifier ?",
+            "es": "A cual cliente notificar?",
+            "ro": "Care client sa fie notificat?"
+          },
+          "bot": "The contact ID of the customer to send the product alert to.",
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Product Name",
+          "as": "productName",
+          "description": {
+            "en": "Name of the product to recommend",
+            "de": "Name des zu empfehlenden Produkts",
+            "fr": "Nom du produit a recommander",
+            "es": "Nombre del producto a recomendar",
+            "ro": "Numele produsului de recomandat"
+          },
+          "bot": "The name of the product to recommend to the customer.",
+          "type": "string",
+          "source": "field",
+          "position": "local",
+          "required": true
+        },
+        {
+          "name": "Reason",
+          "as": "reason",
+          "description": {
+            "en": "Why is this product relevant for them?",
+            "de": "Warum ist dieses Produkt fuer sie relevant?",
+            "fr": "Pourquoi ce produit est-il pertinent pour eux ?",
+            "es": "Por que este producto es relevante para ellos?",
+            "ro": "De ce este acest produs relevant pentru ei?"
+          },
+          "bot": "Optional reason why this product is relevant for the customer.",
+          "type": "string",
+          "source": "field",
+          "position": "local",
+          "required": false
+        }
+      ]
+    },
+    {
+      "type": "prompt",
+      "label": {
+        "en": "Compose recommendation",
+        "de": "Empfehlung verfassen",
+        "fr": "Rediger la recommandation",
+        "es": "Redactar recomendacion",
+        "ro": "Compune recomandarea"
+      },
+      "prompt": "Compose a personalized product recommendation in German (du-form) for {{CONTACT_NAME}} about {{productName}}. Reason it's relevant: {{reason}}. Friendly tone."
+    },
+    {
+      "type": "collect",
+      "label": {
+        "en": "Send message",
+        "de": "Nachricht senden",
+        "fr": "Envoyer le message",
+        "es": "Enviar mensaje",
+        "ro": "Trimite mesajul"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/agents/{{JOAI_AGENT_UUID}}/message",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "auto": true,
+      "inputs": [
+        {
+          "name": "Integration Type",
+          "as": "integrationType",
+          "type": "string",
+          "source": "field",
+          "value": "whatsapp",
+          "hidden": true
+        },
+        {
+          "name": "Recipient ID",
+          "as": "recipientId",
+          "type": "string",
+          "source": "field",
+          "value": "{{CONTACT_PHONE}}",
+          "hidden": true
+        },
+        {
+          "name": "Recipient Name",
+          "as": "recipientName",
+          "type": "string",
+          "source": "field",
+          "value": "{{CONTACT_NAME}}",
+          "hidden": true
+        },
+        {
+          "name": "Message",
+          "as": "message",
+          "type": "string",
+          "source": "field",
+          "value": "{{MESSAGE}}",
+          "hidden": true
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Sending product recommendation...",
+      "de": "Produktempfehlung wird gesendet...",
+      "fr": "Envoi de la recommandation de produit...",
+      "es": "Enviando recomendacion de producto...",
+      "ro": "Se trimite recomandarea de produs..."
+    }
+  }
+}

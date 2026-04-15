@@ -7,6 +7,9 @@ export const brand = async (config: WarpClientConfig): Promise<WarpbaseBrand> =>
     .setDescription({
       en: 'Stake-backed personal challenges. Put money on the line and prove it.',
       de: 'Persönliche Challenges mit echtem Einsatz. Setz etwas aufs Spiel und beweise es.',
+      fr: 'Defis personnels avec mise en jeu. Mettez quelque chose en jeu et prouvez-le.',
+      es: 'Retos personales con dinero en juego. Pon algo en riesgo y demuestralo.',
+      ro: 'Provocari personale sustinute de o miza. Pune ceva in joc si demonstreaza.',
     })
     .setLogo('https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg')
     .setUrls({ web: 'https://joai.ai' })
@@ -30,10 +33,10 @@ export const brand = async (config: WarpClientConfig): Promise<WarpbaseBrand> =>
     auth: false,
     indexPath: '/',
     routes: [
-      { path: '/', warp: '@challenge-list', label: { en: 'Browse', de: 'Entdecken' }, nav: true },
-      { path: '/create', warp: '@challenge-create', label: { en: 'Create', de: 'Erstellen' }, nav: true },
-      { path: '/view', warp: '@challenge-view', label: { en: 'Challenge', de: 'Challenge' }, nav: false },
-      { path: '/accept', warp: '@challenge-accept', label: { en: 'Accept', de: 'Annehmen' }, nav: false },
+      { path: '/', warp: '@challenge-list', label: { en: 'Browse', de: 'Entdecken', fr: 'Explorer', es: 'Explorar', ro: 'Exploreaza' }, nav: true },
+      { path: '/create', warp: '@challenge-create', label: { en: 'Create', de: 'Erstellen', fr: 'Creer', es: 'Crear', ro: 'Creeaza' }, nav: true },
+      { path: '/view', warp: '@challenge-view', label: { en: 'Challenge', de: 'Challenge', fr: 'Defi', es: 'Reto', ro: 'Provocare' }, nav: false },
+      { path: '/accept', warp: '@challenge-accept', label: { en: 'Accept', de: 'Annehmen', fr: 'Accepter', es: 'Aceptar', ro: 'Accepta' }, nav: false },
     ],
   },
 })

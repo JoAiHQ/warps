@@ -1,0 +1,148 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Upsells: Bundle Suggest",
+  "title": {
+    "en": "Suggest a service bundle",
+    "de": "Ein Dienstleistungspaket vorschlagen",
+    "fr": "Suggerer un forfait de services",
+    "es": "Sugerir un paquete de servicios",
+    "ro": "Sugereaza un pachet de servicii"
+  },
+  "description": {
+    "en": "Suggest a bundled package of services to a customer at a discounted rate.",
+    "de": "Einem Kunden ein Dienstleistungspaket zu einem reduzierten Preis vorschlagen.",
+    "fr": "Suggerer un forfait groupe de services a un client a un tarif reduit.",
+    "es": "Sugerir un paquete combinado de servicios a un cliente a un precio con descuento.",
+    "ro": "Sugereaza un pachet combinat de servicii unui client la un pret redus."
+  },
+  "bot": "When this warp is triggered: fetches the contact, composes an attractive bundle offer, and sends it via WhatsApp.",
+  "output": {
+    "CONTACT_NAME": "out.name",
+    "CONTACT_PHONE": "out.phone",
+    "CONTACT_EMAIL": "out.email"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Suggest bundle",
+        "de": "Paket vorschlagen",
+        "fr": "Suggerer le forfait",
+        "es": "Sugerir paquete",
+        "ro": "Sugereaza pachetul"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/contacts/{{contactId}}",
+        "method": "GET",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Contact",
+          "as": "contactId",
+          "description": {
+            "en": "Which customer to suggest the bundle to?",
+            "de": "Welchem Kunden soll das Paket vorgeschlagen werden?",
+            "fr": "A quel client suggerer le forfait ?",
+            "es": "A cual cliente sugerir el paquete?",
+            "ro": "Caruia client sa sugerezi pachetul?"
+          },
+          "bot": "The contact ID of the customer to suggest the bundle to.",
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Services",
+          "as": "services",
+          "description": {
+            "en": "Services to include (comma-separated)",
+            "de": "Enthaltene Dienstleistungen (kommagetrennt)",
+            "fr": "Services a inclure (separes par des virgules)",
+            "es": "Servicios a incluir (separados por comas)",
+            "ro": "Servicii de inclus (separate prin virgula)"
+          },
+          "bot": "Comma-separated list of services to include in the bundle.",
+          "type": "string",
+          "source": "field",
+          "position": "local",
+          "required": true
+        }
+      ]
+    },
+    {
+      "type": "prompt",
+      "label": {
+        "en": "Compose bundle offer",
+        "de": "Paketangebot verfassen",
+        "fr": "Rediger l offre forfait",
+        "es": "Redactar oferta de paquete",
+        "ro": "Compune oferta de pachet"
+      },
+      "prompt": "Suggest a service bundle in German (du-form) for {{CONTACT_NAME}} from these services: {{services}}. Calculate ~15% discount. Present attractively."
+    },
+    {
+      "type": "collect",
+      "label": {
+        "en": "Send message",
+        "de": "Nachricht senden",
+        "fr": "Envoyer le message",
+        "es": "Enviar mensaje",
+        "ro": "Trimite mesajul"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/agents/{{JOAI_AGENT_UUID}}/message",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "auto": true,
+      "inputs": [
+        {
+          "name": "Integration Type",
+          "as": "integrationType",
+          "type": "string",
+          "source": "field",
+          "value": "whatsapp",
+          "hidden": true
+        },
+        {
+          "name": "Recipient ID",
+          "as": "recipientId",
+          "type": "string",
+          "source": "field",
+          "value": "{{CONTACT_PHONE}}",
+          "hidden": true
+        },
+        {
+          "name": "Recipient Name",
+          "as": "recipientName",
+          "type": "string",
+          "source": "field",
+          "value": "{{CONTACT_NAME}}",
+          "hidden": true
+        },
+        {
+          "name": "Message",
+          "as": "message",
+          "type": "string",
+          "source": "field",
+          "value": "{{MESSAGE}}",
+          "hidden": true
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Preparing bundle suggestion...",
+      "de": "Paketvorschlag wird vorbereitet...",
+      "fr": "Preparation de la suggestion de forfait...",
+      "es": "Preparando sugerencia de paquete...",
+      "ro": "Se pregateste sugestia de pachet..."
+    }
+  }
+}

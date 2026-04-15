@@ -1,0 +1,107 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Shop: Add Product",
+  "title": {
+    "en": "Add product",
+    "de": "Produkt hinzufügen"
+  },
+  "description": {
+    "en": "Add a product to your shop catalog.",
+    "de": "Füge ein Produkt zu deinem Shop-Katalog hinzu."
+  },
+  "bot": "Adds a product to the shop on-chain. Use slug as a short unique identifier (e.g. single-room, day-pass).",
+  "chain": "multiversx",
+  "vars": {
+    "SC_ADDRESS": "INJECT:SHOP_SC_ADDRESS"
+  },
+  "actions": [
+    {
+      "type": "contract",
+      "label": {
+        "en": "Add product",
+        "de": "Produkt hinzufügen"
+      },
+      "address": "{{SC_ADDRESS}}",
+      "func": "addProduct",
+      "inputs": [
+        {
+          "name": "Shop ID",
+          "as": "id",
+          "type": "string",
+          "position": "arg:1",
+          "source": "hidden",
+          "default": "{{JOAI_WARP_BRAND}}",
+          "required": true
+        },
+        {
+          "name": "Slug",
+          "as": "product_slug",
+          "description": {
+            "en": "Short unique ID (e.g. single-room, day-pass)",
+            "de": "Kurze eindeutige ID (z.B. einzelzimmer, tageskarte)"
+          },
+          "bot": "Short slug, lowercase, dashes only.",
+          "type": "string",
+          "position": "arg:2",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Name",
+          "as": "name",
+          "description": {
+            "en": "Product name",
+            "de": "Produktname"
+          },
+          "type": "string",
+          "position": "arg:3",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Price",
+          "as": "price",
+          "description": {
+            "en": "Price in token micro-units (e.g. 149000000 = 149 USDC)",
+            "de": "Preis in Token-Mikroeinheiten (z.B. 149000000 = 149 USDC)"
+          },
+          "bot": "Price in smallest token unit. For USDC (6 decimals): multiply by 1000000.",
+          "type": "uint64",
+          "position": "arg:4",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Category",
+          "as": "category",
+          "description": {
+            "en": "Category (e.g. room, ticket, package)",
+            "de": "Kategorie (z.B. Zimmer, Ticket, Paket)"
+          },
+          "type": "string",
+          "position": "arg:5",
+          "source": "field"
+        },
+        {
+          "name": "Description",
+          "as": "description",
+          "description": {
+            "en": "Product description",
+            "de": "Produktbeschreibung"
+          },
+          "type": "string",
+          "position": "arg:6",
+          "source": "field"
+        }
+      ],
+      "gasLimit": 10000000,
+      "abi": "INJECT:contract/output/shop.abi.json"
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Product added to your shop.",
+      "de": "Produkt zum Shop hinzugefügt."
+    }
+  }
+}

@@ -15,6 +15,11 @@ on:
         required: false
         default: false
         type: boolean
+      regenerate_all_screenshots:
+        description: 'Regenerate screenshots for all brands (not just delta)'
+        required: false
+        default: false
+        type: boolean
 
 concurrency:
   group: warp-sync-${{ github.ref_name }}
@@ -49,12 +54,24 @@ jobs:
           fi
           node --import tsx scripts/catalog/build-catalog.ts $FULL_FLAG --branch "${GITHUB_REF_NAME}" --commit "${GITHUB_SHA}" --repo "${GITHUB_REPOSITORY}"
 
-      - name: Commit catalog changes
+      - name: Generate warp screenshots
+        run: |
+          if [ "${{ github.event.inputs.regenerate_all_screenshots }}" = "true" ]; then
+            node scripts/generate-screenshots.mjs --all
+          else
+            # Delta: only brands with changed files
+            CHANGED_BRANDS=$(git diff --name-only HEAD~1 HEAD -- warps/ | cut -d'/' -f2 | sort -u)
+            for brand in $CHANGED_BRANDS; do
+              node scripts/generate-screenshots.mjs "$brand" 2>&1 || echo "  ⚠ Screenshots skipped for $brand"
+            done
+          fi
+
+      - name: Commit catalog and image changes
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          git add catalog
-          git diff --quiet && git diff --staged --quiet || (git commit -m "chore: update warp catalog [skip ci]" && git pull --rebase && git push)
+          git add catalog warps/*/images/
+          git diff --quiet && git diff --staged --quiet || (git commit -m "chore: update warp catalog and images [skip ci]" && git pull --rebase && git push)
 
       - name: Sync delta to API
         env:

@@ -1,0 +1,54 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Form: Update Field",
+  "title": {
+    "en": "Edit a field",
+    "de": "Feld bearbeiten"
+  },
+  "description": {
+    "en": "Update a field in an existing form.",
+    "de": "Ein Feld eines bestehenden Formulars aktualisieren."
+  },
+  "bot": "Use this to update a field on a form. Call form-get first to read the current definition, then modify the target field in definition.actions[0].inputs and submit the full updated definition.",
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Update field",
+        "de": "Feld aktualisieren"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/warps/{{formId}}",
+        "method": "PATCH",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Form ID",
+          "as": "formId",
+          "type": "string",
+          "position": "arg:1",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Definition",
+          "as": "definition",
+          "bot": "The full updated warp definition with the target field modified in definition.actions[0].inputs. Keep all other fields intact.",
+          "type": "json",
+          "position": "arg:2",
+          "source": "computed",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Field updated.",
+      "de": "Feld aktualisiert."
+    }
+  }
+}

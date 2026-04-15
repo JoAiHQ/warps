@@ -1,0 +1,53 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Provision Site",
+  "title": {
+    "en": "Provision site",
+    "de": "Seite bereitstellen"
+  },
+  "description": {
+    "en": "Provision a brand site for the team. Creates the site if it does not exist yet, otherwise returns the existing one.",
+    "de": "Stellt eine Markenseite für das Team bereit. Erstellt die Seite, falls sie noch nicht existiert, andernfalls wird die bestehende zurückgegeben."
+  },
+  "bot": "Provisions a brand site for the team. Called automatically after setup flows like appointment policy or form configuration. Brand and team are passed via query params.",
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Provision",
+        "de": "Bereitstellen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/sites/{{brand}}/provision",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "brand",
+          "as": "brand",
+          "type": "string",
+          "source": "query",
+          "required": true
+        },
+        {
+          "name": "team",
+          "as": "team",
+          "type": "string",
+          "source": "query",
+          "required": true
+        }
+      ],
+      "auto": true
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Site provisioned.",
+      "de": "Seite bereitgestellt."
+    }
+  }
+}

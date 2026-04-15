@@ -1,0 +1,103 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Business Identity Verification",
+  "title": {
+    "en": "Verify Your Business",
+    "de": "Unternehmen verifizieren"
+  },
+  "description": {
+    "en": "Submit your business information to unlock payouts. Required once per account.",
+    "de": "Reiche deine Unternehmensdaten ein, um Auszahlungen freizuschalten. Einmalig pro Konto erforderlich."
+  },
+  "bot": "Guide the user through submitting their business identity for payout verification. Frame this as a business onboarding step — ask for the legal business name, the owner's name, registered country, business address, and VAT/tax ID. Explain this is required once to comply with legal obligations and unlock payouts.",
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Submit for review",
+        "de": "Zur Prüfung einreichen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/me/kyc",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Legal Representative Name",
+          "as": "fullName",
+          "description": {
+            "en": "Full legal name of the business owner or authorized representative.",
+            "de": "Vollständiger rechtlicher Name des Geschäftsinhabers oder bevollmächtigten Vertreters."
+          },
+          "type": "string",
+          "position": "arg:1",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Country",
+          "as": "country",
+          "description": {
+            "en": "Country where the business is registered.",
+            "de": "Land, in dem das Unternehmen registriert ist."
+          },
+          "bot": "Ask for the country naturally. Convert the answer to the two-letter ISO 3166-1 alpha-2 code (e.g. Austria → AT, Germany → DE) before submitting.",
+          "type": "string",
+          "position": "arg:2",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Business Address",
+          "as": "address",
+          "description": {
+            "en": "The registered business address including city and postal code.",
+            "de": "Die eingetragene Geschäftsadresse mit Stadt und Postleitzahl."
+          },
+          "type": "string",
+          "position": "arg:3",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "VAT / Tax ID",
+          "as": "taxId",
+          "description": {
+            "en": "The company's VAT number or tax identification number (e.g. ATU12345678, DE123456789).",
+            "de": "Die UID-Nummer oder Steueridentifikationsnummer des Unternehmens (z.B. ATU12345678, DE123456789)."
+          },
+          "type": "string",
+          "position": "arg:4",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Company Name",
+          "as": "companyName",
+          "description": {
+            "en": "The registered legal company name.",
+            "de": "Der eingetragene rechtliche Unternehmensname."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Business identity submitted. We will review your information and notify you once approved.",
+      "de": "Unternehmensidentität eingereicht. Wir prüfen deine Angaben und benachrichtigen dich nach der Freigabe."
+    },
+    "error": {
+      "en": "Failed to submit business information. Please try again.",
+      "de": "Unternehmensdaten konnten nicht eingereicht werden. Bitte erneut versuchen."
+    }
+  }
+}

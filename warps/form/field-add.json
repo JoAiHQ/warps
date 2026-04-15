@@ -1,0 +1,55 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Form: Add Field",
+  "title": {
+    "en": "Add a field",
+    "de": "Feld hinzufügen"
+  },
+  "description": {
+    "en": "Add an input field to an existing form.",
+    "de": "Ein Eingabefeld zu einem bestehenden Formular hinzufügen."
+  },
+  "bot": "Use this to add a field to a form. Call form-get first to read the current definition, then append the new field to definition.actions[0].inputs and submit the full updated definition.",
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Add field",
+        "de": "Feld hinzufügen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/warps/{{formId}}",
+        "method": "PATCH",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Form ID",
+          "as": "formId",
+          "bot": "The form's ID. Never ask the user — carry it from the previous step.",
+          "type": "string",
+          "position": "arg:1",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Definition",
+          "as": "definition",
+          "bot": "The full updated warp definition with the new field appended to definition.actions[0].inputs. Preserve all existing fields.",
+          "type": "json",
+          "position": "arg:2",
+          "source": "computed",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Field added.",
+      "de": "Feld hinzugefügt."
+    }
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Content: Create Post",
+  "title": {
+    "en": "Create a social media post",
+    "de": "Social-Media-Post erstellen",
+    "fr": "Créer une publication",
+    "es": "Crear una publicación",
+    "ro": "Creează o postare"
+  },
+  "description": {
+    "en": "Create an on-brand social media post with image and caption via AI Studio.",
+    "de": "Erstelle einen markenkonformen Social-Media-Post mit Bild und Caption via KI-Studio.",
+    "fr": "Crée une publication conforme à la marque avec image et légende via le Studio IA.",
+    "es": "Crea una publicación acorde a la marca con imagen y texto via AI Studio.",
+    "ro": "Creează o postare conformă cu brandul prin AI Studio."
+  },
+  "bot": "Compose a Studio prompt from the topic. Include platform-specific aspect ratio. After project is created, call studio_produce then studio_export and share the link.",
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Create post",
+        "de": "Post erstellen",
+        "fr": "Créer",
+        "es": "Crear",
+        "ro": "Creează"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/projects/{{JOAI_AGENT_UUID}}/studio/send",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Topic",
+          "as": "message",
+          "description": {
+            "en": "What should the post be about?",
+            "de": "Worum soll es im Post gehen?",
+            "fr": "De quoi parle la publication ?",
+            "es": "¿De qué trata la publicación?",
+            "ro": "Despre ce este postarea?"
+          },
+          "bot": "Compose a Studio-ready prompt from the user's topic and platform. Include aspect ratio (Instagram 1:1 or 4:5, Stories/TikTok 9:16, LinkedIn landscape). Mention brand-kit styling. Example: 'Create an Instagram post (1:1) about spring sale with brand colors and logo'.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "min": 3
+        },
+        {
+          "name": "Output Formats",
+          "as": "outputFormats",
+          "type": "string",
+          "source": "field",
+          "value": "[\"image\"]",
+          "hidden": true
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Creating your post in Studio...",
+      "de": "Dein Post wird im Studio erstellt...",
+      "fr": "Création en cours...",
+      "es": "Creando tu publicación...",
+      "ro": "Se creează postarea..."
+    }
+  }
+}

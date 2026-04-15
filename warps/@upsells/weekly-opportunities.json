@@ -1,0 +1,63 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Upsells: Weekly Opportunities",
+  "title": {
+    "en": "Weekly upsell opportunities report",
+    "de": "Woechentlicher Upsell-Chancen-Bericht",
+    "fr": "Rapport hebdomadaire des opportunites de vente additionnelle",
+    "es": "Informe semanal de oportunidades de venta adicional",
+    "ro": "Raport saptamanal de oportunitati de upsell"
+  },
+  "description": {
+    "en": "Automatically identify the best upsell opportunities for the week based on upcoming appointments and customer history.",
+    "de": "Automatisch die besten Upsell-Chancen der Woche basierend auf anstehenden Terminen und Kundenhistorie identifizieren.",
+    "fr": "Identifier automatiquement les meilleures opportunites de vente additionnelle de la semaine en fonction des rendez-vous a venir et de l historique client.",
+    "es": "Identificar automaticamente las mejores oportunidades de venta adicional de la semana basadas en citas proximas e historial de clientes.",
+    "ro": "Identifica automat cele mai bune oportunitati de upsell ale saptamanii pe baza programarilor viitoare si a istoricului clientilor."
+  },
+  "bot": "When this warp is triggered: fetches follow-up candidates and analyzes them for upsell opportunities. This is a report for the business owner.",
+  "output": {
+    "_DATA": "out.1"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Generate report",
+        "de": "Bericht generieren",
+        "fr": "Generer le rapport",
+        "es": "Generar informe",
+        "ro": "Genereaza raportul"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/contacts/{{JOAI_AGENT_UUID}}/followup-candidates?minDays=3&maxDays=90",
+        "method": "GET",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [],
+      "auto": true
+    },
+    {
+      "type": "prompt",
+      "label": {
+        "en": "Analyze opportunities",
+        "de": "Chancen analysieren",
+        "fr": "Analyser les opportunites",
+        "es": "Analizar oportunidades",
+        "ro": "Analizeaza oportunitatile"
+      },
+      "prompt": "Analyze these customers and identify the top 3-5 upsell opportunities for this week. For each, name the customer, suggest what to recommend, and explain why. Format as an actionable list."
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Weekly upsell opportunities report generated.",
+      "de": "Woechentlicher Upsell-Chancen-Bericht generiert.",
+      "fr": "Rapport hebdomadaire des opportunites de vente additionnelle genere.",
+      "es": "Informe semanal de oportunidades de venta adicional generado.",
+      "ro": "Raport saptamanal de oportunitati de upsell generat."
+    }
+  }
+}

@@ -6,10 +6,10 @@
     "de": "Dienstleistung hinzufügen"
   },
   "description": {
-    "en": "Add a service to your shop — name, price, and duration.",
-    "de": "Füge eine Dienstleistung hinzu — Name, Preis und Dauer."
+    "en": "Add a service to your shop — name, price, duration, and description.",
+    "de": "Füge eine Dienstleistung hinzu — Name, Preis, Dauer und Beschreibung."
   },
-  "bot": "Adds a service to the shop on-chain. Use slug as a short unique identifier (e.g. haircut, color-treatment).",
+  "bot": "Adds a service to the shop on-chain. Use slug as a short unique identifier (e.g. haircut, spa-60min).",
   "chain": "multiversx",
   "vars": {
     "SC_ADDRESS": "INJECT:SHOP_SC_ADDRESS"
@@ -25,7 +25,8 @@
       "func": "addService",
       "inputs": [
         {
-          "name": "SHOP_SLUG",
+          "name": "Shop ID",
+          "as": "id",
           "type": "string",
           "position": "arg:1",
           "source": "hidden",
@@ -34,12 +35,12 @@
         },
         {
           "name": "Slug",
-          "as": "serviceSlug",
+          "as": "service_slug",
           "description": {
-            "en": "Short unique ID for this service (e.g. haircut)",
-            "de": "Kurze eindeutige ID für diese Dienstleistung (z.B. haarschnitt)"
+            "en": "Short unique ID (e.g. haircut, spa-60min)",
+            "de": "Kurze eindeutige ID (z.B. haarschnitt, spa-60min)"
           },
-          "bot": "Short slug for the service, lowercase, dashes only.",
+          "bot": "Short slug, lowercase, dashes only.",
           "type": "string",
           "position": "arg:2",
           "source": "field",
@@ -49,23 +50,22 @@
           "name": "Name",
           "as": "name",
           "description": {
-            "en": "Service name (e.g. Haircut)",
-            "de": "Name der Dienstleistung (z.B. Haarschnitt)"
+            "en": "Service name",
+            "de": "Name der Dienstleistung"
           },
-          "bot": "Display name for the service.",
           "type": "string",
           "position": "arg:3",
           "source": "field",
           "required": true
         },
         {
-          "name": "Price (cents)",
-          "as": "priceCents",
+          "name": "Price",
+          "as": "price",
           "description": {
-            "en": "Price in cents (e.g. 2500 = €25.00)",
-            "de": "Preis in Cent (z.B. 2500 = 25,00 €)"
+            "en": "Price in token micro-units (e.g. 25000000 = 25 USDC)",
+            "de": "Preis in Token-Mikroeinheiten (z.B. 25000000 = 25 USDC)"
           },
-          "bot": "Price in smallest currency unit (cents). Use 0 for free.",
+          "bot": "Price in smallest token unit. For USDC (6 decimals): multiply by 1000000.",
           "type": "uint64",
           "position": "arg:4",
           "source": "field",
@@ -73,12 +73,11 @@
         },
         {
           "name": "Duration (minutes)",
-          "as": "durationMinutes",
+          "as": "duration_minutes",
           "description": {
-            "en": "How long does this service take? (e.g. 30)",
-            "de": "Wie lange dauert diese Dienstleistung? (z.B. 30)"
+            "en": "How long does this service take?",
+            "de": "Wie lange dauert diese Dienstleistung?"
           },
-          "bot": "Duration in minutes.",
           "type": "uint32",
           "position": "arg:5",
           "source": "field",
@@ -88,18 +87,27 @@
           "name": "Category",
           "as": "category",
           "description": {
-            "en": "Optional category (e.g. hair, nails)",
-            "de": "Optionale Kategorie (z.B. Haare, Nägel)"
+            "en": "Category (e.g. hair, spa, fitness)",
+            "de": "Kategorie (z.B. Haare, Spa, Fitness)"
           },
-          "bot": "Category label, optional.",
           "type": "string",
           "position": "arg:6",
-          "source": "field",
-          "required": false
+          "source": "field"
+        },
+        {
+          "name": "Description",
+          "as": "description",
+          "description": {
+            "en": "Service description",
+            "de": "Beschreibung der Dienstleistung"
+          },
+          "type": "string",
+          "position": "arg:7",
+          "source": "field"
         }
       ],
       "gasLimit": 10000000,
-      "abi": "INJECT:abis/shop.abi.json"
+      "abi": "INJECT:contract/output/shop.abi.json"
     }
   ],
   "messages": {

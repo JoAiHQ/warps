@@ -1,0 +1,71 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Shop: Update Stock",
+  "title": {
+    "en": "Update product stock",
+    "de": "Produktbestand aktualisieren"
+  },
+  "description": {
+    "en": "Mark a product as in stock or out of stock.",
+    "de": "Produkt als verfügbar oder nicht verfügbar markieren."
+  },
+  "bot": "Updates the in_stock status of a product.",
+  "chain": "multiversx",
+  "vars": {
+    "SC_ADDRESS": "INJECT:SHOP_SC_ADDRESS"
+  },
+  "actions": [
+    {
+      "type": "contract",
+      "label": {
+        "en": "Update stock",
+        "de": "Bestand aktualisieren"
+      },
+      "address": "{{SC_ADDRESS}}",
+      "func": "updateProductStock",
+      "inputs": [
+        {
+          "name": "Shop ID",
+          "as": "id",
+          "type": "string",
+          "position": "arg:1",
+          "source": "hidden",
+          "default": "{{JOAI_WARP_BRAND}}",
+          "required": true
+        },
+        {
+          "name": "Product slug",
+          "as": "product_slug",
+          "description": {
+            "en": "Slug of the product",
+            "de": "Slug des Produkts"
+          },
+          "type": "string",
+          "position": "arg:2",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "In Stock",
+          "as": "in_stock",
+          "description": {
+            "en": "true = in stock, false = out of stock",
+            "de": "true = verfügbar, false = nicht verfügbar"
+          },
+          "type": "bool",
+          "position": "arg:3",
+          "source": "field",
+          "required": true
+        }
+      ],
+      "gasLimit": 10000000,
+      "abi": "INJECT:contract/output/shop.abi.json"
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Product stock updated.",
+      "de": "Produktbestand aktualisiert."
+    }
+  }
+}

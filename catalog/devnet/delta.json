@@ -4,25 +4,23 @@
   "repo": "JoAiHQ/warps",
   "branch": "dev",
   "network": "devnet",
-  "commitSha": "8ac8a23bcd082bd365518ca7d3cfbb564e5b43ad",
-  "committedAt": "2026-04-10T10:16:24.007Z",
-  "generatedAt": "2026-04-10T10:16:26.214Z",
+  "commitSha": "83aa3da0416176992d703c84f4451ea524e79ea6",
+  "committedAt": "2026-04-15T09:21:43.444Z",
+  "generatedAt": "2026-04-15T09:21:45.812Z",
   "upserts": [
     {
-      "key": "none:appointment-policy-upsert",
-      "identifier": "@appointment-policy-upsert",
-      "alias": "appointment-policy-upsert",
+      "key": "none:joai-billing-address-set",
+      "identifier": "@joai-billing-address-set",
+      "alias": "joai-billing-address-set",
       "chain": "none",
-      "hash": "75837ce831638ae8ba8d250f60321cf7dd9aadc166f874a2bfcff163e2952a8c",
-      "checksum": "75837ce831638ae8ba8d250f60321cf7dd9aadc166f874a2bfcff163e2952a8c",
-      "name": "Appointments: Upsert Policy",
+      "hash": "4cb8f5e112ed5a7e97498423c7c903ff8770d0e41ec34ceecded748536e7e872",
+      "checksum": "4cb8f5e112ed5a7e97498423c7c903ff8770d0e41ec34ceecded748536e7e872",
+      "name": "JoAi: Set Billing Address",
       "title": {
-        "en": "Update policy",
-        "de": "Einstellungen speichern"
+        "en": "Set billing address"
       },
       "description": {
-        "en": "Save the appointment booking policy for your agent. Configure timezone, office hours, slot intervals, buffer times, minimum notice periods, and available services.",
-        "de": "Speichere die Terminbuchungsrichtlinie für deinen Agenten. Konfiguriere Zeitzone, Geschäftszeiten, Slot-Intervalle, Pufferzeiten, Mindestvorlaufzeiten und verfügbare Dienstleistungen."
+        "en": "Set the billing address for a user. Required before generating an upgrade link. Pass a VAT ID to mark the account as a business (routes to Stripe instead of LemonSqueezy)."
       },
       "preview": null,
       "creator": "github:JoAiHQ/warps",
@@ -32,57 +30,261 @@
       "primaryAddress": null,
       "primaryFunc": null,
       "brand": {
-        "hash": "13e21ae250eea2df29beb08bc9657121ecb459d5a4193fa0d40772aa1ae8694e",
-        "slug": "appointment",
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
         "active": true,
         "protocol": "brand:0.2.0",
-        "name": "Appointment",
+        "name": "JoAi",
         "description": {
-          "en": "Appointment booking and intake flows for service businesses.",
-          "de": "Terminbuchung und Intake-Abläufe für Dienstleistungsunternehmen."
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
         },
         "logo": {
           "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
         },
         "urls": {
           "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
         }
       },
       "warp": {
         "protocol": "warp:3.0.0",
-        "name": "Appointments: Upsert Policy",
+        "name": "JoAi: Set Billing Address",
         "title": {
-          "en": "Update policy",
-          "de": "Einstellungen speichern"
+          "en": "Set billing address"
         },
         "description": {
-          "en": "Save the appointment booking policy for your agent. Configure timezone, office hours, slot intervals, buffer times, minimum notice periods, and available services.",
-          "de": "Speichere die Terminbuchungsrichtlinie für deinen Agenten. Konfiguriere Zeitzone, Geschäftszeiten, Slot-Intervalle, Pufferzeiten, Mindestvorlaufzeiten und verfügbare Dienstleistungen."
+          "en": "Set the billing address for a user. Required before generating an upgrade link. Pass a VAT ID to mark the account as a business (routes to Stripe instead of LemonSqueezy)."
         },
-        "bot": "Use this when the user wants to save appointment configuration changes such as timezone, office hours, slot interval, buffer, notice period, or service settings.",
+        "bot": "Use this after creating a user to set their billing address before generating an upgrade link. The userId comes from the user-create warp output. Include vatId for business accounts.",
+        "vars": {
+          "JOAI_API_TOKEN": "env:JOAI_API_TOKEN|Admin Sanctum API token"
+        },
         "actions": [
           {
             "type": "collect",
             "label": {
-              "en": "Save",
-              "de": "Speichern"
+              "en": "Set billing address"
             },
             "destination": {
-              "url": "https://devnet-api.joai.ai/v1/agents/{{JOAI_AGENT_UUID}}/appointments/policy",
-              "method": "PUT",
+              "url": "https://devnet-api.joai.ai/v1/users/{{userId}}/billing-address",
+              "method": "POST",
               "headers": {
-                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+                "Authorization": "Bearer {{JOAI_API_TOKEN}}",
+                "Content-Type": "application/json",
+                "Accept": "application/json"
               }
             },
             "inputs": [
               {
-                "name": "Policy",
-                "as": "policy",
+                "name": "User ID",
+                "as": "userId",
                 "description": {
-                  "en": "JSON-encoded appointment policy object",
-                  "de": "JSON-kodiertes Terminrichtlinien-Objekt"
+                  "en": "The id of the user (from user-create output)"
                 },
-                "bot": "A JSON string containing the full appointment policy. Include all fields: timezone, availability, minNoticeMinutes, bufferMinutes, maxDaysAhead, slotIntervalMinutes, and services.",
+                "bot": "The user's id returned by the user-create warp.",
+                "type": "string",
+                "position": "url:userId",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "First Name",
+                "as": "firstName",
+                "description": {
+                  "en": "First name or company name"
+                },
+                "type": "string",
+                "position": "arg:1",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Last Name",
+                "as": "lastName",
+                "description": {
+                  "en": "Last name or legal entity suffix"
+                },
+                "type": "string",
+                "position": "arg:2",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Country",
+                "as": "country",
+                "description": {
+                  "en": "Country"
+                },
+                "bot": "Convert the country to the two-letter ISO 3166-1 alpha-2 code (e.g. Austria → AT, Germany → DE) before submitting.",
+                "type": "string",
+                "position": "arg:3",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "VAT ID",
+                "as": "vatId",
+                "description": {
+                  "en": "VAT ID for business accounts (e.g. DE123456789)"
+                },
+                "bot": "Optional. Providing a VAT ID marks the account as a business and routes payment through Stripe.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              }
+            ]
+          }
+        ],
+        "messages": {
+          "success": {
+            "en": "Billing address saved."
+          },
+          "error": {
+            "en": "Failed to save billing address."
+          }
+        }
+      },
+      "extras": null
+    },
+    {
+      "key": "none:joai-kyc-business-submit",
+      "identifier": "@joai-kyc-business-submit",
+      "alias": "joai-kyc-business-submit",
+      "chain": "none",
+      "hash": "89c903f84607b1c50cd207cf286a2cef81699ac66c399d63b7d166c1d754fc68",
+      "checksum": "89c903f84607b1c50cd207cf286a2cef81699ac66c399d63b7d166c1d754fc68",
+      "name": "JoAi: Business Identity Verification",
+      "title": {
+        "en": "Verify Your Business",
+        "de": "Unternehmen verifizieren"
+      },
+      "description": {
+        "en": "Submit your business information to unlock payouts. Required once per account.",
+        "de": "Reiche deine Unternehmensdaten ein, um Auszahlungen freizuschalten. Einmalig pro Konto erforderlich."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: Business Identity Verification",
+        "title": {
+          "en": "Verify Your Business",
+          "de": "Unternehmen verifizieren"
+        },
+        "description": {
+          "en": "Submit your business information to unlock payouts. Required once per account.",
+          "de": "Reiche deine Unternehmensdaten ein, um Auszahlungen freizuschalten. Einmalig pro Konto erforderlich."
+        },
+        "bot": "Guide the user through submitting their business identity for payout verification. Frame this as a business onboarding step — ask for the legal business name, the owner's name, registered country, business address, and VAT/tax ID. Explain this is required once to comply with legal obligations and unlock payouts.",
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Submit for review",
+              "de": "Zur Prüfung einreichen"
+            },
+            "destination": {
+              "url": "https://devnet-api.joai.ai/v1/me/kyc",
+              "method": "POST",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Legal Representative Name",
+                "as": "fullName",
+                "description": {
+                  "en": "Full legal name of the business owner or authorized representative.",
+                  "de": "Vollständiger rechtlicher Name des Geschäftsinhabers oder bevollmächtigten Vertreters."
+                },
+                "type": "string",
+                "position": "arg:1",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Country",
+                "as": "country",
+                "description": {
+                  "en": "Country where the business is registered.",
+                  "de": "Land, in dem das Unternehmen registriert ist."
+                },
+                "bot": "Ask for the country naturally. Convert the answer to the two-letter ISO 3166-1 alpha-2 code (e.g. Austria → AT, Germany → DE) before submitting.",
+                "type": "string",
+                "position": "arg:2",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Business Address",
+                "as": "address",
+                "description": {
+                  "en": "The registered business address including city and postal code.",
+                  "de": "Die eingetragene Geschäftsadresse mit Stadt und Postleitzahl."
+                },
+                "type": "string",
+                "position": "arg:3",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "VAT / Tax ID",
+                "as": "taxId",
+                "description": {
+                  "en": "The company's VAT number or tax identification number (e.g. ATU12345678, DE123456789).",
+                  "de": "Die UID-Nummer oder Steueridentifikationsnummer des Unternehmens (z.B. ATU12345678, DE123456789)."
+                },
+                "type": "string",
+                "position": "arg:4",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Company Name",
+                "as": "companyName",
+                "description": {
+                  "en": "The registered legal company name.",
+                  "de": "Der eingetragene rechtliche Unternehmensname."
+                },
                 "type": "string",
                 "source": "field",
                 "required": true
@@ -92,2136 +294,443 @@
         ],
         "messages": {
           "success": {
-            "en": "Appointment settings saved.",
-            "de": "Termineinstellungen gespeichert."
+            "en": "Business identity submitted. We will review your information and notify you once approved.",
+            "de": "Unternehmensidentität eingereicht. Wir prüfen deine Angaben und benachrichtigen dich nach der Freigabe."
+          },
+          "error": {
+            "en": "Failed to submit business information. Please try again.",
+            "de": "Unternehmensdaten konnten nicht eingereicht werden. Bitte erneut versuchen."
           }
         }
       },
       "extras": null
     },
     {
-      "key": "none:poll",
-      "identifier": "@poll",
-      "alias": "poll",
+      "key": "none:joai-kyc-submit",
+      "identifier": "@joai-kyc-submit",
+      "alias": "joai-kyc-submit",
       "chain": "none",
-      "hash": "fa55407a42b3656935f1416e07ab3a16623302da7ea484e635f592997ea2a26f",
-      "checksum": "fa55407a42b3656935f1416e07ab3a16623302da7ea484e635f592997ea2a26f",
-      "name": "Poll: Get Poll",
+      "hash": "337d642363eb47def407739110299c73898ecbf14f0ae52eec699f029c1e8cab",
+      "checksum": "337d642363eb47def407739110299c73898ecbf14f0ae52eec699f029c1e8cab",
+      "name": "JoAi: Identity Verification",
       "title": {
-        "en": "Poll Details",
-        "de": "Abstimmungsdetails"
+        "en": "Verify Your Identity",
+        "de": "Identität verifizieren"
       },
       "description": {
-        "en": "Query details of a specific poll.",
-        "de": "Details einer bestimmten Abstimmung abfragen."
+        "en": "Submit your identity information to unlock payouts. Required once per account.",
+        "de": "Reiche deine Identitätsdaten ein, um Auszahlungen freizuschalten. Einmalig pro Konto erforderlich."
       },
       "preview": null,
       "creator": "github:JoAiHQ/warps",
       "privileges": [],
       "listed": true,
       "visibility": "public",
-      "primaryAddress": "{{SC_ADDRESS}}",
-      "primaryFunc": "getPoll",
+      "primaryAddress": null,
+      "primaryFunc": null,
       "brand": {
-        "hash": "0847471b0e7d910d18121ee35b0a3dade65963cdbc4f4b4915cde32dea0e1abe",
-        "slug": "poll",
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
         "active": true,
         "protocol": "brand:0.2.0",
-        "name": "Poll",
+        "name": "JoAi",
         "description": {
-          "en": "On-chain polls and voting groups for any community — property owners, DAOs, teams, and more.",
-          "de": "On-Chain-Abstimmungen und Voting-Gruppen für jede Gemeinschaft — Eigentümer, DAOs, Teams und mehr."
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
         },
         "logo": {
           "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
         },
         "urls": {
           "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
         }
       },
       "warp": {
         "protocol": "warp:3.0.0",
-        "name": "Poll: Get Poll",
+        "name": "JoAi: Identity Verification",
         "title": {
-          "en": "Poll Details",
-          "de": "Abstimmungsdetails"
+          "en": "Verify Your Identity",
+          "de": "Identität verifizieren"
         },
         "description": {
-          "en": "Query details of a specific poll.",
-          "de": "Details einer bestimmten Abstimmung abfragen."
+          "en": "Submit your identity information to unlock payouts. Required once per account.",
+          "de": "Reiche deine Identitätsdaten ein, um Auszahlungen freizuschalten. Einmalig pro Konto erforderlich."
         },
-        "vars": {
-          "SC_ADDRESS": "TODO"
-        },
+        "bot": "Guide the user through submitting their identity for payout verification. Explain that this is required once to comply with legal obligations and unlock payouts.",
         "actions": [
           {
-            "type": "query",
+            "type": "collect",
             "label": {
-              "en": "Loading poll...",
-              "de": "Abstimmung wird geladen..."
+              "en": "Submit for review",
+              "de": "Zur Prüfung einreichen"
             },
-            "address": "{{SC_ADDRESS}}",
-            "func": "getPoll",
-            "args": [
-              "u64:{{POLL_ID}}"
-            ],
-            "inputs": [
-              {
-                "name": "POLL_ID",
-                "type": "uint64",
-                "position": "arg:1",
-                "source": "field",
-                "required": true,
-                "label": {
-                  "en": "Poll ID",
-                  "de": "Abstimmungs-ID"
-                }
+            "destination": {
+              "url": "https://devnet-api.joai.ai/v1/me/kyc",
+              "method": "POST",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+                "Content-Type": "application/json",
+                "Accept": "application/json"
               }
-            ],
-            "auto": false,
-            "abi": "hash:b1f38ccaf8b165eb6dba31beba04cacbc50f1a16735e78148107b60e635c6cc4"
-          }
-        ]
-      },
-      "extras": null
-    },
-    {
-      "key": "none:poll-admin-transfer",
-      "identifier": "@poll-admin-transfer",
-      "alias": "poll-admin-transfer",
-      "chain": "none",
-      "hash": "ea0c8ed55599e9c2607d31e49368e851f19fbcd3073a43516928d6584d342766",
-      "checksum": "ea0c8ed55599e9c2607d31e49368e851f19fbcd3073a43516928d6584d342766",
-      "name": "Poll: Transfer Admin",
-      "title": {
-        "en": "Transfer Admin",
-        "de": "Admin übertragen"
-      },
-      "description": {
-        "en": "Hand over group admin rights to another member.",
-        "de": "Admin-Rechte der Gruppe an ein anderes Mitglied übertragen."
-      },
-      "preview": null,
-      "creator": "github:JoAiHQ/warps",
-      "privileges": [],
-      "listed": true,
-      "visibility": "public",
-      "primaryAddress": "{{SC_ADDRESS}}",
-      "primaryFunc": "transferAdmin",
-      "brand": {
-        "hash": "0847471b0e7d910d18121ee35b0a3dade65963cdbc4f4b4915cde32dea0e1abe",
-        "slug": "poll",
-        "active": true,
-        "protocol": "brand:0.2.0",
-        "name": "Poll",
-        "description": {
-          "en": "On-chain polls and voting groups for any community — property owners, DAOs, teams, and more.",
-          "de": "On-Chain-Abstimmungen und Voting-Gruppen für jede Gemeinschaft — Eigentümer, DAOs, Teams und mehr."
-        },
-        "logo": {
-          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
-        },
-        "urls": {
-          "web": "https://joai.ai"
-        }
-      },
-      "warp": {
-        "protocol": "warp:3.0.0",
-        "name": "Poll: Transfer Admin",
-        "title": {
-          "en": "Transfer Admin",
-          "de": "Admin übertragen"
-        },
-        "description": {
-          "en": "Hand over group admin rights to another member.",
-          "de": "Admin-Rechte der Gruppe an ein anderes Mitglied übertragen."
-        },
-        "vars": {
-          "SC_ADDRESS": "TODO"
-        },
-        "actions": [
-          {
-            "type": "contract",
-            "label": {
-              "en": "Transfer",
-              "de": "Übertragen"
             },
-            "address": "{{SC_ADDRESS}}",
-            "func": "transferAdmin",
-            "args": [
-              "string:{{SLUG}}",
-              "address:{{NEW_ADMIN}}"
-            ],
-            "gasLimit": 10000000,
             "inputs": [
               {
-                "name": "SLUG",
+                "name": "Full Legal Name",
+                "as": "fullName",
+                "description": {
+                  "en": "Your full legal name as it appears on your ID.",
+                  "de": "Dein vollständiger rechtlicher Name, wie er auf deinem Ausweis steht."
+                },
                 "type": "string",
                 "position": "arg:1",
                 "source": "field",
                 "required": true
               },
               {
-                "name": "NEW_ADMIN",
+                "name": "Country",
+                "as": "country",
+                "description": {
+                  "en": "Country of residence.",
+                  "de": "Wohnsitzland."
+                },
+                "bot": "Ask for the country naturally. Convert the answer to the two-letter ISO 3166-1 alpha-2 code (e.g. Austria → AT, Germany → DE) before submitting.",
                 "type": "string",
                 "position": "arg:2",
-                "source": "field",
-                "required": true,
-                "label": {
-                  "en": "New admin address",
-                  "de": "Neue Admin-Adresse"
-                }
-              }
-            ],
-            "abi": "hash:b1f38ccaf8b165eb6dba31beba04cacbc50f1a16735e78148107b60e635c6cc4"
-          }
-        ]
-      },
-      "extras": null
-    },
-    {
-      "key": "none:poll-create",
-      "identifier": "@poll-create",
-      "alias": "poll-create",
-      "chain": "none",
-      "hash": "9067790a1991b6ebfec0dbab5fd809410297fd81c226da1b80499eb72d60eb5a",
-      "checksum": "9067790a1991b6ebfec0dbab5fd809410297fd81c226da1b80499eb72d60eb5a",
-      "name": "Poll: Create Poll",
-      "title": {
-        "en": "Create Poll",
-        "de": "Abstimmung erstellen"
-      },
-      "description": {
-        "en": "Create a new poll in your group. Provide a question, deadline (Unix timestamp), and up to 4 answer options.",
-        "de": "Neue Abstimmung in der Gruppe erstellen. Frage, Deadline (Unix-Timestamp) und bis zu 4 Antwortoptionen angeben."
-      },
-      "preview": null,
-      "creator": "github:JoAiHQ/warps",
-      "privileges": [],
-      "listed": true,
-      "visibility": "public",
-      "primaryAddress": "{{SC_ADDRESS}}",
-      "primaryFunc": "createPoll",
-      "brand": {
-        "hash": "0847471b0e7d910d18121ee35b0a3dade65963cdbc4f4b4915cde32dea0e1abe",
-        "slug": "poll",
-        "active": true,
-        "protocol": "brand:0.2.0",
-        "name": "Poll",
-        "description": {
-          "en": "On-chain polls and voting groups for any community — property owners, DAOs, teams, and more.",
-          "de": "On-Chain-Abstimmungen und Voting-Gruppen für jede Gemeinschaft — Eigentümer, DAOs, Teams und mehr."
-        },
-        "logo": {
-          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
-        },
-        "urls": {
-          "web": "https://joai.ai"
-        }
-      },
-      "warp": {
-        "protocol": "warp:3.0.0",
-        "name": "Poll: Create Poll",
-        "title": {
-          "en": "Create Poll",
-          "de": "Abstimmung erstellen"
-        },
-        "description": {
-          "en": "Create a new poll in your group. Provide a question, deadline (Unix timestamp), and up to 4 answer options.",
-          "de": "Neue Abstimmung in der Gruppe erstellen. Frage, Deadline (Unix-Timestamp) und bis zu 4 Antwortoptionen angeben."
-        },
-        "vars": {
-          "SC_ADDRESS": "TODO"
-        },
-        "actions": [
-          {
-            "type": "contract",
-            "label": {
-              "en": "Create Poll",
-              "de": "Abstimmung erstellen"
-            },
-            "address": "{{SC_ADDRESS}}",
-            "func": "createPoll",
-            "args": [
-              "string:{{GROUP_SLUG}}",
-              "string:{{QUESTION}}",
-              "u64:{{DEADLINE}}",
-              "string:{{OPTION_1}}",
-              "string:{{OPTION_2}}",
-              "string:{{OPTION_3}}",
-              "string:{{OPTION_4}}"
-            ],
-            "gasLimit": 15000000,
-            "inputs": [
-              {
-                "name": "GROUP_SLUG",
-                "type": "string",
-                "position": "arg:1",
                 "source": "field",
                 "required": true
               },
               {
-                "name": "QUESTION",
+                "name": "Address",
+                "as": "address",
+                "description": {
+                  "en": "Your full residential address including city and postal code.",
+                  "de": "Deine vollständige Wohnadresse mit Stadt und Postleitzahl."
+                },
                 "type": "string",
-                "position": "arg:2",
-                "source": "field",
-                "required": true,
-                "label": {
-                  "en": "Question",
-                  "de": "Frage"
-                }
-              },
-              {
-                "name": "DEADLINE",
-                "type": "uint64",
                 "position": "arg:3",
                 "source": "field",
-                "required": true,
-                "label": {
-                  "en": "Deadline (Unix timestamp)",
-                  "de": "Deadline (Unix-Timestamp)"
-                }
+                "required": true
               },
               {
-                "name": "OPTION_1",
+                "name": "Tax / VAT ID",
+                "as": "taxId",
+                "description": {
+                  "en": "Your tax identification number or VAT ID. For individuals: national tax ID. For businesses: VAT number.",
+                  "de": "Deine Steueridentifikationsnummer oder USt-IdNr. Für Privatpersonen: Steuer-ID. Für Unternehmen: UID-Nummer."
+                },
                 "type": "string",
                 "position": "arg:4",
                 "source": "field",
-                "required": true,
-                "label": {
-                  "en": "Option 1",
-                  "de": "Option 1"
-                }
+                "required": true
               },
               {
-                "name": "OPTION_2",
+                "name": "Company Name",
+                "as": "companyName",
+                "description": {
+                  "en": "Your company or business name, if applicable.",
+                  "de": "Dein Unternehmensname, falls zutreffend."
+                },
                 "type": "string",
-                "position": "arg:5",
+                "source": "field",
+                "required": false
+              }
+            ]
+          }
+        ],
+        "messages": {
+          "success": {
+            "en": "Identity submitted. We will review your information and notify you once approved.",
+            "de": "Identität eingereicht. Wir prüfen deine Angaben und benachrichtigen dich nach der Freigabe."
+          },
+          "error": {
+            "en": "Failed to submit identity information. Please try again.",
+            "de": "Identitätsdaten konnten nicht eingereicht werden. Bitte erneut versuchen."
+          }
+        }
+      },
+      "extras": null
+    },
+    {
+      "key": "none:joai-store-create",
+      "identifier": "@joai-store-create",
+      "alias": "joai-store-create",
+      "chain": "none",
+      "hash": "ef74449e4a191e5a6610de3679826e7bf43f5f92b1a9a7306af8ce142befc1e6",
+      "checksum": "ef74449e4a191e5a6610de3679826e7bf43f5f92b1a9a7306af8ce142befc1e6",
+      "name": "JoAi: Create Store",
+      "title": {
+        "en": "Create a data store",
+        "de": "Datenspeicher erstellen"
+      },
+      "description": {
+        "en": "Create a new tracked data store for time-series or scalar data (weight, expenses, habits, etc.).",
+        "de": "Erstelle einen neuen Datenspeicher für Zeitreihen- oder Einzelwerte (Gewicht, Ausgaben, Gewohnheiten usw.)."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: Create Store",
+        "title": {
+          "en": "Create a data store",
+          "de": "Datenspeicher erstellen"
+        },
+        "description": {
+          "en": "Create a new tracked data store for time-series or scalar data (weight, expenses, habits, etc.).",
+          "de": "Erstelle einen neuen Datenspeicher für Zeitreihen- oder Einzelwerte (Gewicht, Ausgaben, Gewohnheiten usw.)."
+        },
+        "bot": "Use this when the user wants to start tracking something new over time — weight, expenses, habits, metrics, counters, or any recurring measurement.",
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Create store",
+              "de": "Speicher erstellen"
+            },
+            "destination": {
+              "url": "https://devnet-api.joai.ai/v1/stores",
+              "method": "POST",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Name",
+                "as": "name",
+                "description": {
+                  "en": "Store name (e.g. \"weight\", \"expense:food\", \"habit:meditation\")",
+                  "de": "Name des Speichers (z.B. \"weight\", \"expense:food\", \"habit:meditation\")"
+                },
+                "bot": "Short, lowercase store name. Use colons for namespacing (e.g. \"habit:meditation\", \"expense:food\"). Must be 2-50 chars, alphanumeric with colons/hyphens.",
+                "type": "string",
+                "position": "arg:1",
                 "source": "field",
                 "required": true,
-                "label": {
-                  "en": "Option 2",
-                  "de": "Option 2"
-                }
+                "min": 2
               },
               {
-                "name": "OPTION_3",
+                "name": "Description",
+                "as": "description",
+                "description": {
+                  "en": "What this store tracks",
+                  "de": "Was dieser Speicher verfolgt"
+                },
+                "bot": "A human-readable purpose for this store.",
                 "type": "string",
-                "position": "arg:6",
+                "position": "arg:2",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Value Type",
+                "as": "valueType",
+                "description": {
+                  "en": "scalar (single value) or series (time-series data)",
+                  "de": "scalar (Einzelwert) oder series (Zeitreihe)"
+                },
+                "bot": "Use 'scalar' for a single changing value (e.g. portfolio balance). Use 'series' for data points over time (e.g. daily weight, expenses).",
+                "type": "string",
                 "source": "field",
                 "required": false,
-                "label": {
-                  "en": "Option 3 (optional)",
-                  "de": "Option 3 (optional)"
+                "default": "series",
+                "options": {
+                  "scalar": "Scalar (single value)",
+                  "series": "Series (time-series)"
                 }
               },
               {
-                "name": "OPTION_4",
+                "name": "Unit",
+                "as": "unit",
+                "description": {
+                  "en": "Unit of measurement (e.g. \"lbs\", \"USD\", \"minutes\")",
+                  "de": "Maßeinheit (z.B. \"kg\", \"EUR\", \"Minuten\")"
+                },
+                "bot": "Optional unit of measurement like 'lbs', 'USD', 'minutes', 'km'.",
                 "type": "string",
-                "position": "arg:7",
                 "source": "field",
-                "required": false,
-                "label": {
-                  "en": "Option 4 (optional)",
-                  "de": "Option 4 (optional)"
-                }
+                "required": false
               }
-            ],
-            "abi": "hash:b1f38ccaf8b165eb6dba31beba04cacbc50f1a16735e78148107b60e635c6cc4"
+            ]
           }
-        ]
+        ],
+        "messages": {
+          "success": {
+            "en": "Now tracking '{{name}}'!",
+            "de": "'{{name}}' wird jetzt verfolgt!"
+          }
+        }
       },
       "extras": null
     },
     {
-      "key": "none:poll-group",
-      "identifier": "@poll-group",
-      "alias": "poll-group",
+      "key": "none:joai-store-query",
+      "identifier": "@joai-store-query",
+      "alias": "joai-store-query",
       "chain": "none",
-      "hash": "81033d20c5eb49b64c5bfee5d044416ad0189c43894884ee0144a4769e063a0d",
-      "checksum": "81033d20c5eb49b64c5bfee5d044416ad0189c43894884ee0144a4769e063a0d",
-      "name": "Poll: Get Group",
+      "hash": "305c5ba79ab6bc18bffbb5708194a8d851212d6484fcc1ddb01f1b13ee4dfaa8",
+      "checksum": "305c5ba79ab6bc18bffbb5708194a8d851212d6484fcc1ddb01f1b13ee4dfaa8",
+      "name": "JoAi: Query Store Data",
       "title": {
-        "en": "Group Info",
-        "de": "Gruppeninfo"
+        "en": "View tracked data",
+        "de": "Verfolgte Daten anzeigen"
       },
       "description": {
-        "en": "Query details about a voting group.",
-        "de": "Details einer Abstimmungsgruppe abfragen."
+        "en": "Query and view entries from a tracked data store with optional date filters.",
+        "de": "Einträge eines Datenspeichers abfragen und mit optionalen Datumsfiltern anzeigen."
       },
       "preview": null,
       "creator": "github:JoAiHQ/warps",
       "privileges": [],
       "listed": true,
       "visibility": "public",
-      "primaryAddress": "{{SC_ADDRESS}}",
-      "primaryFunc": "getGroup",
+      "primaryAddress": null,
+      "primaryFunc": null,
       "brand": {
-        "hash": "0847471b0e7d910d18121ee35b0a3dade65963cdbc4f4b4915cde32dea0e1abe",
-        "slug": "poll",
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
         "active": true,
         "protocol": "brand:0.2.0",
-        "name": "Poll",
+        "name": "JoAi",
         "description": {
-          "en": "On-chain polls and voting groups for any community — property owners, DAOs, teams, and more.",
-          "de": "On-Chain-Abstimmungen und Voting-Gruppen für jede Gemeinschaft — Eigentümer, DAOs, Teams und mehr."
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
         },
         "logo": {
           "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
         },
         "urls": {
           "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
         }
       },
       "warp": {
         "protocol": "warp:3.0.0",
-        "name": "Poll: Get Group",
+        "name": "JoAi: Query Store Data",
         "title": {
-          "en": "Group Info",
-          "de": "Gruppeninfo"
+          "en": "View tracked data",
+          "de": "Verfolgte Daten anzeigen"
         },
         "description": {
-          "en": "Query details about a voting group.",
-          "de": "Details einer Abstimmungsgruppe abfragen."
+          "en": "Query and view entries from a tracked data store with optional date filters.",
+          "de": "Einträge eines Datenspeichers abfragen und mit optionalen Datumsfiltern anzeigen."
         },
-        "vars": {
-          "SC_ADDRESS": "TODO"
-        },
+        "bot": "Use this when the user wants to see their tracked data, check progress, view history, or look up past entries in a store.",
         "actions": [
           {
-            "type": "query",
+            "type": "collect",
             "label": {
-              "en": "Loading group...",
-              "de": "Gruppe wird geladen..."
+              "en": "Query data",
+              "de": "Daten abfragen"
             },
-            "address": "{{SC_ADDRESS}}",
-            "func": "getGroup",
-            "args": [
-              "string:{{SLUG}}"
-            ],
+            "destination": {
+              "url": "https://devnet-api.joai.ai/v1/stores/{{storeName}}/entries",
+              "method": "GET"
+            },
             "inputs": [
               {
-                "name": "SLUG",
-                "type": "string",
-                "position": "arg:1",
-                "source": "field",
-                "required": true
-              }
-            ],
-            "auto": true,
-            "abi": "hash:b1f38ccaf8b165eb6dba31beba04cacbc50f1a16735e78148107b60e635c6cc4"
-          }
-        ]
-      },
-      "extras": null
-    },
-    {
-      "key": "none:poll-group-create",
-      "identifier": "@poll-group-create",
-      "alias": "poll-group-create",
-      "chain": "none",
-      "hash": "a6fad2d4038becce05b6af90c5f7cc5437407c397b76ce9daab72e31f45b5291",
-      "checksum": "a6fad2d4038becce05b6af90c5f7cc5437407c397b76ce9daab72e31f45b5291",
-      "name": "Poll: Create Group",
-      "title": {
-        "en": "Create Group",
-        "de": "Gruppe erstellen"
-      },
-      "description": {
-        "en": "Create a new voting group. You become the admin and first member.",
-        "de": "Neue Abstimmungsgruppe erstellen. Du wirst Admin und erstes Mitglied."
-      },
-      "preview": null,
-      "creator": "github:JoAiHQ/warps",
-      "privileges": [],
-      "listed": true,
-      "visibility": "public",
-      "primaryAddress": "{{SC_ADDRESS}}",
-      "primaryFunc": "createGroup",
-      "brand": {
-        "hash": "0847471b0e7d910d18121ee35b0a3dade65963cdbc4f4b4915cde32dea0e1abe",
-        "slug": "poll",
-        "active": true,
-        "protocol": "brand:0.2.0",
-        "name": "Poll",
-        "description": {
-          "en": "On-chain polls and voting groups for any community — property owners, DAOs, teams, and more.",
-          "de": "On-Chain-Abstimmungen und Voting-Gruppen für jede Gemeinschaft — Eigentümer, DAOs, Teams und mehr."
-        },
-        "logo": {
-          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
-        },
-        "urls": {
-          "web": "https://joai.ai"
-        }
-      },
-      "warp": {
-        "protocol": "warp:3.0.0",
-        "name": "Poll: Create Group",
-        "title": {
-          "en": "Create Group",
-          "de": "Gruppe erstellen"
-        },
-        "description": {
-          "en": "Create a new voting group. You become the admin and first member.",
-          "de": "Neue Abstimmungsgruppe erstellen. Du wirst Admin und erstes Mitglied."
-        },
-        "vars": {
-          "SC_ADDRESS": "TODO"
-        },
-        "actions": [
-          {
-            "type": "contract",
-            "label": {
-              "en": "Create Group",
-              "de": "Gruppe erstellen"
-            },
-            "address": "{{SC_ADDRESS}}",
-            "func": "createGroup",
-            "args": [
-              "string:{{SLUG}}",
-              "string:{{NAME}}",
-              "bool:{{OPEN_MEMBERSHIP}}"
-            ],
-            "gasLimit": 10000000,
-            "inputs": [
-              {
-                "name": "SLUG",
-                "type": "string",
-                "position": "arg:1",
-                "source": "field",
-                "required": true,
-                "label": {
-                  "en": "Slug (e.g. my-building)",
-                  "de": "Slug (z.B. mein-gebaeude)"
-                }
-              },
-              {
-                "name": "NAME",
-                "type": "string",
-                "position": "arg:2",
-                "source": "field",
-                "required": true,
-                "label": {
-                  "en": "Group name",
-                  "de": "Gruppenname"
-                }
-              },
-              {
-                "name": "OPEN_MEMBERSHIP",
-                "type": "bool",
-                "position": "arg:3",
-                "source": "field",
-                "required": true,
-                "label": {
-                  "en": "Open membership (anyone can join)",
-                  "de": "Offene Mitgliedschaft (jeder kann beitreten)"
-                }
-              }
-            ],
-            "abi": "hash:b1f38ccaf8b165eb6dba31beba04cacbc50f1a16735e78148107b60e635c6cc4"
-          }
-        ]
-      },
-      "extras": null
-    },
-    {
-      "key": "none:poll-group-polls",
-      "identifier": "@poll-group-polls",
-      "alias": "poll-group-polls",
-      "chain": "none",
-      "hash": "c533adde510fbca40b7eac6fa393182136e1b965dba040beba0c82af407f5e21",
-      "checksum": "c533adde510fbca40b7eac6fa393182136e1b965dba040beba0c82af407f5e21",
-      "name": "Poll: Get Group Polls",
-      "title": {
-        "en": "All Group Polls",
-        "de": "Alle Gruppenabstimmungen"
-      },
-      "description": {
-        "en": "Query all poll IDs belonging to a group (active and expired).",
-        "de": "Alle Abstimmungs-IDs einer Gruppe abfragen (aktive und abgelaufene)."
-      },
-      "preview": null,
-      "creator": "github:JoAiHQ/warps",
-      "privileges": [],
-      "listed": true,
-      "visibility": "public",
-      "primaryAddress": "{{SC_ADDRESS}}",
-      "primaryFunc": "getGroupPolls",
-      "brand": {
-        "hash": "0847471b0e7d910d18121ee35b0a3dade65963cdbc4f4b4915cde32dea0e1abe",
-        "slug": "poll",
-        "active": true,
-        "protocol": "brand:0.2.0",
-        "name": "Poll",
-        "description": {
-          "en": "On-chain polls and voting groups for any community — property owners, DAOs, teams, and more.",
-          "de": "On-Chain-Abstimmungen und Voting-Gruppen für jede Gemeinschaft — Eigentümer, DAOs, Teams und mehr."
-        },
-        "logo": {
-          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
-        },
-        "urls": {
-          "web": "https://joai.ai"
-        }
-      },
-      "warp": {
-        "protocol": "warp:3.0.0",
-        "name": "Poll: Get Group Polls",
-        "title": {
-          "en": "All Group Polls",
-          "de": "Alle Gruppenabstimmungen"
-        },
-        "description": {
-          "en": "Query all poll IDs belonging to a group (active and expired).",
-          "de": "Alle Abstimmungs-IDs einer Gruppe abfragen (aktive und abgelaufene)."
-        },
-        "vars": {
-          "SC_ADDRESS": "TODO"
-        },
-        "actions": [
-          {
-            "type": "query",
-            "label": {
-              "en": "Loading polls...",
-              "de": "Abstimmungen werden geladen..."
-            },
-            "address": "{{SC_ADDRESS}}",
-            "func": "getGroupPolls",
-            "args": [
-              "string:{{SLUG}}"
-            ],
-            "inputs": [
-              {
-                "name": "SLUG",
-                "type": "string",
-                "position": "arg:1",
-                "source": "field",
-                "required": true
-              }
-            ],
-            "auto": true,
-            "abi": "hash:b1f38ccaf8b165eb6dba31beba04cacbc50f1a16735e78148107b60e635c6cc4"
-          }
-        ]
-      },
-      "extras": null
-    },
-    {
-      "key": "none:poll-invite",
-      "identifier": "@poll-invite",
-      "alias": "poll-invite",
-      "chain": "none",
-      "hash": "86125de4517900204a248718932b74cc687c7ffb775602f6838c497ba28d1739",
-      "checksum": "86125de4517900204a248718932b74cc687c7ffb775602f6838c497ba28d1739",
-      "name": "Poll: Get Invite",
-      "title": {
-        "en": "Invite Status",
-        "de": "Einladungsstatus"
-      },
-      "description": {
-        "en": "Check if an invite code is still valid and how many uses remain.",
-        "de": "Prüfen, ob ein Einladungscode noch gültig ist und wie viele Nutzungen verbleiben."
-      },
-      "preview": null,
-      "creator": "github:JoAiHQ/warps",
-      "privileges": [],
-      "listed": true,
-      "visibility": "public",
-      "primaryAddress": "{{SC_ADDRESS}}",
-      "primaryFunc": "getInvite",
-      "brand": {
-        "hash": "0847471b0e7d910d18121ee35b0a3dade65963cdbc4f4b4915cde32dea0e1abe",
-        "slug": "poll",
-        "active": true,
-        "protocol": "brand:0.2.0",
-        "name": "Poll",
-        "description": {
-          "en": "On-chain polls and voting groups for any community — property owners, DAOs, teams, and more.",
-          "de": "On-Chain-Abstimmungen und Voting-Gruppen für jede Gemeinschaft — Eigentümer, DAOs, Teams und mehr."
-        },
-        "logo": {
-          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
-        },
-        "urls": {
-          "web": "https://joai.ai"
-        }
-      },
-      "warp": {
-        "protocol": "warp:3.0.0",
-        "name": "Poll: Get Invite",
-        "title": {
-          "en": "Invite Status",
-          "de": "Einladungsstatus"
-        },
-        "description": {
-          "en": "Check if an invite code is still valid and how many uses remain.",
-          "de": "Prüfen, ob ein Einladungscode noch gültig ist und wie viele Nutzungen verbleiben."
-        },
-        "vars": {
-          "SC_ADDRESS": "TODO"
-        },
-        "actions": [
-          {
-            "type": "query",
-            "label": {
-              "en": "Checking invite...",
-              "de": "Einladung wird geprüft..."
-            },
-            "address": "{{SC_ADDRESS}}",
-            "func": "getInvite",
-            "args": [
-              "string:{{SLUG}}",
-              "string:{{CODE}}"
-            ],
-            "inputs": [
-              {
-                "name": "SLUG",
+                "name": "Store Name",
+                "as": "storeName",
+                "description": {
+                  "en": "The name of the store to query",
+                  "de": "Name des abzufragenden Speichers"
+                },
+                "bot": "The exact name of the store to query.",
                 "type": "string",
                 "position": "arg:1",
                 "source": "field",
                 "required": true
               },
               {
-                "name": "CODE",
+                "name": "Since",
+                "as": "since",
+                "description": {
+                  "en": "Show entries after this date.",
+                  "de": "Einträge nach diesem Datum anzeigen."
+                },
+                "bot": "Optional start date filter. Convert to ISO 8601 format before submitting.",
                 "type": "string",
-                "position": "arg:2",
                 "source": "field",
-                "required": true,
-                "label": {
-                  "en": "Invite code",
-                  "de": "Einladungscode"
-                }
-              }
-            ],
-            "auto": false,
-            "abi": "hash:b1f38ccaf8b165eb6dba31beba04cacbc50f1a16735e78148107b60e635c6cc4"
-          }
-        ]
-      },
-      "extras": null
-    },
-    {
-      "key": "none:poll-invite-create",
-      "identifier": "@poll-invite-create",
-      "alias": "poll-invite-create",
-      "chain": "none",
-      "hash": "bd30e8bd920b4d065adaca3892fb07120d071673dfd8d72c469e625cd3598b44",
-      "checksum": "bd30e8bd920b4d065adaca3892fb07120d071673dfd8d72c469e625cd3598b44",
-      "name": "Poll: Create Invite",
-      "title": {
-        "en": "Create Invite Link",
-        "de": "Einladungslink erstellen"
-      },
-      "description": {
-        "en": "Generate an invite code that lets people join your space directly without approval.",
-        "de": "Einladungscode generieren, mit dem Personen ohne Genehmigung beitreten können."
-      },
-      "preview": null,
-      "creator": "github:JoAiHQ/warps",
-      "privileges": [],
-      "listed": true,
-      "visibility": "public",
-      "primaryAddress": "{{SC_ADDRESS}}",
-      "primaryFunc": "createInvite",
-      "brand": {
-        "hash": "0847471b0e7d910d18121ee35b0a3dade65963cdbc4f4b4915cde32dea0e1abe",
-        "slug": "poll",
-        "active": true,
-        "protocol": "brand:0.2.0",
-        "name": "Poll",
-        "description": {
-          "en": "On-chain polls and voting groups for any community — property owners, DAOs, teams, and more.",
-          "de": "On-Chain-Abstimmungen und Voting-Gruppen für jede Gemeinschaft — Eigentümer, DAOs, Teams und mehr."
-        },
-        "logo": {
-          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
-        },
-        "urls": {
-          "web": "https://joai.ai"
-        }
-      },
-      "warp": {
-        "protocol": "warp:3.0.0",
-        "name": "Poll: Create Invite",
-        "title": {
-          "en": "Create Invite Link",
-          "de": "Einladungslink erstellen"
-        },
-        "description": {
-          "en": "Generate an invite code that lets people join your space directly without approval.",
-          "de": "Einladungscode generieren, mit dem Personen ohne Genehmigung beitreten können."
-        },
-        "vars": {
-          "SC_ADDRESS": "TODO"
-        },
-        "actions": [
-          {
-            "type": "contract",
-            "label": {
-              "en": "Create Invite",
-              "de": "Einladung erstellen"
-            },
-            "address": "{{SC_ADDRESS}}",
-            "func": "createInvite",
-            "args": [
-              "string:{{SLUG}}",
-              "string:{{CODE}}",
-              "u32:{{MAX_USES}}",
-              "u64:{{EXPIRES_AT}}"
-            ],
-            "gasLimit": 10000000,
-            "inputs": [
-              {
-                "name": "SLUG",
-                "type": "string",
-                "position": "arg:1",
-                "source": "field",
-                "required": true
+                "required": false
               },
               {
-                "name": "CODE",
+                "name": "Until",
+                "as": "until",
+                "description": {
+                  "en": "Show entries before this date.",
+                  "de": "Einträge vor diesem Datum anzeigen."
+                },
+                "bot": "Optional end date filter. Convert to ISO 8601 format before submitting.",
                 "type": "string",
-                "position": "arg:2",
                 "source": "field",
-                "required": true,
-                "label": {
-                  "en": "Invite code",
-                  "de": "Einladungscode"
-                }
+                "required": false
               },
               {
-                "name": "MAX_USES",
-                "type": "uint32",
-                "position": "arg:3",
+                "name": "Last N",
+                "as": "last",
+                "description": {
+                  "en": "Return only the last N entries",
+                  "de": "Nur die letzten N Einträge zurückgeben"
+                },
+                "bot": "Optional number to return only the most recent N entries.",
+                "type": "string",
                 "source": "field",
-                "required": true,
-                "label": {
-                  "en": "Max uses",
-                  "de": "Maximale Nutzungen"
-                }
-              },
-              {
-                "name": "EXPIRES_AT",
-                "type": "uint64",
-                "position": "arg:4",
-                "source": "field",
-                "required": true,
-                "label": {
-                  "en": "Expires at (Unix timestamp)",
-                  "de": "Läuft ab (Unix-Timestamp)"
-                }
+                "required": false
               }
-            ],
-            "abi": "hash:b1f38ccaf8b165eb6dba31beba04cacbc50f1a16735e78148107b60e635c6cc4"
+            ]
           }
-        ]
-      },
-      "extras": null
-    },
-    {
-      "key": "none:poll-invite-join",
-      "identifier": "@poll-invite-join",
-      "alias": "poll-invite-join",
-      "chain": "none",
-      "hash": "655eb9e6f40230bac37940d5e1109192868bb6d0eff654e08735c7cc79d46244",
-      "checksum": "655eb9e6f40230bac37940d5e1109192868bb6d0eff654e08735c7cc79d46244",
-      "name": "Poll: Join With Invite",
-      "title": {
-        "en": "Join With Invite Code",
-        "de": "Mit Einladungscode beitreten"
-      },
-      "description": {
-        "en": "Use an invite code to join a group instantly without waiting for approval.",
-        "de": "Mit einem Einladungscode sofort einer Gruppe beitreten, ohne auf Genehmigung zu warten."
-      },
-      "preview": null,
-      "creator": "github:JoAiHQ/warps",
-      "privileges": [],
-      "listed": true,
-      "visibility": "public",
-      "primaryAddress": "{{SC_ADDRESS}}",
-      "primaryFunc": "joinWithInvite",
-      "brand": {
-        "hash": "0847471b0e7d910d18121ee35b0a3dade65963cdbc4f4b4915cde32dea0e1abe",
-        "slug": "poll",
-        "active": true,
-        "protocol": "brand:0.2.0",
-        "name": "Poll",
-        "description": {
-          "en": "On-chain polls and voting groups for any community — property owners, DAOs, teams, and more.",
-          "de": "On-Chain-Abstimmungen und Voting-Gruppen für jede Gemeinschaft — Eigentümer, DAOs, Teams und mehr."
-        },
-        "logo": {
-          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
-        },
-        "urls": {
-          "web": "https://joai.ai"
+        ],
+        "messages": {
+          "success": {
+            "en": "Here are your '{{storeName}}' entries.",
+            "de": "Hier sind deine '{{storeName}}'-Einträge."
+          }
         }
-      },
-      "warp": {
-        "protocol": "warp:3.0.0",
-        "name": "Poll: Join With Invite",
-        "title": {
-          "en": "Join With Invite Code",
-          "de": "Mit Einladungscode beitreten"
-        },
-        "description": {
-          "en": "Use an invite code to join a group instantly without waiting for approval.",
-          "de": "Mit einem Einladungscode sofort einer Gruppe beitreten, ohne auf Genehmigung zu warten."
-        },
-        "vars": {
-          "SC_ADDRESS": "TODO"
-        },
-        "actions": [
-          {
-            "type": "contract",
-            "label": {
-              "en": "Join",
-              "de": "Beitreten"
-            },
-            "address": "{{SC_ADDRESS}}",
-            "func": "joinWithInvite",
-            "args": [
-              "string:{{SLUG}}",
-              "string:{{CODE}}",
-              "string:{{DISPLAY_NAME}}"
-            ],
-            "gasLimit": 10000000,
-            "inputs": [
-              {
-                "name": "SLUG",
-                "type": "string",
-                "position": "arg:1",
-                "source": "field",
-                "required": true
-              },
-              {
-                "name": "CODE",
-                "type": "string",
-                "position": "arg:2",
-                "source": "field",
-                "required": true,
-                "label": {
-                  "en": "Invite code",
-                  "de": "Einladungscode"
-                }
-              },
-              {
-                "name": "DISPLAY_NAME",
-                "type": "string",
-                "position": "arg:3",
-                "source": "field",
-                "required": true,
-                "label": {
-                  "en": "Your display name",
-                  "de": "Dein Anzeigename"
-                }
-              }
-            ],
-            "abi": "hash:b1f38ccaf8b165eb6dba31beba04cacbc50f1a16735e78148107b60e635c6cc4"
-          }
-        ]
-      },
-      "extras": null
-    },
-    {
-      "key": "none:poll-invite-revoke",
-      "identifier": "@poll-invite-revoke",
-      "alias": "poll-invite-revoke",
-      "chain": "none",
-      "hash": "b8073691e827f524e3dbfd9be37e553855a659eca66505fb2fb0a52dc69b9f4d",
-      "checksum": "b8073691e827f524e3dbfd9be37e553855a659eca66505fb2fb0a52dc69b9f4d",
-      "name": "Poll: Revoke Invite",
-      "title": {
-        "en": "Revoke Invite",
-        "de": "Einladung widerrufen"
-      },
-      "description": {
-        "en": "Revoke an active invite code so it can no longer be used.",
-        "de": "Aktiven Einladungscode widerrufen, sodass er nicht mehr verwendet werden kann."
-      },
-      "preview": null,
-      "creator": "github:JoAiHQ/warps",
-      "privileges": [],
-      "listed": true,
-      "visibility": "public",
-      "primaryAddress": "{{SC_ADDRESS}}",
-      "primaryFunc": "revokeInvite",
-      "brand": {
-        "hash": "0847471b0e7d910d18121ee35b0a3dade65963cdbc4f4b4915cde32dea0e1abe",
-        "slug": "poll",
-        "active": true,
-        "protocol": "brand:0.2.0",
-        "name": "Poll",
-        "description": {
-          "en": "On-chain polls and voting groups for any community — property owners, DAOs, teams, and more.",
-          "de": "On-Chain-Abstimmungen und Voting-Gruppen für jede Gemeinschaft — Eigentümer, DAOs, Teams und mehr."
-        },
-        "logo": {
-          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
-        },
-        "urls": {
-          "web": "https://joai.ai"
-        }
-      },
-      "warp": {
-        "protocol": "warp:3.0.0",
-        "name": "Poll: Revoke Invite",
-        "title": {
-          "en": "Revoke Invite",
-          "de": "Einladung widerrufen"
-        },
-        "description": {
-          "en": "Revoke an active invite code so it can no longer be used.",
-          "de": "Aktiven Einladungscode widerrufen, sodass er nicht mehr verwendet werden kann."
-        },
-        "vars": {
-          "SC_ADDRESS": "TODO"
-        },
-        "actions": [
-          {
-            "type": "contract",
-            "label": {
-              "en": "Revoke",
-              "de": "Widerrufen"
-            },
-            "address": "{{SC_ADDRESS}}",
-            "func": "revokeInvite",
-            "args": [
-              "string:{{SLUG}}",
-              "string:{{CODE}}"
-            ],
-            "gasLimit": 10000000,
-            "inputs": [
-              {
-                "name": "SLUG",
-                "type": "string",
-                "position": "arg:1",
-                "source": "field",
-                "required": true
-              },
-              {
-                "name": "CODE",
-                "type": "string",
-                "position": "arg:2",
-                "source": "field",
-                "required": true,
-                "label": {
-                  "en": "Invite code",
-                  "de": "Einladungscode"
-                }
-              }
-            ],
-            "abi": "hash:b1f38ccaf8b165eb6dba31beba04cacbc50f1a16735e78148107b60e635c6cc4"
-          }
-        ]
-      },
-      "extras": null
-    },
-    {
-      "key": "none:poll-member-approve",
-      "identifier": "@poll-member-approve",
-      "alias": "poll-member-approve",
-      "chain": "none",
-      "hash": "5934b5e421ae625c0cb5c8be364d166cb105b6b0e25e4d97b9a7cedb61054802",
-      "checksum": "5934b5e421ae625c0cb5c8be364d166cb105b6b0e25e4d97b9a7cedb61054802",
-      "name": "Poll: Approve Member",
-      "title": {
-        "en": "Approve Member",
-        "de": "Mitglied genehmigen"
-      },
-      "description": {
-        "en": "Approve a pending membership request and add the person to the group.",
-        "de": "Ausstehende Mitgliedschaftsanfrage genehmigen und Person zur Gruppe hinzufügen."
-      },
-      "preview": null,
-      "creator": "github:JoAiHQ/warps",
-      "privileges": [],
-      "listed": true,
-      "visibility": "public",
-      "primaryAddress": "{{SC_ADDRESS}}",
-      "primaryFunc": "approveMember",
-      "brand": {
-        "hash": "0847471b0e7d910d18121ee35b0a3dade65963cdbc4f4b4915cde32dea0e1abe",
-        "slug": "poll",
-        "active": true,
-        "protocol": "brand:0.2.0",
-        "name": "Poll",
-        "description": {
-          "en": "On-chain polls and voting groups for any community — property owners, DAOs, teams, and more.",
-          "de": "On-Chain-Abstimmungen und Voting-Gruppen für jede Gemeinschaft — Eigentümer, DAOs, Teams und mehr."
-        },
-        "logo": {
-          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
-        },
-        "urls": {
-          "web": "https://joai.ai"
-        }
-      },
-      "warp": {
-        "protocol": "warp:3.0.0",
-        "name": "Poll: Approve Member",
-        "title": {
-          "en": "Approve Member",
-          "de": "Mitglied genehmigen"
-        },
-        "description": {
-          "en": "Approve a pending membership request and add the person to the group.",
-          "de": "Ausstehende Mitgliedschaftsanfrage genehmigen und Person zur Gruppe hinzufügen."
-        },
-        "vars": {
-          "SC_ADDRESS": "TODO"
-        },
-        "actions": [
-          {
-            "type": "contract",
-            "label": {
-              "en": "Approve",
-              "de": "Genehmigen"
-            },
-            "address": "{{SC_ADDRESS}}",
-            "func": "approveMember",
-            "args": [
-              "string:{{SLUG}}",
-              "address:{{ADDRESS}}"
-            ],
-            "gasLimit": 10000000,
-            "inputs": [
-              {
-                "name": "SLUG",
-                "type": "string",
-                "position": "arg:1",
-                "source": "field",
-                "required": true
-              },
-              {
-                "name": "ADDRESS",
-                "type": "string",
-                "position": "arg:2",
-                "source": "field",
-                "required": true,
-                "label": {
-                  "en": "Member address",
-                  "de": "Mitglied-Adresse"
-                }
-              }
-            ],
-            "abi": "hash:b1f38ccaf8b165eb6dba31beba04cacbc50f1a16735e78148107b60e635c6cc4"
-          }
-        ]
-      },
-      "extras": null
-    },
-    {
-      "key": "none:poll-member-check",
-      "identifier": "@poll-member-check",
-      "alias": "poll-member-check",
-      "chain": "none",
-      "hash": "f5f6da4ff5fa84d8a08430d44e0e5639b7655baffa815f075669d233d054622b",
-      "checksum": "f5f6da4ff5fa84d8a08430d44e0e5639b7655baffa815f075669d233d054622b",
-      "name": "Poll: Is Member",
-      "title": {
-        "en": "Check Membership",
-        "de": "Mitgliedschaft prüfen"
-      },
-      "description": {
-        "en": "Check if an address is a member of a group.",
-        "de": "Prüfen, ob eine Adresse Mitglied einer Gruppe ist."
-      },
-      "preview": null,
-      "creator": "github:JoAiHQ/warps",
-      "privileges": [],
-      "listed": true,
-      "visibility": "public",
-      "primaryAddress": "{{SC_ADDRESS}}",
-      "primaryFunc": "isMember",
-      "brand": {
-        "hash": "0847471b0e7d910d18121ee35b0a3dade65963cdbc4f4b4915cde32dea0e1abe",
-        "slug": "poll",
-        "active": true,
-        "protocol": "brand:0.2.0",
-        "name": "Poll",
-        "description": {
-          "en": "On-chain polls and voting groups for any community — property owners, DAOs, teams, and more.",
-          "de": "On-Chain-Abstimmungen und Voting-Gruppen für jede Gemeinschaft — Eigentümer, DAOs, Teams und mehr."
-        },
-        "logo": {
-          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
-        },
-        "urls": {
-          "web": "https://joai.ai"
-        }
-      },
-      "warp": {
-        "protocol": "warp:3.0.0",
-        "name": "Poll: Is Member",
-        "title": {
-          "en": "Check Membership",
-          "de": "Mitgliedschaft prüfen"
-        },
-        "description": {
-          "en": "Check if an address is a member of a group.",
-          "de": "Prüfen, ob eine Adresse Mitglied einer Gruppe ist."
-        },
-        "vars": {
-          "SC_ADDRESS": "TODO"
-        },
-        "actions": [
-          {
-            "type": "query",
-            "label": {
-              "en": "Checking...",
-              "de": "Wird geprüft..."
-            },
-            "address": "{{SC_ADDRESS}}",
-            "func": "isMember",
-            "args": [
-              "string:{{SLUG}}",
-              "address:{{ADDRESS}}"
-            ],
-            "inputs": [
-              {
-                "name": "SLUG",
-                "type": "string",
-                "position": "arg:1",
-                "source": "field",
-                "required": true
-              },
-              {
-                "name": "ADDRESS",
-                "type": "string",
-                "position": "arg:2",
-                "source": "field",
-                "required": true,
-                "label": {
-                  "en": "Address",
-                  "de": "Adresse"
-                }
-              }
-            ],
-            "auto": false,
-            "abi": "hash:b1f38ccaf8b165eb6dba31beba04cacbc50f1a16735e78148107b60e635c6cc4"
-          }
-        ]
-      },
-      "extras": null
-    },
-    {
-      "key": "none:poll-member-remove",
-      "identifier": "@poll-member-remove",
-      "alias": "poll-member-remove",
-      "chain": "none",
-      "hash": "f25a97b9fe6099d5f66d691e6f6595e8ae48c7952b44c9927537c75084955dfe",
-      "checksum": "f25a97b9fe6099d5f66d691e6f6595e8ae48c7952b44c9927537c75084955dfe",
-      "name": "Poll: Remove Member",
-      "title": {
-        "en": "Remove Member",
-        "de": "Mitglied entfernen"
-      },
-      "description": {
-        "en": "Remove a member from the group. Admin cannot remove themselves.",
-        "de": "Mitglied aus der Gruppe entfernen. Admin kann sich nicht selbst entfernen."
-      },
-      "preview": null,
-      "creator": "github:JoAiHQ/warps",
-      "privileges": [],
-      "listed": true,
-      "visibility": "public",
-      "primaryAddress": "{{SC_ADDRESS}}",
-      "primaryFunc": "removeMember",
-      "brand": {
-        "hash": "0847471b0e7d910d18121ee35b0a3dade65963cdbc4f4b4915cde32dea0e1abe",
-        "slug": "poll",
-        "active": true,
-        "protocol": "brand:0.2.0",
-        "name": "Poll",
-        "description": {
-          "en": "On-chain polls and voting groups for any community — property owners, DAOs, teams, and more.",
-          "de": "On-Chain-Abstimmungen und Voting-Gruppen für jede Gemeinschaft — Eigentümer, DAOs, Teams und mehr."
-        },
-        "logo": {
-          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
-        },
-        "urls": {
-          "web": "https://joai.ai"
-        }
-      },
-      "warp": {
-        "protocol": "warp:3.0.0",
-        "name": "Poll: Remove Member",
-        "title": {
-          "en": "Remove Member",
-          "de": "Mitglied entfernen"
-        },
-        "description": {
-          "en": "Remove a member from the group. Admin cannot remove themselves.",
-          "de": "Mitglied aus der Gruppe entfernen. Admin kann sich nicht selbst entfernen."
-        },
-        "vars": {
-          "SC_ADDRESS": "TODO"
-        },
-        "actions": [
-          {
-            "type": "contract",
-            "label": {
-              "en": "Remove",
-              "de": "Entfernen"
-            },
-            "address": "{{SC_ADDRESS}}",
-            "func": "removeMember",
-            "args": [
-              "string:{{SLUG}}",
-              "address:{{ADDRESS}}"
-            ],
-            "gasLimit": 10000000,
-            "inputs": [
-              {
-                "name": "SLUG",
-                "type": "string",
-                "position": "arg:1",
-                "source": "field",
-                "required": true
-              },
-              {
-                "name": "ADDRESS",
-                "type": "string",
-                "position": "arg:2",
-                "source": "field",
-                "required": true,
-                "label": {
-                  "en": "Member address",
-                  "de": "Mitglied-Adresse"
-                }
-              }
-            ],
-            "abi": "hash:b1f38ccaf8b165eb6dba31beba04cacbc50f1a16735e78148107b60e635c6cc4"
-          }
-        ]
-      },
-      "extras": null
-    },
-    {
-      "key": "none:poll-member-vote",
-      "identifier": "@poll-member-vote",
-      "alias": "poll-member-vote",
-      "chain": "none",
-      "hash": "d20224bd174aecf81d0fdada4c26f781b2d889d1cf5095de4e6a514640545272",
-      "checksum": "d20224bd174aecf81d0fdada4c26f781b2d889d1cf5095de4e6a514640545272",
-      "name": "Poll: Get Member Vote",
-      "title": {
-        "en": "Member's Vote",
-        "de": "Stimme des Mitglieds"
-      },
-      "description": {
-        "en": "Query which option an address voted for on a poll.",
-        "de": "Abfragen, für welche Option eine Adresse bei einer Abstimmung gestimmt hat."
-      },
-      "preview": null,
-      "creator": "github:JoAiHQ/warps",
-      "privileges": [],
-      "listed": true,
-      "visibility": "public",
-      "primaryAddress": "{{SC_ADDRESS}}",
-      "primaryFunc": "getMemberVote",
-      "brand": {
-        "hash": "0847471b0e7d910d18121ee35b0a3dade65963cdbc4f4b4915cde32dea0e1abe",
-        "slug": "poll",
-        "active": true,
-        "protocol": "brand:0.2.0",
-        "name": "Poll",
-        "description": {
-          "en": "On-chain polls and voting groups for any community — property owners, DAOs, teams, and more.",
-          "de": "On-Chain-Abstimmungen und Voting-Gruppen für jede Gemeinschaft — Eigentümer, DAOs, Teams und mehr."
-        },
-        "logo": {
-          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
-        },
-        "urls": {
-          "web": "https://joai.ai"
-        }
-      },
-      "warp": {
-        "protocol": "warp:3.0.0",
-        "name": "Poll: Get Member Vote",
-        "title": {
-          "en": "Member's Vote",
-          "de": "Stimme des Mitglieds"
-        },
-        "description": {
-          "en": "Query which option an address voted for on a poll.",
-          "de": "Abfragen, für welche Option eine Adresse bei einer Abstimmung gestimmt hat."
-        },
-        "vars": {
-          "SC_ADDRESS": "TODO"
-        },
-        "actions": [
-          {
-            "type": "query",
-            "label": {
-              "en": "Loading vote...",
-              "de": "Stimme wird geladen..."
-            },
-            "address": "{{SC_ADDRESS}}",
-            "func": "getMemberVote",
-            "args": [
-              "u64:{{POLL_ID}}",
-              "address:{{ADDRESS}}"
-            ],
-            "inputs": [
-              {
-                "name": "POLL_ID",
-                "type": "uint64",
-                "position": "arg:1",
-                "source": "field",
-                "required": true,
-                "label": {
-                  "en": "Poll ID",
-                  "de": "Abstimmungs-ID"
-                }
-              },
-              {
-                "name": "ADDRESS",
-                "type": "string",
-                "position": "arg:2",
-                "source": "field",
-                "required": true,
-                "label": {
-                  "en": "Address",
-                  "de": "Adresse"
-                }
-              }
-            ],
-            "auto": false,
-            "abi": "hash:b1f38ccaf8b165eb6dba31beba04cacbc50f1a16735e78148107b60e635c6cc4"
-          }
-        ]
-      },
-      "extras": null
-    },
-    {
-      "key": "none:poll-members",
-      "identifier": "@poll-members",
-      "alias": "poll-members",
-      "chain": "none",
-      "hash": "49117f6034513478bc8c639b860dd834c8b1b8b8b307a0cd97ab7ec821144e4f",
-      "checksum": "49117f6034513478bc8c639b860dd834c8b1b8b8b307a0cd97ab7ec821144e4f",
-      "name": "Poll: Get Members",
-      "title": {
-        "en": "Group Members",
-        "de": "Gruppenmitglieder"
-      },
-      "description": {
-        "en": "List all members of a group.",
-        "de": "Alle Mitglieder einer Gruppe anzeigen."
-      },
-      "preview": null,
-      "creator": "github:JoAiHQ/warps",
-      "privileges": [],
-      "listed": true,
-      "visibility": "public",
-      "primaryAddress": "{{SC_ADDRESS}}",
-      "primaryFunc": "getMembers",
-      "brand": {
-        "hash": "0847471b0e7d910d18121ee35b0a3dade65963cdbc4f4b4915cde32dea0e1abe",
-        "slug": "poll",
-        "active": true,
-        "protocol": "brand:0.2.0",
-        "name": "Poll",
-        "description": {
-          "en": "On-chain polls and voting groups for any community — property owners, DAOs, teams, and more.",
-          "de": "On-Chain-Abstimmungen und Voting-Gruppen für jede Gemeinschaft — Eigentümer, DAOs, Teams und mehr."
-        },
-        "logo": {
-          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
-        },
-        "urls": {
-          "web": "https://joai.ai"
-        }
-      },
-      "warp": {
-        "protocol": "warp:3.0.0",
-        "name": "Poll: Get Members",
-        "title": {
-          "en": "Group Members",
-          "de": "Gruppenmitglieder"
-        },
-        "description": {
-          "en": "List all members of a group.",
-          "de": "Alle Mitglieder einer Gruppe anzeigen."
-        },
-        "vars": {
-          "SC_ADDRESS": "TODO"
-        },
-        "actions": [
-          {
-            "type": "query",
-            "label": {
-              "en": "Loading members...",
-              "de": "Mitglieder werden geladen..."
-            },
-            "address": "{{SC_ADDRESS}}",
-            "func": "getMembers",
-            "args": [
-              "string:{{SLUG}}"
-            ],
-            "inputs": [
-              {
-                "name": "SLUG",
-                "type": "string",
-                "position": "arg:1",
-                "source": "field",
-                "required": true
-              }
-            ],
-            "auto": true,
-            "abi": "hash:b1f38ccaf8b165eb6dba31beba04cacbc50f1a16735e78148107b60e635c6cc4"
-          }
-        ]
-      },
-      "extras": null
-    },
-    {
-      "key": "none:poll-membership-request",
-      "identifier": "@poll-membership-request",
-      "alias": "poll-membership-request",
-      "chain": "none",
-      "hash": "9a144b778cea1fbdc17a48d6710f321136205331b58470ce56fac2a0d9f9e2fc",
-      "checksum": "9a144b778cea1fbdc17a48d6710f321136205331b58470ce56fac2a0d9f9e2fc",
-      "name": "Poll: Join Space",
-      "title": {
-        "en": "Join This Space",
-        "de": "Space beitreten"
-      },
-      "description": {
-        "en": "Request membership to participate in polls. The admin will approve your request.",
-        "de": "Mitgliedschaft beantragen, um an Abstimmungen teilzunehmen. Der Admin genehmigt deine Anfrage."
-      },
-      "preview": null,
-      "creator": "github:JoAiHQ/warps",
-      "privileges": [],
-      "listed": true,
-      "visibility": "public",
-      "primaryAddress": "{{SC_ADDRESS}}",
-      "primaryFunc": "requestMembership",
-      "brand": {
-        "hash": "0847471b0e7d910d18121ee35b0a3dade65963cdbc4f4b4915cde32dea0e1abe",
-        "slug": "poll",
-        "active": true,
-        "protocol": "brand:0.2.0",
-        "name": "Poll",
-        "description": {
-          "en": "On-chain polls and voting groups for any community — property owners, DAOs, teams, and more.",
-          "de": "On-Chain-Abstimmungen und Voting-Gruppen für jede Gemeinschaft — Eigentümer, DAOs, Teams und mehr."
-        },
-        "logo": {
-          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
-        },
-        "urls": {
-          "web": "https://joai.ai"
-        }
-      },
-      "warp": {
-        "protocol": "warp:3.0.0",
-        "name": "Poll: Join Space",
-        "title": {
-          "en": "Join This Space",
-          "de": "Space beitreten"
-        },
-        "description": {
-          "en": "Request membership to participate in polls. The admin will approve your request.",
-          "de": "Mitgliedschaft beantragen, um an Abstimmungen teilzunehmen. Der Admin genehmigt deine Anfrage."
-        },
-        "vars": {
-          "SC_ADDRESS": "TODO"
-        },
-        "actions": [
-          {
-            "type": "contract",
-            "label": {
-              "en": "Send Request",
-              "de": "Anfrage senden"
-            },
-            "address": "{{SC_ADDRESS}}",
-            "func": "requestMembership",
-            "args": [
-              "string:{{SLUG}}",
-              "string:{{DISPLAY_NAME}}"
-            ],
-            "gasLimit": 10000000,
-            "inputs": [
-              {
-                "name": "SLUG",
-                "type": "string",
-                "position": "arg:1",
-                "source": "field",
-                "required": true
-              },
-              {
-                "name": "DISPLAY_NAME",
-                "type": "string",
-                "position": "arg:2",
-                "source": "field",
-                "required": true,
-                "label": {
-                  "en": "Your display name",
-                  "de": "Dein Anzeigename"
-                }
-              }
-            ],
-            "abi": "hash:b1f38ccaf8b165eb6dba31beba04cacbc50f1a16735e78148107b60e635c6cc4"
-          }
-        ]
-      },
-      "extras": null
-    },
-    {
-      "key": "none:poll-polls-active",
-      "identifier": "@poll-polls-active",
-      "alias": "poll-polls-active",
-      "chain": "none",
-      "hash": "f3ec3ea0954adffaa9bc381052c6f20ede8e52a31b9c940d5ba9f1d118f6ecb7",
-      "checksum": "f3ec3ea0954adffaa9bc381052c6f20ede8e52a31b9c940d5ba9f1d118f6ecb7",
-      "name": "Poll: Active Polls",
-      "title": {
-        "en": "Active Polls",
-        "de": "Aktive Abstimmungen"
-      },
-      "description": {
-        "en": "See all open polls in this space.",
-        "de": "Alle offenen Abstimmungen in diesem Space anzeigen."
-      },
-      "preview": null,
-      "creator": "github:JoAiHQ/warps",
-      "privileges": [],
-      "listed": true,
-      "visibility": "public",
-      "primaryAddress": "{{SC_ADDRESS}}",
-      "primaryFunc": "getActivePolls",
-      "brand": {
-        "hash": "0847471b0e7d910d18121ee35b0a3dade65963cdbc4f4b4915cde32dea0e1abe",
-        "slug": "poll",
-        "active": true,
-        "protocol": "brand:0.2.0",
-        "name": "Poll",
-        "description": {
-          "en": "On-chain polls and voting groups for any community — property owners, DAOs, teams, and more.",
-          "de": "On-Chain-Abstimmungen und Voting-Gruppen für jede Gemeinschaft — Eigentümer, DAOs, Teams und mehr."
-        },
-        "logo": {
-          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
-        },
-        "urls": {
-          "web": "https://joai.ai"
-        }
-      },
-      "warp": {
-        "protocol": "warp:3.0.0",
-        "name": "Poll: Active Polls",
-        "title": {
-          "en": "Active Polls",
-          "de": "Aktive Abstimmungen"
-        },
-        "description": {
-          "en": "See all open polls in this space.",
-          "de": "Alle offenen Abstimmungen in diesem Space anzeigen."
-        },
-        "vars": {
-          "SC_ADDRESS": "TODO"
-        },
-        "actions": [
-          {
-            "type": "query",
-            "label": {
-              "en": "Loading polls...",
-              "de": "Abstimmungen werden geladen..."
-            },
-            "address": "{{SC_ADDRESS}}",
-            "func": "getActivePolls",
-            "args": [
-              "string:{{SLUG}}"
-            ],
-            "inputs": [
-              {
-                "name": "SLUG",
-                "type": "string",
-                "position": "arg:1",
-                "source": "field",
-                "required": true
-              }
-            ],
-            "auto": true,
-            "abi": "hash:b1f38ccaf8b165eb6dba31beba04cacbc50f1a16735e78148107b60e635c6cc4"
-          }
-        ]
-      },
-      "extras": null
-    },
-    {
-      "key": "none:poll-request-deny",
-      "identifier": "@poll-request-deny",
-      "alias": "poll-request-deny",
-      "chain": "none",
-      "hash": "2b08a4d248056f2d3d971d2c29ee10af17871627c5be672b605fa0070b240911",
-      "checksum": "2b08a4d248056f2d3d971d2c29ee10af17871627c5be672b605fa0070b240911",
-      "name": "Poll: Deny Request",
-      "title": {
-        "en": "Deny Request",
-        "de": "Anfrage ablehnen"
-      },
-      "description": {
-        "en": "Deny a pending membership request.",
-        "de": "Ausstehende Mitgliedschaftsanfrage ablehnen."
-      },
-      "preview": null,
-      "creator": "github:JoAiHQ/warps",
-      "privileges": [],
-      "listed": true,
-      "visibility": "public",
-      "primaryAddress": "{{SC_ADDRESS}}",
-      "primaryFunc": "denyRequest",
-      "brand": {
-        "hash": "0847471b0e7d910d18121ee35b0a3dade65963cdbc4f4b4915cde32dea0e1abe",
-        "slug": "poll",
-        "active": true,
-        "protocol": "brand:0.2.0",
-        "name": "Poll",
-        "description": {
-          "en": "On-chain polls and voting groups for any community — property owners, DAOs, teams, and more.",
-          "de": "On-Chain-Abstimmungen und Voting-Gruppen für jede Gemeinschaft — Eigentümer, DAOs, Teams und mehr."
-        },
-        "logo": {
-          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
-        },
-        "urls": {
-          "web": "https://joai.ai"
-        }
-      },
-      "warp": {
-        "protocol": "warp:3.0.0",
-        "name": "Poll: Deny Request",
-        "title": {
-          "en": "Deny Request",
-          "de": "Anfrage ablehnen"
-        },
-        "description": {
-          "en": "Deny a pending membership request.",
-          "de": "Ausstehende Mitgliedschaftsanfrage ablehnen."
-        },
-        "vars": {
-          "SC_ADDRESS": "TODO"
-        },
-        "actions": [
-          {
-            "type": "contract",
-            "label": {
-              "en": "Deny",
-              "de": "Ablehnen"
-            },
-            "address": "{{SC_ADDRESS}}",
-            "func": "denyRequest",
-            "args": [
-              "string:{{SLUG}}",
-              "address:{{ADDRESS}}"
-            ],
-            "gasLimit": 10000000,
-            "inputs": [
-              {
-                "name": "SLUG",
-                "type": "string",
-                "position": "arg:1",
-                "source": "field",
-                "required": true
-              },
-              {
-                "name": "ADDRESS",
-                "type": "string",
-                "position": "arg:2",
-                "source": "field",
-                "required": true,
-                "label": {
-                  "en": "Member address",
-                  "de": "Mitglied-Adresse"
-                }
-              }
-            ],
-            "abi": "hash:b1f38ccaf8b165eb6dba31beba04cacbc50f1a16735e78148107b60e635c6cc4"
-          }
-        ]
-      },
-      "extras": null
-    },
-    {
-      "key": "none:poll-requests-pending",
-      "identifier": "@poll-requests-pending",
-      "alias": "poll-requests-pending",
-      "chain": "none",
-      "hash": "9bb050c12209af3e876e14bad046fe273e5d047678f5d2e8f57607766fa4f04e",
-      "checksum": "9bb050c12209af3e876e14bad046fe273e5d047678f5d2e8f57607766fa4f04e",
-      "name": "Poll: Pending Requests",
-      "title": {
-        "en": "Membership Requests",
-        "de": "Mitgliedschaftsanfragen"
-      },
-      "description": {
-        "en": "View all pending membership requests for your space.",
-        "de": "Alle offenen Mitgliedschaftsanfragen im Space anzeigen."
-      },
-      "preview": null,
-      "creator": "github:JoAiHQ/warps",
-      "privileges": [],
-      "listed": true,
-      "visibility": "public",
-      "primaryAddress": "{{SC_ADDRESS}}",
-      "primaryFunc": "getPendingRequests",
-      "brand": {
-        "hash": "0847471b0e7d910d18121ee35b0a3dade65963cdbc4f4b4915cde32dea0e1abe",
-        "slug": "poll",
-        "active": true,
-        "protocol": "brand:0.2.0",
-        "name": "Poll",
-        "description": {
-          "en": "On-chain polls and voting groups for any community — property owners, DAOs, teams, and more.",
-          "de": "On-Chain-Abstimmungen und Voting-Gruppen für jede Gemeinschaft — Eigentümer, DAOs, Teams und mehr."
-        },
-        "logo": {
-          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
-        },
-        "urls": {
-          "web": "https://joai.ai"
-        }
-      },
-      "warp": {
-        "protocol": "warp:3.0.0",
-        "name": "Poll: Pending Requests",
-        "title": {
-          "en": "Membership Requests",
-          "de": "Mitgliedschaftsanfragen"
-        },
-        "description": {
-          "en": "View all pending membership requests for your space.",
-          "de": "Alle offenen Mitgliedschaftsanfragen im Space anzeigen."
-        },
-        "vars": {
-          "SC_ADDRESS": "TODO"
-        },
-        "actions": [
-          {
-            "type": "query",
-            "label": {
-              "en": "Loading requests...",
-              "de": "Anfragen werden geladen..."
-            },
-            "address": "{{SC_ADDRESS}}",
-            "func": "getPendingRequests",
-            "args": [
-              "string:{{SLUG}}"
-            ],
-            "inputs": [
-              {
-                "name": "SLUG",
-                "type": "string",
-                "position": "arg:1",
-                "source": "field",
-                "required": true
-              }
-            ],
-            "auto": true,
-            "abi": "hash:b1f38ccaf8b165eb6dba31beba04cacbc50f1a16735e78148107b60e635c6cc4"
-          }
-        ]
-      },
-      "extras": null
-    },
-    {
-      "key": "none:poll-results",
-      "identifier": "@poll-results",
-      "alias": "poll-results",
-      "chain": "none",
-      "hash": "39fdaa9ef5540a4791bcbb49bdf1ffb4ec24f35208377ae9565817c297c67d1f",
-      "checksum": "39fdaa9ef5540a4791bcbb49bdf1ffb4ec24f35208377ae9565817c297c67d1f",
-      "name": "Poll: Results",
-      "title": {
-        "en": "Poll Results",
-        "de": "Abstimmungsergebnis"
-      },
-      "description": {
-        "en": "View the current vote counts for each option.",
-        "de": "Die aktuellen Stimmen pro Option anzeigen."
-      },
-      "preview": null,
-      "creator": "github:JoAiHQ/warps",
-      "privileges": [],
-      "listed": true,
-      "visibility": "public",
-      "primaryAddress": "{{SC_ADDRESS}}",
-      "primaryFunc": "getPollResults",
-      "brand": {
-        "hash": "0847471b0e7d910d18121ee35b0a3dade65963cdbc4f4b4915cde32dea0e1abe",
-        "slug": "poll",
-        "active": true,
-        "protocol": "brand:0.2.0",
-        "name": "Poll",
-        "description": {
-          "en": "On-chain polls and voting groups for any community — property owners, DAOs, teams, and more.",
-          "de": "On-Chain-Abstimmungen und Voting-Gruppen für jede Gemeinschaft — Eigentümer, DAOs, Teams und mehr."
-        },
-        "logo": {
-          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
-        },
-        "urls": {
-          "web": "https://joai.ai"
-        }
-      },
-      "warp": {
-        "protocol": "warp:3.0.0",
-        "name": "Poll: Results",
-        "title": {
-          "en": "Poll Results",
-          "de": "Abstimmungsergebnis"
-        },
-        "description": {
-          "en": "View the current vote counts for each option.",
-          "de": "Die aktuellen Stimmen pro Option anzeigen."
-        },
-        "vars": {
-          "SC_ADDRESS": "TODO"
-        },
-        "actions": [
-          {
-            "type": "query",
-            "label": {
-              "en": "Loading results...",
-              "de": "Ergebnisse werden geladen..."
-            },
-            "address": "{{SC_ADDRESS}}",
-            "func": "getPollResults",
-            "args": [
-              "u64:{{POLL_ID}}"
-            ],
-            "inputs": [
-              {
-                "name": "POLL_ID",
-                "type": "uint64",
-                "position": "arg:1",
-                "source": "field",
-                "required": true,
-                "label": {
-                  "en": "Poll ID",
-                  "de": "Abstimmungs-ID"
-                }
-              }
-            ],
-            "auto": false,
-            "abi": "hash:b1f38ccaf8b165eb6dba31beba04cacbc50f1a16735e78148107b60e635c6cc4"
-          }
-        ]
-      },
-      "extras": null
-    },
-    {
-      "key": "none:poll-vote",
-      "identifier": "@poll-vote",
-      "alias": "poll-vote",
-      "chain": "none",
-      "hash": "96427b3d039f6e03f2808ca8e50c79deed848284776e7477f34e9df3ae82c218",
-      "checksum": "96427b3d039f6e03f2808ca8e50c79deed848284776e7477f34e9df3ae82c218",
-      "name": "Poll: Vote",
-      "title": {
-        "en": "Cast Your Vote",
-        "de": "Abstimmen"
-      },
-      "description": {
-        "en": "Vote on an open poll. You need to be a member of the space to vote.",
-        "de": "An einer offenen Abstimmung teilnehmen. Du musst Mitglied des Spaces sein."
-      },
-      "preview": null,
-      "creator": "github:JoAiHQ/warps",
-      "privileges": [],
-      "listed": true,
-      "visibility": "public",
-      "primaryAddress": "{{SC_ADDRESS}}",
-      "primaryFunc": "vote",
-      "brand": {
-        "hash": "0847471b0e7d910d18121ee35b0a3dade65963cdbc4f4b4915cde32dea0e1abe",
-        "slug": "poll",
-        "active": true,
-        "protocol": "brand:0.2.0",
-        "name": "Poll",
-        "description": {
-          "en": "On-chain polls and voting groups for any community — property owners, DAOs, teams, and more.",
-          "de": "On-Chain-Abstimmungen und Voting-Gruppen für jede Gemeinschaft — Eigentümer, DAOs, Teams und mehr."
-        },
-        "logo": {
-          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
-        },
-        "urls": {
-          "web": "https://joai.ai"
-        }
-      },
-      "warp": {
-        "protocol": "warp:3.0.0",
-        "name": "Poll: Vote",
-        "title": {
-          "en": "Cast Your Vote",
-          "de": "Abstimmen"
-        },
-        "description": {
-          "en": "Vote on an open poll. You need to be a member of the space to vote.",
-          "de": "An einer offenen Abstimmung teilnehmen. Du musst Mitglied des Spaces sein."
-        },
-        "vars": {
-          "SC_ADDRESS": "TODO"
-        },
-        "actions": [
-          {
-            "type": "contract",
-            "label": {
-              "en": "Submit Vote",
-              "de": "Stimme abgeben"
-            },
-            "address": "{{SC_ADDRESS}}",
-            "func": "vote",
-            "args": [
-              "u64:{{POLL_ID}}",
-              "u32:{{OPTION_INDEX}}"
-            ],
-            "gasLimit": 10000000,
-            "inputs": [
-              {
-                "name": "POLL_ID",
-                "type": "uint64",
-                "position": "arg:1",
-                "source": "field",
-                "required": true,
-                "label": {
-                  "en": "Poll ID",
-                  "de": "Abstimmungs-ID"
-                }
-              },
-              {
-                "name": "OPTION_INDEX",
-                "type": "uint32",
-                "position": "arg:2",
-                "source": "field",
-                "required": true,
-                "label": {
-                  "en": "Option (0 = first option)",
-                  "de": "Option (0 = erste Option)"
-                }
-              }
-            ],
-            "abi": "hash:b1f38ccaf8b165eb6dba31beba04cacbc50f1a16735e78148107b60e635c6cc4"
-          }
-        ]
-      },
-      "extras": null
-    },
-    {
-      "key": "none:poll-vote-check",
-      "identifier": "@poll-vote-check",
-      "alias": "poll-vote-check",
-      "chain": "none",
-      "hash": "6ea4854442da77ea0d0bae88474f733cf5aca8a1e6369f2ead66db6c1191d585",
-      "checksum": "6ea4854442da77ea0d0bae88474f733cf5aca8a1e6369f2ead66db6c1191d585",
-      "name": "Poll: Has Voted",
-      "title": {
-        "en": "Check Vote Status",
-        "de": "Abstimmungsstatus prüfen"
-      },
-      "description": {
-        "en": "Check if an address has already voted on a poll.",
-        "de": "Prüfen, ob eine Adresse bereits an einer Abstimmung teilgenommen hat."
-      },
-      "preview": null,
-      "creator": "github:JoAiHQ/warps",
-      "privileges": [],
-      "listed": true,
-      "visibility": "public",
-      "primaryAddress": "{{SC_ADDRESS}}",
-      "primaryFunc": "hasVoted",
-      "brand": {
-        "hash": "0847471b0e7d910d18121ee35b0a3dade65963cdbc4f4b4915cde32dea0e1abe",
-        "slug": "poll",
-        "active": true,
-        "protocol": "brand:0.2.0",
-        "name": "Poll",
-        "description": {
-          "en": "On-chain polls and voting groups for any community — property owners, DAOs, teams, and more.",
-          "de": "On-Chain-Abstimmungen und Voting-Gruppen für jede Gemeinschaft — Eigentümer, DAOs, Teams und mehr."
-        },
-        "logo": {
-          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
-        },
-        "urls": {
-          "web": "https://joai.ai"
-        }
-      },
-      "warp": {
-        "protocol": "warp:3.0.0",
-        "name": "Poll: Has Voted",
-        "title": {
-          "en": "Check Vote Status",
-          "de": "Abstimmungsstatus prüfen"
-        },
-        "description": {
-          "en": "Check if an address has already voted on a poll.",
-          "de": "Prüfen, ob eine Adresse bereits an einer Abstimmung teilgenommen hat."
-        },
-        "vars": {
-          "SC_ADDRESS": "TODO"
-        },
-        "actions": [
-          {
-            "type": "query",
-            "label": {
-              "en": "Checking...",
-              "de": "Wird geprüft..."
-            },
-            "address": "{{SC_ADDRESS}}",
-            "func": "hasVoted",
-            "args": [
-              "u64:{{POLL_ID}}",
-              "address:{{ADDRESS}}"
-            ],
-            "inputs": [
-              {
-                "name": "POLL_ID",
-                "type": "uint64",
-                "position": "arg:1",
-                "source": "field",
-                "required": true,
-                "label": {
-                  "en": "Poll ID",
-                  "de": "Abstimmungs-ID"
-                }
-              },
-              {
-                "name": "ADDRESS",
-                "type": "string",
-                "position": "arg:2",
-                "source": "field",
-                "required": true,
-                "label": {
-                  "en": "Address",
-                  "de": "Adresse"
-                }
-              }
-            ],
-            "auto": false,
-            "abi": "hash:b1f38ccaf8b165eb6dba31beba04cacbc50f1a16735e78148107b60e635c6cc4"
-          }
-        ]
       },
       "extras": null
     }
   ],
-  "deletes": [
-    {
-      "key": "none:appointment-upsert-policy",
-      "alias": "appointment-upsert-policy",
-      "chain": "none",
-      "hash": "75837ce831638ae8ba8d250f60321cf7dd9aadc166f874a2bfcff163e2952a8c"
-    }
-  ]
+  "deletes": []
 }
