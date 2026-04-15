@@ -9,28 +9,8 @@
     "en": "Update a field in an existing form.",
     "de": "Ein Feld eines bestehenden Formulars aktualisieren."
   },
-  "bot": "Use this to update a field on an existing form. First fetch the current definition via GET, modify the target input in definition.actions[0].inputs, then PATCH with the full updated definition.",
+  "bot": "Use this to update a field on a form. Call form-get first to read the current definition, then modify the target field in definition.actions[0].inputs and submit the full updated definition.",
   "actions": [
-    {
-      "type": "fetch",
-      "source": {
-        "url": "INJECT:API_BASE/v1/warps/{{formId}}",
-        "method": "GET",
-        "headers": {
-          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
-        }
-      },
-      "inputs": [
-        {
-          "name": "Form ID",
-          "as": "formId",
-          "type": "string",
-          "position": "arg:1",
-          "source": "field",
-          "required": true
-        }
-      ]
-    },
     {
       "type": "collect",
       "label": {
@@ -46,9 +26,17 @@
       },
       "inputs": [
         {
+          "name": "Form ID",
+          "as": "formId",
+          "type": "string",
+          "position": "arg:1",
+          "source": "field",
+          "required": true
+        },
+        {
           "name": "Definition",
           "as": "definition",
-          "bot": "The full updated warp definition JSON with the modified field. Find the field by slug in definition.actions[0].inputs, update only what changed, keep everything else intact.",
+          "bot": "The full updated warp definition with the target field modified in definition.actions[0].inputs. Keep all other fields intact.",
           "type": "json",
           "position": "arg:2",
           "source": "computed",
