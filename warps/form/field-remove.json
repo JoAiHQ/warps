@@ -9,17 +9,13 @@
     "en": "Permanently remove a field from a form.",
     "de": "Ein Feld dauerhaft aus einem Formular entfernen."
   },
-  "bot": "Use this to remove a field from an existing form.",
+  "bot": "Use this to remove a field from an existing form. First fetch the current definition via GET, filter out the target field from definition.actions[0].inputs, then PATCH with the full updated definition.",
   "actions": [
     {
-      "type": "collect",
-      "label": {
-        "en": "Remove field",
-        "de": "Feld entfernen"
-      },
-      "destination": {
-        "url": "INJECT:API_BASE/v1/warps/{{formId}}/inputs/{{slug}}",
-        "method": "DELETE",
+      "type": "fetch",
+      "source": {
+        "url": "INJECT:API_BASE/v1/warps/{{formId}}",
+        "method": "GET",
         "headers": {
           "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
         }
@@ -32,17 +28,30 @@
           "position": "arg:1",
           "source": "field",
           "required": true
-        },
+        }
+      ]
+    },
+    {
+      "type": "collect",
+      "label": {
+        "en": "Remove field",
+        "de": "Feld entfernen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/warps/{{formId}}",
+        "method": "PATCH",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
         {
-          "name": "Slug",
-          "as": "slug",
-          "description": {
-            "en": "The slug of the field to remove",
-            "de": "Der Slug des zu entfernenden Felds"
-          },
-          "type": "string",
+          "name": "Definition",
+          "as": "definition",
+          "bot": "The full updated warp definition JSON with the target field removed from definition.actions[0].inputs. Keep all other fields intact.",
+          "type": "json",
           "position": "arg:2",
-          "source": "field",
+          "source": "computed",
           "required": true
         }
       ]
@@ -50,8 +59,8 @@
   ],
   "messages": {
     "success": {
-      "en": "Field '{{slug}}' removed.",
-      "de": "Feld '{{slug}}' entfernt."
+      "en": "Field removed.",
+      "de": "Feld entfernt."
     }
   }
 }

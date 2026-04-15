@@ -6,20 +6,16 @@
     "de": "Feld bearbeiten"
   },
   "description": {
-    "en": "Update the label or required flag of an existing field.",
-    "de": "Beschriftung oder Pflichtfeld-Status eines bestehenden Felds aktualisieren."
+    "en": "Update a field in an existing form.",
+    "de": "Ein Feld eines bestehenden Formulars aktualisieren."
   },
-  "bot": "Use this to update a field's label or required setting on an existing form.",
+  "bot": "Use this to update a field on an existing form. First fetch the current definition via GET, modify the target input in definition.actions[0].inputs, then PATCH with the full updated definition.",
   "actions": [
     {
-      "type": "collect",
-      "label": {
-        "en": "Update field",
-        "de": "Feld aktualisieren"
-      },
-      "destination": {
-        "url": "INJECT:API_BASE/v1/warps/{{formId}}/inputs/{{slug}}",
-        "method": "PATCH",
+      "type": "fetch",
+      "source": {
+        "url": "INJECT:API_BASE/v1/warps/{{formId}}",
+        "method": "GET",
         "headers": {
           "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
         }
@@ -32,50 +28,39 @@
           "position": "arg:1",
           "source": "field",
           "required": true
-        },
+        }
+      ]
+    },
+    {
+      "type": "collect",
+      "label": {
+        "en": "Update field",
+        "de": "Feld aktualisieren"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/warps/{{formId}}",
+        "method": "PATCH",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
         {
-          "name": "Slug",
-          "as": "slug",
-          "description": {
-            "en": "The field's slug (cannot be changed)",
-            "de": "Der Slug des Felds (unveränderlich)"
-          },
-          "type": "string",
+          "name": "Definition",
+          "as": "definition",
+          "bot": "The full updated warp definition JSON with the modified field. Find the field by slug in definition.actions[0].inputs, update only what changed, keep everything else intact.",
+          "type": "json",
           "position": "arg:2",
-          "source": "field",
+          "source": "computed",
           "required": true
-        },
-        {
-          "name": "Label",
-          "as": "label",
-          "description": {
-            "en": "New label shown to submitters",
-            "de": "Neue Beschriftung für Einreichende"
-          },
-          "type": "string",
-          "position": "arg:3",
-          "source": "field",
-          "required": false
-        },
-        {
-          "name": "Required",
-          "as": "required",
-          "description": {
-            "en": "Must submitters fill this in?",
-            "de": "Pflichtfeld?"
-          },
-          "type": "bool",
-          "position": "arg:4",
-          "source": "field",
-          "required": false
         }
       ]
     }
   ],
   "messages": {
     "success": {
-      "en": "Field '{{slug}}' updated.",
-      "de": "Feld '{{slug}}' aktualisiert."
+      "en": "Field updated.",
+      "de": "Feld aktualisiert."
     }
   }
 }

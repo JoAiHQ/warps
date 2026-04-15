@@ -9,17 +9,13 @@
     "en": "Add an input field to an existing form.",
     "de": "Ein Eingabefeld zu einem bestehenden Formular hinzufügen."
   },
-  "bot": "Use this to add a field to a form. The formId comes from the form creation response. Auto-generate the slug from the label as lowercase kebab-case.",
+  "bot": "Use this to add a field to a form. First fetch the current definition via GET, extend the inputs array, then PATCH with the full updated definition.",
   "actions": [
     {
-      "type": "collect",
-      "label": {
-        "en": "Add field",
-        "de": "Feld hinzufügen"
-      },
-      "destination": {
-        "url": "INJECT:API_BASE/v1/warps/{{formId}}/inputs",
-        "method": "POST",
+      "type": "fetch",
+      "source": {
+        "url": "INJECT:API_BASE/v1/warps/{{formId}}",
+        "method": "GET",
         "headers": {
           "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
         }
@@ -33,73 +29,39 @@
           "position": "arg:1",
           "source": "field",
           "required": true
-        },
+        }
+      ]
+    },
+    {
+      "type": "collect",
+      "label": {
+        "en": "Add field",
+        "de": "Feld hinzufügen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/warps/{{formId}}",
+        "method": "PATCH",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
         {
-          "name": "Slug",
-          "as": "slug",
-          "description": {
-            "en": "Internal key for this field (e.g. company, job-title)",
-            "de": "Interner Schlüssel (z.B. firma, berufsbezeichnung)"
-          },
-          "bot": "Lowercase kebab-case key. Auto-generate from label.",
-          "type": "string",
+          "name": "Definition",
+          "as": "definition",
+          "bot": "The full updated warp definition JSON with the new field appended to definition.actions[0].inputs. Carry all existing fields and only append the new one.",
+          "type": "json",
           "position": "arg:2",
-          "source": "field",
+          "source": "computed",
           "required": true
-        },
-        {
-          "name": "Label",
-          "as": "label",
-          "description": {
-            "en": "Label shown to the submitter",
-            "de": "Beschriftung für Einreichende"
-          },
-          "type": "string",
-          "position": "arg:3",
-          "source": "field",
-          "required": true
-        },
-        {
-          "name": "Field Type",
-          "as": "fieldType",
-          "description": {
-            "en": "Input type",
-            "de": "Eingabetyp"
-          },
-          "type": "string",
-          "position": "arg:4",
-          "source": "field",
-          "required": false,
-          "default": "string",
-          "options": {
-            "string": "Short text",
-            "email": "Email address",
-            "phone": "Phone number",
-            "text": "Long text",
-            "select": "Dropdown",
-            "bool": "Yes / No"
-          }
-        },
-        {
-          "name": "Required",
-          "as": "required",
-          "description": {
-            "en": "Must the submitter fill this in?",
-            "de": "Pflichtfeld?"
-          },
-          "type": "bool",
-          "position": "arg:5",
-          "source": "field",
-          "required": false,
-          "default": "false"
         }
       ]
     }
   ],
   "messages": {
     "success": {
-      "en": "Field '{{label}}' added.",
-      "de": "Feld '{{label}}' hinzugefügt."
+      "en": "Field added.",
+      "de": "Feld hinzugefügt."
     }
   }
 }
