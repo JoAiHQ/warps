@@ -1,0 +1,108 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Running Coach: Onboard",
+  "title": {
+    "en": "Set up your running profile",
+    "de": "Laufprofil einrichten"
+  },
+  "description": {
+    "en": "Tell the coach your goal, current fitness level, and availability so it can build your personal training plan.",
+    "de": "Teile dem Coach dein Ziel, dein aktuelles Fitnesslevel und deine Verfügbarkeit mit, damit er deinen persönlichen Trainingsplan erstellen kann."
+  },
+  "bot": "Use this at the start to collect the user's running profile. Once submitted, save a memory with the full profile (goal, distance, pace, days/week, race date) and generate a personalized training plan.",
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Save profile",
+        "de": "Profil speichern"
+      },
+      "inputs": [
+        {
+          "name": "Running Goal",
+          "as": "goal",
+          "description": {
+            "en": "What are you training for?",
+            "de": "Wofür trainierst du?"
+          },
+          "bot": "The user's primary running goal. Use this to set the overall training direction.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "options": {
+            "5k": "Finish a 5K",
+            "10k": "Finish a 10K",
+            "half_marathon": "Finish a Half Marathon",
+            "improve_pace": "Improve my pace",
+            "stay_active": "Stay active and healthy"
+          }
+        },
+        {
+          "name": "Current Longest Run",
+          "as": "currentDistance",
+          "description": {
+            "en": "What's the furthest you can run right now without stopping? (km)",
+            "de": "Wie weit kannst du aktuell ohne Pause laufen? (km)"
+          },
+          "bot": "Current aerobic base in kilometers. Used to calibrate starting week and long run distance.",
+          "type": "number",
+          "source": "field",
+          "required": true,
+          "min": 0,
+          "max": 42
+        },
+        {
+          "name": "Current Pace",
+          "as": "currentPace",
+          "description": {
+            "en": "Roughly how fast do you run? (minutes per km)",
+            "de": "Wie schnell läufst du ungefähr? (Minuten pro km)"
+          },
+          "bot": "Current easy pace in min/km. Used to set appropriate training zones and target race pace.",
+          "type": "number",
+          "source": "field",
+          "required": false,
+          "min": 4,
+          "max": 15
+        },
+        {
+          "name": "Training Days per Week",
+          "as": "daysPerWeek",
+          "description": {
+            "en": "How many days per week can you run?",
+            "de": "An wie vielen Tagen pro Woche kannst du laufen?"
+          },
+          "bot": "Available training days per week. Use this to structure the weekly plan — more days means more variety (easy, tempo, long run).",
+          "type": "number",
+          "source": "field",
+          "required": true,
+          "options": {
+            "2": "2 days",
+            "3": "3 days",
+            "4": "4 days",
+            "5": "5 days"
+          }
+        },
+        {
+          "name": "Race Date",
+          "as": "raceDate",
+          "description": {
+            "en": "Do you have a target race date? (optional)",
+            "de": "Hast du ein Zieldatum für einen Lauf? (optional)"
+          },
+          "bot": "Optional target race date (ISO format). If provided, work backwards to structure the training phases with a taper week before the race.",
+          "type": "string",
+          "source": "field",
+          "required": false
+        }
+      ]
+    }
+  ],
+  "next": "@joai-memory-create?content=Running+profile:+goal={{goal}}+distance={{currentDistance}}km+pace={{currentPace}}min/km+days={{daysPerWeek}}+race={{raceDate}}&category=running&tags=running,profile",
+  "messages": {
+    "success": {
+      "en": "Profile saved. Building your training plan now...",
+      "de": "Profil gespeichert. Dein Trainingsplan wird erstellt..."
+    }
+  }
+}
