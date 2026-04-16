@@ -4,8 +4,8 @@
   "repo": "JoAiHQ/warps",
   "branch": "dev",
   "network": "devnet",
-  "commitSha": "b8cc829b88e15d2629fb961d82b2b6eee8050847",
-  "generatedAt": "2026-04-15T20:26:23.346Z",
+  "commitSha": "f4a571c11173c62badd6628d853e8b40177f307b",
+  "generatedAt": "2026-04-16T07:58:01.093Z",
   "warps": [
     {
       "key": "arbitrum:omniset-deposit-arbitrum",
@@ -43387,8 +43387,8 @@
       "identifier": "@form-create",
       "alias": "form-create",
       "chain": "none",
-      "hash": "e1c09e7eec65e1f78e2efc33fdfca2d7a6bb0adb65854bc15ae26af74cd47911",
-      "checksum": "e1c09e7eec65e1f78e2efc33fdfca2d7a6bb0adb65854bc15ae26af74cd47911",
+      "hash": "580d4fddc2f27ddc3ab39b04886da47b5121014e3e9bc9bb69a81179425f3f40",
+      "checksum": "580d4fddc2f27ddc3ab39b04886da47b5121014e3e9bc9bb69a81179425f3f40",
       "name": "Form: Create",
       "title": {
         "en": "Create a form",
@@ -43444,7 +43444,7 @@
               "en": "Configure form",
               "de": "Formular konfigurieren"
             },
-            "prompt": "Generate the HTTP request body as valid JSON for creating a form. Return ONLY the raw JSON object — no markdown fences, no explanation.\n\nUse this EXACT structure and fill in name, title, and messages from the user's inputs:\n{\"brand\":\"form\",\"definition\":{\"name\":\"<English internal name>\",\"title\":{\"en\":\"<English title>\",\"de\":\"<German title>\"},\"actions\":[{\"type\":\"collect\",\"label\":{\"en\":\"Submit\",\"de\":\"Absenden\"},\"inputs\":[]}],\"messages\":{\"success\":{\"en\":\"<English success message>\",\"de\":\"<German success message>\"}}}}\n\nRules:\n- Do not add, remove, or rename any keys\n- Keep the inputs array empty (fields are added separately)\n- Derive name and title from the user's title input\n- Write a friendly success message appropriate for the form type",
+            "prompt": "Build the form definition from the user's title and description. Translate the title into German. Write a friendly, context-appropriate success message in both English and German. The inputs array must be empty — fields are added in the next step.",
             "inputs": [
               {
                 "name": "Title",
@@ -43492,7 +43492,7 @@
                 "type": "string",
                 "source": "hidden",
                 "required": true,
-                "default": "{{PROMPT}}"
+                "default": "{{MESSAGE}}"
               }
             ]
           }
@@ -43615,8 +43615,8 @@
       "identifier": "@form-field-add",
       "alias": "form-field-add",
       "chain": "none",
-      "hash": "b2b543c16da3648213bcbca6810ffdb66eca79f3d4d18d5c28dae49df52c8bef",
-      "checksum": "b2b543c16da3648213bcbca6810ffdb66eca79f3d4d18d5c28dae49df52c8bef",
+      "hash": "46c37e0d5d256a7f682230f630fc7c584f60e0ecc809fcca819737b91319d770",
+      "checksum": "46c37e0d5d256a7f682230f630fc7c584f60e0ecc809fcca819737b91319d770",
       "name": "Form: Add Field",
       "title": {
         "en": "Add a field",
@@ -43672,7 +43672,7 @@
               "en": "Configure field",
               "de": "Feld konfigurieren"
             },
-            "prompt": "Generate the HTTP PATCH body as valid JSON for adding a field to a form. Return ONLY the raw JSON object — no markdown fences, no explanation.\n\nThe current form definition is:\n{{currentDefinition}}\n\nAppend a new field to definition.actions[0].inputs using this exact schema:\n{\"name\":\"<display label>\",\"as\":\"<camelCaseKey>\",\"description\":{\"en\":\"...\",\"de\":\"...\"},\"type\":\"{{fieldType}}\",\"source\":\"field\",\"required\":{{required}}}\n\nReturn the full updated definition:\n{\"definition\":{...full current definition with the new field appended to actions[0].inputs...}}\n\nRules:\n- Preserve all existing fields exactly — do not modify anything else\n- Derive the `as` key from the field name in camelCase\n- Write a concise description in both English and German\n- `required` must be a boolean (true or false), not a string",
+            "prompt": "Append a new field to actions[0].inputs of the current definition. Derive the `as` key in camelCase from the field name. Write a concise description in English and German. Preserve everything else in the definition exactly.",
             "inputs": [
               {
                 "name": "Field Name",
@@ -43747,7 +43747,7 @@
                 "type": "string",
                 "source": "hidden",
                 "required": true,
-                "default": "{{PROMPT}}"
+                "default": "{{MESSAGE}}"
               }
             ]
           }
@@ -43850,8 +43850,8 @@
       "identifier": "@form-field-remove",
       "alias": "form-field-remove",
       "chain": "none",
-      "hash": "c034b5502ca80841d946baa55b60ed729a7c37a02a779f7fb6dfd7c22bc62fc3",
-      "checksum": "c034b5502ca80841d946baa55b60ed729a7c37a02a779f7fb6dfd7c22bc62fc3",
+      "hash": "6b6752112a25aaa1cd758b3a5ba26e82ff1bc19d44813a0f16009be0d80e408f",
+      "checksum": "6b6752112a25aaa1cd758b3a5ba26e82ff1bc19d44813a0f16009be0d80e408f",
       "name": "Form: Remove Field",
       "title": {
         "en": "Remove a field",
@@ -43907,7 +43907,7 @@
               "en": "Confirm removal",
               "de": "Entfernung bestätigen"
             },
-            "prompt": "Generate the HTTP PATCH body as valid JSON for removing a field from a form. Return ONLY the raw JSON object — no markdown fences, no explanation.\n\nThe current form definition is:\n{{currentDefinition}}\n\nRemove the field with `as` value \"{{fieldKey}}\" from definition.actions[0].inputs.\n\nReturn the full updated definition:\n{\"definition\":{...full current definition with the target field removed from actions[0].inputs...}}\n\nRules:\n- Remove only the target field — preserve all other fields exactly\n- Do not modify any other part of the definition",
+            "prompt": "Remove the field with `as` value \"{{fieldKey}}\" from actions[0].inputs. Preserve everything else in the definition exactly.",
             "inputs": [
               {
                 "name": "Field Key",
@@ -43957,7 +43957,7 @@
                 "type": "string",
                 "source": "hidden",
                 "required": true,
-                "default": "{{PROMPT}}"
+                "default": "{{MESSAGE}}"
               }
             ]
           }
@@ -44046,8 +44046,8 @@
       "identifier": "@form-field-update",
       "alias": "form-field-update",
       "chain": "none",
-      "hash": "b5d5c8764019674b40a53fdab4a5cce3e24b18e904273be1f70bfc7724b5911a",
-      "checksum": "b5d5c8764019674b40a53fdab4a5cce3e24b18e904273be1f70bfc7724b5911a",
+      "hash": "08c58430dff5551452e1c15e56312282d2db1f4570d48c2790cc35a727a2b1e4",
+      "checksum": "08c58430dff5551452e1c15e56312282d2db1f4570d48c2790cc35a727a2b1e4",
       "name": "Form: Update Field",
       "title": {
         "en": "Edit a field",
@@ -44103,7 +44103,7 @@
               "en": "Configure changes",
               "de": "Änderungen konfigurieren"
             },
-            "prompt": "Generate the HTTP PATCH body as valid JSON for updating a field in a form. Return ONLY the raw JSON object — no markdown fences, no explanation.\n\nThe current form definition is:\n{{currentDefinition}}\n\nFind the field with `as` value \"{{fieldKey}}\" in definition.actions[0].inputs and apply these changes:\n{{changes}}\n\nReturn the full updated definition:\n{\"definition\":{...full current definition with the target field updated in actions[0].inputs...}}\n\nRules:\n- Only modify the target field — preserve all other fields exactly\n- Keep the `as` key unchanged unless renaming is explicitly requested\n- If updating descriptions, provide both English and German\n- `required` must be a boolean (true or false), not a string",
+            "prompt": "Update the field with `as` value \"{{fieldKey}}\" in actions[0].inputs by applying: {{changes}}. Keep the `as` key unchanged unless a rename is explicitly requested. If updating descriptions, provide both English and German. Preserve everything else exactly.",
             "inputs": [
               {
                 "name": "Field Key",
@@ -44164,7 +44164,7 @@
                 "type": "string",
                 "source": "hidden",
                 "required": true,
-                "default": "{{PROMPT}}"
+                "default": "{{MESSAGE}}"
               }
             ]
           }
@@ -44379,6 +44379,87 @@
         "category": "sales",
         "faq": {}
       }
+    },
+    {
+      "key": "none:form-list",
+      "identifier": "@form-list",
+      "alias": "form-list",
+      "chain": "none",
+      "hash": "4153522a75bd624ba0711a5e930558e9500cadb057928f43382b3925177b0a96",
+      "checksum": "4153522a75bd624ba0711a5e930558e9500cadb057928f43382b3925177b0a96",
+      "name": "Form: List",
+      "title": {
+        "en": "List forms",
+        "de": "Formulare auflisten"
+      },
+      "description": {
+        "en": "List all forms created by your team.",
+        "de": "Alle Formulare deines Teams auflisten."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "9d2185484475294d3c6a6aaad17bda94b4c5bcd360aab56f2234fe7a52eaa771",
+        "slug": "form",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "Form",
+        "description": {
+          "en": "Custom forms that capture leads, RSVPs, feedback, and sign-ups — powered by private warps.",
+          "de": "Maßgeschneiderte Formulare, die Leads, RSVPs, Feedback und Anmeldungen erfassen — mit privaten Warps.",
+          "fr": "Formulaires personnalisés qui capturent leads, RSVPs, feedbacks et inscriptions — avec des warps privés.",
+          "es": "Formularios personalizados que capturan leads, RSVPs, comentarios e inscripciones — con warps privados.",
+          "ro": "Formulare personalizate care capteaza lead-uri, RSVPs, feedback si inscrieri — cu warps private."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "Form: List",
+        "title": {
+          "en": "List forms",
+          "de": "Formulare auflisten"
+        },
+        "description": {
+          "en": "List all forms created by your team.",
+          "de": "Alle Formulare deines Teams auflisten."
+        },
+        "bot": "Use this to see all forms created by the team. Returns IDs and titles.",
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "List forms",
+              "de": "Formulare auflisten"
+            },
+            "destination": {
+              "url": "https://devnet-api.joai.ai/v1/warps?brand=form",
+              "method": "GET",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+              }
+            },
+            "inputs": []
+          }
+        ],
+        "messages": {
+          "success": {
+            "en": "Forms loaded.",
+            "de": "Formulare geladen."
+          }
+        }
+      },
+      "extras": null
     },
     {
       "key": "none:gemini-add-followup",
