@@ -39,7 +39,7 @@ The following files are produced by GitHub Actions and must never be committed b
 
 - `**/chatapp.dist.html` — built from the MCP app source (`index.tsx`, components) by the warps build pipeline.
 - `**/warp.types.ts` — auto-generated TypeScript types per warp.
-- `catalog/**` — `manifest.json`, `delta.json`, `distribution.json` for every chain env are produced by the catalog sync workflow.
+- `catalog/**` — `manifest.json`, `delta.json`, `distribution.json` for every chain env are produced by the catalog sync workflow. **Never run `npm run catalog:build` locally** — it requires CI environment variables and will fail. Push the warp JSON changes and CI handles the rest.
 
 If you see any of these in `git status` after editing source files, reset or unstage them before committing. Only commit the source files (e.g. `warp.json`, `index.tsx`, component files, `meta.ts`, `brand.ts`).
 
