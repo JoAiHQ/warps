@@ -1,0 +1,51 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Delete Reminder",
+  "title": {
+    "en": "Delete a reminder",
+    "de": "Erinnerung löschen"
+  },
+  "description": {
+    "en": "Permanently remove a reminder so your agent no longer triggers it.",
+    "de": "Entferne eine Erinnerung dauerhaft, damit dein Agent sie nicht mehr auslöst."
+  },
+  "bot": "Use this when the user wants to cancel or remove a reminder. If the user refers to a reminder by content, list reminders first to find the matching ID.",
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Delete reminder",
+        "de": "Erinnerung löschen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/reminders/{{reminderId}}",
+        "method": "DELETE",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Reminder ID",
+          "as": "reminderId",
+          "description": {
+            "en": "The ID of the reminder to delete",
+            "de": "Die ID der zu löschenden Erinnerung"
+          },
+          "bot": "The reminder hash ID. If the user refers to a reminder by content, list reminders first to find the matching ID.",
+          "type": "string",
+          "position": "url:reminderId",
+          "source": "field",
+          "required": true,
+          "min": 1
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Reminder deleted.",
+      "de": "Erinnerung gelöscht."
+    }
+  }
+}

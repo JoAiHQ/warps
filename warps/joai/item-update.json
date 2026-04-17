@@ -1,0 +1,87 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Update Item",
+  "title": {
+    "en": "Update an item",
+    "de": "Element aktualisieren"
+  },
+  "description": {
+    "en": "Edit the details of an existing item such as its title, content, or status.",
+    "de": "Bearbeite die Details eines bestehenden Elements, z. B. Titel, Inhalt oder Status."
+  },
+  "bot": "Use this when the user wants to modify an existing item. If the user refers to an item by title, list items first to find the matching ID.",
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Update item",
+        "de": "Element aktualisieren"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/items/{{itemId}}",
+        "method": "PUT",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Item ID",
+          "as": "itemId",
+          "description": {
+            "en": "The ID of the item to update",
+            "de": "Die ID des zu aktualisierenden Elements"
+          },
+          "bot": "The item hash ID. If the user refers to an item by title, list items first to find the matching ID.",
+          "type": "string",
+          "position": "url:itemId",
+          "source": "field",
+          "required": true,
+          "min": 1
+        },
+        {
+          "name": "Title",
+          "as": "title",
+          "description": {
+            "en": "Updated title for this item",
+            "de": "Aktualisierter Titel für dieses Element"
+          },
+          "bot": "A new title for this item, if the user wants to rename it.",
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Content",
+          "as": "content",
+          "description": {
+            "en": "Updated content or body of the item",
+            "de": "Aktualisierter Inhalt oder Text des Elements"
+          },
+          "bot": "The updated body or content for this item.",
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Status",
+          "as": "status",
+          "description": {
+            "en": "Updated status for this item",
+            "de": "Aktualisierter Status für dieses Element"
+          },
+          "bot": "The new status for this item (e.g., active, done, archived).",
+          "type": "string",
+          "source": "field",
+          "required": false
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Item updated.",
+      "de": "Element aktualisiert."
+    }
+  }
+}

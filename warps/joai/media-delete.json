@@ -1,0 +1,65 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Delete Media",
+  "title": {
+    "en": "Delete media",
+    "de": "Medien löschen"
+  },
+  "description": {
+    "en": "Permanently remove a media file from your agent's media library.",
+    "de": "Entferne eine Mediendatei dauerhaft aus der Medienbibliothek deines Agenten."
+  },
+  "bot": "Use this when the user wants to remove a media file. If the user refers to media by label, list media first to find the matching ID.",
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Delete media",
+        "de": "Medien löschen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/media/{{agentId}}/{{mediaId}}",
+        "method": "DELETE",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Agent ID",
+          "as": "agentId",
+          "description": {
+            "en": "The agent that owns this media",
+            "de": "Der Agent, dem diese Medien gehören"
+          },
+          "bot": "The agent hash ID that owns this media.",
+          "type": "string",
+          "position": "url:agentId",
+          "source": "field",
+          "required": true,
+          "min": 1
+        },
+        {
+          "name": "Media ID",
+          "as": "mediaId",
+          "description": {
+            "en": "The ID of the media to delete",
+            "de": "Die ID der zu löschenden Medien"
+          },
+          "bot": "The media hash ID. If the user refers to media by label, list media first to find the matching ID.",
+          "type": "string",
+          "position": "url:mediaId",
+          "source": "field",
+          "required": true,
+          "min": 1
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Media deleted.",
+      "de": "Medien gelöscht."
+    }
+  }
+}

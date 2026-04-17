@@ -1,0 +1,65 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Delete Element",
+  "title": {
+    "en": "Delete an element",
+    "de": "Element löschen"
+  },
+  "description": {
+    "en": "Permanently remove an element from your agent.",
+    "de": "Entferne ein Element dauerhaft von deinem Agenten."
+  },
+  "bot": "Use this when the user wants to remove an element. If the user refers to an element by name, list elements first to find the matching ID.",
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Delete element",
+        "de": "Element löschen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/elements/{{agentId}}/{{elementId}}",
+        "method": "DELETE",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Agent ID",
+          "as": "agentId",
+          "description": {
+            "en": "The agent that owns this element",
+            "de": "Der Agent, dem dieses Element gehört"
+          },
+          "bot": "The agent hash ID that owns this element.",
+          "type": "string",
+          "position": "url:agentId",
+          "source": "field",
+          "required": true,
+          "min": 1
+        },
+        {
+          "name": "Element ID",
+          "as": "elementId",
+          "description": {
+            "en": "The ID of the element to delete",
+            "de": "Die ID des zu löschenden Elements"
+          },
+          "bot": "The element hash ID. If the user refers to an element by name, list elements first to find the matching ID.",
+          "type": "string",
+          "position": "url:elementId",
+          "source": "field",
+          "required": true,
+          "min": 1
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Element deleted.",
+      "de": "Element gelöscht."
+    }
+  }
+}

@@ -1,0 +1,80 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Create Private App",
+  "title": {
+    "en": "Create a private app",
+    "de": "Private App erstellen"
+  },
+  "description": {
+    "en": "Create a private warp app scoped to your team, so you can publish private warps under your own brand.",
+    "de": "Erstelle eine private Warp-App, die auf dein Team beschränkt ist, damit du private Warps unter deiner eigenen Marke veröffentlichen kannst."
+  },
+  "bot": "Use this when the user wants to set up a private warp brand for their team. Ask for the team slug, app name, and description.",
+  "vars": {
+    "AGENT_UUID": "query:agent"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Create private app",
+        "de": "Private App erstellen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/warps/brands/team/{{teamSlug}}",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Team Slug",
+          "as": "teamSlug",
+          "description": {
+            "en": "The team slug to scope this app to",
+            "de": "Der Team-Slug, auf den diese App beschränkt ist"
+          },
+          "bot": "The team's URL slug (e.g., 'my-company'). This scopes the private app to that team.",
+          "type": "string",
+          "position": "url:teamSlug",
+          "source": "field",
+          "required": true,
+          "min": 1
+        },
+        {
+          "name": "Name",
+          "as": "name",
+          "description": {
+            "en": "A name for this private app",
+            "de": "Ein Name für diese private App"
+          },
+          "bot": "A short name for this private warp app or brand.",
+          "type": "string",
+          "position": "arg:1",
+          "source": "field",
+          "required": true,
+          "min": 2
+        },
+        {
+          "name": "Description",
+          "as": "description",
+          "description": {
+            "en": "What this private app is for",
+            "de": "Wofür diese private App gedacht ist"
+          },
+          "bot": "A short description of this private app's purpose.",
+          "type": "string",
+          "source": "field",
+          "required": false
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Private app '{{name}}' created.",
+      "de": "Private App '{{name}}' erstellt."
+    }
+  }
+}

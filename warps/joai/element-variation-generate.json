@@ -1,0 +1,77 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Generate Element Variation",
+  "title": {
+    "en": "Generate element variation",
+    "de": "Element-Variation generieren"
+  },
+  "description": {
+    "en": "Generate a new variation of an existing element using AI, optionally guided by custom instructions.",
+    "de": "Generiere mithilfe von KI eine neue Variation eines bestehenden Elements, optional gesteuert durch individuelle Anweisungen."
+  },
+  "bot": "Use this when the user wants an alternative version of an existing element. If the user refers to an element by name, list elements first to find the matching ID.",
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Generate variation",
+        "de": "Variation generieren"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/elements/{{agentId}}/{{elementId}}/generate-variation",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Agent ID",
+          "as": "agentId",
+          "description": {
+            "en": "The agent that owns this element",
+            "de": "Der Agent, dem dieses Element gehört"
+          },
+          "bot": "The agent hash ID that owns this element.",
+          "type": "string",
+          "position": "url:agentId",
+          "source": "field",
+          "required": true,
+          "min": 1
+        },
+        {
+          "name": "Element ID",
+          "as": "elementId",
+          "description": {
+            "en": "The ID of the element to vary",
+            "de": "Die ID des Elements, von dem eine Variation erstellt werden soll"
+          },
+          "bot": "The element hash ID. If the user refers to an element by name, list elements first to find the matching ID.",
+          "type": "string",
+          "position": "url:elementId",
+          "source": "field",
+          "required": true,
+          "min": 1
+        },
+        {
+          "name": "Prompt",
+          "as": "prompt",
+          "description": {
+            "en": "Optional instructions for generating the variation",
+            "de": "Optionale Anweisungen zur Generierung der Variation"
+          },
+          "bot": "Optional guidance for how the variation should differ — e.g., 'make it more formal', 'shorter version', 'different tone'.",
+          "type": "string",
+          "source": "field",
+          "required": false
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Element variation generated.",
+      "de": "Element-Variation generiert."
+    }
+  }
+}

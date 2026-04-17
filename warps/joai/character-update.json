@@ -1,0 +1,76 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Update Character",
+  "title": {
+    "en": "Update agent character",
+    "de": "Agenten-Charakter aktualisieren"
+  },
+  "description": {
+    "en": "Update your agent's name, system prompt, or bio to shape how it thinks, talks, and presents itself.",
+    "de": "Aktualisiere den Namen, System-Prompt oder die Bio deines Agenten, um zu bestimmen, wie er denkt, kommuniziert und sich präsentiert."
+  },
+  "bot": "Use this to change the agent's personality, system instructions, or display name. Only fill fields the user explicitly wants to change.",
+  "vars": {
+    "AGENT_UUID": "query:agent"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Update character",
+        "de": "Charakter aktualisieren"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/agents/{{AGENT_UUID}}/character",
+        "method": "PUT",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Name",
+          "as": "name",
+          "description": {
+            "en": "The agent's display name",
+            "de": "Der Anzeigename des Agenten"
+          },
+          "bot": "A new display name for this agent, if the user wants to rename it.",
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "System Prompt",
+          "as": "systemPrompt",
+          "description": {
+            "en": "Core instructions that define how the agent behaves",
+            "de": "Kernanweisungen, die das Verhalten des Agenten definieren"
+          },
+          "bot": "The system prompt that shapes the agent's behavior, tone, and capabilities. Only update if the user explicitly wants to change it.",
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Bio",
+          "as": "bio",
+          "description": {
+            "en": "A short description or bio for the agent",
+            "de": "Eine kurze Beschreibung oder Bio des Agenten"
+          },
+          "bot": "A short bio describing who this agent is and what it does.",
+          "type": "string",
+          "source": "field",
+          "required": false
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Agent character updated.",
+      "de": "Agenten-Charakter aktualisiert."
+    }
+  }
+}

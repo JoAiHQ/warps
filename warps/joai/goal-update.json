@@ -1,0 +1,92 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Update Goal",
+  "title": {
+    "en": "Update goal progress",
+    "de": "Zielfortschritt aktualisieren"
+  },
+  "description": {
+    "en": "Update the progress, status, or notes for an existing goal to keep your agent informed on how things are going.",
+    "de": "Aktualisiere Fortschritt, Status oder Notizen eines bestehenden Ziels, damit dein Agent weiß, wie die Dinge laufen."
+  },
+  "bot": "Use this when the user reports progress on a goal, changes its status, or wants to add notes. If the user refers to a goal by title, list goals first to find the matching ID.",
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Update goal",
+        "de": "Ziel aktualisieren"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/goals/{{goalId}}",
+        "method": "PUT",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Goal ID",
+          "as": "goalId",
+          "description": {
+            "en": "The ID of the goal to update",
+            "de": "Die ID des zu aktualisierenden Ziels"
+          },
+          "bot": "The goal hash ID. If the user refers to a goal by title, list goals first to find the matching ID.",
+          "type": "string",
+          "position": "url:goalId",
+          "source": "field",
+          "required": true,
+          "min": 1
+        },
+        {
+          "name": "Progress",
+          "as": "progress",
+          "description": {
+            "en": "Progress percentage (0–100)",
+            "de": "Fortschritt in Prozent (0–100)"
+          },
+          "bot": "A number from 0 to 100 indicating how complete this goal is.",
+          "type": "number",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Status",
+          "as": "status",
+          "description": {
+            "en": "Current status of the goal",
+            "de": "Aktueller Status des Ziels"
+          },
+          "bot": "The current state of this goal. Use 'active' while in progress, 'completed' when done, or 'paused' if on hold.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "options": {
+            "active": "Active",
+            "completed": "Completed",
+            "paused": "Paused"
+          }
+        },
+        {
+          "name": "Notes",
+          "as": "notes",
+          "description": {
+            "en": "Any notes or context about current progress",
+            "de": "Notizen oder Kontext zum aktuellen Fortschritt"
+          },
+          "bot": "Optional notes about what has been done, blockers, or next steps for this goal.",
+          "type": "string",
+          "source": "field",
+          "required": false
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Goal progress updated.",
+      "de": "Zielfortschritt aktualisiert."
+    }
+  }
+}
