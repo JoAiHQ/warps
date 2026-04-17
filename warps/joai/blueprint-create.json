@@ -1,0 +1,88 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Create Blueprint",
+  "title": {
+    "en": "Create a blueprint",
+    "de": "Blueprint erstellen"
+  },
+  "description": {
+    "en": "Create a reusable automation blueprint that your agent can execute to carry out complex multi-step tasks.",
+    "de": "Erstelle einen wiederverwendbaren Automatisierungs-Blueprint, den dein Agent ausführen kann, um komplexe mehrstufige Aufgaben zu erledigen."
+  },
+  "bot": "Use this when the user wants to define a new repeatable automation or workflow for their agent. Help them structure it clearly.",
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Create blueprint",
+        "de": "Blueprint erstellen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/blueprints",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Name",
+          "as": "name",
+          "description": {
+            "en": "A short name for this blueprint",
+            "de": "Ein kurzer Name für diesen Blueprint"
+          },
+          "bot": "A concise name describing what this blueprint does (e.g., 'Weekly report', 'Onboard new client').",
+          "type": "string",
+          "position": "arg:1",
+          "source": "field",
+          "required": true,
+          "min": 2
+        },
+        {
+          "name": "Description",
+          "as": "description",
+          "description": {
+            "en": "What this blueprint does and when to use it",
+            "de": "Was dieser Blueprint tut und wann er eingesetzt wird"
+          },
+          "bot": "A short explanation of this blueprint's purpose and when the agent should run it.",
+          "type": "string",
+          "position": "arg:2",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Agent ID",
+          "as": "agentId",
+          "description": {
+            "en": "The agent this blueprint belongs to",
+            "de": "Der Agent, zu dem dieser Blueprint gehört"
+          },
+          "bot": "The agent hash ID that owns this blueprint.",
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Config",
+          "as": "config",
+          "description": {
+            "en": "Configuration or steps for this blueprint (JSON or text)",
+            "de": "Konfiguration oder Schritte für diesen Blueprint (JSON oder Text)"
+          },
+          "bot": "Optional structured configuration, steps, or instructions that define how this blueprint runs.",
+          "type": "string",
+          "source": "field",
+          "required": false
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Blueprint '{{name}}' created.",
+      "de": "Blueprint '{{name}}' erstellt."
+    }
+  }
+}

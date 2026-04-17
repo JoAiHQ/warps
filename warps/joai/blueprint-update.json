@@ -1,0 +1,87 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Update Blueprint",
+  "title": {
+    "en": "Update a blueprint",
+    "de": "Blueprint aktualisieren"
+  },
+  "description": {
+    "en": "Edit an existing blueprint's name, description, or configuration.",
+    "de": "Bearbeite den Namen, die Beschreibung oder die Konfiguration eines bestehenden Blueprints."
+  },
+  "bot": "Use this when the user wants to refine or correct an existing blueprint. If the user refers to a blueprint by name, list blueprints first to find the matching ID.",
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Update blueprint",
+        "de": "Blueprint aktualisieren"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/blueprints/{{blueprintId}}",
+        "method": "PUT",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Blueprint ID",
+          "as": "blueprintId",
+          "description": {
+            "en": "The ID of the blueprint to update",
+            "de": "Die ID des zu aktualisierenden Blueprints"
+          },
+          "bot": "The blueprint hash ID. If the user refers to a blueprint by name, list blueprints first to find the matching ID.",
+          "type": "string",
+          "position": "url:blueprintId",
+          "source": "field",
+          "required": true,
+          "min": 1
+        },
+        {
+          "name": "Name",
+          "as": "name",
+          "description": {
+            "en": "Updated name for this blueprint",
+            "de": "Aktualisierter Name für diesen Blueprint"
+          },
+          "bot": "A new concise name for this blueprint, if the user wants to rename it.",
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Description",
+          "as": "description",
+          "description": {
+            "en": "Updated description of what this blueprint does",
+            "de": "Aktualisierte Beschreibung, was dieser Blueprint tut"
+          },
+          "bot": "An updated explanation of this blueprint's purpose and when to use it.",
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Config",
+          "as": "config",
+          "description": {
+            "en": "Updated configuration or steps (JSON or text)",
+            "de": "Aktualisierte Konfiguration oder Schritte (JSON oder Text)"
+          },
+          "bot": "Updated structured configuration, steps, or instructions for this blueprint.",
+          "type": "string",
+          "source": "field",
+          "required": false
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Blueprint updated.",
+      "de": "Blueprint aktualisiert."
+    }
+  }
+}

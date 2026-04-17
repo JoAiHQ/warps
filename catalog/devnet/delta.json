@@ -4,25 +4,23 @@
   "repo": "JoAiHQ/warps",
   "branch": "dev",
   "network": "devnet",
-  "commitSha": "f4a571c11173c62badd6628d853e8b40177f307b",
-  "committedAt": "2026-04-16T07:57:58.739Z",
-  "generatedAt": "2026-04-16T07:58:01.093Z",
+  "commitSha": "f503846e83abb2e084f85beadf6791e14a43ca6f",
+  "committedAt": "2026-04-17T11:53:22.143Z",
+  "generatedAt": "2026-04-17T11:53:24.189Z",
   "upserts": [
     {
-      "key": "none:form-field-add",
-      "identifier": "@form-field-add",
-      "alias": "form-field-add",
+      "key": "none:joai-contact-activities-list",
+      "identifier": "@joai-contact-activities-list",
+      "alias": "joai-contact-activities-list",
       "chain": "none",
-      "hash": "46c37e0d5d256a7f682230f630fc7c584f60e0ecc809fcca819737b91319d770",
-      "checksum": "46c37e0d5d256a7f682230f630fc7c584f60e0ecc809fcca819737b91319d770",
-      "name": "Form: Add Field",
+      "hash": "37a28de4db77ddf0141609b0ab058530719b0ba078bb6c07163a90075868e639",
+      "checksum": "37a28de4db77ddf0141609b0ab058530719b0ba078bb6c07163a90075868e639",
+      "name": "JoAi: List Contact Activities",
       "title": {
-        "en": "Add a field",
-        "de": "Feld hinzufügen"
+        "en": "List contact activities"
       },
       "description": {
-        "en": "Add an input field to an existing form.",
-        "de": "Ein Eingabefeld zu einem bestehenden Formular hinzufügen."
+        "en": "View the activity history for a contact."
       },
       "preview": null,
       "creator": "github:JoAiHQ/warps",
@@ -32,611 +30,547 @@
       "primaryAddress": null,
       "primaryFunc": null,
       "brand": {
-        "hash": "9d2185484475294d3c6a6aaad17bda94b4c5bcd360aab56f2234fe7a52eaa771",
-        "slug": "form",
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
         "active": true,
         "protocol": "brand:0.2.0",
-        "name": "Form",
+        "name": "JoAi",
         "description": {
-          "en": "Custom forms that capture leads, RSVPs, feedback, and sign-ups — powered by private warps.",
-          "de": "Maßgeschneiderte Formulare, die Leads, RSVPs, Feedback und Anmeldungen erfassen — mit privaten Warps.",
-          "fr": "Formulaires personnalisés qui capturent leads, RSVPs, feedbacks et inscriptions — avec des warps privés.",
-          "es": "Formularios personalizados que capturan leads, RSVPs, comentarios e inscripciones — con warps privados.",
-          "ro": "Formulare personalizate care capteaza lead-uri, RSVPs, feedback si inscrieri — cu warps private."
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
         },
         "logo": {
           "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
         },
         "urls": {
           "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
         }
       },
       "warp": {
         "protocol": "warp:3.0.0",
-        "name": "Form: Add Field",
+        "name": "JoAi: List Contact Activities",
         "title": {
-          "en": "Add a field",
-          "de": "Feld hinzufügen"
+          "en": "List contact activities"
         },
         "description": {
-          "en": "Add an input field to an existing form.",
-          "de": "Ein Eingabefeld zu einem bestehenden Formular hinzufügen."
+          "en": "View the activity history for a contact."
         },
-        "bot": "Call form-get first to read the current definition. Then use this warp to add a new field.",
+        "bot": "Use this when the user wants to see the history, activity log, or past interactions for a contact.",
         "actions": [
           {
-            "type": "prompt",
+            "type": "collect",
             "label": {
-              "en": "Configure field",
-              "de": "Feld konfigurieren"
+              "en": "List activities"
             },
-            "prompt": "Append a new field to actions[0].inputs of the current definition. Derive the `as` key in camelCase from the field name. Write a concise description in English and German. Preserve everything else in the definition exactly.",
+            "destination": {
+              "url": "https://devnet-api.joai.ai/v1/contacts/{{contactId}}/activities",
+              "method": "GET"
+            },
             "inputs": [
               {
-                "name": "Field Name",
-                "as": "fieldName",
+                "name": "Contact ID",
+                "as": "contactId",
                 "description": {
-                  "en": "Label shown to the user (e.g. Email Address)",
-                  "de": "Bezeichnung für den Benutzer (z.B. E-Mail-Adresse)"
+                  "en": "The ID of the contact"
                 },
+                "bot": "The ID of the contact whose activity history to retrieve.",
                 "type": "string",
+                "position": "url:contactId",
+                "source": "field",
+                "required": true
+              }
+            ]
+          }
+        ]
+      },
+      "extras": null
+    },
+    {
+      "key": "none:joai-contact-activity-log",
+      "identifier": "@joai-contact-activity-log",
+      "alias": "joai-contact-activity-log",
+      "chain": "none",
+      "hash": "be917dde033ae418600ec665dc34466b2ae471e966a9236877d5291c5f7ae658",
+      "checksum": "be917dde033ae418600ec665dc34466b2ae471e966a9236877d5291c5f7ae658",
+      "name": "JoAi: Log Contact Activity",
+      "title": {
+        "en": "Log an activity on a contact",
+        "de": "Aktivität bei einem Kontakt protokollieren"
+      },
+      "description": {
+        "en": "Log any type of activity on a contact — note, call, meeting, email, task, or custom event.",
+        "de": "Beliebige Aktivität bei einem Kontakt protokollieren – Notiz, Anruf, Meeting, E-Mail, Aufgabe oder benutzerdefiniertes Ereignis."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: Log Contact Activity",
+        "title": {
+          "en": "Log an activity on a contact",
+          "de": "Aktivität bei einem Kontakt protokollieren"
+        },
+        "description": {
+          "en": "Log any type of activity on a contact — note, call, meeting, email, task, or custom event.",
+          "de": "Beliebige Aktivität bei einem Kontakt protokollieren – Notiz, Anruf, Meeting, E-Mail, Aufgabe oder benutzerdefiniertes Ereignis."
+        },
+        "bot": "Use this to log any interaction or touchpoint with a contact. Prefer specific types (call, email, meeting) over custom when applicable.",
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Log activity",
+              "de": "Aktivität protokollieren"
+            },
+            "destination": {
+              "url": "https://devnet-api.joai.ai/v1/contacts/{{contactId}}/activities",
+              "method": "POST",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Contact ID",
+                "as": "contactId",
+                "description": {
+                  "en": "The ID of the contact to log the activity on.",
+                  "de": "Die ID des Kontakts, bei dem die Aktivität protokolliert werden soll."
+                },
+                "bot": "The ID of the contact.",
+                "type": "string",
+                "position": "url:contactId",
                 "source": "field",
                 "required": true
               },
               {
-                "name": "Field Type",
-                "as": "fieldType",
+                "name": "Type",
+                "as": "type",
                 "description": {
-                  "en": "Input type: string, email, phone, number, textarea, date, or checkbox",
-                  "de": "Eingabetyp: string, email, phone, number, textarea, date oder checkbox"
+                  "en": "The type of activity: note, call, meeting, email, task, or custom.",
+                  "de": "Art der Aktivität: note, call, meeting, email, task oder custom."
                 },
+                "bot": "The activity type. Use 'note' for general observations, 'email' for email exchanges, 'call' for calls, 'meeting' for meetings, 'task' for to-dos, 'custom' for anything else.",
                 "type": "string",
+                "position": "payload:type",
                 "source": "field",
                 "required": true
               },
               {
-                "name": "Required",
-                "as": "required",
+                "name": "Description",
+                "as": "description",
                 "description": {
-                  "en": "Is this field required? (true or false)",
-                  "de": "Ist dieses Feld ein Pflichtfeld? (true oder false)"
+                  "en": "Details about the activity.",
+                  "de": "Details zur Aktivität."
                 },
+                "bot": "A clear description of what happened or what was discussed.",
+                "type": "string",
+                "position": "payload:description",
+                "source": "field",
+                "required": false
+              }
+            ]
+          }
+        ],
+        "messages": {
+          "success": {
+            "en": "Activity logged on contact.",
+            "de": "Aktivität beim Kontakt protokolliert."
+          }
+        }
+      },
+      "extras": null
+    },
+    {
+      "key": "none:joai-store-append",
+      "identifier": "@joai-store-append",
+      "alias": "joai-store-append",
+      "chain": "none",
+      "hash": "49a2f56c578489fc91ac8143c1eb91964a0ee160c8c7ade3a3d2ed3584040fe9",
+      "checksum": "49a2f56c578489fc91ac8143c1eb91964a0ee160c8c7ade3a3d2ed3584040fe9",
+      "name": "JoAi: Record Store Entry",
+      "title": {
+        "en": "Record a data point",
+        "de": "Datenpunkt erfassen"
+      },
+      "description": {
+        "en": "Record a new data point in a tracked store (e.g. log weight, add expense, track habit).",
+        "de": "Erfasse einen neuen Datenpunkt in einem Datenspeicher (z.B. Gewicht, Ausgabe, Gewohnheit)."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: Record Store Entry",
+        "title": {
+          "en": "Record a data point",
+          "de": "Datenpunkt erfassen"
+        },
+        "description": {
+          "en": "Record a new data point in a tracked store (e.g. log weight, add expense, track habit).",
+          "de": "Erfasse einen neuen Datenpunkt in einem Datenspeicher (z.B. Gewicht, Ausgabe, Gewohnheit)."
+        },
+        "bot": "Use this when the user reports a new measurement or data point for something they're tracking — a weight reading, an expense amount, a habit completion, etc.",
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Record entry",
+              "de": "Eintrag erfassen"
+            },
+            "destination": {
+              "url": "https://devnet-api.joai.ai/v1/stores/{{storeName}}/entries",
+              "method": "POST",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Store Name",
+                "as": "storeName",
+                "description": {
+                  "en": "The name of the store to record to",
+                  "de": "Name des Speichers"
+                },
+                "bot": "The exact name of the existing store to append to.",
+                "type": "string",
+                "position": "url:storeName",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Value",
+                "as": "value",
+                "description": {
+                  "en": "The value to record",
+                  "de": "Der zu erfassende Wert"
+                },
+                "bot": "The data point value — a number, string, or boolean.",
+                "type": "string",
+                "position": "arg:2",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Label",
+                "as": "label",
+                "description": {
+                  "en": "Optional label for this entry (e.g. \"morning weigh-in\")",
+                  "de": "Optionales Label (z.B. \"Morgens\")"
+                },
+                "bot": "Optional label to describe this specific entry.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              }
+            ]
+          }
+        ],
+        "messages": {
+          "success": {
+            "en": "Recorded {{value}} in '{{storeName}}'.",
+            "de": "{{value}} in '{{storeName}}' erfasst."
+          }
+        }
+      },
+      "extras": null
+    },
+    {
+      "key": "none:joai-store-delete",
+      "identifier": "@joai-store-delete",
+      "alias": "joai-store-delete",
+      "chain": "none",
+      "hash": "bdfddfa0c0f25fb269b5036510c32f48a170ecad1ae5fe4d7c1c4df8ea71fe9d",
+      "checksum": "bdfddfa0c0f25fb269b5036510c32f48a170ecad1ae5fe4d7c1c4df8ea71fe9d",
+      "name": "JoAi: Delete Store",
+      "title": {
+        "en": "Delete a data store",
+        "de": "Datenspeicher löschen"
+      },
+      "description": {
+        "en": "Stop tracking and delete a data store and all its entries.",
+        "de": "Einen Datenspeicher und alle seine Einträge löschen."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: Delete Store",
+        "title": {
+          "en": "Delete a data store",
+          "de": "Datenspeicher löschen"
+        },
+        "description": {
+          "en": "Stop tracking and delete a data store and all its entries.",
+          "de": "Einen Datenspeicher und alle seine Einträge löschen."
+        },
+        "bot": "Use this when the user wants to stop tracking something or delete a store entirely.",
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Delete store",
+              "de": "Speicher löschen"
+            },
+            "destination": {
+              "url": "https://devnet-api.joai.ai/v1/stores/{{storeName}}",
+              "method": "DELETE",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Store Name",
+                "as": "storeName",
+                "description": {
+                  "en": "The name of the store to delete",
+                  "de": "Name des zu löschenden Speichers"
+                },
+                "bot": "The exact name of the store to delete.",
+                "type": "string",
+                "position": "url:storeName",
+                "source": "field",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "messages": {
+          "success": {
+            "en": "Stopped tracking '{{storeName}}'.",
+            "de": "'{{storeName}}' wird nicht mehr verfolgt."
+          }
+        }
+      },
+      "extras": null
+    },
+    {
+      "key": "none:joai-store-query",
+      "identifier": "@joai-store-query",
+      "alias": "joai-store-query",
+      "chain": "none",
+      "hash": "f698d979fa9837530945a06e9899fe9aab16781c9e8aab7d3f9ed1fe5f6c9645",
+      "checksum": "f698d979fa9837530945a06e9899fe9aab16781c9e8aab7d3f9ed1fe5f6c9645",
+      "name": "JoAi: Query Store Data",
+      "title": {
+        "en": "View tracked data",
+        "de": "Verfolgte Daten anzeigen"
+      },
+      "description": {
+        "en": "Query and view entries from a tracked data store with optional date filters.",
+        "de": "Einträge eines Datenspeichers abfragen und mit optionalen Datumsfiltern anzeigen."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: Query Store Data",
+        "title": {
+          "en": "View tracked data",
+          "de": "Verfolgte Daten anzeigen"
+        },
+        "description": {
+          "en": "Query and view entries from a tracked data store with optional date filters.",
+          "de": "Einträge eines Datenspeichers abfragen und mit optionalen Datumsfiltern anzeigen."
+        },
+        "bot": "Use this when the user wants to see their tracked data, check progress, view history, or look up past entries in a store.",
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Query data",
+              "de": "Daten abfragen"
+            },
+            "destination": {
+              "url": "https://devnet-api.joai.ai/v1/stores/{{storeName}}/entries",
+              "method": "GET"
+            },
+            "inputs": [
+              {
+                "name": "Store Name",
+                "as": "storeName",
+                "description": {
+                  "en": "The name of the store to query",
+                  "de": "Name des abzufragenden Speichers"
+                },
+                "bot": "The exact name of the store to query.",
+                "type": "string",
+                "position": "url:storeName",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Since",
+                "as": "since",
+                "description": {
+                  "en": "Show entries after this date.",
+                  "de": "Einträge nach diesem Datum anzeigen."
+                },
+                "bot": "Optional start date filter. Convert to ISO 8601 format before submitting.",
                 "type": "string",
                 "source": "field",
                 "required": false
               },
               {
-                "name": "Current Definition",
-                "as": "currentDefinition",
-                "bot": "The full current form definition JSON string. Fetch it from form-get and pass it here verbatim.",
-                "type": "string",
-                "source": "computed",
-                "required": true
-              }
-            ],
-            "expect": "https://raw.githubusercontent.com/JoAiHQ/warps/main/schemas/form/patch-body.json",
-            "auto": true
-          },
-          {
-            "type": "collect",
-            "label": {
-              "en": "Add field",
-              "de": "Feld hinzufügen"
-            },
-            "destination": {
-              "url": "https://devnet-api.joai.ai/v1/warps/{{formId}}",
-              "method": "PATCH",
-              "headers": {
-                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
-              }
-            },
-            "inputs": [
-              {
-                "name": "Form ID",
-                "as": "formId",
-                "bot": "The form's hash ID. Carry it from context — never ask the user.",
-                "type": "string",
-                "source": "field",
-                "required": true
-              },
-              {
-                "name": "PAYLOAD",
-                "as": "PAYLOAD",
-                "type": "string",
-                "source": "hidden",
-                "required": true,
-                "default": "{{MESSAGE}}"
-              }
-            ]
-          }
-        ],
-        "messages": {
-          "success": {
-            "en": "Field added.",
-            "de": "Feld hinzugefügt."
-          }
-        }
-      },
-      "extras": {
-        "keywords": {
-          "en": [
-            "add form field",
-            "custom form field",
-            "form builder field",
-            "form customization"
-          ],
-          "de": [
-            "Formularfeld hinzufügen",
-            "benutzerdefiniertes Feld",
-            "Formular anpassen"
-          ],
-          "fr": [
-            "ajouter champ formulaire",
-            "champ personnalise",
-            "personnalisation formulaire"
-          ],
-          "es": [
-            "agregar campo formulario",
-            "campo personalizado",
-            "personalizacion de formulario"
-          ],
-          "ro": [
-            "adauga camp formular",
-            "camp personalizat",
-            "personalizare formular"
-          ]
-        },
-        "useCases": {
-          "en": [
-            "Add a \"Company\" field to a lead capture form for B2B events",
-            "Add a \"Job Title\" field to segment professional contacts after a conference",
-            "Add a \"Message\" text field to a contact form for open-ended inquiries",
-            "Add an \"Interest\" select field to route leads to the right follow-up sequence"
-          ],
-          "de": [
-            "Ein \"Unternehmen\"-Feld zu einem Lead-Formular für B2B-Events hinzufügen",
-            "Ein \"Jobtitel\"-Feld hinzufügen, um Profi-Kontakte nach einer Konferenz zu segmentieren",
-            "Ein \"Nachricht\"-Textfeld zu einem Kontaktformular für offene Anfragen hinzufügen",
-            "Ein \"Interesse\"-Auswahlfeld hinzufügen, um Leads zur richtigen Follow-up-Sequenz zu routen"
-          ],
-          "fr": [
-            "Ajouter un champ \"Entreprise\" à un formulaire de capture de leads pour des événements B2B",
-            "Ajouter un champ \"Titre du poste\" pour segmenter les contacts professionnels après une conférence",
-            "Ajouter un champ texte \"Message\" à un formulaire de contact pour des demandes ouvertes",
-            "Ajouter un champ select \"Intérêt\" pour router les leads vers la bonne séquence de suivi"
-          ],
-          "es": [
-            "Agregar un campo \"Empresa\" a un formulario de captura de leads para eventos B2B",
-            "Agregar un campo \"Cargo\" para segmentar contactos profesionales después de una conferencia",
-            "Agregar un campo de texto \"Mensaje\" a un formulario de contacto para consultas abiertas",
-            "Agregar un campo select \"Interés\" para enrutar leads a la secuencia de seguimiento correcta"
-          ],
-          "ro": [
-            "Adauga un camp \"Companie\" la un formular de captare a lead-urilor pentru evenimente B2B",
-            "Adauga un camp \"Titlu job\" pentru a segmenta contactele profesionale dupa o conferinta",
-            "Adauga un camp text \"Mesaj\" la un formular de contact pentru cereri deschise",
-            "Adauga un camp select \"Interes\" pentru a direcţiona lead-urile catre secventa de follow-up potrivita"
-          ]
-        },
-        "category": "sales",
-        "faq": {
-          "en": [
-            {
-              "question": "Can I change a field's type after adding it?",
-              "answer": "Field type cannot be changed once set. To change a type, remove the field and add a new one with the correct type."
-            },
-            {
-              "question": "What field types are available?",
-              "answer": "`string` (short text), `email` (validated email), `phone` (phone number), `text` (multi-line), `select` (dropdown), `bool` (yes/no toggle)."
-            }
-          ],
-          "de": [
-            {
-              "question": "Kann ich den Feldtyp nach dem Hinzufügen ändern?",
-              "answer": "Der Feldtyp kann nach dem Setzen nicht geändert werden. Um den Typ zu ändern, entferne das Feld und füge es mit dem korrekten Typ neu hinzu."
-            },
-            {
-              "question": "Welche Feldtypen sind verfügbar?",
-              "answer": "`string` (kurzer Text), `email` (validierte E-Mail), `phone` (Telefonnummer), `text` (mehrzeilig), `select` (Dropdown), `bool` (Ja/Nein)."
-            }
-          ]
-        }
-      }
-    },
-    {
-      "key": "none:form-field-remove",
-      "identifier": "@form-field-remove",
-      "alias": "form-field-remove",
-      "chain": "none",
-      "hash": "6b6752112a25aaa1cd758b3a5ba26e82ff1bc19d44813a0f16009be0d80e408f",
-      "checksum": "6b6752112a25aaa1cd758b3a5ba26e82ff1bc19d44813a0f16009be0d80e408f",
-      "name": "Form: Remove Field",
-      "title": {
-        "en": "Remove a field",
-        "de": "Feld entfernen"
-      },
-      "description": {
-        "en": "Permanently remove a field from a form.",
-        "de": "Ein Feld dauerhaft aus einem Formular entfernen."
-      },
-      "preview": null,
-      "creator": "github:JoAiHQ/warps",
-      "privileges": [],
-      "listed": true,
-      "visibility": "public",
-      "primaryAddress": null,
-      "primaryFunc": null,
-      "brand": {
-        "hash": "9d2185484475294d3c6a6aaad17bda94b4c5bcd360aab56f2234fe7a52eaa771",
-        "slug": "form",
-        "active": true,
-        "protocol": "brand:0.2.0",
-        "name": "Form",
-        "description": {
-          "en": "Custom forms that capture leads, RSVPs, feedback, and sign-ups — powered by private warps.",
-          "de": "Maßgeschneiderte Formulare, die Leads, RSVPs, Feedback und Anmeldungen erfassen — mit privaten Warps.",
-          "fr": "Formulaires personnalisés qui capturent leads, RSVPs, feedbacks et inscriptions — avec des warps privés.",
-          "es": "Formularios personalizados que capturan leads, RSVPs, comentarios e inscripciones — con warps privados.",
-          "ro": "Formulare personalizate care capteaza lead-uri, RSVPs, feedback si inscrieri — cu warps private."
-        },
-        "logo": {
-          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
-        },
-        "urls": {
-          "web": "https://joai.ai"
-        }
-      },
-      "warp": {
-        "protocol": "warp:3.0.0",
-        "name": "Form: Remove Field",
-        "title": {
-          "en": "Remove a field",
-          "de": "Feld entfernen"
-        },
-        "description": {
-          "en": "Permanently remove a field from a form.",
-          "de": "Ein Feld dauerhaft aus einem Formular entfernen."
-        },
-        "bot": "Call form-get first to read the current definition. Then use this warp to remove a specific field.",
-        "actions": [
-          {
-            "type": "prompt",
-            "label": {
-              "en": "Confirm removal",
-              "de": "Entfernung bestätigen"
-            },
-            "prompt": "Remove the field with `as` value \"{{fieldKey}}\" from actions[0].inputs. Preserve everything else in the definition exactly.",
-            "inputs": [
-              {
-                "name": "Field Key",
-                "as": "fieldKey",
-                "bot": "The `as` value (camelCase key) of the field to remove. Read it from the current definition.",
-                "type": "string",
-                "source": "computed",
-                "required": true
-              },
-              {
-                "name": "Current Definition",
-                "as": "currentDefinition",
-                "bot": "The full current form definition JSON string. Fetch it from form-get and pass it here verbatim.",
-                "type": "string",
-                "source": "computed",
-                "required": true
-              }
-            ],
-            "expect": "https://raw.githubusercontent.com/JoAiHQ/warps/main/schemas/form/patch-body.json",
-            "auto": true
-          },
-          {
-            "type": "collect",
-            "label": {
-              "en": "Remove field",
-              "de": "Feld entfernen"
-            },
-            "destination": {
-              "url": "https://devnet-api.joai.ai/v1/warps/{{formId}}",
-              "method": "PATCH",
-              "headers": {
-                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
-              }
-            },
-            "inputs": [
-              {
-                "name": "Form ID",
-                "as": "formId",
-                "bot": "The form's hash ID. Carry it from context — never ask the user.",
-                "type": "string",
-                "source": "field",
-                "required": true
-              },
-              {
-                "name": "PAYLOAD",
-                "as": "PAYLOAD",
-                "type": "string",
-                "source": "hidden",
-                "required": true,
-                "default": "{{MESSAGE}}"
-              }
-            ]
-          }
-        ],
-        "messages": {
-          "success": {
-            "en": "Field removed.",
-            "de": "Feld entfernt."
-          }
-        }
-      },
-      "extras": {
-        "keywords": {
-          "en": [
-            "remove form field",
-            "delete field",
-            "form cleanup"
-          ],
-          "de": [
-            "Formularfeld entfernen",
-            "Feld löschen",
-            "Formular bereinigen"
-          ],
-          "fr": [
-            "supprimer champ formulaire",
-            "effacer champ",
-            "nettoyage formulaire"
-          ],
-          "es": [
-            "eliminar campo formulario",
-            "borrar campo",
-            "limpiar formulario"
-          ],
-          "ro": [
-            "sterge camp formular",
-            "elimina camp",
-            "curata formular"
-          ]
-        },
-        "useCases": {
-          "en": [
-            "Remove a field that is no longer relevant after an event is over",
-            "Clean up a form by removing unused optional fields",
-            "Remove a field before re-adding it with a corrected type"
-          ],
-          "de": [
-            "Ein nicht mehr relevantes Feld nach einem Event entfernen",
-            "Ein Formular durch Entfernen nicht genutzter optionaler Felder bereinigen",
-            "Ein Feld entfernen, bevor es mit dem korrekten Typ neu hinzugefügt wird"
-          ],
-          "fr": [
-            "Supprimer un champ qui n est plus pertinent après la fin d un événement",
-            "Nettoyer un formulaire en supprimant les champs optionnels inutilisés",
-            "Supprimer un champ avant de le rajouter avec le bon type"
-          ],
-          "es": [
-            "Eliminar un campo que ya no es relevante después de que un evento haya terminado",
-            "Limpiar un formulario eliminando campos opcionales no utilizados",
-            "Eliminar un campo antes de volver a agregarlo con el tipo correcto"
-          ],
-          "ro": [
-            "Sterge un camp care nu mai este relevant dupa incheierea unui eveniment",
-            "Curata un formular prin eliminarea campurilor optionale neutilizate",
-            "Sterge un camp inainte de a-l readauga cu tipul corect"
-          ]
-        },
-        "category": "sales",
-        "faq": {
-          "en": [
-            {
-              "question": "Is removing a field reversible?",
-              "answer": "No — the removal is permanent. The slug can be re-registered with `field-add` but any submissions that already included that field will have had their data carried through the CRM chain."
-            }
-          ],
-          "de": [
-            {
-              "question": "Ist das Entfernen eines Felds umkehrbar?",
-              "answer": "Nein — die Entfernung ist dauerhaft. Der Slug kann mit `field-add` neu registriert werden, aber frühere Einreichungen haben die Daten bereits durch die CRM-Kette weitergegeben."
-            }
-          ]
-        }
-      }
-    },
-    {
-      "key": "none:form-field-update",
-      "identifier": "@form-field-update",
-      "alias": "form-field-update",
-      "chain": "none",
-      "hash": "08c58430dff5551452e1c15e56312282d2db1f4570d48c2790cc35a727a2b1e4",
-      "checksum": "08c58430dff5551452e1c15e56312282d2db1f4570d48c2790cc35a727a2b1e4",
-      "name": "Form: Update Field",
-      "title": {
-        "en": "Edit a field",
-        "de": "Feld bearbeiten"
-      },
-      "description": {
-        "en": "Update a field in an existing form.",
-        "de": "Ein Feld eines bestehenden Formulars aktualisieren."
-      },
-      "preview": null,
-      "creator": "github:JoAiHQ/warps",
-      "privileges": [],
-      "listed": true,
-      "visibility": "public",
-      "primaryAddress": null,
-      "primaryFunc": null,
-      "brand": {
-        "hash": "9d2185484475294d3c6a6aaad17bda94b4c5bcd360aab56f2234fe7a52eaa771",
-        "slug": "form",
-        "active": true,
-        "protocol": "brand:0.2.0",
-        "name": "Form",
-        "description": {
-          "en": "Custom forms that capture leads, RSVPs, feedback, and sign-ups — powered by private warps.",
-          "de": "Maßgeschneiderte Formulare, die Leads, RSVPs, Feedback und Anmeldungen erfassen — mit privaten Warps.",
-          "fr": "Formulaires personnalisés qui capturent leads, RSVPs, feedbacks et inscriptions — avec des warps privés.",
-          "es": "Formularios personalizados que capturan leads, RSVPs, comentarios e inscripciones — con warps privados.",
-          "ro": "Formulare personalizate care capteaza lead-uri, RSVPs, feedback si inscrieri — cu warps private."
-        },
-        "logo": {
-          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
-        },
-        "urls": {
-          "web": "https://joai.ai"
-        }
-      },
-      "warp": {
-        "protocol": "warp:3.0.0",
-        "name": "Form: Update Field",
-        "title": {
-          "en": "Edit a field",
-          "de": "Feld bearbeiten"
-        },
-        "description": {
-          "en": "Update a field in an existing form.",
-          "de": "Ein Feld eines bestehenden Formulars aktualisieren."
-        },
-        "bot": "Call form-get first to read the current definition. Then use this warp to update a specific field.",
-        "actions": [
-          {
-            "type": "prompt",
-            "label": {
-              "en": "Configure changes",
-              "de": "Änderungen konfigurieren"
-            },
-            "prompt": "Update the field with `as` value \"{{fieldKey}}\" in actions[0].inputs by applying: {{changes}}. Keep the `as` key unchanged unless a rename is explicitly requested. If updating descriptions, provide both English and German. Preserve everything else exactly.",
-            "inputs": [
-              {
-                "name": "Field Key",
-                "as": "fieldKey",
-                "bot": "The `as` value (camelCase key) of the field to update. Read it from the current definition.",
-                "type": "string",
-                "source": "computed",
-                "required": true
-              },
-              {
-                "name": "Changes",
-                "as": "changes",
+                "name": "Until",
+                "as": "until",
                 "description": {
-                  "en": "What to change (e.g. make it required, rename to 'Mobile Number', change type to email)",
-                  "de": "Was geändert werden soll (z.B. Pflichtfeld machen, umbenennen in 'Handynummer', Typ auf email ändern)"
+                  "en": "Show entries before this date.",
+                  "de": "Einträge vor diesem Datum anzeigen."
                 },
+                "bot": "Optional end date filter. Convert to ISO 8601 format before submitting.",
                 "type": "string",
                 "source": "field",
-                "required": true
+                "required": false
               },
               {
-                "name": "Current Definition",
-                "as": "currentDefinition",
-                "bot": "The full current form definition JSON string. Fetch it from form-get and pass it here verbatim.",
-                "type": "string",
-                "source": "computed",
-                "required": true
-              }
-            ],
-            "expect": "https://raw.githubusercontent.com/JoAiHQ/warps/main/schemas/form/patch-body.json",
-            "auto": true
-          },
-          {
-            "type": "collect",
-            "label": {
-              "en": "Update field",
-              "de": "Feld aktualisieren"
-            },
-            "destination": {
-              "url": "https://devnet-api.joai.ai/v1/warps/{{formId}}",
-              "method": "PATCH",
-              "headers": {
-                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
-              }
-            },
-            "inputs": [
-              {
-                "name": "Form ID",
-                "as": "formId",
-                "bot": "The form's hash ID. Carry it from context — never ask the user.",
+                "name": "Last N",
+                "as": "last",
+                "description": {
+                  "en": "Return only the last N entries",
+                  "de": "Nur die letzten N Einträge zurückgeben"
+                },
+                "bot": "Optional number to return only the most recent N entries.",
                 "type": "string",
                 "source": "field",
-                "required": true
-              },
-              {
-                "name": "PAYLOAD",
-                "as": "PAYLOAD",
-                "type": "string",
-                "source": "hidden",
-                "required": true,
-                "default": "{{MESSAGE}}"
+                "required": false
               }
             ]
           }
         ],
         "messages": {
           "success": {
-            "en": "Field updated.",
-            "de": "Feld aktualisiert."
+            "en": "Here are your '{{storeName}}' entries.",
+            "de": "Hier sind deine '{{storeName}}'-Einträge."
           }
         }
       },
-      "extras": {
-        "keywords": {
-          "en": [
-            "edit form field",
-            "update field label",
-            "change field required"
-          ],
-          "de": [
-            "Formularfeld bearbeiten",
-            "Feldbezeichnung ändern",
-            "Pflichtfeld ändern"
-          ],
-          "fr": [
-            "modifier champ formulaire",
-            "changer libelle champ"
-          ],
-          "es": [
-            "editar campo formulario",
-            "cambiar etiqueta campo"
-          ],
-          "ro": [
-            "edita camp formular",
-            "schimba eticheta camp"
-          ]
-        },
-        "useCases": {
-          "en": [
-            "Rename a field label from \"Notes\" to \"Message\" without removing and re-adding the field",
-            "Change a field from optional to required after testing the form"
-          ],
-          "de": [
-            "Eine Feldbezeichnung von \"Notizen\" auf \"Nachricht\" umbenennen, ohne das Feld zu entfernen und neu hinzuzufügen",
-            "Ein Feld nach dem Testen von optional auf Pflichtfeld ändern"
-          ],
-          "fr": [
-            "Renommer un libellé de champ de \"Notes\" à \"Message\" sans supprimer et rajouter le champ",
-            "Changer un champ de facultatif à obligatoire après avoir testé le formulaire"
-          ],
-          "es": [
-            "Renombrar una etiqueta de campo de \"Notas\" a \"Mensaje\" sin eliminar y volver a agregar el campo",
-            "Cambiar un campo de opcional a obligatorio después de probar el formulario"
-          ],
-          "ro": [
-            "Redenumeste o eticheta de camp din \"Note\" in \"Mesaj\" fara a sterge si readauga campul",
-            "Schimba un camp din optional in obligatoriu dupa testarea formularului"
-          ]
-        },
-        "category": "sales",
-        "faq": {
-          "en": [
-            {
-              "question": "Can I change the field type with this warp?",
-              "answer": "No — field type is immutable once set. Only the label and required flag can be updated. To change a type, use `field-remove` then `field-add`."
-            }
-          ],
-          "de": [
-            {
-              "question": "Kann ich den Feldtyp mit diesem Warp ändern?",
-              "answer": "Nein — der Feldtyp ist unveränderlich. Nur Beschriftung und Pflichtfeld-Status können aktualisiert werden. Um den Typ zu ändern, `field-remove` und `field-add` verwenden."
-            }
-          ]
-        }
-      }
+      "extras": null
     }
   ],
   "deletes": []

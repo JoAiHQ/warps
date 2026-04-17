@@ -1,0 +1,54 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Delete Project",
+  "title": {
+    "en": "Delete a project",
+    "de": "Projekt löschen"
+  },
+  "description": {
+    "en": "Permanently remove a project from your agent.",
+    "de": "Entferne ein Projekt dauerhaft von deinem Agenten."
+  },
+  "bot": "Use this when the user wants to remove a project. If the user refers to a project by name, list projects first to find the matching ID.",
+  "vars": {
+    "AGENT_UUID": "query:agent"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Delete project",
+        "de": "Projekt löschen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/projects/{{AGENT_UUID}}/{{projectId}}",
+        "method": "DELETE",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Project ID",
+          "as": "projectId",
+          "description": {
+            "en": "The ID of the project to delete",
+            "de": "Die ID des zu löschenden Projekts"
+          },
+          "bot": "The project hash ID. If the user refers to a project by name, list projects first to find the matching ID.",
+          "type": "string",
+          "position": "url:projectId",
+          "source": "field",
+          "required": true,
+          "min": 1
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Project deleted.",
+      "de": "Projekt gelöscht."
+    }
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Update Contract",
+  "title": {
+    "en": "Update a smart contract",
+    "de": "Smart Contract aktualisieren"
+  },
+  "description": {
+    "en": "Edit the details of an existing smart contract such as its name or description.",
+    "de": "Bearbeite die Details eines bestehenden Smart Contracts, z. B. Name oder Beschreibung."
+  },
+  "bot": "Use this when the user wants to rename or update the description of an existing contract. If the user refers to a contract by name, list contracts first to find the matching ID.",
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Update contract",
+        "de": "Contract aktualisieren"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/contracts/{{contractId}}",
+        "method": "PUT",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Contract ID",
+          "as": "contractId",
+          "description": {
+            "en": "The ID of the contract to update",
+            "de": "Die ID des zu aktualisierenden Contracts"
+          },
+          "bot": "The contract hash ID. If the user refers to a contract by name, list contracts first to find the matching ID.",
+          "type": "string",
+          "position": "url:contractId",
+          "source": "field",
+          "required": true,
+          "min": 1
+        },
+        {
+          "name": "Name",
+          "as": "name",
+          "description": {
+            "en": "Updated name for this contract",
+            "de": "Aktualisierter Name für diesen Contract"
+          },
+          "bot": "A new name for this contract, if the user wants to rename it.",
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Description",
+          "as": "description",
+          "description": {
+            "en": "Updated description of what this contract does",
+            "de": "Aktualisierte Beschreibung, was dieser Contract tut"
+          },
+          "bot": "An updated description of this contract's purpose.",
+          "type": "string",
+          "source": "field",
+          "required": false
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Contract updated.",
+      "de": "Contract aktualisiert."
+    }
+  }
+}

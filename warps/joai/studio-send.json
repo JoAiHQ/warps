@@ -1,0 +1,76 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Studio Send",
+  "title": {
+    "en": "Send studio content",
+    "de": "Studio-Inhalt senden"
+  },
+  "description": {
+    "en": "Send produced studio content to a channel or recipient.",
+    "de": "Sende produzierten Studio-Inhalt an einen Kanal oder Empfänger."
+  },
+  "bot": "Use this when the user wants to send or publish studio output to a destination such as an email, channel, or recipient.",
+  "vars": {
+    "AGENT_UUID": "query:agent"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Send content",
+        "de": "Inhalt senden"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/projects/{{AGENT_UUID}}/studio/send",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Channel",
+          "as": "channel",
+          "description": {
+            "en": "The channel or platform to send to",
+            "de": "Der Kanal oder die Plattform, an die gesendet werden soll"
+          },
+          "bot": "The delivery channel (e.g., email, slack, webhook).",
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Recipient",
+          "as": "recipient",
+          "description": {
+            "en": "The recipient address or identifier",
+            "de": "Die Empfängeradresse oder -kennung"
+          },
+          "bot": "The recipient — an email address, user ID, or channel identifier depending on the channel.",
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Content",
+          "as": "content",
+          "description": {
+            "en": "The content to send",
+            "de": "Der zu sendende Inhalt"
+          },
+          "bot": "The content body to send. If omitted, the latest produced content from the project will be used.",
+          "type": "string",
+          "source": "field",
+          "required": false
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Content sent.",
+      "de": "Inhalt gesendet."
+    }
+  }
+}

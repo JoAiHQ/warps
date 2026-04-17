@@ -1,0 +1,87 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Create Element",
+  "title": {
+    "en": "Create an element",
+    "de": "Element erstellen"
+  },
+  "description": {
+    "en": "Create a new reusable element — a building block like a text snippet, image prompt, or template that your agent can use in content production.",
+    "de": "Erstelle ein neues wiederverwendbares Element — einen Baustein wie einen Textschnipsel, Bild-Prompt oder eine Vorlage, die dein Agent bei der Content-Produktion nutzen kann."
+  },
+  "bot": "Use this when the user wants to add a new reusable element or building block for their agent. Ask for a name, type, and content/prompt.",
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Create element",
+        "de": "Element erstellen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/elements",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Name",
+          "as": "name",
+          "description": {
+            "en": "A name for this element",
+            "de": "Ein Name für dieses Element"
+          },
+          "bot": "A short descriptive name for this element (e.g., 'Hero tagline', 'Product image prompt').",
+          "type": "string",
+          "position": "arg:1",
+          "source": "field",
+          "required": true,
+          "min": 2
+        },
+        {
+          "name": "Type",
+          "as": "type",
+          "description": {
+            "en": "The type of element",
+            "de": "Die Art des Elements"
+          },
+          "bot": "The element type — e.g., text, image, template, prompt.",
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Content",
+          "as": "content",
+          "description": {
+            "en": "The content or body of this element",
+            "de": "Der Inhalt oder Text dieses Elements"
+          },
+          "bot": "The actual content, text, or prompt for this element.",
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Prompt",
+          "as": "prompt",
+          "description": {
+            "en": "An AI prompt for generating this element's content",
+            "de": "Ein KI-Prompt zur Generierung des Inhalts dieses Elements"
+          },
+          "bot": "An optional generation prompt if this element should be AI-generated.",
+          "type": "string",
+          "source": "field",
+          "required": false
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Element '{{name}}' created.",
+      "de": "Element '{{name}}' erstellt."
+    }
+  }
+}

@@ -1,0 +1,76 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Create Skill",
+  "title": {
+    "en": "Create a skill",
+    "de": "Fähigkeit erstellen"
+  },
+  "description": {
+    "en": "Add a new skill to your agent, giving it specialized knowledge or a defined capability it can call upon.",
+    "de": "Füge deinem Agenten eine neue Fähigkeit hinzu und gib ihm spezialisiertes Wissen oder eine definierte Fähigkeit, die er nutzen kann."
+  },
+  "bot": "Use this when the user wants to teach their agent a new skill or capability. The content should describe what the agent should do or know.",
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Create skill",
+        "de": "Fähigkeit erstellen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/skills",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Name",
+          "as": "name",
+          "description": {
+            "en": "A short name for this skill",
+            "de": "Ein kurzer Name für diese Fähigkeit"
+          },
+          "bot": "A concise name that identifies this skill (e.g., 'Write cold emails', 'Summarize meetings').",
+          "type": "string",
+          "position": "arg:1",
+          "source": "field",
+          "required": true,
+          "min": 2
+        },
+        {
+          "name": "Description",
+          "as": "description",
+          "description": {
+            "en": "What this skill does",
+            "de": "Was diese Fähigkeit tut"
+          },
+          "bot": "A brief description of when and how this skill should be used.",
+          "type": "string",
+          "position": "arg:2",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Content",
+          "as": "content",
+          "description": {
+            "en": "The instructions or knowledge that define this skill",
+            "de": "Die Anweisungen oder das Wissen, das diese Fähigkeit definiert"
+          },
+          "bot": "Detailed instructions, templates, or knowledge that the agent should use when applying this skill.",
+          "type": "string",
+          "source": "field",
+          "required": false
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Skill '{{name}}' created.",
+      "de": "Fähigkeit '{{name}}' erstellt."
+    }
+  }
+}

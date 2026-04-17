@@ -1,0 +1,79 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Deploy Contract",
+  "title": {
+    "en": "Deploy a smart contract",
+    "de": "Smart Contract deployen"
+  },
+  "description": {
+    "en": "Record a deployment for a smart contract version to a specific network.",
+    "de": "Erfasse ein Deployment für eine Smart-Contract-Version auf einem bestimmten Netzwerk."
+  },
+  "bot": "Use this when the user wants to deploy or record a deployment of a contract. Ask for the contract ID, version, and network (devnet or mainnet).",
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Deploy contract",
+        "de": "Contract deployen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/contracts/{{contractId}}/deployment",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Contract ID",
+          "as": "contractId",
+          "description": {
+            "en": "The ID of the contract to deploy",
+            "de": "Die ID des zu deployenden Contracts"
+          },
+          "bot": "The contract hash ID. If the user refers to a contract by name, list contracts first to find the matching ID.",
+          "type": "string",
+          "position": "url:contractId",
+          "source": "field",
+          "required": true,
+          "min": 1
+        },
+        {
+          "name": "Version",
+          "as": "version",
+          "description": {
+            "en": "The contract version to deploy",
+            "de": "Die zu deployende Contract-Version"
+          },
+          "bot": "The version identifier for this deployment (e.g., '1.0.0', 'v2').",
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Network",
+          "as": "network",
+          "description": {
+            "en": "The network to deploy to",
+            "de": "Das Netzwerk, auf das deployed werden soll"
+          },
+          "bot": "The target network. Use 'devnet' for testing or 'mainnet' for production.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "options": {
+            "devnet": "Devnet (Testing)",
+            "mainnet": "Mainnet (Production)"
+          }
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Contract deployment recorded.",
+      "de": "Contract-Deployment erfasst."
+    }
+  }
+}

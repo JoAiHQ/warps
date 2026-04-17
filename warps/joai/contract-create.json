@@ -1,0 +1,91 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Create Contract",
+  "title": {
+    "en": "Create a smart contract",
+    "de": "Smart Contract erstellen"
+  },
+  "description": {
+    "en": "Create a new smart contract project so your agent can manage, deploy, and interact with it on-chain.",
+    "de": "Erstelle ein neues Smart-Contract-Projekt, damit dein Agent es verwalten, deployen und on-chain damit interagieren kann."
+  },
+  "bot": "Use this when the user wants to start a new smart contract. Gather the name, type (rust or solidity), and target chain.",
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Create contract",
+        "de": "Contract erstellen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/contracts",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Name",
+          "as": "name",
+          "description": {
+            "en": "A name for this contract",
+            "de": "Ein Name für diesen Contract"
+          },
+          "bot": "A short descriptive name for this smart contract (e.g., 'Token Sale', 'NFT Collection').",
+          "type": "string",
+          "position": "arg:1",
+          "source": "field",
+          "required": true,
+          "min": 2
+        },
+        {
+          "name": "Description",
+          "as": "description",
+          "description": {
+            "en": "What this contract does",
+            "de": "Was dieser Contract tut"
+          },
+          "bot": "A brief description of this contract's purpose and functionality.",
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Type",
+          "as": "type",
+          "description": {
+            "en": "The contract language/type",
+            "de": "Die Contract-Sprache/-Art"
+          },
+          "bot": "The smart contract type. Use 'rust' for MultiversX/WASM contracts or 'solidity' for EVM-compatible contracts.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "options": {
+            "rust": "Rust (MultiversX)",
+            "solidity": "Solidity (EVM)"
+          }
+        },
+        {
+          "name": "Chain",
+          "as": "chain",
+          "description": {
+            "en": "The blockchain network for this contract",
+            "de": "Das Blockchain-Netzwerk für diesen Contract"
+          },
+          "bot": "The target blockchain (e.g., multiversx, ethereum, polygon).",
+          "type": "string",
+          "source": "field",
+          "required": false
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Contract '{{name}}' created.",
+      "de": "Contract '{{name}}' erstellt."
+    }
+  }
+}

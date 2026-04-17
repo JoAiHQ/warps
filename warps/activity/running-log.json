@@ -1,0 +1,90 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Running Coach: Log Run",
+  "title": {
+    "en": "Log a run",
+    "de": "Lauf eintragen"
+  },
+  "description": {
+    "en": "Record a completed run so the coach can track your progress and adjust the plan.",
+    "de": "Trage einen abgeschlossenen Lauf ein, damit der Coach deinen Fortschritt verfolgen und den Plan anpassen kann."
+  },
+  "bot": "Use this after the user completes a run. Acknowledge their effort, note if they're on track with the plan, and tell them what the next session is.",
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Log run",
+        "de": "Lauf speichern"
+      },
+      "inputs": [
+        {
+          "name": "Distance",
+          "as": "distance",
+          "description": {
+            "en": "How far did you run? (km)",
+            "de": "Wie weit bist du gelaufen? (km)"
+          },
+          "bot": "Distance covered in kilometers.",
+          "type": "number",
+          "source": "field",
+          "required": true,
+          "min": 0.1,
+          "max": 100
+        },
+        {
+          "name": "Duration",
+          "as": "duration",
+          "description": {
+            "en": "How long did you run? (minutes)",
+            "de": "Wie lange bist du gelaufen? (Minuten)"
+          },
+          "bot": "Duration in minutes. Used to calculate pace.",
+          "type": "number",
+          "source": "field",
+          "required": true,
+          "min": 1,
+          "max": 600
+        },
+        {
+          "name": "How did it feel?",
+          "as": "effort",
+          "description": {
+            "en": "Rate your perceived effort",
+            "de": "Bewerte deine wahrgenommene Anstrengung"
+          },
+          "bot": "Perceived effort level. Easy means below conversational pace, hard means pushing limits. Use this to calibrate future session intensity.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "options": {
+            "easy": "Easy",
+            "moderate": "Moderate",
+            "hard": "Hard",
+            "exhausted": "Exhausted"
+          }
+        },
+        {
+          "name": "Notes",
+          "as": "notes",
+          "description": {
+            "en": "Anything to note? (optional)",
+            "de": "Etwas anzumerken? (optional)"
+          },
+          "bot": "Optional freeform note — terrain, weather, how legs felt, injuries, anything relevant.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "max": 300
+        }
+      ]
+    }
+  ],
+  "next": "@joai-store-append?storeName=running-logs&value={{distance}}km+in+{{duration}}min+({{effort}})&label=Run",
+  "messages": {
+    "success": {
+      "en": "Run logged. Nice work.",
+      "de": "Lauf eingetragen. Gut gemacht."
+    }
+  }
+}

@@ -1,0 +1,87 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Update Memory",
+  "title": {
+    "en": "Update a memory",
+    "de": "Erinnerung aktualisieren"
+  },
+  "description": {
+    "en": "Update the content, category, or tags of an existing memory stored by your agent.",
+    "de": "Aktualisiere den Inhalt, die Kategorie oder die Tags einer bestehenden Erinnerung deines Agenten."
+  },
+  "bot": "Use this when the user wants to correct or extend an existing memory. If the user refers to a memory by content, search memories first to find the matching ID.",
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Update memory",
+        "de": "Erinnerung aktualisieren"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/memories/{{memoryId}}",
+        "method": "PUT",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Memory ID",
+          "as": "memoryId",
+          "description": {
+            "en": "The ID of the memory to update",
+            "de": "Die ID der zu aktualisierenden Erinnerung"
+          },
+          "bot": "The memory hash ID. If the user refers to a memory by content, search memories first to find the matching ID.",
+          "type": "string",
+          "position": "url:memoryId",
+          "source": "field",
+          "required": true,
+          "min": 1
+        },
+        {
+          "name": "Content",
+          "as": "content",
+          "description": {
+            "en": "The updated fact or knowledge",
+            "de": "Das aktualisierte Wissen oder die Tatsache"
+          },
+          "bot": "A concise, self-contained statement of the updated fact or knowledge.",
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Category",
+          "as": "category",
+          "description": {
+            "en": "Category for this memory",
+            "de": "Kategorie für diese Erinnerung"
+          },
+          "bot": "Optional category like preference, fact, experience, or relationship.",
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Tags",
+          "as": "tags",
+          "description": {
+            "en": "Tags for categorization",
+            "de": "Tags zur Kategorisierung"
+          },
+          "bot": "Optional comma-separated tags to categorize this memory.",
+          "type": "string",
+          "source": "field",
+          "required": false
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Memory updated.",
+      "de": "Erinnerung aktualisiert."
+    }
+  }
+}
