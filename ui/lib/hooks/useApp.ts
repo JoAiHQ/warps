@@ -91,7 +91,9 @@ export function useApp<T = any, I = any>(app: App, isDevMode = false, locale = '
     }
     const result = await app.callServerTool({ name: toolName, arguments: args })
     setToolResult(result)
-    return unwrapStructuredContent(result)
+    const unwrapped = unwrapStructuredContent(result)
+    const record = toRecord(unwrapped)
+    return record && 'mapped' in record ? record['mapped'] : unwrapped
   }, [app, isDevMode])
 
   const sendFollowUp = useCallback(async (prompt: string) => {
