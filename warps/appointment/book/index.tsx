@@ -230,7 +230,7 @@ function Main() {
     setBooking(true)
     try {
       const title = purpose.trim() ? `${purpose.trim()} — ${name.trim()}` : `Appointment with ${name.trim()}`
-      const result = (await executeWarp('appointment-book', {
+      const result = (await executeWarp('appointment-book-confirm', {
         title,
         scheduledAt: selectedSlot.startAt,
         timezone: agentTimezone ?? undefined,
