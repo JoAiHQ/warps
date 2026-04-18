@@ -1,0 +1,69 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Appointments: Cancel (Public)",
+  "title": {
+    "en": "Cancel appointment",
+    "de": "Termin absagen",
+    "fr": "Annuler le rendez-vous",
+    "es": "Cancelar cita",
+    "ro": "Anuleaza programarea"
+  },
+  "description": {
+    "en": "Cancel a booked appointment from the public booking widget.",
+    "de": "Einen gebuchten Termin über das öffentliche Buchungs-Widget absagen.",
+    "fr": "Annulez un rendez-vous depuis le widget de reservation public.",
+    "es": "Cancela una cita reservada desde el widget de reserva publico.",
+    "ro": "Anuleaza o programare din widgetul public de rezervare."
+  },
+  "bot": "Internal warp used by the booking widget to cancel a confirmed appointment. Do not invoke manually.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "auto": true,
+      "label": {
+        "en": "Cancel",
+        "de": "Absagen",
+        "fr": "Annuler",
+        "es": "Cancelar",
+        "ro": "Anuleaza"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/agents/{{JOAI_AGENT_UUID}}/appointments/{{meetingId}}/cancel",
+        "method": "POST"
+      },
+      "inputs": [
+        {
+          "name": "Meeting ID",
+          "as": "meetingId",
+          "type": "string",
+          "position": "arg:1",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Reason",
+          "as": "reason",
+          "type": "string",
+          "source": "field",
+          "required": false
+        }
+      ]
+    }
+  ],
+  "output": {
+    "MEETING_ID": "out.data.id",
+    "STATUS": "out.data.status"
+  },
+  "messages": {
+    "success": {
+      "en": "Appointment cancelled.",
+      "de": "Termin abgesagt.",
+      "fr": "Rendez-vous annule.",
+      "es": "Cita cancelada.",
+      "ro": "Programare anulata."
+    }
+  }
+}

@@ -9,9 +9,32 @@ type Props = {
   locale: string
   title: string
   subtitle: string
+  cancelLabel: string
+  cancellingLabel: string
+  cancelledTitle: string
+  cancelledMessage: string
+  cancelling: boolean
+  cancelled: boolean
+  onCancel: () => void
 }
 
-export function BookingConfirmed({ booked, selectedDate, displayTimezone, locale, title, subtitle }: Props) {
+export function BookingConfirmed({
+  booked, selectedDate, displayTimezone, locale, title, subtitle,
+  cancelLabel, cancellingLabel, cancelledTitle, cancelledMessage,
+  cancelling, cancelled, onCancel,
+}: Props) {
+  if (cancelled) {
+    return (
+      <div className="flex flex-col items-center gap-5 p-6 text-center">
+        <div className="flex items-center justify-center w-12 h-12 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 text-xl">✕</div>
+        <div>
+          <p className="text-lg font-semibold text-gray-900 dark:text-white">{cancelledTitle}</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{cancelledMessage}</p>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className="flex flex-col items-center gap-5 p-6 text-center">
       <div className="flex items-center justify-center w-12 h-12 rounded-full bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 text-xl">✓</div>
@@ -70,6 +93,13 @@ export function BookingConfirmed({ booked, selectedDate, displayTimezone, locale
           </button>
         </div>
       </div>
+      <button
+        onClick={onCancel}
+        disabled={cancelling}
+        className="text-xs text-gray-400 dark:text-gray-500 hover:text-red-500 dark:hover:text-red-400 transition-colors disabled:opacity-50 mt-1"
+      >
+        {cancelling ? cancellingLabel : cancelLabel}
+      </button>
     </div>
   )
 }

@@ -18,6 +18,10 @@ export const en = {
     today: 'Today',
     tomorrow: 'Tomorrow',
     nameRequired: 'Name is required.',
+    cancelAppointment: 'Cancel appointment',
+    cancelling: 'Cancelling...',
+    cancelled: 'Appointment cancelled',
+    cancelledMessage: 'Your appointment has been cancelled.',
   },
   configure: {
     title: 'Appointment Settings',

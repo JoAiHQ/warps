@@ -57,6 +57,8 @@ function Main() {
   const [booking, setBooking] = useState(false)
   const [booked, setBooked] = useState<BookingResult | null>(null)
   const [nameError, setNameError] = useState(false)
+  const [cancelling, setCancelling] = useState(false)
+  const [cancelled, setCancelled] = useState(false)
 
   const fetchSlots = useCallback(async (date: Date) => {
     setLoadingSlots(true)
@@ -97,6 +99,17 @@ function Main() {
   const handleSlotSelect = (slot: AvailabilitySlot) => {
     setSelectedSlot(slot)
     setStep('contact')
+  }
+
+  const handleCancel = async () => {
+    if (!booked) return
+    setCancelling(true)
+    try {
+      await executeWarp('appointment-cancel-public', { meetingId: booked.id })
+      setCancelled(true)
+    } finally {
+      setCancelling(false)
+    }
   }
 
   const handleBook = async () => {
@@ -140,6 +153,13 @@ function Main() {
         locale={locale}
         title={tr.confirmed}
         subtitle={tr.confirmedMessage}
+        cancelLabel={tr.cancelAppointment}
+        cancellingLabel={tr.cancelling}
+        cancelledTitle={tr.cancelled}
+        cancelledMessage={tr.cancelledMessage}
+        cancelling={cancelling}
+        cancelled={cancelled}
+        onCancel={handleCancel}
       />
     )
   }
