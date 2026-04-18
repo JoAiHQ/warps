@@ -1,0 +1,26 @@
+export const de = {
+  polls: {
+    title: 'Aktive Abstimmungen',
+    empty: 'Gerade keine offenen Abstimmungen.',
+    loading: 'Abstimmungen werden geladen...',
+    deadline: 'Endet',
+    closed: 'Beendet',
+    votes: 'Stimmen',
+    vote: 'Abstimmen',
+  },
+  vote: {
+    loading: 'Abstimmung wird geladen...',
+    loadingOptions: 'Optionen werden geladen...',
+    deadline: 'Endet',
+    closed: 'Diese Abstimmung ist beendet',
+    selectOption: 'Option auswählen',
+    castVote: 'Abstimmen',
+    voting: 'Wird übermittelt...',
+    votedTitle: 'Stimme abgegeben!',
+    resultsTitle: 'Ergebnisse',
+    totalVotes: 'Stimmen insgesamt',
+    yourVote: 'Deine Stimme',
+    error: 'Etwas ist schiefgelaufen. Bitte erneut versuchen.',
+    alreadyVoted: 'Du hast bereits an dieser Abstimmung teilgenommen.',
+  },
+}

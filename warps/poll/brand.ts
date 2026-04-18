@@ -27,9 +27,10 @@ export const brand = async (config: WarpClientConfig): Promise<WarpbaseBrand> =>
     auth: false,
     indexPath: '/',
     routes: [
-      { path: '/', warp: '@poll-polls-active', label: { en: 'Polls', de: 'Abstimmungen', fr: 'Sondages', es: 'Encuestas', ro: 'Sondaje' }, nav: true, hiddenFields: ['GROUP_SLUG'] },
+      { path: '/', warp: '@poll-polls', label: { en: 'Polls', de: 'Abstimmungen', fr: 'Sondages', es: 'Encuestas', ro: 'Sondaje' }, nav: true, hiddenFields: ['GROUP_SLUG'] },
+      { path: '/poll', warp: '@poll-detail', label: { en: 'Poll', de: 'Abstimmung', fr: 'Sondage', es: 'Encuesta', ro: 'Sondaj' }, nav: false },
       { path: '/vote', warp: '@poll-vote', label: { en: 'Vote', de: 'Abstimmen', fr: 'Voter', es: 'Votar', ro: 'Voteaza' }, nav: false },
-      { path: '/results', warp: '@poll-poll-results', label: { en: 'Results', de: 'Ergebnisse', fr: 'Resultats', es: 'Resultados', ro: 'Rezultate' }, nav: false },
+      { path: '/results', warp: '@poll-results', label: { en: 'Results', de: 'Ergebnisse', fr: 'Resultats', es: 'Resultados', ro: 'Rezultate' }, nav: false },
       { path: '/join', warp: '@poll-membership-request', label: { en: 'Join Group', de: 'Gruppe beitreten', fr: 'Rejoindre le groupe', es: 'Unirse al grupo', ro: 'Alatura-te grupului' }, nav: true, hiddenFields: ['GROUP_SLUG'] },
       { path: '/join-invite', warp: '@poll-invite-join', label: { en: 'Join with Invite', de: 'Mit Einladung beitreten', fr: 'Rejoindre avec une invitation', es: 'Unirse con invitacion', ro: 'Alatura-te cu invitatie' }, nav: false, hiddenFields: ['GROUP_SLUG'] },
       { path: '/admin/create', warp: '@poll-poll-create', label: { en: 'Create Poll', de: 'Abstimmung erstellen', fr: 'Creer un sondage', es: 'Crear encuesta', ro: 'Creeaza sondaj' }, nav: false, hiddenFields: ['GROUP_SLUG'] },

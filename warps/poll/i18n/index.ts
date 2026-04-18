@@ -4,6 +4,6 @@ import { es } from './es'
 import { fr } from './fr'
 import { ro } from './ro'
 
-export type Translations = typeof en
+export type PollTranslations = typeof en
 
-export const translations: Record<string, Translations> = { en, de, fr, es, ro }
+export const translations: Record<string, PollTranslations> = { en, de, fr, es, ro }

@@ -1,0 +1,26 @@
+export const fr = {
+  polls: {
+    title: 'Sondages actifs',
+    empty: 'Aucun sondage ouvert pour le moment.',
+    loading: 'Chargement des sondages...',
+    deadline: 'Ferme le',
+    closed: 'Ferme',
+    votes: 'votes',
+    vote: 'Voter',
+  },
+  vote: {
+    loading: 'Chargement du sondage...',
+    loadingOptions: 'Chargement des options...',
+    deadline: 'Ferme le',
+    closed: 'Ce sondage est clos',
+    selectOption: 'Selectionnez une option',
+    castVote: 'Voter',
+    voting: 'Envoi en cours...',
+    votedTitle: 'Vote enregistre !',
+    resultsTitle: 'Resultats',
+    totalVotes: 'votes au total',
+    yourVote: 'Votre vote',
+    error: "Une erreur s'est produite. Veuillez reessayer.",
+    alreadyVoted: 'Vous avez deja vote pour ce sondage.',
+  },
+}

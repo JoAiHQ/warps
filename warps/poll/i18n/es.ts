@@ -1,0 +1,26 @@
+export const es = {
+  polls: {
+    title: 'Encuestas activas',
+    empty: 'No hay encuestas abiertas en este momento.',
+    loading: 'Cargando encuestas...',
+    deadline: 'Cierra el',
+    closed: 'Cerrada',
+    votes: 'votos',
+    vote: 'Votar',
+  },
+  vote: {
+    loading: 'Cargando encuesta...',
+    loadingOptions: 'Cargando opciones...',
+    deadline: 'Cierra el',
+    closed: 'Esta encuesta esta cerrada',
+    selectOption: 'Selecciona una opcion',
+    castVote: 'Emitir voto',
+    voting: 'Enviando...',
+    votedTitle: '¡Voto emitido!',
+    resultsTitle: 'Resultados',
+    totalVotes: 'votos en total',
+    yourVote: 'Tu voto',
+    error: 'Algo salio mal. Por favor, intentalo de nuevo.',
+    alreadyVoted: 'Ya has votado en esta encuesta.',
+  },
+}

@@ -20,6 +20,10 @@ export const de: typeof en = {
     today: 'Heute',
     tomorrow: 'Morgen',
     nameRequired: 'Name ist erforderlich.',
+    cancelAppointment: 'Termin absagen',
+    cancelling: 'Wird abgesagt...',
+    cancelled: 'Termin abgesagt',
+    cancelledMessage: 'Dein Termin wurde abgesagt.',
   },
   configure: {
     title: 'Termineinstellungen',
