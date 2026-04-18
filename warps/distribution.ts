@@ -3,6 +3,7 @@ import {
   AppDistributionManifest,
   AppDistributionProvider,
   AppDistributionProviderAction,
+  AppDistributionProviderConfig,
   WarpbaseBrand,
 } from './types'
 
@@ -81,7 +82,7 @@ function createDefaultProviderDistribution(
   provider: AppDistributionProvider,
   brandSlug: string,
   mcpUrl: string,
-): AppDistributionManifest['providers'][AppDistributionProvider] {
+): AppDistributionProviderConfig {
   const pluginName = getPluginName(brandSlug)
   const appPageUrl = getAppPageUrl(brandSlug)
 

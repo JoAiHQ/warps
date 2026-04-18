@@ -4,7 +4,7 @@ use errors::{
     ERR_INVALID_CATEGORY, ERR_INVALID_DESCRIPTION, ERR_INVALID_LOCATION, ERR_INVALID_ID,
     ERR_INVALID_URL, ERR_SHOP_ALREADY_EXISTS, ERR_SHOP_NOT_FOUND,
 };
-use types::ShopInfo;
+use types::{ShopInfo, ShopService};
 
 multiversx_sc::imports!();
 multiversx_sc::derive_imports!();
@@ -113,6 +113,17 @@ pub trait ShopContract:
     }
 
     // --- Views ---
+
+    #[view(getServiceWithPayment)]
+    fn get_service_with_payment(
+        &self,
+        id: ManagedBuffer,
+        slug: ManagedBuffer,
+    ) -> MultiValue2<ShopService<Self::Api>, types::PaymentDestination<Self::Api>> {
+        let service = self.get_service(id.clone(), slug);
+        let payment = self.get_payment_destination(id);
+        (service, payment).into()
+    }
 
     #[view(getShopInfo)]
     fn get_shop_info(&self, id: ManagedBuffer) -> ShopInfo<Self::Api> {

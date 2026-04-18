@@ -1,0 +1,22 @@
+export const de = {
+  broadcast: {
+    title: 'Broadcast-Nachricht',
+    recipients: 'Empfänger',
+    noContacts: 'Keine Kontakte gefunden. Versuche einen anderen Tag oder füge Kontakte zu deinem CRM hinzu.',
+    channel: 'Kanal',
+    channelWhatsapp: 'WhatsApp',
+    channelEmail: 'E-Mail',
+    messagePlaceholder: 'Nachricht schreiben...',
+    send: 'Broadcast senden',
+    sending: 'Wird gesendet...',
+    sent: 'Gesendet!',
+    sentMessage: 'Deine Nachricht wurde an {count} Kontakt gesendet.',
+    sentMessagePlural: 'Deine Nachricht wurde an {count} Kontakte gesendet.',
+    confirmTitle: 'An {count} Kontakte senden?',
+    confirmDescription: 'Deine Nachricht wird per {channel} an alle oben angezeigten Empfänger gesendet.',
+    confirm: 'Bestätigen & senden',
+    cancel: 'Abbrechen',
+    messageRequired: 'Bitte schreibe eine Nachricht, bevor du sendest.',
+    noRecipientsWithChannel: 'Keiner der ausgewählten Kontakte hat eine {channel}-Adresse. Wechsle den Kanal oder füge Kontaktdaten hinzu.',
+  },
+}

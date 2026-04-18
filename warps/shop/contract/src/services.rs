@@ -67,6 +67,13 @@ pub trait ServicesModule: config::ConfigModule + events::EventsModule {
         self.service_removed_event(id, service_slug);
     }
 
+    #[view(getService)]
+    fn get_service(&self, id: ManagedBuffer, slug: ManagedBuffer) -> ShopService<Self::Api> {
+        require!(!self.shop_info(&id).is_empty(), ERR_SHOP_NOT_FOUND);
+        require!(!self.shop_service(&id, &slug).is_empty(), ERR_SERVICE_NOT_FOUND);
+        self.shop_service(&id, &slug).get()
+    }
+
     #[view(getServices)]
     fn get_services(&self, id: ManagedBuffer) -> MultiValueEncoded<ShopService<Self::Api>> {
         require!(!self.shop_info(&id).is_empty(), ERR_SHOP_NOT_FOUND);

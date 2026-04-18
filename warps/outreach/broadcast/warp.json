@@ -1,0 +1,48 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Outreach: Broadcast",
+  "title": {
+    "en": "Broadcast to contacts",
+    "de": "An Kontakte senden"
+  },
+  "description": {
+    "en": "Compose and send a message to all contacts in a segment or tag.",
+    "de": "Eine Nachricht an alle Kontakte in einem Segment oder Tag verfassen und senden."
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "auto": true,
+      "label": {
+        "en": "Load contacts",
+        "de": "Kontakte laden"
+      },
+      "inputs": [
+        {
+          "name": "Tag",
+          "as": "tag",
+          "description": {
+            "en": "Filter contacts by tag (optional)",
+            "de": "Kontakte nach Tag filtern (optional)"
+          },
+          "bot": "Optional contact tag to filter recipients, e.g. 'vip', 'lead'.",
+          "type": "string",
+          "source": "field",
+          "required": false
+        }
+      ],
+      "destination": {
+        "url": "INJECT:API_BASE/v1/contacts?tag={{tag}}",
+        "method": "GET",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "output": {
+        "contacts": "out.data",
+        "agentUuid": "out.agentUuid"
+      }
+    }
+  ],
+  "ui": "https://raw.githubusercontent.com/JoAiHQ/warps/main/warps/outreach/broadcast/chatapp.dist.html"
+}
