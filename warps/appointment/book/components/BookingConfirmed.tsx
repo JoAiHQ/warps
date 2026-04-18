@@ -48,11 +48,11 @@ export function BookingConfirmed({ booked, selectedDate, displayTimezone, locale
             rel="noopener noreferrer"
             className="flex items-center gap-1.5 rounded-md border border-gray-200 dark:border-gray-700 px-3 py-1.5 text-xs font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
           >
-            <svg viewBox="0 0 24 24" className="w-3.5 h-3.5 shrink-0" aria-hidden="true">
-              <path fill="#0078D4" d="M24 12.204c0-.528-.046-1.056-.092-1.537H12.274v2.918h6.625c-.275 1.537-1.146 2.826-2.43 3.69v3.026h3.897C22.545 18.372 24 15.546 24 12.204z"/>
-              <path fill="#00A4EF" d="M12.274 24c3.3 0 6.074-1.084 8.092-2.944l-3.897-3.026c-1.1.737-2.476 1.16-4.195 1.16-3.208 0-5.958-2.155-6.9-5.073H1.34v3.119C3.358 21.428 7.553 24 12.274 24z"/>
-              <path fill="#FFB900" d="M5.374 14.117A7.18 7.18 0 0 1 5.006 12c0-.737.138-1.45.368-2.117V6.764H1.34A11.951 11.951 0 0 0 0 12c0 1.93.46 3.76 1.34 5.236l4.034-3.119z"/>
-              <path fill="#F25022" d="M12.274 4.81c1.788 0 3.392.621 4.653 1.836l3.484-3.484C18.302 1.196 15.528 0 12.274 0 7.553 0 3.358 2.572 1.34 6.764l4.034 3.119c.942-2.918 3.692-5.073 6.9-5.073z"/>
+            <svg viewBox="0 0 23 23" className="w-3.5 h-3.5 shrink-0" aria-hidden="true">
+              <rect fill="#F35325" x="0" y="0" width="10.5" height="10.5"/>
+              <rect fill="#81BC06" x="12.5" y="0" width="10.5" height="10.5"/>
+              <rect fill="#05A6F0" x="0" y="12.5" width="10.5" height="10.5"/>
+              <rect fill="#FFBA08" x="12.5" y="12.5" width="10.5" height="10.5"/>
             </svg>
             Outlook
           </a>
