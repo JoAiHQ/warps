@@ -27,6 +27,7 @@ export const brand = async (config: WarpClientConfig): Promise<WarpbaseBrand> =>
     .setLogo('https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg')
     .setUrls({ web: 'https://joai.ai' })
     .build(),
+  contracts: {},
   destinations: {
     API_BASE: (env: WarpChainEnv) => {
       if (env === 'devnet') return 'https://devnet-api.joai.ai'
