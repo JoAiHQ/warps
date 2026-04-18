@@ -4,8 +4,8 @@
   "repo": "JoAiHQ/warps",
   "branch": "dev",
   "network": "devnet",
-  "commitSha": "44466c13053edda1d24dbb60747621fc25db9d11",
-  "generatedAt": "2026-04-18T15:26:58.161Z",
+  "commitSha": "2784f8d598b4d197ffe9f816ee700d9943ef3b74",
+  "generatedAt": "2026-04-18T15:53:42.108Z",
   "warps": [
     {
       "key": "arbitrum:omniset-deposit-arbitrum",
@@ -58479,8 +58479,8 @@
       "identifier": "@joai-private-warp-create",
       "alias": "joai-private-warp-create",
       "chain": "none",
-      "hash": "70957f2aac0a069e8a24dbd3862e31bca26f5ad7885d1556dccfcb552ff7dba0",
-      "checksum": "70957f2aac0a069e8a24dbd3862e31bca26f5ad7885d1556dccfcb552ff7dba0",
+      "hash": "f98148fcfdf7016211a65699c5356b49f061794593a337445ab1fad748e2cd4e",
+      "checksum": "f98148fcfdf7016211a65699c5356b49f061794593a337445ab1fad748e2cd4e",
       "name": "JoAi: Create Private Warp",
       "title": {
         "en": "Create a private warp",
@@ -58532,7 +58532,7 @@
           "en": "Create a private warp under your brand that calls a custom endpoint — enabling your agent to trigger private automations.",
           "de": "Erstelle einen privaten Warp unter deiner Marke, der einen eigenen Endpunkt aufruft — damit dein Agent private Automatisierungen auslösen kann."
         },
-        "bot": "Use this when the user wants to create a custom private warp for their brand. Ask for the brand hash, warp name, endpoint URL, and HTTP method.",
+        "bot": "Use this when the user wants to create a custom private warp for their brand. Pass a pre-built JSON payload containing brand, definition, and public fields.",
         "actions": [
           {
             "type": "collect",
@@ -58541,7 +58541,7 @@
               "de": "Privaten Warp erstellen"
             },
             "destination": {
-              "url": "https://devnet-api.joai.ai/cortex/warps/brands/{{brandHash}}/warps",
+              "url": "https://devnet-api.joai.ai/v1/warps",
               "method": "POST",
               "headers": {
                 "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
@@ -58549,85 +58549,20 @@
             },
             "inputs": [
               {
-                "name": "Brand Hash",
-                "as": "brandHash",
-                "description": {
-                  "en": "The brand hash to create this warp under",
-                  "de": "Der Brand-Hash, unter dem dieser Warp erstellt wird"
-                },
-                "bot": "The hash identifier of the private app/brand to create this warp under.",
+                "name": "PAYLOAD",
+                "as": "PAYLOAD",
                 "type": "string",
-                "position": "url:brandHash",
-                "source": "field",
+                "source": "hidden",
                 "required": true,
-                "min": 1
-              },
-              {
-                "name": "Name",
-                "as": "name",
-                "description": {
-                  "en": "A name for this warp",
-                  "de": "Ein Name für diesen Warp"
-                },
-                "bot": "A short name describing what this warp does.",
-                "type": "string",
-                "position": "arg:1",
-                "source": "field",
-                "required": true,
-                "min": 2
-              },
-              {
-                "name": "Description",
-                "as": "description",
-                "description": {
-                  "en": "What this warp does",
-                  "de": "Was dieser Warp tut"
-                },
-                "bot": "A brief description of what this private warp does and when it should be triggered.",
-                "type": "string",
-                "source": "field",
-                "required": false
-              },
-              {
-                "name": "Endpoint URL",
-                "as": "endpointUrl",
-                "description": {
-                  "en": "The URL this warp will call",
-                  "de": "Die URL, die dieser Warp aufruft"
-                },
-                "bot": "The full endpoint URL that this warp should call when triggered.",
-                "type": "string",
-                "source": "field",
-                "required": true,
-                "min": 10
-              },
-              {
-                "name": "Method",
-                "as": "method",
-                "description": {
-                  "en": "The HTTP method to use",
-                  "de": "Die zu verwendende HTTP-Methode"
-                },
-                "bot": "The HTTP method for the endpoint call. Defaults to POST.",
-                "type": "string",
-                "source": "field",
-                "required": false,
-                "default": "POST",
-                "options": {
-                  "POST": "POST",
-                  "PUT": "PUT",
-                  "PATCH": "PATCH",
-                  "DELETE": "DELETE",
-                  "GET": "GET"
-                }
+                "default": ""
               }
             ]
           }
         ],
         "messages": {
           "success": {
-            "en": "Private warp '{{name}}' created.",
-            "de": "Privater Warp '{{name}}' erstellt."
+            "en": "Private warp created.",
+            "de": "Privater Warp erstellt."
           }
         }
       },
