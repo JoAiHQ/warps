@@ -198,7 +198,7 @@ function Main() {
         durationMinutes: 30,
       })) as { slots?: AvailabilitySlot[] } | undefined
 
-      setSlots((result as any)?.slots ?? [])
+      setSlots((result as any)?.SLOTS ?? [])
     } finally {
       setLoadingSlots(false)
     }
