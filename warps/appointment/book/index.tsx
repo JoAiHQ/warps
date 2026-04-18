@@ -241,10 +241,10 @@ function Main() {
       })) as any
 
       setBooked({
-        id: result?.id ?? '',
-        name: result?.name ?? title,
+        id: (result as any)?.MEETING_ID ?? '',
+        name: (result as any)?.MEETING_TITLE ?? title,
         scheduledAt: selectedSlot.startAt,
-        inviteUrl: result?.inviteUrl,
+        inviteUrl: (result as any)?.MEETING_URL,
       })
       setStep('confirmed')
     } finally {

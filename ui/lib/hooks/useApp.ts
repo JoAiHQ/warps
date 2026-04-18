@@ -91,7 +91,7 @@ export function useApp<T = any, I = any>(app: App, isDevMode = false, locale = '
     }
     const result = await app.callServerTool({ name: toolName, arguments: args })
     setToolResult(result)
-    return result
+    return unwrapStructuredContent(result)
   }, [app, isDevMode])
 
   const sendFollowUp = useCallback(async (prompt: string) => {
