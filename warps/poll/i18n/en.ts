@@ -1,0 +1,26 @@
+export const en = {
+  polls: {
+    title: 'Active Polls',
+    empty: 'No open polls right now.',
+    loading: 'Loading polls...',
+    deadline: 'Closes',
+    closed: 'Closed',
+    votes: 'votes',
+    vote: 'Vote',
+  },
+  vote: {
+    loading: 'Loading poll...',
+    loadingOptions: 'Loading options...',
+    deadline: 'Closes',
+    closed: 'This poll is closed',
+    selectOption: 'Select an option to vote',
+    castVote: 'Cast Vote',
+    voting: 'Submitting...',
+    votedTitle: 'Vote cast!',
+    resultsTitle: 'Results',
+    totalVotes: 'total votes',
+    yourVote: 'Your vote',
+    error: 'Something went wrong. Please try again.',
+    alreadyVoted: 'You have already voted on this poll.',
+  },
+}

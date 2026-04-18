@@ -18,5 +18,6 @@ export type BookingResult = {
   id: string
   name: string
   scheduledAt: string
-  inviteUrl?: string
+  endAt: string
+  joinUrl?: string
 }

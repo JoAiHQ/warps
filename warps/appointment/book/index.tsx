@@ -244,7 +244,8 @@ function Main() {
         id: (result as any)?.MEETING_ID ?? '',
         name: (result as any)?.MEETING_TITLE ?? title,
         scheduledAt: selectedSlot.startAt,
-        inviteUrl: (result as any)?.MEETING_URL,
+        endAt: selectedSlot.endAt,
+        joinUrl: (result as any)?.MEETING_URL,
       })
       setStep('confirmed')
     } finally {
@@ -270,8 +271,8 @@ function Main() {
             {formatTime(booked.scheduledAt, displayTimezone, locale)}
             <span className="ml-1 text-xs text-gray-400">({displayTimezone})</span>
           </p>
-          {booked.inviteUrl && (
-            <a href={booked.inviteUrl} className="mt-3 inline-block text-blue-600 dark:text-blue-400 text-xs underline" target="_blank" rel="noopener noreferrer">
+          {booked.joinUrl && (
+            <a href={booked.joinUrl} className="mt-3 inline-block text-blue-600 dark:text-blue-400 text-xs underline" target="_blank" rel="noopener noreferrer">
               Add to calendar →
             </a>
           )}

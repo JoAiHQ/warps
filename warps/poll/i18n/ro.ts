@@ -1,0 +1,26 @@
+export const ro = {
+  polls: {
+    title: 'Sondaje active',
+    empty: 'Niciun sondaj deschis in momentul de fata.',
+    loading: 'Se incarca sondajele...',
+    deadline: 'Se inchide pe',
+    closed: 'Inchis',
+    votes: 'voturi',
+    vote: 'Voteaza',
+  },
+  vote: {
+    loading: 'Se incarca sondajul...',
+    loadingOptions: 'Se incarca optiunile...',
+    deadline: 'Se inchide pe',
+    closed: 'Acest sondaj este inchis',
+    selectOption: 'Selecteaza o optiune',
+    castVote: 'Voteaza',
+    voting: 'Se trimite...',
+    votedTitle: 'Vot inregistrat!',
+    resultsTitle: 'Rezultate',
+    totalVotes: 'voturi in total',
+    yourVote: 'Votul tau',
+    error: 'Ceva a mers gresit. Te rugam sa incerci din nou.',
+    alreadyVoted: 'Ai votat deja la acest sondaj.',
+  },
+}
