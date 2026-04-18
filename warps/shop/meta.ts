@@ -359,6 +359,48 @@ export const meta: Record<string, WarpExtras> = {
     },
   },
 
+  'shop-service-pay': {
+    keywords: {
+      en: ['pay for service', 'book hotel room', 'on-chain booking payment', 'crypto service payment', 'blockchain payment link', 'pay with crypto', 'service payment link'],
+      de: ['Dienstleistung bezahlen', 'Hotelzimmer buchen', 'On-Chain-Buchungszahlung', 'Krypto-Dienstleistungszahlung', 'Blockchain-Zahlungslink'],
+    },
+    useCases: {
+      en: [
+        'Share a direct payment link for a specific service — customers open it, see the details, and pay in one tap',
+        'Let AI agents complete bookings autonomously by reading service details and routing payment on-chain',
+        'Hotel room, consultation, or any time-based service — one link, one click, crypto payment direct to your wallet',
+      ],
+      de: [
+        'Teile einen direkten Zahlungslink für einen bestimmten Service — Kunden öffnen ihn, sehen die Details und zahlen mit einem Klick',
+        'Lass KI-Agenten Buchungen autonom abschließen, indem sie Service-Details lesen und die Zahlung On-Chain weiterleiten',
+        'Hotelzimmer, Beratung oder jeder zeitbasierte Service — ein Link, ein Klick, Krypto-Zahlung direkt auf deine Wallet',
+      ],
+    },
+    category: 'commerce',
+    faq: {
+      en: [
+        {
+          question: 'How does the payment link work?',
+          answer: 'Share the link with ?shop=YOUR_SHOP_ID&service=SERVICE_SLUG appended. The warp fetches the service details and your configured payment destination on-chain, then shows the customer a Pay button that sends crypto directly to your wallet.',
+        },
+        {
+          question: 'Which chains and tokens are supported?',
+          answer: 'Any chain you configured in your payment destination — MultiversX, Base, Solana, Ethereum, and more. The token is whatever you set when configuring your shop payment.',
+        },
+      ],
+      de: [
+        {
+          question: 'Wie funktioniert der Zahlungslink?',
+          answer: 'Teile den Link mit ?shop=DEINE_SHOP_ID&service=SERVICE_SLUG. Der Warp liest die Service-Details und dein konfiguriertes Zahlungsziel On-Chain und zeigt dem Kunden einen Pay-Button, der Krypto direkt auf deine Wallet sendet.',
+        },
+        {
+          question: 'Welche Chains und Token werden unterstützt?',
+          answer: 'Jede Chain, die du in deinem Zahlungsziel konfiguriert hast — MultiversX, Base, Solana, Ethereum und mehr.',
+        },
+      ],
+    },
+  },
+
   'shop-payment-info': {
     keywords: {
       en: ['get payment destination', 'which chain to pay on', 'shop wallet address', 'accepted token', 'AI payment routing', 'multi-chain payment info', 'crypto checkout'],

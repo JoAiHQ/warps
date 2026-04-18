@@ -45,6 +45,7 @@ export const brand = async (config: WarpClientConfig): Promise<WarpbaseBrand> =>
       { path: '/admin/setup', warp: '@shop-register', label: { en: 'Register Shop', de: 'Shop registrieren' }, nav: false },
       { path: '/admin/configure', warp: '@shop-configure', label: { en: 'Configure Shop', de: 'Shop konfigurieren' }, nav: false },
       { path: '/admin/payment', warp: '@shop-set-payment', label: { en: 'Payment Setup', de: 'Zahlung einrichten' }, nav: false },
+      { path: '/service/pay', warp: '@shop-service-pay', label: { en: 'Book & Pay', de: 'Buchen & Bezahlen' }, nav: false },
       { path: '/admin/service/add', warp: '@shop-service-add', label: { en: 'Add Service', de: 'Leistung hinzufügen' }, nav: false },
       { path: '/admin/service/remove', warp: '@shop-service-remove', label: { en: 'Remove Service', de: 'Leistung entfernen' }, nav: false },
       { path: '/admin/product/add', warp: '@shop-product-add', label: { en: 'Add Product', de: 'Produkt hinzufügen' }, nav: false },
