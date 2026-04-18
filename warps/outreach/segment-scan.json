@@ -1,0 +1,74 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Outreach: Segment Scan",
+  "title": {
+    "en": "Scan contacts for outreach",
+    "de": "Kontakte für Outreach scannen"
+  },
+  "description": {
+    "en": "Identify contacts in a segment or tag that are ready for proactive outreach.",
+    "de": "Kontakte in einem Segment oder Tag identifizieren, die für proaktiven Outreach bereit sind."
+  },
+  "bot": "When this warp is triggered: fetches contacts matching the given tag and inactivity criteria, then analyzes them and suggests who to contact and why.",
+  "output": {
+    "_DATA": "out.1"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Scan contacts",
+        "de": "Kontakte scannen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/contacts?tag={{tag}}&minInactiveDays={{minInactiveDays}}",
+        "method": "GET",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Tag",
+          "as": "tag",
+          "description": {
+            "en": "Which tag or segment to scan?",
+            "de": "Welchen Tag oder welches Segment scannen?"
+          },
+          "bot": "Contact tag to filter by, e.g. 'lead', 'vip', 'inactive'.",
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Minimum inactive days",
+          "as": "minInactiveDays",
+          "description": {
+            "en": "Only include contacts not contacted in this many days",
+            "de": "Nur Kontakte einschließen, die seit so vielen Tagen nicht kontaktiert wurden"
+          },
+          "bot": "Minimum number of days since the contact was last reached out to. Leave empty to include all.",
+          "type": "string",
+          "source": "field",
+          "position": "local",
+          "required": false
+        }
+      ],
+      "auto": true
+    },
+    {
+      "type": "prompt",
+      "label": {
+        "en": "Analyze",
+        "de": "Analysieren"
+      },
+      "prompt": "Analyze these contacts and identify who is most ready for outreach. For each, suggest a specific reason to reach out and the best channel (WhatsApp or email). Be concise. Contacts: {{_DATA}}"
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Segment scan complete.",
+      "de": "Segment-Scan abgeschlossen."
+    }
+  }
+}

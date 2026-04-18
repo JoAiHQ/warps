@@ -1,0 +1,146 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Outreach: Contact Message",
+  "title": {
+    "en": "Message a contact",
+    "de": "Kontakt anschreiben"
+  },
+  "description": {
+    "en": "Send a personalized outreach message to a specific CRM contact.",
+    "de": "Eine personalisierte Outreach-Nachricht an einen bestimmten CRM-Kontakt senden."
+  },
+  "bot": "When this warp is triggered: fetches the contact, composes a personalized message based on the context provided, and sends it via the specified channel.",
+  "output": {
+    "CONTACT_NAME": "out.name",
+    "CONTACT_PHONE": "out.phone",
+    "CONTACT_EMAIL": "out.email"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "auto": true,
+      "label": {
+        "en": "Load contact",
+        "de": "Kontakt laden"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/contacts/{{contactId}}",
+        "method": "GET",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Contact",
+          "as": "contactId",
+          "description": {
+            "en": "Which contact to reach out to?",
+            "de": "Welchen Kontakt ansprechen?"
+          },
+          "bot": "The ID of the CRM contact to message.",
+          "type": "string",
+          "source": "field",
+          "required": true
+        }
+      ]
+    },
+    {
+      "type": "collect",
+      "label": {
+        "en": "Message details",
+        "de": "Nachrichtendetails"
+      },
+      "inputs": [
+        {
+          "name": "Context",
+          "as": "context",
+          "description": {
+            "en": "What is this message about?",
+            "de": "Worum geht es in dieser Nachricht?"
+          },
+          "bot": "The reason for reaching out — used to compose a relevant, personalized message.",
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Channel",
+          "as": "channel",
+          "description": {
+            "en": "Send via WhatsApp or email?",
+            "de": "Per WhatsApp oder E-Mail senden?"
+          },
+          "bot": "The channel to use for this message. Defaults to whatsapp.",
+          "type": "string",
+          "source": "field",
+          "value": "whatsapp",
+          "required": false
+        }
+      ]
+    },
+    {
+      "type": "prompt",
+      "label": {
+        "en": "Compose message",
+        "de": "Nachricht verfassen"
+      },
+      "prompt": "Compose a warm, personalized outreach message for {{CONTACT_NAME}}. Context: {{context}}. Keep it concise and natural. Do not use formal language."
+    },
+    {
+      "type": "collect",
+      "auto": true,
+      "label": {
+        "en": "Send message",
+        "de": "Nachricht senden"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/agents/{{JOAI_AGENT_UUID}}/message",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Integration Type",
+          "as": "integrationType",
+          "type": "string",
+          "source": "field",
+          "value": "{{channel}}",
+          "hidden": true
+        },
+        {
+          "name": "Recipient ID",
+          "as": "recipientId",
+          "type": "string",
+          "source": "field",
+          "value": "{{CONTACT_PHONE}}",
+          "hidden": true
+        },
+        {
+          "name": "Recipient Name",
+          "as": "recipientName",
+          "type": "string",
+          "source": "field",
+          "value": "{{CONTACT_NAME}}",
+          "hidden": true
+        },
+        {
+          "name": "Message",
+          "as": "message",
+          "type": "string",
+          "source": "field",
+          "value": "{{MESSAGE}}",
+          "hidden": true
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Message sent to {{CONTACT_NAME}}.",
+      "de": "Nachricht an {{CONTACT_NAME}} gesendet."
+    }
+  }
+}
