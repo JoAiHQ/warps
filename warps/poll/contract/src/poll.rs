@@ -202,16 +202,18 @@ pub trait PollModule: config::ConfigModule + events::EventsModule {
         require!(!self.group_info(&group_slug).is_empty(), ERR_GROUP_NOT_FOUND);
         require!(question.len() >= 1 && question.len() <= MAX_QUESTION_LEN, ERR_INVALID_QUESTION);
 
-        let options_vec: ManagedVec<ManagedBuffer> = options.into_vec_of_buffers();
+        let mut options_vec: ManagedVec<ManagedBuffer> = ManagedVec::new();
+        for opt in options.into_vec_of_buffers().iter() {
+            if opt.len() > 0 {
+                require!(opt.len() <= MAX_OPTION_LABEL_LEN, ERR_INVALID_OPTION_LABEL);
+                options_vec.push(opt.clone_value());
+            }
+        }
         let option_count = options_vec.len() as u32;
         require!(
             option_count >= MIN_OPTION_COUNT && option_count <= MAX_OPTION_COUNT,
             ERR_INVALID_OPTIONS_COUNT
         );
-
-        for opt in options_vec.iter() {
-            require!(opt.len() >= 1 && opt.len() <= MAX_OPTION_LABEL_LEN, ERR_INVALID_OPTION_LABEL);
-        }
 
         let caller = self.blockchain().get_caller();
         require!(self.group_members(&group_slug).contains(&caller), ERR_NOT_MEMBER);

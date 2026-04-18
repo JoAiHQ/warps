@@ -16,7 +16,8 @@
     "ro": "Creeaza un nou grup de vot. Vei deveni administratorul si primul membru."
   },
   "vars": {
-    "SC_ADDRESS": "INJECT:POLL_SC_ADDRESS"
+    "SC_ADDRESS": "INJECT:POLL_SC_ADDRESS",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG|Team identifier"
   },
   "actions": [
     {
@@ -31,14 +32,14 @@
       "address": "{{SC_ADDRESS}}",
       "func": "createGroup",
       "args": [
-        "string:{{SLUG}}",
+        "string:{{GROUP_SLUG}}",
         "string:{{NAME}}",
         "bool:{{OPEN_MEMBERSHIP}}"
       ],
       "gasLimit": 10000000,
       "inputs": [
         {
-          "name": "SLUG",
+          "name": "GROUP_SLUG",
           "type": "string",
           "position": "arg:1",
           "source": "field",
@@ -82,5 +83,6 @@
       ],
       "abi": "INJECT:contract/output/poll.abi.json"
     }
-  ]
+  ],
+  "next": "@joai-site-provision?brand=poll&team={{JOAI_TEAM_SLUG}}&settings={\"GROUP_SLUG\":\"{{GROUP_SLUG}}\"}"
 }
