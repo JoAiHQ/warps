@@ -4,9 +4,561 @@
   "repo": "JoAiHQ/warps",
   "branch": "dev",
   "network": "devnet",
-  "commitSha": "0a72f48ef21fb417dbed7b449566f3adce06643c",
-  "committedAt": "2026-04-18T19:46:41.638Z",
-  "generatedAt": "2026-04-18T19:46:43.632Z",
-  "upserts": [],
-  "deletes": []
+  "commitSha": "2a79a72ecb611a320f9f949caf756328b63d5a8f",
+  "committedAt": "2026-04-18T20:58:36.280Z",
+  "generatedAt": "2026-04-18T20:58:38.565Z",
+  "upserts": [
+    {
+      "key": "none:appointment-book-confirm",
+      "identifier": "@appointment-book-confirm",
+      "alias": "appointment-book-confirm",
+      "chain": "none",
+      "hash": "9d33ed552be9afec60a6418969ba4c09b9b8baa2da593822518c5e9a7019a344",
+      "checksum": "9d33ed552be9afec60a6418969ba4c09b9b8baa2da593822518c5e9a7019a344",
+      "name": "Appointments: Book",
+      "title": {
+        "en": "Book appointment",
+        "de": "Termin buchen",
+        "fr": "Confirmer le rendez-vous",
+        "es": "Reservar cita",
+        "ro": "Confirma programarea"
+      },
+      "description": {
+        "en": "Book a confirmed appointment slot for the current agent.",
+        "de": "Bucht einen bestaetigten Termin fuer den aktuellen Agenten.",
+        "fr": "Confirmez un creneau de rendez-vous pour l agent actuel.",
+        "es": "Reserva un horario ya confirmado para el agente actual.",
+        "ro": "Rezerva un interval confirmat pentru agentul curent."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "873defa13190da1a0124161ec46673a00290697aaea9851a2b8fc027482adac9",
+        "slug": "appointment",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "Appointment",
+        "description": {
+          "en": "Appointment booking and intake flows for service businesses.",
+          "de": "Terminbuchung und Intake-Abläufe für Dienstleistungsunternehmen.",
+          "fr": "Prise de rendez-vous et parcours de reservation pour les entreprises de services.",
+          "es": "Reservas de citas y flujos de atencion para negocios de servicios.",
+          "ro": "Programari si fluxuri de preluare pentru afaceri de servicii."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "Appointments: Book",
+        "title": {
+          "en": "Book appointment",
+          "de": "Termin buchen",
+          "fr": "Confirmer le rendez-vous",
+          "es": "Reservar cita",
+          "ro": "Confirma programarea"
+        },
+        "description": {
+          "en": "Book a confirmed appointment slot for the current agent.",
+          "de": "Bucht einen bestaetigten Termin fuer den aktuellen Agenten.",
+          "fr": "Confirmez un creneau de rendez-vous pour l agent actuel.",
+          "es": "Reserva un horario ya confirmado para el agente actual.",
+          "ro": "Rezerva un interval confirmat pentru agentul curent."
+        },
+        "bot": "Use this only after running appointment-availability and the user has explicitly chosen a slot from the results. Never substitute this with direct calendar event creation — that skips booking policy, overlap checks, and attendee tracking. Always refer to bookings as 'appointments', never 'meetings'. The attendee is the person you are talking to — use their name and email from context without asking. Build a descriptive title combining purpose and name (e.g. 'Consultation with Anna Schmidt'). Pass exact start and end times from the chosen slot.",
+        "vars": {
+          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Book now",
+              "de": "Jetzt buchen",
+              "fr": "Confirmer maintenant",
+              "es": "Reservar ahora",
+              "ro": "Rezerva acum"
+            },
+            "destination": {
+              "url": "https://devnet-api.joai.ai/v1/agents/{{JOAI_AGENT_UUID}}/appointments/book",
+              "method": "POST",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Appointment Title",
+                "as": "title",
+                "description": {
+                  "en": "Descriptive title shown on the calendar event",
+                  "de": "Aussagekräftiger Titel für den Kalendereintrag",
+                  "fr": "Titre descriptif affiche dans l evenement du calendrier",
+                  "es": "Titulo descriptivo que aparecera en el calendario",
+                  "ro": "Titlu descriptiv afisat in evenimentul din calendar"
+                },
+                "bot": "Required. A descriptive title that identifies the appointment at a glance. Always combine the meeting purpose AND the attendee name, e.g. 'Consultation with Anna Schmidt', 'Demo call with Acme Corp', 'Tax review with John Doe'. Never use generic titles like 'Appointment' or 'Meeting'.",
+                "type": "string",
+                "position": "arg:1",
+                "source": "field",
+                "required": true,
+                "min": 3
+              },
+              {
+                "name": "Scheduled At",
+                "as": "scheduledAt",
+                "description": {
+                  "en": "Exact appointment start in ISO format",
+                  "de": "Exakter Startzeitpunkt im ISO-Format",
+                  "fr": "Heure exacte de debut du rendez-vous au format ISO",
+                  "es": "Hora exacta de inicio en formato ISO",
+                  "ro": "Ora exacta de inceput a programarii in format ISO"
+                },
+                "bot": "Exact confirmed appointment start in ISO 8601 format.",
+                "type": "string",
+                "position": "arg:2",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Timezone",
+                "as": "timezone",
+                "description": {
+                  "en": "Appointment timezone",
+                  "de": "Zeitzone des Termins",
+                  "fr": "Fuseau horaire du rendez-vous",
+                  "es": "Zona horaria de la cita",
+                  "ro": "Fusul orar al programarii"
+                },
+                "bot": "Timezone identifier like Europe/Vienna, America/New_York, or UTC.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Service Slug",
+                "as": "serviceSlug",
+                "description": {
+                  "en": "Optional configured service identifier",
+                  "de": "Optionaler Bezeichner fuer einen konfigurierten Service",
+                  "fr": "Identifiant facultatif d un service configure",
+                  "es": "Identificador opcional de un servicio configurado",
+                  "ro": "Identificator optional pentru un serviciu configurat"
+                },
+                "bot": "If the booking belongs to a configured service, pass the same service slug used for availability.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Routed Agent UUID",
+                "as": "routedAgentUuid",
+                "description": {
+                  "en": "Optional staff agent UUID for routed bookings",
+                  "de": "Optionale UUID des Mitarbeiter-Agenten fuer geroutete Buchungen",
+                  "fr": "UUID facultatif de l agent affecte pour les reservations routees",
+                  "es": "UUID opcional del agente asignado para reservas enrutadas",
+                  "ro": "UUID optional al agentului alocat pentru rezervari directionate"
+                },
+                "bot": "If appointment availability returned a specific agentUuid for the selected slot, pass it here unchanged.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Appointment Request ID",
+                "as": "appointmentRequestId",
+                "description": {
+                  "en": "Optional linked appointment request id",
+                  "de": "Optionale verknuepfte Terminanfrage-ID",
+                  "fr": "ID facultatif de la demande de rendez-vous liee",
+                  "es": "ID opcional de la solicitud de cita vinculada",
+                  "ro": "ID optional al cererii de programare asociate"
+                },
+                "bot": "If this booking is fulfilling a previously created appointment request, pass that request id.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Attendee Name",
+                "as": "attendeeName",
+                "description": {
+                  "en": "Full name of the person the appointment is for",
+                  "de": "Vollständiger Name der Person, für die der Termin ist",
+                  "fr": "Nom complet de la personne pour laquelle le rendez-vous est pris",
+                  "es": "Nombre completo de la persona para la que es la cita",
+                  "ro": "Numele complet al persoanei pentru care este programarea"
+                },
+                "bot": "Full name of the attendee.",
+                "type": "string",
+                "source": "field",
+                "required": true,
+                "default": "{{JOAI_SENDER_NAME}}",
+                "min": 2
+              },
+              {
+                "name": "Attendee Email",
+                "as": "attendeeEmail",
+                "description": {
+                  "en": "The attendee email",
+                  "de": "E-Mail des Teilnehmers",
+                  "fr": "E-mail du participant",
+                  "es": "Correo de la persona asistente",
+                  "ro": "E-mailul participantului"
+                },
+                "bot": "Email address of the attendee if available.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Notes",
+                "as": "description",
+                "description": {
+                  "en": "Optional notes or agenda",
+                  "de": "Optionale Notizen oder Agenda",
+                  "fr": "Notes ou ordre du jour facultatifs",
+                  "es": "Notas o agenda opcionales",
+                  "ro": "Note sau agenda optionale"
+                },
+                "bot": "Optional notes, context, or agenda to include with the appointment.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Conference Provider",
+                "as": "conferenceProvider",
+                "description": {
+                  "en": "Optional remote meeting provider",
+                  "de": "Optionaler Anbieter fuer Videotermine",
+                  "fr": "Fournisseur facultatif pour la reunion a distance",
+                  "es": "Proveedor opcional para la reunion remota",
+                  "ro": "Furnizor optional pentru intalnirea la distanta"
+                },
+                "bot": "Use 'google_meet', 'teams', or 'zoom' only if the user explicitly wants a remote meeting link. Otherwise leave empty.",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "options": {
+                  "google_meet": "Google Meet",
+                  "teams": "Microsoft Teams",
+                  "zoom": "Zoom"
+                }
+              }
+            ]
+          }
+        ],
+        "sections": [
+          {
+            "title": {
+              "en": "Who's coming?",
+              "de": "Wer kommt?",
+              "fr": "Qui participe ?",
+              "es": "Quien viene?",
+              "ro": "Cine participa?"
+            },
+            "description": {
+              "en": "We'll send your confirmation here.",
+              "de": "Wir schicken die Bestätigung dorthin.",
+              "fr": "Nous enverrons la confirmation a ces coordonnees.",
+              "es": "Enviaremos aqui la confirmacion.",
+              "ro": "Vom trimite confirmarea aici."
+            },
+            "inputs": [
+              "attendeeName",
+              "attendeeEmail"
+            ]
+          },
+          {
+            "title": {
+              "en": "When is it?",
+              "de": "Wann ist der Termin?",
+              "fr": "Quand a lieu le rendez-vous ?",
+              "es": "Cuando es?",
+              "ro": "Cand are loc?"
+            },
+            "description": {
+              "en": "Confirm the slot you've chosen.",
+              "de": "Bestätige den gewählten Zeitslot.",
+              "fr": "Confirmez le creneau choisi.",
+              "es": "Confirma el horario que has elegido.",
+              "ro": "Confirma intervalul ales."
+            },
+            "inputs": [
+              "scheduledAt",
+              "timezone"
+            ]
+          },
+          {
+            "title": {
+              "en": "Anything else?",
+              "de": "Noch etwas?",
+              "fr": "Autre chose a ajouter ?",
+              "es": "Algo mas?",
+              "ro": "Mai este ceva?"
+            },
+            "description": {
+              "en": "Add a note or choose how you'd like to meet.",
+              "de": "Füge eine Notiz hinzu oder wähle, wie ihr euch treffen wollt.",
+              "fr": "Ajoutez une note ou choisissez la facon de vous rencontrer.",
+              "es": "Anade una nota o elige como prefieres reunirte.",
+              "ro": "Adauga o nota sau alege cum vreti sa va intalniti."
+            },
+            "inputs": [
+              "description",
+              "conferenceProvider"
+            ]
+          }
+        ],
+        "output": {
+          "MEETING_ID": "out.data.id",
+          "MEETING_URL": "out.data.inviteUrl",
+          "ATTENDEE_EMAIL": "out.data.participants.0.email",
+          "ATTENDEE_NAME": "out.data.participants.0.name",
+          "MEETING_TITLE": "out.data.name",
+          "SCHEDULED_AT": "out.data.scheduledAt"
+        },
+        "next": "appointment/email-confirm?MEETING_ID={{MEETING_ID}}&ATTENDEE_EMAIL={{ATTENDEE_EMAIL}}&ATTENDEE_NAME={{ATTENDEE_NAME}}&MEETING_TITLE={{MEETING_TITLE}}&SCHEDULED_AT={{SCHEDULED_AT}}&MEETING_URL={{MEETING_URL}}",
+        "messages": {
+          "success": {
+            "en": "Appointment booked successfully.",
+            "de": "Termin erfolgreich gebucht.",
+            "fr": "Rendez-vous confirme avec succes.",
+            "es": "Cita reservada correctamente.",
+            "ro": "Programarea a fost confirmata cu succes."
+          }
+        }
+      },
+      "extras": null
+    },
+    {
+      "key": "none:poll-detail",
+      "identifier": "@poll-detail",
+      "alias": "poll-detail",
+      "chain": "none",
+      "hash": "26d85e05a3373d518d84df9c9f3b91f7cce937ff09f1d9fd81af20afffa13bcc",
+      "checksum": "26d85e05a3373d518d84df9c9f3b91f7cce937ff09f1d9fd81af20afffa13bcc",
+      "name": "Poll: Detail",
+      "title": {
+        "en": "Poll Details",
+        "de": "Abstimmungsdetails",
+        "fr": "Details du sondage",
+        "es": "Detalles de la encuesta",
+        "ro": "Detaliile sondajului"
+      },
+      "description": {
+        "en": "Query details of a specific poll.",
+        "de": "Details einer bestimmten Abstimmung abfragen.",
+        "fr": "Consultez les details d un sondage precis.",
+        "es": "Consulta los detalles de una encuesta concreta.",
+        "ro": "Consulta detaliile unui anumit sondaj."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": "{{SC_ADDRESS}}",
+      "primaryFunc": "getPoll",
+      "brand": {
+        "hash": "fc301bc7bc50bff5dd493177625a1b41218746d24b9485a394ff89cfb5e7b060",
+        "slug": "poll",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "Poll",
+        "description": {
+          "en": "On-chain polls and voting groups for any community — property owners, DAOs, teams, and more.",
+          "de": "On-Chain-Abstimmungen und Voting-Gruppen für jede Gemeinschaft — Eigentümer, DAOs, Teams und mehr.",
+          "fr": "Sondages on-chain et groupes de vote pour toutes les communautes : coproprietes, DAO, equipes et bien plus.",
+          "es": "Encuestas on-chain y grupos de votacion para cualquier comunidad: propietarios, DAOs, equipos y mas.",
+          "ro": "Sondaje on-chain si grupuri de vot pentru orice comunitate: proprietari, DAO-uri, echipe si multe altele."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "Poll: Detail",
+        "title": {
+          "en": "Poll Details",
+          "de": "Abstimmungsdetails",
+          "fr": "Details du sondage",
+          "es": "Detalles de la encuesta",
+          "ro": "Detaliile sondajului"
+        },
+        "description": {
+          "en": "Query details of a specific poll.",
+          "de": "Details einer bestimmten Abstimmung abfragen.",
+          "fr": "Consultez les details d un sondage precis.",
+          "es": "Consulta los detalles de una encuesta concreta.",
+          "ro": "Consulta detaliile unui anumit sondaj."
+        },
+        "vars": {
+          "SC_ADDRESS": "erd1qqqqqqqqqqqqqpgqtxwhd7z99tvvrgd38897k9zunrqsgmahtres7648am"
+        },
+        "actions": [
+          {
+            "type": "query",
+            "label": {
+              "en": "Loading poll...",
+              "de": "Abstimmung wird geladen...",
+              "fr": "Chargement du sondage...",
+              "es": "Cargando encuesta...",
+              "ro": "Se incarca sondajul..."
+            },
+            "address": "{{SC_ADDRESS}}",
+            "func": "getPoll",
+            "args": [
+              "u64:{{POLL_ID}}"
+            ],
+            "inputs": [
+              {
+                "name": "POLL_ID",
+                "type": "uint64",
+                "position": "arg:1",
+                "source": "field",
+                "required": true,
+                "label": {
+                  "en": "Poll ID",
+                  "de": "Abstimmungs-ID",
+                  "fr": "ID du sondage",
+                  "es": "ID de la encuesta",
+                  "ro": "ID-ul sondajului"
+                }
+              }
+            ],
+            "auto": false,
+            "abi": "hash:b1f38ccaf8b165eb6dba31beba04cacbc50f1a16735e78148107b60e635c6cc4"
+          }
+        ],
+        "next": "@poll-vote?POLL_ID={{POLL_ID}}"
+      },
+      "extras": null
+    },
+    {
+      "key": "none:poll-polls-active",
+      "identifier": "@poll-polls-active",
+      "alias": "poll-polls-active",
+      "chain": "none",
+      "hash": "913dd8f0488d8d016778df14ad95b0ec9866ebd7240fedd672c4db554c2b4d0a",
+      "checksum": "913dd8f0488d8d016778df14ad95b0ec9866ebd7240fedd672c4db554c2b4d0a",
+      "name": "Poll: Active Polls",
+      "title": {
+        "en": "Active Polls",
+        "de": "Aktive Abstimmungen",
+        "fr": "Sondages actifs",
+        "es": "Encuestas activas",
+        "ro": "Sondaje active"
+      },
+      "description": {
+        "en": "See all open polls in this space.",
+        "de": "Alle offenen Abstimmungen in diesem Space anzeigen.",
+        "fr": "Consultez tous les sondages ouverts dans cet espace.",
+        "es": "Consulta todas las encuestas abiertas de este espacio.",
+        "ro": "Vezi toate sondajele deschise din acest spatiu."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": "{{SC_ADDRESS}}",
+      "primaryFunc": "getActivePolls",
+      "brand": {
+        "hash": "fc301bc7bc50bff5dd493177625a1b41218746d24b9485a394ff89cfb5e7b060",
+        "slug": "poll",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "Poll",
+        "description": {
+          "en": "On-chain polls and voting groups for any community — property owners, DAOs, teams, and more.",
+          "de": "On-Chain-Abstimmungen und Voting-Gruppen für jede Gemeinschaft — Eigentümer, DAOs, Teams und mehr.",
+          "fr": "Sondages on-chain et groupes de vote pour toutes les communautes : coproprietes, DAO, equipes et bien plus.",
+          "es": "Encuestas on-chain y grupos de votacion para cualquier comunidad: propietarios, DAOs, equipos y mas.",
+          "ro": "Sondaje on-chain si grupuri de vot pentru orice comunitate: proprietari, DAO-uri, echipe si multe altele."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "Poll: Active Polls",
+        "title": {
+          "en": "Active Polls",
+          "de": "Aktive Abstimmungen",
+          "fr": "Sondages actifs",
+          "es": "Encuestas activas",
+          "ro": "Sondaje active"
+        },
+        "description": {
+          "en": "See all open polls in this space.",
+          "de": "Alle offenen Abstimmungen in diesem Space anzeigen.",
+          "fr": "Consultez tous les sondages ouverts dans cet espace.",
+          "es": "Consulta todas las encuestas abiertas de este espacio.",
+          "ro": "Vezi toate sondajele deschise din acest spatiu."
+        },
+        "vars": {
+          "SC_ADDRESS": "erd1qqqqqqqqqqqqqpgqtxwhd7z99tvvrgd38897k9zunrqsgmahtres7648am"
+        },
+        "actions": [
+          {
+            "type": "query",
+            "label": {
+              "en": "Loading polls...",
+              "de": "Abstimmungen werden geladen...",
+              "fr": "Chargement des sondages...",
+              "es": "Cargando encuestas...",
+              "ro": "Se incarca sondajele..."
+            },
+            "address": "{{SC_ADDRESS}}",
+            "func": "getActivePolls",
+            "args": [
+              "string:{{GROUP_SLUG}}"
+            ],
+            "inputs": [
+              {
+                "name": "GROUP_SLUG",
+                "type": "string",
+                "position": "arg:1",
+                "source": "field",
+                "required": true
+              }
+            ],
+            "auto": true,
+            "abi": "hash:b1f38ccaf8b165eb6dba31beba04cacbc50f1a16735e78148107b60e635c6cc4"
+          }
+        ],
+        "next": "@poll-detail?POLL_ID={{RESULT}}"
+      },
+      "extras": null
+    }
+  ],
+  "deletes": [
+    {
+      "key": "none:poll",
+      "alias": "poll",
+      "chain": "none",
+      "hash": "d8a104d8c4543e1fd0c289bb2c1c4af753c86b9a006c4f677dabd3632e47eca6"
+    }
+  ]
 }
