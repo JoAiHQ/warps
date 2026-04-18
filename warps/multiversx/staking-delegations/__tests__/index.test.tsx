@@ -32,6 +32,8 @@ const mockContext = {
   executeWarp: async () => ({}),
   executePrompt: async () => {},
   meta: undefined,
+  locale: 'en',
+  t: (key: any) => (typeof key === 'string' ? key : key?.en ?? ''),
 }
 
 describe('staking delegations app', () => {
