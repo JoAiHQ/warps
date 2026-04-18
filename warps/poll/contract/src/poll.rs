@@ -198,7 +198,7 @@ pub trait PollModule: config::ConfigModule + events::EventsModule {
         question: ManagedBuffer,
         deadline: u64,
         options: MultiValueEncoded<ManagedBuffer>,
-    ) {
+    ) -> u64 {
         require!(!self.group_info(&group_slug).is_empty(), ERR_GROUP_NOT_FOUND);
         require!(question.len() >= 1 && question.len() <= MAX_QUESTION_LEN, ERR_INVALID_QUESTION);
 
@@ -244,6 +244,8 @@ pub trait PollModule: config::ConfigModule + events::EventsModule {
         self.group_polls(&group_slug).insert(poll_id);
 
         self.poll_created_event(group_slug, poll_id, question);
+
+        poll_id
     }
 
     #[endpoint(vote)]
