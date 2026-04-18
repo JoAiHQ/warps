@@ -28,6 +28,7 @@ export const brand = async (config: WarpClientConfig): Promise<WarpbaseBrand> =>
     indexPath: '/',
     routes: [
       { path: '/', warp: '@poll-polls-active', label: { en: 'Polls', de: 'Abstimmungen', fr: 'Sondages', es: 'Encuestas', ro: 'Sondaje' }, nav: true, hiddenFields: ['GROUP_SLUG'] },
+      { path: '/poll', warp: '@poll-detail', label: { en: 'Poll', de: 'Abstimmung', fr: 'Sondage', es: 'Encuesta', ro: 'Sondaj' }, nav: false },
       { path: '/vote', warp: '@poll-vote', label: { en: 'Vote', de: 'Abstimmen', fr: 'Voter', es: 'Votar', ro: 'Voteaza' }, nav: false },
       { path: '/results', warp: '@poll-poll-results', label: { en: 'Results', de: 'Ergebnisse', fr: 'Resultats', es: 'Resultados', ro: 'Rezultate' }, nav: false },
       { path: '/join', warp: '@poll-membership-request', label: { en: 'Join Group', de: 'Gruppe beitreten', fr: 'Rejoindre le groupe', es: 'Unirse al grupo', ro: 'Alatura-te grupului' }, nav: true, hiddenFields: ['GROUP_SLUG'] },
