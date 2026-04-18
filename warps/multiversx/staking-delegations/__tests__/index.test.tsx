@@ -29,7 +29,7 @@ const structuredDelegations = {
 const mockContext = {
   data: structuredDelegations,
   paymentRequired: false,
-  executeTool: async () => ({}),
+  executeWarp: async () => ({}),
   executePrompt: async () => {},
   meta: undefined,
 }

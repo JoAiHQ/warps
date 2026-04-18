@@ -9,7 +9,7 @@ export type UseAppResult<T, I = any> = {
   inputs?: I
   config?: Record<string, string>
   paymentRequired: boolean
-  executeTool: AppExecute
+  executeWarp: AppExecute
   executePrompt: (prompt: string) => Promise<void>
   meta?: unknown
   locale: string
@@ -140,7 +140,7 @@ export function useApp<T = any, I = any>(app: App, isDevMode = false, locale = '
     inputs,
     config,
     paymentRequired: Boolean(upgradeRecord),
-    executeTool: execute,
+    executeWarp: execute,
     executePrompt: sendFollowUp,
     meta,
     locale,

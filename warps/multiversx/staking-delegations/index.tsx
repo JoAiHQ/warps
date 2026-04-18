@@ -12,7 +12,7 @@ import { formatEgld, shortenAddress } from '../helpers'
 import { Config } from './config'
 import { MultiversXStakingViewDelegationsData, MultiversXStakingViewDelegationsInputs } from './warp.types'
 
-export function DelegationCard({ delegation, executeTool }: { delegation: any; executeTool: AppExecute }) {
+export function DelegationCard({ delegation, executeWarp }: { delegation: any; executeWarp: AppExecute }) {
   const [expanded, setExpanded] = useState(false)
   const [claimRequested, setClaimRequested] = useState(false)
   const activeStake = formatEgld(delegation.userActiveStake)
@@ -66,7 +66,7 @@ export function DelegationCard({ delegation, executeTool }: { delegation: any; e
           className="mb-3"
           onClick={() => {
             setClaimRequested(true)
-            executeTool(Config.Tools.StakingClaim, {
+            executeWarp(Config.Tools.StakingClaim, {
               PROVIDER: delegation.contract,
             })
           }}
@@ -118,7 +118,7 @@ export function DelegationCard({ delegation, executeTool }: { delegation: any; e
 
 export function Main() {
   const [claimAllRequested, setClaimAllRequested] = useState(false)
-  const { data, executeTool, executePrompt } = useAppContext<MultiversXStakingViewDelegationsData, MultiversXStakingViewDelegationsInputs>()
+  const { data, executeWarp, executePrompt } = useAppContext<MultiversXStakingViewDelegationsData, MultiversXStakingViewDelegationsInputs>()
 
   if (!data) {
     return <EmptyMessageSkeleton />
@@ -180,7 +180,7 @@ export function Main() {
       <div className="space-y-3">
         <h2 className="text-secondary text-sm font-semibold uppercase tracking-wide">Delegations</h2>
         {data.DELEGATIONS.map((delegation: any, idx: number) => (
-          <DelegationCard key={`${delegation.contract}-${idx}`} delegation={delegation} executeTool={executeTool} />
+          <DelegationCard key={`${delegation.contract}-${idx}`} delegation={delegation} executeWarp={executeWarp} />
         ))}
       </div>
     </div>

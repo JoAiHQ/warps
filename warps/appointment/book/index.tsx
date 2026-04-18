@@ -135,7 +135,7 @@ function Calendar({ currentMonth, selectedDate, minDate, maxDate, disabledWeekda
 }
 
 function Main() {
-  const { data, executeTool, locale } = useAppContext<BookPublicData>()
+  const { data, executeWarp, locale } = useAppContext<BookPublicData>()
   const tr = useTranslations(translations).book
 
   const policy = data?.policy ?? null
@@ -191,7 +191,7 @@ function Main() {
       const windowEnd = new Date(date)
       windowEnd.setHours(23, 59, 59, 0)
 
-      const result = (await executeTool('appointment-availability', {
+      const result = (await executeWarp('appointment-availability', {
         title: 'Appointment',
         windowStart: windowStart.toISOString(),
         windowEnd: windowEnd.toISOString(),
@@ -202,7 +202,7 @@ function Main() {
     } finally {
       setLoadingSlots(false)
     }
-  }, [executeTool])
+  }, [executeWarp])
 
   const handleDateSelect = (date: Date) => {
     setSelectedDate(date)
@@ -230,7 +230,7 @@ function Main() {
     setBooking(true)
     try {
       const title = purpose.trim() ? `${purpose.trim()} — ${name.trim()}` : `Appointment with ${name.trim()}`
-      const result = (await executeTool('appointment-book', {
+      const result = (await executeWarp('appointment-book', {
         title,
         scheduledAt: selectedSlot.startAt,
         timezone: agentTimezone ?? undefined,

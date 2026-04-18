@@ -35,7 +35,7 @@ function emptyPolicy(): AppointmentPolicy {
 }
 
 function Main() {
-  const { data, executeTool } = useAppContext<AppointmentConfigureData>()
+  const { data, executeWarp } = useAppContext<AppointmentConfigureData>()
   const tr = useTranslations(translations).configure
   const [policy, setPolicy] = useState<AppointmentPolicy>(emptyPolicy())
   const [services, setServices] = useState<ServiceEntry[]>([])
@@ -66,7 +66,7 @@ function Main() {
     setSaving(true)
     setSaved(false)
     try {
-      await executeTool('appointment-upsert-policy', {
+      await executeWarp('appointment-upsert-policy', {
         policy: JSON.stringify({
           availability: policy.availability ?? {},
           minNoticeMinutes: policy.minNoticeMinutes ?? null,
