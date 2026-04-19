@@ -28,7 +28,7 @@
     {
       "title": { "en": "Document Details", "de": "Dokumentendetails", "fr": "Details du document", "es": "Detalles del documento", "ro": "Detaliile documentului" },
       "description": { "en": "What document needs to be signed?", "de": "Welches Dokument muss unterzeichnet werden?", "fr": "Quel document doit etre signe ?", "es": "Que documento hay que firmar?", "ro": "Ce document trebuie semnat?" },
-      "inputs": ["title", "documentHash", "documentUrl"]
+      "inputs": ["title", "document"]
     },
     {
       "title": { "en": "Signer", "de": "Unterzeichner", "fr": "Signataire", "es": "Firmante", "ro": "Semnatar" },
@@ -77,22 +77,15 @@
         {
           "name": "Document Hash",
           "as": "documentHash",
-          "description": {
-            "en": "SHA-256 hash of the document. Proves the document hasn't been altered.",
-            "de": "SHA-256-Hash des Dokuments. Beweist, dass das Dokument nicht verändert wurde.",
-            "fr": "Hash SHA-256 du document. Prouve que le document n a pas ete modifie.",
-            "es": "Hash SHA-256 del documento. Demuestra que el documento no ha sido alterado.",
-            "ro": "Hash-ul SHA-256 al documentului. Dovedeste ca documentul nu a fost modificat."
-          },
-          "bot": "SHA-256 fingerprint of the document. Auto-filled when the user uploads the file — do not ask for this.",
           "type": "string",
           "position": "arg:2",
-          "source": "field",
+          "source": "hidden",
+          "modifier": "crypto:sha256:document",
           "required": true
         },
         {
           "name": "Document",
-          "as": "documentUrl",
+          "as": "document",
           "description": {
             "en": "Upload the PDF document to be signed. The SHA-256 fingerprint will be computed automatically.",
             "de": "Lade das zu unterzeichnende PDF-Dokument hoch. Der SHA-256-Fingerabdruck wird automatisch berechnet.",
@@ -101,8 +94,7 @@
             "ro": "Incarca documentul PDF care trebuie semnat. Amprenta SHA-256 va fi calculata automat."
           },
           "bot": "Ask the user to upload or drop the document file — show a file upload embed. If a document is already pinned on the desk, use it. Do NOT ask for a URL.",
-          "type": "media",
-          "hashInput": "documentHash",
+          "type": "file",
           "position": "arg:3",
           "source": "field",
           "required": true

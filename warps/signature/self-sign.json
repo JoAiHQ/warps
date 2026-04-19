@@ -27,7 +27,7 @@
     {
       "title": { "en": "Document", "de": "Dokument", "fr": "Document", "es": "Documento", "ro": "Document" },
       "description": { "en": "Upload the document you want to sign.", "de": "Lade das Dokument hoch, das du unterzeichnen möchtest.", "fr": "Telechargez le document que vous souhaitez signer.", "es": "Sube el documento que quieres firmar.", "ro": "Incarca documentul pe care doresti sa il semnezi." },
-      "inputs": ["title", "documentHash", "documentUrl"]
+      "inputs": ["title", "document"]
     }
   ],
   "actions": [
@@ -66,22 +66,15 @@
         {
           "name": "Document Hash",
           "as": "documentHash",
-          "description": {
-            "en": "SHA-256 hash of the document. Auto-computed when you upload.",
-            "de": "SHA-256-Hash des Dokuments. Wird beim Upload automatisch berechnet.",
-            "fr": "Hash SHA-256 du document. Calcule automatiquement lors du telechargement.",
-            "es": "Hash SHA-256 del documento. Se calcula automaticamente al subir.",
-            "ro": "Hash-ul SHA-256 al documentului. Calculat automat la incarcare."
-          },
-          "bot": "SHA-256 fingerprint of the document. Auto-filled when the user uploads the file — do not ask for this.",
           "type": "string",
           "position": "arg:2",
-          "source": "field",
+          "source": "hidden",
+          "modifier": "crypto:sha256:document",
           "required": true
         },
         {
           "name": "Document",
-          "as": "documentUrl",
+          "as": "document",
           "description": {
             "en": "Upload the PDF to be signed. The fingerprint is computed automatically.",
             "de": "Lade das zu unterzeichnende PDF hoch. Der Fingerabdruck wird automatisch berechnet.",
@@ -90,8 +83,7 @@
             "ro": "Incarca PDF-ul de semnat. Amprenta este calculata automat."
           },
           "bot": "Ask the user to upload or drop the document file — show a file upload embed. If a document is already pinned on the desk, use it. Do NOT ask for a URL.",
-          "type": "media",
-          "hashInput": "documentHash",
+          "type": "file",
           "position": "arg:3",
           "source": "field",
           "required": true
