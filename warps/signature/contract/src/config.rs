@@ -1,4 +1,4 @@
-use crate::types::{RequestId, SignatureRequest};
+use crate::types::{AuditEntry, RequestId, SignatureRequest};
 
 multiversx_sc::imports!();
 multiversx_sc::derive_imports!();
@@ -22,4 +22,7 @@ pub trait ConfigModule {
 
     #[storage_mapper("request_declined_by")]
     fn request_declined_by(&self, id: RequestId) -> UnorderedSetMapper<ManagedAddress>;
+
+    #[storage_mapper("request_audit_log")]
+    fn request_audit_log(&self, id: RequestId) -> VecMapper<AuditEntry<Self::Api>>;
 }

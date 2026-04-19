@@ -4,6 +4,14 @@ multiversx_sc::derive_imports!();
 pub type RequestId = u64;
 
 #[type_abi]
+#[derive(NestedEncode, NestedDecode, TopEncode, TopDecode)]
+pub struct AuditEntry<M: ManagedTypeApi> {
+    pub action: ManagedBuffer<M>,
+    pub actor: ManagedAddress<M>,
+    pub timestamp: u64,
+}
+
+#[type_abi]
 #[derive(NestedEncode, NestedDecode, TopEncode, TopDecode, PartialEq, Clone)]
 pub enum SignatureStatus {
     Pending,

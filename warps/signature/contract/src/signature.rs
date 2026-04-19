@@ -2,7 +2,7 @@ use crate::{
     config,
     errors::*,
     events,
-    types::{RequestId, SignatureRequest, SignatureStatus},
+    types::{AuditEntry, RequestId, SignatureRequest, SignatureStatus},
 };
 
 
@@ -83,6 +83,12 @@ pub trait SignatureModule: config::ConfigModule + events::EventsModule {
         self.creator_requests(&caller).insert(id);
         self.next_request_id().set(id + 1);
 
+        self.request_audit_log(id).push(&AuditEntry {
+            action: ManagedBuffer::from(b"created"),
+            actor: caller.clone(),
+            timestamp: now,
+        });
+
         self.request_created_event(id, caller, title, document_hash, deadline);
 
         id
@@ -117,6 +123,12 @@ pub trait SignatureModule: config::ConfigModule + events::EventsModule {
             self.request(request_id).set(&req);
         }
 
+        self.request_audit_log(request_id).push(&AuditEntry {
+            action: ManagedBuffer::from(b"signed"),
+            actor: caller.clone(),
+            timestamp: now,
+        });
+
         self.document_signed_event(request_id, caller, req.signed_count, req.signer_count);
     }
 
@@ -131,8 +143,15 @@ pub trait SignatureModule: config::ConfigModule + events::EventsModule {
         let caller = self.blockchain().get_caller();
         require!(caller == req.creator, ERR_NOT_CREATOR);
 
+        let now: u64 = self.blockchain().get_block_timestamp_seconds().as_u64_seconds();
         req.status = SignatureStatus::Cancelled;
         self.request(request_id).set(&req);
+
+        self.request_audit_log(request_id).push(&AuditEntry {
+            action: ManagedBuffer::from(b"cancelled"),
+            actor: caller.clone(),
+            timestamp: now,
+        });
 
         self.request_cancelled_event(request_id, req.creator);
     }
@@ -150,7 +169,15 @@ pub trait SignatureModule: config::ConfigModule + events::EventsModule {
         require!(!self.request_signed_by(request_id).contains(&caller), ERR_ALREADY_SIGNED);
         require!(!self.request_declined_by(request_id).contains(&caller), ERR_ALREADY_DECLINED);
 
+        let now: u64 = self.blockchain().get_block_timestamp_seconds().as_u64_seconds();
         self.request_declined_by(request_id).insert(caller.clone());
+
+        self.request_audit_log(request_id).push(&AuditEntry {
+            action: ManagedBuffer::from(b"declined"),
+            actor: caller.clone(),
+            timestamp: now,
+        });
+
         self.request_declined_event(request_id, caller);
     }
 
@@ -228,6 +255,15 @@ pub trait SignatureModule: config::ConfigModule + events::EventsModule {
         let mut result = MultiValueEncoded::new();
         for addr in self.request_declined_by(request_id).iter() {
             result.push(addr);
+        }
+        result
+    }
+
+    #[view(getAuditLog)]
+    fn get_audit_log(&self, request_id: RequestId) -> MultiValueEncoded<MultiValue3<ManagedBuffer, ManagedAddress, u64>> {
+        let mut result = MultiValueEncoded::new();
+        for entry in self.request_audit_log(request_id).iter() {
+            result.push((entry.action, entry.actor, entry.timestamp).into());
         }
         result
     }
