@@ -1,0 +1,103 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Set Notification Preference",
+  "title": {
+    "en": "Update notification settings",
+    "de": "Benachrichtigungseinstellungen aktualisieren"
+  },
+  "description": {
+    "en": "Enable or disable notifications for a specific app and channel.",
+    "de": "Benachrichtigungen für eine bestimmte App und einen Kanal aktivieren oder deaktivieren."
+  },
+  "bot": "Saves a notification preference for an app+channel combination. Key format: notifications.{app}.{channel} (e.g. notifications.signature.email). Value is 'true' or 'false'.",
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Saving preference...",
+        "de": "Einstellung wird gespeichert..."
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/settings",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "App",
+          "as": "app",
+          "description": {
+            "en": "App to configure (e.g. signature, challenge, shop).",
+            "de": "App, die konfiguriert werden soll (z.B. signature, challenge, shop)."
+          },
+          "bot": "App slug — e.g. 'signature', 'challenge', 'shop'.",
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Channel",
+          "as": "channel",
+          "description": {
+            "en": "Notification channel (email or whatsapp).",
+            "de": "Benachrichtigungskanal (email oder whatsapp)."
+          },
+          "bot": "Channel slug — 'email' or 'whatsapp'.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "options": {
+            "email": "Email",
+            "whatsapp": "WhatsApp"
+          }
+        },
+        {
+          "name": "Enabled",
+          "as": "enabled",
+          "description": {
+            "en": "Turn this notification on or off.",
+            "de": "Diese Benachrichtigung ein- oder ausschalten."
+          },
+          "bot": "Whether to enable (true) or disable (false) the notification.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "options": {
+            "true": "On",
+            "false": "Off"
+          }
+        },
+        {
+          "name": "key",
+          "as": "key",
+          "type": "string",
+          "source": "hidden",
+          "default": "notifications.{{app}}.{{channel}}"
+        },
+        {
+          "name": "value",
+          "as": "value",
+          "type": "string",
+          "source": "hidden",
+          "default": "{{enabled}}"
+        },
+        {
+          "name": "brand",
+          "as": "brand",
+          "type": "string",
+          "source": "hidden",
+          "default": "{{JOAI_WARP_BRAND}}"
+        }
+      ],
+      "auto": true
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "{{app}} {{channel}} notifications set to {{enabled}}.",
+      "de": "{{app}} {{channel}}-Benachrichtigungen auf {{enabled}} gesetzt."
+    }
+  }
+}
