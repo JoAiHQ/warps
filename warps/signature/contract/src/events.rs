@@ -29,4 +29,7 @@ pub trait EventsModule {
 
     #[event("requestExpired")]
     fn request_expired_event(&self, #[indexed] id: u64);
+
+    #[event("requestDeclined")]
+    fn request_declined_event(&self, #[indexed] id: u64, #[indexed] signer: ManagedAddress);
 }

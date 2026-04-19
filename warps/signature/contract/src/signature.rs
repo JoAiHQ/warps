@@ -5,6 +5,7 @@ use crate::{
     types::{RequestId, SignatureRequest, SignatureStatus},
 };
 
+
 pub const MAX_TITLE_LEN: usize = 128;
 pub const MAX_DOCUMENT_HASH_LEN: usize = 128;
 pub const MAX_DOCUMENT_URL_LEN: usize = 256;
@@ -136,6 +137,23 @@ pub trait SignatureModule: config::ConfigModule + events::EventsModule {
         self.request_cancelled_event(request_id, req.creator);
     }
 
+    /// Decline a pending request. Only an eligible signer who hasn't signed yet can decline.
+    #[endpoint(declineRequest)]
+    fn decline_request(&self, request_id: RequestId) {
+        require!(!self.request(request_id).is_empty(), ERR_REQUEST_NOT_FOUND);
+
+        let req = self.request(request_id).get();
+        require!(req.status == SignatureStatus::Pending, ERR_NOT_PENDING);
+
+        let caller = self.blockchain().get_caller();
+        require!(self.request_signers(request_id).contains(&caller), ERR_NOT_SIGNER);
+        require!(!self.request_signed_by(request_id).contains(&caller), ERR_ALREADY_SIGNED);
+        require!(!self.request_declined_by(request_id).contains(&caller), ERR_ALREADY_DECLINED);
+
+        self.request_declined_by(request_id).insert(caller.clone());
+        self.request_declined_event(request_id, caller);
+    }
+
     /// Expire a request whose deadline has passed. Anyone can call this.
     #[endpoint(expireRequest)]
     fn expire_request(&self, request_id: RequestId) {
@@ -201,6 +219,15 @@ pub trait SignatureModule: config::ConfigModule + events::EventsModule {
         let mut result = MultiValueEncoded::new();
         for id in self.creator_requests(&creator).iter().skip(offset).take(limit) {
             result.push((id, self.request(id).get()).into());
+        }
+        result
+    }
+
+    #[view(getDeclinedBy)]
+    fn get_declined_by(&self, request_id: RequestId) -> MultiValueEncoded<ManagedAddress> {
+        let mut result = MultiValueEncoded::new();
+        for addr in self.request_declined_by(request_id).iter() {
+            result.push(addr);
         }
         result
     }
