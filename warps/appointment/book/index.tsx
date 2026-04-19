@@ -68,8 +68,10 @@ function Main() {
     setSlots([])
     setSlotsError(null)
     try {
+      const now = new Date()
       const windowStart = new Date(date)
       windowStart.setHours(0, 0, 0, 0)
+      if (windowStart <= now) windowStart.setTime(now.getTime() + 60_000)
       const windowEnd = new Date(date)
       windowEnd.setHours(23, 59, 59, 0)
 
