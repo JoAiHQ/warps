@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useRef, useState } from 'react'
 import ReactDOM from 'react-dom/client'
 import { App, useAppContext } from '../../../ui/lib/components'
 import { useTranslations } from '../../../ui/lib/hooks'
@@ -17,7 +17,7 @@ function Main() {
 
   const policy = data?.policy ?? null
   const agentTimezone = policy?.timezone ?? null
-  const displayTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone
+  const [displayTimezone, setDisplayTimezone] = useState(() => Intl.DateTimeFormat().resolvedOptions().timeZone)
   const maxDaysAhead = policy?.maxDaysAhead ?? 14
 
   const today = startOfDay(new Date())
@@ -47,6 +47,8 @@ function Main() {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null)
   const [slots, setSlots] = useState<AvailabilitySlot[]>([])
   const [loadingSlots, setLoadingSlots] = useState(false)
+  const [slotsError, setSlotsError] = useState<string | null>(null)
+  const fetchIdRef = useRef(0)
   const [selectedSlot, setSelectedSlot] = useState<AvailabilitySlot | null>(null)
 
   const [step, setStep] = useState<'datetime' | 'contact' | 'confirmed'>('datetime')
@@ -60,12 +62,16 @@ function Main() {
   const [cancelling, setCancelling] = useState(false)
   const [cancelled, setCancelled] = useState(false)
 
-  const fetchSlots = useCallback(async (date: Date) => {
+  const fetchSlots = useCallback(async (date: Date, tz: string) => {
+    const fetchId = ++fetchIdRef.current
     setLoadingSlots(true)
     setSlots([])
+    setSlotsError(null)
     try {
+      const now = new Date()
       const windowStart = new Date(date)
       windowStart.setHours(0, 0, 0, 0)
+      if (windowStart <= now) windowStart.setTime(now.getTime() + 60_000)
       const windowEnd = new Date(date)
       windowEnd.setHours(23, 59, 59, 0)
 
@@ -73,19 +79,24 @@ function Main() {
         title: 'Appointment',
         windowStart: windowStart.toISOString(),
         windowEnd: windowEnd.toISOString(),
-        durationMinutes: 30,
+        durationMinutes: policy?.slotIntervalMinutes ?? 30,
+        timezone: tz,
       })) as any
 
+      if (fetchId !== fetchIdRef.current) return
       setSlots(result?.SLOTS ?? [])
+    } catch {
+      if (fetchId !== fetchIdRef.current) return
+      setSlotsError(tr.slotsError)
     } finally {
-      setLoadingSlots(false)
+      if (fetchId === fetchIdRef.current) setLoadingSlots(false)
     }
-  }, [executeWarp])
+  }, [executeWarp, policy?.slotIntervalMinutes, tr.slotsError])
 
   const handleDateSelect = (date: Date) => {
     setSelectedDate(date)
     setSelectedSlot(null)
-    fetchSlots(date)
+    fetchSlots(date, displayTimezone)
   }
 
   const handleMonthChange = (delta: number) => {
@@ -94,6 +105,11 @@ function Main() {
       next.setMonth(next.getMonth() + delta)
       return next
     })
+  }
+
+  const handleTimezoneChange = (tz: string) => {
+    setDisplayTimezone(tz)
+    if (selectedDate) fetchSlots(selectedDate, tz)
   }
 
   const handleSlotSelect = (slot: AvailabilitySlot) => {
@@ -221,10 +237,13 @@ function Main() {
             selectedDate={selectedDate}
             slots={slots}
             loading={loadingSlots}
+            error={slotsError}
             displayTimezone={displayTimezone}
             locale={locale}
             noSlotsLabel={tr.noSlots}
+            timeZoneLabel={tr.timeZone}
             onSelect={handleSlotSelect}
+            onTimezoneChange={handleTimezoneChange}
           />
         )}
       </div>

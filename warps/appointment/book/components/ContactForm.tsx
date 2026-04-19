@@ -57,6 +57,7 @@ export function ContactForm({
             placeholder={labels.namePlaceholder}
             value={name}
             onChange={(e) => onNameChange(e.target.value)}
+            autoFocus
             className={`w-full rounded-lg border px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-900 dark:text-white ${nameError ? 'border-red-400' : 'border-gray-200 dark:border-gray-700'}`}
           />
           {nameError && <p className="text-xs text-red-500 mt-1">{labels.nameRequired}</p>}

@@ -20,10 +20,12 @@ export const es: typeof en = {
     today: 'Hoy',
     tomorrow: 'Mañana',
     nameRequired: 'El nombre es obligatorio.',
+    timeZone: 'Zona horaria',
     cancelAppointment: 'Cancelar cita',
     cancelling: 'Cancelando...',
     cancelled: 'Cita cancelada',
     cancelledMessage: 'Tu cita ha sido cancelada.',
+    slotsError: 'No se pudieron cargar los horarios disponibles. Inténtalo de nuevo.',
   },
   configure: {
     title: 'Configuración de citas',

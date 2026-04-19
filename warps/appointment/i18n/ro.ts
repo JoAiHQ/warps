@@ -20,10 +20,12 @@ export const ro: typeof en = {
     today: 'Azi',
     tomorrow: 'Mâine',
     nameRequired: 'Numele este obligatoriu.',
+    timeZone: 'Fus orar',
     cancelAppointment: 'Anulează programarea',
     cancelling: 'Se anulează...',
     cancelled: 'Programare anulată',
     cancelledMessage: 'Programarea ta a fost anulată.',
+    slotsError: 'Nu s-au putut încărca intervalele disponibile. Încearcă din nou.',
   },
   configure: {
     title: 'Setări programări',
