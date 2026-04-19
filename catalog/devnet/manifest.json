@@ -4,8 +4,8 @@
   "repo": "JoAiHQ/warps",
   "branch": "dev",
   "network": "devnet",
-  "commitSha": "5c9152ceba4cd9b8382738849fd27fadf6c51489",
-  "generatedAt": "2026-04-19T11:55:15.041Z",
+  "commitSha": "587b33dccfcb7275933d68431d83b047046b2e02",
+  "generatedAt": "2026-04-19T12:56:56.044Z",
   "warps": [
     {
       "key": "arbitrum:omniset-deposit-arbitrum",
@@ -31107,8 +31107,8 @@
       "identifier": "@appointment-book-confirm",
       "alias": "appointment-book-confirm",
       "chain": "none",
-      "hash": "9d33ed552be9afec60a6418969ba4c09b9b8baa2da593822518c5e9a7019a344",
-      "checksum": "9d33ed552be9afec60a6418969ba4c09b9b8baa2da593822518c5e9a7019a344",
+      "hash": "f9c0d45433d70d565f9254c04da25173e45202f3d0fb5cc391bb776751600219",
+      "checksum": "f9c0d45433d70d565f9254c04da25173e45202f3d0fb5cc391bb776751600219",
       "name": "Appointments: Book",
       "title": {
         "en": "Book appointment",
@@ -31422,9 +31422,11 @@
           "ATTENDEE_EMAIL": "out.data.participants.0.email",
           "ATTENDEE_NAME": "out.data.participants.0.name",
           "MEETING_TITLE": "out.data.name",
-          "SCHEDULED_AT": "out.data.scheduledAt"
+          "SCHEDULED_AT": "out.data.scheduledAt",
+          "HOST_EMAIL": "out.data.hostEmail",
+          "HOST_NAME": "out.data.hostName"
         },
-        "next": "appointment/email-confirm?MEETING_ID={{MEETING_ID}}&ATTENDEE_EMAIL={{ATTENDEE_EMAIL}}&ATTENDEE_NAME={{ATTENDEE_NAME}}&MEETING_TITLE={{MEETING_TITLE}}&SCHEDULED_AT={{SCHEDULED_AT}}&MEETING_URL={{MEETING_URL}}",
+        "next": "appointment/email-confirm?MEETING_ID={{MEETING_ID}}&ATTENDEE_EMAIL={{ATTENDEE_EMAIL}}&ATTENDEE_NAME={{ATTENDEE_NAME}}&MEETING_TITLE={{MEETING_TITLE}}&SCHEDULED_AT={{SCHEDULED_AT}}&MEETING_URL={{MEETING_URL}}&HOST_EMAIL={{HOST_EMAIL}}&HOST_NAME={{HOST_NAME}}",
         "messages": {
           "success": {
             "en": "Appointment booked successfully.",
@@ -31887,8 +31889,8 @@
       "identifier": "@appointment-email-confirm",
       "alias": "appointment-email-confirm",
       "chain": "none",
-      "hash": "d10cfeda4a3765066ca4c60cbe02271202835fb0e26b710a9b0b3e2af807ddb4",
-      "checksum": "d10cfeda4a3765066ca4c60cbe02271202835fb0e26b710a9b0b3e2af807ddb4",
+      "hash": "c028241e1c8367847f5281a3640d4e348b7f6cea2b33f7682e1a52aa2db74b8a",
+      "checksum": "c028241e1c8367847f5281a3640d4e348b7f6cea2b33f7682e1a52aa2db74b8a",
       "name": "Appointments: Send Confirmation Email",
       "title": {
         "en": "Send appointment confirmation",
@@ -32038,6 +32040,77 @@
                 "position": "payload:message",
                 "source": "value",
                 "value": "Hi {{ATTENDEE_NAME}},\n\nYour appointment \"{{MEETING_TITLE}}\" has been confirmed for {{SCHEDULED_AT}}.{{#MEETING_URL}}\n\nJoin here: {{MEETING_URL}}{{/MEETING_URL}}\n\nLooking forward to it!",
+                "required": true
+              },
+              {
+                "name": "Host Email",
+                "as": "HOST_EMAIL",
+                "type": "string",
+                "source": "query",
+                "required": false
+              },
+              {
+                "name": "Host Name",
+                "as": "HOST_NAME",
+                "type": "string",
+                "source": "query",
+                "required": false
+              }
+            ]
+          },
+          {
+            "type": "collect",
+            "label": {
+              "en": "Notify host",
+              "de": "Gastgeber benachrichtigen",
+              "fr": "Notifier le professionnel",
+              "es": "Notificar al profesional",
+              "ro": "Notifica gazda"
+            },
+            "auto": true,
+            "when": "{{HOST_EMAIL}} != ''",
+            "destination": {
+              "url": "https://devnet-api.joai.ai/v1/agents/{{JOAI_AGENT_UUID}}/room/message",
+              "method": "POST",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Integration",
+                "as": "INTEGRATION",
+                "type": "string",
+                "position": "payload:integration",
+                "source": "value",
+                "value": "email",
+                "required": true
+              },
+              {
+                "name": "Recipient ID",
+                "as": "RECIPIENT_ID",
+                "type": "string",
+                "position": "payload:recipientId",
+                "source": "value",
+                "value": "{{HOST_EMAIL}}",
+                "required": false
+              },
+              {
+                "name": "Recipient Name",
+                "as": "RECIPIENT_NAME",
+                "type": "string",
+                "position": "payload:recipientName",
+                "source": "value",
+                "value": "{{HOST_NAME}}",
+                "required": false
+              },
+              {
+                "name": "Message",
+                "as": "MESSAGE",
+                "type": "string",
+                "position": "payload:message",
+                "source": "value",
+                "value": "Hi {{HOST_NAME}},\n\nA new appointment has been booked: \"{{MEETING_TITLE}}\" on {{SCHEDULED_AT}}.\n\nAttendee: {{ATTENDEE_NAME}}{{#ATTENDEE_EMAIL}} ({{ATTENDEE_EMAIL}}){{/ATTENDEE_EMAIL}}{{#MEETING_URL}}\n\nMeeting link: {{MEETING_URL}}{{/MEETING_URL}}",
                 "required": true
               }
             ]
