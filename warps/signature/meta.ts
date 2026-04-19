@@ -1,6 +1,25 @@
 import type { WarpExtras } from '../types'
 
 export const meta: Record<string, WarpExtras> = {
+  'signature-self-sign': {
+    keywords: {
+      en: ['self sign', 'sign own', 'certify', 'document', 'authorship', 'proof', 'upload', 'on-chain'],
+      de: ['selbst signieren', 'eigenes signieren', 'zertifizieren', 'dokument', 'urheberschaft', 'nachweis', 'hochladen', 'on-chain'],
+    },
+    useCases: {
+      en: [
+        'Sign a document you authored and send the signed copy via email',
+        'Certify authorship of a proposal or invoice on-chain',
+        'Create a blockchain-anchored proof of a signed PDF',
+      ],
+      de: [
+        'Ein selbst verfasstes Dokument unterzeichnen und die unterzeichnete Kopie per E-Mail versenden',
+        'Urheberschaft eines Angebots oder einer Rechnung on-chain zertifizieren',
+        'Blockchain-verankerten Nachweis eines unterzeichneten PDFs erstellen',
+      ],
+    },
+    category: 'legal',
+  },
   'signature-create': {
     keywords: {
       en: ['signature', 'sign', 'document', 'contract', 'agreement', 'legal', 'nda', 'request', 'on-chain'],
@@ -117,6 +136,25 @@ export const meta: Record<string, WarpExtras> = {
     useCases: {
       en: ['Resend the signing link to a signer who hasn\'t responded', 'Follow up on a pending signature request'],
       de: ['Signing-Link erneut an einen Unterzeichner senden', 'Nachfassen bei einer ausstehenden Signaturanfrage'],
+    },
+    category: 'legal',
+  },
+  'signature-cancel': {
+    keywords: {
+      en: ['cancel', 'revoke', 'withdraw', 'signature', 'request', 'pending'],
+      de: ['stornieren', 'widerrufen', 'signatur', 'anfrage', 'ausstehend'],
+    },
+    useCases: {
+      en: [
+        'Cancel a signature request you no longer need',
+        'Withdraw a pending contract before it is signed',
+        'Revoke an outstanding signature request',
+      ],
+      de: [
+        'Eine nicht mehr benötigte Signaturanfrage stornieren',
+        'Einen ausstehenden Vertrag zurückziehen, bevor er unterzeichnet wird',
+        'Eine offene Signaturanfrage widerrufen',
+      ],
     },
     category: 'legal',
   },
