@@ -4,8 +4,8 @@
   "repo": "JoAiHQ/warps",
   "branch": "main",
   "network": "mainnet",
-  "commitSha": "70a9dc24d1f7a1c6063eafa0267195560d584e4e",
-  "generatedAt": "2026-04-18T19:52:18.959Z",
+  "commitSha": "d429280d3d94891aa3f262466f086ef47672fc82",
+  "generatedAt": "2026-04-19T08:02:19.626Z",
   "warps": [
     {
       "key": "arbitrum:omniset-deposit-arbitrum",
@@ -31100,8 +31100,8 @@
       "identifier": "@appointment-book-confirm",
       "alias": "appointment-book-confirm",
       "chain": "none",
-      "hash": "c2bf3552ebd7b1f852e1d7022f09b3fd9fb3909f3a199458ea98247700cc386b",
-      "checksum": "c2bf3552ebd7b1f852e1d7022f09b3fd9fb3909f3a199458ea98247700cc386b",
+      "hash": "ac913323091b155933080748b1bc6d4e94fc67bba3c62c902825a47e5ed0c00d",
+      "checksum": "ac913323091b155933080748b1bc6d4e94fc67bba3c62c902825a47e5ed0c00d",
       "name": "Appointments: Book",
       "title": {
         "en": "Book appointment",
@@ -31412,7 +31412,6 @@
         "output": {
           "MEETING_ID": "out.data.id",
           "MEETING_URL": "out.data.inviteUrl",
-          "CALENDAR_EVENT_ID": "out.data.calendarEventId",
           "ATTENDEE_EMAIL": "out.data.participants.0.email",
           "ATTENDEE_NAME": "out.data.participants.0.name",
           "MEETING_TITLE": "out.data.name",
@@ -31621,6 +31620,126 @@
       }
     },
     {
+      "key": "none:appointment-cancel-public",
+      "identifier": "@appointment-cancel-public",
+      "alias": "appointment-cancel-public",
+      "chain": "none",
+      "hash": "e4905813be3203e5b809d9ae009312bd98b52ee0fb6d54a6a4d881c42ccf6a05",
+      "checksum": "e4905813be3203e5b809d9ae009312bd98b52ee0fb6d54a6a4d881c42ccf6a05",
+      "name": "Appointments: Cancel (Public)",
+      "title": {
+        "en": "Cancel appointment",
+        "de": "Termin absagen",
+        "fr": "Annuler le rendez-vous",
+        "es": "Cancelar cita",
+        "ro": "Anuleaza programarea"
+      },
+      "description": {
+        "en": "Cancel a booked appointment from the public booking widget.",
+        "de": "Einen gebuchten Termin über das öffentliche Buchungs-Widget absagen.",
+        "fr": "Annulez un rendez-vous depuis le widget de reservation public.",
+        "es": "Cancela una cita reservada desde el widget de reserva publico.",
+        "ro": "Anuleaza o programare din widgetul public de rezervare."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "873defa13190da1a0124161ec46673a00290697aaea9851a2b8fc027482adac9",
+        "slug": "appointment",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "Appointment",
+        "description": {
+          "en": "Appointment booking and intake flows for service businesses.",
+          "de": "Terminbuchung und Intake-Abläufe für Dienstleistungsunternehmen.",
+          "fr": "Prise de rendez-vous et parcours de reservation pour les entreprises de services.",
+          "es": "Reservas de citas y flujos de atencion para negocios de servicios.",
+          "ro": "Programari si fluxuri de preluare pentru afaceri de servicii."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "Appointments: Cancel (Public)",
+        "title": {
+          "en": "Cancel appointment",
+          "de": "Termin absagen",
+          "fr": "Annuler le rendez-vous",
+          "es": "Cancelar cita",
+          "ro": "Anuleaza programarea"
+        },
+        "description": {
+          "en": "Cancel a booked appointment from the public booking widget.",
+          "de": "Einen gebuchten Termin über das öffentliche Buchungs-Widget absagen.",
+          "fr": "Annulez un rendez-vous depuis le widget de reservation public.",
+          "es": "Cancela una cita reservada desde el widget de reserva publico.",
+          "ro": "Anuleaza o programare din widgetul public de rezervare."
+        },
+        "bot": "Internal warp used by the booking widget to cancel a confirmed appointment. Do not invoke manually.",
+        "vars": {
+          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "auto": true,
+            "label": {
+              "en": "Cancel",
+              "de": "Absagen",
+              "fr": "Annuler",
+              "es": "Cancelar",
+              "ro": "Anuleaza"
+            },
+            "destination": {
+              "url": "https://api.joai.ai/v1/agents/{{JOAI_AGENT_UUID}}/appointments/{{meetingId}}/cancel",
+              "method": "POST"
+            },
+            "inputs": [
+              {
+                "name": "Meeting ID",
+                "as": "meetingId",
+                "type": "string",
+                "position": "arg:1",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Reason",
+                "as": "reason",
+                "type": "string",
+                "source": "field",
+                "required": false
+              }
+            ]
+          }
+        ],
+        "output": {
+          "MEETING_ID": "out.data.id",
+          "STATUS": "out.data.status"
+        },
+        "messages": {
+          "success": {
+            "en": "Appointment cancelled.",
+            "de": "Termin abgesagt.",
+            "fr": "Rendez-vous annule.",
+            "es": "Cita cancelada.",
+            "ro": "Programare anulata."
+          }
+        }
+      },
+      "extras": null
+    },
+    {
       "key": "none:appointment-configure",
       "identifier": "@appointment-configure",
       "alias": "appointment-configure",
@@ -31761,8 +31880,8 @@
       "identifier": "@appointment-email-confirm",
       "alias": "appointment-email-confirm",
       "chain": "none",
-      "hash": "5845cc2bbab1320b02bfe422e6ac443db01ce9711d83dec466e5758d96c0b243",
-      "checksum": "5845cc2bbab1320b02bfe422e6ac443db01ce9711d83dec466e5758d96c0b243",
+      "hash": "9ab2be57d3388202a15fa8ede4cc20857756feac823d5e99a5ec75412695cf65",
+      "checksum": "9ab2be57d3388202a15fa8ede4cc20857756feac823d5e99a5ec75412695cf65",
       "name": "Appointments: Send Confirmation Email",
       "title": {
         "en": "Send appointment confirmation",
@@ -31920,6 +32039,7 @@
         "output": {
           "EMAIL_ROOM_ID": "out.data.roomId"
         },
+        "next": "joai/team-members-notify?TITLE=New+appointment+booked&MESSAGE={{MEETING_TITLE}}+on+{{SCHEDULED_AT}}",
         "messages": {
           "success": {
             "en": "Confirmation email sent.",
@@ -54593,6 +54713,154 @@
       "extras": null
     },
     {
+      "key": "none:joai-contact-message-send",
+      "identifier": "@joai-contact-message-send",
+      "alias": "joai-contact-message-send",
+      "chain": "none",
+      "hash": "755456ba2aef1f6d30f89ffb5fcad47fb47a4b885d63250957664a2dd52ab3a7",
+      "checksum": "755456ba2aef1f6d30f89ffb5fcad47fb47a4b885d63250957664a2dd52ab3a7",
+      "name": "JoAi: Send Contact Message",
+      "title": {
+        "en": "Send message to contact",
+        "de": "Nachricht an Kontakt senden"
+      },
+      "description": {
+        "en": "Fetches a contact by ID, then sends them a message via the specified integration (defaults to email).",
+        "de": "Holt einen Kontakt anhand der ID und sendet ihm eine Nachricht über die angegebene Integration (Standard: E-Mail)."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: Send Contact Message",
+        "title": {
+          "en": "Send message to contact",
+          "de": "Nachricht an Kontakt senden"
+        },
+        "description": {
+          "en": "Fetches a contact by ID, then sends them a message via the specified integration (defaults to email).",
+          "de": "Holt einen Kontakt anhand der ID und sendet ihm eine Nachricht über die angegebene Integration (Standard: E-Mail)."
+        },
+        "bot": "Use this to send a direct message to a contact by their ID. Provide the contact ID, the message text, and optionally the integration type (e.g. email, telegram).",
+        "vars": {
+          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+          "CONTACT_ID": "query:contactId",
+          "INTEGRATION": "query:integration",
+          "MESSAGE": "query:message",
+          "CONTACT_EMAIL": "env:contactEmail",
+          "CONTACT_NAME": "env:contactName"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "auto": true,
+            "label": {
+              "en": "Fetch contact",
+              "de": "Kontakt abrufen"
+            },
+            "destination": {
+              "url": "https://api.joai.ai/v1/contacts/{{CONTACT_ID}}",
+              "method": "GET",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+              }
+            },
+            "inputs": []
+          },
+          {
+            "type": "collect",
+            "auto": true,
+            "label": {
+              "en": "Send message",
+              "de": "Nachricht senden"
+            },
+            "destination": {
+              "url": "https://api.joai.ai/v1/agents/{{JOAI_AGENT_UUID}}/room/message",
+              "method": "POST",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Integration",
+                "as": "integration",
+                "type": "string",
+                "position": "payload:integration",
+                "source": "hidden",
+                "default": "{{INTEGRATION}}"
+              },
+              {
+                "name": "RecipientId",
+                "as": "recipientId",
+                "type": "string",
+                "position": "payload:recipientId",
+                "source": "hidden",
+                "default": "{{CONTACT_EMAIL}}"
+              },
+              {
+                "name": "RecipientName",
+                "as": "recipientName",
+                "type": "string",
+                "position": "payload:recipientName",
+                "source": "hidden",
+                "default": "{{CONTACT_NAME}}"
+              },
+              {
+                "name": "Message",
+                "as": "message",
+                "type": "string",
+                "position": "payload:message",
+                "source": "hidden",
+                "default": "{{MESSAGE}}"
+              }
+            ]
+          }
+        ],
+        "output": {
+          "contactEmail": "out.data.email",
+          "contactName": "out.data.name"
+        },
+        "messages": {
+          "success": {
+            "en": "Message sent.",
+            "de": "Nachricht gesendet."
+          }
+        }
+      },
+      "extras": null
+    },
+    {
       "key": "none:joai-contact-update",
       "identifier": "@joai-contact-update",
       "alias": "joai-contact-update",
@@ -61158,6 +61426,132 @@
           "success": {
             "en": "Task status updated.",
             "de": "Aufgabenstatus aktualisiert."
+          }
+        }
+      },
+      "extras": null
+    },
+    {
+      "key": "none:joai-team-members-notify",
+      "identifier": "@joai-team-members-notify",
+      "alias": "joai-team-members-notify",
+      "chain": "none",
+      "hash": "f3a05997e8ceecb332d799ce4cd03205d09b4b6b98fe18d899633277d20509d7",
+      "checksum": "f3a05997e8ceecb332d799ce4cd03205d09b4b6b98fe18d899633277d20509d7",
+      "name": "Team: Notify Members",
+      "title": {
+        "en": "Notify team members",
+        "de": "Teammitglieder benachrichtigen",
+        "fr": "Notifier les membres de l'équipe",
+        "es": "Notificar a los miembros del equipo",
+        "ro": "Notifica membrii echipei"
+      },
+      "description": {
+        "en": "Sends an in-app push notification to all team members of the current agent.",
+        "de": "Sendet eine In-App-Push-Benachrichtigung an alle Teammitglieder des aktuellen Agenten.",
+        "fr": "Envoie une notification push in-app a tous les membres de l'equipe de l'agent actuel.",
+        "es": "Envía una notificación push in-app a todos los miembros del equipo del agente actual.",
+        "ro": "Trimite o notificare push in-app tuturor membrilor echipei agentului curent."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "Team: Notify Members",
+        "title": {
+          "en": "Notify team members",
+          "de": "Teammitglieder benachrichtigen",
+          "fr": "Notifier les membres de l'équipe",
+          "es": "Notificar a los miembros del equipo",
+          "ro": "Notifica membrii echipei"
+        },
+        "description": {
+          "en": "Sends an in-app push notification to all team members of the current agent.",
+          "de": "Sendet eine In-App-Push-Benachrichtigung an alle Teammitglieder des aktuellen Agenten.",
+          "fr": "Envoie une notification push in-app a tous les membres de l'equipe de l'agent actuel.",
+          "es": "Envía una notificación push in-app a todos los miembros del equipo del agente actual.",
+          "ro": "Trimite o notificare push in-app tuturor membrilor echipei agentului curent."
+        },
+        "bot": "Use this to push a notification to all team members. Accepts any title and message. Can be placed anywhere in a warp chain.",
+        "vars": {
+          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "auto": true,
+            "label": {
+              "en": "Notify",
+              "de": "Benachrichtigen",
+              "fr": "Notifier",
+              "es": "Notificar",
+              "ro": "Notifica"
+            },
+            "destination": {
+              "url": "https://api.joai.ai/v1/agents/{{JOAI_AGENT_UUID}}/team/notify",
+              "method": "POST",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Title",
+                "as": "TITLE",
+                "type": "string",
+                "position": "payload:title",
+                "source": "query",
+                "required": true
+              },
+              {
+                "name": "Message",
+                "as": "MESSAGE",
+                "type": "string",
+                "position": "payload:message",
+                "source": "query",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "output": {},
+        "messages": {
+          "success": {
+            "en": "Team notified.",
+            "de": "Team benachrichtigt.",
+            "fr": "Equipe notifiee.",
+            "es": "Equipo notificado.",
+            "ro": "Echipa notificata."
           }
         }
       },
@@ -76292,119 +76686,12 @@
       "extras": null
     },
     {
-      "key": "none:poll",
-      "identifier": "@poll",
-      "alias": "poll",
-      "chain": "none",
-      "hash": "378d9cd0fb43034a340244b1a4093cb9b54263d5fb8cb4ede0bc0f1c40dbafd0",
-      "checksum": "378d9cd0fb43034a340244b1a4093cb9b54263d5fb8cb4ede0bc0f1c40dbafd0",
-      "name": "Poll: Get Poll",
-      "title": {
-        "en": "Poll Details",
-        "de": "Abstimmungsdetails",
-        "fr": "Details du sondage",
-        "es": "Detalles de la encuesta",
-        "ro": "Detaliile sondajului"
-      },
-      "description": {
-        "en": "Query details of a specific poll.",
-        "de": "Details einer bestimmten Abstimmung abfragen.",
-        "fr": "Consultez les details d un sondage precis.",
-        "es": "Consulta los detalles de una encuesta concreta.",
-        "ro": "Consulta detaliile unui anumit sondaj."
-      },
-      "preview": null,
-      "creator": "github:JoAiHQ/warps",
-      "privileges": [],
-      "listed": true,
-      "visibility": "public",
-      "primaryAddress": "{{SC_ADDRESS}}",
-      "primaryFunc": "getPoll",
-      "brand": {
-        "hash": "fc301bc7bc50bff5dd493177625a1b41218746d24b9485a394ff89cfb5e7b060",
-        "slug": "poll",
-        "active": true,
-        "protocol": "brand:0.2.0",
-        "name": "Poll",
-        "description": {
-          "en": "On-chain polls and voting groups for any community — property owners, DAOs, teams, and more.",
-          "de": "On-Chain-Abstimmungen und Voting-Gruppen für jede Gemeinschaft — Eigentümer, DAOs, Teams und mehr.",
-          "fr": "Sondages on-chain et groupes de vote pour toutes les communautes : coproprietes, DAO, equipes et bien plus.",
-          "es": "Encuestas on-chain y grupos de votacion para cualquier comunidad: propietarios, DAOs, equipos y mas.",
-          "ro": "Sondaje on-chain si grupuri de vot pentru orice comunitate: proprietari, DAO-uri, echipe si multe altele."
-        },
-        "logo": {
-          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
-        },
-        "urls": {
-          "web": "https://joai.ai"
-        }
-      },
-      "warp": {
-        "protocol": "warp:3.0.0",
-        "name": "Poll: Get Poll",
-        "title": {
-          "en": "Poll Details",
-          "de": "Abstimmungsdetails",
-          "fr": "Details du sondage",
-          "es": "Detalles de la encuesta",
-          "ro": "Detaliile sondajului"
-        },
-        "description": {
-          "en": "Query details of a specific poll.",
-          "de": "Details einer bestimmten Abstimmung abfragen.",
-          "fr": "Consultez les details d un sondage precis.",
-          "es": "Consulta los detalles de una encuesta concreta.",
-          "ro": "Consulta detaliile unui anumit sondaj."
-        },
-        "vars": {
-          "SC_ADDRESS": "TODO"
-        },
-        "actions": [
-          {
-            "type": "query",
-            "label": {
-              "en": "Loading poll...",
-              "de": "Abstimmung wird geladen...",
-              "fr": "Chargement du sondage...",
-              "es": "Cargando encuesta...",
-              "ro": "Se incarca sondajul..."
-            },
-            "address": "{{SC_ADDRESS}}",
-            "func": "getPoll",
-            "args": [
-              "u64:{{POLL_ID}}"
-            ],
-            "inputs": [
-              {
-                "name": "POLL_ID",
-                "type": "uint64",
-                "position": "arg:1",
-                "source": "field",
-                "required": true,
-                "label": {
-                  "en": "Poll ID",
-                  "de": "Abstimmungs-ID",
-                  "fr": "ID du sondage",
-                  "es": "ID de la encuesta",
-                  "ro": "ID-ul sondajului"
-                }
-              }
-            ],
-            "auto": false,
-            "abi": "hash:b1f38ccaf8b165eb6dba31beba04cacbc50f1a16735e78148107b60e635c6cc4"
-          }
-        ]
-      },
-      "extras": null
-    },
-    {
       "key": "none:poll-admin-transfer",
       "identifier": "@poll-admin-transfer",
       "alias": "poll-admin-transfer",
       "chain": "none",
-      "hash": "8507ee7f1d843b3630ab291d42efd5c782b4d40d8f144c587196a60cfd9aa24a",
-      "checksum": "8507ee7f1d843b3630ab291d42efd5c782b4d40d8f144c587196a60cfd9aa24a",
+      "hash": "c8266a2eb9895f0d64d2d1326e8317f4186632a3168a847d0a99b96e2c4bda9f",
+      "checksum": "c8266a2eb9895f0d64d2d1326e8317f4186632a3168a847d0a99b96e2c4bda9f",
       "name": "Poll: Transfer Admin",
       "title": {
         "en": "Transfer Admin",
@@ -76507,7 +76794,7 @@
                 }
               }
             ],
-            "abi": "hash:b1f38ccaf8b165eb6dba31beba04cacbc50f1a16735e78148107b60e635c6cc4"
+            "abi": "hash:6305d23fc0759ecaddbc37107385954f77f0b2df97eaf5ef4dc0d56c4c7c7337"
           }
         ]
       },
@@ -76518,8 +76805,8 @@
       "identifier": "@poll-create",
       "alias": "poll-create",
       "chain": "none",
-      "hash": "8efc0dc6126b14d2f6dec06a4e8fd9f729094017d415195187d72e10ccec7bff",
-      "checksum": "8efc0dc6126b14d2f6dec06a4e8fd9f729094017d415195187d72e10ccec7bff",
+      "hash": "7d254c37bbb6645dbc9f05bfbe2eafeba65f5be4d077a4317c4d18e94afe7a3a",
+      "checksum": "7d254c37bbb6645dbc9f05bfbe2eafeba65f5be4d077a4317c4d18e94afe7a3a",
       "name": "Poll: Create Poll",
       "title": {
         "en": "Create Poll",
@@ -76529,11 +76816,11 @@
         "ro": "Creeaza sondaj"
       },
       "description": {
-        "en": "Create a new poll in your group. Provide a question, deadline (Unix timestamp), and 2 to 7 answer options.",
-        "de": "Neue Abstimmung in der Gruppe erstellen. Frage, Deadline (Unix-Timestamp) und 2 bis 7 Antwortoptionen angeben.",
-        "fr": "Creez un nouveau sondage dans votre groupe. Indiquez la question, l echeance (timestamp Unix) et de 2 a 7 reponses possibles.",
-        "es": "Crea una nueva encuesta en tu grupo. Indica la pregunta, la fecha limite (timestamp Unix) y de 2 a 7 opciones de respuesta.",
-        "ro": "Creeaza un nou sondaj in grup. Introdu intrebarea, termenul limita (timestamp Unix) si intre 2 si 7 optiuni de raspuns."
+        "en": "Add a new question to an existing group for members to vote on. Requires a group to already exist. Provide a question, optional deadline, and 2–7 answer options.",
+        "de": "Neue Frage zu einer bestehenden Gruppe hinzufuegen, ueber die Mitglieder abstimmen koennen. Gruppe muss bereits existieren.",
+        "fr": "Ajoutez une nouvelle question a un groupe existant pour que les membres puissent voter. Necessite qu un groupe existe deja.",
+        "es": "Anade una nueva pregunta a un grupo existente para que los miembros voten. Requiere que el grupo ya exista.",
+        "ro": "Adauga o noua intrebare unui grup existent pentru ca membrii sa voteze. Necesita ca grupul sa existe deja."
       },
       "preview": null,
       "creator": "github:JoAiHQ/warps",
@@ -76573,12 +76860,13 @@
           "ro": "Creeaza sondaj"
         },
         "description": {
-          "en": "Create a new poll in your group. Provide a question, deadline (Unix timestamp), and 2 to 7 answer options.",
-          "de": "Neue Abstimmung in der Gruppe erstellen. Frage, Deadline (Unix-Timestamp) und 2 bis 7 Antwortoptionen angeben.",
-          "fr": "Creez un nouveau sondage dans votre groupe. Indiquez la question, l echeance (timestamp Unix) et de 2 a 7 reponses possibles.",
-          "es": "Crea una nueva encuesta en tu grupo. Indica la pregunta, la fecha limite (timestamp Unix) y de 2 a 7 opciones de respuesta.",
-          "ro": "Creeaza un nou sondaj in grup. Introdu intrebarea, termenul limita (timestamp Unix) si intre 2 si 7 optiuni de raspuns."
+          "en": "Add a new question to an existing group for members to vote on. Requires a group to already exist. Provide a question, optional deadline, and 2–7 answer options.",
+          "de": "Neue Frage zu einer bestehenden Gruppe hinzufuegen, ueber die Mitglieder abstimmen koennen. Gruppe muss bereits existieren.",
+          "fr": "Ajoutez une nouvelle question a un groupe existant pour que les membres puissent voter. Necessite qu un groupe existe deja.",
+          "es": "Anade una nueva pregunta a un grupo existente para que los miembros voten. Requiere que el grupo ya exista.",
+          "ro": "Adauga o noua intrebare unui grup existent pentru ca membrii sa voteze. Necesita ca grupul sa existe deja."
         },
+        "bot": "Only run this after a group exists and the caller is a member. Requires GROUP_SLUG of an existing on-chain group. Deadline is a Unix timestamp (0 = no deadline). Provide 2–7 short answer options. After creation the user lands directly on the voting screen.",
         "vars": {
           "SC_ADDRESS": "TODO"
         },
@@ -76742,9 +77030,118 @@
                 }
               }
             ],
-            "abi": "hash:b1f38ccaf8b165eb6dba31beba04cacbc50f1a16735e78148107b60e635c6cc4"
+            "abi": "hash:6305d23fc0759ecaddbc37107385954f77f0b2df97eaf5ef4dc0d56c4c7c7337"
           }
-        ]
+        ],
+        "next": "@poll-vote?POLL_ID={{RESULT}}"
+      },
+      "extras": null
+    },
+    {
+      "key": "none:poll-detail",
+      "identifier": "@poll-detail",
+      "alias": "poll-detail",
+      "chain": "none",
+      "hash": "9bb745a9867cb61dee26b00e918fca5ed26ec039618b6fa1e321b4ba0e79d8b6",
+      "checksum": "9bb745a9867cb61dee26b00e918fca5ed26ec039618b6fa1e321b4ba0e79d8b6",
+      "name": "Poll: Detail",
+      "title": {
+        "en": "Poll Details",
+        "de": "Abstimmungsdetails",
+        "fr": "Details du sondage",
+        "es": "Detalles de la encuesta",
+        "ro": "Detaliile sondajului"
+      },
+      "description": {
+        "en": "Query details of a specific poll.",
+        "de": "Details einer bestimmten Abstimmung abfragen.",
+        "fr": "Consultez les details d un sondage precis.",
+        "es": "Consulta los detalles de una encuesta concreta.",
+        "ro": "Consulta detaliile unui anumit sondaj."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": "{{SC_ADDRESS}}",
+      "primaryFunc": "getPoll",
+      "brand": {
+        "hash": "fc301bc7bc50bff5dd493177625a1b41218746d24b9485a394ff89cfb5e7b060",
+        "slug": "poll",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "Poll",
+        "description": {
+          "en": "On-chain polls and voting groups for any community — property owners, DAOs, teams, and more.",
+          "de": "On-Chain-Abstimmungen und Voting-Gruppen für jede Gemeinschaft — Eigentümer, DAOs, Teams und mehr.",
+          "fr": "Sondages on-chain et groupes de vote pour toutes les communautes : coproprietes, DAO, equipes et bien plus.",
+          "es": "Encuestas on-chain y grupos de votacion para cualquier comunidad: propietarios, DAOs, equipos y mas.",
+          "ro": "Sondaje on-chain si grupuri de vot pentru orice comunitate: proprietari, DAO-uri, echipe si multe altele."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "Poll: Detail",
+        "title": {
+          "en": "Poll Details",
+          "de": "Abstimmungsdetails",
+          "fr": "Details du sondage",
+          "es": "Detalles de la encuesta",
+          "ro": "Detaliile sondajului"
+        },
+        "description": {
+          "en": "Query details of a specific poll.",
+          "de": "Details einer bestimmten Abstimmung abfragen.",
+          "fr": "Consultez les details d un sondage precis.",
+          "es": "Consulta los detalles de una encuesta concreta.",
+          "ro": "Consulta detaliile unui anumit sondaj."
+        },
+        "vars": {
+          "SC_ADDRESS": "TODO"
+        },
+        "actions": [
+          {
+            "type": "query",
+            "label": {
+              "en": "Loading poll...",
+              "de": "Abstimmung wird geladen...",
+              "fr": "Chargement du sondage...",
+              "es": "Cargando encuesta...",
+              "ro": "Se incarca sondajul..."
+            },
+            "address": "{{SC_ADDRESS}}",
+            "func": "getPoll",
+            "args": [
+              "u64:{{POLL_ID}}"
+            ],
+            "inputs": [
+              {
+                "name": "POLL_ID",
+                "type": "uint64",
+                "position": "arg:1",
+                "source": "field",
+                "required": true,
+                "label": {
+                  "en": "Poll ID",
+                  "de": "Abstimmungs-ID",
+                  "fr": "ID du sondage",
+                  "es": "ID de la encuesta",
+                  "ro": "ID-ul sondajului"
+                }
+              }
+            ],
+            "auto": false,
+            "abi": "hash:6305d23fc0759ecaddbc37107385954f77f0b2df97eaf5ef4dc0d56c4c7c7337"
+          }
+        ],
+        "next": "@poll-vote?POLL_ID={{POLL_ID}}"
       },
       "extras": null
     },
@@ -76753,8 +77150,8 @@
       "identifier": "@poll-group",
       "alias": "poll-group",
       "chain": "none",
-      "hash": "d1f72b5295362bdcbb348c104a50517119330a0a34442bbf0c143e88e549f08b",
-      "checksum": "d1f72b5295362bdcbb348c104a50517119330a0a34442bbf0c143e88e549f08b",
+      "hash": "267abb73c6e9c53cfbb4c9dc7d7777cc5a8b78a451392678288924de3269b1e3",
+      "checksum": "267abb73c6e9c53cfbb4c9dc7d7777cc5a8b78a451392678288924de3269b1e3",
       "name": "Poll: Get Group",
       "title": {
         "en": "Group Info",
@@ -76842,7 +77239,7 @@
               }
             ],
             "auto": true,
-            "abi": "hash:b1f38ccaf8b165eb6dba31beba04cacbc50f1a16735e78148107b60e635c6cc4"
+            "abi": "hash:6305d23fc0759ecaddbc37107385954f77f0b2df97eaf5ef4dc0d56c4c7c7337"
           }
         ]
       },
@@ -76853,8 +77250,8 @@
       "identifier": "@poll-group-create",
       "alias": "poll-group-create",
       "chain": "none",
-      "hash": "f58392525ea2b2adc43b27a2d5d039450a4e09e197eb4095980ca4348503a956",
-      "checksum": "f58392525ea2b2adc43b27a2d5d039450a4e09e197eb4095980ca4348503a956",
+      "hash": "50c675bbb1b93085bdc45803dedca028e85de94b0f15aa518d02ff03bc3a882a",
+      "checksum": "50c675bbb1b93085bdc45803dedca028e85de94b0f15aa518d02ff03bc3a882a",
       "name": "Poll: Create Group",
       "title": {
         "en": "Create Group",
@@ -76864,11 +77261,11 @@
         "ro": "Creeaza grupul"
       },
       "description": {
-        "en": "Create a new voting group. You become the admin and first member.",
-        "de": "Neue Abstimmungsgruppe erstellen. Du wirst Admin und erstes Mitglied.",
-        "fr": "Creez un nouveau groupe de vote. Vous en devenez l administrateur et le premier membre.",
-        "es": "Crea un nuevo grupo de votacion. Seras la persona administradora y el primer miembro.",
-        "ro": "Creeaza un nou grup de vot. Vei deveni administratorul si primul membru."
+        "en": "Set up a new on-chain voting community — a DAO, HOA, team, or any group. Required first step before any polls can be created or voted on. You become admin.",
+        "de": "Neue On-Chain-Abstimmungsgemeinschaft einrichten — eine DAO, HOA, ein Team oder jede andere Gruppe. Pflichtschritt bevor Abstimmungen erstellt werden koennen.",
+        "fr": "Creez une communaute de vote on-chain — DAO, copropriete, equipe ou autre. Etape obligatoire avant de pouvoir creer des sondages ou voter.",
+        "es": "Crea una comunidad de votacion on-chain: DAO, comunidad de vecinos, equipo u otro. Paso obligatorio antes de crear encuestas o votar.",
+        "ro": "Configureaza o comunitate de vot on-chain — DAO, asociatie, echipa sau orice grup. Pas obligatoriu inainte de a crea sondaje sau de a vota."
       },
       "preview": null,
       "creator": "github:JoAiHQ/warps",
@@ -76908,12 +77305,13 @@
           "ro": "Creeaza grupul"
         },
         "description": {
-          "en": "Create a new voting group. You become the admin and first member.",
-          "de": "Neue Abstimmungsgruppe erstellen. Du wirst Admin und erstes Mitglied.",
-          "fr": "Creez un nouveau groupe de vote. Vous en devenez l administrateur et le premier membre.",
-          "es": "Crea un nuevo grupo de votacion. Seras la persona administradora y el primer miembro.",
-          "ro": "Creeaza un nou grup de vot. Vei deveni administratorul si primul membru."
+          "en": "Set up a new on-chain voting community — a DAO, HOA, team, or any group. Required first step before any polls can be created or voted on. You become admin.",
+          "de": "Neue On-Chain-Abstimmungsgemeinschaft einrichten — eine DAO, HOA, ein Team oder jede andere Gruppe. Pflichtschritt bevor Abstimmungen erstellt werden koennen.",
+          "fr": "Creez une communaute de vote on-chain — DAO, copropriete, equipe ou autre. Etape obligatoire avant de pouvoir creer des sondages ou voter.",
+          "es": "Crea una comunidad de votacion on-chain: DAO, comunidad de vecinos, equipo u otro. Paso obligatorio antes de crear encuestas o votar.",
+          "ro": "Configureaza o comunitate de vot on-chain — DAO, asociatie, echipa sau orice grup. Pas obligatoriu inainte de a crea sondaje sau de a vota."
         },
+        "bot": "Run this FIRST before creating any polls. A group (voting space) must exist before polls can be created or votes cast. Use a short lowercase slug like 'my-dao' or 'building-owners'. Set open_membership to true for public groups or false to require admin approval.",
         "vars": {
           "SC_ADDRESS": "TODO",
           "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG|Team identifier"
@@ -76941,15 +77339,9 @@
                 "name": "GROUP_SLUG",
                 "type": "string",
                 "position": "arg:1",
-                "source": "field",
-                "required": true,
-                "label": {
-                  "en": "Slug (e.g. my-building)",
-                  "de": "Slug (z.B. mein-gebaeude)",
-                  "fr": "Slug (par ex. ma-copropriete)",
-                  "es": "Slug (p. ej. mi-edificio)",
-                  "ro": "Slug (de ex. blocul-meu)"
-                }
+                "source": "hidden",
+                "default": "{{JOAI_TEAM_SLUG}}",
+                "required": true
               },
               {
                 "name": "NAME",
@@ -76980,7 +77372,7 @@
                 }
               }
             ],
-            "abi": "hash:b1f38ccaf8b165eb6dba31beba04cacbc50f1a16735e78148107b60e635c6cc4"
+            "abi": "hash:6305d23fc0759ecaddbc37107385954f77f0b2df97eaf5ef4dc0d56c4c7c7337"
           }
         ],
         "next": "@joai-site-provision?brand=poll&team={{JOAI_TEAM_SLUG}}&settings={\"GROUP_SLUG\":\"{{GROUP_SLUG}}\"}"
@@ -76992,8 +77384,8 @@
       "identifier": "@poll-group-polls",
       "alias": "poll-group-polls",
       "chain": "none",
-      "hash": "023d773b6facc97bbd6d02de95fa0933fe062e871bb7d14425cc90b7b2bb8e93",
-      "checksum": "023d773b6facc97bbd6d02de95fa0933fe062e871bb7d14425cc90b7b2bb8e93",
+      "hash": "bb21c6e0befd3a739d1b7f519e2087532be3c41311cf064855afebd0a36e4ae2",
+      "checksum": "bb21c6e0befd3a739d1b7f519e2087532be3c41311cf064855afebd0a36e4ae2",
       "name": "Poll: Get Group Polls",
       "title": {
         "en": "All Group Polls",
@@ -77081,7 +77473,7 @@
               }
             ],
             "auto": true,
-            "abi": "hash:b1f38ccaf8b165eb6dba31beba04cacbc50f1a16735e78148107b60e635c6cc4"
+            "abi": "hash:6305d23fc0759ecaddbc37107385954f77f0b2df97eaf5ef4dc0d56c4c7c7337"
           }
         ]
       },
@@ -77092,8 +77484,8 @@
       "identifier": "@poll-invite",
       "alias": "poll-invite",
       "chain": "none",
-      "hash": "b1c6fe739e8da9f8f2dd649b352f91e458bc36963e0c550d9c6d0fda07d7b802",
-      "checksum": "b1c6fe739e8da9f8f2dd649b352f91e458bc36963e0c550d9c6d0fda07d7b802",
+      "hash": "6b8f596e0e710925736df4b0d95d85705426d44ea28632f260b2d0d9a30868fc",
+      "checksum": "6b8f596e0e710925736df4b0d95d85705426d44ea28632f260b2d0d9a30868fc",
       "name": "Poll: Get Invite",
       "title": {
         "en": "Invite Status",
@@ -77196,7 +77588,7 @@
               }
             ],
             "auto": false,
-            "abi": "hash:b1f38ccaf8b165eb6dba31beba04cacbc50f1a16735e78148107b60e635c6cc4"
+            "abi": "hash:6305d23fc0759ecaddbc37107385954f77f0b2df97eaf5ef4dc0d56c4c7c7337"
           }
         ]
       },
@@ -77207,8 +77599,8 @@
       "identifier": "@poll-invite-create",
       "alias": "poll-invite-create",
       "chain": "none",
-      "hash": "46f96096bbac17692bc756074f8fbffa5c613c631bad832d5ba6961472d8b09f",
-      "checksum": "46f96096bbac17692bc756074f8fbffa5c613c631bad832d5ba6961472d8b09f",
+      "hash": "afef3644811deabe110737ffafb335973e2d726e6461ad934d6a69d80cdc8526",
+      "checksum": "afef3644811deabe110737ffafb335973e2d726e6461ad934d6a69d80cdc8526",
       "name": "Poll: Create Invite",
       "title": {
         "en": "Create Invite Link",
@@ -77341,7 +77733,7 @@
                 }
               }
             ],
-            "abi": "hash:b1f38ccaf8b165eb6dba31beba04cacbc50f1a16735e78148107b60e635c6cc4"
+            "abi": "hash:6305d23fc0759ecaddbc37107385954f77f0b2df97eaf5ef4dc0d56c4c7c7337"
           }
         ]
       },
@@ -77352,8 +77744,8 @@
       "identifier": "@poll-invite-join",
       "alias": "poll-invite-join",
       "chain": "none",
-      "hash": "8f8868781073cef49987ac276c567548dc35a264c2950b17fa7eeb81470860da",
-      "checksum": "8f8868781073cef49987ac276c567548dc35a264c2950b17fa7eeb81470860da",
+      "hash": "22542cd7a7364aad4fdf7b032013d038b81433d31ff78f78b135e86ed2f331e1",
+      "checksum": "22542cd7a7364aad4fdf7b032013d038b81433d31ff78f78b135e86ed2f331e1",
       "name": "Poll: Join With Invite",
       "title": {
         "en": "Join With Invite Code",
@@ -77471,7 +77863,7 @@
                 }
               }
             ],
-            "abi": "hash:b1f38ccaf8b165eb6dba31beba04cacbc50f1a16735e78148107b60e635c6cc4"
+            "abi": "hash:6305d23fc0759ecaddbc37107385954f77f0b2df97eaf5ef4dc0d56c4c7c7337"
           }
         ]
       },
@@ -77482,8 +77874,8 @@
       "identifier": "@poll-invite-revoke",
       "alias": "poll-invite-revoke",
       "chain": "none",
-      "hash": "a808cc36f3d58132965228d5cad2cf3550f3e5ed1506695e576cf4edd621aa2f",
-      "checksum": "a808cc36f3d58132965228d5cad2cf3550f3e5ed1506695e576cf4edd621aa2f",
+      "hash": "c2ca568d672bafe0e6c68000c63209c2fed8b55ba1de367d8c750660fe872299",
+      "checksum": "c2ca568d672bafe0e6c68000c63209c2fed8b55ba1de367d8c750660fe872299",
       "name": "Poll: Revoke Invite",
       "title": {
         "en": "Revoke Invite",
@@ -77586,7 +77978,7 @@
                 }
               }
             ],
-            "abi": "hash:b1f38ccaf8b165eb6dba31beba04cacbc50f1a16735e78148107b60e635c6cc4"
+            "abi": "hash:6305d23fc0759ecaddbc37107385954f77f0b2df97eaf5ef4dc0d56c4c7c7337"
           }
         ]
       },
@@ -77597,8 +77989,8 @@
       "identifier": "@poll-member-approve",
       "alias": "poll-member-approve",
       "chain": "none",
-      "hash": "ae9976d51aad9ef6f2852d383e4818a1949fdab023c1b89812d222e426cbd661",
-      "checksum": "ae9976d51aad9ef6f2852d383e4818a1949fdab023c1b89812d222e426cbd661",
+      "hash": "063170846797e35c37e144b3fb25ca5ba1b578b777cc8c8573edfd57c14312d8",
+      "checksum": "063170846797e35c37e144b3fb25ca5ba1b578b777cc8c8573edfd57c14312d8",
       "name": "Poll: Approve Member",
       "title": {
         "en": "Approve Member",
@@ -77701,7 +78093,7 @@
                 }
               }
             ],
-            "abi": "hash:b1f38ccaf8b165eb6dba31beba04cacbc50f1a16735e78148107b60e635c6cc4"
+            "abi": "hash:6305d23fc0759ecaddbc37107385954f77f0b2df97eaf5ef4dc0d56c4c7c7337"
           }
         ]
       },
@@ -77712,8 +78104,8 @@
       "identifier": "@poll-member-check",
       "alias": "poll-member-check",
       "chain": "none",
-      "hash": "d0f8f3389c88eb2536530a074751ec7de2f975f5ebb5204a6063fda431577185",
-      "checksum": "d0f8f3389c88eb2536530a074751ec7de2f975f5ebb5204a6063fda431577185",
+      "hash": "3ce2f80111b704695482ae3ba2f4d7380b42ce2cc7ce8828da28bbfec02c60e8",
+      "checksum": "3ce2f80111b704695482ae3ba2f4d7380b42ce2cc7ce8828da28bbfec02c60e8",
       "name": "Poll: Is Member",
       "title": {
         "en": "Check Membership",
@@ -77816,7 +78208,7 @@
               }
             ],
             "auto": false,
-            "abi": "hash:b1f38ccaf8b165eb6dba31beba04cacbc50f1a16735e78148107b60e635c6cc4"
+            "abi": "hash:6305d23fc0759ecaddbc37107385954f77f0b2df97eaf5ef4dc0d56c4c7c7337"
           }
         ]
       },
@@ -77827,8 +78219,8 @@
       "identifier": "@poll-member-remove",
       "alias": "poll-member-remove",
       "chain": "none",
-      "hash": "40e3a274d7b7804b8a9fe795b59f50a4f1fa26766e62118d084fd693ed5eebc3",
-      "checksum": "40e3a274d7b7804b8a9fe795b59f50a4f1fa26766e62118d084fd693ed5eebc3",
+      "hash": "f9e4094891ea63b2294b60aa9d5cccd75709ae09888e08f298d40a0f2868aa99",
+      "checksum": "f9e4094891ea63b2294b60aa9d5cccd75709ae09888e08f298d40a0f2868aa99",
       "name": "Poll: Remove Member",
       "title": {
         "en": "Remove Member",
@@ -77931,7 +78323,7 @@
                 }
               }
             ],
-            "abi": "hash:b1f38ccaf8b165eb6dba31beba04cacbc50f1a16735e78148107b60e635c6cc4"
+            "abi": "hash:6305d23fc0759ecaddbc37107385954f77f0b2df97eaf5ef4dc0d56c4c7c7337"
           }
         ]
       },
@@ -77942,8 +78334,8 @@
       "identifier": "@poll-member-vote",
       "alias": "poll-member-vote",
       "chain": "none",
-      "hash": "fa631355a842b5fac363f397e9ea5f5cc0aeebeaaaf9c23ec0e080ec8db3fb4e",
-      "checksum": "fa631355a842b5fac363f397e9ea5f5cc0aeebeaaaf9c23ec0e080ec8db3fb4e",
+      "hash": "b77b7a8aa9ddc12164688899e247d13c48bfd1183e2c96574183c62c05a0c617",
+      "checksum": "b77b7a8aa9ddc12164688899e247d13c48bfd1183e2c96574183c62c05a0c617",
       "name": "Poll: Get Member Vote",
       "title": {
         "en": "Member's Vote",
@@ -78053,7 +78445,7 @@
               }
             ],
             "auto": false,
-            "abi": "hash:b1f38ccaf8b165eb6dba31beba04cacbc50f1a16735e78148107b60e635c6cc4"
+            "abi": "hash:6305d23fc0759ecaddbc37107385954f77f0b2df97eaf5ef4dc0d56c4c7c7337"
           }
         ]
       },
@@ -78064,8 +78456,8 @@
       "identifier": "@poll-members",
       "alias": "poll-members",
       "chain": "none",
-      "hash": "f7377f962a35e491ebfc4d7f30d11be4d8f674f3da492d89d3b999671f6c2b8a",
-      "checksum": "f7377f962a35e491ebfc4d7f30d11be4d8f674f3da492d89d3b999671f6c2b8a",
+      "hash": "00c8dbf7f5017bcf7f1ab4b0552204d805dd6daf84306fe2b099a15261c7ca96",
+      "checksum": "00c8dbf7f5017bcf7f1ab4b0552204d805dd6daf84306fe2b099a15261c7ca96",
       "name": "Poll: Get Members",
       "title": {
         "en": "Group Members",
@@ -78153,7 +78545,7 @@
               }
             ],
             "auto": true,
-            "abi": "hash:b1f38ccaf8b165eb6dba31beba04cacbc50f1a16735e78148107b60e635c6cc4"
+            "abi": "hash:6305d23fc0759ecaddbc37107385954f77f0b2df97eaf5ef4dc0d56c4c7c7337"
           }
         ]
       },
@@ -78164,8 +78556,8 @@
       "identifier": "@poll-membership-request",
       "alias": "poll-membership-request",
       "chain": "none",
-      "hash": "2db41504b522a65ba91b70e09d46f1b190a49af7dfbd87cc039d72a71ab52efa",
-      "checksum": "2db41504b522a65ba91b70e09d46f1b190a49af7dfbd87cc039d72a71ab52efa",
+      "hash": "6fc2fc5fecade6f3a3b635e09b12a4db392a1c8164c5ad54d0fd088edaa7623a",
+      "checksum": "6fc2fc5fecade6f3a3b635e09b12a4db392a1c8164c5ad54d0fd088edaa7623a",
       "name": "Poll: Join Space",
       "title": {
         "en": "Join This Space",
@@ -78268,19 +78660,19 @@
                 }
               }
             ],
-            "abi": "hash:b1f38ccaf8b165eb6dba31beba04cacbc50f1a16735e78148107b60e635c6cc4"
+            "abi": "hash:6305d23fc0759ecaddbc37107385954f77f0b2df97eaf5ef4dc0d56c4c7c7337"
           }
         ]
       },
       "extras": null
     },
     {
-      "key": "none:poll-polls-active",
-      "identifier": "@poll-polls-active",
-      "alias": "poll-polls-active",
+      "key": "none:poll-polls",
+      "identifier": "@poll-polls",
+      "alias": "poll-polls",
       "chain": "none",
-      "hash": "da3a715191baf6d39b8b3601ef5dd82c5602cdb46689c7785a6352bdf13b40da",
-      "checksum": "da3a715191baf6d39b8b3601ef5dd82c5602cdb46689c7785a6352bdf13b40da",
+      "hash": "cc583f8240ee82900aba567d529b0d44e63c31815531b7d6a5191181f7fd3998",
+      "checksum": "cc583f8240ee82900aba567d529b0d44e63c31815531b7d6a5191181f7fd3998",
       "name": "Poll: Active Polls",
       "title": {
         "en": "Active Polls",
@@ -78368,9 +78760,111 @@
               }
             ],
             "auto": true,
-            "abi": "hash:b1f38ccaf8b165eb6dba31beba04cacbc50f1a16735e78148107b60e635c6cc4"
+            "abi": "hash:6305d23fc0759ecaddbc37107385954f77f0b2df97eaf5ef4dc0d56c4c7c7337"
           }
-        ]
+        ],
+        "ui": "https://raw.githubusercontent.com/JoAiHQ/warps/main/warps/poll/polls/chatapp.dist.html"
+      },
+      "extras": null
+    },
+    {
+      "key": "none:poll-polls-active",
+      "identifier": "@poll-polls-active",
+      "alias": "poll-polls-active",
+      "chain": "none",
+      "hash": "0ac512ae3f167e6ed75735e6e53831a2854d29b2fa54e282886ae7be6937aa8d",
+      "checksum": "0ac512ae3f167e6ed75735e6e53831a2854d29b2fa54e282886ae7be6937aa8d",
+      "name": "Poll: Active Polls",
+      "title": {
+        "en": "Active Polls",
+        "de": "Aktive Abstimmungen",
+        "fr": "Sondages actifs",
+        "es": "Encuestas activas",
+        "ro": "Sondaje active"
+      },
+      "description": {
+        "en": "See all open polls in this space.",
+        "de": "Alle offenen Abstimmungen in diesem Space anzeigen.",
+        "fr": "Consultez tous les sondages ouverts dans cet espace.",
+        "es": "Consulta todas las encuestas abiertas de este espacio.",
+        "ro": "Vezi toate sondajele deschise din acest spatiu."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": "{{SC_ADDRESS}}",
+      "primaryFunc": "getActivePolls",
+      "brand": {
+        "hash": "fc301bc7bc50bff5dd493177625a1b41218746d24b9485a394ff89cfb5e7b060",
+        "slug": "poll",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "Poll",
+        "description": {
+          "en": "On-chain polls and voting groups for any community — property owners, DAOs, teams, and more.",
+          "de": "On-Chain-Abstimmungen und Voting-Gruppen für jede Gemeinschaft — Eigentümer, DAOs, Teams und mehr.",
+          "fr": "Sondages on-chain et groupes de vote pour toutes les communautes : coproprietes, DAO, equipes et bien plus.",
+          "es": "Encuestas on-chain y grupos de votacion para cualquier comunidad: propietarios, DAOs, equipos y mas.",
+          "ro": "Sondaje on-chain si grupuri de vot pentru orice comunitate: proprietari, DAO-uri, echipe si multe altele."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "Poll: Active Polls",
+        "title": {
+          "en": "Active Polls",
+          "de": "Aktive Abstimmungen",
+          "fr": "Sondages actifs",
+          "es": "Encuestas activas",
+          "ro": "Sondaje active"
+        },
+        "description": {
+          "en": "See all open polls in this space.",
+          "de": "Alle offenen Abstimmungen in diesem Space anzeigen.",
+          "fr": "Consultez tous les sondages ouverts dans cet espace.",
+          "es": "Consulta todas las encuestas abiertas de este espacio.",
+          "ro": "Vezi toate sondajele deschise din acest spatiu."
+        },
+        "vars": {
+          "SC_ADDRESS": "TODO"
+        },
+        "actions": [
+          {
+            "type": "query",
+            "label": {
+              "en": "Loading polls...",
+              "de": "Abstimmungen werden geladen...",
+              "fr": "Chargement des sondages...",
+              "es": "Cargando encuestas...",
+              "ro": "Se incarca sondajele..."
+            },
+            "address": "{{SC_ADDRESS}}",
+            "func": "getActivePolls",
+            "args": [
+              "string:{{GROUP_SLUG}}"
+            ],
+            "inputs": [
+              {
+                "name": "GROUP_SLUG",
+                "type": "string",
+                "position": "arg:1",
+                "source": "field",
+                "required": true
+              }
+            ],
+            "auto": true,
+            "abi": "hash:6305d23fc0759ecaddbc37107385954f77f0b2df97eaf5ef4dc0d56c4c7c7337"
+          }
+        ],
+        "next": "@poll-detail?POLL_ID={{RESULT}}"
       },
       "extras": null
     },
@@ -78379,8 +78873,8 @@
       "identifier": "@poll-request-deny",
       "alias": "poll-request-deny",
       "chain": "none",
-      "hash": "e06585dc3fd10de840d43a194818028357990b28737b860813249ef54a523d72",
-      "checksum": "e06585dc3fd10de840d43a194818028357990b28737b860813249ef54a523d72",
+      "hash": "c4a204cf80b80d2410882c7f39cac2f015ef5a4d924a7c382aa3cff80ecbab89",
+      "checksum": "c4a204cf80b80d2410882c7f39cac2f015ef5a4d924a7c382aa3cff80ecbab89",
       "name": "Poll: Deny Request",
       "title": {
         "en": "Deny Request",
@@ -78483,7 +78977,7 @@
                 }
               }
             ],
-            "abi": "hash:b1f38ccaf8b165eb6dba31beba04cacbc50f1a16735e78148107b60e635c6cc4"
+            "abi": "hash:6305d23fc0759ecaddbc37107385954f77f0b2df97eaf5ef4dc0d56c4c7c7337"
           }
         ]
       },
@@ -78494,8 +78988,8 @@
       "identifier": "@poll-requests-pending",
       "alias": "poll-requests-pending",
       "chain": "none",
-      "hash": "37352679d6c2c17603ba77e88f1949f6bdb73f629f6a68f35bb17f72bc1d84e0",
-      "checksum": "37352679d6c2c17603ba77e88f1949f6bdb73f629f6a68f35bb17f72bc1d84e0",
+      "hash": "903e867d893a0d11da3b017defe3a17d48435820073ef507a129c4016bd4c9d1",
+      "checksum": "903e867d893a0d11da3b017defe3a17d48435820073ef507a129c4016bd4c9d1",
       "name": "Poll: Pending Requests",
       "title": {
         "en": "Membership Requests",
@@ -78583,7 +79077,7 @@
               }
             ],
             "auto": true,
-            "abi": "hash:b1f38ccaf8b165eb6dba31beba04cacbc50f1a16735e78148107b60e635c6cc4"
+            "abi": "hash:6305d23fc0759ecaddbc37107385954f77f0b2df97eaf5ef4dc0d56c4c7c7337"
           }
         ]
       },
@@ -78594,8 +79088,8 @@
       "identifier": "@poll-results",
       "alias": "poll-results",
       "chain": "none",
-      "hash": "262439370273c12e22cf9c453954875da85d510748b5ebef53c5c7b6c8624d09",
-      "checksum": "262439370273c12e22cf9c453954875da85d510748b5ebef53c5c7b6c8624d09",
+      "hash": "a98439bd479990936f788c7742244528e8b4093205e9a356d61c9365a78cb532",
+      "checksum": "a98439bd479990936f788c7742244528e8b4093205e9a356d61c9365a78cb532",
       "name": "Poll: Results",
       "title": {
         "en": "Poll Results",
@@ -78690,9 +79184,110 @@
               }
             ],
             "auto": false,
-            "abi": "hash:b1f38ccaf8b165eb6dba31beba04cacbc50f1a16735e78148107b60e635c6cc4"
+            "abi": "hash:6305d23fc0759ecaddbc37107385954f77f0b2df97eaf5ef4dc0d56c4c7c7337"
           }
         ]
+      },
+      "extras": null
+    },
+    {
+      "key": "none:poll-results",
+      "identifier": "@poll-results",
+      "alias": "poll-results",
+      "chain": "none",
+      "hash": "d4fe16ad91937976e427e2751a31fb4ff569b979c7a01de61bce6ca63b398c14",
+      "checksum": "d4fe16ad91937976e427e2751a31fb4ff569b979c7a01de61bce6ca63b398c14",
+      "name": "Poll: Results",
+      "title": {
+        "en": "Poll Results",
+        "de": "Abstimmungsergebnis",
+        "fr": "Resultats du sondage",
+        "es": "Resultados de la encuesta",
+        "ro": "Rezultatele sondajului"
+      },
+      "description": {
+        "en": "View the live vote counts and percentages for a poll.",
+        "de": "Aktuelle Stimmenverteilung und Prozentsätze einer Abstimmung anzeigen.",
+        "fr": "Consultez les votes et pourcentages en temps reel pour un sondage.",
+        "es": "Consulta los votos y porcentajes en tiempo real de una encuesta.",
+        "ro": "Vizualizeaza voturile si procentele live ale unui sondaj."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": "{{SC_ADDRESS}}",
+      "primaryFunc": "getPollResults",
+      "brand": {
+        "hash": "fc301bc7bc50bff5dd493177625a1b41218746d24b9485a394ff89cfb5e7b060",
+        "slug": "poll",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "Poll",
+        "description": {
+          "en": "On-chain polls and voting groups for any community — property owners, DAOs, teams, and more.",
+          "de": "On-Chain-Abstimmungen und Voting-Gruppen für jede Gemeinschaft — Eigentümer, DAOs, Teams und mehr.",
+          "fr": "Sondages on-chain et groupes de vote pour toutes les communautes : coproprietes, DAO, equipes et bien plus.",
+          "es": "Encuestas on-chain y grupos de votacion para cualquier comunidad: propietarios, DAOs, equipos y mas.",
+          "ro": "Sondaje on-chain si grupuri de vot pentru orice comunitate: proprietari, DAO-uri, echipe si multe altele."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "Poll: Results",
+        "title": {
+          "en": "Poll Results",
+          "de": "Abstimmungsergebnis",
+          "fr": "Resultats du sondage",
+          "es": "Resultados de la encuesta",
+          "ro": "Rezultatele sondajului"
+        },
+        "description": {
+          "en": "View the live vote counts and percentages for a poll.",
+          "de": "Aktuelle Stimmenverteilung und Prozentsätze einer Abstimmung anzeigen.",
+          "fr": "Consultez les votes et pourcentages en temps reel pour un sondage.",
+          "es": "Consulta los votos y porcentajes en tiempo real de una encuesta.",
+          "ro": "Vizualizeaza voturile si procentele live ale unui sondaj."
+        },
+        "vars": {
+          "SC_ADDRESS": "TODO"
+        },
+        "actions": [
+          {
+            "type": "query",
+            "label": {
+              "en": "Loading results...",
+              "de": "Ergebnisse werden geladen...",
+              "fr": "Chargement des resultats...",
+              "es": "Cargando resultados...",
+              "ro": "Se incarca rezultatele..."
+            },
+            "address": "{{SC_ADDRESS}}",
+            "func": "getPollResults",
+            "args": [
+              "u64:{{POLL_ID}}"
+            ],
+            "inputs": [
+              {
+                "name": "POLL_ID",
+                "type": "uint64",
+                "position": "arg:1",
+                "source": "query",
+                "required": true
+              }
+            ],
+            "auto": true,
+            "abi": "hash:6305d23fc0759ecaddbc37107385954f77f0b2df97eaf5ef4dc0d56c4c7c7337"
+          }
+        ],
+        "ui": "https://raw.githubusercontent.com/JoAiHQ/warps/main/warps/poll/results/chatapp.dist.html"
       },
       "extras": null
     },
@@ -78701,22 +79296,22 @@
       "identifier": "@poll-vote",
       "alias": "poll-vote",
       "chain": "none",
-      "hash": "7870256eae725d5699b42f0dd401fab240d4adce6ecd36078cf6c117dc3abe15",
-      "checksum": "7870256eae725d5699b42f0dd401fab240d4adce6ecd36078cf6c117dc3abe15",
+      "hash": "d83f08e9d4b63b1871403bbfebc724e6a485be309e553bece1886a684522d1ca",
+      "checksum": "d83f08e9d4b63b1871403bbfebc724e6a485be309e553bece1886a684522d1ca",
       "name": "Poll: Vote",
       "title": {
         "en": "Cast Your Vote",
         "de": "Abstimmen",
         "fr": "Voter",
-        "es": "Emitir tu voto",
+        "es": "Votar",
         "ro": "Voteaza"
       },
       "description": {
-        "en": "Vote on an open poll. You need to be a member of the space to vote.",
-        "de": "An einer offenen Abstimmung teilnehmen. Du musst Mitglied des Spaces sein.",
-        "fr": "Votez dans un sondage ouvert. Vous devez etre membre de l espace pour voter.",
-        "es": "Vota en una encuesta abierta. Tienes que ser miembro del espacio para poder votar.",
-        "ro": "Voteaza intr-un sondaj deschis. Trebuie sa fii membru al spatiului pentru a putea vota."
+        "en": "View a poll and cast your vote. See live results after voting.",
+        "de": "Abstimmung anzeigen und teilnehmen. Ergebnisse nach der Abstimmung sehen.",
+        "fr": "Consultez un sondage et votez. Voyez les resultats en direct apres avoir vote.",
+        "es": "Ver una encuesta y votar. Ver resultados en tiempo real despues de votar.",
+        "ro": "Vizualizeaza un sondaj si voteaza. Vezi rezultatele dupa vot."
       },
       "preview": null,
       "creator": "github:JoAiHQ/warps",
@@ -78724,7 +79319,7 @@
       "listed": true,
       "visibility": "public",
       "primaryAddress": "{{SC_ADDRESS}}",
-      "primaryFunc": "vote",
+      "primaryFunc": "getPoll",
       "brand": {
         "hash": "fc301bc7bc50bff5dd493177625a1b41218746d24b9485a394ff89cfb5e7b060",
         "slug": "poll",
@@ -78752,69 +79347,48 @@
           "en": "Cast Your Vote",
           "de": "Abstimmen",
           "fr": "Voter",
-          "es": "Emitir tu voto",
+          "es": "Votar",
           "ro": "Voteaza"
         },
         "description": {
-          "en": "Vote on an open poll. You need to be a member of the space to vote.",
-          "de": "An einer offenen Abstimmung teilnehmen. Du musst Mitglied des Spaces sein.",
-          "fr": "Votez dans un sondage ouvert. Vous devez etre membre de l espace pour voter.",
-          "es": "Vota en una encuesta abierta. Tienes que ser miembro del espacio para poder votar.",
-          "ro": "Voteaza intr-un sondaj deschis. Trebuie sa fii membru al spatiului pentru a putea vota."
+          "en": "View a poll and cast your vote. See live results after voting.",
+          "de": "Abstimmung anzeigen und teilnehmen. Ergebnisse nach der Abstimmung sehen.",
+          "fr": "Consultez un sondage et votez. Voyez les resultats en direct apres avoir vote.",
+          "es": "Ver una encuesta y votar. Ver resultados en tiempo real despues de votar.",
+          "ro": "Vizualizeaza un sondaj si voteaza. Vezi rezultatele dupa vot."
         },
         "vars": {
           "SC_ADDRESS": "TODO"
         },
         "actions": [
           {
-            "type": "contract",
+            "type": "query",
             "label": {
-              "en": "Submit Vote",
-              "de": "Stimme abgeben",
-              "fr": "Envoyer le vote",
-              "es": "Enviar voto",
-              "ro": "Trimite votul"
+              "en": "Loading poll...",
+              "de": "Abstimmung wird geladen...",
+              "fr": "Chargement du sondage...",
+              "es": "Cargando encuesta...",
+              "ro": "Se incarca sondajul..."
             },
             "address": "{{SC_ADDRESS}}",
-            "func": "vote",
+            "func": "getPoll",
             "args": [
-              "u64:{{POLL_ID}}",
-              "u32:{{OPTION_INDEX}}"
+              "u64:{{POLL_ID}}"
             ],
-            "gasLimit": 10000000,
             "inputs": [
               {
                 "name": "POLL_ID",
                 "type": "uint64",
                 "position": "arg:1",
-                "source": "field",
-                "required": true,
-                "label": {
-                  "en": "Poll ID",
-                  "de": "Abstimmungs-ID",
-                  "fr": "ID du sondage",
-                  "es": "ID de la encuesta",
-                  "ro": "ID-ul sondajului"
-                }
-              },
-              {
-                "name": "OPTION_INDEX",
-                "type": "uint32",
-                "position": "arg:2",
-                "source": "field",
-                "required": true,
-                "label": {
-                  "en": "Option (0 = first option)",
-                  "de": "Option (0 = erste Option)",
-                  "fr": "Option (0 = premiere option)",
-                  "es": "Opcion (0 = primera opcion)",
-                  "ro": "Optiune (0 = prima optiune)"
-                }
+                "source": "query",
+                "required": true
               }
             ],
-            "abi": "hash:b1f38ccaf8b165eb6dba31beba04cacbc50f1a16735e78148107b60e635c6cc4"
+            "auto": true,
+            "abi": "hash:6305d23fc0759ecaddbc37107385954f77f0b2df97eaf5ef4dc0d56c4c7c7337"
           }
-        ]
+        ],
+        "ui": "https://raw.githubusercontent.com/JoAiHQ/warps/main/warps/poll/vote/chatapp.dist.html"
       },
       "extras": null
     },
@@ -78823,8 +79397,8 @@
       "identifier": "@poll-vote-check",
       "alias": "poll-vote-check",
       "chain": "none",
-      "hash": "7db18fa3c5a7f2f970df1e1ae53602911ffe0c217f198d36543668577b5ff783",
-      "checksum": "7db18fa3c5a7f2f970df1e1ae53602911ffe0c217f198d36543668577b5ff783",
+      "hash": "f6e916f13a0a6efd01e2d07d413a364bfba0d3fb188854e48c1ce0fee9db35e7",
+      "checksum": "f6e916f13a0a6efd01e2d07d413a364bfba0d3fb188854e48c1ce0fee9db35e7",
       "name": "Poll: Has Voted",
       "title": {
         "en": "Check Vote Status",
@@ -78934,7 +79508,129 @@
               }
             ],
             "auto": false,
-            "abi": "hash:b1f38ccaf8b165eb6dba31beba04cacbc50f1a16735e78148107b60e635c6cc4"
+            "abi": "hash:6305d23fc0759ecaddbc37107385954f77f0b2df97eaf5ef4dc0d56c4c7c7337"
+          }
+        ]
+      },
+      "extras": null
+    },
+    {
+      "key": "none:poll-vote-tx",
+      "identifier": "@poll-vote-tx",
+      "alias": "poll-vote-tx",
+      "chain": "none",
+      "hash": "f31dd57e866a1392b3891d6ca9a2b7c38c71febaa0bf86d44461a499c5460a6a",
+      "checksum": "f31dd57e866a1392b3891d6ca9a2b7c38c71febaa0bf86d44461a499c5460a6a",
+      "name": "Poll: Vote TX",
+      "title": {
+        "en": "Cast Your Vote",
+        "de": "Abstimmen",
+        "fr": "Voter",
+        "es": "Emitir tu voto",
+        "ro": "Voteaza"
+      },
+      "description": {
+        "en": "Vote on an open poll. You need to be a member of the space to vote.",
+        "de": "An einer offenen Abstimmung teilnehmen. Du musst Mitglied des Spaces sein.",
+        "fr": "Votez dans un sondage ouvert. Vous devez etre membre de l espace pour voter.",
+        "es": "Vota en una encuesta abierta. Tienes que ser miembro del espacio para poder votar.",
+        "ro": "Voteaza intr-un sondaj deschis. Trebuie sa fii membru al spatiului pentru a putea vota."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": "{{SC_ADDRESS}}",
+      "primaryFunc": "vote",
+      "brand": {
+        "hash": "fc301bc7bc50bff5dd493177625a1b41218746d24b9485a394ff89cfb5e7b060",
+        "slug": "poll",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "Poll",
+        "description": {
+          "en": "On-chain polls and voting groups for any community — property owners, DAOs, teams, and more.",
+          "de": "On-Chain-Abstimmungen und Voting-Gruppen für jede Gemeinschaft — Eigentümer, DAOs, Teams und mehr.",
+          "fr": "Sondages on-chain et groupes de vote pour toutes les communautes : coproprietes, DAO, equipes et bien plus.",
+          "es": "Encuestas on-chain y grupos de votacion para cualquier comunidad: propietarios, DAOs, equipos y mas.",
+          "ro": "Sondaje on-chain si grupuri de vot pentru orice comunitate: proprietari, DAO-uri, echipe si multe altele."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "Poll: Vote TX",
+        "title": {
+          "en": "Cast Your Vote",
+          "de": "Abstimmen",
+          "fr": "Voter",
+          "es": "Emitir tu voto",
+          "ro": "Voteaza"
+        },
+        "description": {
+          "en": "Vote on an open poll. You need to be a member of the space to vote.",
+          "de": "An einer offenen Abstimmung teilnehmen. Du musst Mitglied des Spaces sein.",
+          "fr": "Votez dans un sondage ouvert. Vous devez etre membre de l espace pour voter.",
+          "es": "Vota en una encuesta abierta. Tienes que ser miembro del espacio para poder votar.",
+          "ro": "Voteaza intr-un sondaj deschis. Trebuie sa fii membru al spatiului pentru a putea vota."
+        },
+        "vars": {
+          "SC_ADDRESS": "TODO"
+        },
+        "actions": [
+          {
+            "type": "contract",
+            "label": {
+              "en": "Submit Vote",
+              "de": "Stimme abgeben",
+              "fr": "Envoyer le vote",
+              "es": "Enviar voto",
+              "ro": "Trimite votul"
+            },
+            "address": "{{SC_ADDRESS}}",
+            "func": "vote",
+            "args": [
+              "u64:{{POLL_ID}}",
+              "u32:{{OPTION_INDEX}}"
+            ],
+            "gasLimit": 10000000,
+            "inputs": [
+              {
+                "name": "POLL_ID",
+                "type": "uint64",
+                "position": "arg:1",
+                "source": "field",
+                "required": true,
+                "label": {
+                  "en": "Poll ID",
+                  "de": "Abstimmungs-ID",
+                  "fr": "ID du sondage",
+                  "es": "ID de la encuesta",
+                  "ro": "ID-ul sondajului"
+                }
+              },
+              {
+                "name": "OPTION_INDEX",
+                "type": "uint32",
+                "position": "arg:2",
+                "source": "field",
+                "required": true,
+                "label": {
+                  "en": "Option (0 = first option)",
+                  "de": "Option (0 = erste Option)",
+                  "fr": "Option (0 = premiere option)",
+                  "es": "Opcion (0 = primera opcion)",
+                  "ro": "Optiune (0 = prima optiune)"
+                }
+              }
+            ],
+            "abi": "hash:6305d23fc0759ecaddbc37107385954f77f0b2df97eaf5ef4dc0d56c4c7c7337"
           }
         ]
       },
