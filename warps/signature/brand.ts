@@ -35,6 +35,8 @@ export const brand = async (config: WarpClientConfig): Promise<WarpbaseBrand> =>
     routes: [
       { path: '/', warp: '@signature-create', label: { en: 'Request Signature', de: 'Signatur anfordern', fr: 'Demander une signature', es: 'Solicitar firma', ro: 'Solicita semnatura' }, nav: true },
       { path: '/sign', warp: '@signature-sign', label: { en: 'Sign Document', de: 'Dokument unterzeichnen', fr: 'Signer le document', es: 'Firmar documento', ro: 'Semneaza documentul' }, nav: false },
+      { path: '/decline', warp: '@signature-decline', label: { en: 'Decline Request', de: 'Anfrage ablehnen', fr: 'Refuser la demande', es: 'Rechazar solicitud', ro: 'Respinge cererea' }, nav: false },
+      { path: '/remind', warp: '@signature-remind', label: { en: 'Send Reminder', de: 'Erinnerung senden', fr: 'Envoyer un rappel', es: 'Enviar recordatorio', ro: 'Trimite reminder' }, nav: false },
       { path: '/view', warp: '@signature-view', label: { en: 'View Request', de: 'Anfrage ansehen', fr: 'Voir la demande', es: 'Ver solicitud', ro: 'Vezi cererea' }, nav: false },
       { path: '/list', warp: '@signature-list', label: { en: 'My Requests', de: 'Meine Anfragen', fr: 'Mes demandes', es: 'Mis solicitudes', ro: 'Cererile mele' }, nav: true },
     ],

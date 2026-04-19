@@ -98,6 +98,28 @@ export const meta: Record<string, WarpExtras> = {
     },
     category: 'legal',
   },
+  'signature-decline': {
+    keywords: {
+      en: ['decline', 'reject', 'refuse', 'signature', 'document'],
+      de: ['ablehnen', 'verweigern', 'signatur', 'dokument'],
+    },
+    useCases: {
+      en: ['Formally decline a signature request you received', 'Reject a contract you do not agree to sign'],
+      de: ['Eine erhaltene Signaturanfrage formal ablehnen', 'Einen Vertrag ablehnen, den du nicht unterschreiben möchtest'],
+    },
+    category: 'legal',
+  },
+  'signature-remind': {
+    keywords: {
+      en: ['remind', 'resend', 'follow up', 'signature', 'pending', 'nudge'],
+      de: ['erinnern', 'erneut senden', 'nachfassen', 'signatur', 'ausstehend'],
+    },
+    useCases: {
+      en: ['Resend the signing link to a signer who hasn\'t responded', 'Follow up on a pending signature request'],
+      de: ['Signing-Link erneut an einen Unterzeichner senden', 'Nachfassen bei einer ausstehenden Signaturanfrage'],
+    },
+    category: 'legal',
+  },
   'signature-list': {
     keywords: {
       en: ['list', 'my requests', 'signature requests', 'created', 'pending', 'completed'],

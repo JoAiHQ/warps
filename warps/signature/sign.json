@@ -19,6 +19,7 @@
   "chain": "multiversx",
   "vars": {
     "SC_ADDRESS": "INJECT:SIGNATURE_SC_ADDRESS",
+    "API_BASE": "INJECT:API_BASE",
     "REQUEST_ID": "query:id"
   },
   "actions": [
@@ -73,6 +74,44 @@
           "hidden": true
         }
       ]
+    }
+  ],
+  "next": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Notifying creator...",
+        "de": "Ersteller wird benachrichtigt...",
+        "fr": "Notification du createur...",
+        "es": "Notificando al creador...",
+        "ro": "Creatorul este notificat..."
+      },
+      "destination": {
+        "url": "{{API_BASE}}/cortex/agents/{{JOAI_AGENT_UUID}}/message",
+        "method": "POST"
+      },
+      "inputs": [
+        {
+          "name": "Creator Email",
+          "as": "creatorEmail",
+          "description": {
+            "en": "Email of the request creator to notify.",
+            "de": "E-Mail des Erstellers zur Benachrichtigung.",
+            "fr": "E-mail du createur a notifier.",
+            "es": "Correo del creador para notificar.",
+            "ro": "E-mailul creatorului pentru notificare."
+          },
+          "bot": "Email address of the person who created the signature request.",
+          "type": "email",
+          "source": "field",
+          "required": true
+        }
+      ],
+      "body": {
+        "integrationType": "email",
+        "recipientId": "{{creatorEmail}}",
+        "message": "{{JOAI_WALLET_ADDRESS}} has signed your document \"{{REQUEST_TITLE}}\".\n\nView request: https://devnet.joai.ai/{{JOAI_TEAM_SLUG}}/signature/view?id={{REQUEST_ID}}"
+      }
     }
   ],
   "output": {

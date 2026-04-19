@@ -197,8 +197,48 @@
         "integrationType": "email",
         "recipientId": "{{signerEmail}}",
         "recipientName": "{{signerName}}",
-        "message": "\"{{TITLE}}\"\n\nhttps://joai.ai/warps/signature-sign?id={{REQUEST_ID}}&signer={{SIGNER_ADDRESS}}\n\nSHA-256: {{DOCUMENT_HASH}}"
+        "message": "You have been asked to sign \"{{TITLE}}\".\n\nSign here:\nhttps://devnet.joai.ai/{{JOAI_TEAM_SLUG}}/signature/sign?id={{REQUEST_ID}}&signer={{SIGNER_ADDRESS}}\n\nDocument fingerprint (SHA-256): {{DOCUMENT_HASH}}"
       }
+    }
+  ],
+  "next": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Sending WhatsApp notification...",
+        "de": "WhatsApp-Benachrichtigung wird gesendet...",
+        "fr": "Envoi de la notification WhatsApp...",
+        "es": "Enviando notificacion por WhatsApp...",
+        "ro": "Se trimite notificarea WhatsApp..."
+      },
+      "destination": {
+        "url": "{{API_BASE}}/cortex/agents/{{JOAI_AGENT_UUID}}/message",
+        "method": "POST"
+      },
+      "inputs": [
+        {
+          "name": "Signer WhatsApp",
+          "as": "signerWhatsApp",
+          "description": {
+            "en": "Signer's WhatsApp number (optional). If provided, they will also receive the signing link via WhatsApp.",
+            "de": "WhatsApp-Nummer des Unterzeichners (optional). Falls angegeben, erhält er den Signing-Link auch via WhatsApp.",
+            "fr": "Numero WhatsApp du signataire (optionnel). S il est fourni, il recevra le lien de signature via WhatsApp.",
+            "es": "Numero de WhatsApp del firmante (opcional). Si se proporciona, tambien recibira el enlace de firma por WhatsApp.",
+            "ro": "Numarul de WhatsApp al semnatarului (optional). Daca este furnizat, va primi linkul de semnare si prin WhatsApp."
+          },
+          "bot": "WhatsApp phone number of the signer (international format, e.g. +43123456789). Optional — skip if not available.",
+          "type": "string",
+          "source": "field",
+          "required": false
+        }
+      ],
+      "body": {
+        "integrationType": "whatsapp",
+        "recipientId": "{{signerWhatsApp}}",
+        "recipientName": "{{signerName}}",
+        "message": "You have been asked to sign \"{{TITLE}}\".\n\nSign here:\nhttps://devnet.joai.ai/{{JOAI_TEAM_SLUG}}/signature/sign?id={{REQUEST_ID}}&signer={{SIGNER_ADDRESS}}"
+      },
+      "condition": "{{signerWhatsApp}} != ''"
     }
   ],
   "output": {
