@@ -4,17 +4,451 @@
   "repo": "JoAiHQ/warps",
   "branch": "dev",
   "network": "devnet",
-  "commitSha": "1d89b4a4907213a58f5238ad947d84fe60604e65",
-  "committedAt": "2026-04-19T08:27:51.770Z",
-  "generatedAt": "2026-04-19T08:27:53.999Z",
+  "commitSha": "d34682bb3553d375fb8230cf56c4ecd6b0e7328e",
+  "committedAt": "2026-04-19T08:52:48.034Z",
+  "generatedAt": "2026-04-19T08:52:51.076Z",
   "upserts": [
+    {
+      "key": "none:appointment-availability",
+      "identifier": "@appointment-availability",
+      "alias": "appointment-availability",
+      "chain": "none",
+      "hash": "7fb83b12c048dfc8d2427b5c221dec449e7b3a5d66deb42955ea712867cba54c",
+      "checksum": "7fb83b12c048dfc8d2427b5c221dec449e7b3a5d66deb42955ea712867cba54c",
+      "name": "Appointments: Availability",
+      "title": {
+        "en": "Appointment availability",
+        "de": "Terminverfuegbarkeit",
+        "fr": "Disponibilite des rendez-vous",
+        "es": "Disponibilidad de citas",
+        "ro": "Disponibilitatea programarilor"
+      },
+      "description": {
+        "en": "Collect booking details and return appointment availability from the current agent calendar.",
+        "de": "Sammelt Buchungsdetails und liefert Terminverfuegbarkeit aus dem Kalender des aktuellen Agenten.",
+        "fr": "Collectez les details de reservation et recuperez les disponibilites depuis le calendrier de l agent actuel.",
+        "es": "Recoge los datos de la reserva y devuelve la disponibilidad desde el calendario del agente actual.",
+        "ro": "Colecteaza detaliile rezervarii si intoarce disponibilitatea din calendarul agentului curent."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "873defa13190da1a0124161ec46673a00290697aaea9851a2b8fc027482adac9",
+        "slug": "appointment",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "Appointment",
+        "description": {
+          "en": "Appointment booking and intake flows for service businesses.",
+          "de": "Terminbuchung und Intake-Abläufe für Dienstleistungsunternehmen.",
+          "fr": "Prise de rendez-vous et parcours de reservation pour les entreprises de services.",
+          "es": "Reservas de citas y flujos de atencion para negocios de servicios.",
+          "ro": "Programari si fluxuri de preluare pentru afaceri de servicii."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "Appointments: Availability",
+        "title": {
+          "en": "Appointment availability",
+          "de": "Terminverfuegbarkeit",
+          "fr": "Disponibilite des rendez-vous",
+          "es": "Disponibilidad de citas",
+          "ro": "Disponibilitatea programarilor"
+        },
+        "description": {
+          "en": "Collect booking details and return appointment availability from the current agent calendar.",
+          "de": "Sammelt Buchungsdetails und liefert Terminverfuegbarkeit aus dem Kalender des aktuellen Agenten.",
+          "fr": "Collectez les details de reservation et recuperez les disponibilites depuis le calendrier de l agent actuel.",
+          "es": "Recoge los datos de la reserva y devuelve la disponibilidad desde el calendario del agente actual.",
+          "ro": "Colecteaza detaliile rezervarii si intoarce disponibilitatea din calendarul agentului curent."
+        },
+        "bot": "REQUIRED first step for any appointment booking. Before invoking, ask the user what time window works for them — never assume a time. Do not create calendar events directly; that bypasses availability checks, policy rules, and attendee tracking. Collect the purpose, their preferred time window, name, and timezone. Convert relative dates to exact ISO datetimes before submitting.",
+        "vars": {
+          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Check availability",
+              "de": "Verfuegbarkeit pruefen",
+              "fr": "Verifier les disponibilites",
+              "es": "Ver disponibilidad",
+              "ro": "Verifica disponibilitatea"
+            },
+            "destination": {
+              "url": "https://devnet-api.joai.ai/v1/agents/{{JOAI_AGENT_UUID}}/appointments/availability",
+              "method": "POST",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Appointment Title",
+                "as": "title",
+                "description": {
+                  "en": "The purpose of the appointment",
+                  "de": "Der Zweck des Termins",
+                  "fr": "Objet du rendez-vous",
+                  "es": "Motivo de la cita",
+                  "ro": "Scopul programarii"
+                },
+                "bot": "Short title describing the appointment, such as 'Intro Call', 'Product Demo', or 'Support Session'.",
+                "type": "string",
+                "position": "arg:1",
+                "source": "field",
+                "required": true,
+                "min": 3
+              },
+              {
+                "name": "Window Start",
+                "as": "windowStart",
+                "description": {
+                  "en": "The earliest acceptable start time in ISO format",
+                  "de": "Die frueheste moegliche Startzeit im ISO-Format",
+                  "fr": "Heure de debut la plus tot acceptable au format ISO",
+                  "es": "Hora mas temprana aceptable en formato ISO",
+                  "ro": "Cea mai devreme ora acceptata de inceput in format ISO"
+                },
+                "bot": "Earliest acceptable appointment start in ISO 8601 format, for example 2026-04-03T09:00:00Z.",
+                "type": "datetime",
+                "position": "arg:2",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Window End",
+                "as": "windowEnd",
+                "description": {
+                  "en": "The latest acceptable end of the scheduling window in ISO format",
+                  "de": "Das spaeteste Ende des Zeitfensters im ISO-Format",
+                  "fr": "Heure de fin la plus tardive acceptable pour le creneau au format ISO",
+                  "es": "Fin mas tardio aceptable de la franja horaria en formato ISO",
+                  "ro": "Cel mai tarziu sfarsit acceptat al intervalului in format ISO"
+                },
+                "bot": "End of the acceptable scheduling window in ISO 8601 format, for example 2026-04-03T17:00:00Z.",
+                "type": "datetime",
+                "position": "arg:3",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Duration Minutes",
+                "as": "durationMinutes",
+                "description": {
+                  "en": "Appointment length in minutes",
+                  "de": "Terminlaenge in Minuten",
+                  "fr": "Duree du rendez-vous en minutes",
+                  "es": "Duracion de la cita en minutos",
+                  "ro": "Durata programarii in minute"
+                },
+                "bot": "Meeting duration in minutes. Use 30 unless the user asks for a different length.",
+                "type": "number",
+                "source": "var",
+                "required": true,
+                "default": 30
+              },
+              {
+                "name": "Attendee Name",
+                "as": "attendeeName",
+                "description": {
+                  "en": "The attendee or requester name",
+                  "de": "Name des Teilnehmers oder Anfragenden",
+                  "fr": "Nom du participant ou du demandeur",
+                  "es": "Nombre de la persona asistente o solicitante",
+                  "ro": "Numele participantului sau al solicitantului"
+                },
+                "bot": "The name of the person requesting or attending the appointment.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Attendee Email",
+                "as": "attendeeEmail",
+                "description": {
+                  "en": "The attendee or requester email",
+                  "de": "E-Mail des Teilnehmers oder Anfragenden",
+                  "fr": "E-mail du participant ou du demandeur",
+                  "es": "Correo de la persona asistente o solicitante",
+                  "ro": "E-mailul participantului sau al solicitantului"
+                },
+                "bot": "The email address of the attendee if known.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Notes",
+                "as": "description",
+                "description": {
+                  "en": "Optional notes or agenda",
+                  "de": "Optionale Notizen oder Agenda",
+                  "fr": "Notes ou ordre du jour facultatifs",
+                  "es": "Notas o agenda opcionales",
+                  "ro": "Note sau agenda optionale"
+                },
+                "bot": "Optional notes, context, or agenda for the appointment.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Timezone",
+                "as": "timezone",
+                "type": "string",
+                "position": "payload:timezone",
+                "source": "field",
+                "required": false
+              }
+            ]
+          }
+        ],
+        "sections": [
+          {
+            "title": {
+              "en": "What's it about?",
+              "de": "Worum geht es?",
+              "fr": "De quoi s agit-il ?",
+              "es": "De que se trata?",
+              "ro": "Despre ce este vorba?"
+            },
+            "description": {
+              "en": "Give us a quick idea of the purpose.",
+              "de": "Gib uns eine kurze Idee des Zwecks.",
+              "fr": "Donnez-nous rapidement le contexte du rendez-vous.",
+              "es": "Cuentanos brevemente el motivo.",
+              "ro": "Spune-ne pe scurt care este scopul."
+            },
+            "inputs": [
+              "title"
+            ]
+          },
+          {
+            "title": {
+              "en": "When are you free?",
+              "de": "Wann hast du Zeit?",
+              "fr": "Quand etes-vous disponible ?",
+              "es": "Cuando te viene bien?",
+              "ro": "Cand esti disponibil?"
+            },
+            "description": {
+              "en": "Pick a window and we'll find the best slot.",
+              "de": "Wähle ein Zeitfenster und wir finden den besten Slot.",
+              "fr": "Choisissez un creneau et nous trouverons le meilleur horaire.",
+              "es": "Elige una franja y encontraremos el mejor hueco.",
+              "ro": "Alege un interval si gasim cel mai bun slot."
+            },
+            "inputs": [
+              "windowStart",
+              "windowEnd"
+            ]
+          },
+          {
+            "title": {
+              "en": "About you",
+              "de": "Über dich",
+              "fr": "A votre sujet",
+              "es": "Sobre ti",
+              "ro": "Despre tine"
+            },
+            "description": {
+              "en": "So we know who to expect.",
+              "de": "Damit wir wissen, wen wir erwarten.",
+              "fr": "Pour savoir qui nous allons recevoir.",
+              "es": "Asi sabremos a quien esperar.",
+              "ro": "Ca sa stim pe cine asteptam."
+            },
+            "inputs": [
+              "attendeeName",
+              "attendeeEmail",
+              "description"
+            ]
+          }
+        ],
+        "output": {
+          "CONNECTED": "out.data.connected",
+          "TIMEZONE": "out.data.timezone",
+          "SERVICE": "out.data.service",
+          "SLOTS": "out.data.slots",
+          "SLOT_COUNT": "out.data.slots.length"
+        },
+        "messages": {
+          "success": {
+            "en": "Found {{SLOT_COUNT}} appointment slot(s).",
+            "de": "{{SLOT_COUNT}} Terminvorschlaege gefunden.",
+            "fr": "{{SLOT_COUNT}} creneau(x) de rendez-vous trouve(s).",
+            "es": "Se han encontrado {{SLOT_COUNT}} horario(s) disponible(s).",
+            "ro": "Am gasit {{SLOT_COUNT}} interval(e) disponibile pentru programare."
+          }
+        }
+      },
+      "extras": {
+        "keywords": {
+          "en": [
+            "check availability",
+            "available time slots",
+            "open appointments",
+            "free schedule slots"
+          ],
+          "de": [
+            "Verfügbarkeit prüfen",
+            "verfügbare Zeitslots",
+            "offene Termine",
+            "freie Terminslots"
+          ]
+        },
+        "useCases": {
+          "en": [
+            "Browse available slots for next week before booking",
+            "Check if a specific date and time is still open",
+            "Find the earliest available appointment slot"
+          ],
+          "de": [
+            "Verfügbare Slots für nächste Woche vor der Buchung durchsuchen",
+            "Prüfen, ob ein bestimmtes Datum und eine bestimmte Uhrzeit noch frei ist",
+            "Den frühesten verfügbaren Terminslot finden"
+          ]
+        },
+        "category": "productivity",
+        "faq": {
+          "en": [
+            {
+              "question": "How are available appointment slots determined?",
+              "answer": "Available slots are based on the provider's configured working hours, existing bookings, and buffer times between appointments. Only genuinely open slots are shown."
+            },
+            {
+              "question": "Can I check availability for a specific date?",
+              "answer": "Yes, specify a date to see all open time slots for that day. You can also browse multiple days to find the most convenient option."
+            }
+          ],
+          "de": [
+            {
+              "question": "Wie werden verfügbare Terminslots ermittelt?",
+              "answer": "Verfügbare Slots basieren auf den konfigurierten Arbeitszeiten des Anbieters, bestehenden Buchungen und Pufferzeiten zwischen Terminen. Es werden nur tatsächlich freie Slots angezeigt."
+            },
+            {
+              "question": "Kann ich die Verfügbarkeit für ein bestimmtes Datum prüfen?",
+              "answer": "Ja, gib ein Datum an, um alle offenen Zeitslots für diesen Tag zu sehen. Du kannst auch mehrere Tage durchsuchen, um die passendste Option zu finden."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "key": "none:joai-private-warp-create",
+      "identifier": "@joai-private-warp-create",
+      "alias": "joai-private-warp-create",
+      "chain": "none",
+      "hash": "9416c893109896d802017eac53ea80a299a7e129ad08f6afc3fded7eea62ea7c",
+      "checksum": "9416c893109896d802017eac53ea80a299a7e129ad08f6afc3fded7eea62ea7c",
+      "name": "JoAi: Create Private Warp",
+      "title": {
+        "en": "Create a private warp",
+        "de": "Privaten Warp erstellen"
+      },
+      "description": {
+        "en": "Create a private warp under your brand that calls a custom endpoint — enabling your agent to trigger private automations.",
+        "de": "Erstelle einen privaten Warp unter deiner Marke, der einen eigenen Endpunkt aufruft — damit dein Agent private Automatisierungen auslösen kann."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: Create Private Warp",
+        "title": {
+          "en": "Create a private warp",
+          "de": "Privaten Warp erstellen"
+        },
+        "description": {
+          "en": "Create a private warp under your brand that calls a custom endpoint — enabling your agent to trigger private automations.",
+          "de": "Erstelle einen privaten Warp unter deiner Marke, der einen eigenen Endpunkt aufruft — damit dein Agent private Automatisierungen auslösen kann."
+        },
+        "bot": "Use this when the user wants to create a custom private warp for their brand. Pass a pre-built JSON payload containing brand, definition, and public fields.",
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Create private warp",
+              "de": "Privaten Warp erstellen"
+            },
+            "destination": {
+              "url": "https://devnet-api.joai.ai/v1/warps",
+              "method": "POST",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "PAYLOAD",
+                "as": "PAYLOAD",
+                "type": "string",
+                "source": "field",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "messages": {
+          "success": {
+            "en": "Private warp created.",
+            "de": "Privater Warp erstellt."
+          }
+        }
+      },
+      "extras": null
+    },
     {
       "key": "none:joai-private-warp-update",
       "identifier": "@joai-private-warp-update",
       "alias": "joai-private-warp-update",
       "chain": "none",
-      "hash": "cc5c44a84481baa80d88bc669052296e7cc8d73d97b49f93f0bcdf78816ac869",
-      "checksum": "cc5c44a84481baa80d88bc669052296e7cc8d73d97b49f93f0bcdf78816ac869",
+      "hash": "0ab28cdcb14d012e1057515ddced5175969fba7011167ad42154ad5be47d9d91",
+      "checksum": "0ab28cdcb14d012e1057515ddced5175969fba7011167ad42154ad5be47d9d91",
       "name": "JoAi: Update Private Warp",
       "title": {
         "en": "Update a private warp",
@@ -86,17 +520,17 @@
                 "name": "Identifier",
                 "as": "identifier",
                 "type": "string",
-                "source": "hidden",
+                "position": "url:identifier",
+                "source": "field",
                 "required": true,
-                "default": ""
+                "min": 1
               },
               {
                 "name": "PAYLOAD",
                 "as": "PAYLOAD",
                 "type": "string",
-                "source": "hidden",
-                "required": true,
-                "default": ""
+                "source": "field",
+                "required": true
               }
             ]
           }
