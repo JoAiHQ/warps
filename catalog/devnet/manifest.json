@@ -4,8 +4,8 @@
   "repo": "JoAiHQ/warps",
   "branch": "dev",
   "network": "devnet",
-  "commitSha": "5893cf03aafb4a22f11193feab5cf61211e47ba5",
-  "generatedAt": "2026-04-19T16:38:30.062Z",
+  "commitSha": "42789187006eee5e2ed6166cb66471df9130feb4",
+  "generatedAt": "2026-04-19T16:46:42.336Z",
   "warps": [
     {
       "key": "arbitrum:omniset-deposit-arbitrum",
@@ -62182,16 +62182,16 @@
       "identifier": "@joai-studio-send",
       "alias": "joai-studio-send",
       "chain": "none",
-      "hash": "021f247a60d9d4dfc9b4da622c67602be86cdbc85c9747600c7aab60d3568f96",
-      "checksum": "021f247a60d9d4dfc9b4da622c67602be86cdbc85c9747600c7aab60d3568f96",
+      "hash": "3eef5272bfe0cc9b974e7ab2f6e0c510e0fde2a561016cc44077a9eefffcb338",
+      "checksum": "3eef5272bfe0cc9b974e7ab2f6e0c510e0fde2a561016cc44077a9eefffcb338",
       "name": "JoAi: Studio Send",
       "title": {
-        "en": "Send studio content",
-        "de": "Studio-Inhalt senden"
+        "en": "Send to Studio",
+        "de": "An Studio senden"
       },
       "description": {
-        "en": "Send produced studio content to a channel or recipient.",
-        "de": "Sende produzierten Studio-Inhalt an einen Kanal oder Empfänger."
+        "en": "Send a message or instruction to the media studio to build or update a project.",
+        "de": "Sende eine Nachricht oder Anweisung an das Media Studio, um ein Projekt zu erstellen oder zu aktualisieren."
       },
       "preview": null,
       "creator": "github:JoAiHQ/warps",
@@ -62228,14 +62228,14 @@
         "protocol": "warp:3.0.0",
         "name": "JoAi: Studio Send",
         "title": {
-          "en": "Send studio content",
-          "de": "Studio-Inhalt senden"
+          "en": "Send to Studio",
+          "de": "An Studio senden"
         },
         "description": {
-          "en": "Send produced studio content to a channel or recipient.",
-          "de": "Sende produzierten Studio-Inhalt an einen Kanal oder Empfänger."
+          "en": "Send a message or instruction to the media studio to build or update a project.",
+          "de": "Sende eine Nachricht oder Anweisung an das Media Studio, um ein Projekt zu erstellen oder zu aktualisieren."
         },
-        "bot": "Use this when the user wants to send or publish studio output to a destination such as an email, channel, or recipient.",
+        "bot": "Use this when the user wants to create or continue a studio project — generative video, slideshow, or source-video clipping.",
         "vars": {
           "AGENT_UUID": "query:agent"
         },
@@ -62243,8 +62243,8 @@
           {
             "type": "collect",
             "label": {
-              "en": "Send content",
-              "de": "Inhalt senden"
+              "en": "Send to Studio",
+              "de": "An Studio senden"
             },
             "destination": {
               "url": "https://devnet-api.joai.ai/v1/projects/{{AGENT_UUID}}/studio/send",
@@ -62255,38 +62255,55 @@
             },
             "inputs": [
               {
-                "name": "Channel",
-                "as": "channel",
+                "name": "Message",
+                "as": "message",
                 "description": {
-                  "en": "The channel or platform to send to",
-                  "de": "Der Kanal oder die Plattform, an die gesendet werden soll"
+                  "en": "Your instruction or message to the studio",
+                  "de": "Deine Anweisung oder Nachricht an das Studio"
                 },
-                "bot": "The delivery channel (e.g., email, slack, webhook).",
+                "bot": "The instruction or creative brief for the studio.",
                 "type": "string",
+                "position": "arg:0",
+                "source": "field",
+                "required": true,
+                "min": 1
+              },
+              {
+                "name": "Project ID",
+                "as": "projectId",
+                "description": {
+                  "en": "Existing project ID to continue working on",
+                  "de": "Bestehende Projekt-ID, an der weitergearbeitet werden soll"
+                },
+                "bot": "The project hash ID. Omit to create a new project.",
+                "type": "string",
+                "position": "arg:1",
                 "source": "field",
                 "required": false
               },
               {
-                "name": "Recipient",
-                "as": "recipient",
+                "name": "Output Type",
+                "as": "outputType",
                 "description": {
-                  "en": "The recipient address or identifier",
-                  "de": "Die Empfängeradresse oder -kennung"
+                  "en": "Primary output type: video, slideshow, or clips",
+                  "de": "Primärer Ausgabetyp: video, slideshow oder clips"
                 },
-                "bot": "The recipient — an email address, user ID, or channel identifier depending on the channel.",
+                "bot": "Use 'clips' to extract short clips from a source video. Use 'video' for generative video. Use 'slideshow' for image sequences.",
                 "type": "string",
+                "position": "arg:2",
                 "source": "field",
                 "required": false
               },
               {
-                "name": "Content",
-                "as": "content",
+                "name": "Source URL",
+                "as": "sourceUrl",
                 "description": {
-                  "en": "The content to send",
-                  "de": "Der zu sendende Inhalt"
+                  "en": "Direct video URL for clips projects",
+                  "de": "Direkte Video-URL für Clips-Projekte"
                 },
-                "bot": "The content body to send. If omitted, the latest produced content from the project will be used.",
+                "bot": "A direct .mp4, .mov, or .webm URL to use as the source video for clip extraction.",
                 "type": "string",
+                "position": "arg:3",
                 "source": "field",
                 "required": false
               }
@@ -62295,8 +62312,8 @@
         ],
         "messages": {
           "success": {
-            "en": "Content sent.",
-            "de": "Inhalt gesendet."
+            "en": "Studio is processing your request.",
+            "de": "Das Studio verarbeitet deine Anfrage."
           }
         }
       },
