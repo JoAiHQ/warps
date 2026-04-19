@@ -15,7 +15,7 @@
     "es": "Envia una solicitud de firma con validez legal. La persona firmante recibe un correo y confirma el documento con un clic.",
     "ro": "Trimite o cerere de semnatura cu valoare legala. Semnatarul primeste un e-mail si confirma documentul cu un singur clic."
   },
-  "bot": "Creates an on-chain signature request and notifies the signer by email. Ask the user for the document title, a SHA-256 hash of the document, a link to the document, the signer's wallet address, the signer's email, and an optional deadline.",
+  "bot": "Request a signature on a document. Upload file first (use desk if pinned), then collect title, signer email, optional name and deadline.",
   "chain": "multiversx",
   "vars": {
     "SC_ADDRESS": "INJECT:SIGNATURE_SC_ADDRESS",
@@ -28,12 +28,12 @@
     {
       "title": { "en": "Document Details", "de": "Dokumentendetails", "fr": "Details du document", "es": "Detalles del documento", "ro": "Detaliile documentului" },
       "description": { "en": "What document needs to be signed?", "de": "Welches Dokument muss unterzeichnet werden?", "fr": "Quel document doit etre signe ?", "es": "Que documento hay que firmar?", "ro": "Ce document trebuie semnat?" },
-      "inputs": ["title", "documentHash", "documentUrl"]
+      "inputs": ["title", "document"]
     },
     {
       "title": { "en": "Signer", "de": "Unterzeichner", "fr": "Signataire", "es": "Firmante", "ro": "Semnatar" },
       "description": { "en": "Who needs to sign this document?", "de": "Wer muss dieses Dokument unterzeichnen?", "fr": "Qui doit signer ce document ?", "es": "Quien tiene que firmar este documento?", "ro": "Cine trebuie sa semneze acest document?" },
-      "inputs": ["signerAddress", "signerEmail", "signerName"]
+      "inputs": ["signerEmail", "signerName"]
     },
     {
       "title": { "en": "Settings", "de": "Einstellungen", "fr": "Parametres", "es": "Ajustes", "ro": "Setari" },
@@ -66,7 +66,7 @@
             "es": "Titulo del documento que se va a firmar.",
             "ro": "Titlul documentului care trebuie semnat."
           },
-          "bot": "Short, clear document title — e.g. 'Freelance Agreement Q2', 'NDA with Acme Corp'.",
+          "bot": "Short document title.",
           "type": "string",
           "position": "arg:1",
           "source": "field",
@@ -77,22 +77,15 @@
         {
           "name": "Document Hash",
           "as": "documentHash",
-          "description": {
-            "en": "SHA-256 hash of the document. Proves the document hasn't been altered.",
-            "de": "SHA-256-Hash des Dokuments. Beweist, dass das Dokument nicht verändert wurde.",
-            "fr": "Hash SHA-256 du document. Prouve que le document n a pas ete modifie.",
-            "es": "Hash SHA-256 del documento. Demuestra que el documento no ha sido alterado.",
-            "ro": "Hash-ul SHA-256 al documentului. Dovedeste ca documentul nu a fost modificat."
-          },
-          "bot": "SHA-256 fingerprint of the document file. Generate with: sha256sum <file>.",
           "type": "string",
           "position": "arg:2",
-          "source": "field",
+          "source": "hidden",
+          "modifier": "crypto:sha256:document",
           "required": true
         },
         {
           "name": "Document",
-          "as": "documentUrl",
+          "as": "document",
           "description": {
             "en": "Upload the PDF document to be signed. The SHA-256 fingerprint will be computed automatically.",
             "de": "Lade das zu unterzeichnende PDF-Dokument hoch. Der SHA-256-Fingerabdruck wird automatisch berechnet.",
@@ -100,9 +93,8 @@
             "es": "Sube el documento PDF que hay que firmar. La huella SHA-256 se calculara automaticamente.",
             "ro": "Incarca documentul PDF care trebuie semnat. Amprenta SHA-256 va fi calculata automat."
           },
-          "bot": "URL of the document to be signed. Accepts a public URL or an uploaded file URL.",
-          "type": "media",
-          "hashInput": "documentHash",
+          "bot": "Show a file upload embed. Use desk document if already pinned.",
+          "type": "file",
           "position": "arg:3",
           "source": "field",
           "required": true
@@ -130,22 +122,6 @@
             "336": "14d"
           }
         },
-        {
-          "name": "Signer Address",
-          "as": "signerAddress",
-          "description": {
-            "en": "Wallet address of the signer.",
-            "de": "Wallet-Adresse des Unterzeichners.",
-            "fr": "Adresse du wallet du signataire.",
-            "es": "Direccion de la wallet de la persona firmante.",
-            "ro": "Adresa wallet-ului semnatarului."
-          },
-          "bot": "MultiversX wallet address (erd1...) of the person who needs to sign.",
-          "type": "Address",
-          "position": "arg:5",
-          "source": "field",
-          "required": true
-        }
       ]
     },
     {

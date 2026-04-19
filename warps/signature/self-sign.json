@@ -15,7 +15,7 @@
     "es": "Sube un documento y firmalo tu mismo. Crea una prueba de autoria on-chain — ideal para enviar una copia firmada por correo.",
     "ro": "Incarca un document si semneaza-l singur. Creeaza o dovada de paternitate on-chain — ideal pentru a trimite o copie semnata prin e-mail."
   },
-  "bot": "Creates a self-signed document on-chain in a single transaction. Ask for the document title, upload the PDF, and the wallet address automatically becomes the sole signer.",
+  "bot": "Self-sign a document on-chain. Upload file first (use desk if pinned), then collect title.",
   "chain": "multiversx",
   "vars": {
     "SC_ADDRESS": "INJECT:SIGNATURE_SC_ADDRESS",
@@ -27,7 +27,7 @@
     {
       "title": { "en": "Document", "de": "Dokument", "fr": "Document", "es": "Documento", "ro": "Document" },
       "description": { "en": "Upload the document you want to sign.", "de": "Lade das Dokument hoch, das du unterzeichnen möchtest.", "fr": "Telechargez le document que vous souhaitez signer.", "es": "Sube el documento que quieres firmar.", "ro": "Incarca documentul pe care doresti sa il semnezi." },
-      "inputs": ["title", "documentHash", "documentUrl"]
+      "inputs": ["title", "document"]
     }
   ],
   "actions": [
@@ -55,7 +55,7 @@
             "es": "Titulo corto que describe este documento.",
             "ro": "Titlu scurt care descrie acest document."
           },
-          "bot": "Short document title — e.g. 'Invoice #42', 'Proposal for Acme Corp'.",
+          "bot": "Short document title.",
           "type": "string",
           "position": "arg:1",
           "source": "field",
@@ -66,22 +66,15 @@
         {
           "name": "Document Hash",
           "as": "documentHash",
-          "description": {
-            "en": "SHA-256 hash of the document. Auto-computed when you upload.",
-            "de": "SHA-256-Hash des Dokuments. Wird beim Upload automatisch berechnet.",
-            "fr": "Hash SHA-256 du document. Calcule automatiquement lors du telechargement.",
-            "es": "Hash SHA-256 del documento. Se calcula automaticamente al subir.",
-            "ro": "Hash-ul SHA-256 al documentului. Calculat automat la incarcare."
-          },
-          "bot": "SHA-256 fingerprint of the document. Auto-filled when the user uploads the file.",
           "type": "string",
           "position": "arg:2",
-          "source": "field",
+          "source": "hidden",
+          "modifier": "crypto:sha256:document",
           "required": true
         },
         {
           "name": "Document",
-          "as": "documentUrl",
+          "as": "document",
           "description": {
             "en": "Upload the PDF to be signed. The fingerprint is computed automatically.",
             "de": "Lade das zu unterzeichnende PDF hoch. Der Fingerabdruck wird automatisch berechnet.",
@@ -89,9 +82,8 @@
             "es": "Sube el PDF que hay que firmar. La huella se calcula automaticamente.",
             "ro": "Incarca PDF-ul de semnat. Amprenta este calculata automat."
           },
-          "bot": "URL or uploaded file of the document to self-sign.",
-          "type": "media",
-          "hashInput": "documentHash",
+          "bot": "Show a file upload embed. Use desk document if already pinned.",
+          "type": "file",
           "position": "arg:3",
           "source": "field",
           "required": true
