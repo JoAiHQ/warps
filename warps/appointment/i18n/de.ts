@@ -20,10 +20,12 @@ export const de: typeof en = {
     today: 'Heute',
     tomorrow: 'Morgen',
     nameRequired: 'Name ist erforderlich.',
+    timeZone: 'Zeitzone',
     cancelAppointment: 'Termin absagen',
     cancelling: 'Wird abgesagt...',
     cancelled: 'Termin abgesagt',
     cancelledMessage: 'Dein Termin wurde abgesagt.',
+    slotsError: 'Verfügbare Zeiten konnten nicht geladen werden. Bitte erneut versuchen.',
   },
   configure: {
     title: 'Termineinstellungen',

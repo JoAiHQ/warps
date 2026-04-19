@@ -20,10 +20,12 @@ export const fr: typeof en = {
     today: 'Aujourd\'hui',
     tomorrow: 'Demain',
     nameRequired: 'Le nom est obligatoire.',
+    timeZone: 'Fuseau horaire',
     cancelAppointment: 'Annuler le rendez-vous',
     cancelling: 'Annulation en cours...',
     cancelled: 'Rendez-vous annulé',
     cancelledMessage: 'Ton rendez-vous a été annulé.',
+    slotsError: 'Impossible de charger les créneaux disponibles. Réessaie.',
   },
   configure: {
     title: 'Paramètres de rendez-vous',

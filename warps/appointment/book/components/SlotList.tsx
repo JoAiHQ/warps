@@ -1,22 +1,26 @@
 import { formatDayFull, formatTime } from '../helpers/format'
 import type { AvailabilitySlot } from '../warp.types'
+import { TimezoneSelect } from './TimezoneSelect'
 
 type Props = {
   selectedDate: Date
   slots: AvailabilitySlot[]
   loading: boolean
+  error: string | null
   displayTimezone: string
   locale: string
   noSlotsLabel: string
+  timeZoneLabel: string
   onSelect: (slot: AvailabilitySlot) => void
+  onTimezoneChange: (tz: string) => void
 }
 
-export function SlotList({ selectedDate, slots, loading, displayTimezone, locale, noSlotsLabel, onSelect }: Props) {
+export function SlotList({ selectedDate, slots, loading, error, displayTimezone, locale, noSlotsLabel, timeZoneLabel, onSelect, onTimezoneChange }: Props) {
   return (
     <div className="flex flex-col gap-3 p-4 h-full">
       <div>
         <p className="text-sm font-semibold text-gray-900 dark:text-white">{formatDayFull(selectedDate, locale)}</p>
-        <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">{displayTimezone}</p>
+        <TimezoneSelect value={displayTimezone} label={timeZoneLabel} onChange={onTimezoneChange} />
       </div>
       {loading ? (
         <div className="flex flex-col gap-2">
@@ -24,6 +28,8 @@ export function SlotList({ selectedDate, slots, loading, displayTimezone, locale
             <div key={i} className="h-10 rounded-lg bg-gray-100 dark:bg-gray-800 animate-pulse" />
           ))}
         </div>
+      ) : error ? (
+        <p className="text-sm text-red-500 dark:text-red-400">{error}</p>
       ) : slots.length === 0 ? (
         <p className="text-sm text-gray-400 dark:text-gray-500">{noSlotsLabel}</p>
       ) : (

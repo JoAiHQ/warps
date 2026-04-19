@@ -18,10 +18,12 @@ export const en = {
     today: 'Today',
     tomorrow: 'Tomorrow',
     nameRequired: 'Name is required.',
+    timeZone: 'Time zone',
     cancelAppointment: 'Cancel appointment',
     cancelling: 'Cancelling...',
     cancelled: 'Appointment cancelled',
     cancelledMessage: 'Your appointment has been cancelled.',
+    slotsError: 'Could not load available times. Please try again.',
   },
   configure: {
     title: 'Appointment Settings',
