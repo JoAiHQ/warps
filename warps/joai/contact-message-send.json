@@ -1,0 +1,99 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Send Contact Message",
+  "title": {
+    "en": "Send message to contact",
+    "de": "Nachricht an Kontakt senden"
+  },
+  "description": {
+    "en": "Fetches a contact by ID, then sends them a message via the specified integration (defaults to email).",
+    "de": "Holt einen Kontakt anhand der ID und sendet ihm eine Nachricht über die angegebene Integration (Standard: E-Mail)."
+  },
+  "bot": "Use this to send a direct message to a contact by their ID. Provide the contact ID, the message text, and optionally the integration type (e.g. email, telegram).",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "CONTACT_ID": "query:contactId",
+    "INTEGRATION": "query:integration",
+    "MESSAGE": "query:message",
+    "CONTACT_EMAIL": "env:contactEmail",
+    "CONTACT_NAME": "env:contactName"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "auto": true,
+      "label": {
+        "en": "Fetch contact",
+        "de": "Kontakt abrufen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/contacts/{{CONTACT_ID}}",
+        "method": "GET",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": []
+    },
+    {
+      "type": "collect",
+      "auto": true,
+      "label": {
+        "en": "Send message",
+        "de": "Nachricht senden"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/agents/{{JOAI_AGENT_UUID}}/room/message",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Integration",
+          "as": "integration",
+          "type": "string",
+          "position": "payload:integration",
+          "source": "hidden",
+          "default": "{{INTEGRATION}}"
+        },
+        {
+          "name": "RecipientId",
+          "as": "recipientId",
+          "type": "string",
+          "position": "payload:recipientId",
+          "source": "hidden",
+          "default": "{{CONTACT_EMAIL}}"
+        },
+        {
+          "name": "RecipientName",
+          "as": "recipientName",
+          "type": "string",
+          "position": "payload:recipientName",
+          "source": "hidden",
+          "default": "{{CONTACT_NAME}}"
+        },
+        {
+          "name": "Message",
+          "as": "message",
+          "type": "string",
+          "position": "payload:message",
+          "source": "hidden",
+          "default": "{{MESSAGE}}"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "contactEmail": "out.data.email",
+    "contactName": "out.data.name"
+  },
+  "messages": {
+    "success": {
+      "en": "Message sent.",
+      "de": "Nachricht gesendet."
+    }
+  }
+}
