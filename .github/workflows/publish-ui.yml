@@ -3,7 +3,7 @@ name: Publish UI
 on:
   workflow_dispatch:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "dev" ]
     paths:
       - 'warps/**/*.tsx'
       - 'warps/**/*.css'
@@ -42,6 +42,7 @@ jobs:
         git diff --quiet && git diff --staged --quiet || (git commit -m "chore: build and update UI artifacts [skip ci]" && git pull --rebase && git push)
 
     - name: Sync catalog to API
+      continue-on-error: true
       env:
         WARP_GITHUB_SYNC_TOKEN: ${{ secrets.WARP_GITHUB_SYNC_TOKEN }}
       run: node --import tsx scripts/catalog/sync-to-api.ts --branch "${{ github.ref_name }}" --commit "$(git rev-parse HEAD)" --repo "${{ github.repository }}"
