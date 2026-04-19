@@ -73,11 +73,11 @@ function discoverExamples(brandSlug) {
       const examplesPath = join(fullPath, 'examples.json')
       if (existsSync(examplesPath)) {
         const data = JSON.parse(readFileSync(examplesPath, 'utf8'))
-        const distHtml = join(fullPath, 'chatapp.dist.html')
+        const distHtml = readdirSync(fullPath).map(f => join(fullPath, f)).find(f => /chatapp(\..+)?\.dist\.html$/.test(f)) ?? null
         warps.push({
           slug: entry,
           ...data,
-          distHtml: existsSync(distHtml) ? distHtml : null,
+          distHtml,
         })
       }
     }
