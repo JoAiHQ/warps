@@ -10,6 +10,7 @@ pub enum SignatureStatus {
     Completed,
     Cancelled,
     Expired,
+    Declined,
 }
 
 #[type_abi]

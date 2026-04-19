@@ -13,3 +13,5 @@ pub const ERR_NOT_CREATOR: &str = "only the request creator can cancel";
 pub const ERR_DEADLINE_PASSED: &str = "signing deadline has passed";
 pub const ERR_DEADLINE_NOT_PASSED: &str = "deadline has not passed yet";
 pub const ERR_NO_DEADLINE: &str = "request has no deadline";
+pub const ERR_NOT_SIGNER: &str = "caller is not a signer for this request";
+pub const ERR_ALREADY_DECLINED: &str = "caller has already declined this request";

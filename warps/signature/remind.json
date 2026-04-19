@@ -1,0 +1,148 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Signature: Remind",
+  "title": {
+    "en": "Send signing reminder",
+    "de": "Erinnerung zum Unterzeichnen senden",
+    "fr": "Envoyer un rappel de signature",
+    "es": "Enviar recordatorio de firma",
+    "ro": "Trimite reminder de semnare"
+  },
+  "description": {
+    "en": "Resend the signing link to a signer who hasn't responded yet.",
+    "de": "Signing-Link erneut an einen Unterzeichner senden, der noch nicht reagiert hat.",
+    "fr": "Renvoyer le lien de signature a un signataire qui n a pas encore repondu.",
+    "es": "Reenviar el enlace de firma a un firmante que aun no ha respondido.",
+    "ro": "Retrimite linkul de semnare unui semnatar care nu a raspuns inca."
+  },
+  "bot": "Resends the signing reminder to one or more signers. Ask for the request ID, signer wallet address, signer email (and optionally WhatsApp number for WhatsApp reminders), and the team slug.",
+  "chain": "multiversx",
+  "vars": {
+    "SC_ADDRESS": "INJECT:SIGNATURE_SC_ADDRESS",
+    "API_BASE": "INJECT:API_BASE",
+    "REQUEST_ID": "query:id"
+  },
+  "actions": [
+    {
+      "type": "query",
+      "label": {
+        "en": "Loading request...",
+        "de": "Anfrage wird geladen...",
+        "fr": "Chargement de la demande...",
+        "es": "Cargando solicitud...",
+        "ro": "Se incarca cererea..."
+      },
+      "address": "{{SC_ADDRESS}}",
+      "func": "getRequest",
+      "args": [],
+      "inputs": [
+        {
+          "name": "Request ID",
+          "as": "requestId",
+          "type": "u64",
+          "position": "arg:1",
+          "source": "var",
+          "default": "{{REQUEST_ID}}",
+          "required": true
+        }
+      ],
+      "auto": true,
+      "abi": "INJECT:contract/output/signature.abi.json"
+    },
+    {
+      "type": "collect",
+      "label": {
+        "en": "Sending reminder...",
+        "de": "Erinnerung wird gesendet...",
+        "fr": "Envoi du rappel...",
+        "es": "Enviando recordatorio...",
+        "ro": "Se trimite reminderul..."
+      },
+      "destination": {
+        "url": "{{API_BASE}}/cortex/agents/{{JOAI_AGENT_UUID}}/message",
+        "method": "POST"
+      },
+      "inputs": [
+        {
+          "name": "Signer Email",
+          "as": "signerEmail",
+          "description": {
+            "en": "Email address of the signer to remind.",
+            "de": "E-Mail-Adresse des Unterzeichners, an den die Erinnerung gesendet wird.",
+            "fr": "Adresse e-mail du signataire a relancer.",
+            "es": "Correo del firmante al que enviar el recordatorio.",
+            "ro": "Adresa de e-mail a semnatarului caruia ii trimiti reminderul."
+          },
+          "bot": "Email address of the signer who hasn't signed yet.",
+          "type": "email",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Signer Name",
+          "as": "signerName",
+          "description": {
+            "en": "Name of the signer (optional)",
+            "de": "Name des Unterzeichners (optional)",
+            "fr": "Nom du signataire (optionnel)",
+            "es": "Nombre del firmante (opcional)",
+            "ro": "Numele semnatarului (optional)"
+          },
+          "bot": "Full name of the signer for the reminder message.",
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Signer Address",
+          "as": "signerAddress",
+          "description": {
+            "en": "Wallet address of the signer.",
+            "de": "Wallet-Adresse des Unterzeichners.",
+            "fr": "Adresse du wallet du signataire.",
+            "es": "Direccion de la wallet del firmante.",
+            "ro": "Adresa wallet-ului semnatarului."
+          },
+          "bot": "MultiversX wallet address (erd1...) of the signer.",
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Team Slug",
+          "as": "teamSlug",
+          "description": {
+            "en": "Your team slug for the signing link.",
+            "de": "Dein Team-Slug für den Signing-Link.",
+            "fr": "Votre identifiant d equipe pour le lien de signature.",
+            "es": "Tu slug de equipo para el enlace de firma.",
+            "ro": "Slug-ul echipei tale pentru linkul de semnare."
+          },
+          "bot": "Team slug used to construct the signing URL (e.g. 'my-team').",
+          "type": "string",
+          "source": "field",
+          "required": true
+        }
+      ],
+      "body": {
+        "integrationType": "email",
+        "recipientId": "{{signerEmail}}",
+        "recipientName": "{{signerName}}",
+        "message": "Reminder: your signature is still needed.\n\nhttps://devnet.joai.ai/{{teamSlug}}/signature/sign?id={{REQUEST_ID}}&signer={{signerAddress}}\n\nSHA-256: {{DOCUMENT_HASH}}"
+      }
+    }
+  ],
+  "output": {
+    "REQUEST_TITLE": "out.title",
+    "DOCUMENT_HASH": "out.document_hash"
+  },
+  "messages": {
+    "success": {
+      "en": "Reminder sent to {{signerEmail}}.",
+      "de": "Erinnerung an {{signerEmail}} gesendet.",
+      "fr": "Rappel envoye a {{signerEmail}}.",
+      "es": "Recordatorio enviado a {{signerEmail}}.",
+      "ro": "Reminder trimis la {{signerEmail}}."
+    }
+  }
+}

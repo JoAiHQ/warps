@@ -19,4 +19,7 @@ pub trait ConfigModule {
 
     #[storage_mapper("creator_requests")]
     fn creator_requests(&self, creator: &ManagedAddress) -> UnorderedSetMapper<RequestId>;
+
+    #[storage_mapper("request_declined_by")]
+    fn request_declined_by(&self, id: RequestId) -> UnorderedSetMapper<ManagedAddress>;
 }

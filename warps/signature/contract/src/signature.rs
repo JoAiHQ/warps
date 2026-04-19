@@ -5,6 +5,7 @@ use crate::{
     types::{RequestId, SignatureRequest, SignatureStatus},
 };
 
+
 pub const MAX_TITLE_LEN: usize = 128;
 pub const MAX_DOCUMENT_HASH_LEN: usize = 128;
 pub const MAX_DOCUMENT_URL_LEN: usize = 256;
@@ -59,7 +60,6 @@ pub trait SignatureModule: config::ConfigModule + events::EventsModule {
 
         let id = self.next_request_id().get();
 
-        // Store signers, checking for duplicates
         for signer in signers_vec.iter() {
             let inserted = self.request_signers(id).insert(signer.clone());
             require!(inserted, ERR_DUPLICATE_SIGNER);
@@ -136,6 +136,74 @@ pub trait SignatureModule: config::ConfigModule + events::EventsModule {
         self.request_cancelled_event(request_id, req.creator);
     }
 
+    /// Decline a pending request. Only an eligible signer who hasn't signed yet can decline.
+    #[endpoint(declineRequest)]
+    fn decline_request(&self, request_id: RequestId) {
+        require!(!self.request(request_id).is_empty(), ERR_REQUEST_NOT_FOUND);
+
+        let req = self.request(request_id).get();
+        require!(req.status == SignatureStatus::Pending, ERR_NOT_PENDING);
+
+        let caller = self.blockchain().get_caller();
+        require!(self.request_signers(request_id).contains(&caller), ERR_NOT_SIGNER);
+        require!(!self.request_signed_by(request_id).contains(&caller), ERR_ALREADY_SIGNED);
+        require!(!self.request_declined_by(request_id).contains(&caller), ERR_ALREADY_DECLINED);
+
+        self.request_declined_by(request_id).insert(caller.clone());
+
+        self.request_declined_event(request_id, caller);
+    }
+
+    /// Create a request and sign it immediately in one transaction (self-certification).
+    /// Useful for anchoring a document you authored on-chain with your own signature.
+    #[endpoint(selfSign)]
+    fn self_sign(
+        &self,
+        title: ManagedBuffer,
+        document_hash: ManagedBuffer,
+        document_url: ManagedBuffer,
+    ) -> RequestId {
+        require!(title.len() >= 1 && title.len() <= MAX_TITLE_LEN, ERR_INVALID_TITLE);
+        require!(
+            document_hash.len() >= 1 && document_hash.len() <= MAX_DOCUMENT_HASH_LEN,
+            ERR_INVALID_DOCUMENT_HASH
+        );
+        require!(
+            document_url.len() >= 1 && document_url.len() <= MAX_DOCUMENT_URL_LEN,
+            ERR_INVALID_DOCUMENT_URL
+        );
+
+        let caller = self.blockchain().get_caller();
+        let now: u64 = self.blockchain().get_block_timestamp_seconds().as_u64_seconds();
+        let id = self.next_request_id().get();
+
+        self.request_signers(id).insert(caller.clone());
+
+        let req = SignatureRequest {
+            id,
+            creator: caller.clone(),
+            title: title.clone(),
+            document_hash: document_hash.clone(),
+            document_url,
+            signer_count: 1u64,
+            signed_count: 1u64,
+            deadline: 0u64,
+            created_at: now,
+            status: SignatureStatus::Completed,
+        };
+
+        self.request(id).set(req);
+        self.creator_requests(&caller).insert(id);
+        self.next_request_id().set(id + 1);
+        self.request_signed_by(id).insert(caller.clone());
+
+        self.request_created_event(id, caller.clone(), title, document_hash.clone(), 0u64);
+        self.request_completed_event(id, caller.clone());
+        self.document_signed_event(id, caller, 1u64, 1u64);
+
+        id
+    }
+
     /// Expire a request whose deadline has passed. Anyone can call this.
     #[endpoint(expireRequest)]
     fn expire_request(&self, request_id: RequestId) {
@@ -201,6 +269,15 @@ pub trait SignatureModule: config::ConfigModule + events::EventsModule {
         let mut result = MultiValueEncoded::new();
         for id in self.creator_requests(&creator).iter().skip(offset).take(limit) {
             result.push((id, self.request(id).get()).into());
+        }
+        result
+    }
+
+    #[view(getDeclinedBy)]
+    fn get_declined_by(&self, request_id: RequestId) -> MultiValueEncoded<ManagedAddress> {
+        let mut result = MultiValueEncoded::new();
+        for addr in self.request_declined_by(request_id).iter() {
+            result.push(addr);
         }
         result
     }

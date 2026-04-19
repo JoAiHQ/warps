@@ -27,6 +27,11 @@ export const brand = async (config: WarpClientConfig): Promise<WarpbaseBrand> =>
       if (env === 'testnet') return 'https://testnet-api.joai.ai'
       return 'https://api.joai.ai'
     },
+    EXPLORER_BASE: (env: WarpChainEnv) => {
+      if (env === 'devnet') return 'https://devnet-explorer.multiversx.com'
+      if (env === 'testnet') return 'https://testnet-explorer.multiversx.com'
+      return 'https://explorer.multiversx.com'
+    },
   },
   site: {
     enabled: true,
@@ -34,8 +39,12 @@ export const brand = async (config: WarpClientConfig): Promise<WarpbaseBrand> =>
     indexPath: '/',
     routes: [
       { path: '/', warp: '@signature-create', label: { en: 'Request Signature', de: 'Signatur anfordern', fr: 'Demander une signature', es: 'Solicitar firma', ro: 'Solicita semnatura' }, nav: true },
+      { path: '/self-sign', warp: '@signature-self-sign', label: { en: 'Sign My Document', de: 'Eigenes Dokument signieren', fr: 'Signer mon document', es: 'Firmar mi documento', ro: 'Semneaza documentul meu' }, nav: true },
       { path: '/sign', warp: '@signature-sign', label: { en: 'Sign Document', de: 'Dokument unterzeichnen', fr: 'Signer le document', es: 'Firmar documento', ro: 'Semneaza documentul' }, nav: false },
+      { path: '/decline', warp: '@signature-decline', label: { en: 'Decline Request', de: 'Anfrage ablehnen', fr: 'Refuser la demande', es: 'Rechazar solicitud', ro: 'Respinge cererea' }, nav: false },
+      { path: '/remind', warp: '@signature-remind', label: { en: 'Send Reminder', de: 'Erinnerung senden', fr: 'Envoyer un rappel', es: 'Enviar recordatorio', ro: 'Trimite reminder' }, nav: false },
       { path: '/view', warp: '@signature-view', label: { en: 'View Request', de: 'Anfrage ansehen', fr: 'Voir la demande', es: 'Ver solicitud', ro: 'Vezi cererea' }, nav: false },
+      { path: '/cancel', warp: '@signature-cancel', label: { en: 'Cancel Request', de: 'Anfrage stornieren', fr: 'Annuler la demande', es: 'Cancelar solicitud', ro: 'Anuleaza cererea' }, nav: false },
       { path: '/list', warp: '@signature-list', label: { en: 'My Requests', de: 'Meine Anfragen', fr: 'Mes demandes', es: 'Mis solicitudes', ro: 'Cererile mele' }, nav: true },
     ],
   },

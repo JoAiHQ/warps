@@ -1,0 +1,91 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Signature: Cancel",
+  "title": {
+    "en": "Cancel signature request",
+    "de": "Signaturanfrage stornieren",
+    "fr": "Annuler la demande de signature",
+    "es": "Cancelar solicitud de firma",
+    "ro": "Anuleaza cererea de semnatura"
+  },
+  "description": {
+    "en": "Cancel a pending signature request you created. This is recorded permanently on-chain.",
+    "de": "Eine ausstehende Signaturanfrage stornieren. Die Stornierung wird dauerhaft on-chain verzeichnet.",
+    "fr": "Annulez une demande de signature en attente que vous avez creee. L annulation est enregistree de facon permanente on-chain.",
+    "es": "Cancela una solicitud de firma pendiente que creaste. La cancelacion queda registrada de forma permanente on-chain.",
+    "ro": "Anuleaza o cerere de semnatura in asteptare pe care ai creat-o. Anularea este inregistrata permanent on-chain."
+  },
+  "bot": "Cancels a pending signature request by ID. Only the creator can cancel. Query getRequest first to confirm the document title so the user can review before cancelling.",
+  "chain": "multiversx",
+  "vars": {
+    "SC_ADDRESS": "INJECT:SIGNATURE_SC_ADDRESS",
+    "REQUEST_ID": "query:id"
+  },
+  "actions": [
+    {
+      "type": "query",
+      "label": {
+        "en": "Loading request details...",
+        "de": "Anfrage wird geladen...",
+        "fr": "Chargement des details...",
+        "es": "Cargando detalles...",
+        "ro": "Se incarca detaliile..."
+      },
+      "address": "{{SC_ADDRESS}}",
+      "func": "getRequest",
+      "args": [],
+      "inputs": [
+        {
+          "name": "Request ID",
+          "as": "requestId",
+          "type": "u64",
+          "position": "arg:1",
+          "source": "var",
+          "default": "{{REQUEST_ID}}",
+          "required": true
+        }
+      ],
+      "auto": true,
+      "abi": "INJECT:contract/output/signature.abi.json"
+    },
+    {
+      "type": "contract",
+      "label": {
+        "en": "Cancel request",
+        "de": "Anfrage stornieren",
+        "fr": "Annuler la demande",
+        "es": "Cancelar solicitud",
+        "ro": "Anuleaza cererea"
+      },
+      "address": "{{SC_ADDRESS}}",
+      "func": "cancelRequest",
+      "gasLimit": 8000000,
+      "abi": "INJECT:contract/output/signature.abi.json",
+      "inputs": [
+        {
+          "name": "Request ID",
+          "as": "requestId",
+          "type": "u64",
+          "position": "arg:1",
+          "source": "var",
+          "default": "{{REQUEST_ID}}",
+          "required": true,
+          "hidden": true
+        }
+      ]
+    }
+  ],
+  "output": {
+    "REQUEST_TITLE": "out.0.title",
+    "DOCUMENT_HASH": "out.0.document_hash"
+  },
+  "messages": {
+    "success": {
+      "en": "Request cancelled successfully.",
+      "de": "Anfrage erfolgreich storniert.",
+      "fr": "Demande annulee avec succes.",
+      "es": "Solicitud cancelada correctamente.",
+      "ro": "Cererea a fost anulata cu succes."
+    }
+  }
+}
