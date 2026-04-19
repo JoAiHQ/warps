@@ -46,7 +46,7 @@ pub trait SignatureModule: config::ConfigModule + events::EventsModule {
         let signers_vec: ManagedVec<ManagedAddress> = signers.to_vec();
         let signer_count = signers_vec.len();
 
-        require!(signer_count >= 1, ERR_NO_SIGNERS);
+        // signer_count == 0 means open signing — anyone can sign via the link
         require!(signer_count <= MAX_SIGNERS, ERR_TOO_MANY_SIGNERS);
 
         let caller = self.blockchain().get_caller();
@@ -102,7 +102,8 @@ pub trait SignatureModule: config::ConfigModule + events::EventsModule {
         }
 
         let caller = self.blockchain().get_caller();
-        require!(self.request_signers(request_id).contains(&caller), ERR_NOT_ELIGIBLE_SIGNER);
+        let is_open = self.request_signers(request_id).is_empty();
+        require!(is_open || self.request_signers(request_id).contains(&caller), ERR_NOT_ELIGIBLE_SIGNER);
         require!(!self.request_signed_by(request_id).contains(&caller), ERR_ALREADY_SIGNED);
 
         self.request_signed_by(request_id).insert(caller.clone());
@@ -255,7 +256,8 @@ pub trait SignatureModule: config::ConfigModule + events::EventsModule {
 
     #[view(isEligibleSigner)]
     fn is_eligible_signer(&self, request_id: RequestId, address: ManagedAddress) -> bool {
-        self.request_signers(request_id).contains(&address)
+        let is_open = self.request_signers(request_id).is_empty();
+        (is_open || self.request_signers(request_id).contains(&address))
             && !self.request_signed_by(request_id).contains(&address)
     }
 
