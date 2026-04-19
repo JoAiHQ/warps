@@ -1,0 +1,67 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Upload to Desk",
+  "title": {
+    "en": "Upload to desk",
+    "de": "Auf Schreibtisch hochladen"
+  },
+  "description": {
+    "en": "Upload a file to your agent's desk so it can be used in actions.",
+    "de": "Lade eine Datei auf den Schreibtisch deines Agenten hoch, damit sie in Aktionen verwendet werden kann."
+  },
+  "bot": "Upload a file to the agent's desk. Collect the file and whether to pin it (default: yes).",
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Uploading to desk...",
+        "de": "Wird auf Schreibtisch hochgeladen..."
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/agents/{{JOAI_AGENT_UUID}}/desk/import",
+        "method": "POST"
+      },
+      "inputs": [
+        {
+          "name": "File",
+          "as": "url",
+          "description": {
+            "en": "The file to upload to your desk",
+            "de": "Die Datei, die auf deinen Schreibtisch hochgeladen werden soll"
+          },
+          "bot": "File to upload. Accept any document, image, or PDF.",
+          "type": "file",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Pin to desk",
+          "as": "pin",
+          "description": {
+            "en": "Keep this file pinned on your desk for future conversations",
+            "de": "Diese Datei für zukünftige Gespräche am Schreibtisch anheften"
+          },
+          "bot": "Should this file be pinned to the desk? Default yes.",
+          "type": "bool",
+          "source": "field",
+          "required": false,
+          "default": "true"
+        },
+        {
+          "name": "Room",
+          "as": "room",
+          "type": "string",
+          "source": "hidden",
+          "required": true,
+          "default": "{{JOAI_ROOM_ID}}"
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "File uploaded to your desk.",
+      "de": "Datei wurde auf deinen Schreibtisch hochgeladen."
+    }
+  }
+}
