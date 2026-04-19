@@ -1,6 +1,12 @@
 import { useEffect, useRef, useState } from 'react'
 
-const ALL_TIMEZONES = Intl.supportedValuesOf('timeZone')
+const ALL_TIMEZONES: string[] = (() => {
+  try {
+    return (Intl as any).supportedValuesOf('timeZone') as string[]
+  } catch {
+    return ['UTC', 'Europe/London', 'Europe/Paris', 'Europe/Berlin', 'Europe/Vienna', 'America/New_York', 'America/Chicago', 'America/Denver', 'America/Los_Angeles', 'Asia/Tokyo', 'Asia/Shanghai', 'Asia/Kolkata', 'Australia/Sydney']
+  }
+})()
 
 type Props = {
   value: string
