@@ -4,8 +4,8 @@
   "repo": "JoAiHQ/warps",
   "branch": "dev",
   "network": "devnet",
-  "commitSha": "local",
-  "generatedAt": "2026-04-20T21:07:27.295Z",
+  "commitSha": "8a77d204f40a75e8f62f6a945d3343f7046ad562",
+  "generatedAt": "2026-04-20T21:19:17.810Z",
   "warps": [
     {
       "key": "arbitrum:omniset-deposit-arbitrum",
@@ -67969,8 +67969,8 @@
       "identifier": "@mail-draft",
       "alias": "mail-draft",
       "chain": "none",
-      "hash": "15dd20a0795192bac372e1bb89b58938ef82f76ebc3ec3cdcf23a2d43b60af80",
-      "checksum": "15dd20a0795192bac372e1bb89b58938ef82f76ebc3ec3cdcf23a2d43b60af80",
+      "hash": "b40cdb5dda090548caa1559abcdd590f8f83e36521d302fb69abccf67270376a",
+      "checksum": "b40cdb5dda090548caa1559abcdd590f8f83e36521d302fb69abccf67270376a",
       "name": "Mail: Draft",
       "title": {
         "en": "Draft email",
@@ -68049,14 +68049,6 @@
                 "required": true
               },
               {
-                "name": "Activity Type",
-                "as": "type",
-                "type": "string",
-                "source": "value",
-                "value": "email",
-                "required": true
-              },
-              {
                 "name": "Subject",
                 "as": "subject",
                 "description": {
@@ -68071,7 +68063,7 @@
               },
               {
                 "name": "Body",
-                "as": "description",
+                "as": "body",
                 "description": {
                   "en": "Full email body",
                   "de": "Vollständiger E-Mail-Inhalt"
@@ -68105,18 +68097,25 @@
                 "type": "string",
                 "source": "field",
                 "required": false
+              },
+              {
+                "name": "PAYLOAD",
+                "as": "PAYLOAD",
+                "type": "string",
+                "source": "hidden",
+                "modifier": "transform:(inputs) => JSON.stringify({ type: 'email', description: inputs.body, meta: { recipientEmail: inputs.recipientEmail, recipientName: inputs.recipientName || null, subject: inputs.subject } })"
               }
             ]
           }
         ],
         "output": {
           "MAIL_ACTIVITY_ID": "out.data.id",
-          "MAIL_MAILTO_URL": "out.data.mailtoUrl"
+          "MAIL_MAILTO_URL": "transform:`mailto:${inputs.recipientEmail}?subject=${encodeURIComponent(inputs.subject)}&body=${encodeURIComponent(inputs.body)}`"
         },
         "messages": {
           "success": {
-            "en": "Email drafted and logged. [Open in Mail Client →]({{MAIL_MAILTO_URL}})",
-            "de": "E-Mail entworfen und protokolliert. [Im Mail-Client öffnen →]({{MAIL_MAILTO_URL}})"
+            "en": "Draft ready. [Open in mail client →]({{MAIL_MAILTO_URL}})",
+            "de": "Entwurf bereit. [Im Mail-Client öffnen →]({{MAIL_MAILTO_URL}})"
           }
         }
       },
