@@ -1,0 +1,463 @@
+{
+    "buildInfo": {
+        "rustc": {
+            "version": "1.91.0",
+            "commitHash": "f8297e351a40c1439a467bbbb6879088047f50b3",
+            "commitDate": "2025-10-28",
+            "channel": "Stable",
+            "host": "aarch64-apple-darwin",
+            "short": "rustc 1.91.0 (f8297e351 2025-10-28)",
+            "llvmVersion": "21.1"
+        },
+        "contractCrate": {
+            "name": "certificate",
+            "version": "0.0.1"
+        },
+        "framework": {
+            "name": "multiversx-sc",
+            "version": "0.65.1"
+        }
+    },
+    "name": "CertificateContract",
+    "constructor": {
+        "inputs": [],
+        "outputs": []
+    },
+    "upgradeConstructor": {
+        "inputs": [],
+        "outputs": []
+    },
+    "endpoints": [
+        {
+            "docs": [
+                "Create a new NFT certificate collection.",
+                "Caller must send exactly 0.05 EGLD (MultiversX ESDT issuance fee).",
+                "The collection becomes ready after the async callback completes."
+            ],
+            "name": "createCollection",
+            "rustMethodName": "create_collection",
+            "mutability": "mutable",
+            "payableInTokens": [
+                "EGLD"
+            ],
+            "inputs": [
+                {
+                    "name": "name",
+                    "type": "bytes"
+                },
+                {
+                    "name": "ticker",
+                    "type": "bytes"
+                }
+            ],
+            "outputs": []
+        },
+        {
+            "docs": [
+                "Issue a certificate as an NFT within a collection.",
+                "Only the collection issuer can issue. The NFT is held by this SC until claimed."
+            ],
+            "name": "issue",
+            "mutability": "mutable",
+            "inputs": [
+                {
+                    "name": "collection_id",
+                    "type": "u64"
+                },
+                {
+                    "name": "company_name",
+                    "type": "bytes"
+                },
+                {
+                    "name": "pdf_hash",
+                    "type": "bytes"
+                },
+                {
+                    "name": "pdf_url",
+                    "type": "bytes"
+                },
+                {
+                    "name": "expires_at",
+                    "type": "u64"
+                }
+            ],
+            "outputs": [
+                {
+                    "type": "u64"
+                }
+            ]
+        },
+        {
+            "docs": [
+                "Claim a certificate. Caller's wallet receives the NFT.",
+                "Can only be claimed once. Certificate must be active."
+            ],
+            "name": "claim",
+            "mutability": "mutable",
+            "inputs": [
+                {
+                    "name": "cert_id",
+                    "type": "u64"
+                }
+            ],
+            "outputs": []
+        },
+        {
+            "docs": [
+                "Revoke a certificate. Only the original issuer can revoke.",
+                "If not yet claimed, the NFT is burned. If already claimed, status is marked revoked only."
+            ],
+            "name": "revoke",
+            "mutability": "mutable",
+            "inputs": [
+                {
+                    "name": "cert_id",
+                    "type": "u64"
+                }
+            ],
+            "outputs": []
+        },
+        {
+            "name": "getCollection",
+            "rustMethodName": "get_collection",
+            "mutability": "readonly",
+            "inputs": [
+                {
+                    "name": "collection_id",
+                    "type": "u64"
+                }
+            ],
+            "outputs": [
+                {
+                    "type": "CertCollection"
+                }
+            ]
+        },
+        {
+            "name": "getCollectionToken",
+            "rustMethodName": "get_collection_token",
+            "mutability": "readonly",
+            "inputs": [
+                {
+                    "name": "collection_id",
+                    "type": "u64"
+                }
+            ],
+            "outputs": [
+                {
+                    "type": "optional<TokenIdentifier>",
+                    "multi_result": true
+                }
+            ]
+        },
+        {
+            "name": "isCollectionReady",
+            "rustMethodName": "is_collection_ready",
+            "mutability": "readonly",
+            "inputs": [
+                {
+                    "name": "collection_id",
+                    "type": "u64"
+                }
+            ],
+            "outputs": [
+                {
+                    "type": "bool"
+                }
+            ]
+        },
+        {
+            "name": "getCollectionsByIssuer",
+            "rustMethodName": "get_collections_by_issuer",
+            "mutability": "readonly",
+            "inputs": [
+                {
+                    "name": "issuer",
+                    "type": "Address"
+                },
+                {
+                    "name": "offset",
+                    "type": "u32"
+                },
+                {
+                    "name": "limit",
+                    "type": "u32"
+                }
+            ],
+            "outputs": [
+                {
+                    "type": "variadic<multi<u64,CertCollection>>",
+                    "multi_result": true
+                }
+            ]
+        },
+        {
+            "name": "getCertificate",
+            "rustMethodName": "get_certificate",
+            "mutability": "readonly",
+            "inputs": [
+                {
+                    "name": "cert_id",
+                    "type": "u64"
+                }
+            ],
+            "outputs": [
+                {
+                    "type": "Certificate"
+                }
+            ]
+        },
+        {
+            "name": "isValid",
+            "rustMethodName": "is_valid",
+            "mutability": "readonly",
+            "inputs": [
+                {
+                    "name": "cert_id",
+                    "type": "u64"
+                }
+            ],
+            "outputs": [
+                {
+                    "type": "bool"
+                }
+            ]
+        },
+        {
+            "name": "getCertsByIssuer",
+            "rustMethodName": "get_certs_by_issuer",
+            "mutability": "readonly",
+            "inputs": [
+                {
+                    "name": "issuer",
+                    "type": "Address"
+                },
+                {
+                    "name": "offset",
+                    "type": "u32"
+                },
+                {
+                    "name": "limit",
+                    "type": "u32"
+                }
+            ],
+            "outputs": [
+                {
+                    "type": "variadic<multi<u64,Certificate>>",
+                    "multi_result": true
+                }
+            ]
+        },
+        {
+            "name": "getCertsByCollection",
+            "rustMethodName": "get_certs_by_collection",
+            "mutability": "readonly",
+            "inputs": [
+                {
+                    "name": "collection_id",
+                    "type": "u64"
+                },
+                {
+                    "name": "offset",
+                    "type": "u32"
+                },
+                {
+                    "name": "limit",
+                    "type": "u32"
+                }
+            ],
+            "outputs": [
+                {
+                    "type": "variadic<multi<u64,Certificate>>",
+                    "multi_result": true
+                }
+            ]
+        },
+        {
+            "name": "getNextCertId",
+            "rustMethodName": "get_next_cert_id",
+            "mutability": "readonly",
+            "inputs": [],
+            "outputs": [
+                {
+                    "type": "u64"
+                }
+            ]
+        },
+        {
+            "name": "getNextCollectionId",
+            "rustMethodName": "get_next_collection_id_view",
+            "mutability": "readonly",
+            "inputs": [],
+            "outputs": [
+                {
+                    "type": "u64"
+                }
+            ]
+        }
+    ],
+    "events": [
+        {
+            "identifier": "collection_created",
+            "inputs": [
+                {
+                    "name": "collection_id",
+                    "type": "u64",
+                    "indexed": true
+                },
+                {
+                    "name": "issuer",
+                    "type": "Address",
+                    "indexed": true
+                },
+                {
+                    "name": "token_id",
+                    "type": "TokenIdentifier",
+                    "indexed": true
+                }
+            ]
+        },
+        {
+            "identifier": "certificate_issued",
+            "inputs": [
+                {
+                    "name": "cert_id",
+                    "type": "u64",
+                    "indexed": true
+                },
+                {
+                    "name": "collection_id",
+                    "type": "u64",
+                    "indexed": true
+                },
+                {
+                    "name": "issuer",
+                    "type": "Address",
+                    "indexed": true
+                },
+                {
+                    "name": "company_name",
+                    "type": "bytes",
+                    "indexed": true
+                }
+            ]
+        },
+        {
+            "identifier": "certificate_revoked",
+            "inputs": [
+                {
+                    "name": "cert_id",
+                    "type": "u64",
+                    "indexed": true
+                },
+                {
+                    "name": "issuer",
+                    "type": "Address",
+                    "indexed": true
+                }
+            ]
+        },
+        {
+            "identifier": "certificate_claimed",
+            "inputs": [
+                {
+                    "name": "cert_id",
+                    "type": "u64",
+                    "indexed": true
+                },
+                {
+                    "name": "recipient",
+                    "type": "Address",
+                    "indexed": true
+                }
+            ]
+        }
+    ],
+    "esdtAttributes": [],
+    "hasCallback": true,
+    "types": {
+        "CertCollection": {
+            "type": "struct",
+            "fields": [
+                {
+                    "name": "id",
+                    "type": "u64"
+                },
+                {
+                    "name": "issuer",
+                    "type": "Address"
+                },
+                {
+                    "name": "name",
+                    "type": "bytes"
+                }
+            ]
+        },
+        "Certificate": {
+            "type": "struct",
+            "fields": [
+                {
+                    "name": "id",
+                    "type": "u64"
+                },
+                {
+                    "name": "collection_id",
+                    "type": "u64"
+                },
+                {
+                    "name": "nft_nonce",
+                    "type": "u64"
+                },
+                {
+                    "name": "issuer",
+                    "type": "Address"
+                },
+                {
+                    "name": "company_name",
+                    "type": "bytes"
+                },
+                {
+                    "name": "pdf_hash",
+                    "type": "bytes"
+                },
+                {
+                    "name": "pdf_url",
+                    "type": "bytes"
+                },
+                {
+                    "name": "issued_at",
+                    "type": "u64"
+                },
+                {
+                    "name": "expires_at",
+                    "type": "u64"
+                },
+                {
+                    "name": "status",
+                    "type": "CertificateStatus"
+                },
+                {
+                    "name": "recipient",
+                    "type": "Option<Address>"
+                }
+            ]
+        },
+        "CertificateStatus": {
+            "type": "enum",
+            "variants": [
+                {
+                    "name": "Active",
+                    "discriminant": 0
+                },
+                {
+                    "name": "Revoked",
+                    "discriminant": 1
+                },
+                {
+                    "name": "Expired",
+                    "discriminant": 2
+                }
+            ]
+        }
+    }
+}
