@@ -4,8 +4,8 @@
   "repo": "JoAiHQ/warps",
   "branch": "dev",
   "network": "devnet",
-  "commitSha": "82d97fad841d728204ff478f8766a232cb4fc28b",
-  "generatedAt": "2026-04-20T10:00:27.838Z",
+  "commitSha": "86abf9f8b250afa4a6ce78df689dea0e8ee4e766",
+  "generatedAt": "2026-04-20T10:42:40.831Z",
   "warps": [
     {
       "key": "arbitrum:omniset-deposit-arbitrum",
@@ -31925,8 +31925,8 @@
       "identifier": "@appointment-cancel",
       "alias": "appointment-cancel",
       "chain": "none",
-      "hash": "73af47db06388bb75b4ee6cc242034ae9bd490f15e2561bd0ddf7af78fc9e1b8",
-      "checksum": "73af47db06388bb75b4ee6cc242034ae9bd490f15e2561bd0ddf7af78fc9e1b8",
+      "hash": "acaf40ee60dc195d6566ed37105b0db4092e672deef200fe57687463d60560ce",
+      "checksum": "acaf40ee60dc195d6566ed37105b0db4092e672deef200fe57687463d60560ce",
       "name": "Appointments: Cancel",
       "title": {
         "en": "Cancel appointment",
@@ -32045,8 +32045,10 @@
         ],
         "output": {
           "MEETING_ID": "out.data.id",
-          "STATUS": "out.data.status"
+          "STATUS": "out.data.status",
+          "MEETING_TITLE": "out.data.name"
         },
+        "next": "joai/team-members-notify?TITLE=Appointment+cancelled&MESSAGE={{MEETING_TITLE}}",
         "messages": {
           "success": {
             "en": "Appointment cancelled.",
@@ -32114,8 +32116,8 @@
       "identifier": "@appointment-cancel-public",
       "alias": "appointment-cancel-public",
       "chain": "none",
-      "hash": "2a5f558b476ddf999c9e5c544a47b38839225d379560a54de382172f88fa7884",
-      "checksum": "2a5f558b476ddf999c9e5c544a47b38839225d379560a54de382172f88fa7884",
+      "hash": "1b44a1e5377495f3d6d0791eede031e6e79c1ecb9b21b84bde1ceaf0d474e89b",
+      "checksum": "1b44a1e5377495f3d6d0791eede031e6e79c1ecb9b21b84bde1ceaf0d474e89b",
       "name": "Appointments: Cancel (Public)",
       "title": {
         "en": "Cancel appointment",
@@ -32215,8 +32217,10 @@
         ],
         "output": {
           "MEETING_ID": "out.data.id",
-          "STATUS": "out.data.status"
+          "STATUS": "out.data.status",
+          "MEETING_TITLE": "out.data.name"
         },
+        "next": "joai/team-members-notify?TITLE=Appointment+cancelled&MESSAGE={{MEETING_TITLE}}",
         "messages": {
           "success": {
             "en": "Appointment cancelled.",
@@ -32370,8 +32374,8 @@
       "identifier": "@appointment-email-confirm",
       "alias": "appointment-email-confirm",
       "chain": "none",
-      "hash": "d10cfeda4a3765066ca4c60cbe02271202835fb0e26b710a9b0b3e2af807ddb4",
-      "checksum": "d10cfeda4a3765066ca4c60cbe02271202835fb0e26b710a9b0b3e2af807ddb4",
+      "hash": "36b990d622bf32533b7e3653baeaad3e8f2a3d772cc76274dbcf4c26091b525f",
+      "checksum": "36b990d622bf32533b7e3653baeaad3e8f2a3d772cc76274dbcf4c26091b525f",
       "name": "Appointments: Send Confirmation Email",
       "title": {
         "en": "Send appointment confirmation",
@@ -32519,8 +32523,8 @@
                 "as": "MESSAGE",
                 "type": "string",
                 "position": "payload:message",
-                "source": "value",
-                "value": "Hi {{ATTENDEE_NAME}},\n\nYour appointment \"{{MEETING_TITLE}}\" has been confirmed for {{SCHEDULED_AT}}.{{#MEETING_URL}}\n\nJoin here: {{MEETING_URL}}{{/MEETING_URL}}\n\nLooking forward to it!",
+                "source": "hidden",
+                "modifier": "transform:(inputs) => { var d = new Date(inputs.SCHEDULED_AT); var fmt = d.toLocaleString('en', {weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'}); var url = inputs.MEETING_URL ? '\\n\\nJoin here: ' + inputs.MEETING_URL : ''; return 'Hi ' + (inputs.ATTENDEE_NAME || '') + ',\\n\\nYour appointment \"' + inputs.MEETING_TITLE + '\" has been confirmed for ' + fmt + '.' + url + '\\n\\nLooking forward to it!'; }",
                 "required": true
               }
             ]
@@ -77585,8 +77589,8 @@
       "identifier": "@poll-admin-transfer",
       "alias": "poll-admin-transfer",
       "chain": "none",
-      "hash": "b5bc30a038b3c3af22b48a26e4ad46df7433064a0b25dc50298c9af71479ffbb",
-      "checksum": "b5bc30a038b3c3af22b48a26e4ad46df7433064a0b25dc50298c9af71479ffbb",
+      "hash": "6770246dcbbdabaa63a7a9eb50b0bcdbbf67dae4fadf095dd872820d65d3904e",
+      "checksum": "6770246dcbbdabaa63a7a9eb50b0bcdbbf67dae4fadf095dd872820d65d3904e",
       "name": "Poll: Transfer Admin",
       "title": {
         "en": "Transfer Admin",
@@ -77662,10 +77666,6 @@
             },
             "address": "{{SC_ADDRESS}}",
             "func": "transferAdmin",
-            "args": [
-              "string:{{GROUP_SLUG}}",
-              "address:{{NEW_ADMIN}}"
-            ],
             "gasLimit": 10000000,
             "inputs": [
               {
@@ -77702,8 +77702,8 @@
       "identifier": "@poll-create",
       "alias": "poll-create",
       "chain": "none",
-      "hash": "b3ac685d4241a07fe5c9cc48ef2ba99726c86f371ec4db89225bda4707bc8c1a",
-      "checksum": "b3ac685d4241a07fe5c9cc48ef2ba99726c86f371ec4db89225bda4707bc8c1a",
+      "hash": "e3e1e36b45710a69beefd7bf44f18c5722011edc7ec9bae84e7476d3d3cec5ee",
+      "checksum": "e3e1e36b45710a69beefd7bf44f18c5722011edc7ec9bae84e7476d3d3cec5ee",
       "name": "Poll: Create Poll",
       "title": {
         "en": "Create Poll",
@@ -77780,13 +77780,6 @@
             },
             "address": "{{SC_ADDRESS}}",
             "func": "createPoll",
-            "args": [
-              "string:{{GROUP_SLUG}}",
-              "string:{{QUESTION}}",
-              "u64:{{DEADLINE}}",
-              "string:{{OPTION_1}}",
-              "string:{{OPTION_2}}"
-            ],
             "gasLimit": 15000000,
             "inputs": [
               {
@@ -78149,8 +78142,8 @@
       "identifier": "@poll-group-create",
       "alias": "poll-group-create",
       "chain": "none",
-      "hash": "7c897d8860f3fcfbf24f7d8d0eef0dbdef7258173e60ba6d00dcb0fdb399e950",
-      "checksum": "7c897d8860f3fcfbf24f7d8d0eef0dbdef7258173e60ba6d00dcb0fdb399e950",
+      "hash": "6c9580dc82eb9616832dce16360cf0eab95bab3c1cdec7f6ae652b3f0e913269",
+      "checksum": "6c9580dc82eb9616832dce16360cf0eab95bab3c1cdec7f6ae652b3f0e913269",
       "name": "Poll: Create Group",
       "title": {
         "en": "Create Group",
@@ -78227,11 +78220,6 @@
             },
             "address": "{{SC_ADDRESS}}",
             "func": "createGroup",
-            "args": [
-              "string:{{GROUP_SLUG}}",
-              "string:{{NAME}}",
-              "bool:{{OPEN_MEMBERSHIP}}"
-            ],
             "gasLimit": 10000000,
             "inputs": [
               {
@@ -78502,8 +78490,8 @@
       "identifier": "@poll-invite-create",
       "alias": "poll-invite-create",
       "chain": "none",
-      "hash": "10d81e70241aeb23dc1d741b5d5274006a3b063a9e038f5d906ff4bf96cd82d6",
-      "checksum": "10d81e70241aeb23dc1d741b5d5274006a3b063a9e038f5d906ff4bf96cd82d6",
+      "hash": "77932b569bd9256da2ae82a3e919d0440823e53e121a3c39546a48b55deb1912",
+      "checksum": "77932b569bd9256da2ae82a3e919d0440823e53e121a3c39546a48b55deb1912",
       "name": "Poll: Create Invite",
       "title": {
         "en": "Create Invite Link",
@@ -78579,12 +78567,6 @@
             },
             "address": "{{SC_ADDRESS}}",
             "func": "createInvite",
-            "args": [
-              "string:{{GROUP_SLUG}}",
-              "string:{{CODE}}",
-              "u32:{{MAX_USES}}",
-              "u64:{{EXPIRES_AT}}"
-            ],
             "gasLimit": 10000000,
             "inputs": [
               {
@@ -78649,8 +78631,8 @@
       "identifier": "@poll-invite-join",
       "alias": "poll-invite-join",
       "chain": "none",
-      "hash": "4e1f05e46137e505678f03e9be1519be06908baa04a7d40e5f4dd58a4aa34ba7",
-      "checksum": "4e1f05e46137e505678f03e9be1519be06908baa04a7d40e5f4dd58a4aa34ba7",
+      "hash": "c245f6ec341420357ca77917c9647624aabe985aba6691bbc617c4fa18d98d47",
+      "checksum": "c245f6ec341420357ca77917c9647624aabe985aba6691bbc617c4fa18d98d47",
       "name": "Poll: Join With Invite",
       "title": {
         "en": "Join With Invite Code",
@@ -78726,11 +78708,6 @@
             },
             "address": "{{SC_ADDRESS}}",
             "func": "joinWithInvite",
-            "args": [
-              "string:{{GROUP_SLUG}}",
-              "string:{{CODE}}",
-              "string:{{DISPLAY_NAME}}"
-            ],
             "gasLimit": 10000000,
             "inputs": [
               {
@@ -78781,8 +78758,8 @@
       "identifier": "@poll-invite-revoke",
       "alias": "poll-invite-revoke",
       "chain": "none",
-      "hash": "a3c955eee63939c87754b0482d4f8ec35f4b0633e8531ebe96ba4d4c36c4d266",
-      "checksum": "a3c955eee63939c87754b0482d4f8ec35f4b0633e8531ebe96ba4d4c36c4d266",
+      "hash": "10aad46eb4998b47e2729f1e801484ffe4d26b9b540149cb614bcb46ca9e7812",
+      "checksum": "10aad46eb4998b47e2729f1e801484ffe4d26b9b540149cb614bcb46ca9e7812",
       "name": "Poll: Revoke Invite",
       "title": {
         "en": "Revoke Invite",
@@ -78858,10 +78835,6 @@
             },
             "address": "{{SC_ADDRESS}}",
             "func": "revokeInvite",
-            "args": [
-              "string:{{GROUP_SLUG}}",
-              "string:{{CODE}}"
-            ],
             "gasLimit": 10000000,
             "inputs": [
               {
@@ -78898,8 +78871,8 @@
       "identifier": "@poll-member-approve",
       "alias": "poll-member-approve",
       "chain": "none",
-      "hash": "d7046733bda3ee4419673ba38fe25b4103bb14e8deddf421a0516d6b9ee872f9",
-      "checksum": "d7046733bda3ee4419673ba38fe25b4103bb14e8deddf421a0516d6b9ee872f9",
+      "hash": "43c8fff9d4a3879c491507bb4238825fd23c706ebf22f0dab5196c7f76f55634",
+      "checksum": "43c8fff9d4a3879c491507bb4238825fd23c706ebf22f0dab5196c7f76f55634",
       "name": "Poll: Approve Member",
       "title": {
         "en": "Approve Member",
@@ -78975,10 +78948,6 @@
             },
             "address": "{{SC_ADDRESS}}",
             "func": "approveMember",
-            "args": [
-              "string:{{GROUP_SLUG}}",
-              "address:{{ADDRESS}}"
-            ],
             "gasLimit": 10000000,
             "inputs": [
               {
@@ -79132,8 +79101,8 @@
       "identifier": "@poll-member-remove",
       "alias": "poll-member-remove",
       "chain": "none",
-      "hash": "01720d7483efff931898f61eb986d73c7c931522418017a5caa5b77934dad095",
-      "checksum": "01720d7483efff931898f61eb986d73c7c931522418017a5caa5b77934dad095",
+      "hash": "50823872acf9eea25c0ba5ef8620f9e129140ecf8f373f0f9684dfab2dbffb88",
+      "checksum": "50823872acf9eea25c0ba5ef8620f9e129140ecf8f373f0f9684dfab2dbffb88",
       "name": "Poll: Remove Member",
       "title": {
         "en": "Remove Member",
@@ -79209,10 +79178,6 @@
             },
             "address": "{{SC_ADDRESS}}",
             "func": "removeMember",
-            "args": [
-              "string:{{GROUP_SLUG}}",
-              "address:{{ADDRESS}}"
-            ],
             "gasLimit": 10000000,
             "inputs": [
               {
@@ -79473,8 +79438,8 @@
       "identifier": "@poll-membership-request",
       "alias": "poll-membership-request",
       "chain": "none",
-      "hash": "548ab75346fbedebab4f9814b1e28679989385a2d2e070ed86d01b877890c553",
-      "checksum": "548ab75346fbedebab4f9814b1e28679989385a2d2e070ed86d01b877890c553",
+      "hash": "2e59e1690c66307b2f1d532af99100867cba888cc667681536c4b64111ed1fb2",
+      "checksum": "2e59e1690c66307b2f1d532af99100867cba888cc667681536c4b64111ed1fb2",
       "name": "Poll: Join Space",
       "title": {
         "en": "Join This Space",
@@ -79550,10 +79515,6 @@
             },
             "address": "{{SC_ADDRESS}}",
             "func": "requestMembership",
-            "args": [
-              "string:{{GROUP_SLUG}}",
-              "string:{{DISPLAY_NAME}}"
-            ],
             "gasLimit": 10000000,
             "inputs": [
               {
@@ -79794,8 +79755,8 @@
       "identifier": "@poll-request-deny",
       "alias": "poll-request-deny",
       "chain": "none",
-      "hash": "47d723d0275d6996b156597cbe6adefcc5660c7a75feb4cf6bd254ffaa500de9",
-      "checksum": "47d723d0275d6996b156597cbe6adefcc5660c7a75feb4cf6bd254ffaa500de9",
+      "hash": "18312e625435a29a779f8e7ea29f6ad637dbb1cf35cfbc1d7c17f453413d14c9",
+      "checksum": "18312e625435a29a779f8e7ea29f6ad637dbb1cf35cfbc1d7c17f453413d14c9",
       "name": "Poll: Deny Request",
       "title": {
         "en": "Deny Request",
@@ -79871,10 +79832,6 @@
             },
             "address": "{{SC_ADDRESS}}",
             "func": "denyRequest",
-            "args": [
-              "string:{{GROUP_SLUG}}",
-              "address:{{ADDRESS}}"
-            ],
             "gasLimit": 10000000,
             "inputs": [
               {
@@ -80444,8 +80401,8 @@
       "identifier": "@poll-vote-tx",
       "alias": "poll-vote-tx",
       "chain": "none",
-      "hash": "6f3915c7cf19d584b28a3f33d8c7237aa920ea05a99a10f8441ca25a51377992",
-      "checksum": "6f3915c7cf19d584b28a3f33d8c7237aa920ea05a99a10f8441ca25a51377992",
+      "hash": "9c499f4a41803898f47cf9b916ca9f767e721885f9e36f0d8809a6e49e15603d",
+      "checksum": "9c499f4a41803898f47cf9b916ca9f767e721885f9e36f0d8809a6e49e15603d",
       "name": "Poll: Vote TX",
       "title": {
         "en": "Cast Your Vote",
@@ -80520,10 +80477,6 @@
             },
             "address": "{{SC_ADDRESS}}",
             "func": "vote",
-            "args": [
-              "u64:{{POLL_ID}}",
-              "u32:{{OPTION_INDEX}}"
-            ],
             "gasLimit": 10000000,
             "inputs": [
               {
