@@ -15,13 +15,14 @@ type Props = {
   cancelledMessage: string
   cancelling: boolean
   cancelled: boolean
+  cancelError: string | null
   onCancel: () => void
 }
 
 export function BookingConfirmed({
   booked, selectedDate, displayTimezone, locale, title, subtitle,
   cancelLabel, cancellingLabel, cancelledTitle, cancelledMessage,
-  cancelling, cancelled, onCancel,
+  cancelling, cancelled, cancelError, onCancel,
 }: Props) {
   if (cancelled) {
     return (
@@ -93,6 +94,11 @@ export function BookingConfirmed({
           </button>
         </div>
       </div>
+      {cancelError && (
+        <div className="w-full rounded-lg border border-red-200 dark:border-red-900 bg-red-50 dark:bg-red-950/40 px-3 py-2 text-sm text-red-700 dark:text-red-300 text-left">
+          {cancelError}
+        </div>
+      )}
       <button
         onClick={onCancel}
         disabled={cancelling}

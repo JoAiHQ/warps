@@ -26,6 +26,9 @@ export const fr: typeof en = {
     cancelled: 'Rendez-vous annulé',
     cancelledMessage: 'Ton rendez-vous a été annulé.',
     slotsError: 'Impossible de charger les créneaux disponibles. Réessaie.',
+    bookingError: 'Impossible de réserver ce créneau. Choisis une autre heure.',
+    cancelError: 'Impossible d\'annuler ton rendez-vous. Réessaie.',
+    tryAgain: 'Réessayer',
   },
   configure: {
     title: 'Paramètres de rendez-vous',

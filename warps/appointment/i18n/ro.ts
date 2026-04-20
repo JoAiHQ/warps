@@ -26,6 +26,9 @@ export const ro: typeof en = {
     cancelled: 'Programare anulată',
     cancelledMessage: 'Programarea ta a fost anulată.',
     slotsError: 'Nu s-au putut încărca intervalele disponibile. Încearcă din nou.',
+    bookingError: 'Nu am putut rezerva acest interval. Alege alt moment.',
+    cancelError: 'Nu am putut anula programarea ta. Încearcă din nou.',
+    tryAgain: 'Încearcă din nou',
   },
   configure: {
     title: 'Setări programări',

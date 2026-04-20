@@ -17,7 +17,8 @@
   },
   "bot": "Only run this after a group exists and the caller is a member. Requires GROUP_SLUG of an existing on-chain group. Deadline is a Unix timestamp (0 = no deadline). Provide 2–7 short answer options. After creation the user lands directly on the voting screen.",
   "vars": {
-    "SC_ADDRESS": "INJECT:POLL_SC_ADDRESS"
+    "SC_ADDRESS": "INJECT:POLL_SC_ADDRESS",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG|Team identifier"
   },
   "actions": [
     {
@@ -31,26 +32,15 @@
       },
       "address": "{{SC_ADDRESS}}",
       "func": "createPoll",
-      "args": [
-        "string:{{GROUP_SLUG}}",
-        "string:{{QUESTION}}",
-        "u64:{{DEADLINE}}",
-        "string:{{OPTION_1}}",
-        "string:{{OPTION_2}}",
-        "string:{{OPTION_3}}",
-        "string:{{OPTION_4}}",
-        "string:{{OPTION_5}}",
-        "string:{{OPTION_6}}",
-        "string:{{OPTION_7}}"
-      ],
       "gasLimit": 15000000,
       "inputs": [
         {
           "name": "GROUP_SLUG",
           "type": "string",
           "position": "arg:1",
-          "source": "field",
-          "required": true
+          "source": "hidden",
+          "required": true,
+          "default": "{{JOAI_TEAM_SLUG}}"
         },
         {
           "name": "QUESTION",
@@ -68,16 +58,17 @@
         },
         {
           "name": "DEADLINE",
-          "type": "uint64",
+          "type": "datetime",
           "position": "arg:3",
           "source": "field",
-          "required": true,
+          "required": false,
+          "default": "0",
           "label": {
-            "en": "Deadline (Unix timestamp)",
-            "de": "Deadline (Unix-Timestamp)",
-            "fr": "Echeance (timestamp Unix)",
-            "es": "Fecha limite (timestamp Unix)",
-            "ro": "Termen limita (timestamp Unix)"
+            "en": "Deadline (optional)",
+            "de": "Deadline (optional)",
+            "fr": "Echeance (optionnel)",
+            "es": "Fecha limite (opcional)",
+            "ro": "Termen limita (optional)"
           }
         },
         {
@@ -182,5 +173,8 @@
       "abi": "INJECT:contract/output/poll.abi.json"
     }
   ],
+  "output": {
+    "RESULT": "out.1"
+  },
   "next": "@poll-vote?POLL_ID={{RESULT}}"
 }

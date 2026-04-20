@@ -201,8 +201,11 @@ export const meta: Record<string, WarpExtras> = {
 
   'loyalty-remind': {
     keywords: {
-      en: ['loyalty reminder', 'remind customers', 'loyalty notification', 'win-back campaign'],
-      de: ['Treue-Erinnerung', 'Kunden erinnern', 'Treue-Benachrichtigung', 'Rückgewinnungskampagne'],
+      en: ['loyalty reminder', 'remind customers', 'loyalty notification', 'win-back campaign', 'ai', 'ai agent', 'ai-powered', 'automated', 'smart', 'intelligent'],
+      de: ['Treue-Erinnerung', 'Kunden erinnern', 'Treue-Benachrichtigung', 'Rückgewinnungskampagne', 'ki', 'ki-agent', 'ki-gestützt', 'automatisiert', 'smart', 'intelligent'],
+      fr: ['rappel de fidélité', 'rappeler les clients', 'notification de fidélité', 'campagne de reconquête', 'ia', 'agent ia', 'ia propulsée', 'automatisé', 'intelligent', 'assistant ia'],
+      es: ['recordatorio de fidelidad', 'recordar clientes', 'notificación de fidelidad', 'campaña de recuperación', 'ia', 'agente ia', 'con ia', 'automatizado', 'inteligente', 'asistente ia'],
+      ro: ['memento fidelitate', 'aminteste clientilor', 'notificare fidelitate', 'campanie de recuperare', 'ia', 'agent ia', 'bazat pe ia', 'automatizat', 'inteligent', 'asistent ia'],
     },
     useCases: {
       en: ["Re-engage customers who haven't visited in weeks", 'Send automated WhatsApp reminders to inactive loyalty members', 'Run a daily win-back campaign for lapsed customers'],

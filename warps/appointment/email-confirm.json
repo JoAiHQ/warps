@@ -103,79 +103,8 @@
           "as": "MESSAGE",
           "type": "string",
           "position": "payload:message",
-          "source": "value",
-          "value": "Hi {{ATTENDEE_NAME}},\n\nYour appointment \"{{MEETING_TITLE}}\" has been confirmed for {{SCHEDULED_AT}}.{{#MEETING_URL}}\n\nJoin here: {{MEETING_URL}}{{/MEETING_URL}}\n\nLooking forward to it!",
-          "required": true
-        },
-        {
-          "name": "Host Email",
-          "as": "HOST_EMAIL",
-          "type": "string",
-          "source": "query",
-          "required": false
-        },
-        {
-          "name": "Host Name",
-          "as": "HOST_NAME",
-          "type": "string",
-          "source": "query",
-          "required": false
-        }
-      ]
-    },
-    {
-      "type": "collect",
-      "label": {
-        "en": "Notify host",
-        "de": "Gastgeber benachrichtigen",
-        "fr": "Notifier le professionnel",
-        "es": "Notificar al profesional",
-        "ro": "Notifica gazda"
-      },
-      "auto": true,
-      "when": "{{HOST_EMAIL}} != ''",
-      "destination": {
-        "url": "INJECT:API_BASE/v1/agents/{{JOAI_AGENT_UUID}}/room/message",
-        "method": "POST",
-        "headers": {
-          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
-        }
-      },
-      "inputs": [
-        {
-          "name": "Integration",
-          "as": "INTEGRATION",
-          "type": "string",
-          "position": "payload:integration",
-          "source": "value",
-          "value": "email",
-          "required": true
-        },
-        {
-          "name": "Recipient ID",
-          "as": "RECIPIENT_ID",
-          "type": "string",
-          "position": "payload:recipientId",
-          "source": "value",
-          "value": "{{HOST_EMAIL}}",
-          "required": false
-        },
-        {
-          "name": "Recipient Name",
-          "as": "RECIPIENT_NAME",
-          "type": "string",
-          "position": "payload:recipientName",
-          "source": "value",
-          "value": "{{HOST_NAME}}",
-          "required": false
-        },
-        {
-          "name": "Message",
-          "as": "MESSAGE",
-          "type": "string",
-          "position": "payload:message",
-          "source": "value",
-          "value": "Hi {{HOST_NAME}},\n\nA new appointment has been booked: \"{{MEETING_TITLE}}\" on {{SCHEDULED_AT}}.\n\nAttendee: {{ATTENDEE_NAME}}{{#ATTENDEE_EMAIL}} ({{ATTENDEE_EMAIL}}){{/ATTENDEE_EMAIL}}{{#MEETING_URL}}\n\nMeeting link: {{MEETING_URL}}{{/MEETING_URL}}",
+          "source": "hidden",
+          "modifier": "transform:(inputs) => { var d = new Date(inputs.SCHEDULED_AT); var fmt = d.toLocaleString('en', {weekday: 'short', year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'}); var url = inputs.MEETING_URL ? '\\n\\nJoin here: ' + inputs.MEETING_URL : ''; return 'Hi ' + (inputs.ATTENDEE_NAME || '') + ',\\n\\nYour appointment \"' + inputs.MEETING_TITLE + '\" has been confirmed for ' + fmt + '.' + url + '\\n\\nLooking forward to it!'; }",
           "required": true
         }
       ]

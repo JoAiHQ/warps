@@ -25,6 +25,24 @@ function unwrapStructuredContent(output: unknown): unknown {
   return envelope?.structuredContent ?? output
 }
 
+type ToolCallResult = {
+  isError?: boolean
+  content?: Array<{ text?: string }>
+  structuredContent?: unknown
+}
+
+/**
+ * Converts an MCP tool result into the value returned by executeWarp.
+ * Throws when the tool signaled isError so callers can use try/catch.
+ */
+export function interpretToolResult(toolName: string, result: unknown): unknown {
+  if (result && typeof result === 'object' && (result as ToolCallResult).isError) {
+    const text = (result as ToolCallResult).content?.[0]?.text
+    throw new Error(text || `Tool ${toolName} failed`)
+  }
+  return unwrapStructuredContent(result)
+}
+
 function toRecord(value: unknown): Record<string, unknown> | undefined {
   if (!value || typeof value !== 'object' || Array.isArray(value)) return undefined
   return value as Record<string, unknown>
@@ -91,7 +109,7 @@ export function useApp<T = any, I = any>(app: App, isDevMode = false, locale = '
     }
     const result = await app.callServerTool({ name: toolName, arguments: args })
     setToolResult(result)
-    return unwrapStructuredContent(result)
+    return interpretToolResult(toolName, result)
   }, [app, isDevMode])
 
   const sendFollowUp = useCallback(async (prompt: string) => {

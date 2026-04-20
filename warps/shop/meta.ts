@@ -3,8 +3,11 @@ import type { WarpExtras } from '../types'
 export const meta: Record<string, WarpExtras> = {
   'shop-register': {
     keywords: {
-      en: ['blockchain service business', 'on-chain shop', 'Web3 business registration', 'decentralized storefront', 'own your business identity', 'future-proof service business', 'blockchain for local business'],
-      de: ['Blockchain-Dienstleistungsunternehmen', 'On-Chain-Shop', 'Web3-Unternehmensregistrierung', 'dezentrales Geschäft', 'Unternehmensidentität besitzen', 'zukunftssicheres Unternehmen'],
+      en: ['blockchain service business', 'on-chain shop', 'Web3 business registration', 'decentralized storefront', 'own your business identity', 'future-proof service business', 'blockchain for local business', 'ai', 'ai-discoverable', 'ai agent', 'smart'],
+      de: ['Blockchain-Dienstleistungsunternehmen', 'On-Chain-Shop', 'Web3-Unternehmensregistrierung', 'dezentrales Geschäft', 'Unternehmensidentität besitzen', 'zukunftssicheres Unternehmen', 'ki', 'ki-auffindbar', 'ki-agent', 'smart'],
+      fr: ['entreprise blockchain', 'boutique on-chain', 'enregistrement web3', 'vitrine décentralisée', 'identité commerciale', 'entreprise future', 'ia', 'découvrable par ia', 'agent ia', 'intelligent'],
+      es: ['negocio en blockchain', 'tienda on-chain', 'registro web3', 'tienda descentralizada', 'identidad empresarial', 'negocio futuro', 'ia', 'descubrible por ia', 'agente ia', 'inteligente'],
+      ro: ['afacere blockchain', 'magazin on-chain', 'inregistrare web3', 'vitrina descentralizata', 'identitate comerciala', 'afacere viitor', 'ia', 'descoperibil de ia', 'agent ia', 'inteligent'],
     },
     useCases: {
       en: [
@@ -119,8 +122,11 @@ export const meta: Record<string, WarpExtras> = {
 
   'shop-configure': {
     keywords: {
-      en: ['update shop details', 'edit blockchain business', 'change shop category', 'update on-chain storefront', 'modify shop location'],
-      de: ['Shop-Details aktualisieren', 'Blockchain-Unternehmen bearbeiten', 'Shop-Kategorie ändern', 'On-Chain-Shop aktualisieren'],
+      en: ['update shop details', 'edit blockchain business', 'change shop category', 'update on-chain storefront', 'modify shop location', 'ai', 'ai-discoverable', 'ai agent', 'smart', 'intelligent'],
+      de: ['Shop-Details aktualisieren', 'Blockchain-Unternehmen bearbeiten', 'Shop-Kategorie ändern', 'On-Chain-Shop aktualisieren', 'ki', 'ki-auffindbar', 'ki-agent', 'smart', 'intelligent'],
+      fr: ['mettre à jour la boutique', 'modifier l entreprise blockchain', 'changer la catégorie', 'mettre à jour la vitrine on-chain', 'modifier la localisation', 'ia', 'découvrable par ia', 'agent ia', 'intelligent', 'assistant ia'],
+      es: ['actualizar tienda', 'editar negocio blockchain', 'cambiar categoría', 'actualizar vitrina on-chain', 'modificar ubicación', 'ia', 'descubrible por ia', 'agente ia', 'inteligente', 'asistente ia'],
+      ro: ['actualizare magazin', 'editeaza afacere blockchain', 'schimba categorie', 'actualizare vitrina on-chain', 'modifica locatie', 'ia', 'descoperibil de ia', 'agent ia', 'inteligent', 'asistent ia'],
     },
     useCases: {
       en: [

@@ -1,6 +1,25 @@
 import type { WarpExtras } from '../types'
 
 export const meta: Record<string, WarpExtras> = {
+  'desk-upload': {
+    keywords: {
+      en: ['upload file', 'add to desk', 'pin document', 'attach pdf', 'share file with agent'],
+      de: ['Datei hochladen', 'zum Schreibtisch hinzufügen', 'Dokument anheften', 'PDF anhängen', 'Datei mit Agent teilen'],
+    },
+    useCases: {
+      en: [
+        'Upload a contract PDF before requesting signatures',
+        'Share an image with your agent so it can use it in the next action',
+        'Pin a document to the desk so it stays available across messages',
+      ],
+      de: [
+        'Einen Vertrag hochladen, bevor du eine Signaturanfrage sendest',
+        'Ein Bild mit deinem Agenten teilen, damit er es in der nächsten Aktion verwenden kann',
+        'Ein Dokument am Schreibtisch anheften, damit es in allen Nachrichten verfügbar bleibt',
+      ],
+    },
+    category: 'productivity',
+  },
   'meeting-start': {
     keywords: {
       en: ['AI meeting recorder', 'meeting transcription', 'automated meeting notes', 'voice recording AI', 'meeting summary'],

@@ -5,62 +5,69 @@
     "en": "Redeem a coupon",
     "de": "Gutschein einlösen",
     "fr": "Utiliser un coupon",
-    "es": "Canjear un cupon",
-    "ro": "Foloseste un cupon"
+    "es": "Canjear un cupón",
+    "ro": "Folosește un cupon"
   },
   "description": {
-    "en": "Apply a discount coupon code at checkout. Your redemption is securely recorded.",
-    "de": "Rabattgutscheincode beim Bezahlen einlösen. Deine Einlösung wird sicher gespeichert.",
-    "fr": "Appliquez un code promo au moment du paiement. L utilisation est enregistree de facon securisee.",
-    "es": "Aplica un codigo de descuento al pagar. El canje queda registrado de forma segura.",
-    "ro": "Aplica un cod de reducere la plata. Folosirea lui este inregistrata in siguranta."
+    "en": "Enter your discount coupon code at checkout. The redemption is recorded on-chain and the discount percentage is returned instantly.",
+    "de": "Gib deinen Gutscheincode beim Bezahlen ein. Die Einlösung wird on-chain gespeichert und der Rabatt sofort zurückgegeben.",
+    "fr": "Saisissez votre code promo au paiement. L'utilisation est enregistrée on-chain et le pourcentage de réduction est retourné instantanément.",
+    "es": "Introduce tu código de descuento al pagar. El canje queda registrado on-chain y el porcentaje de descuento se devuelve al instante.",
+    "ro": "Introdu codul tău de reducere la plată. Folosirea este înregistrată on-chain și procentul de reducere este returnat imediat."
   },
-  "bot": "Redeems an on-chain coupon by code. Ask the user for the coupon code they want to apply.",
+  "bot": "Redeems an on-chain coupon by code. Ask the user for the coupon code they want to apply. On success the contract returns the discount percentage.",
   "chain": "multiversx",
   "vars": {
-    "SC_ADDRESS": "INJECT:COUPON_SC_ADDRESS"
+    "SC_ADDRESS": "INJECT:COUPON_SC_ADDRESS",
+    "CODE": "query:code"
   },
   "actions": [
     {
       "type": "contract",
       "label": {
-        "en": "Redeem coupon",
-        "de": "Gutschein einlösen",
-        "fr": "Utiliser le coupon",
-        "es": "Canjear cupon",
-        "ro": "Foloseste cuponul"
+        "en": "Apply coupon",
+        "de": "Gutschein anwenden",
+        "fr": "Appliquer le coupon",
+        "es": "Aplicar cupón",
+        "ro": "Aplică cuponul"
       },
       "address": "{{SC_ADDRESS}}",
       "func": "redeemCoupon",
-      "gasLimit": 10000000,
+      "gasLimit": 5000000,
       "abi": "INJECT:contract/output/coupon.abi.json",
       "inputs": [
         {
           "name": "Coupon Code",
           "as": "code",
           "description": {
-            "en": "Enter the coupon code to redeem.",
-            "de": "Gutscheincode zum Einlösen eingeben.",
-            "fr": "Saisissez le code promo a utiliser.",
-            "es": "Introduce el codigo del cupon que quieres canjear.",
-            "ro": "Introdu codul cuponului pe care vrei sa il folosesti."
+            "en": "The coupon code to redeem (e.g. SUMMER20)",
+            "de": "Der einzulösende Gutscheincode (z. B. SOMMER20)",
+            "fr": "Le code promo à utiliser (ex. SUMMER20)",
+            "es": "El código del cupón a canjear (p. ej. SUMMER20)",
+            "ro": "Codul cuponului de folosit (ex. SUMMER20)"
           },
-          "bot": "The coupon code to redeem — e.g. SUMMER20, VIP50.",
+          "bot": "The exact coupon code — e.g. SUMMER20, VIP50. Case-sensitive.",
           "type": "string",
           "position": "arg:1",
           "source": "field",
-          "required": true
+          "default": "{{CODE}}",
+          "required": true,
+          "min": 1,
+          "max": 32
         }
       ]
     }
   ],
+  "output": {
+    "DISCOUNT": "out.data"
+  },
   "messages": {
     "success": {
-      "en": "Coupon redeemed! Your discount has been applied.",
-      "de": "Gutschein eingelöst! Dein Rabatt wurde angewendet.",
-      "fr": "Coupon utilise ! Votre reduction a bien ete appliquee.",
-      "es": "Cupon canjeado. Tu descuento ya se ha aplicado.",
-      "ro": "Cupon folosit! Reducerea ta a fost aplicata."
+      "en": "{{DISCOUNT}}% off — coupon applied! Show this confirmation to the merchant.",
+      "de": "{{DISCOUNT}}% Rabatt — Gutschein eingelöst! Zeig diese Bestätigung dem Händler.",
+      "fr": "{{DISCOUNT}}% de réduction — coupon utilisé ! Montrez cette confirmation au marchand.",
+      "es": "{{DISCOUNT}}% de descuento — ¡cupón aplicado! Muestra esta confirmación al comerciante.",
+      "ro": "{{DISCOUNT}}% reducere — cupon folosit! Arată această confirmare comerciantului."
     }
   }
 }
