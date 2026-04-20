@@ -4,30 +4,42 @@
   "title": {
     "en": "Create a coupon",
     "de": "Gutschein erstellen",
-    "fr": "Creer un coupon",
-    "es": "Crear un cupon",
-    "ro": "Creeaza un cupon"
+    "fr": "Créer un coupon",
+    "es": "Crear un cupón",
+    "ro": "Creează un cupon"
   },
   "description": {
-    "en": "Create a discount coupon your customers can redeem at checkout. Set the code, percentage off, and how many times it can be used.",
-    "de": "Erstelle einen Rabattgutschein, den deine Kunden beim Bezahlen einlösen können. Lege Code, Rabatt und die maximale Anzahl an Einlösungen fest.",
-    "fr": "Creez un coupon de reduction que vos clients pourront utiliser au moment du paiement. Definissez le code, la remise et le nombre d utilisations autorisees.",
-    "es": "Crea un cupon de descuento para que tus clientes lo canjeen al pagar. Define el codigo, el porcentaje de descuento y cuantas veces puede usarse.",
-    "ro": "Creeaza un cupon de reducere pe care clientii il pot folosi la plata. Seteaza codul, procentul reducerii si de cate ori poate fi folosit."
+    "en": "Create a discount coupon your customers can redeem at checkout. Set the code, percentage off, usage limit, and expiry — all stored on-chain.",
+    "de": "Erstelle einen Rabattgutschein, den Kunden beim Bezahlen einlösen können. Code, Rabatt, Nutzungslimit und Ablaufdatum werden on-chain gespeichert.",
+    "fr": "Créez un coupon de réduction que vos clients pourront utiliser au paiement. Code, pourcentage, limite et expiration — tout est stocké on-chain.",
+    "es": "Crea un cupón de descuento para que tus clientes lo canjeen al pagar. Código, descuento, límite de uso y vencimiento — todo almacenado on-chain.",
+    "ro": "Creează un cupon de reducere pe care clienții îl pot folosi la plată. Cod, procent, limită și expirare — totul stocat on-chain."
   },
-  "bot": "Creates a discount coupon. Ask the user for the coupon code, discount percentage, and how many times it can be used (0 = unlimited).",
+  "bot": "Creates an on-chain discount coupon. Ask for the coupon code (short memorable string like SUMMER20), discount percentage (1-100), max uses (0 = unlimited), and validity period in days (0 = never expires).",
   "chain": "multiversx",
   "vars": {
     "SC_ADDRESS": "INJECT:COUPON_SC_ADDRESS"
   },
   "sections": [
     {
-      "title": { "en": "Coupon Code", "de": "Gutscheincode", "fr": "Code promo", "es": "Codigo del cupon", "ro": "Codul cuponului" },
+      "title": {
+        "en": "Coupon Details",
+        "de": "Gutschein-Details",
+        "fr": "Détails du coupon",
+        "es": "Detalles del cupón",
+        "ro": "Detalii cupon"
+      },
       "inputs": ["code", "discountPercent"]
     },
     {
-      "title": { "en": "Limits", "de": "Einschränkungen", "fr": "Limites", "es": "Limites", "ro": "Limite" },
-      "inputs": ["maxUses"]
+      "title": {
+        "en": "Rules",
+        "de": "Einschränkungen",
+        "fr": "Règles",
+        "es": "Reglas",
+        "ro": "Reguli"
+      },
+      "inputs": ["maxUses", "expiryDays"]
     }
   ],
   "actions": [
@@ -36,26 +48,26 @@
       "label": {
         "en": "Create coupon",
         "de": "Gutschein erstellen",
-        "fr": "Creer le coupon",
-        "es": "Crear cupon",
-        "ro": "Creeaza cuponul"
+        "fr": "Créer le coupon",
+        "es": "Crear cupón",
+        "ro": "Creează cuponul"
       },
       "address": "{{SC_ADDRESS}}",
       "func": "createCoupon",
-      "gasLimit": 10000000,
+      "gasLimit": 5000000,
       "abi": "INJECT:contract/output/coupon.abi.json",
       "inputs": [
         {
           "name": "Code",
           "as": "code",
           "description": {
-            "en": "The coupon code customers will enter (e.g. SUMMER20)",
-            "de": "Der Gutscheincode, den Kunden eingeben (z.B. SOMMER20)",
-            "fr": "Le code promo que les clients saisiront (par ex. SUMMER20)",
-            "es": "El codigo del cupon que introduciran los clientes (p. ej. SUMMER20)",
-            "ro": "Codul cuponului pe care il vor introduce clientii (de ex. SUMMER20)"
+            "en": "Short, memorable code customers will enter (e.g. SUMMER20, VIP50)",
+            "de": "Kurzer einprägsamer Code, den Kunden eingeben (z. B. SOMMER20, VIP50)",
+            "fr": "Code court et mémorable que les clients saisiront (ex. SUMMER20, VIP50)",
+            "es": "Código corto y memorable que introducirán los clientes (p. ej. SUMMER20, VIP50)",
+            "ro": "Cod scurt și memorabil pe care îl vor introduce clienții (ex. SUMMER20, VIP50)"
           },
-          "bot": "Short, memorable coupon code — e.g. LAUNCH10, VIP50, WELCOME.",
+          "bot": "Short memorable coupon code — e.g. LAUNCH10, VIP50, WELCOME. Max 32 characters, uppercase recommended.",
           "type": "string",
           "position": "arg:1",
           "source": "field",
@@ -67,71 +79,89 @@
           "name": "Discount",
           "as": "discountPercent",
           "description": {
-            "en": "Discount percentage (1–100)",
-            "de": "Rabattprozentsatz (1–100)",
-            "fr": "Pourcentage de reduction (1-100)",
-            "es": "Porcentaje de descuento (1-100)",
-            "ro": "Procentul reducerii (1-100)"
+            "en": "Percentage discount applied at redemption",
+            "de": "Rabattprozentsatz bei der Einlösung",
+            "fr": "Pourcentage de réduction appliqué à l'utilisation",
+            "es": "Porcentaje de descuento aplicado al canjear",
+            "ro": "Procentul de reducere aplicat la folosire"
           },
-          "bot": "Percentage discount the coupon applies.",
+          "bot": "Discount percentage — e.g. 10 for 10% off. Must be between 1 and 100.",
           "type": "u8",
           "position": "arg:2",
           "source": "field",
           "required": true,
           "options": {
-            "5": "5%",
-            "10": "10%",
-            "15": "15%",
-            "20": "20%",
-            "25": "25%",
-            "50": "50%"
+            "5": "5% off",
+            "10": "10% off",
+            "15": "15% off",
+            "20": "20% off",
+            "25": "25% off",
+            "30": "30% off",
+            "50": "50% off",
+            "75": "75% off"
           }
         },
         {
           "name": "Max Uses",
           "as": "maxUses",
           "description": {
-            "en": "How many times can this coupon be redeemed? (0 = unlimited)",
-            "de": "Wie oft kann dieser Gutschein eingelöst werden? (0 = unbegrenzt)",
-            "fr": "Combien de fois ce coupon peut-il etre utilise ? (0 = illimite)",
-            "es": "Cuantas veces puede canjearse este cupon? (0 = ilimitado)",
-            "ro": "De cate ori poate fi folosit acest cupon? (0 = nelimitat)"
+            "en": "Maximum number of times this coupon can be redeemed (0 = unlimited)",
+            "de": "Maximale Einlösungen (0 = unbegrenzt)",
+            "fr": "Nombre maximum d'utilisations (0 = illimité)",
+            "es": "Número máximo de canjes (0 = ilimitado)",
+            "ro": "Numărul maxim de utilizări (0 = nelimitat)"
           },
-          "bot": "Maximum number of redemptions. Use 0 for unlimited uses.",
+          "bot": "Max redemptions. 0 for unlimited. Common values: 1 for single-use, 100 for a large campaign.",
           "type": "u64",
           "position": "arg:3",
           "source": "field",
           "required": true,
           "options": {
-            "0": "∞",
-            "1": "1",
-            "5": "5",
-            "10": "10",
-            "100": "100"
+            "0": "∞ Unlimited",
+            "1": "1 — single use",
+            "5": "5 uses",
+            "10": "10 uses",
+            "25": "25 uses",
+            "50": "50 uses",
+            "100": "100 uses"
           }
         },
         {
-          "name": "Expires At",
-          "as": "expiresAt",
+          "name": "Valid For",
+          "as": "expiryDays",
+          "description": {
+            "en": "How long this coupon is valid from now (0 = never expires)",
+            "de": "Wie lange der Gutschein ab jetzt gültig ist (0 = läuft nie ab)",
+            "fr": "Durée de validité à partir de maintenant (0 = n'expire jamais)",
+            "es": "Cuánto tiempo es válido el cupón desde ahora (0 = no caduca nunca)",
+            "ro": "Cât timp este valabil cuponul de acum (0 = nu expiră niciodată)"
+          },
+          "bot": "Validity period in days from now. 0 for no expiry. Examples: 7 for a week, 30 for a month.",
           "type": "u64",
           "position": "arg:4",
-          "source": "hidden",
-          "default": "0",
-          "required": true
+          "source": "field",
+          "required": true,
+          "options": {
+            "0": "Never expires",
+            "7": "7 days",
+            "14": "14 days",
+            "30": "30 days",
+            "60": "60 days",
+            "90": "90 days",
+            "180": "6 months",
+            "365": "1 year"
+          }
         }
       ]
     }
   ],
-  "output": {
-    "COUPON_ID": "out.data"
-  },
   "messages": {
     "success": {
-      "en": "Coupon created! Share the code and let customers redeem it.",
-      "de": "Gutschein erstellt! Teile den Code und lass Kunden ihn einlösen.",
-      "fr": "Coupon cree ! Partagez le code pour que vos clients puissent l utiliser.",
-      "es": "Cupon creado. Comparte el codigo para que tus clientes puedan canjearlo.",
-      "ro": "Cupon creat! Distribuie codul pentru ca clientii sa il poata folosi."
+      "en": "Coupon created! Share the code with your customers — they can redeem it at checkout.",
+      "de": "Gutschein erstellt! Teile den Code mit deinen Kunden — sie können ihn beim Bezahlen einlösen.",
+      "fr": "Coupon créé ! Partagez le code avec vos clients — ils peuvent l'utiliser au paiement.",
+      "es": "¡Cupón creado! Comparte el código con tus clientes — pueden canjearlo al pagar.",
+      "ro": "Cupon creat! Distribuie codul clienților tăi — îl pot folosi la plată."
     }
   }
 }

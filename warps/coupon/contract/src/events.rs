@@ -2,40 +2,29 @@ multiversx_sc::imports!();
 
 #[multiversx_sc::module]
 pub trait EventsModule {
-    #[event("collectionCreated")]
-    fn collection_created_event(
-        &self,
-        #[indexed] collection_id: u64,
-        #[indexed] creator: ManagedAddress,
-        #[indexed] token_identifier: EsdtTokenIdentifier,
-    );
-
     #[event("couponCreated")]
     fn coupon_created_event(
         &self,
-        #[indexed] collection_id: u64,
-        #[indexed] nonce: u64,
-        #[indexed] creator: ManagedAddress,
+        #[indexed] code: &ManagedBuffer,
+        #[indexed] owner: &ManagedAddress,
         #[indexed] discount_percent: u8,
-        #[indexed] amount: BigUint,
+        #[indexed] max_uses: u64,
         #[indexed] expires_at: u64,
     );
 
     #[event("couponRedeemed")]
     fn coupon_redeemed_event(
         &self,
-        #[indexed] collection_id: u64,
-        #[indexed] nonce: u64,
-        #[indexed] redeemer: ManagedAddress,
+        #[indexed] code: &ManagedBuffer,
+        #[indexed] redeemer: &ManagedAddress,
         #[indexed] discount_percent: u8,
-        #[indexed] amount: BigUint,
+        #[indexed] used_count: u64,
     );
 
     #[event("couponRevoked")]
     fn coupon_revoked_event(
         &self,
-        #[indexed] collection_id: u64,
-        #[indexed] nonce: u64,
-        #[indexed] creator: ManagedAddress,
+        #[indexed] code: &ManagedBuffer,
+        #[indexed] owner: &ManagedAddress,
     );
 }

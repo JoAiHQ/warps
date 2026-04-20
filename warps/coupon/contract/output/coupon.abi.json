@@ -30,125 +30,76 @@
     "endpoints": [
         {
             "docs": [
-                "Create a new coupon collection by issuing an SFT token on-chain.",
-                "Caller must send exactly 0.05 EGLD (the MultiversX ESDT issuance fee).",
-                "The collection becomes ready after two async callbacks complete (issue + setRoles)."
-            ],
-            "name": "createCollection",
-            "rustMethodName": "create_collection",
-            "mutability": "mutable",
-            "payableInTokens": [
-                "EGLD"
-            ],
-            "inputs": [
-                {
-                    "name": "name",
-                    "type": "bytes"
-                },
-                {
-                    "name": "ticker",
-                    "type": "bytes"
-                }
-            ],
-            "outputs": []
-        },
-        {
-            "docs": [
-                "Mint coupon tokens within a collection.",
-                "Only the collection creator can mint.",
-                "`amount` = number of redemptions available for this coupon type.",
-                "`expires_at` = unix timestamp after which the coupon cannot be redeemed (0 = no expiry)."
+                "Create a new discount coupon identified by a human-readable code.",
+                "`expiry_days` — days from now before the coupon expires; 0 = never expires.",
+                "`max_uses` — total redemptions allowed; 0 = unlimited."
             ],
             "name": "createCoupon",
             "rustMethodName": "create_coupon",
             "mutability": "mutable",
             "inputs": [
                 {
-                    "name": "collection_id",
-                    "type": "u64"
+                    "name": "code",
+                    "type": "bytes"
                 },
                 {
                     "name": "discount_percent",
                     "type": "u8"
                 },
                 {
-                    "name": "amount",
-                    "type": "BigUint"
+                    "name": "max_uses",
+                    "type": "u64"
                 },
                 {
-                    "name": "expires_at",
+                    "name": "expiry_days",
                     "type": "u64"
+                }
+            ],
+            "outputs": []
+        },
+        {
+            "docs": [
+                "Redeem a coupon by code. Validates limits, increments the usage counter, and returns the",
+                "discount percentage so the caller can apply it immediately."
+            ],
+            "name": "redeemCoupon",
+            "rustMethodName": "redeem_coupon",
+            "mutability": "mutable",
+            "inputs": [
+                {
+                    "name": "code",
+                    "type": "bytes"
                 }
             ],
             "outputs": [
                 {
-                    "type": "u64"
+                    "type": "u8"
                 }
             ]
         },
         {
             "docs": [
-                "Redeem a coupon by sending the SFT to this contract.",
-                "The token is burned on-chain as irrefutable proof of redemption.",
-                "The emitted event carries `discount_percent` for the caller's application."
-            ],
-            "name": "redeemCoupon",
-            "rustMethodName": "redeem_coupon",
-            "mutability": "mutable",
-            "payableInTokens": [
-                "*"
-            ],
-            "inputs": [],
-            "outputs": []
-        },
-        {
-            "docs": [
-                "Mark a coupon nonce as revoked. Holders of existing tokens can no longer redeem them.",
-                "Only the collection creator can revoke."
+                "Permanently revoke a coupon. Only the original creator can revoke."
             ],
             "name": "revokeCoupon",
             "rustMethodName": "revoke_coupon",
             "mutability": "mutable",
             "inputs": [
                 {
-                    "name": "collection_id",
-                    "type": "u64"
-                },
-                {
-                    "name": "nonce",
-                    "type": "u64"
+                    "name": "code",
+                    "type": "bytes"
                 }
             ],
             "outputs": []
         },
         {
-            "name": "getCollection",
-            "rustMethodName": "get_collection",
+            "name": "getCoupon",
+            "rustMethodName": "get_coupon",
             "mutability": "readonly",
             "inputs": [
                 {
-                    "name": "collection_id",
-                    "type": "u64"
-                }
-            ],
-            "outputs": [
-                {
-                    "type": "Collection"
-                }
-            ]
-        },
-        {
-            "name": "getCouponData",
-            "rustMethodName": "get_coupon_data",
-            "mutability": "readonly",
-            "inputs": [
-                {
-                    "name": "collection_id",
-                    "type": "u64"
-                },
-                {
-                    "name": "nonce",
-                    "type": "u64"
+                    "name": "code",
+                    "type": "bytes"
                 }
             ],
             "outputs": [
@@ -158,62 +109,33 @@
             ]
         },
         {
-            "name": "getCollectionsByCreator",
-            "rustMethodName": "get_collections_by_creator",
+            "docs": [
+                "Returns all coupon codes created by the given owner address."
+            ],
+            "name": "getOwnerCoupons",
+            "rustMethodName": "get_owner_coupons",
             "mutability": "readonly",
             "inputs": [
                 {
-                    "name": "creator",
+                    "name": "owner",
                     "type": "Address"
-                },
-                {
-                    "name": "offset",
-                    "type": "u32"
-                },
-                {
-                    "name": "limit",
-                    "type": "u32"
                 }
             ],
             "outputs": [
                 {
-                    "type": "variadic<multi<u64,Collection>>",
+                    "type": "variadic<bytes>",
                     "multi_result": true
                 }
             ]
         },
         {
-            "docs": [
-                "Returns the ESDT token identifier for a collection.",
-                "Empty = collection exists but ESDT not yet issued (still pending async callback)."
-            ],
-            "name": "getCollectionToken",
-            "rustMethodName": "get_collection_token",
+            "name": "couponExists",
+            "rustMethodName": "coupon_exists",
             "mutability": "readonly",
             "inputs": [
                 {
-                    "name": "collection_id",
-                    "type": "u64"
-                }
-            ],
-            "outputs": [
-                {
-                    "type": "optional<TokenIdentifier>",
-                    "multi_result": true
-                }
-            ]
-        },
-        {
-            "docs": [
-                "Returns true if the collection's ESDT has been issued and roles set."
-            ],
-            "name": "isCollectionReady",
-            "rustMethodName": "is_collection_ready",
-            "mutability": "readonly",
-            "inputs": [
-                {
-                    "name": "collection_id",
-                    "type": "u64"
+                    "name": "code",
+                    "type": "bytes"
                 }
             ],
             "outputs": [
@@ -221,55 +143,19 @@
                     "type": "bool"
                 }
             ]
-        },
-        {
-            "name": "getNextCollectionId",
-            "rustMethodName": "get_next_collection_id",
-            "mutability": "readonly",
-            "inputs": [],
-            "outputs": [
-                {
-                    "type": "u64"
-                }
-            ]
         }
     ],
     "events": [
         {
-            "identifier": "collectionCreated",
-            "inputs": [
-                {
-                    "name": "collection_id",
-                    "type": "u64",
-                    "indexed": true
-                },
-                {
-                    "name": "creator",
-                    "type": "Address",
-                    "indexed": true
-                },
-                {
-                    "name": "token_identifier",
-                    "type": "TokenIdentifier",
-                    "indexed": true
-                }
-            ]
-        },
-        {
             "identifier": "couponCreated",
             "inputs": [
                 {
-                    "name": "collection_id",
-                    "type": "u64",
+                    "name": "code",
+                    "type": "bytes",
                     "indexed": true
                 },
                 {
-                    "name": "nonce",
-                    "type": "u64",
-                    "indexed": true
-                },
-                {
-                    "name": "creator",
+                    "name": "owner",
                     "type": "Address",
                     "indexed": true
                 },
@@ -279,8 +165,8 @@
                     "indexed": true
                 },
                 {
-                    "name": "amount",
-                    "type": "BigUint",
+                    "name": "max_uses",
+                    "type": "u64",
                     "indexed": true
                 },
                 {
@@ -294,13 +180,8 @@
             "identifier": "couponRedeemed",
             "inputs": [
                 {
-                    "name": "collection_id",
-                    "type": "u64",
-                    "indexed": true
-                },
-                {
-                    "name": "nonce",
-                    "type": "u64",
+                    "name": "code",
+                    "type": "bytes",
                     "indexed": true
                 },
                 {
@@ -314,8 +195,8 @@
                     "indexed": true
                 },
                 {
-                    "name": "amount",
-                    "type": "BigUint",
+                    "name": "used_count",
+                    "type": "u64",
                     "indexed": true
                 }
             ]
@@ -324,17 +205,12 @@
             "identifier": "couponRevoked",
             "inputs": [
                 {
-                    "name": "collection_id",
-                    "type": "u64",
+                    "name": "code",
+                    "type": "bytes",
                     "indexed": true
                 },
                 {
-                    "name": "nonce",
-                    "type": "u64",
-                    "indexed": true
-                },
-                {
-                    "name": "creator",
+                    "name": "owner",
                     "type": "Address",
                     "indexed": true
                 }
@@ -342,31 +218,26 @@
         }
     ],
     "esdtAttributes": [],
-    "hasCallback": true,
+    "hasCallback": false,
     "types": {
-        "Collection": {
-            "type": "struct",
-            "fields": [
-                {
-                    "name": "id",
-                    "type": "u64"
-                },
-                {
-                    "name": "creator",
-                    "type": "Address"
-                },
-                {
-                    "name": "name",
-                    "type": "bytes"
-                }
-            ]
-        },
         "CouponData": {
             "type": "struct",
             "fields": [
                 {
+                    "name": "owner",
+                    "type": "Address"
+                },
+                {
                     "name": "discount_percent",
                     "type": "u8"
+                },
+                {
+                    "name": "max_uses",
+                    "type": "u64"
+                },
+                {
+                    "name": "used_count",
+                    "type": "u64"
                 },
                 {
                     "name": "expires_at",
