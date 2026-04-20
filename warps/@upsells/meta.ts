@@ -3,11 +3,11 @@ import type { WarpExtras } from '../types'
 export const meta: Record<string, WarpExtras> = {
   'recommend': {
     keywords: {
-      en: ['recommend products', 'product recommendations', 'upsell', 'cross-sell', 'suggest products'],
-      de: ['Produkte empfehlen', 'Produktempfehlungen', 'Upselling', 'Cross-Selling', 'Produkte vorschlagen'],
-      fr: ['recommander des produits', 'recommandations de produits', 'vente additionnelle', 'vente croisee', 'suggerer des produits'],
-      es: ['recomendar productos', 'recomendaciones de productos', 'venta adicional', 'venta cruzada', 'sugerir productos'],
-      ro: ['recomanda produse', 'recomandari de produse', 'upselling', 'cross-selling', 'sugereaza produse'],
+      en: ['recommend products', 'product recommendations', 'upsell', 'cross-sell', 'suggest products', 'ai', 'ai assistant', 'ai-powered', 'intelligent', 'smart recommendations', 'automated'],
+      de: ['Produkte empfehlen', 'Produktempfehlungen', 'Upselling', 'Cross-Selling', 'Produkte vorschlagen', 'ki', 'ki-assistent', 'ki-gestützt', 'intelligent', 'smarte Empfehlungen', 'automatisiert'],
+      fr: ['recommander des produits', 'recommandations de produits', 'vente additionnelle', 'vente croisee', 'suggerer des produits', 'ia', 'agent ia', 'ia propulsée', 'automatisé', 'intelligent', 'assistant ia'],
+      es: ['recomendar productos', 'recomendaciones de productos', 'venta adicional', 'venta cruzada', 'sugerir productos', 'ia', 'agente ia', 'con ia', 'automatizado', 'inteligente', 'asistente ia'],
+      ro: ['recomanda produse', 'recomandari de produse', 'upselling', 'cross-selling', 'sugereaza produse', 'ia', 'agent ia', 'bazat pe ia', 'automatizat', 'inteligent', 'asistent ia'],
     },
     useCases: {
       en: ['Suggest complementary products after a haircut', 'Recommend skincare products based on treatment history', 'Generate personalized offers for a returning customer'],
@@ -83,11 +83,11 @@ export const meta: Record<string, WarpExtras> = {
 
   'after-visit': {
     keywords: {
-      en: ['post-visit', 'after appointment', 'follow-up upsell', 'after treatment', 'visit follow-up'],
-      de: ['nach dem Besuch', 'nach dem Termin', 'Follow-up-Upsell', 'nach der Behandlung', 'Besuch-Nachfassung'],
-      fr: ['apres la visite', 'apres le rendez-vous', 'vente additionnelle de suivi', 'apres le traitement', 'suivi de visite'],
-      es: ['despues de la visita', 'despues de la cita', 'venta adicional de seguimiento', 'despues del tratamiento', 'seguimiento de visita'],
-      ro: ['dupa vizita', 'dupa programare', 'upsell de follow-up', 'dupa tratament', 'follow-up vizita'],
+      en: ['post-visit', 'after appointment', 'follow-up upsell', 'after treatment', 'visit follow-up', 'ai', 'ai-powered', 'automated', 'smart', 'ai agent'],
+      de: ['nach dem Besuch', 'nach dem Termin', 'Follow-up-Upsell', 'nach der Behandlung', 'Besuch-Nachfassung', 'ki', 'ki-gestützt', 'automatisiert', 'smart', 'ki-agent'],
+      fr: ['apres la visite', 'apres le rendez-vous', 'vente additionnelle de suivi', 'apres le traitement', 'suivi de visite', 'ia', 'ia propulsée', 'automatisé', 'intelligent', 'agent ia'],
+      es: ['despues de la visita', 'despues de la cita', 'venta adicional de seguimiento', 'despues del tratamiento', 'seguimiento de visita', 'ia', 'con ia', 'automatizado', 'inteligente', 'agente ia'],
+      ro: ['dupa vizita', 'dupa programare', 'upsell de follow-up', 'dupa tratament', 'follow-up vizita', 'ia', 'bazat pe ia', 'automatizat', 'inteligent', 'agent ia'],
     },
     useCases: {
       en: ['Send product recommendations after a facial treatment via WhatsApp', 'Follow up with home care products after a massage', 'Upsell retail products after a salon visit via email'],
@@ -163,11 +163,11 @@ export const meta: Record<string, WarpExtras> = {
 
   'product-alert': {
     keywords: {
-      en: ['product alert', 'product notification', 'product recommendation', 'notify customer', 'product suggestion'],
-      de: ['Produktbenachrichtigung', 'Produkthinweis', 'Produktempfehlung', 'Kunden benachrichtigen', 'Produktvorschlag'],
-      fr: ['alerte produit', 'notification produit', 'recommandation de produit', 'notifier le client', 'suggestion de produit'],
-      es: ['alerta de producto', 'notificacion de producto', 'recomendacion de producto', 'notificar al cliente', 'sugerencia de producto'],
-      ro: ['alerta de produs', 'notificare de produs', 'recomandare de produs', 'notifica clientul', 'sugestie de produs'],
+      en: ['product alert', 'product notification', 'product recommendation', 'notify customer', 'product suggestion', 'ai', 'ai-powered', 'intelligent', 'automated', 'smart alert'],
+      de: ['Produktbenachrichtigung', 'Produkthinweis', 'Produktempfehlung', 'Kunden benachrichtigen', 'Produktvorschlag', 'ki', 'ki-gestützt', 'intelligent', 'automatisiert', 'smarter Hinweis'],
+      fr: ['alerte produit', 'notification produit', 'recommandation de produit', 'notifier le client', 'suggestion de produit', 'ia', 'ia propulsée', 'intelligent', 'automatisé', 'agent ia'],
+      es: ['alerta de producto', 'notificacion de producto', 'recomendacion de producto', 'notificar al cliente', 'sugerencia de producto', 'ia', 'con ia', 'inteligente', 'automatizado', 'agente ia'],
+      ro: ['alerta de produs', 'notificare de produs', 'recomandare de produs', 'notifica clientul', 'sugestie de produs', 'ia', 'bazat pe ia', 'inteligent', 'automatizat', 'agent ia'],
     },
     useCases: {
       en: ['Alert a customer about a new product that matches their preferences', 'Notify a regular client about a restocked favorite item', 'Send a personalized product recommendation to a VIP customer'],
@@ -243,11 +243,11 @@ export const meta: Record<string, WarpExtras> = {
 
   'bundle-suggest': {
     keywords: {
-      en: ['bundle', 'package deal', 'service package', 'combo offer', 'bundled services'],
-      de: ['Paket', 'Paketangebot', 'Dienstleistungspaket', 'Kombi-Angebot', 'gebuendelte Dienste'],
-      fr: ['forfait', 'offre groupee', 'forfait de services', 'offre combo', 'services groupes'],
-      es: ['paquete', 'oferta combinada', 'paquete de servicios', 'oferta combo', 'servicios combinados'],
-      ro: ['pachet', 'oferta pachet', 'pachet de servicii', 'oferta combo', 'servicii combinate'],
+      en: ['bundle', 'package deal', 'service package', 'combo offer', 'bundled services', 'ai', 'ai-powered', 'intelligent', 'smart bundle', 'ai suggestions'],
+      de: ['Paket', 'Paketangebot', 'Dienstleistungspaket', 'Kombi-Angebot', 'gebuendelte Dienste', 'ki', 'ki-gestützt', 'intelligent', 'smartes Paket', 'ki-vorschläge'],
+      fr: ['forfait', 'offre groupee', 'forfait de services', 'offre combo', 'services groupes', 'ia', 'ia propulsée', 'intelligent', 'suggestions ia', 'agent ia'],
+      es: ['paquete', 'oferta combinada', 'paquete de servicios', 'oferta combo', 'servicios combinados', 'ia', 'con ia', 'inteligente', 'sugerencias ia', 'agente ia'],
+      ro: ['pachet', 'oferta pachet', 'pachet de servicii', 'oferta combo', 'servicii combinate', 'ia', 'bazat pe ia', 'inteligent', 'sugestii ia', 'agent ia'],
     },
     useCases: {
       en: ['Suggest a haircut and color bundle to a regular client', 'Offer a spa day package combining massage and facial', 'Propose a maintenance package with discounted follow-up visits'],
@@ -323,11 +323,11 @@ export const meta: Record<string, WarpExtras> = {
 
   'weekly-opportunities': {
     keywords: {
-      en: ['weekly upsell', 'upsell report', 'sales opportunities', 'weekly sales', 'upsell opportunities'],
-      de: ['woechentlicher Upsell', 'Upsell-Bericht', 'Verkaufschancen', 'woechentliche Verkaeufe', 'Upsell-Moeglichkeiten'],
-      fr: ['vente additionnelle hebdomadaire', 'rapport de vente additionnelle', 'opportunites de vente', 'ventes hebdomadaires', 'opportunites de vente additionnelle'],
-      es: ['venta adicional semanal', 'informe de venta adicional', 'oportunidades de venta', 'ventas semanales', 'oportunidades de venta adicional'],
-      ro: ['upsell saptamanal', 'raport de upsell', 'oportunitati de vanzare', 'vanzari saptamanale', 'oportunitati de upsell'],
+      en: ['weekly upsell', 'upsell report', 'sales opportunities', 'weekly sales', 'upsell opportunities', 'ai', 'ai agent', 'ai-powered', 'automated', 'intelligent analysis'],
+      de: ['woechentlicher Upsell', 'Upsell-Bericht', 'Verkaufschancen', 'woechentliche Verkaeufe', 'Upsell-Moeglichkeiten', 'ki', 'ki-agent', 'ki-gestützt', 'automatisiert', 'intelligente Analyse'],
+      fr: ['vente additionnelle hebdomadaire', 'rapport de vente additionnelle', 'opportunites de vente', 'ventes hebdomadaires', 'opportunites de vente additionnelle', 'ia', 'agent ia', 'ia propulsée', 'automatisé', 'analyse intelligente'],
+      es: ['venta adicional semanal', 'informe de venta adicional', 'oportunidades de venta', 'ventas semanales', 'oportunidades de venta adicional', 'ia', 'agente ia', 'con ia', 'automatizado', 'análisis inteligente'],
+      ro: ['upsell saptamanal', 'raport de upsell', 'oportunitati de vanzare', 'vanzari saptamanale', 'oportunitati de upsell', 'ia', 'agent ia', 'bazat pe ia', 'automatizat', 'analiza inteligenta'],
     },
     useCases: {
       en: ['Receive a weekly overview of the best upsell opportunities', 'Get notified about high-value customers visiting this week', 'Identify which upcoming appointments have upsell potential'],

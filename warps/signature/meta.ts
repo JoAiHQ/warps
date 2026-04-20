@@ -3,8 +3,11 @@ import type { WarpExtras } from '../types'
 export const meta: Record<string, WarpExtras> = {
   'signature-self-sign': {
     keywords: {
-      en: ['self sign', 'sign own', 'certify', 'document', 'authorship', 'proof', 'upload', 'on-chain'],
-      de: ['selbst signieren', 'eigenes signieren', 'zertifizieren', 'dokument', 'urheberschaft', 'nachweis', 'hochladen', 'on-chain'],
+      en: ['self sign', 'sign own', 'certify', 'document', 'authorship', 'proof', 'upload', 'on-chain', 'ai', 'ai agent', 'ai-powered', 'automated'],
+      de: ['selbst signieren', 'eigenes signieren', 'zertifizieren', 'dokument', 'urheberschaft', 'nachweis', 'hochladen', 'on-chain', 'ki', 'ki-agent', 'ki-gestützt', 'automatisiert'],
+      fr: ['auto-signer', 'signer soi-même', 'certifier', 'document', 'paternité', 'preuve', 'télécharger', 'on-chain', 'ia', 'agent ia', 'ia propulsée', 'automatisé'],
+      es: ['auto-firmar', 'firmar propio', 'certificar', 'documento', 'autoría', 'prueba', 'subir', 'on-chain', 'ia', 'agente ia', 'con ia', 'automatizado'],
+      ro: ['auto-semna', 'semna propriu', 'certifica', 'document', 'paternitate', 'dovada', 'incarca', 'on-chain', 'ia', 'agent ia', 'bazat pe ia', 'automatizat'],
     },
     useCases: {
       en: [
@@ -22,8 +25,11 @@ export const meta: Record<string, WarpExtras> = {
   },
   'signature-create': {
     keywords: {
-      en: ['signature', 'sign', 'document', 'contract', 'agreement', 'legal', 'nda', 'request', 'on-chain'],
-      de: ['signatur', 'unterzeichnen', 'dokument', 'vertrag', 'vereinbarung', 'rechtlich', 'nda', 'anfrage', 'on-chain'],
+      en: ['signature', 'sign', 'document', 'contract', 'agreement', 'legal', 'nda', 'request', 'on-chain', 'ai', 'ai agent', 'ai-powered', 'automated', 'smart'],
+      de: ['signatur', 'unterzeichnen', 'dokument', 'vertrag', 'vereinbarung', 'rechtlich', 'nda', 'anfrage', 'on-chain', 'ki', 'ki-agent', 'ki-gestützt', 'automatisiert', 'smart'],
+      fr: ['signature', 'signer', 'document', 'contrat', 'accord', 'juridique', 'nda', 'demande', 'on-chain', 'ia', 'agent ia', 'ia propulsée', 'automatisé', 'intelligent'],
+      es: ['firma', 'firmar', 'documento', 'contrato', 'acuerdo', 'legal', 'nda', 'solicitud', 'on-chain', 'ia', 'agente ia', 'con ia', 'automatizado', 'inteligente'],
+      ro: ['semnatura', 'semna', 'document', 'contract', 'acord', 'legal', 'nda', 'solicitare', 'on-chain', 'ia', 'agent ia', 'bazat pe ia', 'automatizat', 'inteligent'],
     },
     useCases: {
       en: [
@@ -130,8 +136,11 @@ export const meta: Record<string, WarpExtras> = {
   },
   'signature-remind': {
     keywords: {
-      en: ['remind', 'resend', 'follow up', 'signature', 'pending', 'nudge'],
-      de: ['erinnern', 'erneut senden', 'nachfassen', 'signatur', 'ausstehend'],
+      en: ['remind', 'resend', 'follow up', 'signature', 'pending', 'nudge', 'ai', 'ai agent', 'automated', 'smart follow-up'],
+      de: ['erinnern', 'erneut senden', 'nachfassen', 'signatur', 'ausstehend', 'ki', 'ki-agent', 'automatisiert', 'smartes Follow-up'],
+      fr: ['rappeler', 'renvoyer', 'suivi', 'signature', 'en attente', 'relance', 'ia', 'agent ia', 'automatisé', 'suivi intelligent'],
+      es: ['recordar', 'reenviar', 'seguimiento', 'firma', 'pendiente', 'recordatorio', 'ia', 'agente ia', 'automatizado', 'seguimiento inteligente'],
+      ro: ['aminteste', 'retrimite', 'urmarire', 'semnatura', 'in asteptare', 'reminder', 'ia', 'agent ia', 'automatizat', 'urmarire inteligenta'],
     },
     useCases: {
       en: ['Resend the signing link to a signer who hasn\'t responded', 'Follow up on a pending signature request'],

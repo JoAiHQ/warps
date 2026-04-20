@@ -3,8 +3,11 @@ import type { WarpExtras } from '../types'
 export const meta: Record<string, WarpExtras> = {
   'create-post': {
     keywords: {
-      en: ['create post', 'social media post', 'Instagram post', 'Facebook post', 'LinkedIn post', 'make a post'],
-      de: ['Post erstellen', 'Social-Media-Post', 'Instagram-Post', 'Facebook-Post', 'LinkedIn-Post', 'Beitrag erstellen'],
+      en: ['create post', 'social media post', 'Instagram post', 'Facebook post', 'LinkedIn post', 'make a post', 'ai', 'ai-powered', 'ai agent', 'automated', 'smart', 'generate content'],
+      de: ['Post erstellen', 'Social-Media-Post', 'Instagram-Post', 'Facebook-Post', 'LinkedIn-Post', 'Beitrag erstellen', 'ki', 'ki-gestützt', 'ki-agent', 'automatisiert', 'smart', 'content generieren'],
+      fr: ['créer un post', 'post réseaux sociaux', 'post Instagram', 'post Facebook', 'post LinkedIn', 'faire un post', 'ia', 'agent ia', 'ia propulsée', 'automatisé', 'intelligent', 'assistant ia'],
+      es: ['crear publicación', 'publicación en redes sociales', 'publicación de Instagram', 'publicación de Facebook', 'publicación de LinkedIn', 'hacer una publicación', 'ia', 'agente ia', 'con ia', 'automatizado', 'inteligente', 'asistente ia'],
+      ro: ['creare post', 'postare retele sociale', 'postare Instagram', 'postare Facebook', 'postare LinkedIn', 'fa un post', 'ia', 'agent ia', 'bazat pe ia', 'automatizat', 'inteligent', 'asistent ia'],
     },
     useCases: {
       en: ['Create a branded Instagram post announcing a new product', 'Generate a Facebook post for a seasonal campaign', 'Make a LinkedIn post sharing a business milestone'],
@@ -41,8 +44,11 @@ export const meta: Record<string, WarpExtras> = {
 
   'create-story': {
     keywords: {
-      en: ['create story', 'Instagram story', 'reel', 'TikTok', 'vertical video', 'stories'],
-      de: ['Story erstellen', 'Instagram Story', 'Reel', 'TikTok', 'vertikales Video', 'Stories'],
+      en: ['create story', 'Instagram story', 'reel', 'TikTok', 'vertical video', 'stories', 'ai', 'ai-powered', 'automated', 'generate content', 'ai assistant'],
+      de: ['Story erstellen', 'Instagram Story', 'Reel', 'TikTok', 'vertikales Video', 'Stories', 'ki', 'ki-gestützt', 'automatisiert', 'content generieren', 'ki-assistent'],
+      fr: ['créer une story', 'story Instagram', 'reel', 'TikTok', 'vidéo verticale', 'stories', 'ia', 'ia propulsée', 'automatisé', 'générer du contenu', 'assistant ia'],
+      es: ['crear historia', 'historia de Instagram', 'reel', 'TikTok', 'video vertical', 'historias', 'ia', 'con ia', 'automatizado', 'generar contenido', 'asistente ia'],
+      ro: ['creare story', 'story Instagram', 'reel', 'TikTok', 'video vertical', 'stories', 'ia', 'bazat pe ia', 'automatizat', 'generare continut', 'asistent ia'],
     },
     useCases: {
       en: ['Create an Instagram story for a daily special', 'Generate a vertical reel showcasing a new service', 'Make a TikTok-style story for a behind-the-scenes look'],
@@ -79,8 +85,11 @@ export const meta: Record<string, WarpExtras> = {
 
   'suggest-ideas': {
     keywords: {
-      en: ['content ideas', 'post ideas', 'content inspiration', 'content plan', 'what to post'],
-      de: ['Content-Ideen', 'Post-Ideen', 'Content-Inspiration', 'Content-Plan', 'was posten'],
+      en: ['content ideas', 'post ideas', 'content inspiration', 'content plan', 'what to post', 'ai', 'ai assistant', 'ai-powered', 'intelligent', 'smart suggestions', 'ai suggestions'],
+      de: ['Content-Ideen', 'Post-Ideen', 'Content-Inspiration', 'Content-Plan', 'was posten', 'ki', 'ki-assistent', 'ki-gestützt', 'intelligent', 'smarte Vorschläge', 'ki-vorschläge'],
+      fr: ['idées de contenu', 'idées de posts', 'inspiration contenu', 'plan de contenu', 'quoi poster', 'ia', 'assistant ia', 'ia propulsée', 'intelligent', 'suggestions intelligentes', 'agent ia'],
+      es: ['ideas de contenido', 'ideas de publicaciones', 'inspiración de contenido', 'plan de contenido', 'qué publicar', 'ia', 'asistente ia', 'con ia', 'inteligente', 'sugerencias inteligentes', 'agente ia'],
+      ro: ['idei de continut', 'idei de postari', 'inspiratie continut', 'plan de continut', 'ce sa postezi', 'ia', 'asistent ia', 'bazat pe ia', 'inteligent', 'sugestii inteligente', 'agent ia'],
     },
     useCases: {
       en: ['Get a week of content ideas for a beauty salon', 'Generate monthly post topics for a restaurant', 'Find inspiration for upcoming holiday content'],
@@ -117,8 +126,11 @@ export const meta: Record<string, WarpExtras> = {
 
   'create-promotion': {
     keywords: {
-      en: ['promotion', 'sale post', 'discount post', 'offer', 'promotional content', 'campaign'],
-      de: ['Promotion', 'Angebots-Post', 'Rabatt-Post', 'Aktion', 'Werbecontent', 'Kampagne'],
+      en: ['promotion', 'sale post', 'discount post', 'offer', 'promotional content', 'campaign', 'ai', 'ai-powered', 'automated', 'generate', 'smart campaign'],
+      de: ['Promotion', 'Angebots-Post', 'Rabatt-Post', 'Aktion', 'Werbecontent', 'Kampagne', 'ki', 'ki-gestützt', 'automatisiert', 'generieren', 'smarte Kampagne'],
+      fr: ['promotion', 'post vente', 'post remise', 'offre', 'contenu promotionnel', 'campagne', 'ia', 'ia propulsée', 'automatisé', 'générer', 'agent ia'],
+      es: ['promoción', 'publicación de venta', 'publicación de descuento', 'oferta', 'contenido promocional', 'campaña', 'ia', 'con ia', 'automatizado', 'generar', 'agente ia'],
+      ro: ['promotie', 'post vanzare', 'post reducere', 'oferta', 'continut promotional', 'campanie', 'ia', 'bazat pe ia', 'automatizat', 'genereaza', 'agent ia'],
     },
     useCases: {
       en: ['Create an Easter promotion post with 20% discount', 'Generate a Black Friday campaign visual', 'Make a grand opening announcement for social media'],
@@ -155,8 +167,11 @@ export const meta: Record<string, WarpExtras> = {
 
   'weekly-suggestions': {
     keywords: {
-      en: ['weekly content', 'weekly suggestions', 'content schedule', 'weekly plan', 'auto content'],
-      de: ['woechentlicher Content', 'woechentliche Vorschlaege', 'Content-Zeitplan', 'Wochenplan', 'automatischer Content'],
+      en: ['weekly content', 'weekly suggestions', 'content schedule', 'weekly plan', 'auto content', 'ai', 'ai agent', 'automated', 'intelligent', 'ai-powered'],
+      de: ['woechentlicher Content', 'woechentliche Vorschlaege', 'Content-Zeitplan', 'Wochenplan', 'automatischer Content', 'ki', 'ki-agent', 'automatisiert', 'intelligent', 'ki-gestützt'],
+      fr: ['contenu hebdomadaire', 'suggestions hebdomadaires', 'calendrier de contenu', 'plan hebdomadaire', 'contenu automatique', 'ia', 'agent ia', 'automatisé', 'intelligent', 'ia propulsée'],
+      es: ['contenido semanal', 'sugerencias semanales', 'calendario de contenido', 'plan semanal', 'contenido automático', 'ia', 'agente ia', 'automatizado', 'inteligente', 'con ia'],
+      ro: ['continut saptamanal', 'sugestii saptamanale', 'calendar de continut', 'plan saptamanal', 'continut automat', 'ia', 'agent ia', 'automatizat', 'inteligent', 'bazat pe ia'],
     },
     useCases: {
       en: ['Receive automatic weekly content suggestions every Monday', 'Get a push notification with content ideas for the week', 'Let the agent plan content on a weekly schedule'],
@@ -193,8 +208,11 @@ export const meta: Record<string, WarpExtras> = {
 
   'monthly-report': {
     keywords: {
-      en: ['monthly report', 'content report', 'content summary', 'performance report', 'monthly recap'],
-      de: ['Monatsbericht', 'Content-Bericht', 'Content-Zusammenfassung', 'Performance-Bericht', 'monatliche Zusammenfassung'],
+      en: ['monthly report', 'content report', 'content summary', 'performance report', 'monthly recap', 'ai', 'ai agent', 'automated', 'ai-powered', 'intelligent analysis'],
+      de: ['Monatsbericht', 'Content-Bericht', 'Content-Zusammenfassung', 'Performance-Bericht', 'monatliche Zusammenfassung', 'ki', 'ki-agent', 'automatisiert', 'ki-gestützt', 'intelligente Analyse'],
+      fr: ['rapport mensuel', 'rapport de contenu', 'résumé de contenu', 'rapport de performance', 'récapitulatif mensuel', 'ia', 'agent ia', 'automatisé', 'ia propulsée', 'analyse intelligente'],
+      es: ['informe mensual', 'informe de contenido', 'resumen de contenido', 'informe de rendimiento', 'resumen mensual', 'ia', 'agente ia', 'automatizado', 'con ia', 'análisis inteligente'],
+      ro: ['raport lunar', 'raport continut', 'rezumat continut', 'raport performanta', 'recapitulare lunara', 'ia', 'agent ia', 'automatizat', 'bazat pe ia', 'analiza inteligenta'],
     },
     useCases: {
       en: ['Get a monthly summary of all content created', 'Review content performance insights at the end of the month', 'Receive an automatic monthly content recap'],

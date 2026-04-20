@@ -3,8 +3,11 @@ import type { WarpExtras } from '../types'
 export const meta: Record<string, WarpExtras> = {
   'challenge-create': {
     keywords: {
-      en: ['challenge', 'stake', 'bet', 'commitment', 'accountability', 'prove', 'egld', 'usdc', 'stablecoin'],
-      de: ['challenge', 'einsatz', 'wette', 'verpflichtung', 'verantwortlichkeit', 'beweisen', 'egld', 'usdc', 'stablecoin'],
+      en: ['challenge', 'stake', 'bet', 'commitment', 'accountability', 'prove', 'egld', 'usdc', 'stablecoin', 'ai', 'ai agent', 'ai-powered', 'smart', 'automated verification'],
+      de: ['challenge', 'einsatz', 'wette', 'verpflichtung', 'verantwortlichkeit', 'beweisen', 'egld', 'usdc', 'stablecoin', 'ki', 'ki-agent', 'ki-gestützt', 'smart', 'automatisierte Verifizierung'],
+      fr: ['challenge', 'mise', 'pari', 'engagement', 'responsabilité', 'prouver', 'egld', 'usdc', 'stablecoin', 'ia', 'agent ia', 'ia propulsée', 'intelligent', 'vérification automatisée'],
+      es: ['reto', 'apuesta', 'apuesta', 'compromiso', 'responsabilidad', 'demostrar', 'egld', 'usdc', 'stablecoin', 'ia', 'agente ia', 'con ia', 'inteligente', 'verificación automatizada'],
+      ro: ['provocare', 'miza', 'pariu', 'angajament', 'responsabilitate', 'dovedeste', 'egld', 'usdc', 'stablecoin', 'ia', 'agent ia', 'bazat pe ia', 'inteligent', 'verificare automatizata'],
     },
     useCases: {
       en: [

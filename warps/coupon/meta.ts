@@ -3,8 +3,11 @@ import type { WarpExtras } from '../types'
 export const meta: Record<string, WarpExtras> = {
   'coupon-create': {
     keywords: {
-      en: ['coupon', 'discount', 'promo', 'code', 'create', 'on-chain', 'commerce', 'sale'],
-      de: ['gutschein', 'rabatt', 'promo', 'code', 'erstellen', 'on-chain', 'handel', 'sale'],
+      en: ['coupon', 'discount', 'promo', 'code', 'create', 'on-chain', 'commerce', 'sale', 'ai', 'ai agent', 'ai-powered', 'automated', 'smart'],
+      de: ['gutschein', 'rabatt', 'promo', 'code', 'erstellen', 'on-chain', 'handel', 'sale', 'ki', 'ki-agent', 'ki-gestützt', 'automatisiert', 'smart'],
+      fr: ['coupon', 'remise', 'promo', 'code', 'créer', 'on-chain', 'commerce', 'solde', 'ia', 'agent ia', 'ia propulsée', 'automatisé', 'intelligent'],
+      es: ['cupón', 'descuento', 'promo', 'código', 'crear', 'on-chain', 'comercio', 'oferta', 'ia', 'agente ia', 'con ia', 'automatizado', 'inteligente'],
+      ro: ['cupon', 'reducere', 'promo', 'cod', 'creeaza', 'on-chain', 'comert', 'vanzare', 'ia', 'agent ia', 'bazat pe ia', 'automatizat', 'inteligent'],
     },
     useCases: {
       en: [

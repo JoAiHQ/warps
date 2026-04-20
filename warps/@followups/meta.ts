@@ -3,11 +3,11 @@ import type { WarpExtras } from '../types'
 export const meta: Record<string, WarpExtras> = {
   'win-back': {
     keywords: {
-      en: ['win back', 'inactive customer', 'lapsed customer', 'customer retention', 'reactivate customer'],
-      de: ['zurueckgewinnen', 'inaktiver Kunde', 'abgewanderter Kunde', 'Kundenbindung', 'Kunden reaktivieren'],
-      fr: ['reconquerir', 'client inactif', 'client perdu', 'retention client', 'reactiver un client'],
-      es: ['recuperar', 'cliente inactivo', 'cliente perdido', 'retencion de clientes', 'reactivar cliente'],
-      ro: ['recuperare', 'client inactiv', 'client pierdut', 'retentie clienti', 'reactiveaza client'],
+      en: ['win back', 'inactive customer', 'lapsed customer', 'customer retention', 'reactivate customer', 'ai', 'ai agent', 'ai-powered', 'automated', 'smart', 'personalized message'],
+      de: ['zurueckgewinnen', 'inaktiver Kunde', 'abgewanderter Kunde', 'Kundenbindung', 'Kunden reaktivieren', 'ki', 'ki-agent', 'ki-gestützt', 'automatisiert', 'smart', 'personalisierte Nachricht'],
+      fr: ['reconquerir', 'client inactif', 'client perdu', 'retention client', 'reactiver un client', 'ia', 'agent ia', 'ia propulsée', 'automatisé', 'intelligent', 'message personnalisé'],
+      es: ['recuperar', 'cliente inactivo', 'cliente perdido', 'retencion de clientes', 'reactivar cliente', 'ia', 'agente ia', 'con ia', 'automatizado', 'inteligente', 'mensaje personalizado'],
+      ro: ['recuperare', 'client inactiv', 'client pierdut', 'retentie clienti', 'reactiveaza client', 'ia', 'agent ia', 'bazat pe ia', 'automatizat', 'inteligent', 'mesaj personalizat'],
     },
     useCases: {
       en: ['Send a win-back offer to a customer inactive for 60 days', 'Reach out to lapsed clients with a personalized discount', 'Re-engage a former regular customer with a special promotion'],
@@ -83,11 +83,11 @@ export const meta: Record<string, WarpExtras> = {
 
   'birthday': {
     keywords: {
-      en: ['birthday', 'birthday greeting', 'birthday offer', 'happy birthday', 'birthday message'],
-      de: ['Geburtstag', 'Geburtstagsgruss', 'Geburtstagsangebot', 'alles Gute zum Geburtstag', 'Geburtstagsnachricht'],
-      fr: ['anniversaire', 'voeu d anniversaire', 'offre d anniversaire', 'joyeux anniversaire', 'message d anniversaire'],
-      es: ['cumpleanos', 'saludo de cumpleanos', 'oferta de cumpleanos', 'feliz cumpleanos', 'mensaje de cumpleanos'],
-      ro: ['ziua de nastere', 'felicitare de nastere', 'oferta de nastere', 'la multi ani', 'mesaj de nastere'],
+      en: ['birthday', 'birthday greeting', 'birthday offer', 'happy birthday', 'birthday message', 'ai', 'ai-powered', 'automated', 'personalized', 'smart greeting'],
+      de: ['Geburtstag', 'Geburtstagsgruss', 'Geburtstagsangebot', 'alles Gute zum Geburtstag', 'Geburtstagsnachricht', 'ki', 'ki-gestützt', 'automatisiert', 'personalisiert', 'smarter Gruß'],
+      fr: ['anniversaire', 'voeu d anniversaire', 'offre d anniversaire', 'joyeux anniversaire', 'message d anniversaire', 'ia', 'ia propulsée', 'automatisé', 'personnalisé', 'agent ia'],
+      es: ['cumpleanos', 'saludo de cumpleanos', 'oferta de cumpleanos', 'feliz cumpleanos', 'mensaje de cumpleanos', 'ia', 'con ia', 'automatizado', 'personalizado', 'agente ia'],
+      ro: ['ziua de nastere', 'felicitare de nastere', 'oferta de nastere', 'la multi ani', 'mesaj de nastere', 'ia', 'bazat pe ia', 'automatizat', 'personalizat', 'agent ia'],
     },
     useCases: {
       en: ['Send a birthday greeting with a 10% discount coupon', 'Wish a loyal customer happy birthday with a free service offer', 'Automatically send birthday messages to all customers this week'],
@@ -163,11 +163,11 @@ export const meta: Record<string, WarpExtras> = {
 
   'post-treatment': {
     keywords: {
-      en: ['aftercare', 'post-treatment', 'care instructions', 'treatment follow-up', 'aftercare tips'],
-      de: ['Nachsorge', 'nach der Behandlung', 'Pflegeanweisungen', 'Behandlungs-Follow-up', 'Nachsorge-Tipps'],
-      fr: ['suivi de traitement', 'apres traitement', 'instructions de soin', 'suivi post-traitement', 'conseils de suivi'],
-      es: ['cuidado posterior', 'post-tratamiento', 'instrucciones de cuidado', 'seguimiento de tratamiento', 'consejos de cuidado'],
-      ro: ['ingrijire post-tratament', 'dupa tratament', 'instructiuni de ingrijire', 'follow-up tratament', 'sfaturi de ingrijire'],
+      en: ['aftercare', 'post-treatment', 'care instructions', 'treatment follow-up', 'aftercare tips', 'ai', 'ai-powered', 'automated', 'personalized', 'smart follow-up'],
+      de: ['Nachsorge', 'nach der Behandlung', 'Pflegeanweisungen', 'Behandlungs-Follow-up', 'Nachsorge-Tipps', 'ki', 'ki-gestützt', 'automatisiert', 'personalisiert', 'smartes Follow-up'],
+      fr: ['suivi de traitement', 'apres traitement', 'instructions de soin', 'suivi post-traitement', 'conseils de suivi', 'ia', 'ia propulsée', 'automatisé', 'personnalisé', 'agent ia'],
+      es: ['cuidado posterior', 'post-tratamiento', 'instrucciones de cuidado', 'seguimiento de tratamiento', 'consejos de cuidado', 'ia', 'con ia', 'automatizado', 'personalizado', 'agente ia'],
+      ro: ['ingrijire post-tratament', 'dupa tratament', 'instructiuni de ingrijire', 'follow-up tratament', 'sfaturi de ingrijire', 'ia', 'bazat pe ia', 'automatizat', 'personalizat', 'agent ia'],
     },
     useCases: {
       en: ['Send aftercare instructions after a facial treatment', 'Follow up with care tips after a hair coloring session', 'Share recovery guidelines after a massage therapy session'],
@@ -243,11 +243,11 @@ export const meta: Record<string, WarpExtras> = {
 
   'reorder-reminder': {
     keywords: {
-      en: ['reorder', 'repurchase', 'product reminder', 'buy again', 'restock reminder'],
-      de: ['Nachbestellung', 'erneuter Kauf', 'Produkt-Erinnerung', 'nochmal kaufen', 'Nachfuell-Erinnerung'],
-      fr: ['recommander', 'rachat', 'rappel de produit', 'racheter', 'rappel de reapprovisionnement'],
-      es: ['reordenar', 'recompra', 'recordatorio de producto', 'comprar de nuevo', 'recordatorio de reabastecimiento'],
-      ro: ['recomanda', 'recumparare', 'memento de produs', 'cumpara din nou', 'memento de reaprovizionare'],
+      en: ['reorder', 'repurchase', 'product reminder', 'buy again', 'restock reminder', 'ai', 'ai-powered', 'automated', 'smart reminder', 'intelligent'],
+      de: ['Nachbestellung', 'erneuter Kauf', 'Produkt-Erinnerung', 'nochmal kaufen', 'Nachfuell-Erinnerung', 'ki', 'ki-gestützt', 'automatisiert', 'smarte Erinnerung', 'intelligent'],
+      fr: ['recommander', 'rachat', 'rappel de produit', 'racheter', 'rappel de reapprovisionnement', 'ia', 'ia propulsée', 'automatisé', 'rappel intelligent', 'agent ia'],
+      es: ['reordenar', 'recompra', 'recordatorio de producto', 'comprar de nuevo', 'recordatorio de reabastecimiento', 'ia', 'con ia', 'automatizado', 'recordatorio inteligente', 'agente ia'],
+      ro: ['recomanda', 'recumparare', 'memento de produs', 'cumpara din nou', 'memento de reaprovizionare', 'ia', 'bazat pe ia', 'automatizat', 'memento inteligent', 'agent ia'],
     },
     useCases: {
       en: ['Remind a customer to reorder their shampoo after 30 days', 'Send a repurchase reminder for a skincare product', 'Notify a client that their supplement supply is likely running low'],
@@ -323,11 +323,11 @@ export const meta: Record<string, WarpExtras> = {
 
   'check-in': {
     keywords: {
-      en: ['check in', 'customer check-in', 'friendly follow-up', 'how are you', 'touch base'],
-      de: ['Nachfragen', 'Kunden-Nachfrage', 'freundliches Follow-up', 'wie geht es', 'sich melden'],
-      fr: ['prendre des nouvelles', 'suivi client', 'suivi amical', 'comment allez-vous', 'donner des nouvelles'],
-      es: ['seguimiento', 'seguimiento de cliente', 'seguimiento amigable', 'como estas', 'ponerse en contacto'],
-      ro: ['verificare', 'verificare client', 'follow-up prietenos', 'ce mai faci', 'a lua legatura'],
+      en: ['check in', 'customer check-in', 'friendly follow-up', 'how are you', 'touch base', 'ai', 'ai-powered', 'automated', 'personalized', 'smart message'],
+      de: ['Nachfragen', 'Kunden-Nachfrage', 'freundliches Follow-up', 'wie geht es', 'sich melden', 'ki', 'ki-gestützt', 'automatisiert', 'personalisiert', 'smarte Nachricht'],
+      fr: ['prendre des nouvelles', 'suivi client', 'suivi amical', 'comment allez-vous', 'donner des nouvelles', 'ia', 'ia propulsée', 'automatisé', 'personnalisé', 'agent ia'],
+      es: ['seguimiento', 'seguimiento de cliente', 'seguimiento amigable', 'como estas', 'ponerse en contacto', 'ia', 'con ia', 'automatizado', 'personalizado', 'agente ia'],
+      ro: ['verificare', 'verificare client', 'follow-up prietenos', 'ce mai faci', 'a lua legatura', 'ia', 'bazat pe ia', 'automatizat', 'personalizat', 'agent ia'],
     },
     useCases: {
       en: ['Send a friendly check-in to a customer who visited 2 weeks ago', 'Reach out to see how a client is doing after their treatment', 'Send a personalized message to a customer with a custom note'],
@@ -403,11 +403,11 @@ export const meta: Record<string, WarpExtras> = {
 
   'inactive-scan': {
     keywords: {
-      en: ['inactive customers', 'lapsed customers', 'customer scan', 'dormant customers', 'find inactive'],
-      de: ['inaktive Kunden', 'abgewanderte Kunden', 'Kunden-Scan', 'ruhende Kunden', 'Inaktive finden'],
-      fr: ['clients inactifs', 'clients perdus', 'analyse des clients', 'clients dormants', 'trouver les inactifs'],
-      es: ['clientes inactivos', 'clientes perdidos', 'escaneo de clientes', 'clientes dormidos', 'encontrar inactivos'],
-      ro: ['clienti inactivi', 'clienti pierduti', 'scanare clienti', 'clienti dormanti', 'gaseste inactivi'],
+      en: ['inactive customers', 'lapsed customers', 'customer scan', 'dormant customers', 'find inactive', 'ai', 'ai agent', 'ai-powered', 'automated', 'intelligent', 'smart scan'],
+      de: ['inaktive Kunden', 'abgewanderte Kunden', 'Kunden-Scan', 'ruhende Kunden', 'Inaktive finden', 'ki', 'ki-agent', 'ki-gestützt', 'automatisiert', 'intelligent', 'smarter Scan'],
+      fr: ['clients inactifs', 'clients perdus', 'analyse des clients', 'clients dormants', 'trouver les inactifs', 'ia', 'agent ia', 'ia propulsée', 'automatisé', 'intelligent', 'analyse intelligente'],
+      es: ['clientes inactivos', 'clientes perdidos', 'escaneo de clientes', 'clientes dormidos', 'encontrar inactivos', 'ia', 'agente ia', 'con ia', 'automatizado', 'inteligente', 'análisis inteligente'],
+      ro: ['clienti inactivi', 'clienti pierduti', 'scanare clienti', 'clienti dormanti', 'gaseste inactivi', 'ia', 'agent ia', 'bazat pe ia', 'automatizat', 'inteligent', 'analiza inteligenta'],
     },
     useCases: {
       en: ['Automatically find all customers who haven\'t visited in 30+ days', 'Get a weekly list of inactive customers with suggested actions', 'Identify at-risk customers before they churn'],
@@ -483,11 +483,11 @@ export const meta: Record<string, WarpExtras> = {
 
   'birthday-scan': {
     keywords: {
-      en: ['birthday scan', 'upcoming birthdays', 'birthday list', 'birthday reminders', 'birthday check'],
-      de: ['Geburtstags-Scan', 'bevorstehende Geburtstage', 'Geburtstagsliste', 'Geburtstags-Erinnerungen', 'Geburtstags-Check'],
-      fr: ['analyse d anniversaires', 'anniversaires a venir', 'liste d anniversaires', 'rappels d anniversaire', 'verification d anniversaires'],
-      es: ['escaneo de cumpleanos', 'cumpleanos proximos', 'lista de cumpleanos', 'recordatorios de cumpleanos', 'verificacion de cumpleanos'],
-      ro: ['scanare zile de nastere', 'zile de nastere viitoare', 'lista de zile de nastere', 'memento-uri de nastere', 'verificare zile de nastere'],
+      en: ['birthday scan', 'upcoming birthdays', 'birthday list', 'birthday reminders', 'birthday check', 'ai', 'ai agent', 'ai-powered', 'automated', 'smart scan'],
+      de: ['Geburtstags-Scan', 'bevorstehende Geburtstage', 'Geburtstagsliste', 'Geburtstags-Erinnerungen', 'Geburtstags-Check', 'ki', 'ki-agent', 'ki-gestützt', 'automatisiert', 'smarter Scan'],
+      fr: ['analyse d anniversaires', 'anniversaires a venir', 'liste d anniversaires', 'rappels d anniversaire', 'verification d anniversaires', 'ia', 'agent ia', 'ia propulsée', 'automatisé', 'analyse intelligente'],
+      es: ['escaneo de cumpleanos', 'cumpleanos proximos', 'lista de cumpleanos', 'recordatorios de cumpleanos', 'verificacion de cumpleanos', 'ia', 'agente ia', 'con ia', 'automatizado', 'análisis inteligente'],
+      ro: ['scanare zile de nastere', 'zile de nastere viitoare', 'lista de zile de nastere', 'memento-uri de nastere', 'verificare zile de nastere', 'ia', 'agent ia', 'bazat pe ia', 'automatizat', 'analiza inteligenta'],
     },
     useCases: {
       en: ['Automatically get a list of customers with birthdays this week', 'Never miss a customer birthday with automatic scanning', 'Plan birthday greetings ahead of time with weekly birthday reports'],
