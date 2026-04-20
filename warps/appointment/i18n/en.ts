@@ -24,6 +24,9 @@ export const en = {
     cancelled: 'Appointment cancelled',
     cancelledMessage: 'Your appointment has been cancelled.',
     slotsError: 'Could not load available times. Please try again.',
+    bookingError: 'We could not book this slot. Please pick another time.',
+    cancelError: 'We could not cancel your appointment. Please try again.',
+    tryAgain: 'Try again',
   },
   configure: {
     title: 'Appointment Settings',

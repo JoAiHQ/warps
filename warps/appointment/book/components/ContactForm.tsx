@@ -21,6 +21,7 @@ type Props = {
   notes: string
   nameError: boolean
   submitting: boolean
+  submitError: string | null
   displayTimezone: string
   locale: string
   labels: Labels
@@ -33,7 +34,7 @@ type Props = {
 }
 
 export function ContactForm({
-  selectedDate, selectedSlot, name, email, purpose, notes, nameError, submitting,
+  selectedDate, selectedSlot, name, email, purpose, notes, nameError, submitting, submitError,
   displayTimezone, locale, labels, onNameChange, onEmailChange, onPurposeChange, onNotesChange, onBack, onSubmit,
 }: Props) {
   return (
@@ -84,6 +85,12 @@ export function ContactForm({
           className="w-full rounded-lg border border-gray-200 dark:border-gray-700 px-3 py-2.5 text-sm outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-900 dark:text-white resize-none"
         />
       </div>
+
+      {submitError && (
+        <div className="rounded-lg border border-red-200 dark:border-red-900 bg-red-50 dark:bg-red-950/40 px-3 py-2 text-sm text-red-700 dark:text-red-300">
+          {submitError}
+        </div>
+      )}
 
       <button
         onClick={onSubmit}

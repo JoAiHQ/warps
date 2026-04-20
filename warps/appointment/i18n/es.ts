@@ -26,6 +26,9 @@ export const es: typeof en = {
     cancelled: 'Cita cancelada',
     cancelledMessage: 'Tu cita ha sido cancelada.',
     slotsError: 'No se pudieron cargar los horarios disponibles. Inténtalo de nuevo.',
+    bookingError: 'No pudimos reservar este horario. Por favor, elige otro.',
+    cancelError: 'No pudimos cancelar tu cita. Inténtalo de nuevo.',
+    tryAgain: 'Intentar de nuevo',
   },
   configure: {
     title: 'Configuración de citas',

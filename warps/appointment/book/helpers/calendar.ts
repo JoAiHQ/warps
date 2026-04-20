@@ -45,6 +45,11 @@ export function downloadIcs(title: string, startAt: string, endAt: string, joinU
   const a = document.createElement('a')
   a.href = url
   a.download = 'appointment.ics'
+  a.rel = 'noopener'
+  document.body.appendChild(a)
   a.click()
-  URL.revokeObjectURL(url)
+  setTimeout(() => {
+    document.body.removeChild(a)
+    URL.revokeObjectURL(url)
+  }, 0)
 }

@@ -61,6 +61,8 @@ function Main() {
   const [nameError, setNameError] = useState(false)
   const [cancelling, setCancelling] = useState(false)
   const [cancelled, setCancelled] = useState(false)
+  const [bookingError, setBookingError] = useState<string | null>(null)
+  const [cancelError, setCancelError] = useState<string | null>(null)
 
   const fetchSlots = useCallback(async (date: Date, tz: string) => {
     const fetchId = ++fetchIdRef.current
@@ -118,11 +120,14 @@ function Main() {
   }
 
   const handleCancel = async () => {
-    if (!booked) return
+    if (!booked?.id) return
     setCancelling(true)
+    setCancelError(null)
     try {
       await executeWarp('appointment-cancel-public', { meetingId: booked.id })
       setCancelled(true)
+    } catch (err) {
+      setCancelError(err instanceof Error ? err.message : tr.cancelError)
     } finally {
       setCancelling(false)
     }
@@ -133,6 +138,7 @@ function Main() {
     if (!name.trim()) { setNameError(true); return }
     setNameError(false)
     setBooking(true)
+    setBookingError(null)
     try {
       const title = purpose.trim() ? `${purpose.trim()} — ${name.trim()}` : `Appointment with ${name.trim()}`
       const result = (await executeWarp('appointment-book-confirm', {
@@ -145,14 +151,21 @@ function Main() {
         routedAgentUuid: selectedSlot.agentUuid,
       })) as any
 
+      if (!result?.MEETING_ID) {
+        throw new Error(tr.bookingError)
+      }
+
       setBooked({
-        id: result?.MEETING_ID ?? '',
+        id: result.MEETING_ID,
         name: result?.MEETING_TITLE ?? title,
         scheduledAt: selectedSlot.startAt,
         endAt: selectedSlot.endAt,
         joinUrl: result?.MEETING_URL,
       })
       setStep('confirmed')
+    } catch (err) {
+      setBookingError(err instanceof Error ? err.message : tr.bookingError)
+      if (selectedDate) fetchSlots(selectedDate, displayTimezone)
     } finally {
       setBooking(false)
     }
@@ -175,6 +188,7 @@ function Main() {
         cancelledMessage={tr.cancelledMessage}
         cancelling={cancelling}
         cancelled={cancelled}
+        cancelError={cancelError}
         onCancel={handleCancel}
       />
     )
@@ -191,6 +205,7 @@ function Main() {
         notes={notes}
         nameError={nameError}
         submitting={booking}
+        submitError={bookingError}
         displayTimezone={displayTimezone}
         locale={locale}
         labels={{

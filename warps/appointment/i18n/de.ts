@@ -26,6 +26,9 @@ export const de: typeof en = {
     cancelled: 'Termin abgesagt',
     cancelledMessage: 'Dein Termin wurde abgesagt.',
     slotsError: 'Verfügbare Zeiten konnten nicht geladen werden. Bitte erneut versuchen.',
+    bookingError: 'Dieser Termin konnte nicht gebucht werden. Bitte wähle eine andere Zeit.',
+    cancelError: 'Dein Termin konnte nicht abgesagt werden. Bitte erneut versuchen.',
+    tryAgain: 'Erneut versuchen',
   },
   configure: {
     title: 'Termineinstellungen',

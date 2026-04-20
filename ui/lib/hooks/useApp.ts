@@ -91,6 +91,11 @@ export function useApp<T = any, I = any>(app: App, isDevMode = false, locale = '
     }
     const result = await app.callServerTool({ name: toolName, arguments: args })
     setToolResult(result)
+    if (result && typeof result === 'object' && (result as { isError?: boolean }).isError) {
+      const content = (result as { content?: Array<{ text?: string }> }).content
+      const text = content?.[0]?.text || `Tool ${toolName} failed`
+      throw new Error(text)
+    }
     return unwrapStructuredContent(result)
   }, [app, isDevMode])
 
