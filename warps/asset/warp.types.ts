@@ -5,4 +5,3 @@ export type AssetTransferInputs = {
   receiver: string;
   asset: string;
 };
-

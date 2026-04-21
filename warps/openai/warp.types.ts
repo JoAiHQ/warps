@@ -60,7 +60,7 @@ export type OpenAICodexCLILaunchTaskInputs = {
 };
 
 export type OpenAICodexCLILaunchTaskData = {
-  RUN_ID: string;
+  RUN_ID: any;
   RUN_STATUS: any;
   SUMMARY: any;
 };
@@ -73,6 +73,14 @@ export type OpenAIGetTaskStatusData = {
   RUN_ID: any;
   RUN_STATUS: any;
   SUMMARY: any;
+};
+
+export type OpenAIConnectJoAiAppInputs = {
+  MCP_URL: string;
+};
+
+export type OpenAIInstallJoAiPluginInputs = {
+  PLUGIN_NAME: string;
 };
 
 export type OpenAILaunchTaskInputs = {

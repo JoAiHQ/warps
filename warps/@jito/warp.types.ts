@@ -2,4 +2,3 @@
 
 export type JitoLiquidStakeInputs = {
 };
-
