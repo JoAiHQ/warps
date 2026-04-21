@@ -4,8 +4,8 @@
   "repo": "JoAiHQ/warps",
   "branch": "dev",
   "network": "devnet",
-  "commitSha": "d7c83df1e663fc992641ab1834e7442be031be7a",
-  "generatedAt": "2026-04-21T09:37:45.006Z",
+  "commitSha": "f8e00f39b213bf8dfa29821df2048a3776d853f8",
+  "generatedAt": "2026-04-21T11:46:48.781Z",
   "warps": [
     {
       "key": "arbitrum:omniset-deposit-arbitrum",
@@ -43310,8 +43310,8 @@
       "identifier": "@email-send",
       "alias": "email-send",
       "chain": "none",
-      "hash": "3ed7a9934859c39632123d159624af6a803dbc2d664710c2e0c0d1e3996b049a",
-      "checksum": "3ed7a9934859c39632123d159624af6a803dbc2d664710c2e0c0d1e3996b049a",
+      "hash": "7882dc9e3b06421cf1fa20b55082517f40c29780ea4cc5f0649c72ee8583f694",
+      "checksum": "7882dc9e3b06421cf1fa20b55082517f40c29780ea4cc5f0649c72ee8583f694",
       "name": "Email: Send",
       "title": {
         "en": "Send email",
@@ -43359,7 +43359,7 @@
           "en": "Send an email to a contact. Resolves or creates a conversation room for the recipient so replies are tracked.",
           "de": "Sendet eine E-Mail an einen Kontakt. Erstellt einen Gesprächsraum für den Empfänger, damit Antworten verfolgt werden."
         },
-        "bot": "Use this to send emails through the agent's email integration. The agent must have an email handle configured. Creates a persistent conversation room for the recipient — replies will route back to that room.",
+        "bot": "Use this to send emails through the agent's email integration. The agent must have an email handle configured. Creates a persistent conversation room for the recipient — replies will route back to that room. The pending message always exposes a mailto: fallback link so the user can send manually from their own mail client if preferred.",
         "vars": {
           "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
           "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
@@ -43412,6 +43412,19 @@
                 "required": false
               },
               {
+                "name": "Subject",
+                "as": "subject",
+                "description": {
+                  "en": "Email subject line",
+                  "de": "E-Mail-Betreff"
+                },
+                "bot": "Concise, specific subject line.",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "max": 500
+              },
+              {
                 "name": "Message",
                 "as": "message",
                 "description": {
@@ -43428,9 +43441,14 @@
         ],
         "output": {
           "EMAIL_ROOM_ID": "out.data.roomId",
-          "EMAIL_MESSAGE_ID": "out.data.externalMessageId"
+          "EMAIL_MESSAGE_ID": "out.data.externalMessageId",
+          "EMAIL_MAILTO_URL": "transform:`mailto:${inputs.recipientId}${inputs.subject || inputs.message ? '?' : ''}${inputs.subject ? `subject=${encodeURIComponent(inputs.subject)}` : ''}${inputs.subject && inputs.message ? '&' : ''}${inputs.message ? `body=${encodeURIComponent(inputs.message)}` : ''}`"
         },
         "messages": {
+          "pending": {
+            "en": "Prefer to send it yourself? [Open in your mail app →]({{EMAIL_MAILTO_URL}})",
+            "de": "Lieber selbst senden? [In deiner Mail-App öffnen →]({{EMAIL_MAILTO_URL}})"
+          },
           "success": {
             "en": "Email sent successfully.",
             "de": "E-Mail erfolgreich gesendet."
@@ -56798,8 +56816,8 @@
       "identifier": "@joai-contact-activity-log",
       "alias": "joai-contact-activity-log",
       "chain": "none",
-      "hash": "15b7b1cd98913b8eeaf4d6a4fbe8993f84b534afa203bc015cd95565fca8eb08",
-      "checksum": "15b7b1cd98913b8eeaf4d6a4fbe8993f84b534afa203bc015cd95565fca8eb08",
+      "hash": "7278b1fb88807a9946d662340c96310969080aa3fea1d67b9ac24ab3639b94ce",
+      "checksum": "7278b1fb88807a9946d662340c96310969080aa3fea1d67b9ac24ab3639b94ce",
       "name": "JoAi: Log Contact Activity",
       "title": {
         "en": "Log an activity on a contact",
@@ -56887,10 +56905,10 @@
                 "name": "Type",
                 "as": "type",
                 "description": {
-                  "en": "The type of activity: note, call, meeting, email, task, or custom.",
-                  "de": "Art der Aktivität: note, call, meeting, email, task oder custom."
+                  "en": "The type of activity: note, call, meeting, task, or custom.",
+                  "de": "Art der Aktivität: note, call, meeting, task oder custom."
                 },
-                "bot": "The activity type. Use 'note' for general observations, 'email' for email exchanges, 'call' for calls, 'meeting' for meetings, 'task' for to-dos, 'custom' for anything else.",
+                "bot": "The activity type. Use 'note' for general observations, 'call' for calls, 'meeting' for meetings, 'task' for to-dos, 'custom' for anything else. For emails, messages are logged as Room messages instead — use the email-send or outreach warps.",
                 "type": "string",
                 "source": "field",
                 "required": true
