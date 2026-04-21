@@ -11,3 +11,35 @@ export type LinkedInCreatePostInputs = {
 export type LinkedInCreatePostData = {
   POST_ID: any;
 };
+
+export type LinkedInGetPostAnalyticsInputs = {
+  POST_URN: string;
+};
+
+export type LinkedInGetPostAnalyticsData = {
+  REACTIONS: any;
+  COMMENTS: any;
+  TOP_LEVEL_COMMENTS: any;
+  COMMENTS_STATE: any;
+};
+
+export type LinkedInGetProfileInputs = {
+};
+
+export type LinkedInGetProfileData = {
+  SUB: any;
+  NAME: any;
+  EMAIL: any;
+  PICTURE: any;
+};
+
+export type LinkedInListPostsInputs = {
+  author: string;
+  count: number;
+  q: string;
+};
+
+export type LinkedInListPostsData = {
+  POSTS: any;
+  COUNT: any;
+};

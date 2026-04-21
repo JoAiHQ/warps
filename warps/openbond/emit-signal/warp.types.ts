@@ -4,4 +4,3 @@ export type OpenBondEmitSignalInputs = {
   type: string;
   hash: string;
 };
-

@@ -4,8 +4,8 @@
   "repo": "JoAiHQ/warps",
   "branch": "main",
   "network": "mainnet",
-  "commitSha": "7a78876812bc5a9899d5823291e5764cb6837cbc",
-  "generatedAt": "2026-04-21T12:54:34.427Z",
+  "commitSha": "local",
+  "generatedAt": "2026-04-21T20:14:59.668Z",
   "warps": [
     {
       "key": "arbitrum:omniset-deposit-arbitrum",
@@ -36797,6 +36797,1190 @@
       "extras": null
     },
     {
+      "key": "none:calendar-create-event",
+      "identifier": "@calendar-create-event",
+      "alias": "calendar-create-event",
+      "chain": "none",
+      "hash": "53dadc2b171ac6128ad5a6c406c8afa23e92ed3b3bd6ec0e98f7f0a6866dd3c8",
+      "checksum": "53dadc2b171ac6128ad5a6c406c8afa23e92ed3b3bd6ec0e98f7f0a6866dd3c8",
+      "name": "Calendar: Create Event",
+      "title": {
+        "en": "Create calendar event",
+        "de": "Kalendereintrag erstellen"
+      },
+      "description": {
+        "en": "Create an event on the calendar the agent is connected to (Google, Microsoft, or Apple). The backend routes the call to the right provider automatically.",
+        "de": "Erstellt ein Ereignis im verbundenen Kalender des Agenten (Google, Microsoft oder Apple). Das Backend leitet die Anfrage automatisch an den richtigen Anbieter weiter."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "847f674ca9bc1b0fb15ce1efc2c0b283a4af8c06e08b9142a8ad0fe5f1931b8f",
+        "slug": "ai-calendar",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "AI Calendar",
+        "description": {
+          "en": "Manage calendar events — create, update, delete, and list — through your AI agent. Provider-agnostic: works with whichever calendar the agent is connected to (Google, Microsoft, Apple). Every action routes through your configured integration so there is one interface regardless of provider.",
+          "de": "Verwalte Kalenderereignisse — erstellen, aktualisieren, löschen, auflisten — über deinen KI-Agenten. Anbieterunabhängig: funktioniert mit dem verbundenen Kalender (Google, Microsoft, Apple). Jede Aktion läuft über deine konfigurierte Integration, damit es eine einheitliche Oberfläche gibt.",
+          "fr": "Gerez les evenements de calendrier — creer, mettre a jour, supprimer, lister — via votre agent IA. Independant du fournisseur: fonctionne avec le calendrier connecte (Google, Microsoft, Apple). Chaque action passe par votre integration configuree.",
+          "es": "Gestiona eventos de calendario — crear, actualizar, eliminar, listar — mediante tu agente IA. Independiente del proveedor: funciona con el calendario conectado (Google, Microsoft, Apple). Cada accion pasa por tu integracion configurada.",
+          "ro": "Gestioneaza evenimente de calendar — creare, actualizare, stergere, listare — prin agentul tau AI. Independent de furnizor: functioneaza cu calendarul conectat (Google, Microsoft, Apple). Fiecare actiune trece prin integrarea ta configurata."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "Calendar: Create Event",
+        "title": {
+          "en": "Create calendar event",
+          "de": "Kalendereintrag erstellen"
+        },
+        "description": {
+          "en": "Create an event on the calendar the agent is connected to (Google, Microsoft, or Apple). The backend routes the call to the right provider automatically.",
+          "de": "Erstellt ein Ereignis im verbundenen Kalender des Agenten (Google, Microsoft oder Apple). Das Backend leitet die Anfrage automatisch an den richtigen Anbieter weiter."
+        },
+        "bot": "Use this to schedule meetings, appointments, or reminders on the user's calendar. Provider is determined by the connected integration — do not ask which provider.",
+        "vars": {
+          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Create event",
+              "de": "Ereignis erstellen"
+            },
+            "destination": {
+              "url": "https://api.joai.ai/v1/agents/{{JOAI_AGENT_UUID}}/calendar/events",
+              "method": "POST",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+                "Content-Type": "application/json"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Title",
+                "as": "title",
+                "description": {
+                  "en": "Event title",
+                  "de": "Titel des Termins"
+                },
+                "bot": "Concise event title, e.g. 'Lunch with Sarah', 'Iron Clothes', 'Team standup'.",
+                "type": "string",
+                "source": "field",
+                "required": true,
+                "max": 500,
+                "position": "payload:title"
+              },
+              {
+                "name": "Description",
+                "as": "description",
+                "description": {
+                  "en": "Optional event description",
+                  "de": "Optionale Beschreibung"
+                },
+                "bot": "Optional longer description or agenda for the event.",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "max": 5000,
+                "position": "payload:description"
+              },
+              {
+                "name": "Start",
+                "as": "startAt",
+                "description": {
+                  "en": "Start datetime (ISO 8601, include timezone)",
+                  "de": "Startzeitpunkt (ISO 8601 mit Zeitzone)"
+                },
+                "bot": "Event start in ISO 8601 with timezone offset, e.g. '2026-04-21T14:00:00+02:00' or '2026-04-21T12:00:00Z'.",
+                "type": "string",
+                "source": "field",
+                "required": true,
+                "position": "payload:startAt"
+              },
+              {
+                "name": "End",
+                "as": "endAt",
+                "description": {
+                  "en": "End datetime (ISO 8601, include timezone)",
+                  "de": "Endzeitpunkt (ISO 8601 mit Zeitzone)"
+                },
+                "bot": "Event end in ISO 8601 with timezone offset. If the user did not specify, default to one hour after start.",
+                "type": "string",
+                "source": "field",
+                "required": true,
+                "position": "payload:endAt"
+              },
+              {
+                "name": "Timezone",
+                "as": "timezone",
+                "description": {
+                  "en": "IANA timezone name for the event",
+                  "de": "IANA-Zeitzonenname"
+                },
+                "bot": "IANA timezone, e.g. 'Europe/Vienna', 'America/New_York'. Use the user's timezone from context.",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "max": 100,
+                "position": "payload:timezone"
+              },
+              {
+                "name": "Location",
+                "as": "location",
+                "description": {
+                  "en": "Location or meeting link",
+                  "de": "Ort oder Meeting-Link"
+                },
+                "bot": "Physical address, room, or video call link.",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "max": 500,
+                "position": "payload:location"
+              },
+              {
+                "name": "All day",
+                "as": "allDay",
+                "description": {
+                  "en": "Whether this is an all-day event",
+                  "de": "All-Day-Termin"
+                },
+                "bot": "True for full-day events where a specific time is not meaningful.",
+                "type": "boolean",
+                "source": "field",
+                "required": false,
+                "position": "payload:allDay"
+              }
+            ]
+          }
+        ],
+        "output": {
+          "EVENT_ID": "out.data.id",
+          "EVENT_EXTERNAL_ID": "out.data.externalId",
+          "EVENT_TITLE": "out.data.title",
+          "EVENT_START": "out.data.startAt"
+        },
+        "messages": {
+          "success": {
+            "en": "Created \"{{EVENT_TITLE}}\" on your calendar.",
+            "de": "\"{{EVENT_TITLE}}\" in deinem Kalender erstellt."
+          }
+        }
+      },
+      "extras": {
+        "keywords": {
+          "en": [
+            "AI calendar",
+            "AI schedule",
+            "AI meeting",
+            "AI appointment",
+            "AI calendar assistant",
+            "schedule meeting",
+            "book appointment",
+            "create event",
+            "add calendar event",
+            "update event",
+            "reschedule meeting",
+            "delete event",
+            "cancel meeting",
+            "list events",
+            "upcoming meetings",
+            "next meeting",
+            "free time",
+            "calendar availability",
+            "agent scheduling",
+            "AI scheduling",
+            "smart scheduling"
+          ],
+          "de": [
+            "KI Kalender",
+            "KI Termine",
+            "KI Meeting",
+            "KI Terminplaner",
+            "Termin vereinbaren",
+            "Termin buchen",
+            "Termin erstellen",
+            "Kalendereintrag hinzufügen",
+            "Termin aktualisieren",
+            "Termin verschieben",
+            "Termin löschen",
+            "Meeting absagen",
+            "Termine auflisten",
+            "kommende Termine",
+            "nächstes Meeting",
+            "freie Zeit",
+            "Kalenderverfügbarkeit",
+            "KI Terminplanung",
+            "intelligente Terminplanung"
+          ],
+          "fr": [
+            "IA calendrier",
+            "IA planning",
+            "IA reunion",
+            "IA rendez-vous",
+            "planifier reunion",
+            "reserver rendez-vous",
+            "creer evenement",
+            "modifier evenement",
+            "annuler reunion",
+            "supprimer evenement",
+            "lister evenements",
+            "prochain rendez-vous",
+            "disponibilite"
+          ],
+          "es": [
+            "IA calendario",
+            "IA agenda",
+            "IA reunion",
+            "IA cita",
+            "programar reunion",
+            "reservar cita",
+            "crear evento",
+            "modificar evento",
+            "cancelar reunion",
+            "eliminar evento",
+            "listar eventos",
+            "proxima reunion",
+            "disponibilidad"
+          ],
+          "ro": [
+            "AI calendar",
+            "AI agenda",
+            "AI intalnire",
+            "AI programare",
+            "programeaza intalnire",
+            "rezerva programare",
+            "creeaza eveniment",
+            "modifica eveniment",
+            "anuleaza intalnire",
+            "sterge eveniment",
+            "listeaza evenimente",
+            "urmatoarea intalnire",
+            "disponibilitate"
+          ]
+        },
+        "useCases": {
+          "en": [
+            "Schedule a meeting with a client from the agent chat in one message",
+            "Block focus time on your calendar by describing it to the agent",
+            "Create a recurring personal reminder (workout, medication, review) via natural language",
+            "Have the agent schedule a follow-up after an email or call without switching apps"
+          ],
+          "de": [
+            "Einen Kundentermin direkt aus dem Agent-Chat mit einer Nachricht buchen",
+            "Fokuszeit im Kalender blockieren, indem du sie dem Agenten beschreibst",
+            "Wiederkehrende persönliche Erinnerungen (Training, Medikation, Review) per Sprache anlegen",
+            "Nach einer E-Mail oder einem Anruf einen Follow-up-Termin vom Agenten planen lassen"
+          ]
+        },
+        "category": "productivity",
+        "faq": {
+          "en": [
+            {
+              "question": "Which calendar providers are supported?",
+              "answer": "Google Calendar, Microsoft Outlook/Exchange, and Apple iCloud Calendar. The warp is provider-agnostic — it always routes through the calendar integration connected to your agent, so you use the same interface regardless of provider."
+            },
+            {
+              "question": "Does the agent create events without my approval?",
+              "answer": "No. Calendar writes run through the warp approval pipeline unless the agent is explicitly in auto mode. You see a preview card and approve before the event is created."
+            },
+            {
+              "question": "How is the calendar connection handled?",
+              "answer": "Connect Google Calendar (or Microsoft/Apple) once from the agent's integration settings. The warp uses the tokens stored on that integration to make the call — no need to manage OAuth tokens per warp."
+            },
+            {
+              "question": "Does event creation sync back to my actual calendar?",
+              "answer": "Yes. Events are written to the connected provider (Google/Microsoft/Apple) and appear in your native calendar app alongside events created elsewhere."
+            }
+          ],
+          "de": [
+            {
+              "question": "Welche Kalenderanbieter werden unterstützt?",
+              "answer": "Google Calendar, Microsoft Outlook/Exchange und Apple iCloud Calendar. Der Warp ist anbieterunabhängig — er läuft immer über die verbundene Kalenderintegration deines Agenten, die Oberfläche ist unabhängig vom Anbieter gleich."
+            },
+            {
+              "question": "Erstellt der Agent Termine ohne meine Zustimmung?",
+              "answer": "Nein. Kalenderschreibvorgänge laufen über die Warp-Freigabe, außer der Agent ist explizit im Auto-Modus. Du siehst eine Vorschau und bestätigst, bevor der Termin angelegt wird."
+            },
+            {
+              "question": "Wie wird die Kalenderverbindung gehandhabt?",
+              "answer": "Verbinde Google Calendar (oder Microsoft/Apple) einmal in den Integrationseinstellungen des Agenten. Der Warp nutzt die dort gespeicherten Tokens — kein OAuth-Management pro Warp nötig."
+            },
+            {
+              "question": "Wird die Termin-Erstellung zurück in meinen Kalender synchronisiert?",
+              "answer": "Ja. Ereignisse werden direkt beim verbundenen Anbieter (Google/Microsoft/Apple) geschrieben und erscheinen in deiner nativen Kalender-App neben anderweitig erstellten Einträgen."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "key": "none:calendar-delete-event",
+      "identifier": "@calendar-delete-event",
+      "alias": "calendar-delete-event",
+      "chain": "none",
+      "hash": "22242b94f0b955f94c4f1ac29ee745a133f12c02deba73efc76c2f2183458ab4",
+      "checksum": "22242b94f0b955f94c4f1ac29ee745a133f12c02deba73efc76c2f2183458ab4",
+      "name": "Calendar: Delete Event",
+      "title": {
+        "en": "Delete calendar event",
+        "de": "Kalendereintrag löschen"
+      },
+      "description": {
+        "en": "Delete an event from the agent's connected calendar. The call is routed to the correct provider automatically.",
+        "de": "Löscht ein Ereignis aus dem verbundenen Kalender. Die Anfrage wird automatisch an den richtigen Anbieter weitergeleitet."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "847f674ca9bc1b0fb15ce1efc2c0b283a4af8c06e08b9142a8ad0fe5f1931b8f",
+        "slug": "ai-calendar",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "AI Calendar",
+        "description": {
+          "en": "Manage calendar events — create, update, delete, and list — through your AI agent. Provider-agnostic: works with whichever calendar the agent is connected to (Google, Microsoft, Apple). Every action routes through your configured integration so there is one interface regardless of provider.",
+          "de": "Verwalte Kalenderereignisse — erstellen, aktualisieren, löschen, auflisten — über deinen KI-Agenten. Anbieterunabhängig: funktioniert mit dem verbundenen Kalender (Google, Microsoft, Apple). Jede Aktion läuft über deine konfigurierte Integration, damit es eine einheitliche Oberfläche gibt.",
+          "fr": "Gerez les evenements de calendrier — creer, mettre a jour, supprimer, lister — via votre agent IA. Independant du fournisseur: fonctionne avec le calendrier connecte (Google, Microsoft, Apple). Chaque action passe par votre integration configuree.",
+          "es": "Gestiona eventos de calendario — crear, actualizar, eliminar, listar — mediante tu agente IA. Independiente del proveedor: funciona con el calendario conectado (Google, Microsoft, Apple). Cada accion pasa por tu integracion configurada.",
+          "ro": "Gestioneaza evenimente de calendar — creare, actualizare, stergere, listare — prin agentul tau AI. Independent de furnizor: functioneaza cu calendarul conectat (Google, Microsoft, Apple). Fiecare actiune trece prin integrarea ta configurata."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "Calendar: Delete Event",
+        "title": {
+          "en": "Delete calendar event",
+          "de": "Kalendereintrag löschen"
+        },
+        "description": {
+          "en": "Delete an event from the agent's connected calendar. The call is routed to the correct provider automatically.",
+          "de": "Löscht ein Ereignis aus dem verbundenen Kalender. Die Anfrage wird automatisch an den richtigen Anbieter weitergeleitet."
+        },
+        "bot": "Use this to cancel an event the user no longer needs. Confirm with the user before executing since deletion is irreversible.",
+        "vars": {
+          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Delete event",
+              "de": "Ereignis löschen"
+            },
+            "destination": {
+              "url": "https://api.joai.ai/v1/agents/{{JOAI_AGENT_UUID}}/calendar/events/{{externalId}}",
+              "method": "DELETE",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "External ID",
+                "as": "externalId",
+                "description": {
+                  "en": "The event's external ID from the provider",
+                  "de": "Externe Ereignis-ID des Anbieters"
+                },
+                "bot": "The provider's event ID (e.g. Google's event id, or agent-<uuid> for agent-created events).",
+                "type": "string",
+                "source": "field",
+                "required": true,
+                "position": "url:externalId"
+              }
+            ]
+          }
+        ],
+        "output": {
+          "EVENT_EXTERNAL_ID": "out.data.externalId",
+          "DELETED": "out.data.deleted"
+        },
+        "messages": {
+          "success": {
+            "en": "Event deleted from your calendar.",
+            "de": "Termin aus deinem Kalender gelöscht."
+          }
+        }
+      },
+      "extras": {
+        "keywords": {
+          "en": [
+            "AI calendar",
+            "AI schedule",
+            "AI meeting",
+            "AI appointment",
+            "AI calendar assistant",
+            "schedule meeting",
+            "book appointment",
+            "create event",
+            "add calendar event",
+            "update event",
+            "reschedule meeting",
+            "delete event",
+            "cancel meeting",
+            "list events",
+            "upcoming meetings",
+            "next meeting",
+            "free time",
+            "calendar availability",
+            "agent scheduling",
+            "AI scheduling",
+            "smart scheduling"
+          ],
+          "de": [
+            "KI Kalender",
+            "KI Termine",
+            "KI Meeting",
+            "KI Terminplaner",
+            "Termin vereinbaren",
+            "Termin buchen",
+            "Termin erstellen",
+            "Kalendereintrag hinzufügen",
+            "Termin aktualisieren",
+            "Termin verschieben",
+            "Termin löschen",
+            "Meeting absagen",
+            "Termine auflisten",
+            "kommende Termine",
+            "nächstes Meeting",
+            "freie Zeit",
+            "Kalenderverfügbarkeit",
+            "KI Terminplanung",
+            "intelligente Terminplanung"
+          ],
+          "fr": [
+            "IA calendrier",
+            "IA planning",
+            "IA reunion",
+            "IA rendez-vous",
+            "planifier reunion",
+            "reserver rendez-vous",
+            "creer evenement",
+            "modifier evenement",
+            "annuler reunion",
+            "supprimer evenement",
+            "lister evenements",
+            "prochain rendez-vous",
+            "disponibilite"
+          ],
+          "es": [
+            "IA calendario",
+            "IA agenda",
+            "IA reunion",
+            "IA cita",
+            "programar reunion",
+            "reservar cita",
+            "crear evento",
+            "modificar evento",
+            "cancelar reunion",
+            "eliminar evento",
+            "listar eventos",
+            "proxima reunion",
+            "disponibilidad"
+          ],
+          "ro": [
+            "AI calendar",
+            "AI agenda",
+            "AI intalnire",
+            "AI programare",
+            "programeaza intalnire",
+            "rezerva programare",
+            "creeaza eveniment",
+            "modifica eveniment",
+            "anuleaza intalnire",
+            "sterge eveniment",
+            "listeaza evenimente",
+            "urmatoarea intalnire",
+            "disponibilitate"
+          ]
+        },
+        "useCases": {
+          "en": [
+            "Cancel a meeting from the agent chat with one sentence",
+            "Remove a mistakenly created event without hunting through your calendar UI",
+            "Clean up duplicate events via natural language"
+          ],
+          "de": [
+            "Ein Meeting aus dem Agent-Chat mit einem Satz absagen",
+            "Einen fälschlich angelegten Termin entfernen, ohne die Kalender-Oberfläche zu durchsuchen",
+            "Doppelte Einträge per Sprache bereinigen"
+          ]
+        },
+        "category": "productivity",
+        "faq": {
+          "en": [
+            {
+              "question": "Which calendar providers are supported?",
+              "answer": "Google Calendar, Microsoft Outlook/Exchange, and Apple iCloud Calendar. The warp is provider-agnostic — it always routes through the calendar integration connected to your agent, so you use the same interface regardless of provider."
+            },
+            {
+              "question": "Does the agent create events without my approval?",
+              "answer": "No. Calendar writes run through the warp approval pipeline unless the agent is explicitly in auto mode. You see a preview card and approve before the event is created."
+            },
+            {
+              "question": "How is the calendar connection handled?",
+              "answer": "Connect Google Calendar (or Microsoft/Apple) once from the agent's integration settings. The warp uses the tokens stored on that integration to make the call — no need to manage OAuth tokens per warp."
+            },
+            {
+              "question": "Does event creation sync back to my actual calendar?",
+              "answer": "Yes. Events are written to the connected provider (Google/Microsoft/Apple) and appear in your native calendar app alongside events created elsewhere."
+            }
+          ],
+          "de": [
+            {
+              "question": "Welche Kalenderanbieter werden unterstützt?",
+              "answer": "Google Calendar, Microsoft Outlook/Exchange und Apple iCloud Calendar. Der Warp ist anbieterunabhängig — er läuft immer über die verbundene Kalenderintegration deines Agenten, die Oberfläche ist unabhängig vom Anbieter gleich."
+            },
+            {
+              "question": "Erstellt der Agent Termine ohne meine Zustimmung?",
+              "answer": "Nein. Kalenderschreibvorgänge laufen über die Warp-Freigabe, außer der Agent ist explizit im Auto-Modus. Du siehst eine Vorschau und bestätigst, bevor der Termin angelegt wird."
+            },
+            {
+              "question": "Wie wird die Kalenderverbindung gehandhabt?",
+              "answer": "Verbinde Google Calendar (oder Microsoft/Apple) einmal in den Integrationseinstellungen des Agenten. Der Warp nutzt die dort gespeicherten Tokens — kein OAuth-Management pro Warp nötig."
+            },
+            {
+              "question": "Wird die Termin-Erstellung zurück in meinen Kalender synchronisiert?",
+              "answer": "Ja. Ereignisse werden direkt beim verbundenen Anbieter (Google/Microsoft/Apple) geschrieben und erscheinen in deiner nativen Kalender-App neben anderweitig erstellten Einträgen."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "key": "none:calendar-list-events",
+      "identifier": "@calendar-list-events",
+      "alias": "calendar-list-events",
+      "chain": "none",
+      "hash": "d29285dccfbb9547d98f141cc7f791c0172d40af0ae13f0fd613e276cc60808c",
+      "checksum": "d29285dccfbb9547d98f141cc7f791c0172d40af0ae13f0fd613e276cc60808c",
+      "name": "Calendar: List Events",
+      "title": {
+        "en": "List calendar events",
+        "de": "Kalendereinträge auflisten"
+      },
+      "description": {
+        "en": "List upcoming events from the agent's connected calendar within a date range.",
+        "de": "Listet kommende Ereignisse aus dem verbundenen Kalender in einem Datumsbereich auf."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "847f674ca9bc1b0fb15ce1efc2c0b283a4af8c06e08b9142a8ad0fe5f1931b8f",
+        "slug": "ai-calendar",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "AI Calendar",
+        "description": {
+          "en": "Manage calendar events — create, update, delete, and list — through your AI agent. Provider-agnostic: works with whichever calendar the agent is connected to (Google, Microsoft, Apple). Every action routes through your configured integration so there is one interface regardless of provider.",
+          "de": "Verwalte Kalenderereignisse — erstellen, aktualisieren, löschen, auflisten — über deinen KI-Agenten. Anbieterunabhängig: funktioniert mit dem verbundenen Kalender (Google, Microsoft, Apple). Jede Aktion läuft über deine konfigurierte Integration, damit es eine einheitliche Oberfläche gibt.",
+          "fr": "Gerez les evenements de calendrier — creer, mettre a jour, supprimer, lister — via votre agent IA. Independant du fournisseur: fonctionne avec le calendrier connecte (Google, Microsoft, Apple). Chaque action passe par votre integration configuree.",
+          "es": "Gestiona eventos de calendario — crear, actualizar, eliminar, listar — mediante tu agente IA. Independiente del proveedor: funciona con el calendario conectado (Google, Microsoft, Apple). Cada accion pasa por tu integracion configurada.",
+          "ro": "Gestioneaza evenimente de calendar — creare, actualizare, stergere, listare — prin agentul tau AI. Independent de furnizor: functioneaza cu calendarul conectat (Google, Microsoft, Apple). Fiecare actiune trece prin integrarea ta configurata."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "Calendar: List Events",
+        "title": {
+          "en": "List calendar events",
+          "de": "Kalendereinträge auflisten"
+        },
+        "description": {
+          "en": "List upcoming events from the agent's connected calendar within a date range.",
+          "de": "Listet kommende Ereignisse aus dem verbundenen Kalender in einem Datumsbereich auf."
+        },
+        "bot": "Use this when the user wants a full list of events. For casual introspection questions ('what's today?'), the CALENDAR provider context in the agent prompt already covers it — only use this warp for explicit list actions or wider ranges.",
+        "vars": {
+          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "List events",
+              "de": "Ereignisse auflisten"
+            },
+            "destination": {
+              "url": "https://api.joai.ai/v1/agents/{{JOAI_AGENT_UUID}}/calendar/events",
+              "method": "GET",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "From",
+                "as": "from",
+                "description": {
+                  "en": "Start of date range (ISO 8601)",
+                  "de": "Beginn des Zeitraums (ISO 8601)"
+                },
+                "bot": "Start of the range in ISO 8601. Defaults to today if omitted.",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "position": "query:from"
+              },
+              {
+                "name": "To",
+                "as": "to",
+                "description": {
+                  "en": "End of date range (ISO 8601)",
+                  "de": "Ende des Zeitraums (ISO 8601)"
+                },
+                "bot": "End of the range in ISO 8601. Defaults to 14 days from today if omitted.",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "position": "query:to"
+              }
+            ]
+          }
+        ],
+        "output": {
+          "CONNECTED": "out.data.connected",
+          "PROVIDER": "out.data.provider",
+          "USER_TIMEZONE": "out.data.userTimezone",
+          "EVENTS": "out.data.events"
+        },
+        "messages": {
+          "success": {
+            "en": "Retrieved calendar events.",
+            "de": "Kalendereinträge abgerufen."
+          }
+        }
+      },
+      "extras": {
+        "keywords": {
+          "en": [
+            "AI calendar",
+            "AI schedule",
+            "AI meeting",
+            "AI appointment",
+            "AI calendar assistant",
+            "schedule meeting",
+            "book appointment",
+            "create event",
+            "add calendar event",
+            "update event",
+            "reschedule meeting",
+            "delete event",
+            "cancel meeting",
+            "list events",
+            "upcoming meetings",
+            "next meeting",
+            "free time",
+            "calendar availability",
+            "agent scheduling",
+            "AI scheduling",
+            "smart scheduling"
+          ],
+          "de": [
+            "KI Kalender",
+            "KI Termine",
+            "KI Meeting",
+            "KI Terminplaner",
+            "Termin vereinbaren",
+            "Termin buchen",
+            "Termin erstellen",
+            "Kalendereintrag hinzufügen",
+            "Termin aktualisieren",
+            "Termin verschieben",
+            "Termin löschen",
+            "Meeting absagen",
+            "Termine auflisten",
+            "kommende Termine",
+            "nächstes Meeting",
+            "freie Zeit",
+            "Kalenderverfügbarkeit",
+            "KI Terminplanung",
+            "intelligente Terminplanung"
+          ],
+          "fr": [
+            "IA calendrier",
+            "IA planning",
+            "IA reunion",
+            "IA rendez-vous",
+            "planifier reunion",
+            "reserver rendez-vous",
+            "creer evenement",
+            "modifier evenement",
+            "annuler reunion",
+            "supprimer evenement",
+            "lister evenements",
+            "prochain rendez-vous",
+            "disponibilite"
+          ],
+          "es": [
+            "IA calendario",
+            "IA agenda",
+            "IA reunion",
+            "IA cita",
+            "programar reunion",
+            "reservar cita",
+            "crear evento",
+            "modificar evento",
+            "cancelar reunion",
+            "eliminar evento",
+            "listar eventos",
+            "proxima reunion",
+            "disponibilidad"
+          ],
+          "ro": [
+            "AI calendar",
+            "AI agenda",
+            "AI intalnire",
+            "AI programare",
+            "programeaza intalnire",
+            "rezerva programare",
+            "creeaza eveniment",
+            "modifica eveniment",
+            "anuleaza intalnire",
+            "sterge eveniment",
+            "listeaza evenimente",
+            "urmatoarea intalnire",
+            "disponibilitate"
+          ]
+        },
+        "useCases": {
+          "en": [
+            "Ask the agent what's on your calendar today or this week",
+            "Find your next meeting or the nearest free slot",
+            "Surface upcoming events for context before another action (e.g. \"am I free at 3pm?\")"
+          ],
+          "de": [
+            "Den Agenten fragen, was heute oder diese Woche im Kalender steht",
+            "Das nächste Meeting oder den nächsten freien Slot finden",
+            "Kommende Termine als Kontext für andere Aktionen aufrufen (z. B. \"bin ich um 15 Uhr frei?\")"
+          ]
+        },
+        "category": "productivity",
+        "faq": {
+          "en": [
+            {
+              "question": "Which calendar providers are supported?",
+              "answer": "Google Calendar, Microsoft Outlook/Exchange, and Apple iCloud Calendar. The warp is provider-agnostic — it always routes through the calendar integration connected to your agent, so you use the same interface regardless of provider."
+            },
+            {
+              "question": "Does the agent create events without my approval?",
+              "answer": "No. Calendar writes run through the warp approval pipeline unless the agent is explicitly in auto mode. You see a preview card and approve before the event is created."
+            },
+            {
+              "question": "How is the calendar connection handled?",
+              "answer": "Connect Google Calendar (or Microsoft/Apple) once from the agent's integration settings. The warp uses the tokens stored on that integration to make the call — no need to manage OAuth tokens per warp."
+            },
+            {
+              "question": "Does event creation sync back to my actual calendar?",
+              "answer": "Yes. Events are written to the connected provider (Google/Microsoft/Apple) and appear in your native calendar app alongside events created elsewhere."
+            }
+          ],
+          "de": [
+            {
+              "question": "Welche Kalenderanbieter werden unterstützt?",
+              "answer": "Google Calendar, Microsoft Outlook/Exchange und Apple iCloud Calendar. Der Warp ist anbieterunabhängig — er läuft immer über die verbundene Kalenderintegration deines Agenten, die Oberfläche ist unabhängig vom Anbieter gleich."
+            },
+            {
+              "question": "Erstellt der Agent Termine ohne meine Zustimmung?",
+              "answer": "Nein. Kalenderschreibvorgänge laufen über die Warp-Freigabe, außer der Agent ist explizit im Auto-Modus. Du siehst eine Vorschau und bestätigst, bevor der Termin angelegt wird."
+            },
+            {
+              "question": "Wie wird die Kalenderverbindung gehandhabt?",
+              "answer": "Verbinde Google Calendar (oder Microsoft/Apple) einmal in den Integrationseinstellungen des Agenten. Der Warp nutzt die dort gespeicherten Tokens — kein OAuth-Management pro Warp nötig."
+            },
+            {
+              "question": "Wird die Termin-Erstellung zurück in meinen Kalender synchronisiert?",
+              "answer": "Ja. Ereignisse werden direkt beim verbundenen Anbieter (Google/Microsoft/Apple) geschrieben und erscheinen in deiner nativen Kalender-App neben anderweitig erstellten Einträgen."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "key": "none:calendar-update-event",
+      "identifier": "@calendar-update-event",
+      "alias": "calendar-update-event",
+      "chain": "none",
+      "hash": "28dfc8069ecb0b57525ce89fb2ef18e1a7871165175d9eec5223d582f254bf81",
+      "checksum": "28dfc8069ecb0b57525ce89fb2ef18e1a7871165175d9eec5223d582f254bf81",
+      "name": "Calendar: Update Event",
+      "title": {
+        "en": "Update calendar event",
+        "de": "Kalendereintrag aktualisieren"
+      },
+      "description": {
+        "en": "Update an existing event on the agent's connected calendar. Supply only the fields you want to change.",
+        "de": "Aktualisiert ein vorhandenes Ereignis im verbundenen Kalender. Nur die zu ändernden Felder angeben."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "847f674ca9bc1b0fb15ce1efc2c0b283a4af8c06e08b9142a8ad0fe5f1931b8f",
+        "slug": "ai-calendar",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "AI Calendar",
+        "description": {
+          "en": "Manage calendar events — create, update, delete, and list — through your AI agent. Provider-agnostic: works with whichever calendar the agent is connected to (Google, Microsoft, Apple). Every action routes through your configured integration so there is one interface regardless of provider.",
+          "de": "Verwalte Kalenderereignisse — erstellen, aktualisieren, löschen, auflisten — über deinen KI-Agenten. Anbieterunabhängig: funktioniert mit dem verbundenen Kalender (Google, Microsoft, Apple). Jede Aktion läuft über deine konfigurierte Integration, damit es eine einheitliche Oberfläche gibt.",
+          "fr": "Gerez les evenements de calendrier — creer, mettre a jour, supprimer, lister — via votre agent IA. Independant du fournisseur: fonctionne avec le calendrier connecte (Google, Microsoft, Apple). Chaque action passe par votre integration configuree.",
+          "es": "Gestiona eventos de calendario — crear, actualizar, eliminar, listar — mediante tu agente IA. Independiente del proveedor: funciona con el calendario conectado (Google, Microsoft, Apple). Cada accion pasa por tu integracion configurada.",
+          "ro": "Gestioneaza evenimente de calendar — creare, actualizare, stergere, listare — prin agentul tau AI. Independent de furnizor: functioneaza cu calendarul conectat (Google, Microsoft, Apple). Fiecare actiune trece prin integrarea ta configurata."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "Calendar: Update Event",
+        "title": {
+          "en": "Update calendar event",
+          "de": "Kalendereintrag aktualisieren"
+        },
+        "description": {
+          "en": "Update an existing event on the agent's connected calendar. Supply only the fields you want to change.",
+          "de": "Aktualisiert ein vorhandenes Ereignis im verbundenen Kalender. Nur die zu ändernden Felder angeben."
+        },
+        "bot": "Use this to reschedule, rename, relocate, or edit an event the user or agent previously created. Look up the externalId from previous list or create outputs.",
+        "vars": {
+          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Update event",
+              "de": "Ereignis aktualisieren"
+            },
+            "destination": {
+              "url": "https://api.joai.ai/v1/agents/{{JOAI_AGENT_UUID}}/calendar/events/{{externalId}}",
+              "method": "PATCH",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+                "Content-Type": "application/json"
+              }
+            },
+            "inputs": [
+              {
+                "name": "External ID",
+                "as": "externalId",
+                "description": {
+                  "en": "The event's external ID from the provider",
+                  "de": "Externe Ereignis-ID des Anbieters"
+                },
+                "bot": "The provider's event ID (e.g. Google's event id, or agent-<uuid> for agent-created events).",
+                "type": "string",
+                "source": "field",
+                "required": true,
+                "position": "url:externalId"
+              },
+              {
+                "name": "Title",
+                "as": "title",
+                "description": {
+                  "en": "Updated title",
+                  "de": "Neuer Titel"
+                },
+                "bot": "Updated title. Omit to keep the existing one.",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "max": 500,
+                "position": "payload:title"
+              },
+              {
+                "name": "Description",
+                "as": "description",
+                "description": {
+                  "en": "Updated description",
+                  "de": "Neue Beschreibung"
+                },
+                "bot": "Updated description. Omit to keep existing.",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "max": 5000,
+                "position": "payload:description"
+              },
+              {
+                "name": "Start",
+                "as": "startAt",
+                "description": {
+                  "en": "Updated start datetime (ISO 8601)",
+                  "de": "Neuer Startzeitpunkt (ISO 8601)"
+                },
+                "bot": "Updated start in ISO 8601 with timezone. Omit to keep existing.",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "position": "payload:startAt"
+              },
+              {
+                "name": "End",
+                "as": "endAt",
+                "description": {
+                  "en": "Updated end datetime (ISO 8601)",
+                  "de": "Neuer Endzeitpunkt (ISO 8601)"
+                },
+                "bot": "Updated end in ISO 8601 with timezone. Omit to keep existing.",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "position": "payload:endAt"
+              },
+              {
+                "name": "Timezone",
+                "as": "timezone",
+                "description": {
+                  "en": "IANA timezone name",
+                  "de": "IANA-Zeitzonenname"
+                },
+                "bot": "IANA timezone, e.g. 'Europe/Vienna'. Omit to keep existing.",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "max": 100,
+                "position": "payload:timezone"
+              },
+              {
+                "name": "Location",
+                "as": "location",
+                "description": {
+                  "en": "Updated location",
+                  "de": "Neuer Ort"
+                },
+                "bot": "Updated location. Omit to keep existing.",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "max": 500,
+                "position": "payload:location"
+              },
+              {
+                "name": "All day",
+                "as": "allDay",
+                "description": {
+                  "en": "All-day flag",
+                  "de": "Ganztägig"
+                },
+                "bot": "Whether this is an all-day event. Omit to keep existing.",
+                "type": "boolean",
+                "source": "field",
+                "required": false,
+                "position": "payload:allDay"
+              }
+            ]
+          }
+        ],
+        "output": {
+          "EVENT_ID": "out.data.id",
+          "EVENT_EXTERNAL_ID": "out.data.externalId",
+          "EVENT_TITLE": "out.data.title",
+          "EVENT_START": "out.data.startAt"
+        },
+        "messages": {
+          "success": {
+            "en": "Updated \"{{EVENT_TITLE}}\".",
+            "de": "\"{{EVENT_TITLE}}\" aktualisiert."
+          }
+        }
+      },
+      "extras": {
+        "keywords": {
+          "en": [
+            "AI calendar",
+            "AI schedule",
+            "AI meeting",
+            "AI appointment",
+            "AI calendar assistant",
+            "schedule meeting",
+            "book appointment",
+            "create event",
+            "add calendar event",
+            "update event",
+            "reschedule meeting",
+            "delete event",
+            "cancel meeting",
+            "list events",
+            "upcoming meetings",
+            "next meeting",
+            "free time",
+            "calendar availability",
+            "agent scheduling",
+            "AI scheduling",
+            "smart scheduling"
+          ],
+          "de": [
+            "KI Kalender",
+            "KI Termine",
+            "KI Meeting",
+            "KI Terminplaner",
+            "Termin vereinbaren",
+            "Termin buchen",
+            "Termin erstellen",
+            "Kalendereintrag hinzufügen",
+            "Termin aktualisieren",
+            "Termin verschieben",
+            "Termin löschen",
+            "Meeting absagen",
+            "Termine auflisten",
+            "kommende Termine",
+            "nächstes Meeting",
+            "freie Zeit",
+            "Kalenderverfügbarkeit",
+            "KI Terminplanung",
+            "intelligente Terminplanung"
+          ],
+          "fr": [
+            "IA calendrier",
+            "IA planning",
+            "IA reunion",
+            "IA rendez-vous",
+            "planifier reunion",
+            "reserver rendez-vous",
+            "creer evenement",
+            "modifier evenement",
+            "annuler reunion",
+            "supprimer evenement",
+            "lister evenements",
+            "prochain rendez-vous",
+            "disponibilite"
+          ],
+          "es": [
+            "IA calendario",
+            "IA agenda",
+            "IA reunion",
+            "IA cita",
+            "programar reunion",
+            "reservar cita",
+            "crear evento",
+            "modificar evento",
+            "cancelar reunion",
+            "eliminar evento",
+            "listar eventos",
+            "proxima reunion",
+            "disponibilidad"
+          ],
+          "ro": [
+            "AI calendar",
+            "AI agenda",
+            "AI intalnire",
+            "AI programare",
+            "programeaza intalnire",
+            "rezerva programare",
+            "creeaza eveniment",
+            "modifica eveniment",
+            "anuleaza intalnire",
+            "sterge eveniment",
+            "listeaza evenimente",
+            "urmatoarea intalnire",
+            "disponibilitate"
+          ]
+        },
+        "useCases": {
+          "en": [
+            "Reschedule a meeting to a later time by asking the agent",
+            "Change the location of an event (e.g. Zoom → physical address) in one message",
+            "Update the title or description of an existing event without opening your calendar app"
+          ],
+          "de": [
+            "Ein Meeting auf einen späteren Zeitpunkt verschieben — einfach per Sprache",
+            "Den Ort eines Termins ändern (z. B. Zoom → Adresse) mit einer Nachricht",
+            "Titel oder Beschreibung eines Termins anpassen, ohne die Kalender-App zu öffnen"
+          ]
+        },
+        "category": "productivity",
+        "faq": {
+          "en": [
+            {
+              "question": "Which calendar providers are supported?",
+              "answer": "Google Calendar, Microsoft Outlook/Exchange, and Apple iCloud Calendar. The warp is provider-agnostic — it always routes through the calendar integration connected to your agent, so you use the same interface regardless of provider."
+            },
+            {
+              "question": "Does the agent create events without my approval?",
+              "answer": "No. Calendar writes run through the warp approval pipeline unless the agent is explicitly in auto mode. You see a preview card and approve before the event is created."
+            },
+            {
+              "question": "How is the calendar connection handled?",
+              "answer": "Connect Google Calendar (or Microsoft/Apple) once from the agent's integration settings. The warp uses the tokens stored on that integration to make the call — no need to manage OAuth tokens per warp."
+            },
+            {
+              "question": "Does event creation sync back to my actual calendar?",
+              "answer": "Yes. Events are written to the connected provider (Google/Microsoft/Apple) and appear in your native calendar app alongside events created elsewhere."
+            }
+          ],
+          "de": [
+            {
+              "question": "Welche Kalenderanbieter werden unterstützt?",
+              "answer": "Google Calendar, Microsoft Outlook/Exchange und Apple iCloud Calendar. Der Warp ist anbieterunabhängig — er läuft immer über die verbundene Kalenderintegration deines Agenten, die Oberfläche ist unabhängig vom Anbieter gleich."
+            },
+            {
+              "question": "Erstellt der Agent Termine ohne meine Zustimmung?",
+              "answer": "Nein. Kalenderschreibvorgänge laufen über die Warp-Freigabe, außer der Agent ist explizit im Auto-Modus. Du siehst eine Vorschau und bestätigst, bevor der Termin angelegt wird."
+            },
+            {
+              "question": "Wie wird die Kalenderverbindung gehandhabt?",
+              "answer": "Verbinde Google Calendar (oder Microsoft/Apple) einmal in den Integrationseinstellungen des Agenten. Der Warp nutzt die dort gespeicherten Tokens — kein OAuth-Management pro Warp nötig."
+            },
+            {
+              "question": "Wird die Termin-Erstellung zurück in meinen Kalender synchronisiert?",
+              "answer": "Ja. Ereignisse werden direkt beim verbundenen Anbieter (Google/Microsoft/Apple) geschrieben und erscheinen in deiner nativen Kalender-App neben anderweitig erstellten Einträgen."
+            }
+          ]
+        }
+      }
+    },
+    {
       "key": "none:calendly-list-event-types",
       "identifier": "@calendly-list-event-types",
       "alias": "calendly-list-event-types",
@@ -49652,614 +50836,6 @@
           "success": {
             "en": "Email sent! ID: {{MESSAGE_ID}}",
             "de": "E-Mail gesendet! ID: {{MESSAGE_ID}}"
-          }
-        }
-      },
-      "extras": null
-    },
-    {
-      "key": "none:google-calendar-create-event",
-      "identifier": "@google-calendar-create-event",
-      "alias": "google-calendar-create-event",
-      "chain": "none",
-      "hash": "57a1c6360a2b458475ba8b39bcf17e3e4ed685fed5648a4cf2ea201219527a0c",
-      "checksum": "57a1c6360a2b458475ba8b39bcf17e3e4ed685fed5648a4cf2ea201219527a0c",
-      "name": "Google Calendar: Create Event",
-      "title": {
-        "en": "Create calendar event",
-        "de": "Kalendereintrag erstellen"
-      },
-      "description": {
-        "en": "Create a new event in your Google Calendar. Set the title, description, start and end times, location, and attendees.",
-        "de": "Erstelle einen neuen Eintrag in deinem Google Kalender. Setze Titel, Beschreibung, Start- und Endzeit, Ort und Teilnehmer."
-      },
-      "preview": null,
-      "creator": "github:JoAiHQ/warps",
-      "privileges": [],
-      "listed": true,
-      "visibility": "private",
-      "primaryAddress": null,
-      "primaryFunc": null,
-      "brand": {
-        "hash": "1960ce1b2c7f72e21322f20f52a7f34273e82b300c9c18cc71a16b3094ef5a1e",
-        "slug": "google-calendar",
-        "active": false,
-        "protocol": "brand:0.2.0",
-        "name": "Google Calendar",
-        "description": {
-          "en": "Manage <strong>calendar events</strong>, <strong>schedules</strong>, and <strong>appointments</strong> with Google Calendar. Create, update, delete, and list events using Google Calendar's <strong>REST API</strong>.",
-          "de": "Verwalte <strong>Kalendereinträge</strong>, <strong>Termine</strong> und <strong>Besprechungen</strong> mit Google Calendar. Erstelle, aktualisiere, lösche und liste Ereignisse mit der <strong>REST API</strong> von Google Calendar."
-        },
-        "logo": {
-          "default": "https://www.google.com/calendar/about/static/images/favicon.ico"
-        },
-        "urls": {
-          "web": "https://calendar.google.com"
-        },
-        "colors": {
-          "primary": "#4285F4"
-        }
-      },
-      "warp": {
-        "protocol": "warp:3.0.0",
-        "name": "Google Calendar: Create Event",
-        "title": {
-          "en": "Create calendar event",
-          "de": "Kalendereintrag erstellen"
-        },
-        "description": {
-          "en": "Create a new event in your Google Calendar. Set the title, description, start and end times, location, and attendees.",
-          "de": "Erstelle einen neuen Eintrag in deinem Google Kalender. Setze Titel, Beschreibung, Start- und Endzeit, Ort und Teilnehmer."
-        },
-        "vars": {
-          "ACCESS_TOKEN": "env:GOOGLE_CALENDAR_ACCESS_TOKEN|OAuth 2.0 access token from Google. Get it from Google Cloud Console after OAuth authentication."
-        },
-        "actions": [
-          {
-            "type": "collect",
-            "label": "Create Event",
-            "destination": {
-              "url": "https://www.googleapis.com/calendar/v3/calendars/{{calendarId}}/events",
-              "method": "POST",
-              "headers": {
-                "Authorization": "Bearer {{ACCESS_TOKEN}}",
-                "Content-Type": "application/json"
-              }
-            },
-            "inputs": [
-              {
-                "name": "Calendar ID",
-                "as": "calendarId",
-                "description": "The calendar ID where the event will be created. Use 'primary' for your primary calendar.",
-                "bot": "The calendar ID. Use 'primary' for the user's primary calendar, or the calendar email address for other calendars.",
-                "type": "string",
-                "source": "field",
-                "required": true,
-                "position": "url:calendarId"
-              },
-              {
-                "name": "Event Title",
-                "as": "summary",
-                "description": "The title or name of the event.",
-                "bot": "The event title or summary, e.g., 'Team Meeting', 'Project Review', 'Lunch with Client'.",
-                "type": "string",
-                "source": "field",
-                "required": true,
-                "position": "payload:summary"
-              },
-              {
-                "name": "Description",
-                "as": "description",
-                "description": "Detailed description of the event.",
-                "bot": "A detailed description of the event. Can include notes, agenda items, or other relevant information.",
-                "type": "string",
-                "source": "field",
-                "position": "payload:description"
-              },
-              {
-                "name": "Start Date Time",
-                "as": "startDateTime",
-                "description": "Start date and time of the event in ISO 8601 format (e.g., '2024-01-15T10:00:00') or RFC3339 format.",
-                "bot": "The start date and time in ISO 8601 format like '2024-01-15T10:00:00' or RFC3339 format. Include timezone if needed.",
-                "type": "string",
-                "source": "field",
-                "required": true,
-                "position": "payload:start.dateTime"
-              },
-              {
-                "name": "End Date Time",
-                "as": "endDateTime",
-                "description": "End date and time of the event in ISO 8601 format (e.g., '2024-01-15T11:00:00') or RFC3339 format.",
-                "bot": "The end date and time in ISO 8601 format like '2024-01-15T11:00:00' or RFC3339 format. Include timezone if needed.",
-                "type": "string",
-                "source": "field",
-                "required": true,
-                "position": "payload:end.dateTime"
-              },
-              {
-                "name": "Start Time Zone",
-                "as": "startTimeZone",
-                "description": "Time zone for the start time (e.g., 'America/New_York', 'Europe/Berlin', 'Asia/Tokyo'). Optional if datetime includes timezone.",
-                "bot": "The time zone for the start time, e.g., 'America/New_York', 'Europe/Berlin', 'UTC'. Optional if the datetime string includes timezone information.",
-                "type": "string",
-                "source": "field",
-                "position": "payload:start.timeZone"
-              },
-              {
-                "name": "End Time Zone",
-                "as": "endTimeZone",
-                "description": "Time zone for the end time (e.g., 'America/New_York', 'Europe/Berlin', 'Asia/Tokyo'). Optional if datetime includes timezone.",
-                "bot": "The time zone for the end time, e.g., 'America/New_York', 'Europe/Berlin', 'UTC'. Optional if the datetime string includes timezone information.",
-                "type": "string",
-                "source": "field",
-                "position": "payload:end.timeZone"
-              },
-              {
-                "name": "Location",
-                "as": "location",
-                "description": "Location of the event (e.g., '123 Main St, City, Country' or 'Conference Room A').",
-                "bot": "The event location. Can be a physical address, room name, or video conference link.",
-                "type": "string",
-                "source": "field",
-                "position": "payload:location"
-              },
-              {
-                "name": "Attendees",
-                "as": "attendees",
-                "description": "JSON array of attendee objects. Example: [{\"email\": \"user@example.com\"}, {\"email\": \"other@example.com\"}]",
-                "bot": "JSON array of attendee objects. Each object should have an 'email' field. Example: [{\"email\": \"user@example.com\"}]",
-                "type": "string",
-                "source": "field",
-                "position": "payload:attendees"
-              }
-            ]
-          }
-        ],
-        "output": {
-          "EVENT_ID": "out.id",
-          "EVENT_LINK": "out.htmlLink"
-        },
-        "messages": {
-          "success": {
-            "en": "Event created successfully! Event ID: {{EVENT_ID}}",
-            "de": "Ereignis erfolgreich erstellt! Ereignis-ID: {{EVENT_ID}}"
-          }
-        }
-      },
-      "extras": null
-    },
-    {
-      "key": "none:google-calendar-delete-event",
-      "identifier": "@google-calendar-delete-event",
-      "alias": "google-calendar-delete-event",
-      "chain": "none",
-      "hash": "3e832185c130b598722d8671ff73dfa7949acda24b6407ca656fe69471ac38ca",
-      "checksum": "3e832185c130b598722d8671ff73dfa7949acda24b6407ca656fe69471ac38ca",
-      "name": "Google Calendar: Delete Event",
-      "title": {
-        "en": "Delete calendar event",
-        "de": "Kalendereintrag löschen"
-      },
-      "description": {
-        "en": "Delete an event from your Google Calendar. This action cannot be undone.",
-        "de": "Lösche einen Eintrag aus deinem Google Kalender. Diese Aktion kann nicht rückgängig gemacht werden."
-      },
-      "preview": null,
-      "creator": "github:JoAiHQ/warps",
-      "privileges": [],
-      "listed": true,
-      "visibility": "private",
-      "primaryAddress": null,
-      "primaryFunc": null,
-      "brand": {
-        "hash": "1960ce1b2c7f72e21322f20f52a7f34273e82b300c9c18cc71a16b3094ef5a1e",
-        "slug": "google-calendar",
-        "active": false,
-        "protocol": "brand:0.2.0",
-        "name": "Google Calendar",
-        "description": {
-          "en": "Manage <strong>calendar events</strong>, <strong>schedules</strong>, and <strong>appointments</strong> with Google Calendar. Create, update, delete, and list events using Google Calendar's <strong>REST API</strong>.",
-          "de": "Verwalte <strong>Kalendereinträge</strong>, <strong>Termine</strong> und <strong>Besprechungen</strong> mit Google Calendar. Erstelle, aktualisiere, lösche und liste Ereignisse mit der <strong>REST API</strong> von Google Calendar."
-        },
-        "logo": {
-          "default": "https://www.google.com/calendar/about/static/images/favicon.ico"
-        },
-        "urls": {
-          "web": "https://calendar.google.com"
-        },
-        "colors": {
-          "primary": "#4285F4"
-        }
-      },
-      "warp": {
-        "protocol": "warp:3.0.0",
-        "name": "Google Calendar: Delete Event",
-        "title": {
-          "en": "Delete calendar event",
-          "de": "Kalendereintrag löschen"
-        },
-        "description": {
-          "en": "Delete an event from your Google Calendar. This action cannot be undone.",
-          "de": "Lösche einen Eintrag aus deinem Google Kalender. Diese Aktion kann nicht rückgängig gemacht werden."
-        },
-        "vars": {
-          "ACCESS_TOKEN": "env:GOOGLE_CALENDAR_ACCESS_TOKEN|OAuth 2.0 access token from Google. Get it from Google Cloud Console after OAuth authentication."
-        },
-        "actions": [
-          {
-            "type": "collect",
-            "label": "Delete Event",
-            "destination": {
-              "url": "https://www.googleapis.com/calendar/v3/calendars/{{calendarId}}/events/{{eventId}}",
-              "method": "DELETE",
-              "headers": {
-                "Authorization": "Bearer {{ACCESS_TOKEN}}"
-              }
-            },
-            "inputs": [
-              {
-                "name": "Calendar ID",
-                "as": "calendarId",
-                "description": "The calendar ID containing the event to delete. Use 'primary' for your primary calendar.",
-                "bot": "The calendar ID. Use 'primary' for the user's primary calendar, or the calendar email address for other calendars.",
-                "type": "string",
-                "source": "field",
-                "required": true,
-                "position": "url:calendarId"
-              },
-              {
-                "name": "Event ID",
-                "as": "eventId",
-                "description": "The ID of the event to delete.",
-                "bot": "The event ID from Google Calendar. You can get this from the event's details or from listing events.",
-                "type": "string",
-                "source": "field",
-                "required": true,
-                "position": "url:eventId"
-              },
-              {
-                "name": "Send Updates",
-                "as": "sendUpdates",
-                "description": "Whether to send notifications about the event deletion. Options: 'all', 'externalOnly', 'none'.",
-                "bot": "Whether to send notifications to attendees. Use 'all' to notify all attendees, 'externalOnly' for external attendees only, or 'none' for no notifications.",
-                "type": "string",
-                "source": "field",
-                "position": "query:sendUpdates"
-              }
-            ]
-          }
-        ],
-        "messages": {
-          "success": {
-            "en": "Event deleted successfully",
-            "de": "Ereignis erfolgreich gelöscht"
-          }
-        }
-      },
-      "extras": null
-    },
-    {
-      "key": "none:google-calendar-list-events",
-      "identifier": "@google-calendar-list-events",
-      "alias": "google-calendar-list-events",
-      "chain": "none",
-      "hash": "981747e5bec19c833f03f0e145fad7e491b8195ca70d0ad450654517f8b9bae2",
-      "checksum": "981747e5bec19c833f03f0e145fad7e491b8195ca70d0ad450654517f8b9bae2",
-      "name": "Google Calendar: List Events",
-      "title": {
-        "en": "List calendar events",
-        "de": "Kalendereinträge auflisten"
-      },
-      "description": {
-        "en": "Retrieve a list of events from your Google Calendar. Filter by date range, search for specific events, or get upcoming events.",
-        "de": "Rufe eine Liste von Ereignissen aus deinem Google Kalender ab. Filtere nach Datumsbereich, suche nach bestimmten Ereignissen oder hole kommende Ereignisse."
-      },
-      "preview": null,
-      "creator": "github:JoAiHQ/warps",
-      "privileges": [],
-      "listed": true,
-      "visibility": "private",
-      "primaryAddress": null,
-      "primaryFunc": null,
-      "brand": {
-        "hash": "1960ce1b2c7f72e21322f20f52a7f34273e82b300c9c18cc71a16b3094ef5a1e",
-        "slug": "google-calendar",
-        "active": false,
-        "protocol": "brand:0.2.0",
-        "name": "Google Calendar",
-        "description": {
-          "en": "Manage <strong>calendar events</strong>, <strong>schedules</strong>, and <strong>appointments</strong> with Google Calendar. Create, update, delete, and list events using Google Calendar's <strong>REST API</strong>.",
-          "de": "Verwalte <strong>Kalendereinträge</strong>, <strong>Termine</strong> und <strong>Besprechungen</strong> mit Google Calendar. Erstelle, aktualisiere, lösche und liste Ereignisse mit der <strong>REST API</strong> von Google Calendar."
-        },
-        "logo": {
-          "default": "https://www.google.com/calendar/about/static/images/favicon.ico"
-        },
-        "urls": {
-          "web": "https://calendar.google.com"
-        },
-        "colors": {
-          "primary": "#4285F4"
-        }
-      },
-      "warp": {
-        "protocol": "warp:3.0.0",
-        "name": "Google Calendar: List Events",
-        "title": {
-          "en": "List calendar events",
-          "de": "Kalendereinträge auflisten"
-        },
-        "description": {
-          "en": "Retrieve a list of events from your Google Calendar. Filter by date range, search for specific events, or get upcoming events.",
-          "de": "Rufe eine Liste von Ereignissen aus deinem Google Kalender ab. Filtere nach Datumsbereich, suche nach bestimmten Ereignissen oder hole kommende Ereignisse."
-        },
-        "vars": {
-          "ACCESS_TOKEN": "env:GOOGLE_CALENDAR_ACCESS_TOKEN|OAuth 2.0 access token from Google. Get it from Google Cloud Console after OAuth authentication."
-        },
-        "actions": [
-          {
-            "type": "collect",
-            "label": "List Events",
-            "destination": {
-              "url": "https://www.googleapis.com/calendar/v3/calendars/{{calendarId}}/events",
-              "method": "GET",
-              "headers": {
-                "Authorization": "Bearer {{ACCESS_TOKEN}}"
-              }
-            },
-            "inputs": [
-              {
-                "name": "Calendar ID",
-                "as": "calendarId",
-                "description": "The calendar ID to list events from. Use 'primary' for your primary calendar.",
-                "bot": "The calendar ID. Use 'primary' for the user's primary calendar, or the calendar email address for other calendars.",
-                "type": "string",
-                "source": "field",
-                "required": true,
-                "position": "url:calendarId"
-              },
-              {
-                "name": "Time Min",
-                "as": "timeMin",
-                "description": "Lower bound (exclusive) for an event's end time to filter by. RFC3339 timestamp with mandatory time zone offset (e.g., '2024-01-15T00:00:00Z').",
-                "bot": "The start of the time range to fetch events from. RFC3339 format with timezone, e.g., '2024-01-15T00:00:00Z'.",
-                "type": "string",
-                "source": "field",
-                "position": "query:timeMin"
-              },
-              {
-                "name": "Time Max",
-                "as": "timeMax",
-                "description": "Upper bound (exclusive) for an event's start time to filter by. RFC3339 timestamp with mandatory time zone offset (e.g., '2024-01-31T23:59:59Z').",
-                "bot": "The end of the time range to fetch events until. RFC3339 format with timezone, e.g., '2024-01-31T23:59:59Z'.",
-                "type": "string",
-                "source": "field",
-                "position": "query:timeMax"
-              },
-              {
-                "name": "Max Results",
-                "as": "maxResults",
-                "description": "Maximum number of events to return. Default is 250, maximum is 2500.",
-                "bot": "The maximum number of events to return. Default is 250, can be up to 2500.",
-                "type": "number",
-                "source": "field",
-                "position": "query:maxResults"
-              },
-              {
-                "name": "Query",
-                "as": "q",
-                "description": "Free text search terms to find events that match these terms in any field.",
-                "bot": "Search query to filter events by keywords. Searches in summary, description, location, and other fields.",
-                "type": "string",
-                "source": "field",
-                "position": "query:q"
-              },
-              {
-                "name": "Single Events",
-                "as": "singleEvents",
-                "description": "Whether to expand recurring events into instances. Set to true to expand recurring events.",
-                "bot": "Set to true to expand recurring events into individual instances. Default is false.",
-                "type": "boolean",
-                "source": "field",
-                "position": "query:singleEvents"
-              },
-              {
-                "name": "Order By",
-                "as": "orderBy",
-                "description": "The order of the events returned. Options: 'startTime' or 'updated'.",
-                "bot": "The order of events. Use 'startTime' to order by event start time, or 'updated' to order by last modification time.",
-                "type": "string",
-                "source": "field",
-                "position": "query:orderBy"
-              }
-            ]
-          }
-        ],
-        "output": {
-          "EVENTS": "out.items",
-          "EVENT_COUNT": "out.items.length"
-        },
-        "messages": {
-          "success": {
-            "en": "Found {{EVENT_COUNT}} event(s)",
-            "de": "{{EVENT_COUNT}} Ereignis(se) gefunden"
-          }
-        }
-      },
-      "extras": null
-    },
-    {
-      "key": "none:google-calendar-update-event",
-      "identifier": "@google-calendar-update-event",
-      "alias": "google-calendar-update-event",
-      "chain": "none",
-      "hash": "a5add7ac6c965970c05e3aa7cc1e7a9b22d221243bf1916e5b7cf922d85c85de",
-      "checksum": "a5add7ac6c965970c05e3aa7cc1e7a9b22d221243bf1916e5b7cf922d85c85de",
-      "name": "Google Calendar: Update Event",
-      "title": {
-        "en": "Update calendar event",
-        "de": "Kalendereintrag aktualisieren"
-      },
-      "description": {
-        "en": "Update an existing event in your Google Calendar. Modify the title, description, time, location, or attendees.",
-        "de": "Aktualisiere einen bestehenden Eintrag in deinem Google Kalender. Ändere Titel, Beschreibung, Zeit, Ort oder Teilnehmer."
-      },
-      "preview": null,
-      "creator": "github:JoAiHQ/warps",
-      "privileges": [],
-      "listed": true,
-      "visibility": "private",
-      "primaryAddress": null,
-      "primaryFunc": null,
-      "brand": {
-        "hash": "1960ce1b2c7f72e21322f20f52a7f34273e82b300c9c18cc71a16b3094ef5a1e",
-        "slug": "google-calendar",
-        "active": false,
-        "protocol": "brand:0.2.0",
-        "name": "Google Calendar",
-        "description": {
-          "en": "Manage <strong>calendar events</strong>, <strong>schedules</strong>, and <strong>appointments</strong> with Google Calendar. Create, update, delete, and list events using Google Calendar's <strong>REST API</strong>.",
-          "de": "Verwalte <strong>Kalendereinträge</strong>, <strong>Termine</strong> und <strong>Besprechungen</strong> mit Google Calendar. Erstelle, aktualisiere, lösche und liste Ereignisse mit der <strong>REST API</strong> von Google Calendar."
-        },
-        "logo": {
-          "default": "https://www.google.com/calendar/about/static/images/favicon.ico"
-        },
-        "urls": {
-          "web": "https://calendar.google.com"
-        },
-        "colors": {
-          "primary": "#4285F4"
-        }
-      },
-      "warp": {
-        "protocol": "warp:3.0.0",
-        "name": "Google Calendar: Update Event",
-        "title": {
-          "en": "Update calendar event",
-          "de": "Kalendereintrag aktualisieren"
-        },
-        "description": {
-          "en": "Update an existing event in your Google Calendar. Modify the title, description, time, location, or attendees.",
-          "de": "Aktualisiere einen bestehenden Eintrag in deinem Google Kalender. Ändere Titel, Beschreibung, Zeit, Ort oder Teilnehmer."
-        },
-        "vars": {
-          "ACCESS_TOKEN": "env:GOOGLE_CALENDAR_ACCESS_TOKEN|OAuth 2.0 access token from Google. Get it from Google Cloud Console after OAuth authentication."
-        },
-        "actions": [
-          {
-            "type": "collect",
-            "label": "Update Event",
-            "destination": {
-              "url": "https://www.googleapis.com/calendar/v3/calendars/{{calendarId}}/events/{{eventId}}",
-              "method": "PUT",
-              "headers": {
-                "Authorization": "Bearer {{ACCESS_TOKEN}}",
-                "Content-Type": "application/json"
-              }
-            },
-            "inputs": [
-              {
-                "name": "Calendar ID",
-                "as": "calendarId",
-                "description": "The calendar ID containing the event. Use 'primary' for your primary calendar.",
-                "bot": "The calendar ID. Use 'primary' for the user's primary calendar, or the calendar email address for other calendars.",
-                "type": "string",
-                "source": "field",
-                "required": true,
-                "position": "url:calendarId"
-              },
-              {
-                "name": "Event ID",
-                "as": "eventId",
-                "description": "The ID of the event to update.",
-                "bot": "The event ID from Google Calendar. You can get this from the event's details or from listing events.",
-                "type": "string",
-                "source": "field",
-                "required": true,
-                "position": "url:eventId"
-              },
-              {
-                "name": "Event Title",
-                "as": "summary",
-                "description": "The updated title or name of the event.",
-                "bot": "The event title or summary, e.g., 'Team Meeting', 'Project Review', 'Lunch with Client'.",
-                "type": "string",
-                "source": "field",
-                "position": "payload:summary"
-              },
-              {
-                "name": "Description",
-                "as": "description",
-                "description": "Updated detailed description of the event.",
-                "bot": "A detailed description of the event. Can include notes, agenda items, or other relevant information.",
-                "type": "string",
-                "source": "field",
-                "position": "payload:description"
-              },
-              {
-                "name": "Start Date Time",
-                "as": "startDateTime",
-                "description": "Updated start date and time in ISO 8601 format (e.g., '2024-01-15T10:00:00') or RFC3339 format.",
-                "bot": "The start date and time in ISO 8601 format like '2024-01-15T10:00:00' or RFC3339 format. Include timezone if needed.",
-                "type": "string",
-                "source": "field",
-                "position": "payload:start.dateTime"
-              },
-              {
-                "name": "End Date Time",
-                "as": "endDateTime",
-                "description": "Updated end date and time in ISO 8601 format (e.g., '2024-01-15T11:00:00') or RFC3339 format.",
-                "bot": "The end date and time in ISO 8601 format like '2024-01-15T11:00:00' or RFC3339 format. Include timezone if needed.",
-                "type": "string",
-                "source": "field",
-                "position": "payload:end.dateTime"
-              },
-              {
-                "name": "Start Time Zone",
-                "as": "startTimeZone",
-                "description": "Time zone for the start time (e.g., 'America/New_York', 'Europe/Berlin', 'Asia/Tokyo'). Optional if datetime includes timezone.",
-                "bot": "The time zone for the start time, e.g., 'America/New_York', 'Europe/Berlin', 'UTC'. Optional if the datetime string includes timezone information.",
-                "type": "string",
-                "source": "field",
-                "position": "payload:start.timeZone"
-              },
-              {
-                "name": "End Time Zone",
-                "as": "endTimeZone",
-                "description": "Time zone for the end time (e.g., 'America/New_York', 'Europe/Berlin', 'Asia/Tokyo'). Optional if datetime includes timezone.",
-                "bot": "The time zone for the end time, e.g., 'America/New_York', 'Europe/Berlin', 'UTC'. Optional if the datetime string includes timezone information.",
-                "type": "string",
-                "source": "field",
-                "position": "payload:end.timeZone"
-              },
-              {
-                "name": "Location",
-                "as": "location",
-                "description": "Updated location of the event (e.g., '123 Main St, City, Country' or 'Conference Room A').",
-                "bot": "The event location. Can be a physical address, room name, or video conference link.",
-                "type": "string",
-                "source": "field",
-                "position": "payload:location"
-              },
-              {
-                "name": "Attendees",
-                "as": "attendees",
-                "description": "JSON array of attendee objects. Example: [{\"email\": \"user@example.com\"}, {\"email\": \"other@example.com\"}]",
-                "bot": "JSON array of attendee objects. Each object should have an 'email' field. Example: [{\"email\": \"user@example.com\"}]",
-                "type": "string",
-                "source": "field",
-                "position": "payload:attendees"
-              }
-            ]
-          }
-        ],
-        "output": {
-          "EVENT_ID": "out.id",
-          "EVENT_LINK": "out.htmlLink"
-        },
-        "messages": {
-          "success": {
-            "en": "Event updated successfully! Event ID: {{EVENT_ID}}",
-            "de": "Ereignis erfolgreich aktualisiert! Ereignis-ID: {{EVENT_ID}}"
           }
         }
       },

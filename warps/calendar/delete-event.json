@@ -1,0 +1,58 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Calendar: Delete Event",
+  "title": {
+    "en": "Delete calendar event",
+    "de": "Kalendereintrag löschen"
+  },
+  "description": {
+    "en": "Delete an event from the agent's connected calendar. The call is routed to the correct provider automatically.",
+    "de": "Löscht ein Ereignis aus dem verbundenen Kalender. Die Anfrage wird automatisch an den richtigen Anbieter weitergeleitet."
+  },
+  "bot": "Use this to cancel an event the user no longer needs. Confirm with the user before executing since deletion is irreversible.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Delete event",
+        "de": "Ereignis löschen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/agents/{{JOAI_AGENT_UUID}}/calendar/events/{{externalId}}",
+        "method": "DELETE",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "External ID",
+          "as": "externalId",
+          "description": {
+            "en": "The event's external ID from the provider",
+            "de": "Externe Ereignis-ID des Anbieters"
+          },
+          "bot": "The provider's event ID (e.g. Google's event id, or agent-<uuid> for agent-created events).",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:externalId"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "EVENT_EXTERNAL_ID": "out.data.externalId",
+    "DELETED": "out.data.deleted"
+  },
+  "messages": {
+    "success": {
+      "en": "Event deleted from your calendar.",
+      "de": "Termin aus deinem Kalender gelöscht."
+    }
+  }
+}

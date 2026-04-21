@@ -10,8 +10,8 @@ export type FirecrawlCrawlInputs = {
 
 export type FirecrawlCrawlData = {
   SUCCESS: any;
-  JOB_ID: string;
-  STATUS_URL: string;
+  JOB_ID: any;
+  STATUS_URL: any;
 };
 
 export type FirecrawlMapInputs = {

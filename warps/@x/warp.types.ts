@@ -4,3 +4,66 @@ export type XCreateContentInputs = {
   NOTES: string;
 };
 
+export type XDeleteTweetInputs = {
+  TWEET_ID: string;
+};
+
+export type XDeleteTweetData = {
+  DELETED: any;
+};
+
+export type XGetTweetInputs = {
+  TWEET_ID: string;
+  tweetFields: string;
+  expansions: string;
+  userFields: string;
+};
+
+export type XGetTweetData = {
+  TEXT: any;
+  AUTHOR_ID: any;
+  LIKES: any;
+  RETWEETS: any;
+  REPLIES: any;
+  QUOTES: any;
+  IMPRESSIONS: any;
+  BOOKMARKS: any;
+  CREATED_AT: any;
+};
+
+export type XGetUserInputs = {
+  USERNAME: string;
+  userFields: string;
+};
+
+export type XGetUserData = {
+  USER_ID: any;
+  NAME: any;
+  USERNAME: any;
+  DESCRIPTION: any;
+  FOLLOWERS: any;
+  FOLLOWING: any;
+  TWEET_COUNT: number;
+};
+
+export type XListUserTweetsInputs = {
+  USER_ID: string;
+  maxResults: number;
+  tweetFields: string;
+};
+
+export type XListUserTweetsData = {
+  TWEETS: any;
+  COUNT: any;
+};
+
+export type XPostTweetInputs = {
+  text: string;
+  replyTo: string;
+  quoteTweetId: string;
+};
+
+export type XPostTweetData = {
+  TWEET_ID: any;
+  TWEET_TEXT: any;
+};

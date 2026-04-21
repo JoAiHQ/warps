@@ -4,4 +4,3 @@ export type OpenBondEstablishBondInputs = {
   parent: string;
   royalty: number;
 };
-

@@ -1,0 +1,143 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Calendar: Create Event",
+  "title": {
+    "en": "Create calendar event",
+    "de": "Kalendereintrag erstellen"
+  },
+  "description": {
+    "en": "Create an event on the calendar the agent is connected to (Google, Microsoft, or Apple). The backend routes the call to the right provider automatically.",
+    "de": "Erstellt ein Ereignis im verbundenen Kalender des Agenten (Google, Microsoft oder Apple). Das Backend leitet die Anfrage automatisch an den richtigen Anbieter weiter."
+  },
+  "bot": "Use this to schedule meetings, appointments, or reminders on the user's calendar. Provider is determined by the connected integration — do not ask which provider.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Create event",
+        "de": "Ereignis erstellen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/agents/{{JOAI_AGENT_UUID}}/calendar/events",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Title",
+          "as": "title",
+          "description": {
+            "en": "Event title",
+            "de": "Titel des Termins"
+          },
+          "bot": "Concise event title, e.g. 'Lunch with Sarah', 'Iron Clothes', 'Team standup'.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "max": 500,
+          "position": "payload:title"
+        },
+        {
+          "name": "Description",
+          "as": "description",
+          "description": {
+            "en": "Optional event description",
+            "de": "Optionale Beschreibung"
+          },
+          "bot": "Optional longer description or agenda for the event.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "max": 5000,
+          "position": "payload:description"
+        },
+        {
+          "name": "Start",
+          "as": "startAt",
+          "description": {
+            "en": "Start datetime (ISO 8601, include timezone)",
+            "de": "Startzeitpunkt (ISO 8601 mit Zeitzone)"
+          },
+          "bot": "Event start in ISO 8601 with timezone offset, e.g. '2026-04-21T14:00:00+02:00' or '2026-04-21T12:00:00Z'.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:startAt"
+        },
+        {
+          "name": "End",
+          "as": "endAt",
+          "description": {
+            "en": "End datetime (ISO 8601, include timezone)",
+            "de": "Endzeitpunkt (ISO 8601 mit Zeitzone)"
+          },
+          "bot": "Event end in ISO 8601 with timezone offset. If the user did not specify, default to one hour after start.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:endAt"
+        },
+        {
+          "name": "Timezone",
+          "as": "timezone",
+          "description": {
+            "en": "IANA timezone name for the event",
+            "de": "IANA-Zeitzonenname"
+          },
+          "bot": "IANA timezone, e.g. 'Europe/Vienna', 'America/New_York'. Use the user's timezone from context.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "max": 100,
+          "position": "payload:timezone"
+        },
+        {
+          "name": "Location",
+          "as": "location",
+          "description": {
+            "en": "Location or meeting link",
+            "de": "Ort oder Meeting-Link"
+          },
+          "bot": "Physical address, room, or video call link.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "max": 500,
+          "position": "payload:location"
+        },
+        {
+          "name": "All day",
+          "as": "allDay",
+          "description": {
+            "en": "Whether this is an all-day event",
+            "de": "All-Day-Termin"
+          },
+          "bot": "True for full-day events where a specific time is not meaningful.",
+          "type": "boolean",
+          "source": "field",
+          "required": false,
+          "position": "payload:allDay"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "EVENT_ID": "out.data.id",
+    "EVENT_EXTERNAL_ID": "out.data.externalId",
+    "EVENT_TITLE": "out.data.title",
+    "EVENT_START": "out.data.startAt"
+  },
+  "messages": {
+    "success": {
+      "en": "Created \"{{EVENT_TITLE}}\" on your calendar.",
+      "de": "\"{{EVENT_TITLE}}\" in deinem Kalender erstellt."
+    }
+  }
+}

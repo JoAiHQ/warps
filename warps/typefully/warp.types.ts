@@ -8,4 +8,3 @@ export type TypefullyCreateScheduleDraftInputs = {
   auto_retweet_enabled: string;
   auto_plug_enabled: string;
 };
-

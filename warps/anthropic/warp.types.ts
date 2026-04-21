@@ -61,7 +61,7 @@ export type AnthropicClaudeCodeLaunchTaskInputs = {
 };
 
 export type AnthropicClaudeCodeLaunchTaskData = {
-  RUN_ID: string;
+  RUN_ID: any;
   RUN_STATUS: any;
   SUMMARY: any;
 };
@@ -74,6 +74,10 @@ export type AnthropicGetTaskStatusData = {
   RUN_ID: any;
   RUN_STATUS: any;
   SUMMARY: string;
+};
+
+export type AnthropicInstallJoAiPluginInputs = {
+  PLUGIN_NAME: string;
 };
 
 export type AnthropicLaunchTaskInputs = {
