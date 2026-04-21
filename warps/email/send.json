@@ -9,7 +9,7 @@
     "en": "Send an email to a contact. Resolves or creates a conversation room for the recipient so replies are tracked.",
     "de": "Sendet eine E-Mail an einen Kontakt. Erstellt einen Gesprächsraum für den Empfänger, damit Antworten verfolgt werden."
   },
-  "bot": "Use this to send emails through the agent's email integration. Creates a persistent conversation room for the recipient — replies will route back to that room. The success CTA exposes a mailto: link so the user can always send from their own mail client if preferred.",
+  "bot": "Use this to send emails through the agent's email integration. Creates a persistent conversation room for the recipient — replies will route back to that room. When no email integration is configured, the API posts a mailto: follow-up in the conversation room so the user can send from their own mail client.",
   "vars": {
     "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
     "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
@@ -62,26 +62,13 @@
           "required": false
         },
         {
-          "name": "Subject",
-          "as": "subject",
-          "description": {
-            "en": "Email subject line",
-            "de": "E-Mail-Betreff"
-          },
-          "bot": "Concise, specific subject line.",
-          "type": "string",
-          "source": "field",
-          "required": false,
-          "max": 500
-        },
-        {
           "name": "Message",
           "as": "message",
           "description": {
-            "en": "Email body content",
-            "de": "E-Mail-Inhalt"
+            "en": "Email body content. Start with a subject line — it will be the first message of the thread.",
+            "de": "E-Mail-Inhalt. Beginne mit einer Betreffzeile — sie wird zur ersten Nachricht des Threads."
           },
-          "bot": "The body content of the email.",
+          "bot": "The full email body. The first line or paragraph serves as the subject of the thread.",
           "type": "string",
           "source": "field",
           "required": true
@@ -91,17 +78,12 @@
   ],
   "output": {
     "EMAIL_ROOM_ID": "out.data.roomId",
-    "EMAIL_MESSAGE_ID": "out.data.externalMessageId",
-    "EMAIL_MAILTO_URL": "transform:`mailto:${inputs.recipientId}${inputs.subject || inputs.message ? '?' : ''}${inputs.subject ? `subject=${encodeURIComponent(inputs.subject)}` : ''}${inputs.subject && inputs.message ? '&' : ''}${inputs.message ? `body=${encodeURIComponent(inputs.message)}` : ''}`"
+    "EMAIL_MESSAGE_ID": "out.data.externalMessageId"
   },
   "messages": {
     "success": {
       "en": "Logged in conversation room.",
       "de": "Im Gesprächsraum protokolliert."
-    },
-    "cta": {
-      "en": "[Open in your mail app →]({{EMAIL_MAILTO_URL}})",
-      "de": "[In deiner Mail-App öffnen →]({{EMAIL_MAILTO_URL}})"
     }
   }
 }
