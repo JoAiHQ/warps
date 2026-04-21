@@ -1,0 +1,73 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Calendar: List Events",
+  "title": {
+    "en": "List calendar events",
+    "de": "Kalendereinträge auflisten"
+  },
+  "description": {
+    "en": "List upcoming events from the agent's connected calendar within a date range.",
+    "de": "Listet kommende Ereignisse aus dem verbundenen Kalender in einem Datumsbereich auf."
+  },
+  "bot": "Use this when the user wants a full list of events. For casual introspection questions ('what's today?'), the CALENDAR provider context in the agent prompt already covers it — only use this warp for explicit list actions or wider ranges.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "List events",
+        "de": "Ereignisse auflisten"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/agents/{{JOAI_AGENT_UUID}}/calendar/events",
+        "method": "GET",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "From",
+          "as": "from",
+          "description": {
+            "en": "Start of date range (ISO 8601)",
+            "de": "Beginn des Zeitraums (ISO 8601)"
+          },
+          "bot": "Start of the range in ISO 8601. Defaults to today if omitted.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "query:from"
+        },
+        {
+          "name": "To",
+          "as": "to",
+          "description": {
+            "en": "End of date range (ISO 8601)",
+            "de": "Ende des Zeitraums (ISO 8601)"
+          },
+          "bot": "End of the range in ISO 8601. Defaults to 14 days from today if omitted.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "query:to"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "CONNECTED": "out.data.connected",
+    "PROVIDER": "out.data.provider",
+    "USER_TIMEZONE": "out.data.userTimezone",
+    "EVENTS": "out.data.events"
+  },
+  "messages": {
+    "success": {
+      "en": "Retrieved calendar events.",
+      "de": "Kalendereinträge abgerufen."
+    }
+  }
+}

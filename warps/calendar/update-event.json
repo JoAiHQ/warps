@@ -1,0 +1,156 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Calendar: Update Event",
+  "title": {
+    "en": "Update calendar event",
+    "de": "Kalendereintrag aktualisieren"
+  },
+  "description": {
+    "en": "Update an existing event on the agent's connected calendar. Supply only the fields you want to change.",
+    "de": "Aktualisiert ein vorhandenes Ereignis im verbundenen Kalender. Nur die zu ändernden Felder angeben."
+  },
+  "bot": "Use this to reschedule, rename, relocate, or edit an event the user or agent previously created. Look up the externalId from previous list or create outputs.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Update event",
+        "de": "Ereignis aktualisieren"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/agents/{{JOAI_AGENT_UUID}}/calendar/events/{{externalId}}",
+        "method": "PATCH",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "Content-Type": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "External ID",
+          "as": "externalId",
+          "description": {
+            "en": "The event's external ID from the provider",
+            "de": "Externe Ereignis-ID des Anbieters"
+          },
+          "bot": "The provider's event ID (e.g. Google's event id, or agent-<uuid> for agent-created events).",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:externalId"
+        },
+        {
+          "name": "Title",
+          "as": "title",
+          "description": {
+            "en": "Updated title",
+            "de": "Neuer Titel"
+          },
+          "bot": "Updated title. Omit to keep the existing one.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "max": 500,
+          "position": "payload:title"
+        },
+        {
+          "name": "Description",
+          "as": "description",
+          "description": {
+            "en": "Updated description",
+            "de": "Neue Beschreibung"
+          },
+          "bot": "Updated description. Omit to keep existing.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "max": 5000,
+          "position": "payload:description"
+        },
+        {
+          "name": "Start",
+          "as": "startAt",
+          "description": {
+            "en": "Updated start datetime (ISO 8601)",
+            "de": "Neuer Startzeitpunkt (ISO 8601)"
+          },
+          "bot": "Updated start in ISO 8601 with timezone. Omit to keep existing.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:startAt"
+        },
+        {
+          "name": "End",
+          "as": "endAt",
+          "description": {
+            "en": "Updated end datetime (ISO 8601)",
+            "de": "Neuer Endzeitpunkt (ISO 8601)"
+          },
+          "bot": "Updated end in ISO 8601 with timezone. Omit to keep existing.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:endAt"
+        },
+        {
+          "name": "Timezone",
+          "as": "timezone",
+          "description": {
+            "en": "IANA timezone name",
+            "de": "IANA-Zeitzonenname"
+          },
+          "bot": "IANA timezone, e.g. 'Europe/Vienna'. Omit to keep existing.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "max": 100,
+          "position": "payload:timezone"
+        },
+        {
+          "name": "Location",
+          "as": "location",
+          "description": {
+            "en": "Updated location",
+            "de": "Neuer Ort"
+          },
+          "bot": "Updated location. Omit to keep existing.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "max": 500,
+          "position": "payload:location"
+        },
+        {
+          "name": "All day",
+          "as": "allDay",
+          "description": {
+            "en": "All-day flag",
+            "de": "Ganztägig"
+          },
+          "bot": "Whether this is an all-day event. Omit to keep existing.",
+          "type": "boolean",
+          "source": "field",
+          "required": false,
+          "position": "payload:allDay"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "EVENT_ID": "out.data.id",
+    "EVENT_EXTERNAL_ID": "out.data.externalId",
+    "EVENT_TITLE": "out.data.title",
+    "EVENT_START": "out.data.startAt"
+  },
+  "messages": {
+    "success": {
+      "en": "Updated \"{{EVENT_TITLE}}\".",
+      "de": "\"{{EVENT_TITLE}}\" aktualisiert."
+    }
+  }
+}
