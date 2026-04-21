@@ -9,7 +9,7 @@
     "en": "Send an email to a contact. Resolves or creates a conversation room for the recipient so replies are tracked.",
     "de": "Sendet eine E-Mail an einen Kontakt. Erstellt einen Gesprächsraum für den Empfänger, damit Antworten verfolgt werden."
   },
-  "bot": "Use this to send emails through the agent's email integration. The agent must have an email handle configured. Creates a persistent conversation room for the recipient — replies will route back to that room.",
+  "bot": "Use this to send emails through the agent's email integration. The agent must have an email handle configured. Creates a persistent conversation room for the recipient — replies will route back to that room. The pending message always exposes a mailto: fallback link so the user can send manually from their own mail client if preferred.",
   "vars": {
     "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
     "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
@@ -62,6 +62,19 @@
           "required": false
         },
         {
+          "name": "Subject",
+          "as": "subject",
+          "description": {
+            "en": "Email subject line",
+            "de": "E-Mail-Betreff"
+          },
+          "bot": "Concise, specific subject line.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "max": 500
+        },
+        {
           "name": "Message",
           "as": "message",
           "description": {
@@ -78,9 +91,14 @@
   ],
   "output": {
     "EMAIL_ROOM_ID": "out.data.roomId",
-    "EMAIL_MESSAGE_ID": "out.data.externalMessageId"
+    "EMAIL_MESSAGE_ID": "out.data.externalMessageId",
+    "EMAIL_MAILTO_URL": "transform:`mailto:${inputs.recipientId}${inputs.subject || inputs.message ? '?' : ''}${inputs.subject ? `subject=${encodeURIComponent(inputs.subject)}` : ''}${inputs.subject && inputs.message ? '&' : ''}${inputs.message ? `body=${encodeURIComponent(inputs.message)}` : ''}`"
   },
   "messages": {
+    "pending": {
+      "en": "Prefer to send it yourself? [Open in your mail app →]({{EMAIL_MAILTO_URL}})",
+      "de": "Lieber selbst senden? [In deiner Mail-App öffnen →]({{EMAIL_MAILTO_URL}})"
+    },
     "success": {
       "en": "Email sent successfully.",
       "de": "E-Mail erfolgreich gesendet."
