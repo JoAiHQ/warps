@@ -4,10 +4,446 @@
   "repo": "JoAiHQ/warps",
   "branch": "main",
   "network": "mainnet",
-  "commitSha": "fcf72a79f7a741ca666b6396016e3925ce810762",
-  "committedAt": "2026-04-21T22:09:29.720Z",
-  "generatedAt": "2026-04-21T22:09:32.009Z",
+  "commitSha": "17d9bd4e0d380257ea3182f6d30657701c03ea90",
+  "committedAt": "2026-04-22T10:57:30.103Z",
+  "generatedAt": "2026-04-22T10:57:32.142Z",
   "upserts": [
+    {
+      "key": "none:outreach-log-touch",
+      "identifier": "@outreach-log-touch",
+      "alias": "outreach-log-touch",
+      "chain": "none",
+      "hash": "37c5061bdeb982bd2462a17ec9202791441efb13e0656997da2604163b02f313",
+      "checksum": "37c5061bdeb982bd2462a17ec9202791441efb13e0656997da2604163b02f313",
+      "name": "Outreach: Log Touch",
+      "title": {
+        "en": "Log an outreach touch",
+        "de": "Outreach-Kontakt protokollieren"
+      },
+      "description": {
+        "en": "Record a single outreach interaction (WhatsApp, email, LinkedIn, post, call) on a CRM contact with structured meta so A/B tests and funnel analytics stay trackable.",
+        "de": "Eine Outreach-Interaktion (WhatsApp, E-Mail, LinkedIn, Post, Anruf) bei einem CRM-Kontakt mit strukturiertem Meta protokollieren — A/B-Tests und Funnel-Analytics bleiben auswertbar."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "544a479feac85c25767d8a8e1b4b974fbb4dd18f88d2df5762c9430e4abbeacb",
+        "slug": "outreach",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "Outreach",
+        "description": {
+          "en": "Proactive customer outreach — broadcast messages to contact segments or reach out to individuals.",
+          "de": "Proaktive Kundenansprache — Nachrichten an Kontaktsegmente senden oder einzelne Kontakte ansprechen.",
+          "fr": "Prospection client proactive — envoyez des messages a des segments de contacts ou contactez des individus.",
+          "es": "Alcance proactivo al cliente — envie mensajes a segmentos de contactos o llegue a individuos.",
+          "ro": "Contactare proactiva a clientilor — trimite mesaje catre segmente de contacte sau contacteaza persoane."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "Outreach: Log Touch",
+        "title": {
+          "en": "Log an outreach touch",
+          "de": "Outreach-Kontakt protokollieren"
+        },
+        "description": {
+          "en": "Record a single outreach interaction (WhatsApp, email, LinkedIn, post, call) on a CRM contact with structured meta so A/B tests and funnel analytics stay trackable.",
+          "de": "Eine Outreach-Interaktion (WhatsApp, E-Mail, LinkedIn, Post, Anruf) bei einem CRM-Kontakt mit strukturiertem Meta protokollieren — A/B-Tests und Funnel-Analytics bleiben auswertbar."
+        },
+        "bot": "Use this to record an outreach touch after sending a WhatsApp, email, LinkedIn message, post or call. Passes the template ID and variant used so reply-rate per template/variant stays computable later. Writes to the generic contact-activity endpoint with structured meta — no outreach-specific API code.",
+        "vars": {
+          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Log outreach touch",
+              "de": "Outreach-Kontakt protokollieren"
+            },
+            "destination": {
+              "url": "https://api.joai.ai/v1/contacts/{{contactId}}/activities",
+              "method": "POST",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Contact",
+                "as": "contactId",
+                "description": {
+                  "en": "The contact who was reached out to",
+                  "de": "Der kontaktierte Kontakt"
+                },
+                "bot": "The hashid of the CRM contact the outreach was sent to.",
+                "type": "string",
+                "position": "url:contactId",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Type",
+                "as": "type",
+                "type": "string",
+                "source": "hidden",
+                "default": "custom"
+              },
+              {
+                "name": "Description",
+                "as": "description",
+                "description": {
+                  "en": "Optional note about this touchpoint",
+                  "de": "Optionale Notiz zu diesem Kontakt"
+                },
+                "bot": "Short free-text context, e.g. the actual message sent or the agent's observation.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Outreach Flag",
+                "as": "outreach",
+                "type": "boolean",
+                "source": "hidden",
+                "default": "true",
+                "position": "payload:meta"
+              },
+              {
+                "name": "Channel",
+                "as": "channel",
+                "description": {
+                  "en": "Which channel was used",
+                  "de": "Welcher Kanal wurde genutzt"
+                },
+                "bot": "One of: whatsapp, sms, email, linkedin, post, call.",
+                "type": "string",
+                "source": "field",
+                "required": true,
+                "position": "payload:meta"
+              },
+              {
+                "name": "Template ID",
+                "as": "templateId",
+                "description": {
+                  "en": "Identifier of the template used",
+                  "de": "Kennung des verwendeten Templates"
+                },
+                "bot": "Stable slug like 'handwerk-seq-a-m1' or 'kanzlei-linkedin-connect'. Used to aggregate reply rates per template.",
+                "type": "string",
+                "source": "field",
+                "required": true,
+                "position": "payload:meta"
+              },
+              {
+                "name": "Variant",
+                "as": "variant",
+                "description": {
+                  "en": "A/B variant (optional)",
+                  "de": "A/B-Variante (optional)"
+                },
+                "bot": "Single token like 'a' or 'b'. Omit for templates without variants.",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "position": "payload:meta"
+              },
+              {
+                "name": "Sequence Step",
+                "as": "sequenceStep",
+                "description": {
+                  "en": "Which step in the sequence (1 = first touch, 2 = follow-up, …)",
+                  "de": "Welcher Schritt in der Sequenz (1 = Erstkontakt, 2 = Follow-up, …)"
+                },
+                "bot": "Integer 1..20. Omit for single-touch templates (defaults to 1 on the analytics side).",
+                "type": "uint16",
+                "source": "field",
+                "required": false,
+                "position": "payload:meta"
+              }
+            ]
+          }
+        ],
+        "messages": {
+          "success": {
+            "en": "Outreach touch logged.",
+            "de": "Outreach-Kontakt protokolliert."
+          }
+        }
+      },
+      "extras": {
+        "keywords": {
+          "en": [
+            "log outreach",
+            "track outreach touch",
+            "a/b test outreach",
+            "record message sent",
+            "outreach analytics",
+            "template tracking"
+          ],
+          "de": [
+            "Outreach protokollieren",
+            "Outreach-Kontakt tracken",
+            "A/B-Test Outreach",
+            "Nachricht protokollieren",
+            "Outreach-Analytics",
+            "Template-Tracking"
+          ]
+        },
+        "useCases": {
+          "en": [
+            "Log a WhatsApp outreach touch with template + variant for later reply-rate analysis",
+            "Record a cold LinkedIn connect-note touch against a contact",
+            "Track which sequence step a follow-up message represents"
+          ],
+          "de": [
+            "Einen WhatsApp-Outreach mit Template + Variante protokollieren für spätere Response-Rate-Analyse",
+            "Einen kalten LinkedIn-Connect-Note-Kontakt bei einem Kontakt protokollieren",
+            "Nachvollziehen, welchen Sequenz-Schritt eine Follow-up-Nachricht darstellt"
+          ]
+        },
+        "category": "communication",
+        "faq": {
+          "en": [
+            {
+              "question": "Why not use contact-activity-log?",
+              "answer": "log-touch enforces a structured meta payload (channel, templateId, variant, sequenceStep) so A/B tests and funnel analytics stay consistent. The generic activity log is free-form and not queryable the same way."
+            },
+            {
+              "question": "What templates IDs should I use?",
+              "answer": "Stable slugs that identify your outreach message, e.g. handwerk-seq-a-m1 or kanzlei-linkedin-connect. The outreach app keeps template definitions in the OPS doc; the touch log just references the slug."
+            }
+          ],
+          "de": [
+            {
+              "question": "Warum nicht contact-activity-log verwenden?",
+              "answer": "log-touch erzwingt ein strukturiertes Meta-Payload (channel, templateId, variant, sequenceStep), damit A/B-Tests und Funnel-Analytics konsistent bleiben. Der generische Activity-Log ist freitextlich und nicht gleich auswertbar."
+            },
+            {
+              "question": "Welche Template-IDs soll ich verwenden?",
+              "answer": "Stabile Slugs die deine Outreach-Nachricht identifizieren, z.B. handwerk-seq-a-m1 oder kanzlei-linkedin-connect. Die Outreach-App hält Template-Definitionen im OPS-Doc; der Touch-Log verweist nur auf den Slug."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "key": "none:outreach-stats",
+      "identifier": "@outreach-stats",
+      "alias": "outreach-stats",
+      "chain": "none",
+      "hash": "0ce52103a88f1114cf3d3d3326d15d2f64324c3ab5d0f004ef159d5be3613b4f",
+      "checksum": "0ce52103a88f1114cf3d3d3326d15d2f64324c3ab5d0f004ef159d5be3613b4f",
+      "name": "Outreach: Stats",
+      "title": {
+        "en": "Outreach stats",
+        "de": "Outreach-Auswertung"
+      },
+      "description": {
+        "en": "Return outreach touches filtered by template, variant, channel and date range. Powers reply-rate and A/B comparison views.",
+        "de": "Outreach-Kontakte nach Template, Variante, Kanal und Zeitraum filtern. Basis für Response-Rate- und A/B-Vergleichs-Auswertungen."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "544a479feac85c25767d8a8e1b4b974fbb4dd18f88d2df5762c9430e4abbeacb",
+        "slug": "outreach",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "Outreach",
+        "description": {
+          "en": "Proactive customer outreach — broadcast messages to contact segments or reach out to individuals.",
+          "de": "Proaktive Kundenansprache — Nachrichten an Kontaktsegmente senden oder einzelne Kontakte ansprechen.",
+          "fr": "Prospection client proactive — envoyez des messages a des segments de contacts ou contactez des individus.",
+          "es": "Alcance proactivo al cliente — envie mensajes a segmentos de contactos o llegue a individuos.",
+          "ro": "Contactare proactiva a clientilor — trimite mesaje catre segmente de contacte sau contacteaza persoane."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "Outreach: Stats",
+        "title": {
+          "en": "Outreach stats",
+          "de": "Outreach-Auswertung"
+        },
+        "description": {
+          "en": "Return outreach touches filtered by template, variant, channel and date range. Powers reply-rate and A/B comparison views.",
+          "de": "Outreach-Kontakte nach Template, Variante, Kanal und Zeitraum filtern. Basis für Response-Rate- und A/B-Vergleichs-Auswertungen."
+        },
+        "bot": "Use this to pull outreach-touch activities for analytics. Filter by templateId to compare variants, by channel to compare WhatsApp vs email vs LinkedIn, or by sinceDate for windowed analysis.",
+        "vars": {
+          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "auto": true,
+            "label": {
+              "en": "Load outreach touches",
+              "de": "Outreach-Kontakte laden"
+            },
+            "destination": {
+              "url": "https://api.joai.ai/v1/activities?meta[outreach]=true&meta[templateId]={{templateId}}&meta[variant]={{variant}}&meta[channel]={{channel}}&sinceDate={{sinceDate}}&perPage={{perPage}}",
+              "method": "GET",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Template ID",
+                "as": "templateId",
+                "description": {
+                  "en": "Filter by template (optional)",
+                  "de": "Nach Template filtern (optional)"
+                },
+                "bot": "Stable slug like 'handwerk-seq-a-m1'. Omit to include all templates.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Variant",
+                "as": "variant",
+                "description": {
+                  "en": "Filter by A/B variant (optional)",
+                  "de": "Nach A/B-Variante filtern (optional)"
+                },
+                "bot": "Single token like 'a'. Omit to include all variants.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Channel",
+                "as": "channel",
+                "description": {
+                  "en": "Filter by channel (optional)",
+                  "de": "Nach Kanal filtern (optional)"
+                },
+                "bot": "One of whatsapp, sms, email, linkedin, post, call. Omit to include all channels.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Since",
+                "as": "sinceDate",
+                "description": {
+                  "en": "Only include touches after this date (ISO 8601, optional)",
+                  "de": "Nur Kontakte nach diesem Datum (ISO 8601, optional)"
+                },
+                "bot": "ISO date like '2026-04-01'. Omit for full history.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Per Page",
+                "as": "perPage",
+                "description": {
+                  "en": "Page size (default 50, max 500)",
+                  "de": "Seitengröße (Standard 50, Max 500)"
+                },
+                "bot": "Integer. Use 500 for full-sweep analytics.",
+                "type": "uint16",
+                "source": "field",
+                "required": false,
+                "value": "200"
+              }
+            ]
+          }
+        ],
+        "messages": {
+          "success": {
+            "en": "Outreach touches loaded.",
+            "de": "Outreach-Kontakte geladen."
+          }
+        }
+      },
+      "extras": {
+        "keywords": {
+          "en": [
+            "outreach stats",
+            "reply rate",
+            "a/b test results",
+            "outreach analytics",
+            "template performance",
+            "funnel metrics"
+          ],
+          "de": [
+            "Outreach-Statistik",
+            "Response-Rate",
+            "A/B-Test-Ergebnisse",
+            "Outreach-Analytics",
+            "Template-Performance",
+            "Funnel-Metriken"
+          ]
+        },
+        "useCases": {
+          "en": [
+            "Compare reply rates between variant A and B of a WhatsApp opener",
+            "See how many handwerk-seq-a-m1 touches went out in the last 30 days",
+            "Pull all lawyer-post touches for an end-of-quarter review"
+          ],
+          "de": [
+            "Response-Rates zwischen Variante A und B eines WhatsApp-Openers vergleichen",
+            "Sehen, wie viele handwerk-seq-a-m1-Kontakte in den letzten 30 Tagen rausgingen",
+            "Alle Anwalts-Post-Kontakte für ein Quartalsreview abrufen"
+          ]
+        },
+        "category": "communication",
+        "faq": {
+          "en": [
+            {
+              "question": "How is reply rate calculated?",
+              "answer": "This warp returns the raw list of outreach touches. Aggregation (sent count, reply count, rate) happens in the outreach dashboard or the agent's analysis step — the warp is the data source."
+            },
+            {
+              "question": "Can I filter by channel AND template?",
+              "answer": "Yes — all filters combine. E.g. channel=whatsapp + templateId=handwerk-seq-a-m1 returns only WhatsApp touches that used that specific template."
+            }
+          ],
+          "de": [
+            {
+              "question": "Wie wird die Response-Rate berechnet?",
+              "answer": "Der Warp liefert die Rohliste der Outreach-Kontakte. Aggregation (Sent-Count, Reply-Count, Rate) passiert im Outreach-Dashboard oder im Analyse-Schritt des Agenten — der Warp ist die Datenquelle."
+            },
+            {
+              "question": "Kann ich nach Channel UND Template filtern?",
+              "answer": "Ja — alle Filter kombinieren. Z.B. channel=whatsapp + templateId=handwerk-seq-a-m1 liefert nur WhatsApp-Kontakte die dieses Template nutzten."
+            }
+          ]
+        }
+      }
+    },
     {
       "key": "none:poll-results",
       "identifier": "@poll-results",
