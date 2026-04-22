@@ -86,4 +86,72 @@ export const meta: Record<string, WarpExtras> = {
       ],
     },
   },
+
+  'log-touch': {
+    keywords: {
+      en: ['log outreach', 'track outreach touch', 'a/b test outreach', 'record message sent', 'outreach analytics', 'template tracking'],
+      de: ['Outreach protokollieren', 'Outreach-Kontakt tracken', 'A/B-Test Outreach', 'Nachricht protokollieren', 'Outreach-Analytics', 'Template-Tracking'],
+    },
+    useCases: {
+      en: ['Log a WhatsApp outreach touch with template + variant for later reply-rate analysis', 'Record a cold LinkedIn connect-note touch against a contact', 'Track which sequence step a follow-up message represents'],
+      de: ['Einen WhatsApp-Outreach mit Template + Variante protokollieren für spätere Response-Rate-Analyse', 'Einen kalten LinkedIn-Connect-Note-Kontakt bei einem Kontakt protokollieren', 'Nachvollziehen, welchen Sequenz-Schritt eine Follow-up-Nachricht darstellt'],
+    },
+    category: 'communication',
+    faq: {
+      en: [
+        {
+          question: 'Why not use contact-activity-log?',
+          answer: 'log-touch enforces a structured meta payload (channel, templateId, variant, sequenceStep) so A/B tests and funnel analytics stay consistent. The generic activity log is free-form and not queryable the same way.',
+        },
+        {
+          question: 'What templates IDs should I use?',
+          answer: 'Stable slugs that identify your outreach message, e.g. handwerk-seq-a-m1 or kanzlei-linkedin-connect. The outreach app keeps template definitions in the OPS doc; the touch log just references the slug.',
+        },
+      ],
+      de: [
+        {
+          question: 'Warum nicht contact-activity-log verwenden?',
+          answer: 'log-touch erzwingt ein strukturiertes Meta-Payload (channel, templateId, variant, sequenceStep), damit A/B-Tests und Funnel-Analytics konsistent bleiben. Der generische Activity-Log ist freitextlich und nicht gleich auswertbar.',
+        },
+        {
+          question: 'Welche Template-IDs soll ich verwenden?',
+          answer: 'Stabile Slugs die deine Outreach-Nachricht identifizieren, z.B. handwerk-seq-a-m1 oder kanzlei-linkedin-connect. Die Outreach-App hält Template-Definitionen im OPS-Doc; der Touch-Log verweist nur auf den Slug.',
+        },
+      ],
+    },
+  },
+
+  'stats': {
+    keywords: {
+      en: ['outreach stats', 'reply rate', 'a/b test results', 'outreach analytics', 'template performance', 'funnel metrics'],
+      de: ['Outreach-Statistik', 'Response-Rate', 'A/B-Test-Ergebnisse', 'Outreach-Analytics', 'Template-Performance', 'Funnel-Metriken'],
+    },
+    useCases: {
+      en: ['Compare reply rates between variant A and B of a WhatsApp opener', 'See how many handwerk-seq-a-m1 touches went out in the last 30 days', 'Pull all lawyer-post touches for an end-of-quarter review'],
+      de: ['Response-Rates zwischen Variante A und B eines WhatsApp-Openers vergleichen', 'Sehen, wie viele handwerk-seq-a-m1-Kontakte in den letzten 30 Tagen rausgingen', 'Alle Anwalts-Post-Kontakte für ein Quartalsreview abrufen'],
+    },
+    category: 'communication',
+    faq: {
+      en: [
+        {
+          question: 'How is reply rate calculated?',
+          answer: 'This warp returns the raw list of outreach touches. Aggregation (sent count, reply count, rate) happens in the outreach dashboard or the agent\'s analysis step — the warp is the data source.',
+        },
+        {
+          question: 'Can I filter by channel AND template?',
+          answer: 'Yes — all filters combine. E.g. channel=whatsapp + templateId=handwerk-seq-a-m1 returns only WhatsApp touches that used that specific template.',
+        },
+      ],
+      de: [
+        {
+          question: 'Wie wird die Response-Rate berechnet?',
+          answer: 'Der Warp liefert die Rohliste der Outreach-Kontakte. Aggregation (Sent-Count, Reply-Count, Rate) passiert im Outreach-Dashboard oder im Analyse-Schritt des Agenten — der Warp ist die Datenquelle.',
+        },
+        {
+          question: 'Kann ich nach Channel UND Template filtern?',
+          answer: 'Ja — alle Filter kombinieren. Z.B. channel=whatsapp + templateId=handwerk-seq-a-m1 liefert nur WhatsApp-Kontakte die dieses Template nutzten.',
+        },
+      ],
+    },
+  },
 }
