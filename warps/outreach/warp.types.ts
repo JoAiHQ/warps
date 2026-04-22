@@ -16,6 +16,17 @@ export type OutreachContactMessageData = {
   CONTACT_EMAIL: any;
 };
 
+export type OutreachLogTouchInputs = {
+  contactId: string;
+  type: string;
+  description: string;
+  outreach: boolean;
+  channel: string;
+  templateId: string;
+  variant: string;
+  sequenceStep: string;
+};
+
 export type OutreachSegmentScanInputs = {
   tag: string;
   minInactiveDays: string;
@@ -23,4 +34,12 @@ export type OutreachSegmentScanInputs = {
 
 export type OutreachSegmentScanData = {
   _DATA: any;
+};
+
+export type OutreachStatsInputs = {
+  templateId: string;
+  variant: string;
+  channel: string;
+  sinceDate: string;
+  perPage: string;
 };
