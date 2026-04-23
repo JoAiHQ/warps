@@ -6,6 +6,7 @@ import {
   existsSync,
   unlinkSync,
   readdirSync,
+  statSync,
 } from 'fs'
 import { join, dirname, resolve } from 'path'
 import { fileURLToPath } from 'url'
@@ -141,11 +142,19 @@ async function buildApp(targetAppName) {
     const cssPath = join(distDir, outfile.replace(/\.js$/, '.css'))
     const htmlPath = join(appDir, htmlFilename)
 
-    // Remove old versioned artifacts (including the legacy chatapp.dist.html)
-    for (const file of readdirSync(appDir)) {
-      if (/^chatapp(\..+)?\.dist\.html$/.test(file) && file !== htmlFilename) {
-        unlinkSync(join(appDir, file))
-      }
+    const KEEP_COUNT = 5
+    const existingDistFiles = readdirSync(appDir)
+      .filter(f => /^chatapp(\..+)?\.dist\.html$/.test(f))
+      .map(f => ({ name: f, mtime: statSync(join(appDir, f)).mtime }))
+      .sort((a, b) => b.mtime - a.mtime)
+
+    const toDelete = existingDistFiles
+      .filter(f => f.name !== htmlFilename)
+      .slice(Math.max(0, KEEP_COUNT - (existingDistFiles.some(f => f.name === htmlFilename) ? 1 : 0)))
+
+    for (const file of toDelete) {
+      unlinkSync(join(appDir, file.name))
+      console.log(`  Removed old artifact: ${file.name}`)
     }
 
     const jsContent = readFileSync(jsPath, 'utf-8')
