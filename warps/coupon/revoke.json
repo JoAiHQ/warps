@@ -9,17 +9,17 @@
     "ro": "Revocă un cupon"
   },
   "description": {
-    "en": "Permanently deactivate a coupon you created. Customers will no longer be able to redeem it.",
-    "de": "Einen von dir erstellten Gutschein dauerhaft deaktivieren. Kunden können ihn danach nicht mehr einlösen.",
-    "fr": "Désactivez définitivement un coupon que vous avez créé. Les clients ne pourront plus l'utiliser.",
-    "es": "Desactiva permanentemente un cupón que creaste. Los clientes ya no podrán canjearlo.",
-    "ro": "Dezactivează definitiv un cupon pe care l-ai creat. Clienții nu îl mai pot folosi după aceea."
+    "en": "Permanently deactivate a coupon. Remaining SFTs are burned and customers can no longer claim or redeem it.",
+    "de": "Einen Gutschein dauerhaft deaktivieren. Verbleibende SFTs werden verbrannt und Kunden können ihn nicht mehr beanspruchen oder einlösen.",
+    "fr": "Désactivez définitivement un coupon. Les SFT restants sont brûlés et les clients ne peuvent plus le réclamer ni l'utiliser.",
+    "es": "Desactiva permanentemente un cupón. Los SFT restantes se queman y los clientes ya no pueden reclamarlo ni canjearlo.",
+    "ro": "Dezactivează definitiv un cupon. SFT-urile rămase sunt arse și clienții nu îl mai pot revendica sau folosi."
   },
-  "bot": "Revokes an on-chain coupon by code. Only the original creator can revoke. Ask the user for the coupon code to revoke.",
+  "bot": "Revokes an on-chain coupon by ID. Only the original creator can revoke. All remaining SFTs in the contract are burned.",
   "chain": "multiversx",
   "vars": {
     "SC_ADDRESS": "INJECT:COUPON_SC_ADDRESS",
-    "CODE": "query:code"
+    "COUPON_ID": "query:couponId"
   },
   "actions": [
     {
@@ -37,35 +37,32 @@
       "abi": "INJECT:contract/output/coupon.abi.json",
       "inputs": [
         {
-          "name": "Coupon Code",
-          "as": "code",
+          "name": "Coupon ID",
+          "as": "couponId",
           "description": {
-            "en": "The coupon code to revoke",
-            "de": "Der zu widerrufende Gutscheincode",
-            "fr": "Le code promo à révoquer",
-            "es": "El código del cupón a revocar",
-            "ro": "Codul cuponului de revocat"
+            "en": "The coupon ID to revoke",
+            "de": "Die Gutschein-ID zum Widerrufen",
+            "fr": "L'ID du coupon à révoquer",
+            "es": "El ID del cupón a revocar",
+            "ro": "ID-ul cuponului de revocat"
           },
-          "bot": "The exact coupon code to revoke. This action is irreversible.",
-          "type": "string",
+          "bot": "The on-chain coupon ID to revoke. This action is irreversible.",
+          "type": "uint64",
           "position": "arg:1",
           "source": "field",
-          "default": "{{CODE}}",
-          "required": true,
-          "min": 1,
-          "max": 32
+          "default": "{{COUPON_ID}}",
+          "required": true
         }
       ]
     }
   ],
   "messages": {
     "success": {
-      "en": "Coupon revoked. It can no longer be redeemed by anyone.",
-      "de": "Gutschein widerrufen. Er kann von niemandem mehr eingelöst werden.",
-      "fr": "Coupon révoqué. Il ne peut plus être utilisé par personne.",
-      "es": "Cupón revocado. Ya nadie puede canjearlo.",
-      "ro": "Cupon revocat. Nu mai poate fi folosit de nimeni."
+      "en": "Coupon revoked. It can no longer be claimed or redeemed.",
+      "de": "Gutschein widerrufen. Er kann nicht mehr beansprucht oder eingelöst werden.",
+      "fr": "Coupon révoqué. Il ne peut plus être réclamé ni utilisé.",
+      "es": "Cupón revocado. Ya no se puede reclamar ni canjear.",
+      "ro": "Cupon revocat. Nu mai poate fi revendicat sau folosit."
     }
-  },
-  "next": "@pass-void?reference={{code}}&source=coupon"
+  }
 }

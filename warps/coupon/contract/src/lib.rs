@@ -14,7 +14,10 @@ pub trait CouponContract:
     config::ConfigModule + events::EventsModule + coupon::CouponModule
 {
     #[init]
-    fn init(&self) {}
+    fn init(&self) {
+        self.next_collection_id().set(1u64);
+        self.next_coupon_id().set(1u64);
+    }
 
     #[upgrade]
     fn upgrade(&self) {}

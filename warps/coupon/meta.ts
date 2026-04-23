@@ -1,6 +1,37 @@
 import type { WarpExtras } from '../types'
 
 export const meta: Record<string, WarpExtras> = {
+  'create-collection': {
+    keywords: {
+      en: ['collection', 'sft', 'create', 'coupon', 'nft', 'blockchain', 'esdt', 'on-chain'],
+      de: ['kollektion', 'sft', 'erstellen', 'gutschein', 'nft', 'blockchain', 'esdt', 'on-chain'],
+      fr: ['collection', 'sft', 'créer', 'coupon', 'nft', 'blockchain', 'esdt', 'on-chain'],
+      es: ['colección', 'sft', 'crear', 'cupón', 'nft', 'blockchain', 'esdt', 'on-chain'],
+      ro: ['colecție', 'sft', 'creează', 'cupon', 'nft', 'blockchain', 'esdt', 'on-chain'],
+    },
+    useCases: {
+      en: [
+        'Create an SFT collection for your brand coupons',
+        'Set up an on-chain coupon collection before issuing discount codes',
+        'Organize coupons by campaign with separate SFT collections',
+      ],
+      de: [
+        'SFT-Kollektion für deine Marken-Gutscheine erstellen',
+        'On-Chain-Gutschein-Kollektion einrichten vor der Ausgabe von Rabattcodes',
+        'Gutscheine nach Kampagne mit separaten SFT-Kollektionen organisieren',
+      ],
+    },
+    category: 'commerce',
+    faq: {
+      en: [
+        { question: 'What is a coupon collection?', answer: 'An SFT collection on MultiversX that holds all your coupon tokens. Create one per brand or campaign.' },
+        { question: 'Does it cost anything?', answer: 'Yes — creating a collection requires 0.05 EGLD for the ESDT issuance fee on MultiversX.' },
+      ],
+      de: [
+        { question: 'Was ist eine Gutschein-Kollektion?', answer: 'Eine SFT-Kollektion auf MultiversX, die alle deine Gutschein-Token hält. Erstelle eine pro Marke oder Kampagne.' },
+      ],
+    },
+  },
   'coupon-create': {
     keywords: {
       en: ['coupon', 'discount', 'promo', 'code', 'create', 'on-chain', 'commerce', 'sale', 'ai', 'ai agent', 'ai-powered', 'automated', 'smart'],
@@ -78,6 +109,36 @@ export const meta: Record<string, WarpExtras> = {
           question: 'Kann ich einen Gutschein widerrufen?',
           answer: 'Ja — du kannst jeden aktiven Gutschein, den du erstellt hast, jederzeit widerrufen. Er wird sofort für alle zukünftigen Einlösungen ungültig.',
         },
+      ],
+    },
+  },
+  'coupon-claim': {
+    keywords: {
+      en: ['claim', 'coupon', 'sft', 'wallet', 'receive', 'get', 'on-chain'],
+      de: ['beanspruchen', 'gutschein', 'sft', 'wallet', 'erhalten', 'on-chain'],
+      fr: ['réclamer', 'coupon', 'sft', 'wallet', 'recevoir', 'on-chain'],
+      es: ['reclamar', 'cupón', 'sft', 'wallet', 'recibir', 'on-chain'],
+      ro: ['revendică', 'cupon', 'sft', 'wallet', 'primește', 'on-chain'],
+    },
+    useCases: {
+      en: [
+        'Claim a discount coupon SFT to your wallet',
+        'Receive an on-chain coupon before redeeming it',
+        'Hold a coupon token until ready to use at checkout',
+      ],
+      de: [
+        'Gutschein-SFT in deine Wallet beanspruchen',
+        'On-Chain-Gutschein erhalten vor der Einlösung',
+        'Gutschein-Token halten bis zur Verwendung beim Checkout',
+      ],
+    },
+    category: 'commerce',
+    faq: {
+      en: [
+        { question: 'What happens when I claim?', answer: 'The coupon SFT is sent to your wallet. You hold it until you redeem it at checkout.' },
+      ],
+      de: [
+        { question: 'Was passiert beim Beanspruchen?', answer: 'Das Gutschein-SFT wird in deine Wallet gesendet. Du behältst es bis zur Einlösung beim Checkout.' },
       ],
     },
   },

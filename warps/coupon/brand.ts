@@ -33,11 +33,11 @@ export const brand = async (config: WarpClientConfig): Promise<WarpbaseBrand> =>
     auth: false,
     indexPath: '/',
     routes: [
-      { path: '/', warp: '@coupon-redeem', label: { en: 'Redeem', de: 'Einlösen', fr: 'Utiliser', es: 'Canjear', ro: 'Folosește' }, nav: true },
-      { path: '/create', warp: '@coupon-create', label: { en: 'Create', de: 'Erstellen', fr: 'Créer', es: 'Crear', ro: 'Creează' }, nav: true },
-      { path: '/my-coupons', warp: '@coupon-list', label: { en: 'My Coupons', de: 'Meine Gutscheine', fr: 'Mes coupons', es: 'Mis cupones', ro: 'Cupoanele mele' }, nav: true },
-      { path: '/view', warp: '@coupon-view', label: { en: 'View Coupon', de: 'Gutschein ansehen', fr: 'Voir le coupon', es: 'Ver cupón', ro: 'Vezi cuponul' }, nav: false },
-      { path: '/revoke', warp: '@coupon-revoke', label: { en: 'Revoke', de: 'Widerrufen', fr: 'Révoquer', es: 'Revocar', ro: 'Revocă' }, nav: false },
+      { path: '/', warp: '@coupon-browse', label: { en: 'Coupons', de: 'Gutscheine' }, nav: true },
+      { path: '/redeem', warp: '@coupon-redeem-app', label: { en: 'Redeem', de: 'Einlösen' }, nav: true },
+      { path: '/create', warp: '@coupon-create-app', label: { en: 'Create', de: 'Erstellen' }, nav: true },
+      { path: '/collection', warp: '@coupon-create-collection-app', label: { en: 'New Collection', de: 'Neue Kollektion' }, nav: false },
+      { path: '/manage', warp: '@coupon-manage-app', label: { en: 'Manage', de: 'Verwalten' }, nav: true },
     ],
   },
 })
