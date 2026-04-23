@@ -4,25 +4,25 @@
   "repo": "JoAiHQ/warps",
   "branch": "dev",
   "network": "devnet",
-  "commitSha": "34dda89a12c66bd77414d7efd59acc1fa0cfb66a",
-  "committedAt": "2026-04-22T10:27:46.922Z",
-  "generatedAt": "2026-04-22T10:27:49.322Z",
+  "commitSha": "7f12e0dcf66c7b6e391cc29aebbed14d37d123a1",
+  "committedAt": "2026-04-23T10:30:52.412Z",
+  "generatedAt": "2026-04-23T10:30:54.524Z",
   "upserts": [
     {
-      "key": "none:outreach-log-touch",
-      "identifier": "@outreach-log-touch",
-      "alias": "outreach-log-touch",
+      "key": "none:appointment-book",
+      "identifier": "@appointment-book",
+      "alias": "appointment-book",
       "chain": "none",
-      "hash": "9ac6321fdce3587df9b2d83b702f81952a2854145f9ea760a86bb7b056c19906",
-      "checksum": "9ac6321fdce3587df9b2d83b702f81952a2854145f9ea760a86bb7b056c19906",
-      "name": "Outreach: Log Touch",
+      "hash": "26c00a7c3ea35b2231412ebf99770d04392386d8d8ea4fec05bfe8b0ed611837",
+      "checksum": "26c00a7c3ea35b2231412ebf99770d04392386d8d8ea4fec05bfe8b0ed611837",
+      "name": "Appointments: Book",
       "title": {
-        "en": "Log an outreach touch",
-        "de": "Outreach-Kontakt protokollieren"
+        "en": "Book an Appointment",
+        "de": "Termin buchen"
       },
       "description": {
-        "en": "Record a single outreach interaction (WhatsApp, email, LinkedIn, post, call) on a CRM contact with structured meta so A/B tests and funnel analytics stay trackable.",
-        "de": "Eine Outreach-Interaktion (WhatsApp, E-Mail, LinkedIn, Post, Anruf) bei einem CRM-Kontakt mit strukturiertem Meta protokollieren — A/B-Tests und Funnel-Analytics bleiben auswertbar."
+        "en": "Browse available time slots and book an appointment.",
+        "de": "Verfügbare Zeitfenster ansehen und Termin buchen."
       },
       "preview": null,
       "creator": "github:JoAiHQ/warps",
@@ -32,17 +32,17 @@
       "primaryAddress": null,
       "primaryFunc": null,
       "brand": {
-        "hash": "544a479feac85c25767d8a8e1b4b974fbb4dd18f88d2df5762c9430e4abbeacb",
-        "slug": "outreach",
+        "hash": "873defa13190da1a0124161ec46673a00290697aaea9851a2b8fc027482adac9",
+        "slug": "appointment",
         "active": true,
         "protocol": "brand:0.2.0",
-        "name": "Outreach",
+        "name": "Appointment",
         "description": {
-          "en": "Proactive customer outreach — broadcast messages to contact segments or reach out to individuals.",
-          "de": "Proaktive Kundenansprache — Nachrichten an Kontaktsegmente senden oder einzelne Kontakte ansprechen.",
-          "fr": "Prospection client proactive — envoyez des messages a des segments de contacts ou contactez des individus.",
-          "es": "Alcance proactivo al cliente — envie mensajes a segmentos de contactos o llegue a individuos.",
-          "ro": "Contactare proactiva a clientilor — trimite mesaje catre segmente de contacte sau contacteaza persoane."
+          "en": "Appointment booking and intake flows for service businesses.",
+          "de": "Terminbuchung und Intake-Abläufe für Dienstleistungsunternehmen.",
+          "fr": "Prise de rendez-vous et parcours de reservation pour les entreprises de services.",
+          "es": "Reservas de citas y flujos de atencion para negocios de servicios.",
+          "ro": "Programari si fluxuri de preluare pentru afaceri de servicii."
         },
         "logo": {
           "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
@@ -53,16 +53,15 @@
       },
       "warp": {
         "protocol": "warp:3.0.0",
-        "name": "Outreach: Log Touch",
+        "name": "Appointments: Book",
         "title": {
-          "en": "Log an outreach touch",
-          "de": "Outreach-Kontakt protokollieren"
+          "en": "Book an Appointment",
+          "de": "Termin buchen"
         },
         "description": {
-          "en": "Record a single outreach interaction (WhatsApp, email, LinkedIn, post, call) on a CRM contact with structured meta so A/B tests and funnel analytics stay trackable.",
-          "de": "Eine Outreach-Interaktion (WhatsApp, E-Mail, LinkedIn, Post, Anruf) bei einem CRM-Kontakt mit strukturiertem Meta protokollieren — A/B-Tests und Funnel-Analytics bleiben auswertbar."
+          "en": "Browse available time slots and book an appointment.",
+          "de": "Verfügbare Zeitfenster ansehen und Termin buchen."
         },
-        "bot": "Use this to record an outreach touch after sending a WhatsApp, email, LinkedIn message, post or call. Passes the template ID and variant used so reply-rate per template/variant stays computable later. Writes to the generic contact-activity endpoint with structured meta — no outreach-specific API code.",
         "vars": {
           "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
           "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
@@ -70,173 +69,78 @@
         "actions": [
           {
             "type": "collect",
+            "auto": true,
             "label": {
-              "en": "Log outreach touch",
-              "de": "Outreach-Kontakt protokollieren"
+              "en": "Load",
+              "de": "Laden"
             },
+            "inputs": [],
             "destination": {
-              "url": "https://devnet-api.joai.ai/v1/contacts/{{contactId}}/activities",
-              "method": "POST",
+              "url": "https://devnet-api.joai.ai/v1/agents/{{JOAI_AGENT_UUID}}/appointments/policy",
+              "method": "GET",
               "headers": {
-                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
-                "Content-Type": "application/json",
-                "Accept": "application/json"
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
               }
             },
-            "inputs": [
-              {
-                "name": "Contact",
-                "as": "contactId",
-                "description": {
-                  "en": "The contact who was reached out to",
-                  "de": "Der kontaktierte Kontakt"
-                },
-                "bot": "The hashid of the CRM contact the outreach was sent to.",
-                "type": "string",
-                "position": "url:contactId",
-                "source": "field",
-                "required": true
-              },
-              {
-                "name": "Type",
-                "as": "type",
-                "type": "string",
-                "source": "hidden",
-                "default": "custom"
-              },
-              {
-                "name": "Description",
-                "as": "description",
-                "description": {
-                  "en": "Optional note about this touchpoint",
-                  "de": "Optionale Notiz zu diesem Kontakt"
-                },
-                "bot": "Short free-text context, e.g. the actual message sent or the agent's observation.",
-                "type": "string",
-                "source": "field",
-                "required": false
-              },
-              {
-                "name": "Outreach Flag",
-                "as": "outreach",
-                "type": "boolean",
-                "source": "hidden",
-                "default": "true",
-                "position": "payload:meta"
-              },
-              {
-                "name": "Channel",
-                "as": "channel",
-                "description": {
-                  "en": "Which channel was used",
-                  "de": "Welcher Kanal wurde genutzt"
-                },
-                "bot": "One of: whatsapp, sms, email, linkedin, post, call.",
-                "type": "string",
-                "source": "field",
-                "required": true,
-                "position": "payload:meta"
-              },
-              {
-                "name": "Template ID",
-                "as": "templateId",
-                "description": {
-                  "en": "Identifier of the template used",
-                  "de": "Kennung des verwendeten Templates"
-                },
-                "bot": "Stable slug like 'handwerk-seq-a-m1' or 'kanzlei-linkedin-connect'. Used to aggregate reply rates per template.",
-                "type": "string",
-                "source": "field",
-                "required": true,
-                "position": "payload:meta"
-              },
-              {
-                "name": "Variant",
-                "as": "variant",
-                "description": {
-                  "en": "A/B variant (optional)",
-                  "de": "A/B-Variante (optional)"
-                },
-                "bot": "Single token like 'a' or 'b'. Omit for templates without variants.",
-                "type": "string",
-                "source": "field",
-                "required": false,
-                "position": "payload:meta"
-              },
-              {
-                "name": "Sequence Step",
-                "as": "sequenceStep",
-                "description": {
-                  "en": "Which step in the sequence (1 = first touch, 2 = follow-up, …)",
-                  "de": "Welcher Schritt in der Sequenz (1 = Erstkontakt, 2 = Follow-up, …)"
-                },
-                "bot": "Integer 1..20. Omit for single-touch templates (defaults to 1 on the analytics side).",
-                "type": "uint16",
-                "source": "field",
-                "required": false,
-                "position": "payload:meta"
-              }
-            ]
+            "output": {
+              "policy": "out.data.policy",
+              "availableStaff": "out.data.availableStaff"
+            }
           }
         ],
-        "messages": {
-          "success": {
-            "en": "Outreach touch logged.",
-            "de": "Outreach-Kontakt protokolliert."
-          }
-        }
+        "ui": "https://raw.githubusercontent.com/JoAiHQ/warps/main/warps/appointment/book/chatapp.c3ca4b2.dist.html"
       },
       "extras": {
         "keywords": {
           "en": [
-            "log outreach",
-            "track outreach touch",
-            "a/b test outreach",
-            "record message sent",
-            "outreach analytics",
-            "template tracking"
+            "book appointment",
+            "schedule appointment",
+            "make reservation",
+            "book meeting",
+            "schedule visit",
+            "appointment booking"
           ],
           "de": [
-            "Outreach protokollieren",
-            "Outreach-Kontakt tracken",
-            "A/B-Test Outreach",
-            "Nachricht protokollieren",
-            "Outreach-Analytics",
-            "Template-Tracking"
+            "Termin buchen",
+            "Termin vereinbaren",
+            "Reservierung machen",
+            "Besprechung buchen",
+            "Besuch planen",
+            "Terminbuchung"
           ]
         },
         "useCases": {
           "en": [
-            "Log a WhatsApp outreach touch with template + variant for later reply-rate analysis",
-            "Record a cold LinkedIn connect-note touch against a contact",
-            "Track which sequence step a follow-up message represents"
+            "Schedule a consultation with a service provider",
+            "Book a recurring weekly appointment for a client",
+            "Reserve a time slot on behalf of someone else"
           ],
           "de": [
-            "Einen WhatsApp-Outreach mit Template + Variante protokollieren für spätere Response-Rate-Analyse",
-            "Einen kalten LinkedIn-Connect-Note-Kontakt bei einem Kontakt protokollieren",
-            "Nachvollziehen, welchen Sequenz-Schritt eine Follow-up-Nachricht darstellt"
+            "Eine Beratung bei einem Dienstleister vereinbaren",
+            "Einen wöchentlich wiederkehrenden Termin für einen Kunden buchen",
+            "Einen Zeitslot im Namen einer anderen Person reservieren"
           ]
         },
-        "category": "communication",
+        "category": "productivity",
         "faq": {
           "en": [
             {
-              "question": "Why not use contact-activity-log?",
-              "answer": "log-touch enforces a structured meta payload (channel, templateId, variant, sequenceStep) so A/B tests and funnel analytics stay consistent. The generic activity log is free-form and not queryable the same way."
+              "question": "How do I book an appointment?",
+              "answer": "Simply select an available time slot and provide your details to book an appointment."
             },
             {
-              "question": "What templates IDs should I use?",
-              "answer": "Stable slugs that identify your outreach message, e.g. handwerk-seq-a-m1 or kanzlei-linkedin-connect. The outreach app keeps template definitions in the OPS doc; the touch log just references the slug."
+              "question": "Can I book an appointment for someone else?",
+              "answer": "Yes, you can book on behalf of someone else by providing their contact details during the booking process."
             }
           ],
           "de": [
             {
-              "question": "Warum nicht contact-activity-log verwenden?",
-              "answer": "log-touch erzwingt ein strukturiertes Meta-Payload (channel, templateId, variant, sequenceStep), damit A/B-Tests und Funnel-Analytics konsistent bleiben. Der generische Activity-Log ist freitextlich und nicht gleich auswertbar."
+              "question": "Wie buche ich einen Termin?",
+              "answer": "Wähle einfach einen verfügbaren Zeitslot und gib deine Daten ein, um einen Termin zu buchen."
             },
             {
-              "question": "Welche Template-IDs soll ich verwenden?",
-              "answer": "Stabile Slugs die deine Outreach-Nachricht identifizieren, z.B. handwerk-seq-a-m1 oder kanzlei-linkedin-connect. Die Outreach-App hält Template-Definitionen im OPS-Doc; der Touch-Log verweist nur auf den Slug."
+              "question": "Kann ich einen Termin für jemand anderen buchen?",
+              "answer": "Ja, du kannst im Namen einer anderen Person buchen, indem du deren Kontaktdaten während des Buchungsvorgangs angibst."
             }
           ]
         }
