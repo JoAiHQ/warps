@@ -4,8 +4,8 @@
   "repo": "JoAiHQ/warps",
   "branch": "main",
   "network": "mainnet",
-  "commitSha": "69eb3176150f5ef5a544ed522f9fceeceb3aca3c",
-  "generatedAt": "2026-04-23T22:12:19.325Z",
+  "commitSha": "5b3ab51d546ac62413baadbc16eb5927190431b1",
+  "generatedAt": "2026-04-23T22:41:34.362Z",
   "apps": [
     {
       "slug": "activity",
@@ -5171,63 +5171,48 @@
         "routes": [
           {
             "path": "/",
-            "warp": "@coupon-redeem",
+            "warp": "@coupon-browse",
+            "label": {
+              "en": "Coupons",
+              "de": "Gutscheine"
+            },
+            "nav": true
+          },
+          {
+            "path": "/redeem",
+            "warp": "@coupon-redeem-app",
             "label": {
               "en": "Redeem",
-              "de": "Einlösen",
-              "fr": "Utiliser",
-              "es": "Canjear",
-              "ro": "Folosește"
+              "de": "Einlösen"
             },
             "nav": true
           },
           {
             "path": "/create",
-            "warp": "@coupon-create",
+            "warp": "@coupon-create-app",
             "label": {
               "en": "Create",
-              "de": "Erstellen",
-              "fr": "Créer",
-              "es": "Crear",
-              "ro": "Creează"
+              "de": "Erstellen"
             },
             "nav": true
           },
           {
-            "path": "/my-coupons",
-            "warp": "@coupon-list",
+            "path": "/collection",
+            "warp": "@coupon-create-collection-app",
             "label": {
-              "en": "My Coupons",
-              "de": "Meine Gutscheine",
-              "fr": "Mes coupons",
-              "es": "Mis cupones",
-              "ro": "Cupoanele mele"
+              "en": "New Collection",
+              "de": "Neue Kollektion"
+            },
+            "nav": false
+          },
+          {
+            "path": "/manage",
+            "warp": "@coupon-manage-app",
+            "label": {
+              "en": "Manage",
+              "de": "Verwalten"
             },
             "nav": true
-          },
-          {
-            "path": "/view",
-            "warp": "@coupon-view",
-            "label": {
-              "en": "View Coupon",
-              "de": "Gutschein ansehen",
-              "fr": "Voir le coupon",
-              "es": "Ver cupón",
-              "ro": "Vezi cuponul"
-            },
-            "nav": false
-          },
-          {
-            "path": "/revoke",
-            "warp": "@coupon-revoke",
-            "label": {
-              "en": "Revoke",
-              "de": "Widerrufen",
-              "fr": "Révoquer",
-              "es": "Revocar",
-              "ro": "Revocă"
-            },
-            "nav": false
           }
         ]
       },
@@ -5367,27 +5352,76 @@
       },
       "actions": [
         {
-          "alias": "coupon-create",
-          "identifier": "@coupon-create",
-          "chain": "multiversx",
-          "name": "Coupon: Create",
+          "alias": "coupon-browse",
+          "identifier": "@coupon-browse",
+          "chain": null,
+          "name": "Coupon: Browse",
           "title": {
-            "en": "Create a coupon",
-            "de": "Gutschein erstellen",
-            "fr": "Créer un coupon",
-            "es": "Crear un cupón",
-            "ro": "Creează un cupon"
+            "en": "Browse Coupons",
+            "de": "Gutscheine durchsuchen"
           },
           "description": {
-            "en": "Create a discount coupon your customers can redeem at checkout. Set the code, percentage off, usage limit, and expiry — all stored on-chain.",
-            "de": "Erstelle einen Rabattgutschein, den Kunden beim Bezahlen einlösen können. Code, Rabatt, Nutzungslimit und Ablaufdatum werden on-chain gespeichert.",
-            "fr": "Créez un coupon de réduction que vos clients pourront utiliser au paiement. Code, pourcentage, limite et expiration — tout est stocké on-chain.",
-            "es": "Crea un cupón de descuento para que tus clientes lo canjeen al pagar. Código, descuento, límite de uso y vencimiento — todo almacenado on-chain.",
-            "ro": "Creează un cupon de reducere pe care clienții îl pot folosi la plată. Cod, procent, limită și expirare — totul stocat on-chain."
+            "en": "Browse available discount coupons and claim one to your wallet.",
+            "de": "Durchsuche verfügbare Rabattgutscheine und beanspruche einen."
+          },
+          "actionTypes": [
+            "collect"
+          ]
+        },
+        {
+          "alias": "coupon-claim",
+          "identifier": "@coupon-claim",
+          "chain": "multiversx",
+          "name": "Coupon: Claim",
+          "title": {
+            "en": "Claim a coupon",
+            "de": "Gutschein beanspruchen",
+            "fr": "Réclamer un coupon",
+            "es": "Reclamar un cupón",
+            "ro": "Revendică un cupon"
+          },
+          "description": {
+            "en": "Claim a discount coupon to your wallet. The coupon is sent as an SFT that you hold until you redeem it.",
+            "de": "Beanspruche einen Rabattgutschein in deiner Wallet. Der Gutschein wird als SFT gesendet, den du bis zur Einlösung behältst.",
+            "fr": "Réclamez un coupon de réduction dans votre wallet. Le coupon est envoyé comme SFT que vous conservez jusqu'à l'utilisation.",
+            "es": "Reclama un cupón de descuento en tu wallet. El cupón se envía como SFT que mantienes hasta canjearlo.",
+            "ro": "Revendică un cupon de reducere în wallet-ul tău. Cuponul este trimis ca SFT pe care îl păstrezi până la utilizare."
           },
           "actionTypes": [
             "contract"
           ]
+        },
+        {
+          "alias": "coupon-create",
+          "identifier": "@coupon-create",
+          "chain": null,
+          "name": "Coupon: Create",
+          "title": {
+            "en": "Create a Coupon",
+            "de": "Gutschein erstellen"
+          },
+          "description": {
+            "en": "Create a new discount coupon in your collection.",
+            "de": "Erstelle einen neuen Rabattgutschein in deiner Kollektion."
+          },
+          "actionTypes": [
+            "collect"
+          ]
+        },
+        {
+          "alias": "coupon-create-collection",
+          "identifier": "@coupon-create-collection",
+          "chain": null,
+          "name": "Coupon: Create Collection",
+          "title": {
+            "en": "Create Coupon Collection",
+            "de": "Gutschein-Kollektion erstellen"
+          },
+          "description": {
+            "en": "Create a new SFT collection for your discount coupons.",
+            "de": "Erstelle eine neue SFT-Kollektion für deine Rabattgutscheine."
+          },
+          "actionTypes": []
         },
         {
           "alias": "coupon-list",
@@ -5406,33 +5440,44 @@
             "de": "Alle on-chain erstellten Rabattgutscheine ansehen.",
             "fr": "Voir tous les coupons de réduction que vous avez créés on-chain.",
             "es": "Ver todos los cupones de descuento que has creado on-chain.",
-            "ro": "Vedere a tuturor cupoanelor de reducere create de tine on-chain."
+            "ro": "Vezi toate cupoanele de reducere create de tine on-chain."
           },
           "actionTypes": [
             "query"
           ]
         },
         {
-          "alias": "coupon-redeem",
-          "identifier": "@coupon-redeem",
-          "chain": "multiversx",
-          "name": "Coupon: Redeem",
+          "alias": "coupon-manage",
+          "identifier": "@coupon-manage",
+          "chain": null,
+          "name": "Coupon: Manage",
           "title": {
-            "en": "Redeem a coupon",
-            "de": "Gutschein einlösen",
-            "fr": "Utiliser un coupon",
-            "es": "Canjear un cupón",
-            "ro": "Folosește un cupon"
+            "en": "Manage Coupons",
+            "de": "Gutscheine verwalten"
           },
           "description": {
-            "en": "Enter your discount coupon code at checkout. The redemption is recorded on-chain and the discount percentage is returned instantly.",
-            "de": "Gib deinen Gutscheincode beim Bezahlen ein. Die Einlösung wird on-chain gespeichert und der Rabatt sofort zurückgegeben.",
-            "fr": "Saisissez votre code promo au paiement. L'utilisation est enregistrée on-chain et le pourcentage de réduction est retourné instantanément.",
-            "es": "Introduce tu código de descuento al pagar. El canje queda registrado on-chain y el porcentaje de descuento se devuelve al instante.",
-            "ro": "Introdu codul tău de reducere la plată. Folosirea este înregistrată on-chain și procentul de reducere este returnat imediat."
+            "en": "View and manage your discount coupons — revoke, check status.",
+            "de": "Rabattgutscheine anzeigen und verwalten — widerrufen, Status prüfen."
           },
           "actionTypes": [
-            "contract"
+            "collect"
+          ]
+        },
+        {
+          "alias": "coupon-redeem",
+          "identifier": "@coupon-redeem",
+          "chain": null,
+          "name": "Coupon: Redeem",
+          "title": {
+            "en": "Redeem Coupon",
+            "de": "Gutschein einlösen"
+          },
+          "description": {
+            "en": "Select a coupon from your wallet and redeem it for a discount.",
+            "de": "Wähle einen Gutschein aus deiner Wallet und löse ihn ein."
+          },
+          "actionTypes": [
+            "collect"
           ]
         },
         {
@@ -5448,11 +5493,11 @@
             "ro": "Revocă un cupon"
           },
           "description": {
-            "en": "Permanently deactivate a coupon you created. Customers will no longer be able to redeem it.",
-            "de": "Einen von dir erstellten Gutschein dauerhaft deaktivieren. Kunden können ihn danach nicht mehr einlösen.",
-            "fr": "Désactivez définitivement un coupon que vous avez créé. Les clients ne pourront plus l'utiliser.",
-            "es": "Desactiva permanentemente un cupón que creaste. Los clientes ya no podrán canjearlo.",
-            "ro": "Dezactivează definitiv un cupon pe care l-ai creat. Clienții nu îl mai pot folosi după aceea."
+            "en": "Permanently deactivate a coupon. Remaining SFTs are burned and customers can no longer claim or redeem it.",
+            "de": "Einen Gutschein dauerhaft deaktivieren. Verbleibende SFTs werden verbrannt und Kunden können ihn nicht mehr beanspruchen oder einlösen.",
+            "fr": "Désactivez définitivement un coupon. Les SFT restants sont brûlés et les clients ne peuvent plus le réclamer ni l'utiliser.",
+            "es": "Desactiva permanentemente un cupón. Los SFT restantes se queman y los clientes ya no pueden reclamarlo ni canjearlo.",
+            "ro": "Dezactivează definitiv un cupon. SFT-urile rămase sunt arse și clienții nu îl mai pot revendica sau folosi."
           },
           "actionTypes": [
             "contract"
@@ -5471,11 +5516,11 @@
             "ro": "Vezi cuponul"
           },
           "description": {
-            "en": "Look up a coupon code on-chain — see the discount, usage count, expiry, and status.",
-            "de": "Gutscheincode on-chain nachschlagen — Rabatt, Nutzungsanzahl, Ablaufdatum und Status ansehen.",
-            "fr": "Recherchez un code promo on-chain — voyez la réduction, les utilisations, l'expiration et le statut.",
-            "es": "Consulta un código de cupón on-chain — ve el descuento, usos, vencimiento y estado.",
-            "ro": "Caută un cod de cupon on-chain — vezi reducerea, numărul de utilizări, expirarea și statusul."
+            "en": "Look up a coupon by code — see the discount, usage count, expiry, and status.",
+            "de": "Gutscheincode nachschlagen — Rabatt, Nutzungsanzahl, Ablaufdatum und Status ansehen.",
+            "fr": "Recherchez un coupon par code — voyez la réduction, les utilisations, l'expiration et le statut.",
+            "es": "Consulta un cupón por código — ve el descuento, usos, vencimiento y estado.",
+            "ro": "Caută un cupon după cod — vezi reducerea, numărul de utilizări, expirarea și statusul."
           },
           "actionTypes": [
             "query"
