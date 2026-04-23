@@ -6,9 +6,9 @@
 
 // Init:                                 1
 // Upgrade:                              1
-// Endpoints:                            6
-// Async Callback (empty):               1
-// Total number of exported functions:   9
+// Endpoints:                           15
+// Async Callback:                       1
+// Total number of exported functions:  18
 
 #![no_std]
 
@@ -20,13 +20,22 @@ multiversx_sc_wasm_adapter::endpoints! {
     (
         init => init
         upgrade => upgrade
+        createCollection => create_collection
         createCoupon => create_coupon
+        claimCoupon => claim_coupon
         redeemCoupon => redeem_coupon
         revokeCoupon => revoke_coupon
-        getCoupon => get_coupon
+        getCollection => get_collection
+        getCollectionToken => get_collection_token
+        getCoupon => get_coupon_by_code
+        getCouponById => get_coupon_by_id
         getOwnerCoupons => get_owner_coupons
+        getCollectionCoupons => get_collection_coupons
         couponExists => coupon_exists
+        isCollectionReady => is_collection_ready
+        getNextCollectionId => get_next_collection_id_view
+        getNextCouponId => get_next_coupon_id_view
     )
 }
 
-multiversx_sc_wasm_adapter::async_callback_empty! {}
+multiversx_sc_wasm_adapter::async_callback! { coupon }

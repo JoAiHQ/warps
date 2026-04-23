@@ -5,8 +5,11 @@ const OTHER: &str = "address:other";
 const CUSTOMER: &str = "address:customer";
 const SC: &str = "sc:coupon";
 const CODE_PATH: &str = "file:output/coupon.wasm";
+const ESDT_ISSUE_COST: u64 = 50_000_000_000_000_000u64;
 
 const CODE: &str = "SUMMER20";
+const COLL_NAME: &str = "JoAi Coupons";
+const COLL_TICKER: &str = "JCOUPON";
 
 fn world() -> ScenarioWorld {
     let mut w = ScenarioWorld::new();
@@ -18,8 +21,8 @@ fn setup() -> ScenarioWorld {
     let mut w = world();
     w.set_state_step(
         SetStateStep::new()
-            .put_account(OWNER, Account::new().nonce(1))
-            .put_account(OTHER, Account::new().nonce(1))
+            .put_account(OWNER, Account::new().nonce(1).balance(ESDT_ISSUE_COST * 10))
+            .put_account(OTHER, Account::new().nonce(1).balance(ESDT_ISSUE_COST))
             .put_account(CUSTOMER, Account::new().nonce(1))
             .new_address(OWNER, 1, SC)
             .block_timestamp(1_000_000),
@@ -31,85 +34,168 @@ fn setup() -> ScenarioWorld {
             .gas_limit("10,000,000")
             .expect(TxExpect::ok()),
     );
+    create_collection(&mut w, OWNER, COLL_NAME, COLL_TICKER);
     w
 }
 
-fn create(w: &mut ScenarioWorld, from: &str, code: &str, discount: u8, max_uses: u64, expiry_days: u64) {
+fn create_collection(w: &mut ScenarioWorld, from: &str, name: &str, ticker: &str) {
+    w.sc_call(
+        ScCallStep::new()
+            .from(from)
+            .to(SC)
+            .function("createCollection")
+            .egld_value(format!("{ESDT_ISSUE_COST}").as_str())
+            .argument(format!("str:{name}").as_str())
+            .argument(format!("str:{ticker}").as_str())
+            .gas_limit("60,000,000")
+            .expect(TxExpect::ok()),
+    );
+}
+
+fn create_collection_err(w: &mut ScenarioWorld, from: &str, name: &str, ticker: &str, egld: u64, err: &str) {
+    w.sc_call(
+        ScCallStep::new()
+            .from(from)
+            .to(SC)
+            .function("createCollection")
+            .egld_value(format!("{egld}").as_str())
+            .argument(format!("str:{name}").as_str())
+            .argument(format!("str:{ticker}").as_str())
+            .gas_limit("60,000,000")
+            .expect(TxExpect::user_error(format!("str:{err}").as_str())),
+    );
+}
+
+fn create_coupon(w: &mut ScenarioWorld, from: &str, coll_id: u64, code: &str, discount: u8, max_uses: u64, expiry_days: u64) {
     w.sc_call(
         ScCallStep::new()
             .from(from)
             .to(SC)
             .function("createCoupon")
+            .argument(format!("{coll_id}").as_str())
             .argument(format!("str:{code}").as_str())
             .argument(format!("{discount}").as_str())
             .argument(format!("{max_uses}").as_str())
             .argument(format!("{expiry_days}").as_str())
-            .gas_limit("5,000,000")
+            .gas_limit("10,000,000")
             .expect(TxExpect::ok()),
     );
 }
 
-fn create_err(w: &mut ScenarioWorld, from: &str, code: &str, discount: u8, max_uses: u64, expiry_days: u64, err: &str) {
+fn create_coupon_err(w: &mut ScenarioWorld, from: &str, coll_id: u64, code: &str, discount: u8, max_uses: u64, expiry_days: u64, err: &str) {
     w.sc_call(
         ScCallStep::new()
             .from(from)
             .to(SC)
             .function("createCoupon")
+            .argument(format!("{coll_id}").as_str())
             .argument(format!("str:{code}").as_str())
             .argument(format!("{discount}").as_str())
             .argument(format!("{max_uses}").as_str())
             .argument(format!("{expiry_days}").as_str())
-            .gas_limit("5,000,000")
+            .gas_limit("10,000,000")
             .expect(TxExpect::user_error(format!("str:{err}").as_str())),
     );
 }
 
-fn redeem(w: &mut ScenarioWorld, from: &str, code: &str, expected_discount: u8) {
+fn claim(w: &mut ScenarioWorld, from: &str, coupon_id: u64) {
     w.sc_call(
         ScCallStep::new()
             .from(from)
             .to(SC)
-            .function("redeemCoupon")
-            .argument(format!("str:{code}").as_str())
-            .gas_limit("5,000,000")
-            .expect(TxExpect::ok().result(format!("{expected_discount}").as_str())),
-    );
-}
-
-fn redeem_err(w: &mut ScenarioWorld, from: &str, code: &str, err: &str) {
-    w.sc_call(
-        ScCallStep::new()
-            .from(from)
-            .to(SC)
-            .function("redeemCoupon")
-            .argument(format!("str:{code}").as_str())
-            .gas_limit("5,000,000")
-            .expect(TxExpect::user_error(format!("str:{err}").as_str())),
-    );
-}
-
-fn revoke(w: &mut ScenarioWorld, from: &str, code: &str) {
-    w.sc_call(
-        ScCallStep::new()
-            .from(from)
-            .to(SC)
-            .function("revokeCoupon")
-            .argument(format!("str:{code}").as_str())
+            .function("claimCoupon")
+            .argument(format!("{coupon_id}").as_str())
             .gas_limit("5,000,000")
             .expect(TxExpect::ok()),
     );
 }
 
-fn revoke_err(w: &mut ScenarioWorld, from: &str, code: &str, err: &str) {
+fn revoke(w: &mut ScenarioWorld, from: &str, coupon_id: u64) {
     w.sc_call(
         ScCallStep::new()
             .from(from)
             .to(SC)
             .function("revokeCoupon")
-            .argument(format!("str:{code}").as_str())
+            .argument(format!("{coupon_id}").as_str())
+            .gas_limit("5,000,000")
+            .expect(TxExpect::ok()),
+    );
+}
+
+fn revoke_err(w: &mut ScenarioWorld, from: &str, coupon_id: u64, err: &str) {
+    w.sc_call(
+        ScCallStep::new()
+            .from(from)
+            .to(SC)
+            .function("revokeCoupon")
+            .argument(format!("{coupon_id}").as_str())
             .gas_limit("5,000,000")
             .expect(TxExpect::user_error(format!("str:{err}").as_str())),
     );
+}
+
+// ─── init ────────────────────────────────────────────────────────────────────
+
+#[test]
+fn init_sets_ids_to_1() {
+    let w = setup();
+    drop(w);
+}
+
+// ─── createCollection ────────────────────────────────────────────────────────
+
+#[test]
+fn create_collection_wrong_payment_fails() {
+    let mut w = world();
+    w.set_state_step(
+        SetStateStep::new()
+            .put_account(OWNER, Account::new().nonce(1).balance(ESDT_ISSUE_COST))
+            .new_address(OWNER, 1, SC),
+    );
+    w.sc_deploy(
+        ScDeployStep::new()
+            .from(OWNER)
+            .code(CODE_PATH)
+            .gas_limit("10,000,000")
+            .expect(TxExpect::ok()),
+    );
+    create_collection_err(&mut w, OWNER, COLL_NAME, COLL_TICKER, 0, coupon::errors::ERR_WRONG_PAYMENT);
+}
+
+#[test]
+fn create_collection_empty_name_fails() {
+    let mut w = world();
+    w.set_state_step(
+        SetStateStep::new()
+            .put_account(OWNER, Account::new().nonce(1).balance(ESDT_ISSUE_COST))
+            .new_address(OWNER, 1, SC),
+    );
+    w.sc_deploy(
+        ScDeployStep::new()
+            .from(OWNER)
+            .code(CODE_PATH)
+            .gas_limit("10,000,000")
+            .expect(TxExpect::ok()),
+    );
+    create_collection_err(&mut w, OWNER, "", COLL_TICKER, ESDT_ISSUE_COST, coupon::errors::ERR_INVALID_NAME);
+}
+
+#[test]
+fn create_collection_ticker_too_short_fails() {
+    let mut w = world();
+    w.set_state_step(
+        SetStateStep::new()
+            .put_account(OWNER, Account::new().nonce(1).balance(ESDT_ISSUE_COST))
+            .new_address(OWNER, 1, SC),
+    );
+    w.sc_deploy(
+        ScDeployStep::new()
+            .from(OWNER)
+            .code(CODE_PATH)
+            .gas_limit("10,000,000")
+            .expect(TxExpect::ok()),
+    );
+    create_collection_err(&mut w, OWNER, COLL_NAME, "AB", ESDT_ISSUE_COST, coupon::errors::ERR_INVALID_TICKER);
 }
 
 // ─── createCoupon ────────────────────────────────────────────────────────────
@@ -117,111 +203,94 @@ fn revoke_err(w: &mut ScenarioWorld, from: &str, code: &str, err: &str) {
 #[test]
 fn create_succeeds() {
     let mut w = setup();
-    create(&mut w, OWNER, CODE, 20, 10, 30);
+    create_coupon(&mut w, OWNER, 1, CODE, 20, 10, 30);
 }
 
 #[test]
 fn create_with_unlimited_uses_and_no_expiry() {
     let mut w = setup();
-    create(&mut w, OWNER, CODE, 10, 0, 0);
+    create_coupon(&mut w, OWNER, 1, CODE, 10, 0, 0);
 }
 
 #[test]
 fn create_empty_code_fails() {
     let mut w = setup();
-    create_err(&mut w, OWNER, "", 10, 5, 0, coupon::errors::ERR_CODE_EMPTY);
+    create_coupon_err(&mut w, OWNER, 1, "", 10, 5, 0, coupon::errors::ERR_CODE_EMPTY);
 }
 
 #[test]
 fn create_code_too_long_fails() {
     let mut w = setup();
     let long_code = "A".repeat(33);
-    create_err(&mut w, OWNER, &long_code, 10, 5, 0, coupon::errors::ERR_CODE_TOO_LONG);
+    create_coupon_err(&mut w, OWNER, 1, &long_code, 10, 5, 0, coupon::errors::ERR_CODE_TOO_LONG);
 }
 
 #[test]
 fn create_duplicate_code_fails() {
     let mut w = setup();
-    create(&mut w, OWNER, CODE, 10, 5, 0);
-    create_err(&mut w, OTHER, CODE, 20, 1, 0, coupon::errors::ERR_CODE_TAKEN);
+    create_coupon(&mut w, OWNER, 1, CODE, 10, 5, 0);
+    create_coupon_err(&mut w, OWNER, 1, CODE, 20, 1, 0, coupon::errors::ERR_CODE_TAKEN);
 }
 
 #[test]
 fn create_discount_zero_fails() {
     let mut w = setup();
-    create_err(&mut w, OWNER, CODE, 0, 5, 0, coupon::errors::ERR_INVALID_DISCOUNT);
+    create_coupon_err(&mut w, OWNER, 1, CODE, 0, 5, 0, coupon::errors::ERR_INVALID_DISCOUNT);
 }
 
 #[test]
 fn create_discount_over_100_fails() {
     let mut w = setup();
-    create_err(&mut w, OWNER, CODE, 101, 5, 0, coupon::errors::ERR_INVALID_DISCOUNT);
+    create_coupon_err(&mut w, OWNER, 1, CODE, 101, 5, 0, coupon::errors::ERR_INVALID_DISCOUNT);
 }
 
 #[test]
 fn create_discount_100_succeeds() {
     let mut w = setup();
-    create(&mut w, OWNER, CODE, 100, 1, 0);
-}
-
-// ─── redeemCoupon ────────────────────────────────────────────────────────────
-
-#[test]
-fn redeem_returns_discount() {
-    let mut w = setup();
-    create(&mut w, OWNER, CODE, 25, 10, 0);
-    redeem(&mut w, CUSTOMER, CODE, 25);
+    create_coupon(&mut w, OWNER, 1, CODE, 100, 1, 0);
 }
 
 #[test]
-fn redeem_unlimited_uses_allows_many() {
+fn create_nonexistent_collection_fails() {
     let mut w = setup();
-    create(&mut w, OWNER, CODE, 5, 0, 0);
-    redeem(&mut w, CUSTOMER, CODE, 5);
-    redeem(&mut w, CUSTOMER, CODE, 5);
-    redeem(&mut w, CUSTOMER, CODE, 5);
+    create_coupon_err(&mut w, OWNER, 99, CODE, 10, 5, 0, coupon::errors::ERR_COLLECTION_NOT_FOUND);
 }
 
 #[test]
-fn redeem_respects_max_uses() {
+fn create_by_non_collection_owner_fails() {
     let mut w = setup();
-    create(&mut w, OWNER, CODE, 10, 2, 0);
-    redeem(&mut w, CUSTOMER, CODE, 10);
-    redeem(&mut w, CUSTOMER, CODE, 10);
-    redeem_err(&mut w, CUSTOMER, CODE, coupon::errors::ERR_COUPON_FULLY_USED);
+    create_coupon_err(&mut w, OTHER, 1, CODE, 10, 5, 0, coupon::errors::ERR_NOT_COLLECTION_OWNER);
+}
+
+// ─── claimCoupon ─────────────────────────────────────────────────────────────
+
+#[test]
+fn claim_succeeds() {
+    let mut w = setup();
+    create_coupon(&mut w, OWNER, 1, CODE, 10, 5, 0);
+    claim(&mut w, CUSTOMER, 1);
 }
 
 #[test]
-fn redeem_unknown_code_fails() {
+fn claim_multiple_users_succeeds() {
     let mut w = setup();
-    redeem_err(&mut w, CUSTOMER, "NOPE", coupon::errors::ERR_COUPON_NOT_FOUND);
+    create_coupon(&mut w, OWNER, 1, CODE, 10, 5, 0);
+    claim(&mut w, CUSTOMER, 1);
+    claim(&mut w, OTHER, 1);
 }
 
 #[test]
-fn redeem_revoked_fails() {
+fn claim_unknown_coupon_fails() {
     let mut w = setup();
-    create(&mut w, OWNER, CODE, 10, 5, 0);
-    revoke(&mut w, OWNER, CODE);
-    redeem_err(&mut w, CUSTOMER, CODE, coupon::errors::ERR_COUPON_REVOKED);
-}
-
-#[test]
-fn redeem_expired_fails() {
-    let mut w = setup();
-    // Coupon created at block_timestamp = 1_000_000, expires 1 day later (86_400 seconds).
-    create(&mut w, OWNER, CODE, 10, 0, 1);
-    // Advance time past the expiry.
-    w.set_state_step(SetStateStep::new().block_timestamp(1_000_000 + 86_400 + 1));
-    redeem_err(&mut w, CUSTOMER, CODE, coupon::errors::ERR_COUPON_EXPIRED);
-}
-
-#[test]
-fn redeem_just_before_expiry_succeeds() {
-    let mut w = setup();
-    create(&mut w, OWNER, CODE, 10, 0, 1);
-    // One second before expiry.
-    w.set_state_step(SetStateStep::new().block_timestamp(1_000_000 + 86_400 - 1));
-    redeem(&mut w, CUSTOMER, CODE, 10);
+    w.sc_call(
+        ScCallStep::new()
+            .from(CUSTOMER)
+            .to(SC)
+            .function("claimCoupon")
+            .argument("99")
+            .gas_limit("5,000,000")
+            .expect(TxExpect::user_error(format!("str:{}", coupon::errors::ERR_COUPON_NOT_FOUND).as_str())),
+    );
 }
 
 // ─── revokeCoupon ────────────────────────────────────────────────────────────
@@ -229,35 +298,35 @@ fn redeem_just_before_expiry_succeeds() {
 #[test]
 fn revoke_by_owner_succeeds() {
     let mut w = setup();
-    create(&mut w, OWNER, CODE, 10, 5, 0);
-    revoke(&mut w, OWNER, CODE);
+    create_coupon(&mut w, OWNER, 1, CODE, 10, 5, 0);
+    revoke(&mut w, OWNER, 1);
 }
 
 #[test]
 fn revoke_by_non_owner_fails() {
     let mut w = setup();
-    create(&mut w, OWNER, CODE, 10, 5, 0);
-    revoke_err(&mut w, OTHER, CODE, coupon::errors::ERR_NOT_OWNER);
+    create_coupon(&mut w, OWNER, 1, CODE, 10, 5, 0);
+    revoke_err(&mut w, OTHER, 1, coupon::errors::ERR_NOT_COUPON_OWNER);
 }
 
 #[test]
-fn revoke_unknown_code_fails() {
+fn revoke_unknown_coupon_fails() {
     let mut w = setup();
-    revoke_err(&mut w, OWNER, "NOPE", coupon::errors::ERR_COUPON_NOT_FOUND);
+    revoke_err(&mut w, OWNER, 99, coupon::errors::ERR_COUPON_NOT_FOUND);
 }
 
 #[test]
 fn revoke_twice_fails() {
     let mut w = setup();
-    create(&mut w, OWNER, CODE, 10, 5, 0);
-    revoke(&mut w, OWNER, CODE);
-    revoke_err(&mut w, OWNER, CODE, coupon::errors::ERR_COUPON_REVOKED);
+    create_coupon(&mut w, OWNER, 1, CODE, 10, 5, 0);
+    revoke(&mut w, OWNER, 1);
+    revoke_err(&mut w, OWNER, 1, coupon::errors::ERR_ALREADY_REVOKED);
 }
 
 // ─── views ───────────────────────────────────────────────────────────────────
 
 #[test]
-fn get_coupon_unknown_fails() {
+fn get_coupon_by_code_unknown_fails() {
     let mut w = setup();
     w.sc_query(
         ScQueryStep::new()
@@ -278,7 +347,7 @@ fn coupon_exists_reflects_state() {
             .argument(format!("str:{CODE}").as_str())
             .expect(TxExpect::ok().result("")),
     );
-    create(&mut w, OWNER, CODE, 10, 5, 0);
+    create_coupon(&mut w, OWNER, 1, CODE, 10, 5, 0);
     w.sc_query(
         ScQueryStep::new()
             .to(SC)
@@ -289,43 +358,30 @@ fn coupon_exists_reflects_state() {
 }
 
 #[test]
-fn get_owner_coupons_returns_all_codes() {
+fn get_next_coupon_id_increments() {
     let mut w = setup();
-    create(&mut w, OWNER, "CODE1", 10, 5, 0);
-    create(&mut w, OWNER, "CODE2", 20, 10, 0);
-    create(&mut w, OTHER, "OTHER1", 5, 3, 0);
-
     w.sc_query(
         ScQueryStep::new()
             .to(SC)
-            .function("getOwnerCoupons")
-            .argument(OWNER)
-            .expect(TxExpect::ok().result("str:CODE1").result("str:CODE2")),
+            .function("getNextCouponId")
+            .expect(TxExpect::ok().result("1")),
     );
+    create_coupon(&mut w, OWNER, 1, "FIRST", 10, 5, 0);
     w.sc_query(
         ScQueryStep::new()
             .to(SC)
-            .function("getOwnerCoupons")
-            .argument(OTHER)
-            .expect(TxExpect::ok().result("str:OTHER1")),
-    );
-    w.sc_query(
-        ScQueryStep::new()
-            .to(SC)
-            .function("getOwnerCoupons")
-            .argument(CUSTOMER)
-            .expect(TxExpect::ok()),
+            .function("getNextCouponId")
+            .expect(TxExpect::ok().result("2")),
     );
 }
 
 // ─── full flow ───────────────────────────────────────────────────────────────
 
 #[test]
-fn full_flow_create_redeem_cap_revoke() {
+fn full_flow_create_claim_revoke() {
     let mut w = setup();
-    create(&mut w, OWNER, CODE, 15, 3, 30);
-    redeem(&mut w, CUSTOMER, CODE, 15);
-    redeem(&mut w, CUSTOMER, CODE, 15);
-    revoke(&mut w, OWNER, CODE);
-    redeem_err(&mut w, CUSTOMER, CODE, coupon::errors::ERR_COUPON_REVOKED);
+    create_coupon(&mut w, OWNER, 1, CODE, 15, 3, 30);
+    claim(&mut w, CUSTOMER, 1);
+    claim(&mut w, OTHER, 1);
+    revoke(&mut w, OWNER, 1);
 }

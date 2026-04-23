@@ -1,3 +1,10 @@
+pub const ERR_WRONG_PAYMENT: &str = "Must send exactly 0.05 EGLD to create a collection";
+pub const ERR_INVALID_NAME: &str = "Invalid collection name";
+pub const ERR_INVALID_TICKER: &str = "Ticker must be 3-10 uppercase letters";
+pub const ERR_COLLECTION_NOT_FOUND: &str = "Collection not found";
+pub const ERR_COLLECTION_NOT_READY: &str = "Collection ESDT not yet issued";
+pub const ERR_NOT_COLLECTION_OWNER: &str = "Only the collection owner can perform this action";
+
 pub const ERR_CODE_EMPTY: &str = "coupon code cannot be empty";
 pub const ERR_CODE_TOO_LONG: &str = "coupon code must be 32 bytes or fewer";
 pub const ERR_CODE_TAKEN: &str = "coupon code already exists";
@@ -5,5 +12,8 @@ pub const ERR_COUPON_NOT_FOUND: &str = "coupon not found";
 pub const ERR_COUPON_REVOKED: &str = "coupon has been revoked";
 pub const ERR_COUPON_EXPIRED: &str = "coupon has expired";
 pub const ERR_COUPON_FULLY_USED: &str = "coupon has reached its usage limit";
-pub const ERR_NOT_OWNER: &str = "only the coupon owner can perform this action";
+pub const ERR_NOT_COUPON_OWNER: &str = "only the coupon owner can perform this action";
 pub const ERR_INVALID_DISCOUNT: &str = "discount_percent must be between 1 and 100";
+pub const ERR_NO_SFT_SENT: &str = "must send exactly 1 coupon SFT to redeem";
+pub const ERR_WRONG_TOKEN: &str = "wrong token sent";
+pub const ERR_ALREADY_REVOKED: &str = "coupon is already revoked";

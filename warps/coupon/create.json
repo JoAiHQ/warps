@@ -9,36 +9,24 @@
     "ro": "Creează un cupon"
   },
   "description": {
-    "en": "Create a discount coupon your customers can redeem at checkout. Set the code, percentage off, usage limit, and expiry — all stored on-chain.",
-    "de": "Erstelle einen Rabattgutschein, den Kunden beim Bezahlen einlösen können. Code, Rabatt, Nutzungslimit und Ablaufdatum werden on-chain gespeichert.",
-    "fr": "Créez un coupon de réduction que vos clients pourront utiliser au paiement. Code, pourcentage, limite et expiration — tout est stocké on-chain.",
-    "es": "Crea un cupón de descuento para que tus clientes lo canjeen al pagar. Código, descuento, límite de uso y vencimiento — todo almacenado on-chain.",
-    "ro": "Creează un cupon de reducere pe care clienții îl pot folosi la plată. Cod, procent, limită și expirare — totul stocat on-chain."
+    "en": "Create a discount coupon as an SFT in your collection. Customers can claim and hold the coupon in their wallet, then redeem it at checkout. All details are stored on-chain.",
+    "de": "Erstelle einen Rabattgutschein als SFT in deiner Kollektion. Kunden können den Gutschein in ihrer Wallet halten und beim Bezahlen einlösen. Alle Details sind on-chain gespeichert.",
+    "fr": "Créez un coupon de réduction en tant que SFT dans votre collection. Les clients peuvent le conserver dans leur wallet et l'utiliser au paiement. Tout est stocké on-chain.",
+    "es": "Crea un cupón de descuento como SFT en tu colección. Los clientes pueden reclamarlo y mantenerlo en su wallet, luego canjearlo al pagar. Todo está almacenado on-chain.",
+    "ro": "Creează un cupon de reducere ca SFT în colecția ta. Clienții pot revendica și păstra cuponul în wallet, apoi folosi la plată. Totul este stocat on-chain."
   },
-  "bot": "Creates an on-chain discount coupon. Ask for the coupon code (short memorable string like SUMMER20), discount percentage (1-100), max uses (0 = unlimited), and validity period in days (0 = never expires).",
+  "bot": "Creates an on-chain coupon as an SFT. Needs a collection ID (create one first if needed). Ask for the coupon code, discount percentage, max uses (0 = unlimited), and validity period in days (0 = never expires).",
   "chain": "multiversx",
   "vars": {
     "SC_ADDRESS": "INJECT:COUPON_SC_ADDRESS"
   },
   "sections": [
     {
-      "title": {
-        "en": "Coupon Details",
-        "de": "Gutschein-Details",
-        "fr": "Détails du coupon",
-        "es": "Detalles del cupón",
-        "ro": "Detalii cupon"
-      },
-      "inputs": ["code", "discountPercent"]
+      "title": { "en": "Coupon Details", "de": "Gutschein-Details", "fr": "Détails du coupon", "es": "Detalles del cupón", "ro": "Detalii cupon" },
+      "inputs": ["collectionId", "code", "discountPercent"]
     },
     {
-      "title": {
-        "en": "Rules",
-        "de": "Einschränkungen",
-        "fr": "Règles",
-        "es": "Reglas",
-        "ro": "Reguli"
-      },
+      "title": { "en": "Rules", "de": "Einschränkungen", "fr": "Règles", "es": "Reglas", "ro": "Reguli" },
       "inputs": ["maxUses", "expiryDays"]
     }
   ],
@@ -54,9 +42,20 @@
       },
       "address": "{{SC_ADDRESS}}",
       "func": "createCoupon",
-      "gasLimit": 5000000,
+      "gasLimit": 10000000,
       "abi": "INJECT:contract/output/coupon.abi.json",
       "inputs": [
+        {
+          "name": "Collection ID",
+          "as": "collectionId",
+          "label": { "en": "Collection", "de": "Kollektion", "fr": "Collection", "es": "Colección", "ro": "Colecție" },
+          "description": { "en": "The SFT collection to create the coupon in.", "de": "Die SFT-Kollektion, in der der Gutschein erstellt wird.", "fr": "La collection SFT dans laquelle créer le coupon.", "es": "La colección SFT en la que crear el cupón.", "ro": "Colecția SFT în care se creează cuponul." },
+          "bot": "The on-chain collection ID. Create a collection first if you don't have one.",
+          "type": "uint64",
+          "position": "arg:1",
+          "source": "field",
+          "required": true
+        },
         {
           "name": "Code",
           "as": "code",
@@ -69,7 +68,7 @@
           },
           "bot": "Short memorable coupon code — e.g. LAUNCH10, VIP50, WELCOME. Max 32 characters, uppercase recommended.",
           "type": "string",
-          "position": "arg:1",
+          "position": "arg:2",
           "source": "field",
           "required": true,
           "min": 1,
@@ -87,7 +86,7 @@
           },
           "bot": "Discount percentage — e.g. 10 for 10% off. Must be between 1 and 100.",
           "type": "uint8",
-          "position": "arg:2",
+          "position": "arg:3",
           "source": "field",
           "required": true,
           "options": {
@@ -111,9 +110,9 @@
             "es": "Número máximo de canjes (0 = ilimitado)",
             "ro": "Numărul maxim de utilizări (0 = nelimitat)"
           },
-          "bot": "Max redemptions. 0 for unlimited. Common values: 1 for single-use, 100 for a large campaign.",
+          "bot": "Max redemptions. 0 for unlimited. Common values: 0 for unlimited, 100 for a campaign.",
           "type": "uint64",
-          "position": "arg:3",
+          "position": "arg:4",
           "source": "field",
           "required": true,
           "options": {
@@ -138,7 +137,7 @@
           },
           "bot": "Validity period in days from now. 0 for no expiry. Examples: 7 for a week, 30 for a month.",
           "type": "uint64",
-          "position": "arg:4",
+          "position": "arg:5",
           "source": "field",
           "required": true,
           "options": {
@@ -155,14 +154,16 @@
       ]
     }
   ],
+  "output": {
+    "COUPON_ID": "out.data"
+  },
   "messages": {
     "success": {
-      "en": "Coupon created! Share the code with your customers — they can redeem it at checkout.",
-      "de": "Gutschein erstellt! Teile den Code mit deinen Kunden — sie können ihn beim Bezahlen einlösen.",
-      "fr": "Coupon créé ! Partagez le code avec vos clients — ils peuvent l'utiliser au paiement.",
-      "es": "¡Cupón creado! Comparte el código con tus clientes — pueden canjearlo al pagar.",
-      "ro": "Cupon creat! Distribuie codul clienților tăi — îl pot folosi la plată."
+      "en": "Coupon {{code}} created! Customers can claim it — {{maxUses}} redemptions available.",
+      "de": "Gutschein {{code}} erstellt! Kunden können ihn jetzt beanspruchen — {{maxUses}} Einlösungen verfügbar.",
+      "fr": "Coupon {{code}} créé ! Les clients peuvent le réclamer — {{maxUses}} utilisations disponibles.",
+      "es": "¡Cupón {{code}} creado! Los clientes pueden reclamarlo — {{maxUses}} canjes disponibles.",
+      "ro": "Cuponul {{code}} a fost creat! Clienții îl pot revendica — {{maxUses}} utilizări disponibile."
     }
-  },
-  "next": "@pass-generate?source=coupon&reference={{code}}"
+  }
 }
