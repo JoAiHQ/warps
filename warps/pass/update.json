@@ -1,0 +1,74 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Pass: Update",
+  "title": {
+    "en": "Update a wallet pass",
+    "de": "Wallet-Pass aktualisieren",
+    "fr": "Mettre à jour un pass mobile",
+    "es": "Actualizar pase de wallet",
+    "ro": "Actualizează un pass de wallet"
+  },
+  "description": {
+    "en": "Push updated data to an existing mobile wallet pass. Changes appear on the customer's phone within about a minute.",
+    "de": "Übermittle aktualisierte Daten an einen bestehenden mobilen Wallet-Pass. Änderungen erscheinen innerhalb von etwa einer Minute auf dem Handy des Kunden.",
+    "fr": "Envoyez des données mises à jour vers un pass mobile existant. Les changements apparaissent sur le téléphone du client en environ une minute.",
+    "es": "Envía datos actualizados a un pase de wallet existente. Los cambios aparecen en el teléfono del cliente en aproximadamente un minuto."
+  },
+  "bot": "Updates an existing wallet pass by pushing new field values. Provide the pass ID and a fields object with the values to update. The update is pushed to the customer's device automatically.",
+  "vars": {
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "PASS_ID": "query:passId",
+    "SOURCE": "query:source",
+    "REFERENCE": "query:reference",
+    "FIELDS": "query:fields"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Update pass",
+        "de": "Pass aktualisieren",
+        "fr": "Mettre à jour le pass",
+        "es": "Actualizar pase",
+        "ro": "Actualizează pass-ul"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/passes-by-reference?source={{SOURCE}}&reference={{REFERENCE}}",
+        "method": "PATCH",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Fields",
+          "as": "fields",
+          "description": {
+            "en": "Key-value pairs to update on the pass",
+            "de": "Schlüssel-Wert-Paare, die auf dem Pass aktualisiert werden sollen",
+            "fr": "Paires clé-valeur à mettre à jour sur le pass",
+            "es": "Pares clave-valor para actualizar en el pase",
+            "ro": "Perechi cheie-valoare de actualizat pe pass"
+          },
+          "bot": "Object with field keys and their new values, e.g. {\"stamps\": \"5/10\", \"discount\": \"10%\"}.",
+          "type": "object",
+          "source": "field",
+          "required": true,
+          "default": "{{FIELDS}}"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "PASS_ID": "out.data.id"
+  },
+  "messages": {
+    "success": {
+      "en": "Pass updated! Changes will appear on the customer's device shortly.",
+      "de": "Pass aktualisiert! Änderungen erscheinen in Kürze auf dem Gerät des Kunden.",
+      "fr": "Pass mis à jour ! Les changements apparaîtront bientôt sur l'appareil du client.",
+      "es": "¡Pase actualizado! Los cambios aparecerán pronto en el dispositivo del cliente.",
+      "ro": "Pass actualizat! Modificările vor apărea în curând pe dispozitivul clientului."
+    }
+  }
+}
