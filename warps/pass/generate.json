@@ -1,0 +1,118 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Pass: Generate",
+  "title": {
+    "en": "Generate a wallet pass",
+    "de": "Wallet-Pass erstellen",
+    "fr": "Générer un pass mobile",
+    "es": "Generar un pase de wallet",
+    "ro": "Generează un pass de wallet"
+  },
+  "description": {
+    "en": "Generate a mobile wallet pass for Apple Wallet or Google Wallet from an existing coupon or loyalty card. The pass appears directly on the customer's phone.",
+    "de": "Erstelle einen mobilen Wallet-Pass für Apple Wallet oder Google Wallet aus einem bestehenden Gutschein oder einer Treuekarte. Der Pass erscheint direkt auf dem Handy des Kunden.",
+    "fr": "Générez un pass mobile pour Apple Wallet ou Google Wallet à partir d'un coupon ou d'une carte de fidélité existant. Le pass apparaît directement sur le téléphone du client.",
+    "es": "Genera un pase de wallet para Apple Wallet o Google Wallet a partir de un cupón o tarjeta de fidelización existente. El pase aparece directamente en el teléfono del cliente."
+  },
+  "bot": "Generates a mobile wallet pass (Apple Wallet or Google Wallet) for a coupon or loyalty card. Provide the source type (coupon or loyalty), the reference (coupon code or card ID), and the platform (apple or google).",
+  "vars": {
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Generate pass",
+        "de": "Pass erstellen",
+        "fr": "Générer le pass",
+        "es": "Generar pase",
+        "ro": "Generează pass"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/passes",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Source",
+          "as": "source",
+          "description": {
+            "en": "The type of pass to generate",
+            "de": "Der Typ des zu erstellenden Passes",
+            "fr": "Le type de pass à générer",
+            "es": "El tipo de pase a generar",
+            "ro": "Tipul de pass de generat"
+          },
+          "bot": "Pass source — 'coupon' for a discount coupon pass, 'loyalty' for a stamp card / store card pass.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "options": {
+            "coupon": "Coupon",
+            "loyalty": "Loyalty Card"
+          }
+        },
+        {
+          "name": "Reference",
+          "as": "reference",
+          "description": {
+            "en": "The coupon code or card ID",
+            "de": "Der Gutscheincode oder die Karten-ID",
+            "fr": "Le code coupon ou l'ID de carte",
+            "es": "El código de cupón o ID de tarjeta",
+            "ro": "Codul cuponului sau ID-ul cardului"
+          },
+          "bot": "The identifier — coupon code (e.g. SUMMER20) for coupons, or card/tag ID for loyalty.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "min": 1,
+          "max": 255
+        },
+        {
+          "name": "Platform",
+          "as": "platform",
+          "description": {
+            "en": "Which wallet platform to generate for",
+            "de": "Für welche Wallet-Plattform der Pass erstellt werden soll",
+            "fr": "Pour quelle plateforme de wallet générer le pass",
+            "es": "Para qué plataforma de wallet generar el pase",
+            "ro": "Pentru ce platformă de wallet să se genereze pass-ul"
+          },
+          "bot": "Target wallet — 'apple' for Apple Wallet (.pkpass), 'google' for Google Wallet.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "options": {
+            "apple": "Apple Wallet",
+            "google": "Google Wallet"
+          }
+        },
+        {
+          "name": "Fields",
+          "as": "fields",
+          "type": "object",
+          "source": "field",
+          "required": false
+        }
+      ]
+    }
+  ],
+  "output": {
+    "PASS_ID": "out.data.id",
+    "PLATFORM": "out.data.platform",
+    "WALLET_URL": "out.data.walletUrl"
+  },
+  "messages": {
+    "success": {
+      "en": "Pass generated! Open this link on your phone to add it to your {{PLATFORM}} wallet: {{WALLET_URL}}",
+      "de": "Pass erstellt! Öffne diesen Link auf deinem Handy, um ihn zum {{PLATFORM}}-Wallet hinzuzufügen: {{WALLET_URL}}",
+      "fr": "Pass généré ! Ouvrez ce lien sur votre téléphone pour l'ajouter à votre wallet {{PLATFORM}} : {{WALLET_URL}}",
+      "es": "¡Pase generado! Abre este enlace en tu teléfono para añadirlo a tu wallet de {{PLATFORM}}: {{WALLET_URL}}",
+      "ro": "Pass generat! Deschide acest link pe telefon pentru a-l adăuga în wallet-ul {{PLATFORM}}: {{WALLET_URL}}"
+    }
+  }
+}
