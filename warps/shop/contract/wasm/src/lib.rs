@@ -6,9 +6,9 @@
 
 // Init:                                 1
 // Upgrade:                              1
-// Endpoints:                           17
+// Endpoints:                           19
 // Async Callback (empty):               1
-// Total number of exported functions:  20
+// Total number of exported functions:  22
 
 #![no_std]
 
@@ -27,6 +27,8 @@ multiversx_sc_wasm_adapter::endpoints! {
         getShopCount => get_shop_count
         getShops => get_shops
         getShopsByCategory => get_shops_by_category
+        setShopSetting => set_shop_setting
+        getShopSetting => get_shop_setting
         addService => add_service
         removeService => remove_service
         getService => get_service
