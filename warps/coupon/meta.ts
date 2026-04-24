@@ -32,7 +32,7 @@ export const meta: Record<string, WarpExtras> = {
       ],
     },
   },
-  'coupon-create': {
+  'create': {
     keywords: {
       en: ['coupon', 'discount', 'promo', 'code', 'create', 'on-chain', 'commerce', 'sale', 'ai', 'ai agent', 'ai-powered', 'automated', 'smart'],
       de: ['gutschein', 'rabatt', 'promo', 'code', 'erstellen', 'on-chain', 'handel', 'sale', 'ki', 'ki-agent', 'ki-gestützt', 'automatisiert', 'smart'],
@@ -112,7 +112,7 @@ export const meta: Record<string, WarpExtras> = {
       ],
     },
   },
-  'coupon-claim': {
+  'claim': {
     keywords: {
       en: ['claim', 'coupon', 'sft', 'wallet', 'receive', 'get', 'on-chain'],
       de: ['beanspruchen', 'gutschein', 'sft', 'wallet', 'erhalten', 'on-chain'],
@@ -142,7 +142,7 @@ export const meta: Record<string, WarpExtras> = {
       ],
     },
   },
-  'coupon-redeem': {
+  'redeem': {
     keywords: {
       en: ['redeem', 'coupon', 'discount', 'code', 'use', 'apply', 'on-chain', 'checkout'],
       de: ['einlösen', 'gutschein', 'rabatt', 'code', 'verwenden', 'anwenden', 'on-chain', 'checkout'],
@@ -206,7 +206,7 @@ export const meta: Record<string, WarpExtras> = {
       ],
     },
   },
-  'coupon-view': {
+  'view': {
     keywords: {
       en: ['view', 'coupon', 'details', 'discount', 'status', 'uses', 'remaining', 'expiry'],
       de: ['ansehen', 'gutschein', 'details', 'rabatt', 'status', 'nutzungen', 'verbleibend', 'ablauf'],
@@ -248,7 +248,7 @@ export const meta: Record<string, WarpExtras> = {
     },
     category: 'commerce',
   },
-  'coupon-list': {
+  'list': {
     keywords: {
       en: ['list', 'my coupons', 'manage', 'owner', 'dashboard', 'on-chain', 'commerce'],
       de: ['liste', 'meine gutscheine', 'verwalten', 'inhaber', 'dashboard', 'on-chain', 'handel'],
@@ -285,7 +285,7 @@ export const meta: Record<string, WarpExtras> = {
     },
     category: 'commerce',
   },
-  'coupon-revoke': {
+  'revoke': {
     keywords: {
       en: ['revoke', 'deactivate', 'cancel', 'coupon', 'on-chain', 'owner', 'commerce'],
       de: ['widerrufen', 'deaktivieren', 'stornieren', 'gutschein', 'on-chain', 'inhaber'],
