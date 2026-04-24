@@ -32,6 +32,12 @@ export function formatSlotRange(slot: AvailabilitySlot, displayTz: string, local
   return `${start} – ${end}`
 }
 
+export function formatTokenAmount(amount: string | undefined, token: string | null): string {
+  if (!amount) return ''
+  const trimmed = parseFloat(amount).toString()
+  return token ? `${trimmed} ${token}` : trimmed
+}
+
 export function getMonthDays(year: number, month: number): (Date | null)[] {
   const first = new Date(year, month, 1)
   const startOffset = (first.getDay() + 6) % 7 // Monday-based
