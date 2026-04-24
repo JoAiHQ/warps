@@ -9,6 +9,7 @@ pub const ERR_INVALID_URL: &str = "url must be at most 256 bytes";
 pub const ERR_INVALID_CHAIN: &str = "chain must be 1-32 bytes";
 pub const ERR_INVALID_ADDRESS: &str = "address must be 1-128 bytes";
 pub const ERR_INVALID_TOKEN: &str = "token must be 1-64 bytes";
+pub const ERR_INVALID_SETTING_KEY: &str = "setting key must be 1-64 bytes";
 
 pub const ERR_SHOP_NOT_FOUND: &str = "shop not found";
 pub const ERR_SHOP_ALREADY_EXISTS: &str = "shop already exists";

@@ -78,6 +78,9 @@ export type JoAiCreateContactInputs = {
   title: string;
   notes: string;
   tags: string;
+  website: string;
+  birthday: string;
+  socials: string;
 };
 
 export type JoAiDeleteContactInputs = {
@@ -221,6 +224,8 @@ export type JoAiCreateActionItemInputs = {
   description: string;
   priority: string;
   dueDate: string;
+  tags: string;
+  goalId: string;
 };
 
 export type JoAiDeleteItemInputs = {
@@ -465,7 +470,7 @@ export type JoAiUserNameUpdateData = {
   USER_NAME: any;
 };
 
-export type JoAiUserOnboardingInputs = {
+export type JoAiUserOnboardingScreenInputs = {
   telegramUsername: string;
   biggestTimeWaster: string;
   primaryGoalAI: string;

@@ -121,7 +121,8 @@ export function generateTypes() {
             const tsType = type === 'uint256' || type === 'int256' ? 'string' :
                            type === 'number' ? 'number' :
                            type === 'boolean' ? 'boolean' : 'string';
-            const formattedKey = key.includes('-') || key.includes(' ') ? `'${key}'` : key;
+            const needsQuoting = key.includes('-') || key.includes(' ') || key.includes('[') || key.includes('.');
+            const formattedKey = needsQuoting ? `'${key}'` : key;
             typeContent += `  ${formattedKey}: ${tsType};\n`;
         });
         typeContent += `};\n\n`;
@@ -131,7 +132,8 @@ export function generateTypes() {
             typeContent += `export type ${baseName}Data = {\n`;
             Object.entries(warp.output).forEach(([key, value]) => {
               const type = inferType(value, key);
-              const formattedKey = key.includes('-') || key.includes(' ') ? `'${key}'` : key;
+            const needsQuoting = key.includes('-') || key.includes(' ') || key.includes('[') || key.includes('.');
+            const formattedKey = needsQuoting ? `'${key}'` : key;
               typeContent += `  ${formattedKey}: ${type};\n`;
             });
             typeContent += `};\n\n`;

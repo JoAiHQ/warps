@@ -72,7 +72,7 @@ function Main() {
   const { data, inputs, config } = useAppContext<MultiversXViewNFTData, MultiversXViewNFTInputs>()
 
   const identifier = data?.NFT_IDENTIFIER
-  const collection = data?.COLLECTION || inputs?.COLLECTION_ID
+  const collection = data?.COLLECTION || inputs?.NFT_IDENTIFIER
 
   if (!data && !inputs) {
     return <EmptyMessageSkeleton />

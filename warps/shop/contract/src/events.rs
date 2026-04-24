@@ -25,4 +25,7 @@ pub trait EventsModule {
 
     #[event("productStockUpdated")]
     fn product_stock_updated_event(&self, #[indexed] id: ManagedBuffer, #[indexed] product_slug: ManagedBuffer, in_stock: bool);
+
+    #[event("shopSettingSet")]
+    fn shop_setting_set_event(&self, #[indexed] id: ManagedBuffer, #[indexed] key: ManagedBuffer, value: bool);
 }

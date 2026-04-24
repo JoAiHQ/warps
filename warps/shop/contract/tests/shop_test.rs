@@ -276,6 +276,45 @@ fn update_product_stock(world: &mut ScenarioWorld, from: &str, id: &str, product
     );
 }
 
+fn set_setting(world: &mut ScenarioWorld, from: &str, id: &str, key: &str, value: bool) {
+    world.sc_call(
+        ScCallStep::new()
+            .from(from)
+            .to(SHOP_SC)
+            .function("setShopSetting")
+            .argument(format!("str:{id}").as_str())
+            .argument(format!("str:{key}").as_str())
+            .argument(if value { "1" } else { "0" })
+            .gas_limit("10,000,000")
+            .expect(TxExpect::ok()),
+    );
+}
+
+fn set_setting_err(world: &mut ScenarioWorld, from: &str, id: &str, key: &str, value: bool, err: &str) {
+    world.sc_call(
+        ScCallStep::new()
+            .from(from)
+            .to(SHOP_SC)
+            .function("setShopSetting")
+            .argument(format!("str:{id}").as_str())
+            .argument(format!("str:{key}").as_str())
+            .argument(if value { "1" } else { "0" })
+            .gas_limit("10,000,000")
+            .expect(TxExpect::user_error(format!("str:{err}").as_str())),
+    );
+}
+
+fn check_setting(world: &mut ScenarioWorld, id: &str, key: &str, expected: bool) {
+    world.sc_query(
+        ScQueryStep::new()
+            .to(SHOP_SC)
+            .function("getShopSetting")
+            .argument(format!("str:{id}").as_str())
+            .argument(format!("str:{key}").as_str())
+            .expect(TxExpect::ok().result(if expected { "1" } else { "0" })),
+    );
+}
+
 // ─── registerShop ────────────────────────────────────────────────────────────
 
 #[test]
@@ -536,4 +575,75 @@ fn test_full_shop_setup_flow() {
     add_service(&mut world, OWNER, SHOP_ID, "spa-60min");
     update_product_stock(&mut world, OWNER, SHOP_ID, "single-room", false);
     update_shop(&mut world, OWNER, SHOP_ID, "boutique-hotel", "Vienna, AT");
+}
+
+// ─── Settings ─────────────────────────────────────────────────────────────────
+
+#[test]
+fn test_set_shop_setting() {
+    let mut world = setup_world();
+    register_shop(&mut world, OWNER, SHOP_ID);
+    set_setting(&mut world, OWNER, SHOP_ID, "bookable", true);
+}
+
+#[test]
+fn test_set_setting_not_owner_fails() {
+    let mut world = setup_world();
+    register_shop(&mut world, OWNER, SHOP_ID);
+    set_setting_err(&mut world, OTHER, SHOP_ID, "bookable", true, shop::errors::ERR_NOT_SHOP_OWNER);
+}
+
+#[test]
+fn test_set_setting_empty_key_fails() {
+    let mut world = setup_world();
+    register_shop(&mut world, OWNER, SHOP_ID);
+    set_setting_err(&mut world, OWNER, SHOP_ID, "", true, shop::errors::ERR_INVALID_SETTING_KEY);
+}
+
+#[test]
+fn test_get_setting_defaults_to_false() {
+    let mut world = setup_world();
+    register_shop(&mut world, OWNER, SHOP_ID);
+    check_setting(&mut world, SHOP_ID, "bookable", false);
+}
+
+#[test]
+fn test_set_and_get_setting() {
+    let mut world = setup_world();
+    register_shop(&mut world, OWNER, SHOP_ID);
+    set_setting(&mut world, OWNER, SHOP_ID, "bookable", true);
+    check_setting(&mut world, SHOP_ID, "bookable", true);
+}
+
+#[test]
+fn test_set_setting_toggle() {
+    let mut world = setup_world();
+    register_shop(&mut world, OWNER, SHOP_ID);
+    set_setting(&mut world, OWNER, SHOP_ID, "bookable", true);
+    check_setting(&mut world, SHOP_ID, "bookable", true);
+    set_setting(&mut world, OWNER, SHOP_ID, "bookable", false);
+    check_setting(&mut world, SHOP_ID, "bookable", false);
+}
+
+#[test]
+fn test_multiple_settings() {
+    let mut world = setup_world();
+    register_shop(&mut world, OWNER, SHOP_ID);
+    set_setting(&mut world, OWNER, SHOP_ID, "bookable", true);
+    set_setting(&mut world, OWNER, SHOP_ID, "delivery_enabled", false);
+    check_setting(&mut world, SHOP_ID, "bookable", true);
+    check_setting(&mut world, SHOP_ID, "delivery_enabled", false);
+}
+
+#[test]
+fn test_setting_shop_not_found_fails() {
+    let mut world = setup_world();
+    world.sc_query(
+        ScQueryStep::new()
+            .to(SHOP_SC)
+            .function("getShopSetting")
+            .argument("str:nonexistent")
+            .argument("str:bookable")
+            .expect(TxExpect::user_error(format!("str:{}", shop::errors::ERR_SHOP_NOT_FOUND).as_str())),
+    );
 }

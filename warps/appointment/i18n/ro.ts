@@ -31,6 +31,9 @@ export const ro: typeof en = {
     tryAgain: 'Încearcă din nou',
     copyLink: 'Trimite linkul',
     copied: 'Copiat!',
+    serviceDuration: 'min',
+    bookService: 'Rezervă',
+    noSpecificService: 'Niciun serviciu specific',
   },
   confirm: {
     confirmed: 'Confirmat!',

@@ -1,7 +1,7 @@
 #![no_std]
 
 use errors::{
-    ERR_INVALID_CATEGORY, ERR_INVALID_DESCRIPTION, ERR_INVALID_LOCATION, ERR_INVALID_ID,
+    ERR_INVALID_CATEGORY, ERR_INVALID_DESCRIPTION,     ERR_INVALID_SETTING_KEY, ERR_INVALID_LOCATION, ERR_INVALID_ID,
     ERR_INVALID_URL, ERR_SHOP_ALREADY_EXISTS, ERR_SHOP_NOT_FOUND,
 };
 use types::{ShopInfo, ShopService};
@@ -23,6 +23,7 @@ const MAX_CATEGORY_LEN: usize = 64;
 const MAX_LOCATION_LEN: usize = 128;
 const MAX_DESCRIPTION_LEN: usize = 512;
 const MAX_URL_LEN: usize = 256;
+const MAX_FLAG_KEY_LEN: usize = 64;
 
 #[multiversx_sc::contract]
 pub trait ShopContract:
@@ -187,5 +188,28 @@ pub trait ShopContract:
         }
 
         result
+    }
+
+    // --- Flags ---
+
+    #[endpoint(setShopSetting)]
+    fn set_shop_setting(&self, id: ManagedBuffer, key: ManagedBuffer, value: bool) {
+        self.require_shop_owner(&id);
+        require!(key.len() >= 1 && key.len() <= MAX_FLAG_KEY_LEN, ERR_INVALID_SETTING_KEY);
+
+        self.shop_setting(&id, &key).set(value);
+
+        self.shop_setting_set_event(id, key, value);
+    }
+
+    #[view(getShopSetting)]
+    fn get_shop_setting(&self, id: ManagedBuffer, key: ManagedBuffer) -> bool {
+        require!(!self.shop_info(&id).is_empty(), ERR_SHOP_NOT_FOUND);
+
+        if self.shop_setting(&id, &key).is_empty() {
+            return false;
+        }
+
+        self.shop_setting(&id, &key).get()
     }
 }

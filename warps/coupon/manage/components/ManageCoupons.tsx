@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { translations } from '../../i18n'
 
 export function ManageCoupons() {
-  const { data, executeWarp } = useAppContext<any[]>()
+  const { data, executeWarp } = useAppContext<any>()
   const tr = useTranslations(translations)
   const [revokingId, setRevokingId] = useState<number | null>(null)
   const [revokedIds, setRevokedIds] = useState<Set<number>>(new Set())
