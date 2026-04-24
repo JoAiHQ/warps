@@ -29,6 +29,9 @@ export const en = {
     tryAgain: 'Try again',
     copyLink: 'Share this link',
     copied: 'Copied!',
+    serviceDuration: 'min',
+    bookService: 'Book',
+    noSpecificService: 'No specific service',
   },
   confirm: {
     confirmed: 'Confirmed!',

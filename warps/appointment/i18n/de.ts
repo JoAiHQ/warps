@@ -31,6 +31,9 @@ export const de: typeof en = {
     tryAgain: 'Erneut versuchen',
     copyLink: 'Link teilen',
     copied: 'Kopiert!',
+    serviceDuration: 'Min.',
+    bookService: 'Buchen',
+    noSpecificService: 'Kein bestimmter Service',
   },
   confirm: {
     confirmed: 'Bestätigt!',
