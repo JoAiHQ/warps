@@ -145,7 +145,7 @@ function Main() {
       const result = (await executeWarp('appointment-book-confirm', {
         title,
         scheduledAt: selectedSlot.startAt,
-        timezone: agentTimezone ?? undefined,
+        timezone: displayTimezone,
         attendeeName: name.trim(),
         attendeeEmail: email.trim() || undefined,
         description: notes.trim() || undefined,
