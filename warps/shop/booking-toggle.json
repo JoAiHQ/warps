@@ -1,0 +1,69 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Shop: Toggle Booking",
+  "title": {
+    "en": "Toggle booking",
+    "de": "Buchung umschalten"
+  },
+  "description": {
+    "en": "Enable or disable online booking for your shop by setting the bookable flag on-chain. When enabled, customers can browse your services and book appointments directly.",
+    "de": "Aktiviere oder deaktiviere Online-Buchung für deinen Shop, indem du den Buchungs-Flag On-Chain setzt. Wenn aktiv, können Kunden deine Dienstleistungen durchsuchen und direkt Termine buchen."
+  },
+  "bot": "Sets the shop's bookable flag on-chain. Pass enabled=true to allow bookings, enabled=false to disable.",
+  "chain": "multiversx",
+  "vars": {
+    "SC_ADDRESS": "INJECT:SHOP_SC_ADDRESS"
+  },
+  "actions": [
+    {
+      "type": "contract",
+      "label": {
+        "en": "Update",
+        "de": "Aktualisieren"
+      },
+      "address": "{{SC_ADDRESS}}",
+      "func": "setShopSetting",
+      "inputs": [
+        {
+          "name": "Shop ID",
+          "as": "id",
+          "type": "string",
+          "position": "arg:1",
+          "source": "hidden",
+          "default": "{{JOAI_WARP_BRAND}}",
+          "required": true
+        },
+        {
+          "name": "Flag Key",
+          "as": "key",
+          "type": "string",
+          "position": "arg:2",
+          "source": "hidden",
+          "default": "bookable",
+          "required": true
+        },
+        {
+          "name": "Enable Booking",
+          "as": "enabled",
+          "description": {
+            "en": "Turn online booking on or off",
+            "de": "Online-Buchung ein- oder ausschalten"
+          },
+          "bot": "true to enable booking, false to disable.",
+          "type": "boolean",
+          "position": "arg:3",
+          "source": "field",
+          "required": true
+        }
+      ],
+      "gasLimit": 10000000,
+      "abi": "INJECT:contract/output/shop.abi.json"
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Booking setting updated.",
+      "de": "Buchungseinstellung aktualisiert."
+    }
+  }
+}
