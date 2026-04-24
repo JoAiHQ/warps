@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { translations, Translations } from '../../i18n'
 
 export function CouponList() {
-  const { data, executeWarp } = useAppContext<any[]>()
+  const { data, executeWarp } = useAppContext<any>()
   const tr = useTranslations(translations)
   const [claimingId, setClaimingId] = useState<number | null>(null)
   const [claimedIds, setClaimedIds] = useState<Set<number>>(new Set())

@@ -171,7 +171,7 @@ export type MailcoachDeleteTemplateData = {
 
 export type MailcoachGetCampaignBouncesInputs = {
   CAMPAIGN_UUID: string;
-  filter[type]: string;
+  'filter[type]': string;
   per_page: number;
 };
 
@@ -195,7 +195,7 @@ export type MailcoachGetCampaignClicksData = {
 
 export type MailcoachGetCampaignOpensInputs = {
   CAMPAIGN_UUID: string;
-  filter[search]: string;
+  'filter[search]': string;
   sort: string;
   per_page: number;
 };
@@ -334,8 +334,8 @@ export type MailcoachGetTransactionalTemplateData = {
 };
 
 export type MailcoachListCampaignsInputs = {
-  filter[search]: string;
-  filter[status]: string;
+  'filter[search]': string;
+  'filter[status]': string;
   per_page: number;
 };
 
@@ -346,7 +346,7 @@ export type MailcoachListCampaignsData = {
 };
 
 export type MailcoachListEmailListsInputs = {
-  filter[search]: string;
+  'filter[search]': string;
   sort: string;
   per_page: number;
 };
@@ -390,8 +390,8 @@ export type MailcoachListSubscriberImportsData = {
 
 export type MailcoachListSubscribersInputs = {
   LIST_UUID: string;
-  filter[search]: string;
-  filter[status]: string;
+  'filter[search]': string;
+  'filter[status]': string;
   per_page: number;
 };
 
@@ -402,8 +402,8 @@ export type MailcoachListSubscribersData = {
 };
 
 export type MailcoachListSuppressionsInputs = {
-  filter[search]: string;
-  filter[reason]: string;
+  'filter[search]': string;
+  'filter[reason]': string;
   per_page: number;
 };
 
@@ -423,7 +423,7 @@ export type MailcoachListTagsData = {
 };
 
 export type MailcoachListTemplatesInputs = {
-  filter[search]: string;
+  'filter[search]': string;
   sort: string;
 };
 
@@ -434,7 +434,7 @@ export type MailcoachListTemplatesData = {
 };
 
 export type MailcoachListTransactionalTemplatesInputs = {
-  filter[name]: string;
+  'filter[name]': string;
   per_page: number;
 };
 

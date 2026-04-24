@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { translations } from '../../i18n'
 
 export function RedeemForm() {
-  const { data, executeWarp } = useAppContext<any[]>()
+  const { data, executeWarp } = useAppContext<any>()
   const tr = useTranslations(translations)
   const [selectedId, setSelectedId] = useState<number | null>(null)
   const [redeeming, setRedeeming] = useState(false)
