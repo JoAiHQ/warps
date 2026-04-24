@@ -304,4 +304,42 @@ export const meta: Record<string, WarpExtras> = {
       ],
     },
   },
+
+  'confirm': {
+    keywords: {
+      en: ['appointment confirmation', 'meeting confirmation', 'view booking', 'add to calendar', 'confirmed appointment'],
+      de: ['Terminbestätigung', 'Bestätigungsseite', 'Termin ansehen', 'Zum Kalender hinzufügen', 'bestätigter Termin'],
+    },
+    useCases: {
+      en: ['Share a confirmed meeting link with an attendee', 'Let attendees add a meeting to their calendar', 'Provide a page to view meeting details and join link'],
+      de: ['Einen Bestätigungslink mit einem Teilnehmer teilen', 'Teilnehmern ermöglichen, einen Termin zum Kalender hinzuzufügen', 'Eine Seite mit Termindetails und Teilnahmelink bereitstellen'],
+    },
+    category: 'productivity',
+    faq: {
+      en: [
+        {
+          question: 'How do I share a confirmed appointment?',
+          answer:
+            'After booking, copy the confirmation link and send it to the attendee. They can view the meeting details and add it to their calendar.',
+        },
+        {
+          question: 'Can an attendee cancel from the confirmation page?',
+          answer:
+            'Yes, the confirmation page includes a cancel option that the attendee can use to cancel the appointment.',
+        },
+      ],
+      de: [
+        {
+          question: 'Wie teile ich einen bestätigten Termin?',
+          answer:
+            'Kopiere nach der Buchung den Bestätigungslink und sende ihn an den Teilnehmer. Er kann die Termindetails ansehen und zu seinem Kalender hinzufügen.',
+        },
+        {
+          question: 'Kann ein Teilnehmer von der Bestätigungsseite aus absagen?',
+          answer:
+            'Ja, die Bestätigungsseite hat eine Absagen-Funktion, die der Teilnehmer nutzen kann, um den Termin zu stornieren.',
+        },
+      ],
+    },
+  },
 }

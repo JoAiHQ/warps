@@ -63,6 +63,7 @@ function Main() {
   const [cancelled, setCancelled] = useState(false)
   const [bookingError, setBookingError] = useState<string | null>(null)
   const [cancelError, setCancelError] = useState<string | null>(null)
+  const [confirmUrl, setConfirmUrl] = useState<string | null>(null)
 
   const fetchSlots = useCallback(async (date: Date, tz: string) => {
     const fetchId = ++fetchIdRef.current
@@ -162,6 +163,13 @@ function Main() {
         endAt: selectedSlot.endAt,
         joinUrl: result?.MEETING_URL,
       })
+
+      const code = result?.MEETING_URL ? new URL(result.MEETING_URL).searchParams.get('code') : null
+      if (code) {
+        const base = window.location.pathname.endsWith('/') ? window.location.pathname : window.location.pathname + '/'
+        setConfirmUrl(`${window.location.origin}${base}../confirm?code=${code}`)
+      }
+
       setStep('confirmed')
     } catch (err) {
       setBookingError(err instanceof Error ? err.message : tr.bookingError)
@@ -190,6 +198,9 @@ function Main() {
         cancelled={cancelled}
         cancelError={cancelError}
         onCancel={handleCancel}
+        shareUrl={confirmUrl ?? undefined}
+        copyLinkLabel={tr.copyLink}
+        copiedLabel={tr.copied}
       />
     )
   }

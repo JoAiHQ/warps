@@ -1,4 +1,5 @@
-import { formatDayFull, formatTime } from '../helpers/format'
+import { useState } from 'react'
+import { formatDayFull, formatTime, formatTokenAmount } from '../helpers/format'
 import { googleCalendarUrl, outlookCalendarUrl, downloadIcs } from '../helpers/calendar'
 import type { BookingResult } from '../warp.types'
 
@@ -17,13 +18,27 @@ type Props = {
   cancelled: boolean
   cancelError: string | null
   onCancel: () => void
+  servicePrice?: string
+  serviceToken?: string
+  serviceName?: string
+  payLabel?: string
+  payingLabel?: string
+  paying?: boolean
+  payError?: string | null
+  onPay?: () => void
+  shareUrl?: string
+  copyLinkLabel?: string
+  copiedLabel?: string
 }
 
 export function BookingConfirmed({
   booked, selectedDate, displayTimezone, locale, title, subtitle,
   cancelLabel, cancellingLabel, cancelledTitle, cancelledMessage,
   cancelling, cancelled, cancelError, onCancel,
+  servicePrice, serviceToken, serviceName, payLabel, payingLabel, paying, payError, onPay,
+  shareUrl, copyLinkLabel, copiedLabel,
 }: Props) {
+  const [copied, setCopied] = useState(false)
   if (cancelled) {
     return (
       <div className="flex flex-col items-center gap-5 p-6 text-center">
@@ -94,6 +109,47 @@ export function BookingConfirmed({
           </button>
         </div>
       </div>
+      {servicePrice && onPay && (
+        <div className="w-full rounded-xl border border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-900 p-4 text-sm">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="font-medium text-gray-900 dark:text-white">{serviceName ?? 'Service'}</p>
+              <p className="text-gray-500 dark:text-gray-400 mt-0.5">{formatTokenAmount(servicePrice, serviceToken ?? null)}</p>
+            </div>
+            <button
+              onClick={onPay}
+              disabled={paying}
+              className="rounded-lg bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-4 py-2 text-sm font-medium disabled:opacity-50 transition-opacity"
+            >
+              {paying ? payingLabel : payLabel}
+            </button>
+          </div>
+          {payError && (
+            <p className="text-xs text-red-500 dark:text-red-400 mt-2">{payError}</p>
+          )}
+        </div>
+      )}
+      {shareUrl && (
+        <div className="w-full rounded-xl border border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-900 p-4 text-sm">
+          <p className="font-medium text-gray-900 dark:text-white mb-2">{copyLinkLabel ?? 'Share this link'}</p>
+          <div className="flex items-center gap-2">
+            <div className="flex-1 rounded-md border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-3 py-2 text-xs text-gray-600 dark:text-gray-300 truncate text-left select-all">
+              {shareUrl}
+            </div>
+            <button
+              onClick={() => {
+                navigator.clipboard.writeText(shareUrl).then(() => {
+                  setCopied(true)
+                  setTimeout(() => setCopied(false), 2000)
+                })
+              }}
+              className="shrink-0 rounded-md bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-3 py-2 text-xs font-medium hover:opacity-90 transition-opacity"
+            >
+              {copied ? (copiedLabel ?? 'Copied!') : (copyLinkLabel ?? 'Copy')}
+            </button>
+          </div>
+        </div>
+      )}
       {cancelError && (
         <div className="w-full rounded-lg border border-red-200 dark:border-red-900 bg-red-50 dark:bg-red-950/40 px-3 py-2 text-sm text-red-700 dark:text-red-300 text-left">
           {cancelError}
