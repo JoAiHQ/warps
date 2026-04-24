@@ -65,6 +65,7 @@ export const fr: typeof en = {
       bufferAfter: 'Tampon après (min)',
       minNotice: 'Préavis minimum (min)',
       maxDaysAhead: 'Jours à l\'avance max',
+      conferenceEnabled: 'Lien de réunion en ligne',
       serviceSlug: 'Slug',
       serviceName: 'Nom',
       serviceDuration: 'Durée (min)',

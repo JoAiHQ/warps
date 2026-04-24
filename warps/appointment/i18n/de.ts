@@ -65,6 +65,7 @@ export const de: typeof en = {
       bufferAfter: 'Pufferzeit (Min)',
       minNotice: 'Mindestvorlaufzeit (Min)',
       maxDaysAhead: 'Maximale Vorlaufzeit (Tage)',
+      conferenceEnabled: 'Online-Meeting-Link',
       serviceSlug: 'Slug',
       serviceName: 'Name',
       serviceDuration: 'Dauer (Min)',

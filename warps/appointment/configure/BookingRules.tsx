@@ -1,4 +1,5 @@
 import { Input } from '@openai/apps-sdk-ui/components/Input'
+import { Switch } from '@openai/apps-sdk-ui/components/Switch'
 import React from 'react'
 import { useTranslations } from '../../../ui/lib/hooks'
 import { translations } from '../i18n'
@@ -52,6 +53,13 @@ export function BookingRules({ policy, onChange }: Props) {
             onChange={(e) => onChange({ maxDaysAhead: e.target.value ? Number(e.target.value) : null })}
           />
         </div>
+      </div>
+      <div className="flex items-center justify-between">
+        <label className="text-xs text-secondary">{tr.fields.conferenceEnabled}</label>
+        <Switch
+          checked={policy.conferenceEnabled ?? true}
+          onCheckedChange={(checked) => onChange({ conferenceEnabled: checked })}
+        />
       </div>
     </section>
   )

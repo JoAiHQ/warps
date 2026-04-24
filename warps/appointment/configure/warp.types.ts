@@ -16,6 +16,7 @@ export type AppointmentPolicy = {
   blockedDates?: string[]
   holidays?: string[]
   services?: AppointmentService[]
+  conferenceEnabled?: boolean | null
 }
 
 export type AvailableStaffMember = {
