@@ -63,6 +63,7 @@ export const en = {
       bufferAfter: 'Buffer after (min)',
       minNotice: 'Minimum notice (min)',
       maxDaysAhead: 'Max days ahead',
+      conferenceEnabled: 'Online meeting link',
       serviceSlug: 'Slug',
       serviceName: 'Name',
       serviceDuration: 'Duration (min)',

@@ -65,6 +65,7 @@ export const ro: typeof en = {
       bufferAfter: 'Pauză după (min)',
       minNotice: 'Preaviz minim (min)',
       maxDaysAhead: 'Zile maxim în avans',
+      conferenceEnabled: 'Link întâlnire online',
       serviceSlug: 'Slug',
       serviceName: 'Nume',
       serviceDuration: 'Durată (min)',

@@ -76,6 +76,7 @@ function Main() {
           blockedDates: policy.blockedDates ?? [],
           holidays: policy.holidays ?? [],
           services: services.filter((s) => s.slug.trim() !== '').map(stripId),
+          conferenceEnabled: policy.conferenceEnabled ?? true,
         }),
       })
       setSaved(true)
