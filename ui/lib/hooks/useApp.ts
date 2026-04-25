@@ -11,6 +11,7 @@ export type UseAppResult<T, I = any> = {
   paymentRequired: boolean
   executeWarp: AppExecute
   executePrompt: (prompt: string) => Promise<void>
+  copyToClipboard: (text: string) => void
   meta?: unknown
   locale: string
   t: Translator
@@ -112,6 +113,11 @@ export function useApp<T = any, I = any>(app: App, isDevMode = false, locale = '
     return interpretToolResult(toolName, result)
   }, [app, isDevMode])
 
+  const copyToClipboard = useCallback((text: string) => {
+    window.parent.postMessage({ type: 'joai:clipboard_copy', text }, '*')
+    navigator.clipboard?.writeText(text).catch(() => {})
+  }, [])
+
   const sendFollowUp = useCallback(async (prompt: string) => {
     if (isDevMode) {
       console.log('[Dev Mode] Would send prompt:', prompt)
@@ -160,6 +166,7 @@ export function useApp<T = any, I = any>(app: App, isDevMode = false, locale = '
     paymentRequired: Boolean(upgradeRecord),
     executeWarp: execute,
     executePrompt: sendFollowUp,
+    copyToClipboard,
     meta,
     locale,
     t,
