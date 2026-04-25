@@ -26,6 +26,7 @@ type Props = {
   playerAddress: string | null
   onResign: () => void
   resigning: boolean
+  isAIGame?: boolean
 }
 
 function StatusBadge({ status, currentTurn, board }: { status: number; currentTurn: number; board: Board }) {
@@ -82,13 +83,20 @@ function StatusBadge({ status, currentTurn, board }: { status: number; currentTu
   )
 }
 
-export default function GameInfo({ info, board, playerAddress, onResign, resigning }: Props) {
+export default function GameInfo({ info, board, playerAddress, onResign, resigning, isAIGame }: Props) {
   const isPlayer = playerAddress === info.white || playerAddress === info.black
 
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <StatusBadge status={info.status} currentTurn={info.current_turn} board={board} />
+        <div className="flex items-center gap-2">
+          <StatusBadge status={info.status} currentTurn={info.current_turn} board={board} />
+          {isAIGame && (
+            <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300">
+              vs AI
+            </span>
+          )}
+        </div>
         <span className="text-xs text-gray-400 dark:text-gray-500">Game #{info.game_id}</span>
       </div>
 

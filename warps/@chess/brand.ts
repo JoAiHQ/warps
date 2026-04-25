@@ -27,6 +27,7 @@ export const brand = async (config: WarpClientConfig): Promise<WarpbaseBrand> =>
     routes: [
       { path: '/', warp: '@chess-list', label: { en: 'My Games', de: 'Meine Spiele' }, nav: true, hiddenFields: ['PLAYER'] },
       { path: '/create', warp: '@chess-create', label: { en: 'New Game', de: 'Neues Spiel' }, nav: true },
+      { path: '/play-ai', warp: '@chess-create-ai-game', label: { en: 'Play AI', de: 'Gegen KI' }, nav: true },
       { path: '/game', warp: '@chess-game', label: { en: 'Play', de: 'Spielen' }, nav: false, hiddenFields: ['PLAYER'] },
       { path: '/open', warp: '@chess-open-games', label: { en: 'Open Games', de: 'Offene Spiele' }, nav: true },
     ],
