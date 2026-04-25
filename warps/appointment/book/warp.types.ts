@@ -10,15 +10,6 @@ export type AvailabilitySlot = {
   serviceSlug?: string | null
 }
 
-export type ShopService = {
-  slug: string
-  name: string
-  price: string
-  duration_minutes: number
-  category?: string
-  description?: string
-}
-
 export type BookPublicData = {
   policy: AppointmentPolicy | null
 }

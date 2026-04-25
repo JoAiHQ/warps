@@ -164,10 +164,8 @@ function Main() {
         joinUrl: result?.MEETING_URL,
       })
 
-      const code = result?.MEETING_URL ? new URL(result.MEETING_URL).searchParams.get('code') : null
-      if (code) {
-        const base = window.location.pathname.endsWith('/') ? window.location.pathname : window.location.pathname + '/'
-        setConfirmUrl(`${window.location.origin}${base}../confirm?code=${code}`)
+      if (result?.MEETING_URL) {
+        setConfirmUrl(result.MEETING_URL)
       }
 
       setStep('confirmed')
