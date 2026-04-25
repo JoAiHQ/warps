@@ -9,17 +9,7 @@ import { translations } from '../i18n'
 import { BookingRules } from './BookingRules'
 import { OfficeHours } from './OfficeHours'
 import { ServicesList } from './ServicesList'
-import { AppointmentConfigureData, AppointmentPolicy, AppointmentService } from './warp.types'
-
-type ServiceEntry = AppointmentService & { _id: string }
-
-function withId(service: AppointmentService): ServiceEntry {
-  return { ...service, _id: crypto.randomUUID() }
-}
-
-function stripId({ _id: _, ...service }: ServiceEntry): AppointmentService {
-  return service
-}
+import { AppointmentConfigureData, AppointmentPolicy } from './warp.types'
 
 function emptyPolicy(): AppointmentPolicy {
   return {
@@ -30,7 +20,9 @@ function emptyPolicy(): AppointmentPolicy {
     slotIntervalMinutes: null,
     blockedDates: [],
     holidays: [],
-    services: [],
+    conferenceEnabled: true,
+    serviceSelectionEnabled: true,
+    marketplacePaymentEnabled: false,
   }
 }
 
@@ -38,7 +30,6 @@ function Main() {
   const { data, executeWarp } = useAppContext<AppointmentConfigureData>()
   const tr = useTranslations(translations).configure
   const [policy, setPolicy] = useState<AppointmentPolicy>(emptyPolicy())
-  const [services, setServices] = useState<ServiceEntry[]>([])
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
   const initializedRef = useRef(false)
@@ -47,7 +38,6 @@ function Main() {
     if (data?.policy && !initializedRef.current) {
       initializedRef.current = true
       setPolicy(data.policy)
-      setServices((data.policy.services ?? []).map(withId))
     }
   }, [data])
 
@@ -75,8 +65,9 @@ function Main() {
           slotIntervalMinutes: policy.slotIntervalMinutes ?? null,
           blockedDates: policy.blockedDates ?? [],
           holidays: policy.holidays ?? [],
-          services: services.filter((s) => s.slug.trim() !== '').map(stripId),
           conferenceEnabled: policy.conferenceEnabled ?? true,
+          serviceSelectionEnabled: policy.serviceSelectionEnabled ?? true,
+          marketplacePaymentEnabled: policy.marketplacePaymentEnabled ?? false,
         }),
       })
       setSaved(true)
@@ -102,21 +93,7 @@ function Main() {
 
       <BookingRules policy={policy} onChange={updatePolicy} />
 
-      <ServicesList
-        services={services}
-        onAdd={() => {
-          markDirty()
-          setServices((prev) => [...prev, withId({ slug: '', name: '' })])
-        }}
-        onUpdate={(id, updated) => {
-          markDirty()
-          setServices((prev) => prev.map((s) => (s._id === id ? { ...updated, _id: id } : s)))
-        }}
-        onRemove={(id) => {
-          markDirty()
-          setServices((prev) => prev.filter((s) => s._id !== id))
-        }}
-      />
+      <ServicesList services={data.services ?? []} />
 
       <Button color="primary" block onClick={handleSave} disabled={saving}>
         {saved ? (

@@ -2,8 +2,6 @@ export type AppointmentService = {
   slug: string
   name?: string
   durationMinutes?: number
-  routingMode?: 'direct' | 'round_robin'
-  staffAgentUuids?: string[]
 }
 
 export type AppointmentPolicy = {
@@ -15,8 +13,9 @@ export type AppointmentPolicy = {
   slotIntervalMinutes?: number | null
   blockedDates?: string[]
   holidays?: string[]
-  services?: AppointmentService[]
   conferenceEnabled?: boolean | null
+  serviceSelectionEnabled?: boolean | null
+  marketplacePaymentEnabled?: boolean | null
 }
 
 export type AvailableStaffMember = {
@@ -26,5 +25,6 @@ export type AvailableStaffMember = {
 
 export type AppointmentConfigureData = {
   policy: AppointmentPolicy | null
+  services: AppointmentService[]
   availableStaff: AvailableStaffMember[]
 }

@@ -61,6 +61,20 @@ export function BookingRules({ policy, onChange }: Props) {
           onCheckedChange={(checked) => onChange({ conferenceEnabled: checked })}
         />
       </div>
+      <div className="flex items-center justify-between">
+        <label className="text-xs text-secondary">{tr.fields.serviceSelectionEnabled}</label>
+        <Switch
+          checked={policy.serviceSelectionEnabled ?? true}
+          onCheckedChange={(checked) => onChange({ serviceSelectionEnabled: checked })}
+        />
+      </div>
+      <div className="flex items-center justify-between">
+        <label className="text-xs text-secondary">{tr.fields.marketplacePaymentEnabled}</label>
+        <Switch
+          checked={policy.marketplacePaymentEnabled ?? false}
+          onCheckedChange={(checked) => onChange({ marketplacePaymentEnabled: checked })}
+        />
+      </div>
     </section>
   )
 }
