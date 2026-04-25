@@ -321,6 +321,25 @@ export function truncateAddress(addr: string): string {
   return addr.slice(0, 6) + '...' + addr.slice(-4)
 }
 
+const PIECE_LETTERS: Record<number, string> = {
+  [W_KING]: 'K', [W_QUEEN]: 'Q', [W_ROOK]: 'R', [W_BISHOP]: 'B', [W_KNIGHT]: 'N', [W_PAWN]: 'P',
+  [B_KING]: 'k', [B_QUEEN]: 'q', [B_ROOK]: 'r', [B_BISHOP]: 'b', [B_KNIGHT]: 'n', [B_PAWN]: 'p',
+}
+
+export function boardToText(board: Board): string {
+  const ranks: string[] = []
+  for (let r = 0; r < 8; r++) {
+    const cells: string[] = []
+    for (let c = 0; c < 8; c++) {
+      const p = board[r * 8 + c]
+      cells.push(p === 0 ? '.' : (PIECE_LETTERS[p] ?? '?'))
+    }
+    ranks.push(`${8 - r} ${cells.join(' ')}`)
+  }
+  ranks.push('  a b c d e f g h')
+  return ranks.join('\n')
+}
+
 export const PROMOTION_PIECES = [
   { type: W_QUEEN, label: 'Queen', symbol: '\u2655' },
   { type: W_ROOK, label: 'Rook', symbol: '\u2656' },

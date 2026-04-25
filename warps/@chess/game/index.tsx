@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, useMemo } from 'react'
+import { useState, useCallback, useEffect, useMemo, useRef } from 'react'
 import ReactDOM from 'react-dom/client'
 import { App, useAppContext } from '../../../ui/lib/components'
 import ChessBoard from './components/ChessBoard'
@@ -10,6 +10,8 @@ import {
   getLegalMoves,
   initialBoard,
   pieceType,
+  boardToText,
+  toAlgebraic,
   STATUS_ACTIVE,
   STATUS_WHITE_WINS,
   STATUS_BLACK_WINS,
@@ -45,6 +47,7 @@ type GameStateData = {
 type Inputs = {
   GAME_ID: string
   PLAYER?: string
+  AI?: string
 }
 
 function LoadingSpinner({ message }: { message: string }) {
@@ -61,16 +64,22 @@ function LoadingSpinner({ message }: { message: string }) {
   )
 }
 
-function GameOverBanner({ status, playerAddress, info }: { status: number; playerAddress: string | null; info: GameInfoType }) {
+function GameOverBanner({ status, playerAddress, info, isAIGame }: { status: number; playerAddress: string | null; info: GameInfoType; isAIGame: boolean }) {
   let message = ''
   let icon = ''
   if (status === STATUS_WHITE_WINS) {
-    const isWinner = playerAddress === info.white
-    message = isWinner ? 'You won!' : 'White wins!'
+    if (isAIGame) {
+      message = 'You beat the AI!'
+    } else {
+      message = playerAddress === info.white ? 'You won!' : 'White wins!'
+    }
     icon = '\u265A'
   } else if (status === STATUS_BLACK_WINS) {
-    const isWinner = playerAddress === info.black
-    message = isWinner ? 'You won!' : 'Black wins!'
+    if (isAIGame) {
+      message = 'AI wins!'
+    } else {
+      message = playerAddress === info.black ? 'You won!' : 'Black wins!'
+    }
     icon = '\u265A'
   } else {
     message = 'Draw'
@@ -86,8 +95,27 @@ function GameOverBanner({ status, playerAddress, info }: { status: number; playe
   )
 }
 
+function AIThinkingBanner() {
+  return (
+    <div className="p-4 bg-gradient-to-r from-purple-50 to-indigo-50 dark:from-purple-900/20 dark:to-indigo-900/20 border border-purple-200 dark:border-purple-800 rounded-xl text-center">
+      <div className="flex items-center justify-center gap-3">
+        <svg className="w-5 h-5 animate-spin text-purple-500" fill="none" viewBox="0 0 24 24">
+          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
+        </svg>
+        <div>
+          <div className="text-sm font-semibold text-purple-700 dark:text-purple-300">AI is thinking...</div>
+          <div className="text-xs text-purple-500 dark:text-purple-400 mt-0.5">Analyzing the position</div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 function Main() {
-  const { data, inputs, executeWarp } = useAppContext<GameStateData, Inputs>()
+  const { data, inputs, executeWarp, executePrompt } = useAppContext<GameStateData, Inputs>()
+
+  const isAIGame = inputs?.AI === 'true'
 
   const [selectedSquare, setSelectedSquare] = useState<number | null>(null)
   const [legalTargets, setLegalTargets] = useState<number[]>([])
@@ -96,6 +124,9 @@ function Main() {
   const [resigning, setResigning] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [flipped, setFlipped] = useState(false)
+  const [aiThinking, setAiThinking] = useState(false)
+  const prevMoveCount = useRef<number>(0)
+  const aiTriggered = useRef<number>(0)
 
   const state = data as GameStateData | undefined
   const info = state?.info
@@ -135,6 +166,53 @@ function Main() {
     setPendingPromotion(null)
   }, [info?.move_count])
 
+  useEffect(() => {
+    if (!isAIGame || !info || info.status !== STATUS_ACTIVE) return
+    if (info.current_turn !== 1) return
+
+    const moveCount = info.move_count
+    if (moveCount === aiTriggered.current) return
+    if (moveCount === prevMoveCount.current && prevMoveCount.current > 0) return
+
+    aiTriggered.current = moveCount
+    prevMoveCount.current = moveCount
+    setAiThinking(true)
+    setError(null)
+
+    const boardText = boardToText(board)
+    const lastMoveStr = moves.length > 0
+      ? `The last move was ${toAlgebraic(moves[moves.length - 1].from_sq)} to ${toAlgebraic(moves[moves.length - 1].to_sq)}.`
+      : ''
+
+    const prompt = [
+      `You are playing black in chess game #${info.game_id}.`,
+      `It is your turn.`,
+      lastMoveStr,
+      ``,
+      `Current board (uppercase=white, lowercase=black):`,
+      boardText,
+      ``,
+      `Analyze the position and make your best move as black.`,
+      `Call @chess-move with GAME_ID=${info.game_id}, FROM=<square_index>, TO=<square_index>, PROMOTION=0.`,
+      `Square indices: a1=56, b1=57, ..., h1=63, a2=48, ..., a8=0, h8=7.`,
+      `Think about piece development, center control, king safety, captures, checks, and tactical opportunities.`,
+      `Reply with ONLY your move — call the warp directly.`,
+    ].filter(Boolean).join('\n')
+
+    executePrompt(prompt).catch(() => {
+      setAiThinking(false)
+      setError('AI failed to respond. Try again.')
+    })
+  }, [isAIGame, info?.current_turn, info?.move_count, info?.status, info?.game_id, board, moves, executePrompt])
+
+  useEffect(() => {
+    if (!aiThinking || !info) return
+    if (info.current_turn === 0 || info.status >= STATUS_WHITE_WINS) {
+      setAiThinking(false)
+      prevMoveCount.current = info.move_count
+    }
+  }, [aiThinking, info?.current_turn, info?.move_count, info?.status])
+
   const lastMove = useMemo(() => {
     if (moves.length === 0) return null
     const last = moves[moves.length - 1]
@@ -143,7 +221,7 @@ function Main() {
 
   const handleSquareClick = useCallback(
     (sq: number) => {
-      if (!isPlayerTurn || moving) return
+      if (!isPlayerTurn || moving || aiThinking) return
 
       setError(null)
 
@@ -198,7 +276,7 @@ function Main() {
       setSelectedSquare(sq)
       setLegalTargets(targets)
     },
-    [selectedSquare, legalTargets, board, isPlayerTurn, moving, playerAddress, info],
+    [selectedSquare, legalTargets, board, isPlayerTurn, moving, aiThinking, playerAddress, info],
   )
 
   const submitMove = useCallback(
@@ -285,7 +363,8 @@ function Main() {
         </div>
 
         <div className="flex-1 min-w-0 space-y-4">
-          {isGameOver && <GameOverBanner status={info.status} playerAddress={playerAddress} info={info} />}
+          {isAIGame && aiThinking && !isGameOver && <AIThinkingBanner />}
+          {isGameOver && <GameOverBanner status={info.status} playerAddress={playerAddress} info={info} isAIGame={isAIGame} />}
 
           <GameInfo
             info={info}
@@ -293,6 +372,7 @@ function Main() {
             playerAddress={playerAddress}
             onResign={handleResign}
             resigning={resigning}
+            isAIGame={isAIGame}
           />
 
           <div>

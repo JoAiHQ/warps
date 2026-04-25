@@ -128,4 +128,33 @@ export const meta: Record<string, WarpExtras> = {
       de: [{ question: 'Wie trete ich einem offenen Spiel bei?', answer: 'Durchsuche die Liste der offenen Spiele und klicke auf "Beitreten" um sofort als Schwarz zu spielen.' }],
     },
   },
+  'create-ai-game': {
+    keywords: {
+      en: ['play chess against ai', 'ai chess', 'chess bot', 'play against computer', 'ai opponent'],
+      de: ['Schach gegen KI', 'KI-Schach', 'Schach-Bot', 'gegen Computer spielen', 'KI-Gegner'],
+    },
+    useCases: {
+      en: [
+        'Play a chess game against an AI opponent on-chain',
+        'Practice chess with an AI that responds to every move',
+        'Challenge the AI to test your chess skills',
+      ],
+      de: [
+        'Spiele ein Schachspiel gegen einen KI-Gegner On-Chain',
+        'Übe Schach mit einer KI, die auf jeden Zug antwortet',
+        'Fordere die KI heraus um dein Schachspiel zu testen',
+      ],
+    },
+    category: 'social',
+    faq: {
+      en: [
+        { question: 'How does the AI play?', answer: 'After you make a move, the AI analyzes the board position and responds with its own move. Every move is recorded on the blockchain.' },
+        { question: 'Do I need an opponent?', answer: 'No! The AI joins as black automatically when you create an AI game. Just make your first move.' },
+      ],
+      de: [
+        { question: 'Wie spielt die KI?', answer: 'Nach deinem Zug analysiert die KI die Brettstellung und antwortet mit ihrem eigenen Zug. Jeder Zug wird auf der Blockchain gespeichert.' },
+        { question: 'Brauche ich einen Gegner?', answer: 'Nein! Die KI tritt automatisch als Schwarz bei, wenn du ein KI-Spiel erstellst. Mache einfach deinen ersten Zug.' },
+      ],
+    },
+  },
 }
