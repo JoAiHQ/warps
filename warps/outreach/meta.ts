@@ -307,6 +307,82 @@ export const meta: Record<string, WarpExtras> = {
     },
   },
 
+  'ai-draft': {
+    keywords: {
+      en: ['draft outreach message', 'personalized message draft', 'ai outreach', 'ai message', 'check-in draft', 'win-back draft'],
+      de: ['Outreach-Nachricht entwerfen', 'personalisierter Entwurf', 'KI-Outreach', 'KI-Nachricht', 'Check-in-Entwurf', 'Win-Back-Entwurf'],
+    },
+    useCases: {
+      en: [
+        'Draft a check-in message anchored in a customer\'s last visit',
+        'Compose a personalized win-back for a contact who hasn\'t been in for 60 days',
+        'Write a birthday message that references the service they last booked',
+      ],
+      de: [
+        'Eine Check-in-Nachricht basierend auf dem letzten Besuch entwerfen',
+        'Eine personalisierte Win-Back-Nachricht für einen 60-Tage-Schläfer entwerfen',
+        'Eine Geburtstagsnachricht schreiben, die auf den letzten Service Bezug nimmt',
+      ],
+    },
+    category: 'communication',
+    faq: {
+      en: [
+        {
+          question: 'Why does this beat a generic template?',
+          answer: 'The prompt forces the draft to include a concrete anchor from the contact\'s real history, a clear reason for writing now, and a single low-effort next step — three things generic templates skip.',
+        },
+        {
+          question: 'Does it send the message?',
+          answer: 'No — it returns a draft for human review. Send via the channel of your choice (or use the broadcast / contact-message warps).',
+        },
+      ],
+      de: [
+        {
+          question: 'Warum ist das besser als ein generisches Template?',
+          answer: 'Der Prompt erzwingt drei Elemente: einen konkreten Anker aus der echten Historie, einen klaren Anlass jetzt zu schreiben, und einen einzigen low-effort Next-Step — alles, was generische Templates auslassen.',
+        },
+        {
+          question: 'Sendet er die Nachricht?',
+          answer: 'Nein — er gibt einen Entwurf zur Prüfung zurück. Senden über den Kanal deiner Wahl (oder via broadcast / contact-message).',
+        },
+      ],
+    },
+  },
+
+  'score-update': {
+    keywords: {
+      en: ['engagement score', 'customer score', 'contact score', 'score contact', 'customer drift', 'crm scoring'],
+      de: ['Engagement-Score', 'Kunden-Score', 'Kontakt-Score', 'Kontakt bewerten', 'Kunden-Drift', 'CRM-Scoring'],
+    },
+    useCases: {
+      en: [
+        'Refresh engagement scores nightly via cron over all active customers',
+        'Surface customers whose engagement_score dropped below 30 (drift) for win-back',
+        'Compute a fresh score before deciding who to invite to a VIP event',
+      ],
+      de: [
+        'Engagement-Scores nächtlich per Cron für alle aktiven Kunden aktualisieren',
+        'Kunden sichtbar machen, deren engagement_score unter 30 gefallen ist (Drift) für Win-Back',
+        'Vor VIP-Event-Einladungen einen frischen Score berechnen',
+      ],
+    },
+    category: 'communication',
+    faq: {
+      en: [
+        {
+          question: 'What goes into the score?',
+          answer: 'Recency, frequency, variety of channels/types, and reciprocity (their inbound vs your outbound). Output is a single integer 0-100, stored as the engagement_score property.',
+        },
+      ],
+      de: [
+        {
+          question: 'Was fließt in den Score ein?',
+          answer: 'Aktualität, Frequenz, Vielfalt von Kanälen/Typen und Reziprozität (deren Inbound vs dein Outbound). Output ist ein Integer 0-100, gespeichert als engagement_score-Property.',
+        },
+      ],
+    },
+  },
+
   'handle-reply': {
     keywords: {
       en: ['outreach reply', 'contact replied', 'response received', 'handle reply', 'outreach response'],
