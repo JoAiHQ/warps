@@ -74,6 +74,8 @@ function Main() {
   const [voting, setVoting] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
+  const handleCreatePoll = () => executeWarp('poll-poll-create', {})
+
   const loadPollDetails = useCallback(async (ids: number[]) => {
     if (ids.length === 0) {
       setPolls([])
@@ -136,7 +138,18 @@ function Main() {
   if (step.type === 'list') {
     return (
       <div className="max-w-xl mx-auto px-4 py-6">
-        <h1 className="text-lg font-bold text-gray-900 dark:text-white mb-4">{t.polls.title}</h1>
+        <div className="flex items-center justify-between mb-4">
+          <h1 className="text-lg font-bold text-gray-900 dark:text-white">{t.polls.title}</h1>
+          <button
+            onClick={handleCreatePoll}
+            className="flex items-center gap-1.5 text-sm font-medium text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors"
+          >
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+            </svg>
+            {t.polls.createPoll}
+          </button>
+        </div>
 
         {!data && !loadingPolls ? (
           <div className="flex items-center justify-center py-12 gap-3 text-gray-400 dark:text-gray-500">
@@ -156,7 +169,16 @@ function Main() {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
               </svg>
             </div>
-            <p className="text-sm text-gray-500 dark:text-gray-400">{t.polls.empty}</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">{t.polls.empty}</p>
+            <button
+              onClick={handleCreatePoll}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium transition-colors"
+            >
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+              </svg>
+              {t.polls.createPoll}
+            </button>
           </div>
         ) : (
           <div className="flex flex-col gap-3">

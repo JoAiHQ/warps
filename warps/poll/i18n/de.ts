@@ -2,6 +2,7 @@ export const de = {
   polls: {
     title: 'Aktive Abstimmungen',
     empty: 'Gerade keine offenen Abstimmungen.',
+    createPoll: 'Abstimmung erstellen',
     loading: 'Abstimmungen werden geladen...',
     deadline: 'Endet',
     closed: 'Beendet',
