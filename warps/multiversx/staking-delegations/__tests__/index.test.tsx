@@ -31,6 +31,7 @@ const mockContext = {
   paymentRequired: false,
   executeWarp: async () => ({}),
   executePrompt: async () => {},
+  copyToClipboard: () => {},
   meta: undefined,
   locale: 'en',
   t: (key: any) => (typeof key === 'string' ? key : key?.en ?? ''),

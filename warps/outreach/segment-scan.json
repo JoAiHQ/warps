@@ -21,7 +21,7 @@
         "de": "Kontakte scannen"
       },
       "destination": {
-        "url": "INJECT:API_BASE/v1/contacts?tag={{tag}}&minInactiveDays={{minInactiveDays}}",
+        "url": "INJECT:API_BASE/v1/contacts?filter[tags]={{tag}}&filter[last_activity_before]={{lastActivityBefore}}",
         "method": "GET",
         "headers": {
           "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
@@ -35,19 +35,19 @@
             "en": "Which tag or segment to scan?",
             "de": "Welchen Tag oder welches Segment scannen?"
           },
-          "bot": "Contact tag to filter by, e.g. 'lead', 'vip', 'inactive'.",
+          "bot": "Contact tag to filter by, e.g. 'lead', 'vip'. Maps to the contacts API's tags filter.",
           "type": "string",
           "source": "field",
           "required": false
         },
         {
-          "name": "Minimum inactive days",
-          "as": "minInactiveDays",
+          "name": "Last activity before",
+          "as": "lastActivityBefore",
           "description": {
-            "en": "Only include contacts not contacted in this many days",
-            "de": "Nur Kontakte einschließen, die seit so vielen Tagen nicht kontaktiert wurden"
+            "en": "ISO date — only include contacts whose latest activity is before this date (i.e., no touch since).",
+            "de": "ISO-Datum — nur Kontakte einschließen, deren letzte Aktivität vor diesem Datum liegt (also seitdem kein Kontakt)."
           },
-          "bot": "Minimum number of days since the contact was last reached out to. Leave empty to include all.",
+          "bot": "Cutoff date in YYYY-MM-DD format. To find contacts not touched in 30 days, compute today - 30 and pass that ISO date. Leave empty to include all.",
           "type": "string",
           "source": "field",
           "position": "local",

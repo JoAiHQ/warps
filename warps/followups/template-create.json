@@ -1,0 +1,117 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Followups: Create Template",
+  "title": {
+    "en": "Create a follow-up template",
+    "de": "Follow-up-Template erstellen"
+  },
+  "description": {
+    "en": "Create a reusable follow-up message template with structured metadata like channel, sequence step, and delay. Pre-fills type=template and app=followups, then chains to the generic document-create warp so the actual storage logic stays in one place.",
+    "de": "Ein wiederverwendbares Follow-up-Nachrichten-Template mit strukturierten Metadaten wie Kanal, Sequenz-Schritt und Verzögerung erstellen. Setzt type=template und app=followups voraus und chained dann zum generischen document-create Warp, damit die eigentliche Speicherlogik an einer Stelle bleibt."
+  },
+  "bot": "Use this when the user wants to create a new follow-up message template for an automated sequence. Collects structured inputs and chains to @joai-document-create with type=template and app=followups pre-filled.",
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Collect template fields",
+        "de": "Template-Felder erfassen"
+      },
+      "inputs": [
+        {
+          "name": "Title",
+          "as": "title",
+          "description": {
+            "en": "Template name (e.g. 'Birthday Follow-up M1')",
+            "de": "Template-Name (z.B. 'Geburtstags-Follow-up M1')"
+          },
+          "bot": "A descriptive name for the follow-up template.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "min": 3
+        },
+        {
+          "name": "Content",
+          "as": "content",
+          "description": {
+            "en": "Message body with variables like {{name}}",
+            "de": "Nachrichtentext mit Variablen wie {{name}}"
+          },
+          "bot": "The template content with placeholder variables. Use {{name}}, {{company}}, etc. for personalization.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "min": 10
+        },
+        {
+          "name": "Slug",
+          "as": "slug",
+          "description": {
+            "en": "Stable identifier (e.g. 'birthday-followup-m1')",
+            "de": "Stabile Kennung (z.B. 'geburtstags-followup-m1')"
+          },
+          "bot": "Unique slug for the template. Used to reference it in sequences. Lowercase, hyphens, no spaces.",
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Channel",
+          "as": "channel",
+          "description": {
+            "en": "Channel: whatsapp, email, linkedin, or post",
+            "de": "Kanal: whatsapp, email, linkedin oder post"
+          },
+          "bot": "Communication channel for this template.",
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Step",
+          "as": "step",
+          "description": {
+            "en": "Sequence step number (1 = first touch)",
+            "de": "Sequenz-Schrittnummer (1 = Erstkontakt)"
+          },
+          "bot": "Which step in the sequence this template represents.",
+          "type": "uint16",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Delay Days",
+          "as": "delay_days",
+          "description": {
+            "en": "Days to wait before this step (0 for first step)",
+            "de": "Wartetage vor diesem Schritt (0 für den ersten Schritt)"
+          },
+          "bot": "Number of days to wait after the previous step. Use 0 for the first step.",
+          "type": "uint16",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Variables",
+          "as": "variables",
+          "description": {
+            "en": "Template variables, comma-separated (e.g. name,company)",
+            "de": "Template-Variablen, kommagetrennt (z.B. name,company)"
+          },
+          "bot": "List of variable names used in the template content.",
+          "type": "string",
+          "source": "field",
+          "required": false
+        }
+      ]
+    }
+  ],
+  "next": "@joai-document-create?type=template&app=followups&title={{title}}&content={{content}}&slug={{slug}}&channel={{channel}}&step={{step}}&delay_days={{delay_days}}&variables={{variables}}",
+  "messages": {
+    "success": {
+      "en": "Follow-up template fields collected — chaining to document-create.",
+      "de": "Follow-up-Template-Felder erfasst — chaining zu document-create."
+    }
+  }
+}

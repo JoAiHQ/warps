@@ -1,0 +1,14 @@
+pub const ERR_GAME_NOT_FOUND: &str = "game not found";
+pub const ERR_GAME_NOT_ACTIVE: &str = "game is not active";
+pub const ERR_GAME_FULL: &str = "game already has two players";
+pub const ERR_NOT_YOUR_TURN: &str = "not your turn";
+pub const ERR_NOT_A_PLAYER: &str = "you are not a player in this game";
+pub const ERR_INVALID_FROM: &str = "source square is out of range";
+pub const ERR_INVALID_TO: &str = "target square is out of range";
+pub const ERR_EMPTY_SOURCE: &str = "no piece on source square";
+pub const ERR_NOT_YOUR_PIECE: &str = "that piece does not belong to you";
+pub const ERR_CANNOT_CAPTURE_OWN: &str = "cannot capture your own piece";
+pub const ERR_INVALID_MOVE: &str = "invalid move for this piece";
+pub const ERR_SAME_SQUARE: &str = "source and target are the same square";
+pub const ERR_CANNOT_PLAY_YOURSELF: &str = "cannot play against yourself";
+pub const ERR_GAME_ALREADY_OVER: &str = "game is already over";

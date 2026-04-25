@@ -1,0 +1,102 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Outreach: Score Update",
+  "title": {
+    "en": "Compute and store an engagement score",
+    "de": "Engagement-Score berechnen und speichern"
+  },
+  "description": {
+    "en": "Compute a 0-100 engagement score for a contact based on the recency, frequency, and variety of interactions in their timeline, and store it on the contact as the engagement_score property. Lets agents and operators surface relationships that are weakening over time.",
+    "de": "Berechne einen 0-100 Engagement-Score für einen Kontakt basierend auf Aktualität, Häufigkeit und Vielfalt der Interaktionen in der Timeline, und speichere ihn am Kontakt als engagement_score-Property. Hilft, schwächer werdende Beziehungen zu erkennen."
+  },
+  "bot": "Use this to refresh the engagement score for a contact. Typically called from a daily cron over a list of contacts. Returns the new score so the caller can also use it for surfacing low-engagement contacts.",
+  "output": {
+    "_SCORE": "out.1"
+  },
+  "vars": {
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Load timeline",
+        "de": "Timeline laden"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/contacts/{{contactId}}/timeline",
+        "method": "GET",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Contact",
+          "as": "contactId",
+          "description": {
+            "en": "Which contact to score?",
+            "de": "Welchen Kontakt bewerten?"
+          },
+          "bot": "The hashid of the CRM contact.",
+          "type": "string",
+          "position": "url:contactId",
+          "source": "field",
+          "required": true
+        }
+      ],
+      "auto": true
+    },
+    {
+      "type": "prompt",
+      "label": {
+        "en": "Compute score",
+        "de": "Score berechnen"
+      },
+      "prompt": "Compute an engagement score from 0 to 100 for the relationship represented by this timeline. Higher = stronger active relationship. Consider:\n- recency (recent touches matter more, decay over time)\n- frequency (regular cadence beats sporadic bursts)\n- variety (mix of channels and interaction types beats single-channel)\n- reciprocity (their replies/inbound count more than our outbound)\n\nTimeline:\n{{_DATA}}\n\nReturn ONLY a single integer between 0 and 100. No prose, no punctuation, no explanation."
+    },
+    {
+      "type": "collect",
+      "label": {
+        "en": "Store score",
+        "de": "Score speichern"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/contacts/{{contactId}}/properties",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Score",
+          "as": "value",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "value": "{{_SCORE}}",
+          "position": "payload:value",
+          "hidden": true
+        },
+        {
+          "name": "Property key",
+          "as": "key",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "value": "engagement_score",
+          "position": "payload:key",
+          "hidden": true
+        }
+      ],
+      "auto": true
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Engagement score updated.",
+      "de": "Engagement-Score aktualisiert."
+    }
+  }
+}

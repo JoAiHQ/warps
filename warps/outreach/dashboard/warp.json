@@ -1,0 +1,102 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Outreach: Dashboard",
+  "title": {
+    "en": "Outreach dashboard",
+    "de": "Outreach-Dashboard"
+  },
+  "description": {
+    "en": "View and manage your outreach pipeline. See enrolled contacts, their current sequence step, parked contacts, and reply status in one overview.",
+    "de": "Deine Outreach-Pipeline einsehen und verwalten. Angemeldete Kontakte, aktueller Sequenz-Schritt, geparkte Kontakte und Antwortstatus auf einen Blick."
+  },
+  "bot": "Use this to show the outreach dashboard. Loads contacts enrolled in outreach sequences and their template library.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "auto": true,
+      "label": {
+        "en": "Load enrolled contacts",
+        "de": "Angemeldete Kontakte laden"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/contacts?filter[tags]=outreach-enrolled&perPage=100",
+        "method": "GET",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [],
+      "output": {
+        "enrolled": "out.data"
+      }
+    },
+    {
+      "type": "collect",
+      "auto": true,
+      "label": {
+        "en": "Load parked contacts",
+        "de": "Geparkte Kontakte laden"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/contacts?filter[tags]=outreach-parked&perPage=100",
+        "method": "GET",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [],
+      "output": {
+        "parked": "out.data"
+      }
+    },
+    {
+      "type": "collect",
+      "auto": true,
+      "label": {
+        "en": "Load replied contacts",
+        "de": "Antwort-Kontakte laden"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/contacts?filter[tags]=outreach-replied&perPage=100",
+        "method": "GET",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [],
+      "output": {
+        "replied": "out.data"
+      }
+    },
+    {
+      "type": "collect",
+      "auto": true,
+      "label": {
+        "en": "Load templates",
+        "de": "Templates laden"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/agents/{{JOAI_AGENT_UUID}}/documents?type=template&perPage=100",
+        "method": "GET",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [],
+      "output": {
+        "templates": "out.data"
+      }
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Outreach dashboard loaded.",
+      "de": "Outreach-Dashboard geladen."
+    }
+  },
+  "ui": "https://raw.githubusercontent.com/JoAiHQ/warps/main/warps/outreach/dashboard/chatapp.378a807.dist.html"
+}

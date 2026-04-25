@@ -21,4 +21,13 @@ export const ro: typeof en = {
     messageRequired: 'Scrie un mesaj înainte de a trimite.',
     noRecipientsWithChannel: 'Niciunul dintre contactele selectate nu are o adresă de {channel}. Schimbă canalul sau adaugă datele de contact.',
   },
+  dashboard: {
+    enrolled: 'Înrolați',
+    parked: 'Parcați',
+    replied: 'Răspuns',
+    enrolledContacts: 'Contacte înrolate',
+    parkedContacts: 'Contacte parcate',
+    repliedContacts: 'Contacte care au răspuns',
+    templates: 'Șabloane',
+  },
 }

@@ -1,0 +1,146 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Outreach: Enroll Contact",
+  "title": {
+    "en": "Enroll a contact in outreach",
+    "de": "Kontakt für Outreach anmelden"
+  },
+  "description": {
+    "en": "Enroll a CRM contact into an outreach sequence by setting the sequence name and resetting their step to 1. The host system schedules execution of the first template.",
+    "de": "Einen CRM-Kontakt in eine Outreach-Sequenz aufnehmen, indem der Sequenz-Name gesetzt und der Schritt auf 1 zurückgesetzt wird. Das Host-System plant die Ausführung des ersten Templates."
+  },
+  "bot": "Use this to enroll a contact into an outreach sequence. Sets outreach_sequence and outreach_step properties on the contact and adds the 'outreach-enrolled' tag.",
+  "vars": {
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Set sequence",
+        "de": "Sequenz setzen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/contacts/{{contactId}}/properties",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Contact",
+          "as": "contactId",
+          "description": {
+            "en": "Which contact to enroll?",
+            "de": "Welchen Kontakt anmelden?"
+          },
+          "bot": "The hashid of the CRM contact to enroll in the outreach sequence.",
+          "type": "string",
+          "position": "url:contactId",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Sequence",
+          "as": "outreach_sequence",
+          "description": {
+            "en": "Sequence name (e.g. 'handwerk-nurture')",
+            "de": "Sequenz-Name (z.B. 'handwerk-nurture')"
+          },
+          "bot": "The sequence to enroll the contact into.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:value"
+        },
+        {
+          "name": "Sequence Key",
+          "as": "key",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "value": "outreach_sequence",
+          "position": "payload:key",
+          "hidden": true
+        }
+      ]
+    },
+    {
+      "type": "collect",
+      "label": {
+        "en": "Set step",
+        "de": "Schritt setzen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/contacts/{{contactId}}/properties",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Step",
+          "as": "outreach_step",
+          "description": {
+            "en": "Starting step (default: 1)",
+            "de": "Startschritt (Standard: 1)"
+          },
+          "bot": "The sequence step to start at. Defaults to 1.",
+          "type": "uint16",
+          "source": "field",
+          "required": false,
+          "value": "1",
+          "position": "payload:value"
+        },
+        {
+          "name": "Step Key",
+          "as": "key",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "value": "outreach_step",
+          "position": "payload:key",
+          "hidden": true
+        }
+      ]
+    },
+    {
+      "type": "collect",
+      "label": {
+        "en": "Tag contact",
+        "de": "Kontakt taggen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/contacts/{{contactId}}",
+        "method": "PUT",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Tag",
+          "as": "tag",
+          "description": {
+            "en": "Tag to add (e.g. 'outreach-enrolled')",
+            "de": "Tag zum Hinzufügen (z.B. 'outreach-enrolled')"
+          },
+          "bot": "Tag to mark the contact as enrolled.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "value": "outreach-enrolled",
+          "position": "payload:tagsAppend[]"
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Contact enrolled in {{outreach_sequence}}.",
+      "de": "Kontakt in {{outreach_sequence}} angemeldet."
+    }
+  }
+}

@@ -1,0 +1,155 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Update Document",
+  "title": {
+    "en": "Update a document",
+    "de": "Dokument aktualisieren"
+  },
+  "description": {
+    "en": "Update the title, content, or metadata of an existing document in your agent's knowledge base. Useful for editing templates or correcting stored information.",
+    "de": "Titel, Inhalt oder Metadaten eines bestehenden Dokuments in der Wissensdatenbank deines Agenten aktualisieren. Nützlich zum Bearbeiten von Templates oder Korrigieren gespeicherter Informationen."
+  },
+  "bot": "Use this when the user wants to edit an existing document or template, or when a workflow needs to update document metadata.",
+  "vars": {
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Update document",
+        "de": "Dokument aktualisieren"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/documents/{{documentId}}",
+        "method": "PUT",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Document ID",
+          "as": "documentId",
+          "description": {
+            "en": "The ID of the document to update",
+            "de": "Die ID des zu aktualisierenden Dokuments"
+          },
+          "bot": "The hashid of the document to update.",
+          "type": "string",
+          "position": "url:documentId",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Title",
+          "as": "title",
+          "description": {
+            "en": "New title (optional)",
+            "de": "Neuer Titel (optional)"
+          },
+          "bot": "Updated document title. Omit to keep the current title.",
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Content",
+          "as": "content",
+          "description": {
+            "en": "New content (optional)",
+            "de": "Neuer Inhalt (optional)"
+          },
+          "bot": "Updated document content. Omit to keep the current content.",
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Meta Slug",
+          "as": "slug",
+          "description": {
+            "en": "Template slug identifier",
+            "de": "Template-Slug-Kennung"
+          },
+          "bot": "Updated slug for template documents.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:meta"
+        },
+        {
+          "name": "Meta App",
+          "as": "app",
+          "description": {
+            "en": "App this template belongs to",
+            "de": "Zugehörige App"
+          },
+          "bot": "App name like 'outreach' or 'followups'.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:meta"
+        },
+        {
+          "name": "Meta Channel",
+          "as": "channel",
+          "description": {
+            "en": "Channel (whatsapp, email, linkedin, post)",
+            "de": "Kanal (whatsapp, email, linkedin, post)"
+          },
+          "bot": "Communication channel for the template.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:meta"
+        },
+        {
+          "name": "Meta Step",
+          "as": "step",
+          "description": {
+            "en": "Sequence step number",
+            "de": "Sequenz-Schrittnummer"
+          },
+          "bot": "Integer step number in the sequence.",
+          "type": "uint16",
+          "source": "field",
+          "required": false,
+          "position": "payload:meta"
+        },
+        {
+          "name": "Meta Delay Days",
+          "as": "delay_days",
+          "description": {
+            "en": "Days to wait before this step",
+            "de": "Tage Wartezeit vor diesem Schritt"
+          },
+          "bot": "Days after the previous step.",
+          "type": "uint16",
+          "source": "field",
+          "required": false,
+          "position": "payload:meta"
+        },
+        {
+          "name": "Meta Variables",
+          "as": "variables",
+          "description": {
+            "en": "Comma-separated template variables",
+            "de": "Kommagetrennte Template-Variablen"
+          },
+          "bot": "Template variables like 'name,company'.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:meta"
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Document updated: {{title}}",
+      "de": "Dokument aktualisiert: {{title}}"
+    }
+  }
+}

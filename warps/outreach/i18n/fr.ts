@@ -21,4 +21,13 @@ export const fr: typeof en = {
     messageRequired: 'Écris un message avant d\'envoyer.',
     noRecipientsWithChannel: 'Aucun des contacts sélectionnés n\'a d\'adresse {channel}. Change de canal ou ajoute les coordonnées du contact.',
   },
+  dashboard: {
+    enrolled: 'Inscrits',
+    parked: 'En pause',
+    replied: 'Répondu',
+    enrolledContacts: 'Contacts inscrits',
+    parkedContacts: 'Contacts en pause',
+    repliedContacts: 'Contacts ayant répondu',
+    templates: 'Modèles',
+  },
 }

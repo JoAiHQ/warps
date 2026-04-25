@@ -19,4 +19,13 @@ export const de = {
     messageRequired: 'Bitte schreibe eine Nachricht, bevor du sendest.',
     noRecipientsWithChannel: 'Keiner der ausgewählten Kontakte hat eine {channel}-Adresse. Wechsle den Kanal oder füge Kontaktdaten hinzu.',
   },
+  dashboard: {
+    enrolled: 'Angemeldet',
+    parked: 'Geparkt',
+    replied: 'Geantwortet',
+    enrolledContacts: 'Angemeldete Kontakte',
+    parkedContacts: 'Geparkte Kontakte',
+    repliedContacts: 'Antwort-Kontakte',
+    templates: 'Templates',
+  },
 }

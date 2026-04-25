@@ -114,4 +114,154 @@ export const meta: Record<string, WarpExtras> = {
       ],
     },
   },
+  'document-create': {
+    keywords: {
+      en: ['save document', 'agent knowledge', 'store template', 'create document', 'add reference material'],
+      de: ['Dokument speichern', 'Agentenwissen', 'Template erstellen', 'Dokument anlegen', 'Referenzmaterial hinzufügen'],
+    },
+    useCases: {
+      en: [
+        'Save an article or note to the agent knowledge base',
+        'Store a reusable message template with structured metadata',
+        'Add guidelines or reference material the agent should know about',
+      ],
+      de: [
+        'Einen Artikel oder eine Notiz in der Wissensbasis speichern',
+        'Ein wiederverwendbares Nachrichten-Template mit Metadaten anlegen',
+        'Richtlinien oder Referenzmaterial hinterlegen, das der Agent kennen soll',
+      ],
+    },
+    category: 'productivity',
+    faq: {
+      en: [
+        {
+          question: 'What types of documents can I save?',
+          answer:
+            'You can save text documents, templates, PDFs, HTML, and Markdown. Templates include metadata like slug, channel, and step number for use in outreach sequences.',
+        },
+        {
+          question: 'What is a template document?',
+          answer:
+            'A template is a reusable message with variables like {{name}} and structured metadata (slug, channel, step). It is used by outreach and followup sequences to personalize messages.',
+        },
+      ],
+      de: [
+        {
+          question: 'Welche Dokumenttypen kann ich speichern?',
+          answer:
+            'Du kannst Textdokumente, Templates, PDFs, HTML und Markdown speichern. Templates enthalten Metadaten wie Slug, Kanal und Schrittnummer für Outreach-Sequenzen.',
+        },
+        {
+          question: 'Was ist ein Template-Dokument?',
+          answer:
+            'Ein Template ist eine wiederverwendbare Nachricht mit Variablen wie {{name}} und strukturierten Metadaten (Slug, Kanal, Schritt). Es wird von Outreach- und Followup-Sequenzen für personalisierte Nachrichten genutzt.',
+        },
+      ],
+    },
+  },
+  'document-list': {
+    keywords: {
+      en: ['list documents', 'search documents', 'find template', 'browse knowledge base', 'show templates'],
+      de: ['Dokumente auflisten', 'Dokumente suchen', 'Template finden', 'Wissensbasis durchsuchen', 'Templates anzeigen'],
+    },
+    useCases: {
+      en: [
+        'List all message templates for outreach sequences',
+        'Search for a specific document by title',
+        'Browse all stored knowledge base documents',
+      ],
+      de: [
+        'Alle Nachrichten-Templates für Outreach-Sequenzen auflisten',
+        'Nach einem bestimmten Dokument im Titel suchen',
+        'Alle gespeicherten Wissensbasis-Dokumente durchsuchen',
+      ],
+    },
+    category: 'productivity',
+    faq: {
+      en: [
+        {
+          question: 'Can I filter documents by type?',
+          answer:
+            'Yes — use the type filter to list only templates, text documents, or any other supported type.',
+        },
+      ],
+      de: [
+        {
+          question: 'Kann ich Dokumente nach Typ filtern?',
+          answer:
+            'Ja — nutze den Typ-Filter, um nur Templates, Textdokumente oder andere unterstützte Typen aufzulisten.',
+        },
+      ],
+    },
+  },
+  'document-update': {
+    keywords: {
+      en: ['edit document', 'update template', 'change document content', 'modify knowledge base'],
+      de: ['Dokument bearbeiten', 'Template aktualisieren', 'Dokumentinhalt ändern', 'Wissensbasis ändern'],
+    },
+    useCases: {
+      en: [
+        'Edit the content of an existing message template',
+        'Update a document title or metadata',
+        'Correct information stored in the knowledge base',
+      ],
+      de: [
+        'Den Inhalt eines bestehenden Nachrichten-Templates bearbeiten',
+        'Einen Dokumenttitel oder Metadaten aktualisieren',
+        'Gespeicherte Informationen in der Wissensbasis korrigieren',
+      ],
+    },
+    category: 'productivity',
+    faq: {
+      en: [
+        {
+          question: 'Can I update only specific fields?',
+          answer:
+            'Yes — title, content, and metadata can each be updated independently. Omit any field to keep its current value.',
+        },
+      ],
+      de: [
+        {
+          question: 'Kann ich nur bestimmte Felder aktualisieren?',
+          answer:
+            'Ja — Titel, Inhalt und Metadaten können unabhängig voneinander aktualisiert werden. Lass ein Feld weg, um den aktuellen Wert beizubehalten.',
+        },
+      ],
+    },
+  },
+  'document-delete': {
+    keywords: {
+      en: ['delete document', 'remove template', 'delete from knowledge base', 'clean up documents'],
+      de: ['Dokument löschen', 'Template entfernen', 'aus Wissensbasis löschen', 'Dokumente aufräumen'],
+    },
+    useCases: {
+      en: [
+        'Remove an outdated template from the knowledge base',
+        'Delete a document that is no longer relevant',
+        'Clean up test or duplicate documents',
+      ],
+      de: [
+        'Ein veraltetes Template aus der Wissensbasis entfernen',
+        'Ein nicht mehr relevantes Dokument löschen',
+        'Test- oder Duplikat-Dokumente aufräumen',
+      ],
+    },
+    category: 'productivity',
+    faq: {
+      en: [
+        {
+          question: 'Can I undo a document deletion?',
+          answer:
+            'No, deletion is permanent. Make sure you have the content backed up if you might need it again.',
+        },
+      ],
+      de: [
+        {
+          question: 'Kann ich eine Dokumentlöschung rückgängig machen?',
+          answer:
+            'Nein, die Löschung ist dauerhaft. Sichere den Inhalt, falls du ihn noch benötigen könntest.',
+        },
+      ],
+    },
+  },
 }

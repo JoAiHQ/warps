@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useAppContext } from '../../../../ui/lib/components'
 import { formatDayFull, formatTime, formatTokenAmount } from '../helpers/format'
 import { googleCalendarUrl, outlookCalendarUrl, downloadIcs } from '../helpers/calendar'
 import type { BookingResult } from '../warp.types'
@@ -38,7 +39,15 @@ export function BookingConfirmed({
   servicePrice, serviceToken, serviceName, payLabel, payingLabel, paying, payError, onPay,
   shareUrl, copyLinkLabel, copiedLabel,
 }: Props) {
+  const { copyToClipboard } = useAppContext()
   const [copied, setCopied] = useState(false)
+
+  const handleCopy = () => {
+    if (!shareUrl) return
+    copyToClipboard(shareUrl)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }
   if (cancelled) {
     return (
       <div className="flex flex-col items-center gap-5 p-6 text-center">
@@ -137,12 +146,7 @@ export function BookingConfirmed({
               {shareUrl}
             </div>
             <button
-              onClick={() => {
-                navigator.clipboard.writeText(shareUrl).then(() => {
-                  setCopied(true)
-                  setTimeout(() => setCopied(false), 2000)
-                })
-              }}
+              onClick={handleCopy}
               className="shrink-0 rounded-md bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-3 py-2 text-xs font-medium hover:opacity-90 transition-opacity"
             >
               {copied ? (copiedLabel ?? 'Copied!') : (copyLinkLabel ?? 'Copy')}

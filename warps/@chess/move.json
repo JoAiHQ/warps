@@ -1,0 +1,91 @@
+{
+  "protocol": "warp:3.0.0",
+  "chain": "multiversx",
+  "name": "Chess: Make Move",
+  "title": {
+    "en": "Make a Move",
+    "de": "Zug machen"
+  },
+  "description": {
+    "en": "Submit a chess move as an on-chain transaction on MultiversX. The smart contract validates turn order, piece ownership, and movement rules.",
+    "de": "Sende einen Schachzug als On-Chain-Transaktion auf MultiversX. Der Smart Contract validiert Zugreihenfolge, Figurenbesitz und Bewegungsregeln."
+  },
+  "vars": {
+    "SC_ADDRESS": "INJECT:CHESS_SC_ADDRESS"
+  },
+  "actions": [
+    {
+      "type": "contract",
+      "label": {
+        "en": "Submit move",
+        "de": "Zug senden"
+      },
+      "address": "{{SC_ADDRESS}}",
+      "func": "makeMove",
+      "args": [
+        "u64:{{GAME_ID}}",
+        "u8:{{FROM}}",
+        "u8:{{TO}}",
+        "u8:{{PROMOTION}}"
+      ],
+      "inputs": [
+        {
+          "name": "GAME_ID",
+          "type": "uint64",
+          "position": "arg:1",
+          "source": "field",
+          "required": true,
+          "description": {
+            "en": "The game ID",
+            "de": "Die Spiel-ID"
+          }
+        },
+        {
+          "name": "FROM",
+          "type": "uint8",
+          "position": "arg:2",
+          "source": "field",
+          "required": true,
+          "description": {
+            "en": "Source square index (0-63)",
+            "de": "Quellfeld-Index (0-63)"
+          }
+        },
+        {
+          "name": "TO",
+          "type": "uint8",
+          "position": "arg:3",
+          "source": "field",
+          "required": true,
+          "description": {
+            "en": "Target square index (0-63)",
+            "de": "Zielfeld-Index (0-63)"
+          }
+        },
+        {
+          "name": "PROMOTION",
+          "type": "uint8",
+          "position": "arg:4",
+          "source": "field",
+          "required": false,
+          "default": "0",
+          "description": {
+            "en": "Promotion piece type (0=auto-queen, 2=knight, 3=bishop, 4=rook, 5=queen)",
+            "de": "Umwandlungs-Figur (0=auto-Dame, 2=Springer, 3=Läufer, 4=Turm, 5=Dame)"
+          }
+        }
+      ],
+      "gasLimit": 10000000
+    }
+  ],
+  "output": {
+    "TX_HASH": "out"
+  },
+  "messages": {
+    "success": {
+      "en": "Move submitted successfully",
+      "de": "Zug erfolgreich gesendet"
+    }
+  },
+  "related": ["@chess-game"]
+}
