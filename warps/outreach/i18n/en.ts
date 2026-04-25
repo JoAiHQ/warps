@@ -19,4 +19,13 @@ export const en = {
     messageRequired: 'Please write a message before sending.',
     noRecipientsWithChannel: 'None of the selected contacts have a {channel} address. Switch channel or add contact details.',
   },
+  dashboard: {
+    enrolled: 'Enrolled',
+    parked: 'Parked',
+    replied: 'Replied',
+    enrolledContacts: 'Enrolled Contacts',
+    parkedContacts: 'Parked Contacts',
+    repliedContacts: 'Replied Contacts',
+    templates: 'Templates',
+  },
 }

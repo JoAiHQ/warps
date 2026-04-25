@@ -1,0 +1,91 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Outreach: AI Draft",
+  "title": {
+    "en": "Draft a personalized message",
+    "de": "Personalisierte Nachricht entwerfen"
+  },
+  "description": {
+    "en": "Draft a personalized outreach message for a contact. Fetches the contact's profile and recent activity history, then uses AI to write a context-aware message tailored to the chosen occasion. Returns the draft for human review — does not send.",
+    "de": "Entwirf eine personalisierte Outreach-Nachricht für einen Kontakt. Lädt das Profil und die letzten Aktivitäten des Kontakts und schreibt mit KI eine kontextbezogene Nachricht zum gewählten Anlass. Gibt den Entwurf zur Freigabe zurück — sendet nicht."
+  },
+  "bot": "Use this when you want a personalized draft for a specific contact, anchored in their actual history with you. Inputs: contactId, occasion (e.g. 'check-in', 'follow-up', 'congratulate', 'win-back'), and an optional context note. Output is text for the operator to review, edit, and send.",
+  "output": {
+    "_DRAFT": "out.1"
+  },
+  "vars": {
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Load contact",
+        "de": "Kontakt laden"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/contacts/{{contactId}}/timeline",
+        "method": "GET",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Contact",
+          "as": "contactId",
+          "description": {
+            "en": "Which contact to draft for?",
+            "de": "Für welchen Kontakt entwerfen?"
+          },
+          "bot": "The hashid of the CRM contact.",
+          "type": "string",
+          "position": "url:contactId",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Occasion",
+          "as": "occasion",
+          "description": {
+            "en": "Type of message to draft",
+            "de": "Art der zu entwerfenden Nachricht"
+          },
+          "bot": "Examples: 'check-in', 'follow-up', 'congratulate', 'win-back', 'thank-you', 'intro-request'. Free-form is fine — the LLM uses it as guidance.",
+          "type": "string",
+          "source": "field",
+          "position": "local",
+          "required": true
+        },
+        {
+          "name": "Context",
+          "as": "context",
+          "description": {
+            "en": "Optional extra context (recent event, specific topic, etc.)",
+            "de": "Optionaler zusätzlicher Kontext (aktuelles Ereignis, spezifisches Thema usw.)"
+          },
+          "bot": "Optional. If you want the draft to reference something specific that isn't in the activity log yet — like a post you saw or news you heard — drop it here.",
+          "type": "string",
+          "source": "field",
+          "position": "local",
+          "required": false
+        }
+      ],
+      "auto": true
+    },
+    {
+      "type": "prompt",
+      "label": {
+        "en": "Draft message",
+        "de": "Nachricht entwerfen"
+      },
+      "prompt": "You are drafting a personalized outreach message. Use the contact's profile, properties, and recent timeline below to write a message that feels specific to THIS person — reference real things from their history when possible. Match the tone of past interactions if visible. Keep it short and human (3-5 sentences max). Do not invent facts. If the timeline is empty, write a respectful first-touch message based only on profile data.\n\nOccasion: {{occasion}}\nExtra context: {{context}}\n\nContact + timeline:\n{{_DATA}}\n\nWrite ONLY the message body. No subject line, no signature, no meta-commentary."
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Draft ready — review and send manually.",
+      "de": "Entwurf bereit — bitte prüfen und manuell senden."
+    }
+  }
+}

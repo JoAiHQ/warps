@@ -560,4 +560,148 @@ export const meta: Record<string, WarpExtras> = {
       ],
     },
   },
+
+  'template-create': {
+    keywords: {
+      en: ['create follow-up template', 'follow-up message template', 'sequence template', 'automated follow-up template', 'whatsapp follow-up'],
+      de: ['Follow-up-Template erstellen', 'Follow-up-Nachrichtenvorlage', 'Sequenz-Template', 'automatisiertes Follow-up-Template', 'WhatsApp-Follow-up'],
+    },
+    useCases: {
+      en: [
+        'Create a reusable WhatsApp follow-up template for an automated sequence',
+        'Set up a multi-step follow-up sequence with delay between steps',
+        'Build a post-treatment check-in template with personalization variables',
+      ],
+      de: [
+        'Ein wiederverwendbares WhatsApp-Follow-up-Template für eine automatisierte Sequenz erstellen',
+        'Eine mehrstufige Follow-up-Sequenz mit Verzögerung zwischen den Schritten aufsetzen',
+        'Ein Nachbehandlungs-Check-in-Template mit Personalisierungsvariablen aufbauen',
+      ],
+    },
+    category: 'engagement',
+    faq: {
+      en: [
+        {
+          question: 'What variables can I use in a follow-up template?',
+          answer: 'Use {{name}}, {{company}}, or any custom variable. The agent fills them in when executing the step based on the contact data.',
+        },
+        {
+          question: 'What is a sequence step?',
+          answer: 'Each template has a step number (1, 2, 3...) and a delay in days. Step 1 is the first follow-up, step 2 follows after the specified delay, and so on.',
+        },
+      ],
+      de: [
+        {
+          question: 'Welche Variablen kann ich in einem Follow-up-Template verwenden?',
+          answer: 'Nutze {{name}}, {{company}} oder eigene Variablen. Der Agent füllt sie bei der Ausführung basierend auf den Kontaktdaten aus.',
+        },
+        {
+          question: 'Was ist ein Sequenz-Schritt?',
+          answer: 'Jedes Template hat eine Schrittnummer (1, 2, 3...) und eine Verzögerung in Tagen. Schritt 1 ist das erste Follow-up, Schritt 2 folgt nach der angegebenen Verzögerung, usw.',
+        },
+      ],
+    },
+  },
+
+  'enroll': {
+    keywords: {
+      en: ['enroll contact follow-up', 'start follow-up sequence', 'add contact to sequence', 'begin automated follow-up'],
+      de: ['Kontakt für Follow-up anmelden', 'Follow-up-Sequenz starten', 'Kontakt zur Sequenz hinzufügen', 'automatisiertes Follow-up beginnen'],
+    },
+    useCases: {
+      en: [
+        'Enroll a customer in a post-treatment follow-up sequence',
+        'Start an automated follow-up for a customer after a purchase',
+        'Add a contact from an inactive scan to a re-engagement sequence',
+      ],
+      de: [
+        'Einen Kunden in einer Nachbehandlungs-Follow-up-Sequenz anmelden',
+        'Ein automatisiertes Follow-up für einen Kunden nach einem Kauf starten',
+        'Einen Kontakt aus einem Inaktivitäts-Scan einer Re-Engagement-Sequenz hinzufügen',
+      ],
+    },
+    category: 'engagement',
+    faq: {
+      en: [
+        {
+          question: 'What happens when I enroll a contact?',
+          answer: 'The contact gets the sequence name and starting step set as properties. The host system then schedules the first template execution.',
+        },
+      ],
+      de: [
+        {
+          question: 'Was passiert, wenn ich einen Kontakt anmelde?',
+          answer: 'Der Kontakt erhält den Sequenz-Namen und Startschritt als Eigenschaften. Das Host-System plant dann die erste Template-Ausführung.',
+        },
+      ],
+    },
+  },
+
+  'execute-step': {
+    keywords: {
+      en: ['execute follow-up step', 'send follow-up message', 'run follow-up sequence', 'automated follow-up execution'],
+      de: ['Follow-up-Schritt ausführen', 'Follow-up-Nachricht senden', 'Follow-up-Sequenz ausführen', 'automatisierte Follow-up-Ausführung'],
+    },
+    useCases: {
+      en: [
+        'Send the next WhatsApp message in a post-treatment follow-up sequence',
+        'Execute step 2 of a birthday follow-up sequence',
+        'Log a check-in message as sent and advance to the next step',
+      ],
+      de: [
+        'Die nächste WhatsApp-Nachricht in einer Nachbehandlungs-Follow-up-Sequenz senden',
+        'Schritt 2 einer Geburtstags-Follow-up-Sequenz ausführen',
+        'Eine Check-in-Nachricht als gesendet protokollieren und zum nächsten Schritt weiterrücken',
+      ],
+    },
+    category: 'engagement',
+    faq: {
+      en: [
+        {
+          question: 'How does personalization work?',
+          answer: 'The agent fetches the contact data and fills in template variables like {{name}} automatically, creating a natural personalized message.',
+        },
+      ],
+      de: [
+        {
+          question: 'Wie funktioniert die Personalisierung?',
+          answer: 'Der Agent ruft die Kontaktdaten ab und füllt Template-Variablen wie {{name}} automatisch aus, um eine natürliche personalisierte Nachricht zu erstellen.',
+        },
+      ],
+    },
+  },
+
+  'handle-reply': {
+    keywords: {
+      en: ['follow-up reply', 'contact replied follow-up', 'handle follow-up response', 'stop follow-up sequence'],
+      de: ['Follow-up-Antwort', 'Kontakt geantwortet Follow-up', 'Follow-up-Response behandeln', 'Follow-up-Sequenz stoppen'],
+    },
+    useCases: {
+      en: [
+        'Record that a contact replied to a follow-up message',
+        'Tag a contact as replied to stop further automated follow-ups',
+        'Log a reply event with a summary of what the contact said',
+      ],
+      de: [
+        'Erfassen, dass ein Kontakt auf eine Follow-up-Nachricht geantwortet hat',
+        'Einen Kontakt als geantwortet markieren, um weitere automatisierte Follow-ups zu stoppen',
+        'Ein Antwort-Ereignis mit einer Zusammenfassung protokollieren',
+      ],
+    },
+    category: 'engagement',
+    faq: {
+      en: [
+        {
+          question: 'What happens after I record a reply?',
+          answer: 'The contact is tagged as followups-replied, which signals the host system to stop automated sequence execution. The reply is also logged as an activity.',
+        },
+      ],
+      de: [
+        {
+          question: 'Was passiert, nachdem ich eine Antwort erfasst habe?',
+          answer: 'Der Kontakt wird als followups-replied getaggt, was dem Host-System signalisiert, die automatische Sequenzausführung zu stoppen. Die Antwort wird zusätzlich als Aktivität protokolliert.',
+        },
+      ],
+    },
+  },
 }

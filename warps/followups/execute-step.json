@@ -1,0 +1,199 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Followups: Execute Step",
+  "title": {
+    "en": "Execute a follow-up step",
+    "de": "Follow-up-Schritt ausführen"
+  },
+  "description": {
+    "en": "Execute one step of a follow-up sequence for a contact: fetch the contact and matching template, personalize the message, send or log it depending on channel, then advance the contact to the next step.",
+    "de": "Einen Schritt einer Follow-up-Sequenz für einen Kontakt ausführen: Kontakt und passendes Template laden, Nachricht personalisieren, je nach Kanal senden oder protokollieren, dann zum nächsten Schritt weiterrücken."
+  },
+  "bot": "Use this to execute the next follow-up step for a contact. For whatsapp/email the message is sent via the agent API. For linkedin/post the message is logged and the user is told to send it manually.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+  },
+  "output": {
+    "CONTACT_NAME": "out.0.name",
+    "CONTACT_PHONE": "out.0.phone",
+    "CONTACT_EMAIL": "out.0.email",
+    "TEMPLATE_CONTENT": "out.1.content",
+    "TEMPLATE_CHANNEL": "out.1.meta.channel",
+    "TEMPLATE_SLUG": "out.1.meta.slug",
+    "TEMPLATE_STEP": "out.1.meta.step"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "auto": true,
+      "label": {
+        "en": "Load contact",
+        "de": "Kontakt laden"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/contacts/{{contactId}}",
+        "method": "GET",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Contact",
+          "as": "contactId",
+          "description": {
+            "en": "Which contact to execute the step for?",
+            "de": "Für welchen Kontakt den Schritt ausführen?"
+          },
+          "bot": "The hashid of the CRM contact.",
+          "type": "string",
+          "position": "url:contactId",
+          "source": "field",
+          "required": true
+        }
+      ]
+    },
+    {
+      "type": "collect",
+      "auto": true,
+      "label": {
+        "en": "Load template",
+        "de": "Template laden"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/agents/{{JOAI_AGENT_UUID}}/documents?type=template&search={{sequenceSlug}}&perPage=50",
+        "method": "GET",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Sequence Slug",
+          "as": "sequenceSlug",
+          "description": {
+            "en": "Sequence to find the template for",
+            "de": "Sequenz, für die das Template gesucht wird"
+          },
+          "bot": "The sequence slug prefix to search templates. The agent filters results by matching step number.",
+          "type": "string",
+          "source": "field",
+          "required": true
+        }
+      ]
+    },
+    {
+      "type": "prompt",
+      "label": {
+        "en": "Personalize message",
+        "de": "Nachricht personalisieren"
+      },
+      "prompt": "Personalize this follow-up template for {{CONTACT_NAME}}. Template: {{TEMPLATE_CONTENT}}. Fill in all variables naturally. Keep the original tone and structure. Output only the personalized message, nothing else."
+    },
+    {
+      "type": "collect",
+      "label": {
+        "en": "Send message",
+        "de": "Nachricht senden"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/agents/{{JOAI_AGENT_UUID}}/message",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "auto": true,
+      "inputs": [
+        {
+          "name": "Integration Type",
+          "as": "integrationType",
+          "type": "string",
+          "source": "field",
+          "value": "{{TEMPLATE_CHANNEL}}",
+          "hidden": true
+        },
+        {
+          "name": "Recipient ID",
+          "as": "recipientId",
+          "type": "string",
+          "source": "field",
+          "value": "{{CONTACT_PHONE}}",
+          "hidden": true
+        },
+        {
+          "name": "Recipient Name",
+          "as": "recipientName",
+          "type": "string",
+          "source": "field",
+          "value": "{{CONTACT_NAME}}",
+          "hidden": true
+        },
+        {
+          "name": "Message",
+          "as": "message",
+          "type": "string",
+          "source": "field",
+          "value": "{{MESSAGE}}",
+          "hidden": true
+        }
+      ]
+    },
+    {
+      "type": "collect",
+      "auto": true,
+      "label": {
+        "en": "Advance step",
+        "de": "Schritt weiterschalten"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/contacts/{{contactId}}/properties",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Contact",
+          "as": "contactId",
+          "type": "string",
+          "source": "field",
+          "value": "{{contactId}}",
+          "hidden": true,
+          "position": "url:contactId"
+        },
+        {
+          "name": "Next Step",
+          "as": "value",
+          "description": {
+            "en": "The next step number",
+            "de": "Die nächste Schrittnummer"
+          },
+          "bot": "Current step + 1. If no more templates exist, set to 0 to mark completion.",
+          "type": "uint16",
+          "source": "field",
+          "required": true,
+          "position": "payload:value"
+        },
+        {
+          "name": "Step Key",
+          "as": "key",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "value": "followups_step",
+          "position": "payload:key",
+          "hidden": true
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Follow-up step {{TEMPLATE_STEP}} sent to {{CONTACT_NAME}} via {{TEMPLATE_CHANNEL}}.",
+      "de": "Follow-up-Schritt {{TEMPLATE_STEP}} an {{CONTACT_NAME}} via {{TEMPLATE_CHANNEL}} gesendet."
+    }
+  }
+}

@@ -1,0 +1,83 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Followups: Dashboard",
+  "title": {
+    "en": "Follow-ups dashboard",
+    "de": "Follow-up-Dashboard"
+  },
+  "description": {
+    "en": "View and manage your follow-up pipeline. See enrolled contacts, their current sequence step, and reply status in one overview.",
+    "de": "Deine Follow-up-Pipeline einsehen und verwalten. Angemeldete Kontakte, aktueller Sequenz-Schritt und Antwortstatus auf einen Blick."
+  },
+  "bot": "Use this to show the follow-ups dashboard. Loads contacts enrolled in follow-up sequences and their template library.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "auto": true,
+      "label": {
+        "en": "Load enrolled contacts",
+        "de": "Angemeldete Kontakte laden"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/contacts?filter[tags]=followups-enrolled&perPage=100",
+        "method": "GET",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [],
+      "output": {
+        "enrolled": "out.data"
+      }
+    },
+    {
+      "type": "collect",
+      "auto": true,
+      "label": {
+        "en": "Load replied contacts",
+        "de": "Antwort-Kontakte laden"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/contacts?filter[tags]=followups-replied&perPage=100",
+        "method": "GET",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [],
+      "output": {
+        "replied": "out.data"
+      }
+    },
+    {
+      "type": "collect",
+      "auto": true,
+      "label": {
+        "en": "Load templates",
+        "de": "Templates laden"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/agents/{{JOAI_AGENT_UUID}}/documents?type=template&perPage=100",
+        "method": "GET",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [],
+      "output": {
+        "templates": "out.data"
+      }
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Follow-ups dashboard loaded.",
+      "de": "Follow-up-Dashboard geladen."
+    }
+  },
+  "ui": "https://raw.githubusercontent.com/JoAiHQ/warps/main/warps/followups/dashboard/chatapp.90c64ff.dist.html"
+}

@@ -1,0 +1,125 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Followups: Handle Reply",
+  "title": {
+    "en": "Handle a follow-up reply",
+    "de": "Auf eine Follow-up-Antwort reagieren"
+  },
+  "description": {
+    "en": "Record that a contact replied to a follow-up message. Tags the contact as 'followups-replied' so the sequence can be stopped and the response handled appropriately.",
+    "de": "Erfassen, dass ein Kontakt auf eine Follow-up-Nachricht geantwortet hat. Markiert den Kontakt als 'followups-replied', damit die Sequenz gestoppt und die Antwort angemessen behandelt werden kann."
+  },
+  "bot": "Use this when a contact replies to a follow-up message. Tags them as replied and logs the interaction as an activity.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Record reply",
+        "de": "Antwort erfassen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/contacts/{{contactId}}",
+        "method": "PUT",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Contact",
+          "as": "contactId",
+          "description": {
+            "en": "Which contact replied?",
+            "de": "Welcher Kontakt hat geantwortet?"
+          },
+          "bot": "The hashid of the CRM contact who replied.",
+          "type": "string",
+          "position": "url:contactId",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Tag",
+          "as": "tag",
+          "type": "string",
+          "source": "hidden",
+          "value": "followups-replied",
+          "position": "payload:tagsAppend[]"
+        }
+      ]
+    },
+    {
+      "type": "collect",
+      "auto": true,
+      "label": {
+        "en": "Log activity",
+        "de": "Aktivität protokollieren"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/contacts/{{contactId}}/activities",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Contact",
+          "as": "contactId",
+          "type": "string",
+          "source": "field",
+          "value": "{{contactId}}",
+          "hidden": true,
+          "position": "url:contactId"
+        },
+        {
+          "name": "Type",
+          "as": "type",
+          "type": "string",
+          "source": "hidden",
+          "default": "custom"
+        },
+        {
+          "name": "Description",
+          "as": "description",
+          "description": {
+            "en": "Summary of the reply",
+            "de": "Zusammenfassung der Antwort"
+          },
+          "bot": "Brief summary of what the contact said in their reply.",
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Followups Flag",
+          "as": "followups",
+          "type": "boolean",
+          "source": "hidden",
+          "default": "true",
+          "position": "payload:meta"
+        },
+        {
+          "name": "Event",
+          "as": "event",
+          "type": "string",
+          "source": "hidden",
+          "default": "reply",
+          "position": "payload:meta"
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Reply recorded. Contact tagged as replied.",
+      "de": "Antwort erfasst. Kontakt als geantwortet markiert."
+    }
+  }
+}

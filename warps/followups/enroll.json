@@ -1,0 +1,146 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Followups: Enroll Contact",
+  "title": {
+    "en": "Enroll a contact in follow-ups",
+    "de": "Kontakt für Follow-up anmelden"
+  },
+  "description": {
+    "en": "Enroll a CRM contact into a follow-up sequence by setting the sequence name and step. The host system schedules execution of the appropriate template.",
+    "de": "Einen CRM-Kontakt in eine Follow-up-Sequenz aufnehmen, indem der Sequenz-Name und Schritt gesetzt werden. Das Host-System plant die Ausführung des entsprechenden Templates."
+  },
+  "bot": "Use this to enroll a contact into a follow-up sequence. Sets followups_sequence and followups_step properties on the contact.",
+  "vars": {
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Set sequence",
+        "de": "Sequenz setzen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/contacts/{{contactId}}/properties",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Contact",
+          "as": "contactId",
+          "description": {
+            "en": "Which contact to enroll?",
+            "de": "Welchen Kontakt anmelden?"
+          },
+          "bot": "The hashid of the CRM contact to enroll in the follow-up sequence.",
+          "type": "string",
+          "position": "url:contactId",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Sequence",
+          "as": "followups_sequence",
+          "description": {
+            "en": "Sequence name (e.g. 'birthday-followup')",
+            "de": "Sequenz-Name (z.B. 'geburtstags-followup')"
+          },
+          "bot": "The sequence to enroll the contact into.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:value"
+        },
+        {
+          "name": "Sequence Key",
+          "as": "key",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "value": "followups_sequence",
+          "position": "payload:key",
+          "hidden": true
+        }
+      ]
+    },
+    {
+      "type": "collect",
+      "label": {
+        "en": "Set step",
+        "de": "Schritt setzen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/contacts/{{contactId}}/properties",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Step",
+          "as": "followups_step",
+          "description": {
+            "en": "Starting step (default: 1)",
+            "de": "Startschritt (Standard: 1)"
+          },
+          "bot": "The sequence step to start at. Defaults to 1.",
+          "type": "uint16",
+          "source": "field",
+          "required": false,
+          "value": "1",
+          "position": "payload:value"
+        },
+        {
+          "name": "Step Key",
+          "as": "key",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "value": "followups_step",
+          "position": "payload:key",
+          "hidden": true
+        }
+      ]
+    },
+    {
+      "type": "collect",
+      "label": {
+        "en": "Tag contact",
+        "de": "Kontakt taggen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/contacts/{{contactId}}",
+        "method": "PUT",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Tag",
+          "as": "tag",
+          "description": {
+            "en": "Tag to add (e.g. 'followups-enrolled')",
+            "de": "Tag zum Hinzufügen (z.B. 'followups-enrolled')"
+          },
+          "bot": "Tag to mark the contact as enrolled.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "value": "followups-enrolled",
+          "position": "payload:tagsAppend[]"
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Contact enrolled in {{followups_sequence}}.",
+      "de": "Kontakt in {{followups_sequence}} angemeldet."
+    }
+  }
+}

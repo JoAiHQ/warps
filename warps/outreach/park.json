@@ -1,0 +1,61 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Outreach: Park Contact",
+  "title": {
+    "en": "Park an outreach contact",
+    "de": "Outreach-Kontakt parken"
+  },
+  "description": {
+    "en": "Mark an outreach contact as parked, pausing their sequence. Useful when a contact needs a break from automated touches or when manual follow-up is needed.",
+    "de": "Einen Outreach-Kontakt als geparkt markieren und die Sequenz pausieren. Nützlich, wenn ein Kontakt eine Pause von automatisierten Nachrichten braucht oder manuelles Follow-up erforderlich ist."
+  },
+  "bot": "Use this to pause outreach for a contact. Adds the 'outreach-parked' tag and keeps the current sequence/step intact so it can be resumed later.",
+  "vars": {
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Park contact",
+        "de": "Kontakt parken"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/contacts/{{contactId}}",
+        "method": "PUT",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Contact",
+          "as": "contactId",
+          "description": {
+            "en": "Which contact to park?",
+            "de": "Welchen Kontakt parken?"
+          },
+          "bot": "The hashid of the CRM contact to park.",
+          "type": "string",
+          "position": "url:contactId",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Tag",
+          "as": "tag",
+          "type": "string",
+          "source": "hidden",
+          "value": "outreach-parked",
+          "position": "payload:tagsAppend[]"
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Contact parked. Outreach paused.",
+      "de": "Kontakt geparkt. Outreach pausiert."
+    }
+  }
+}
