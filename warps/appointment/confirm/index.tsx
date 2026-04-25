@@ -36,6 +36,14 @@ function Main() {
   const selectedDate = new Date(scheduledAt)
   const displayTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone
 
+  const joinLabel = (() => {
+    if (!conferenceUrl) return undefined
+    if (conferenceUrl.includes('teams.microsoft.com')) return tr.joinTeams
+    if (conferenceUrl.includes('meet.google.com')) return tr.joinGoogleMeet
+    if (conferenceUrl.includes('zoom.us')) return tr.joinZoom
+    return tr.joinMeeting
+  })()
+
   const booked = {
     id: data.MEETING_ID,
     name: data.MEETING_NAME,
@@ -74,6 +82,7 @@ function Main() {
       cancelled={cancelled}
       cancelError={cancelError}
       onCancel={handleCancel}
+      joinLabel={joinLabel}
     />
   )
 }

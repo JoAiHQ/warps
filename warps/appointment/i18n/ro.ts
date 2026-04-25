@@ -45,6 +45,10 @@ export const ro: typeof en = {
     cancelled: 'Programare anulată',
     cancelledMessage: 'Această programare a fost anulată.',
     cancelError: 'Nu s-a putut anula. Încearcă din nou.',
+    joinTeams: 'Alătură-te pe Microsoft Teams',
+    joinGoogleMeet: 'Alătură-te pe Google Meet',
+    joinZoom: 'Alătură-te pe Zoom',
+    joinMeeting: 'Alătură-te la întâlnire',
   },
   configure: {
     title: 'Setări programări',

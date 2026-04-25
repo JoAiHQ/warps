@@ -43,6 +43,10 @@ export const en = {
     cancelled: 'Appointment cancelled',
     cancelledMessage: 'This appointment has been cancelled.',
     cancelError: 'Could not cancel. Please try again.',
+    joinTeams: 'Join on Microsoft Teams',
+    joinGoogleMeet: 'Join on Google Meet',
+    joinZoom: 'Join on Zoom',
+    joinMeeting: 'Join meeting',
   },
   configure: {
     title: 'Appointment Settings',

@@ -45,6 +45,10 @@ export const de: typeof en = {
     cancelled: 'Termin abgesagt',
     cancelledMessage: 'Dieser Termin wurde abgesagt.',
     cancelError: 'Konnte nicht abgesagt werden. Bitte erneut versuchen.',
+    joinTeams: 'Per Microsoft Teams beitreten',
+    joinGoogleMeet: 'Per Google Meet beitreten',
+    joinZoom: 'Per Zoom beitreten',
+    joinMeeting: 'Meeting beitreten',
   },
   configure: {
     title: 'Termineinstellungen',
