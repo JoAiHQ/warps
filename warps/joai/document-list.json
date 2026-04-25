@@ -1,0 +1,79 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: List Documents",
+  "title": {
+    "en": "List documents",
+    "de": "Dokumente auflisten"
+  },
+  "description": {
+    "en": "Retrieve documents from your agent's knowledge base. Filter by type to list only templates, or search by title. Returns paginated results.",
+    "de": "Dokumente aus der Wissensdatenbank deines Agenten abrufen. Nach Typ filtern, z.B. nur Templates, oder nach Titel suchen. Liefert paginierte Ergebnisse."
+  },
+  "bot": "Use this when the user wants to see their documents or templates, or when a workflow needs to look up templates by type or search term.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "auto": true,
+      "label": {
+        "en": "Load documents",
+        "de": "Dokumente laden"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/agents/{{JOAI_AGENT_UUID}}/documents?type={{type}}&search={{search}}&perPage={{perPage}}",
+        "method": "GET",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Type",
+          "as": "type",
+          "description": {
+            "en": "Filter by document type (text, template, pdf, html, markdown)",
+            "de": "Nach Dokumenttyp filtern (text, template, pdf, html, markdown)"
+          },
+          "bot": "Document type to filter by. Use 'template' to list only message templates. Omit for all types.",
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Search",
+          "as": "search",
+          "description": {
+            "en": "Search term for document title",
+            "de": "Suchbegriff für Dokumenttitel"
+          },
+          "bot": "Search documents by title. Omit to return all.",
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Per Page",
+          "as": "perPage",
+          "description": {
+            "en": "Number of results per page (max 500)",
+            "de": "Ergebnisse pro Seite (max. 500)"
+          },
+          "bot": "Page size. Use up to 500 for bulk operations.",
+          "type": "uint16",
+          "source": "field",
+          "required": false,
+          "value": "50"
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Documents loaded.",
+      "de": "Dokumente geladen."
+    }
+  }
+}

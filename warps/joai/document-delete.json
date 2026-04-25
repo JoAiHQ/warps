@@ -1,0 +1,53 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Delete Document",
+  "title": {
+    "en": "Delete a document",
+    "de": "Dokument löschen"
+  },
+  "description": {
+    "en": "Permanently delete a document or template from your agent's knowledge base. This cannot be undone.",
+    "de": "Ein Dokument oder Template dauerhaft aus der Wissensdatenbank deines Agenten löschen. Dies kann nicht rückgängig gemacht werden."
+  },
+  "bot": "Use this when the user wants to remove a document or template from the knowledge base.",
+  "vars": {
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Delete document",
+        "de": "Dokument löschen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/documents/{{documentId}}",
+        "method": "DELETE",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Document ID",
+          "as": "documentId",
+          "description": {
+            "en": "The ID of the document to delete",
+            "de": "Die ID des zu löschenden Dokuments"
+          },
+          "bot": "The hashid of the document to delete.",
+          "type": "string",
+          "position": "url:documentId",
+          "source": "field",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Document deleted.",
+      "de": "Dokument gelöscht."
+    }
+  }
+}
