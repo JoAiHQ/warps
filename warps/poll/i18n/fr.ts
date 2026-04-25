@@ -2,6 +2,7 @@ export const fr = {
   polls: {
     title: 'Sondages actifs',
     empty: 'Aucun sondage ouvert pour le moment.',
+    createPoll: 'Creer un sondage',
     loading: 'Chargement des sondages...',
     deadline: 'Ferme le',
     closed: 'Ferme',

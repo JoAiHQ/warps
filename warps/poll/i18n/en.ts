@@ -2,6 +2,7 @@ export const en = {
   polls: {
     title: 'Active Polls',
     empty: 'No open polls right now.',
+    createPoll: 'Create Poll',
     loading: 'Loading polls...',
     deadline: 'Closes',
     closed: 'Closed',

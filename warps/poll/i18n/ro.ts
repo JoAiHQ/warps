@@ -2,6 +2,7 @@ export const ro = {
   polls: {
     title: 'Sondaje active',
     empty: 'Niciun sondaj deschis in momentul de fata.',
+    createPoll: 'Creeaza sondaj',
     loading: 'Se incarca sondajele...',
     deadline: 'Se inchide pe',
     closed: 'Inchis',
