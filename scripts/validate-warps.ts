@@ -80,7 +80,19 @@ function checkUrlPlaceholdersHaveInputs(warp: Warp, relPath: string): Issue[] {
   const issues: Issue[] = []
   const varNames = new Set(Object.keys(warp.vars ?? {}))
 
+  // Track url-positioned inputs across the chain. In multi-action warps the
+  // user provides each input once and it stays available for subsequent
+  // actions, so a `url:contactId` declared in action 1 also satisfies the
+  // {{contactId}} in action 2's URL.
+  const chainUrlPositioned = new Set<string>()
+
   for (const action of warp.actions ?? []) {
+    for (const input of action.inputs ?? []) {
+      if (typeof input.position === 'string' && input.position.startsWith('url:')) {
+        chainUrlPositioned.add(input.position.slice(4))
+      }
+    }
+
     if (!action.destination || typeof action.destination === 'string') continue
     const url = action.destination.url
     if (!url) continue
@@ -88,17 +100,10 @@ function checkUrlPlaceholdersHaveInputs(warp: Warp, relPath: string): Issue[] {
     const placeholders = extractUrlPathPlaceholders(url)
     if (placeholders.length === 0) continue
 
-    const urlPositioned = new Set(
-      (action.inputs ?? [])
-        .map((i) => i.position)
-        .filter((p): p is string => typeof p === 'string' && p.startsWith('url:'))
-        .map((p) => p.slice(4))
-    )
-
     for (const placeholder of placeholders) {
       if (varNames.has(placeholder)) continue
       if (UPPERCASE_VAR_PATTERN.test(placeholder)) continue
-      if (!urlPositioned.has(placeholder)) {
+      if (!chainUrlPositioned.has(placeholder)) {
         issues.push({
           file: relPath,
           message: `URL "${url}" has {{${placeholder}}} but no input has position "url:${placeholder}" (and it is not declared in vars)`,
