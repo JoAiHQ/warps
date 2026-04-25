@@ -164,8 +164,9 @@ function Main() {
         joinUrl: result?.MEETING_URL,
       })
 
-      if (result?.MEETING_URL) {
-        setConfirmUrl(result.MEETING_URL)
+      const shareUrl = result?.APPOINTMENT_CONFIRM_URL || result?.MEETING_URL
+      if (shareUrl) {
+        setConfirmUrl(shareUrl)
       }
 
       setStep('confirmed')
