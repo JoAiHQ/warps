@@ -331,34 +331,33 @@ function resolveAbiPath(rawValue: string, warpDir: string): string {
   return path.join(warpDir, abiPath)
 }
 
-function replaceAbiPlaceholders(warp: Dict, warpDir: string): Dict {
+function replaceAbiPlaceholders(warp: Dict, warpDir: string): Dict | null {
   const cloned = deepClone(warp)
 
   if (!Array.isArray(cloned.actions)) {
     return cloned
   }
 
-  cloned.actions = cloned.actions.map((action: Dict) => {
+  const actions: Dict[] = []
+  for (const action of cloned.actions as Dict[]) {
     if (typeof action?.abi === 'string' && action.abi.startsWith(PLACEHOLDER_PREFIX)) {
       const abiFile = resolveAbiPath(action.abi, warpDir)
 
       if (!fs.existsSync(abiFile)) {
-        throw new Error(`ABI file not found: ${abiFile}`)
+        console.warn(`⚠ ABI file not found, skipping warp: ${abiFile}`)
+        return null
       }
 
       const abiRaw = fs.readFileSync(abiFile, 'utf8')
       const abiJson = JSON.parse(abiRaw)
       const abiHash = hashDeterministic(abiJson)
-
-      return {
-        ...action,
-        abi: `hash:${abiHash}`,
-      }
+      actions.push({ ...action, abi: `hash:${abiHash}` })
+    } else {
+      actions.push(action)
     }
+  }
 
-    return action
-  })
-
+  cloned.actions = actions
   return cloned
 }
 
@@ -740,7 +739,9 @@ async function buildManifest(args: CliArgs, network: SyncNetwork): Promise<Build
     }
 
     let workingWarp = deepClone(parsed)
-    workingWarp = replaceAbiPlaceholders(workingWarp, path.dirname(absolutePath))
+    const abiResult = replaceAbiPlaceholders(workingWarp, path.dirname(absolutePath))
+    if (abiResult === null) continue
+    workingWarp = abiResult
 
     if (brandName) {
       const brandFactoryOutput = brandFactoryCache.get(brandName) ?? null
