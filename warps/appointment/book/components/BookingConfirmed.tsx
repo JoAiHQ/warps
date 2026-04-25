@@ -30,6 +30,7 @@ type Props = {
   shareUrl?: string
   copyLinkLabel?: string
   copiedLabel?: string
+  joinLabel?: string
 }
 
 export function BookingConfirmed({
@@ -37,7 +38,7 @@ export function BookingConfirmed({
   cancelLabel, cancellingLabel, cancelledTitle, cancelledMessage,
   cancelling, cancelled, cancelError, onCancel,
   servicePrice, serviceToken, serviceName, payLabel, payingLabel, paying, payError, onPay,
-  shareUrl, copyLinkLabel, copiedLabel,
+  shareUrl, copyLinkLabel, copiedLabel, joinLabel,
 }: Props) {
   const { copyToClipboard } = useAppContext()
   const [copied, setCopied] = useState(false)
@@ -118,6 +119,16 @@ export function BookingConfirmed({
           </button>
         </div>
       </div>
+      {booked.joinUrl && joinLabel && (
+        <a
+          href={booked.joinUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="w-full rounded-xl bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-4 py-3 text-sm font-semibold text-center hover:opacity-90 transition-opacity"
+        >
+          {joinLabel}
+        </a>
+      )}
       {servicePrice && onPay && (
         <div className="w-full rounded-xl border border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-900 p-4 text-sm">
           <div className="flex items-center justify-between">

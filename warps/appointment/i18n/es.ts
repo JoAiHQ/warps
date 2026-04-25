@@ -45,6 +45,10 @@ export const es: typeof en = {
     cancelled: 'Cita cancelada',
     cancelledMessage: 'Esta cita ha sido cancelada.',
     cancelError: 'No se pudo cancelar. Inténtalo de nuevo.',
+    joinTeams: 'Unirse en Microsoft Teams',
+    joinGoogleMeet: 'Unirse en Google Meet',
+    joinZoom: 'Unirse en Zoom',
+    joinMeeting: 'Unirse a la reunión',
   },
   configure: {
     title: 'Configuración de citas',

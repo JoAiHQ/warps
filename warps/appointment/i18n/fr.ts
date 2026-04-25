@@ -45,6 +45,10 @@ export const fr: typeof en = {
     cancelled: 'Rendez-vous annulé',
     cancelledMessage: 'Ce rendez-vous a été annulé.',
     cancelError: 'Impossible d\'annuler. Réessaie.',
+    joinTeams: 'Rejoindre sur Microsoft Teams',
+    joinGoogleMeet: 'Rejoindre sur Google Meet',
+    joinZoom: 'Rejoindre sur Zoom',
+    joinMeeting: 'Rejoindre la réunion',
   },
   configure: {
     title: 'Paramètres de rendez-vous',
