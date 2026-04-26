@@ -114,7 +114,7 @@ export function useApp<T = any, I = any>(app: App, isDevMode = false, locale = '
   }, [app, isDevMode])
 
   const copyToClipboard = useCallback((text: string) => {
-    window.parent.postMessage({ type: 'joai:clipboard_copy', text }, '*')
+    window.top?.postMessage({ type: 'joai:clipboard_copy', text }, '*')
     navigator.clipboard?.writeText(text).catch(() => {})
   }, [])
 
