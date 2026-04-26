@@ -1,9 +1,3 @@
-export type AppointmentService = {
-  slug: string
-  name?: string
-  durationMinutes?: number
-}
-
 export type AppointmentPolicy = {
   timezone?: string | null
   availability?: Record<string, string[]>
@@ -25,6 +19,5 @@ export type AvailableStaffMember = {
 
 export type AppointmentConfigureData = {
   policy: AppointmentPolicy | null
-  services: AppointmentService[]
   availableStaff: AvailableStaffMember[]
 }

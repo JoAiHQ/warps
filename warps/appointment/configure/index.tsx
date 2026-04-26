@@ -8,7 +8,6 @@ import { EmptyMessageSkeleton } from '../../../ui/lib/skeletons'
 import { translations } from '../i18n'
 import { BookingRules } from './BookingRules'
 import { OfficeHours } from './OfficeHours'
-import { ServicesList } from './ServicesList'
 import { AppointmentConfigureData, AppointmentPolicy } from './warp.types'
 
 function emptyPolicy(): AppointmentPolicy {
@@ -92,8 +91,6 @@ function Main() {
       />
 
       <BookingRules policy={policy} onChange={updatePolicy} />
-
-      <ServicesList services={data.services ?? []} />
 
       <Button color="primary" block onClick={handleSave} disabled={saving}>
         {saved ? (

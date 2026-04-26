@@ -74,7 +74,7 @@ function Main() {
   const [voting, setVoting] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const handleCreatePoll = () => executeWarp('poll-poll-create', {})
+  const handleCreatePoll = () => executeWarp('poll-create', {})
 
   const loadPollDetails = useCallback(async (ids: number[]) => {
     if (ids.length === 0) {
