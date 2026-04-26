@@ -1,4 +1,14 @@
 export const es = {
+  groups: {
+    title: 'Grupos',
+    noGroup: 'Aun no hay ningun grupo configurado.',
+    noGroupSub: 'Crea un grupo de votacion para empezar.',
+    createGroup: 'Crear grupo',
+    joinGroup: 'Unirse al grupo',
+    openMembership: 'Membresia abierta',
+    closedMembership: 'Solo por invitacion',
+    members: 'miembros',
+  },
   polls: {
     title: 'Encuestas activas',
     empty: 'No hay encuestas abiertas en este momento.',

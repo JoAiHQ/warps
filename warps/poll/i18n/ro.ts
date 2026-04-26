@@ -1,4 +1,14 @@
 export const ro = {
+  groups: {
+    title: 'Grupuri',
+    noGroup: 'Niciun grup configurat inca.',
+    noGroupSub: 'Creeaza un grup de vot pentru a incepe.',
+    createGroup: 'Creeaza grup',
+    joinGroup: 'Alatura-te grupului',
+    openMembership: 'Aderare libera',
+    closedMembership: 'Doar prin invitatie',
+    members: 'membri',
+  },
   polls: {
     title: 'Sondaje active',
     empty: 'Niciun sondaj deschis in momentul de fata.',

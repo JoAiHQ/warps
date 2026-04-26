@@ -9,6 +9,16 @@ export const en = {
     votes: 'votes',
     vote: 'Vote',
   },
+  groups: {
+    title: 'Groups',
+    noGroup: 'No group set up yet.',
+    noGroupSub: 'Create a voting group to get started.',
+    createGroup: 'Create Group',
+    joinGroup: 'Join Group',
+    openMembership: 'Open membership',
+    closedMembership: 'Invite only',
+    members: 'members',
+  },
   vote: {
     loading: 'Loading poll...',
     loadingOptions: 'Loading options...',

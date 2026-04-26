@@ -8,6 +8,7 @@ import {
   readdirSync,
   statSync,
 } from 'fs'
+import { createHash } from 'crypto'
 import { join, dirname, resolve } from 'path'
 import { fileURLToPath } from 'url'
 import { execSync } from 'child_process'
@@ -79,14 +80,6 @@ function getGithubUrl(relativePath) {
     }
 }
 
-function getCommitSha() {
-    try {
-        return execSync('git rev-parse --short HEAD', { cwd: resolve(__dirname, '..') }).toString().trim();
-    } catch {
-        return 'local';
-    }
-}
-
 async function buildApp(targetAppName) {
   try {
     console.log(`Building ${targetAppName}...`)
@@ -101,9 +94,7 @@ async function buildApp(targetAppName) {
     const stylesCssPath = existsSync(appStylesCssPath) ? appStylesCssPath : defaultStylesCssPath
     
     const distDir = resolve(appDir, 'dist')
-    const sha = getCommitSha()
     const outfile = `chatapp.dist.js`
-    const htmlFilename = `chatapp.${sha}.dist.html`
     const virtualIdInput = `virtual-entry:${targetAppName.replace(/\//g, '_')}`
 
     await build({
@@ -140,22 +131,6 @@ async function buildApp(targetAppName) {
 
     const jsPath = join(distDir, outfile)
     const cssPath = join(distDir, outfile.replace(/\.js$/, '.css'))
-    const htmlPath = join(appDir, htmlFilename)
-
-    const KEEP_COUNT = 5
-    const existingDistFiles = readdirSync(appDir)
-      .filter(f => /^chatapp(\..+)?\.dist\.html$/.test(f))
-      .map(f => ({ name: f, mtime: statSync(join(appDir, f)).mtime }))
-      .sort((a, b) => b.mtime - a.mtime)
-
-    const toDelete = existingDistFiles
-      .filter(f => f.name !== htmlFilename)
-      .slice(Math.max(0, KEEP_COUNT - (existingDistFiles.some(f => f.name === htmlFilename) ? 1 : 0)))
-
-    for (const file of toDelete) {
-      unlinkSync(join(appDir, file.name))
-      console.log(`  Removed old artifact: ${file.name}`)
-    }
 
     const jsContent = readFileSync(jsPath, 'utf-8')
     let cssContent = ''
@@ -166,7 +141,7 @@ async function buildApp(targetAppName) {
     }
 
     unlinkSync(jsPath)
-    
+
     const html = `<!DOCTYPE html>
 <html data-theme="auto">
 <head>
@@ -184,9 +159,33 @@ if (window.openai?.theme) {
 ${jsContent}
 </script>
 </body>
-</html>`
+</html>`.trim()
 
-    writeFileSync(htmlPath, html.trim())
+    const contentHash = createHash('sha256').update(html).digest('hex').slice(0, 8)
+    const htmlFilename = `chatapp.${contentHash}.dist.html`
+    const htmlPath = join(appDir, htmlFilename)
+
+    const KEEP_COUNT = 5
+    const existingDistFiles = readdirSync(appDir)
+      .filter(f => /^chatapp(\..+)?\.dist\.html$/.test(f))
+      .map(f => ({ name: f, mtime: statSync(join(appDir, f)).mtime }))
+      .sort((a, b) => b.mtime - a.mtime)
+
+    const toDelete = existingDistFiles
+      .filter(f => f.name !== htmlFilename)
+      .slice(Math.max(0, KEEP_COUNT - (existingDistFiles.some(f => f.name === htmlFilename) ? 1 : 0)))
+
+    for (const file of toDelete) {
+      unlinkSync(join(appDir, file.name))
+      console.log(`  Removed old artifact: ${file.name}`)
+    }
+
+    if (existsSync(htmlPath)) {
+      console.log(`✓ Skipped ${targetAppName} (unchanged) → ${htmlFilename}`)
+      return
+    }
+
+    writeFileSync(htmlPath, html)
     console.log(`✓ Built ${targetAppName} → ${htmlFilename}`)
 
     const relativePath = `warps/${targetAppName}/${htmlFilename}`;

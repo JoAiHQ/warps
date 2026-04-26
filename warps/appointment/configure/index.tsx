@@ -55,7 +55,7 @@ function Main() {
     setSaving(true)
     setSaved(false)
     try {
-      await executeWarp('appointment-upsert-policy', {
+      await executeWarp('appointment-policy-upsert', {
         policy: JSON.stringify({
           availability: policy.availability ?? {},
           minNoticeMinutes: policy.minNoticeMinutes ?? null,
