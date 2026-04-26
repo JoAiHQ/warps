@@ -9,6 +9,16 @@ export const de = {
     votes: 'Stimmen',
     vote: 'Abstimmen',
   },
+  groups: {
+    title: 'Gruppen',
+    noGroup: 'Noch keine Gruppe eingerichtet.',
+    noGroupSub: 'Erstelle eine Abstimmungsgruppe, um loszulegen.',
+    createGroup: 'Gruppe erstellen',
+    joinGroup: 'Gruppe beitreten',
+    openMembership: 'Offene Mitgliedschaft',
+    closedMembership: 'Nur auf Einladung',
+    members: 'Mitglieder',
+  },
   vote: {
     loading: 'Abstimmung wird geladen...',
     loadingOptions: 'Optionen werden geladen...',
