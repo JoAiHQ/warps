@@ -55,8 +55,6 @@ export const ro: typeof en = {
     officeHours: 'Program de lucru',
     closed: 'Închis',
     bookingRules: 'Reguli de programare',
-    services: 'Servicii',
-    noServices: 'Niciun serviciu configurat încă.',
     save: 'Salvează',
     saved: 'Salvat',
     saving: 'Se salvează...',

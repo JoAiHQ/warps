@@ -9,13 +9,18 @@ import { Calendar } from './components/Calendar'
 import { SlotList } from './components/SlotList'
 import { ContactForm } from './components/ContactForm'
 import { BookingConfirmed } from './components/BookingConfirmed'
-import type { AvailabilitySlot, BookPublicData, BookingResult } from './warp.types'
+import { ServicePicker } from './components/ServicePicker'
+import type { AppointmentService, AvailabilitySlot, BookPublicData, BookingResult } from './warp.types'
 
 function Main() {
   const { data, executeWarp, locale } = useAppContext<BookPublicData>()
   const tr = useTranslations(translations).book
 
   const policy = data?.policy ?? null
+  const services = data?.services ?? []
+  const serviceSelectionEnabled = policy?.serviceSelectionEnabled ?? true
+  const showServiceStep = serviceSelectionEnabled && services.length > 0
+
   const agentTimezone = policy?.timezone ?? null
   const [displayTimezone, setDisplayTimezone] = useState(() => Intl.DateTimeFormat().resolvedOptions().timeZone)
   const maxDaysAhead = policy?.maxDaysAhead ?? 14
@@ -51,7 +56,8 @@ function Main() {
   const fetchIdRef = useRef(0)
   const [selectedSlot, setSelectedSlot] = useState<AvailabilitySlot | null>(null)
 
-  const [step, setStep] = useState<'datetime' | 'contact' | 'confirmed'>('datetime')
+  const [selectedService, setSelectedService] = useState<AppointmentService | null | undefined>(undefined)
+  const [step, setStep] = useState<'service' | 'datetime' | 'contact' | 'confirmed'>(() => showServiceStep ? 'service' : 'datetime')
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [purpose, setPurpose] = useState('')
@@ -78,11 +84,12 @@ function Main() {
       const windowEnd = new Date(date)
       windowEnd.setHours(23, 59, 59, 0)
 
+      const durationMinutes = selectedService?.durationMinutes ?? policy?.slotIntervalMinutes ?? 30
       const result = (await executeWarp('appointment-availability', {
         title: 'Appointment',
         windowStart: windowStart.toISOString(),
         windowEnd: windowEnd.toISOString(),
-        durationMinutes: policy?.slotIntervalMinutes ?? 30,
+        durationMinutes,
         timezone: tz,
       })) as any
 
@@ -94,7 +101,7 @@ function Main() {
     } finally {
       if (fetchId === fetchIdRef.current) setLoadingSlots(false)
     }
-  }, [executeWarp, policy?.slotIntervalMinutes, tr.slotsError])
+  }, [executeWarp, selectedService, policy?.slotIntervalMinutes, tr.slotsError])
 
   const handleDateSelect = (date: Date) => {
     setSelectedDate(date)
@@ -150,6 +157,7 @@ function Main() {
         attendeeEmail: email.trim() || undefined,
         description: notes.trim() || undefined,
         routedAgentUuid: selectedSlot.agentUuid,
+        serviceSlug: selectedService?.slug,
       })) as any
 
       if (!result?.MEETING_ID) {
@@ -178,7 +186,24 @@ function Main() {
     }
   }
 
+  const handleServiceSelect = (service: AppointmentService | null) => {
+    setSelectedService(service)
+    setStep('datetime')
+  }
+
   if (!data) return <EmptyMessageSkeleton />
+
+  if (step === 'service') {
+    return (
+      <ServicePicker
+        services={services}
+        onSelect={handleServiceSelect}
+        bookLabel={tr.bookService}
+        noSpecificServiceLabel={tr.noSpecificService}
+        durationUnit={tr.serviceDuration}
+      />
+    )
+  }
 
   if (step === 'confirmed' && booked && selectedDate) {
     return (

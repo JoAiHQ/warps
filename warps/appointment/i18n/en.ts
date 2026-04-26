@@ -53,8 +53,6 @@ export const en = {
     officeHours: 'Office Hours',
     closed: 'Closed',
     bookingRules: 'Booking Rules',
-    services: 'Services',
-    noServices: 'No services configured yet.',
     save: 'Save Settings',
     saved: 'Saved',
     saving: 'Saving...',

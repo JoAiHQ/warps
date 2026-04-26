@@ -55,8 +55,6 @@ export const de: typeof en = {
     officeHours: 'Bürozeiten',
     closed: 'Geschlossen',
     bookingRules: 'Buchungsregeln',
-    services: 'Dienstleistungen',
-    noServices: 'Noch keine Dienstleistungen konfiguriert.',
     save: 'Einstellungen speichern',
     saved: 'Gespeichert',
     saving: 'Speichern...',

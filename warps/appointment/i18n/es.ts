@@ -55,8 +55,6 @@ export const es: typeof en = {
     officeHours: 'Horario de atención',
     closed: 'Cerrado',
     bookingRules: 'Reglas de reserva',
-    services: 'Servicios',
-    noServices: 'Aún no hay servicios configurados.',
     save: 'Guardar',
     saved: 'Guardado',
     saving: 'Guardando...',
