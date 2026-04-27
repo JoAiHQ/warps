@@ -9,6 +9,19 @@ export type SignatureCancelData = {
   DOCUMENT_HASH: string;
 };
 
+export type SignatureCreateInputs = {
+  title: string;
+  documentHash: string;
+  document: string;
+  deadlineHours: string;
+  signerEmail: string;
+  signerName: string;
+};
+
+export type SignatureCreateData = {
+  REQUEST_ID: any;
+};
+
 export type SignatureDeclineInputs = {
   requestId: string;
   creatorEmail: string;

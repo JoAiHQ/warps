@@ -3,7 +3,7 @@
 export type UpsellsAfterVisitInputs = {
   contactId: string;
   serviceCompleted: string;
-  integrationType: string;
+  integration: string;
   recipientId: string;
   recipientName: string;
   message: string;
@@ -18,7 +18,7 @@ export type UpsellsAfterVisitData = {
 export type UpsellsBundleSuggestInputs = {
   contactId: string;
   services: string;
-  integrationType: string;
+  integration: string;
   recipientId: string;
   recipientName: string;
   message: string;
@@ -34,7 +34,7 @@ export type UpsellsProductAlertInputs = {
   contactId: string;
   productName: string;
   reason: string;
-  integrationType: string;
+  integration: string;
   recipientId: string;
   recipientName: string;
   message: string;

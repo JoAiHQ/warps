@@ -10,6 +10,9 @@
     "de": "Breche eine geplante Aufgabe oder wiederkehrende Automatisierung ab und lösche sie."
   },
   "bot": "Use this when the user wants to cancel, stop, remove, or delete a scheduled task. The task ID is required — if the user doesn't provide one, list tasks first to find it.",
+  "vars": {
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+  },
   "actions": [
     {
       "type": "collect",
@@ -18,8 +21,11 @@
         "de": "Aufgabe löschen"
       },
       "destination": {
-        "url": "INJECT:API_BASE/cortex/tasks/{{taskId}}",
-        "method": "DELETE"
+        "url": "INJECT:API_BASE/v1/tasks/{{taskId}}",
+        "method": "DELETE",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
       },
       "inputs": [
         {

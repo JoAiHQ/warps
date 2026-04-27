@@ -10,7 +10,7 @@ export type FollowupsBirthdayScanData = {
 export type FollowupsBirthdayInputs = {
   contactId: string;
   offer: string;
-  integrationType: string;
+  integration: string;
   recipientId: string;
   recipientName: string;
   message: string;
@@ -25,7 +25,7 @@ export type FollowupsBirthdayData = {
 export type FollowupsCheckInInputs = {
   contactId: string;
   lastVisitDate: string;
-  integrationType: string;
+  integration: string;
   recipientId: string;
   recipientName: string;
   message: string;
@@ -35,6 +35,44 @@ export type FollowupsCheckInData = {
   CONTACT_NAME: any;
   CONTACT_PHONE: any;
   CONTACT_EMAIL: any;
+};
+
+export type FollowupsEnrollContactInputs = {
+  contactId: string;
+  followups_sequence: string;
+  key: string;
+  followups_step: string;
+  tag: string;
+};
+
+export type FollowupsExecuteStepInputs = {
+  contactId: string;
+  sequenceSlug: string;
+  integration: string;
+  recipientId: string;
+  recipientName: string;
+  message: string;
+  value: string;
+  key: string;
+};
+
+export type FollowupsExecuteStepData = {
+  CONTACT_NAME: any;
+  CONTACT_PHONE: any;
+  CONTACT_EMAIL: any;
+  TEMPLATE_CONTENT: any;
+  TEMPLATE_CHANNEL: any;
+  TEMPLATE_SLUG: any;
+  TEMPLATE_STEP: any;
+};
+
+export type FollowupsHandleReplyInputs = {
+  contactId: string;
+  tag: string;
+  type: string;
+  description: string;
+  followups: boolean;
+  event: string;
 };
 
 export type FollowupsInactiveScanInputs = {
@@ -47,7 +85,7 @@ export type FollowupsInactiveScanData = {
 export type FollowupsPostTreatmentInputs = {
   contactId: string;
   treatment: string;
-  integrationType: string;
+  integration: string;
   recipientId: string;
   recipientName: string;
   message: string;
@@ -63,7 +101,7 @@ export type FollowupsReorderReminderInputs = {
   contactId: string;
   productName: string;
   lastPurchased: string;
-  integrationType: string;
+  integration: string;
   recipientId: string;
   recipientName: string;
   message: string;
@@ -75,11 +113,21 @@ export type FollowupsReorderReminderData = {
   CONTACT_EMAIL: any;
 };
 
+export type FollowupsCreateTemplateInputs = {
+  title: string;
+  content: string;
+  slug: string;
+  channel: string;
+  step: string;
+  delay_days: string;
+  variables: string;
+};
+
 export type FollowupsWinBackInputs = {
   contactId: string;
   daysInactive: string;
   offer: string;
-  integrationType: string;
+  integration: string;
   recipientId: string;
   recipientName: string;
   message: string;

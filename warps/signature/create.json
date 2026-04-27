@@ -22,23 +22,68 @@
     "API_BASE": "INJECT:API_BASE",
     "TITLE": "field:title",
     "DOCUMENT_HASH": "field:documentHash",
-    "SIGNER_ADDRESS": "field:signerAddress"
+    "SIGNER_ADDRESS": "field:signerAddress",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
   },
   "sections": [
     {
-      "title": { "en": "Document Details", "de": "Dokumentendetails", "fr": "Details du document", "es": "Detalles del documento", "ro": "Detaliile documentului" },
-      "description": { "en": "What document needs to be signed?", "de": "Welches Dokument muss unterzeichnet werden?", "fr": "Quel document doit etre signe ?", "es": "Que documento hay que firmar?", "ro": "Ce document trebuie semnat?" },
-      "inputs": ["title", "document"]
+      "title": {
+        "en": "Document Details",
+        "de": "Dokumentendetails",
+        "fr": "Details du document",
+        "es": "Detalles del documento",
+        "ro": "Detaliile documentului"
+      },
+      "description": {
+        "en": "What document needs to be signed?",
+        "de": "Welches Dokument muss unterzeichnet werden?",
+        "fr": "Quel document doit etre signe ?",
+        "es": "Que documento hay que firmar?",
+        "ro": "Ce document trebuie semnat?"
+      },
+      "inputs": [
+        "title",
+        "document"
+      ]
     },
     {
-      "title": { "en": "Signer", "de": "Unterzeichner", "fr": "Signataire", "es": "Firmante", "ro": "Semnatar" },
-      "description": { "en": "Who needs to sign this document?", "de": "Wer muss dieses Dokument unterzeichnen?", "fr": "Qui doit signer ce document ?", "es": "Quien tiene que firmar este documento?", "ro": "Cine trebuie sa semneze acest document?" },
-      "inputs": ["signerEmail", "signerName"]
+      "title": {
+        "en": "Signer",
+        "de": "Unterzeichner",
+        "fr": "Signataire",
+        "es": "Firmante",
+        "ro": "Semnatar"
+      },
+      "description": {
+        "en": "Who needs to sign this document?",
+        "de": "Wer muss dieses Dokument unterzeichnen?",
+        "fr": "Qui doit signer ce document ?",
+        "es": "Quien tiene que firmar este documento?",
+        "ro": "Cine trebuie sa semneze acest document?"
+      },
+      "inputs": [
+        "signerEmail",
+        "signerName"
+      ]
     },
     {
-      "title": { "en": "Settings", "de": "Einstellungen", "fr": "Parametres", "es": "Ajustes", "ro": "Setari" },
-      "description": { "en": "Set a deadline for the signature request.", "de": "Frist für die Signaturanfrage festlegen.", "fr": "Definissez une date limite pour la demande de signature.", "es": "Define una fecha limite para la solicitud de firma.", "ro": "Seteaza un termen limita pentru cererea de semnatura." },
-      "inputs": ["deadlineHours"]
+      "title": {
+        "en": "Settings",
+        "de": "Einstellungen",
+        "fr": "Parametres",
+        "es": "Ajustes",
+        "ro": "Setari"
+      },
+      "description": {
+        "en": "Set a deadline for the signature request.",
+        "de": "Frist für die Signaturanfrage festlegen.",
+        "fr": "Definissez une date limite pour la demande de signature.",
+        "es": "Define una fecha limite para la solicitud de firma.",
+        "ro": "Seteaza un termen limita pentru cererea de semnatura."
+      },
+      "inputs": [
+        "deadlineHours"
+      ]
     }
   ],
   "actions": [
@@ -121,7 +166,7 @@
             "168": "7d",
             "336": "14d"
           }
-        },
+        }
       ]
     },
     {
@@ -134,8 +179,11 @@
         "ro": "Semnatarul este notificat..."
       },
       "destination": {
-        "url": "{{API_BASE}}/cortex/agents/{{JOAI_AGENT_UUID}}/message",
-        "method": "POST"
+        "url": "INJECT:API_BASE/v1/agents/{{JOAI_AGENT_UUID}}/room/message",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
       },
       "inputs": [
         {
@@ -170,57 +218,17 @@
         }
       ],
       "body": {
-        "integrationType": "email",
         "recipientId": "{{signerEmail}}",
         "recipientName": "{{signerName}}",
-        "message": "You have been asked to sign \"{{TITLE}}\".\n\nSign here:\nhttps://devnet.joai.ai/{{JOAI_TEAM_SLUG}}/signature/sign?id={{REQUEST_ID}}&signer={{SIGNER_ADDRESS}}\n\nDocument fingerprint (SHA-256): {{DOCUMENT_HASH}}"
+        "message": "You have been asked to sign \"{{TITLE}}\".\n\nSign here:\nhttps://devnet.joai.ai/{{JOAI_TEAM_SLUG}}/signature/sign?id={{REQUEST_ID}}&signer={{SIGNER_ADDRESS}}\n\nDocument fingerprint (SHA-256): {{DOCUMENT_HASH}}",
+        "integration": "email"
       }
     }
   ],
-  "next": [
-    {
-      "type": "collect",
-      "label": {
-        "en": "Sending WhatsApp notification...",
-        "de": "WhatsApp-Benachrichtigung wird gesendet...",
-        "fr": "Envoi de la notification WhatsApp...",
-        "es": "Enviando notificacion por WhatsApp...",
-        "ro": "Se trimite notificarea WhatsApp..."
-      },
-      "destination": {
-        "url": "{{API_BASE}}/cortex/agents/{{JOAI_AGENT_UUID}}/message",
-        "method": "POST"
-      },
-      "inputs": [
-        {
-          "name": "Signer WhatsApp",
-          "as": "signerWhatsApp",
-          "description": {
-            "en": "Signer's WhatsApp number (optional). If provided, they will also receive the signing link via WhatsApp.",
-            "de": "WhatsApp-Nummer des Unterzeichners (optional). Falls angegeben, erhält er den Signing-Link auch via WhatsApp.",
-            "fr": "Numero WhatsApp du signataire (optionnel). S il est fourni, il recevra le lien de signature via WhatsApp.",
-            "es": "Numero de WhatsApp del firmante (opcional). Si se proporciona, tambien recibira el enlace de firma por WhatsApp.",
-            "ro": "Numarul de WhatsApp al semnatarului (optional). Daca este furnizat, va primi linkul de semnare si prin WhatsApp."
-          },
-          "bot": "WhatsApp phone number of the signer (international format, e.g. +43123456789). Optional — skip if not available.",
-          "type": "string",
-          "source": "field",
-          "required": false
-        }
-      ],
-      "body": {
-        "integrationType": "whatsapp",
-        "recipientId": "{{signerWhatsApp}}",
-        "recipientName": "{{signerName}}",
-        "message": "You have been asked to sign \"{{TITLE}}\".\n\nSign here:\nhttps://devnet.joai.ai/{{JOAI_TEAM_SLUG}}/signature/sign?id={{REQUEST_ID}}&signer={{SIGNER_ADDRESS}}"
-      },
-      "condition": "{{signerWhatsApp}} != ''"
-    }
-  ],
+  "next": "@joai-site-provision?brand=signature&team={{JOAI_TEAM_SLUG}}",
   "output": {
     "REQUEST_ID": "out.data"
   },
-  "next": "@joai-site-provision?brand=signature&team={{JOAI_TEAM_SLUG}}",
   "messages": {
     "success": {
       "en": "Signature request sent! The signer will receive an email with a signing link.",

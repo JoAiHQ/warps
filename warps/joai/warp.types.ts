@@ -99,6 +99,12 @@ export type JoAiSendContactMessageData = {
   contactName: any;
 };
 
+export type JoAiSetContactPropertyInputs = {
+  contactId: string;
+  key: string;
+  value: string;
+};
+
 export type JoAiUpdateContactInputs = {
   contactId: string;
   name: string;
@@ -106,7 +112,12 @@ export type JoAiUpdateContactInputs = {
   phone: string;
   company: string;
   title: string;
+  notes: string;
+  website: string;
+  birthday: string;
+  socials: string;
   tags: string;
+  tagsAppend: string;
 };
 
 export type JoAiCreateContractInputs = {
@@ -163,6 +174,36 @@ export type JoAiWeeklyDigestEmailData = {
 export type JoAiCreateDocumentInputs = {
   title: string;
   content: string;
+  type: string;
+  slug: string;
+  app: string;
+  channel: string;
+  step: string;
+  delay_days: string;
+  locale: string;
+  variables: string;
+};
+
+export type JoAiDeleteDocumentInputs = {
+  documentId: string;
+};
+
+export type JoAiListDocumentsInputs = {
+  type: string;
+  search: string;
+  perPage: string;
+};
+
+export type JoAiUpdateDocumentInputs = {
+  documentId: string;
+  title: string;
+  content: string;
+  slug: string;
+  app: string;
+  channel: string;
+  step: string;
+  delay_days: string;
+  variables: string;
 };
 
 export type JoAiCreateElementInputs = {
@@ -298,7 +339,6 @@ export type JoAiSetNotificationPreferenceInputs = {
 };
 
 export type JoAiCreatePrivateAppInputs = {
-  teamSlug: string;
   name: string;
   description: string;
 };
@@ -360,6 +400,11 @@ export type JoAiProvisionSiteInputs = {
   brand: string;
   team: string;
   settings: string;
+  next: string;
+};
+
+export type JoAiProvisionSiteData = {
+  SITE_URL: any;
 };
 
 export type JoAiCreateSkillInputs = {
@@ -468,15 +513,6 @@ export type JoAiUserNameUpdateInputs = {
 
 export type JoAiUserNameUpdateData = {
   USER_NAME: any;
-};
-
-export type JoAiUserOnboardingScreenInputs = {
-  telegramUsername: string;
-  biggestTimeWaster: string;
-  primaryGoalAI: string;
-  technicalComfortLevel: string;
-  blockchainCryptoApps: string;
-  aiToolsPaid: string;
 };
 
 export type JoAiUserOnboardingInputs = {
