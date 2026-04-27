@@ -1,0 +1,69 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Delete Element Variation",
+  "title": {
+    "en": "Delete element variation",
+    "de": "Element-Variation löschen"
+  },
+  "description": {
+    "en": "Permanently remove a variation (including its images) from an element.",
+    "de": "Entferne dauerhaft eine Variation (einschließlich ihrer Bilder) aus einem Element."
+  },
+  "bot": "Use this when the user wants to remove an unwanted variation. Use list_element_variations first to find IDs.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Delete variation",
+        "de": "Variation löschen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/studio/elements/{{elementId}}/variations/{{variationId}}",
+        "method": "DELETE",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Element ID",
+          "as": "elementId",
+          "description": {
+            "en": "The ID of the parent element",
+            "de": "Die ID des übergeordneten Elements"
+          },
+          "bot": "The element hash ID this variation belongs to.",
+          "type": "string",
+          "position": "url:elementId",
+          "source": "field",
+          "required": true,
+          "min": 1
+        },
+        {
+          "name": "Variation ID",
+          "as": "variationId",
+          "description": {
+            "en": "The ID of the variation to delete",
+            "de": "Die ID der zu löschenden Variation"
+          },
+          "bot": "The variation hash ID. Use list_element_variations to find IDs.",
+          "type": "string",
+          "position": "url:variationId",
+          "source": "field",
+          "required": true,
+          "min": 1
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Element variation deleted.",
+      "de": "Element-Variation gelöscht."
+    }
+  }
+}
