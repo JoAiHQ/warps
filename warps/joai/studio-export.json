@@ -1,15 +1,15 @@
 {
   "protocol": "warp:3.0.0",
-  "name": "JoAi: Delete Project",
+  "name": "JoAi: Studio Export",
   "title": {
-    "en": "Delete a project",
-    "de": "Projekt löschen"
+    "en": "Export studio project",
+    "de": "Studio-Projekt exportieren"
   },
   "description": {
-    "en": "Permanently remove a project from your agent.",
-    "de": "Entferne ein Projekt dauerhaft von deinem Agenten."
+    "en": "Export the final asset from a studio project to a permanent shareable URL.",
+    "de": "Exportiere das fertige Asset eines Studio-Projekts zu einer dauerhaften, teilbaren URL."
   },
-  "bot": "Use this when the user wants to remove a project. If the user refers to a project by name, list projects first to find the matching ID.",
+  "bot": "Use this when the user wants to finalize and export a studio project. The project must be in 'composed' status. Returns the public export URL and asset download links.",
   "vars": {
     "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
     "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
@@ -18,12 +18,12 @@
     {
       "type": "collect",
       "label": {
-        "en": "Delete project",
-        "de": "Projekt löschen"
+        "en": "Export project",
+        "de": "Projekt exportieren"
       },
       "destination": {
-        "url": "INJECT:API_BASE/v1/studio/projects/{{projectId}}",
-        "method": "DELETE",
+        "url": "INJECT:API_BASE/v1/studio/projects/{{projectId}}/export",
+        "method": "POST",
         "headers": {
           "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
         }
@@ -33,8 +33,8 @@
           "name": "Project ID",
           "as": "projectId",
           "description": {
-            "en": "The ID of the project to delete",
-            "de": "Die ID des zu löschenden Projekts"
+            "en": "The ID of the studio project to export",
+            "de": "Die ID des zu exportierenden Studio-Projekts"
           },
           "bot": "The project hash ID. If the user refers to a project by name, list projects first to find the matching ID.",
           "type": "string",
@@ -48,8 +48,8 @@
   ],
   "messages": {
     "success": {
-      "en": "Project deleted.",
-      "de": "Projekt gelöscht."
+      "en": "Studio project exported.",
+      "de": "Studio-Projekt exportiert."
     }
   }
 }

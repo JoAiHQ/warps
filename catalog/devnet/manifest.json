@@ -4,8 +4,8 @@
   "repo": "JoAiHQ/warps",
   "branch": "dev",
   "network": "devnet",
-  "commitSha": "a1048bbb64d8eeb5c97505d25619ebdb5f3c9a82",
-  "generatedAt": "2026-04-27T10:48:40.116Z",
+  "commitSha": "0d69334609793cf44c74ebcff47ea9cc5d12f451",
+  "generatedAt": "2026-04-27T11:26:03.226Z",
   "warps": [
     {
       "key": "arbitrum:omniset-deposit-arbitrum",
@@ -546,8 +546,8 @@
       "identifier": "@certificate-issue",
       "alias": "certificate-issue",
       "chain": "multiversx",
-      "hash": "0c92e17277c43a5a77aefbffb4ba2a0e0fbb810f44834f28d2c8a1ebefbda8ca",
-      "checksum": "0c92e17277c43a5a77aefbffb4ba2a0e0fbb810f44834f28d2c8a1ebefbda8ca",
+      "hash": "fbf6e2ee11fc4ed179d6b5e11e2d54921cca201e9f6ad951e99d63aa50dfc41f",
+      "checksum": "fbf6e2ee11fc4ed179d6b5e11e2d54921cca201e9f6ad951e99d63aa50dfc41f",
       "name": "Certificate: Issue",
       "title": {
         "en": "Issue a certificate",
@@ -615,7 +615,8 @@
           "API_BASE": "https://devnet-api.joai.ai",
           "COMPANY_NAME": "field:companyName",
           "RECIPIENT_EMAIL": "field:recipientEmail",
-          "CERT_ID": "out.data"
+          "CERT_ID": "out.data",
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
         },
         "sections": [
           {
@@ -805,16 +806,19 @@
               "ro": "Se trimite emailul de revendicare..."
             },
             "destination": {
-              "url": "{{API_BASE}}/cortex/agents/{{JOAI_AGENT_UUID}}/message",
-              "method": "POST"
+              "url": "https://devnet-api.joai.ai/v1/agents/{{JOAI_AGENT_UUID}}/room/message",
+              "method": "POST",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+              }
             },
             "inputs": [],
             "body": {
-              "integrationType": "email",
               "recipientId": "{{RECIPIENT_EMAIL}}",
               "recipientName": "{{COMPANY_NAME}}",
               "subject": "Your certificate is ready to claim",
-              "message": "{{COMPANY_NAME}} has been issued a digital certificate.\n\nClaim your certificate here:\n{{SITES_BASE}}/certificates/claim?certId={{CERT_ID}}\n\nThis certificate is permanently anchored on the blockchain and can be verified by anyone."
+              "message": "{{COMPANY_NAME}} has been issued a digital certificate.\n\nClaim your certificate here:\n{{SITES_BASE}}/certificates/claim?certId={{CERT_ID}}\n\nThis certificate is permanently anchored on the blockchain and can be verified by anyone.",
+              "integration": "email"
             },
             "when": "{{RECIPIENT_EMAIL}} != ''"
           }
@@ -19484,12 +19488,304 @@
       "extras": null
     },
     {
+      "key": "multiversx:signature-create",
+      "identifier": "@signature-create",
+      "alias": "signature-create",
+      "chain": "multiversx",
+      "hash": "2e617fe4bbfdc759ae032667f7fabb6148cd0f4693d07a3b3d9ed20280588d74",
+      "checksum": "2e617fe4bbfdc759ae032667f7fabb6148cd0f4693d07a3b3d9ed20280588d74",
+      "name": "Signature: Create",
+      "title": {
+        "en": "Request a signature",
+        "de": "Signatur anfordern",
+        "fr": "Demander une signature",
+        "es": "Solicitar una firma",
+        "ro": "Solicita o semnatura"
+      },
+      "description": {
+        "en": "Send a legally-binding signature request. The signer receives an email and confirms the document with one click.",
+        "de": "Sende eine rechtsverbindliche Signaturanfrage. Der Unterzeichner erhält eine E-Mail und bestätigt das Dokument mit einem Klick.",
+        "fr": "Envoyez une demande de signature juridiquement engageante. Le signataire recoit un e-mail et confirme le document en un clic.",
+        "es": "Envia una solicitud de firma con validez legal. La persona firmante recibe un correo y confirma el documento con un clic.",
+        "ro": "Trimite o cerere de semnatura cu valoare legala. Semnatarul primeste un e-mail si confirma documentul cu un singur clic."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": "{{SC_ADDRESS}}",
+      "primaryFunc": "createRequest",
+      "brand": {
+        "hash": "ffbc5b6c628692626f4838b18c3927107a32488dc4644eb5b0f4af0b7ae96045",
+        "slug": "signature",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "Signature",
+        "description": {
+          "en": "On-chain document signatures. Send signing requests by email. All agreements anchored on the blockchain.",
+          "de": "On-chain-Dokumentensignaturen. Signaturanfragen per E-Mail senden. Alle Vereinbarungen auf der Blockchain verankert.",
+          "fr": "Signatures de documents on-chain. Envoyez des demandes de signature par e-mail. Tous les accords sont ancrés sur la blockchain.",
+          "es": "Firmas de documentos on-chain. Envia solicitudes de firma por correo electronico. Todos los acuerdos quedan anclados en la blockchain.",
+          "ro": "Semnaturi de documente on-chain. Trimite cereri de semnare prin e-mail. Toate acordurile sunt ancorate pe blockchain."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "Signature: Create",
+        "title": {
+          "en": "Request a signature",
+          "de": "Signatur anfordern",
+          "fr": "Demander une signature",
+          "es": "Solicitar una firma",
+          "ro": "Solicita o semnatura"
+        },
+        "description": {
+          "en": "Send a legally-binding signature request. The signer receives an email and confirms the document with one click.",
+          "de": "Sende eine rechtsverbindliche Signaturanfrage. Der Unterzeichner erhält eine E-Mail und bestätigt das Dokument mit einem Klick.",
+          "fr": "Envoyez une demande de signature juridiquement engageante. Le signataire recoit un e-mail et confirme le document en un clic.",
+          "es": "Envia una solicitud de firma con validez legal. La persona firmante recibe un correo y confirma el documento con un clic.",
+          "ro": "Trimite o cerere de semnatura cu valoare legala. Semnatarul primeste un e-mail si confirma documentul cu un singur clic."
+        },
+        "bot": "Request a signature on a document. Upload file first (use desk if pinned), then collect title, signer email, optional name and deadline.",
+        "chain": "multiversx",
+        "vars": {
+          "SC_ADDRESS": "erd1qqqqqqqqqqqqqpgqtxwhd7z99tvvrgd38897k9zunrqsgmahtres7648am",
+          "API_BASE": "https://devnet-api.joai.ai",
+          "TITLE": "field:title",
+          "DOCUMENT_HASH": "field:documentHash",
+          "SIGNER_ADDRESS": "field:signerAddress",
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+        },
+        "sections": [
+          {
+            "title": {
+              "en": "Document Details",
+              "de": "Dokumentendetails",
+              "fr": "Details du document",
+              "es": "Detalles del documento",
+              "ro": "Detaliile documentului"
+            },
+            "description": {
+              "en": "What document needs to be signed?",
+              "de": "Welches Dokument muss unterzeichnet werden?",
+              "fr": "Quel document doit etre signe ?",
+              "es": "Que documento hay que firmar?",
+              "ro": "Ce document trebuie semnat?"
+            },
+            "inputs": [
+              "title",
+              "document"
+            ]
+          },
+          {
+            "title": {
+              "en": "Signer",
+              "de": "Unterzeichner",
+              "fr": "Signataire",
+              "es": "Firmante",
+              "ro": "Semnatar"
+            },
+            "description": {
+              "en": "Who needs to sign this document?",
+              "de": "Wer muss dieses Dokument unterzeichnen?",
+              "fr": "Qui doit signer ce document ?",
+              "es": "Quien tiene que firmar este documento?",
+              "ro": "Cine trebuie sa semneze acest document?"
+            },
+            "inputs": [
+              "signerEmail",
+              "signerName"
+            ]
+          },
+          {
+            "title": {
+              "en": "Settings",
+              "de": "Einstellungen",
+              "fr": "Parametres",
+              "es": "Ajustes",
+              "ro": "Setari"
+            },
+            "description": {
+              "en": "Set a deadline for the signature request.",
+              "de": "Frist für die Signaturanfrage festlegen.",
+              "fr": "Definissez une date limite pour la demande de signature.",
+              "es": "Define una fecha limite para la solicitud de firma.",
+              "ro": "Seteaza un termen limita pentru cererea de semnatura."
+            },
+            "inputs": [
+              "deadlineHours"
+            ]
+          }
+        ],
+        "actions": [
+          {
+            "type": "contract",
+            "label": {
+              "en": "Request signature",
+              "de": "Signatur anfordern",
+              "fr": "Demander la signature",
+              "es": "Solicitar firma",
+              "ro": "Solicita semnatura"
+            },
+            "address": "{{SC_ADDRESS}}",
+            "func": "createRequest",
+            "gasLimit": 10000000,
+            "abi": "hash:306e7123aeb690c791a082c24ce09a52219debbf81fbf5fa8215113477f18770",
+            "inputs": [
+              {
+                "name": "Title",
+                "as": "title",
+                "description": {
+                  "en": "Title of the document to be signed.",
+                  "de": "Titel des zu unterzeichnenden Dokuments.",
+                  "fr": "Titre du document a signer.",
+                  "es": "Titulo del documento que se va a firmar.",
+                  "ro": "Titlul documentului care trebuie semnat."
+                },
+                "bot": "Short document title.",
+                "type": "string",
+                "position": "arg:1",
+                "source": "field",
+                "required": true,
+                "min": 1,
+                "max": 128
+              },
+              {
+                "name": "Document Hash",
+                "as": "documentHash",
+                "type": "string",
+                "position": "arg:2",
+                "source": "hidden",
+                "modifier": "crypto:sha256:document",
+                "required": true
+              },
+              {
+                "name": "Document",
+                "as": "document",
+                "description": {
+                  "en": "Upload the PDF document to be signed. The SHA-256 fingerprint will be computed automatically.",
+                  "de": "Lade das zu unterzeichnende PDF-Dokument hoch. Der SHA-256-Fingerabdruck wird automatisch berechnet.",
+                  "fr": "Televersez le document PDF a signer. L empreinte SHA-256 sera calculee automatiquement.",
+                  "es": "Sube el documento PDF que hay que firmar. La huella SHA-256 se calculara automaticamente.",
+                  "ro": "Incarca documentul PDF care trebuie semnat. Amprenta SHA-256 va fi calculata automat."
+                },
+                "bot": "Show a file upload embed. Use desk document if already pinned.",
+                "type": "file",
+                "position": "arg:3",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Deadline",
+                "as": "deadlineHours",
+                "description": {
+                  "en": "How long does the signer have to sign?",
+                  "de": "Wie lange hat der Unterzeichner Zeit zum Unterzeichnen?",
+                  "fr": "Combien de temps le signataire a-t-il pour signer ?",
+                  "es": "Cuanto tiempo tiene la persona firmante para firmar?",
+                  "ro": "Cat timp are semnatarul la dispozitie pentru a semna?"
+                },
+                "bot": "Deadline in hours. Use 0 for no deadline, 24 for one day, 168 for a week.",
+                "type": "uint64",
+                "position": "arg:4",
+                "source": "field",
+                "required": true,
+                "options": {
+                  "0": "∞",
+                  "24": "24h",
+                  "72": "72h",
+                  "168": "7d",
+                  "336": "14d"
+                }
+              }
+            ]
+          },
+          {
+            "type": "collect",
+            "label": {
+              "en": "Notifying signer...",
+              "de": "Unterzeichner wird benachrichtigt...",
+              "fr": "Notification du signataire...",
+              "es": "Avisando al firmante...",
+              "ro": "Semnatarul este notificat..."
+            },
+            "destination": {
+              "url": "https://devnet-api.joai.ai/v1/agents/{{JOAI_AGENT_UUID}}/room/message",
+              "method": "POST",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Signer Email",
+                "as": "signerEmail",
+                "description": {
+                  "en": "Signer's email address. They will receive a signing link.",
+                  "de": "E-Mail-Adresse des Unterzeichners. Er erhält einen Link zum Unterzeichnen.",
+                  "fr": "Adresse e-mail du signataire. Il recevra un lien de signature.",
+                  "es": "Correo de la persona firmante. Recibira un enlace para firmar.",
+                  "ro": "Adresa de e-mail a semnatarului. Va primi un link pentru semnare."
+                },
+                "bot": "Email address of the person who needs to sign the document.",
+                "type": "email",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Signer Name",
+                "as": "signerName",
+                "description": {
+                  "en": "Signer's name (optional)",
+                  "de": "Name des Unterzeichners (optional)",
+                  "fr": "Nom du signataire (optionnel)",
+                  "es": "Nombre de la persona firmante (opcional)",
+                  "ro": "Numele semnatarului (optional)"
+                },
+                "bot": "Full name of the signer, used in the notification email.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              }
+            ],
+            "body": {
+              "recipientId": "{{signerEmail}}",
+              "recipientName": "{{signerName}}",
+              "message": "You have been asked to sign \"{{TITLE}}\".\n\nSign here:\nhttps://devnet.joai.ai/{{JOAI_TEAM_SLUG}}/signature/sign?id={{REQUEST_ID}}&signer={{SIGNER_ADDRESS}}\n\nDocument fingerprint (SHA-256): {{DOCUMENT_HASH}}",
+              "integration": "email"
+            }
+          }
+        ],
+        "next": "@joai-site-provision?brand=signature&team={{JOAI_TEAM_SLUG}}",
+        "output": {
+          "REQUEST_ID": "out.data"
+        },
+        "messages": {
+          "success": {
+            "en": "Signature request sent! The signer will receive an email with a signing link.",
+            "de": "Signaturanfrage gesendet! Der Unterzeichner erhält eine E-Mail mit einem Link zum Unterzeichnen.",
+            "fr": "Demande de signature envoyee ! Le signataire recevra un e-mail avec un lien de signature.",
+            "es": "Solicitud de firma enviada. La persona firmante recibira un correo con el enlace para firmar.",
+            "ro": "Cererea de semnatura a fost trimisa! Semnatarul va primi un e-mail cu linkul de semnare."
+          }
+        }
+      },
+      "extras": null
+    },
+    {
       "key": "multiversx:signature-decline",
       "identifier": "@signature-decline",
       "alias": "signature-decline",
       "chain": "multiversx",
-      "hash": "c6fee0f53d0d32c269358ca79007815a3b272675120217cce9490d872c901614",
-      "checksum": "c6fee0f53d0d32c269358ca79007815a3b272675120217cce9490d872c901614",
+      "hash": "d5f704bfa7ba255acf1f4b28d84d2d96f3300f4b8d61c6fce3a38f44b19e5adc",
+      "checksum": "d5f704bfa7ba255acf1f4b28d84d2d96f3300f4b8d61c6fce3a38f44b19e5adc",
       "name": "Signature: Decline",
       "title": {
         "en": "Decline signature request",
@@ -19554,7 +19850,8 @@
         "vars": {
           "SC_ADDRESS": "erd1qqqqqqqqqqqqqpgqtxwhd7z99tvvrgd38897k9zunrqsgmahtres7648am",
           "API_BASE": "https://devnet-api.joai.ai",
-          "REQUEST_ID": "query:id"
+          "REQUEST_ID": "query:id",
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
         },
         "actions": [
           {
@@ -19619,8 +19916,11 @@
               "ro": "Creatorul este notificat..."
             },
             "destination": {
-              "url": "{{API_BASE}}/cortex/agents/{{JOAI_AGENT_UUID}}/message",
-              "method": "POST"
+              "url": "https://devnet-api.joai.ai/v1/agents/{{JOAI_AGENT_UUID}}/room/message",
+              "method": "POST",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+              }
             },
             "inputs": [
               {
@@ -19640,9 +19940,9 @@
               }
             ],
             "body": {
-              "integrationType": "email",
               "recipientId": "{{creatorEmail}}",
-              "message": "A signer has declined your signature request.\n\nRequest ID: {{REQUEST_ID}}\n\nYou can view the request at: https://devnet.joai.ai/{{JOAI_TEAM_SLUG}}/signature/view?id={{REQUEST_ID}}"
+              "message": "A signer has declined your signature request.\n\nRequest ID: {{REQUEST_ID}}\n\nYou can view the request at: https://devnet.joai.ai/{{JOAI_TEAM_SLUG}}/signature/view?id={{REQUEST_ID}}",
+              "integration": "email"
             }
           }
         ],
@@ -19775,8 +20075,8 @@
       "identifier": "@signature-remind",
       "alias": "signature-remind",
       "chain": "multiversx",
-      "hash": "20100b4b61e1f5c2170eb00405af658da005c5e265161c3aa55f574ea90ba5c4",
-      "checksum": "20100b4b61e1f5c2170eb00405af658da005c5e265161c3aa55f574ea90ba5c4",
+      "hash": "099f80ddc222742992db0317342cc27fab10664d529dcc27baa30d3b121bb123",
+      "checksum": "099f80ddc222742992db0317342cc27fab10664d529dcc27baa30d3b121bb123",
       "name": "Signature: Remind",
       "title": {
         "en": "Send signing reminder",
@@ -19841,7 +20141,8 @@
         "vars": {
           "SC_ADDRESS": "erd1qqqqqqqqqqqqqpgqtxwhd7z99tvvrgd38897k9zunrqsgmahtres7648am",
           "API_BASE": "https://devnet-api.joai.ai",
-          "REQUEST_ID": "query:id"
+          "REQUEST_ID": "query:id",
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
         },
         "actions": [
           {
@@ -19880,8 +20181,11 @@
               "ro": "Se trimite reminderul..."
             },
             "destination": {
-              "url": "{{API_BASE}}/cortex/agents/{{JOAI_AGENT_UUID}}/message",
-              "method": "POST"
+              "url": "https://devnet-api.joai.ai/v1/agents/{{JOAI_AGENT_UUID}}/room/message",
+              "method": "POST",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+              }
             },
             "inputs": [
               {
@@ -19946,10 +20250,10 @@
               }
             ],
             "body": {
-              "integrationType": "email",
               "recipientId": "{{signerEmail}}",
               "recipientName": "{{signerName}}",
-              "message": "Reminder: your signature is still needed.\n\nhttps://devnet.joai.ai/{{teamSlug}}/signature/sign?id={{REQUEST_ID}}&signer={{signerAddress}}\n\nSHA-256: {{DOCUMENT_HASH}}"
+              "message": "Reminder: your signature is still needed.\n\nhttps://devnet.joai.ai/{{teamSlug}}/signature/sign?id={{REQUEST_ID}}&signer={{signerAddress}}\n\nSHA-256: {{DOCUMENT_HASH}}",
+              "integration": "email"
             }
           }
         ],
@@ -19974,8 +20278,8 @@
       "identifier": "@signature-self-sign",
       "alias": "signature-self-sign",
       "chain": "multiversx",
-      "hash": "be3798370b7c531b715be63cbe8cdf9cfe060d4c1c4565cb3e2d2de23901539b",
-      "checksum": "be3798370b7c531b715be63cbe8cdf9cfe060d4c1c4565cb3e2d2de23901539b",
+      "hash": "23ab3fd7c8bd0d87fb72d7e78dc594a54bb2801adbb93c0a30d932eedfa9eb53",
+      "checksum": "23ab3fd7c8bd0d87fb72d7e78dc594a54bb2801adbb93c0a30d932eedfa9eb53",
       "name": "Signature: Self-Sign",
       "title": {
         "en": "Sign your own document",
@@ -20041,7 +20345,8 @@
           "SC_ADDRESS": "erd1qqqqqqqqqqqqqpgqtxwhd7z99tvvrgd38897k9zunrqsgmahtres7648am",
           "API_BASE": "https://devnet-api.joai.ai",
           "TITLE": "field:title",
-          "DOCUMENT_HASH": "field:documentHash"
+          "DOCUMENT_HASH": "field:documentHash",
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
         },
         "sections": [
           {
@@ -20135,8 +20440,11 @@
               "ro": "Se trimite copia semnata..."
             },
             "destination": {
-              "url": "{{API_BASE}}/cortex/agents/{{JOAI_AGENT_UUID}}/message",
-              "method": "POST"
+              "url": "https://devnet-api.joai.ai/v1/agents/{{JOAI_AGENT_UUID}}/room/message",
+              "method": "POST",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+              }
             },
             "inputs": [
               {
@@ -20171,10 +20479,10 @@
               }
             ],
             "body": {
-              "integrationType": "email",
               "recipientId": "{{recipientEmail}}",
               "recipientName": "{{recipientName}}",
-              "message": "Please find attached the signed document \"{{TITLE}}\".\n\nThis document has been signed on the MultiversX blockchain.\n\nDocument fingerprint (SHA-256): {{DOCUMENT_HASH}}\nView on blockchain: https://devnet-explorer.multiversx.com/transactions?receiver={{SC_ADDRESS}}"
+              "message": "Please find attached the signed document \"{{TITLE}}\".\n\nThis document has been signed on the MultiversX blockchain.\n\nDocument fingerprint (SHA-256): {{DOCUMENT_HASH}}\nView on blockchain: https://devnet-explorer.multiversx.com/transactions?receiver={{SC_ADDRESS}}",
+              "integration": "email"
             },
             "condition": "{{recipientEmail}} != ''"
           }
@@ -20199,8 +20507,8 @@
       "identifier": "@signature-sign",
       "alias": "signature-sign",
       "chain": "multiversx",
-      "hash": "21bd13033d20d7ff7f9fb69a1d9b330c93efdc28fa64e04deb80cf780bf1be48",
-      "checksum": "21bd13033d20d7ff7f9fb69a1d9b330c93efdc28fa64e04deb80cf780bf1be48",
+      "hash": "92ac761398cbf32c104a43d4bbc8b93686660e383a1ad6addc9015c6593938f8",
+      "checksum": "92ac761398cbf32c104a43d4bbc8b93686660e383a1ad6addc9015c6593938f8",
       "name": "Signature: Sign",
       "title": {
         "en": "Sign document",
@@ -20265,7 +20573,8 @@
         "vars": {
           "SC_ADDRESS": "erd1qqqqqqqqqqqqqpgqtxwhd7z99tvvrgd38897k9zunrqsgmahtres7648am",
           "API_BASE": "https://devnet-api.joai.ai",
-          "REQUEST_ID": "query:id"
+          "REQUEST_ID": "query:id",
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
         },
         "actions": [
           {
@@ -20332,8 +20641,11 @@
               "ro": "Creatorul este notificat..."
             },
             "destination": {
-              "url": "{{API_BASE}}/cortex/agents/{{JOAI_AGENT_UUID}}/message",
-              "method": "POST"
+              "url": "https://devnet-api.joai.ai/v1/agents/{{JOAI_AGENT_UUID}}/room/message",
+              "method": "POST",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+              }
             },
             "inputs": [
               {
@@ -20353,9 +20665,9 @@
               }
             ],
             "body": {
-              "integrationType": "email",
               "recipientId": "{{creatorEmail}}",
-              "message": "{{JOAI_WALLET_ADDRESS}} has signed your document \"{{REQUEST_TITLE}}\".\n\nView request: https://devnet.joai.ai/{{JOAI_TEAM_SLUG}}/signature/view?id={{REQUEST_ID}}"
+              "message": "{{JOAI_WALLET_ADDRESS}} has signed your document \"{{REQUEST_TITLE}}\".\n\nView request: https://devnet.joai.ai/{{JOAI_TEAM_SLUG}}/signature/view?id={{REQUEST_ID}}",
+              "integration": "email"
             }
           }
         ],
@@ -45833,8 +46145,8 @@
       "identifier": "@followups-birthday",
       "alias": "followups-birthday",
       "chain": "none",
-      "hash": "f3b916c95c493df9faa244d1dfd6f8cdd3b8dccee2ce0f2068283b6f64f1e6ef",
-      "checksum": "f3b916c95c493df9faa244d1dfd6f8cdd3b8dccee2ce0f2068283b6f64f1e6ef",
+      "hash": "db501f08d7b26b250ac04b7fd334838db439a734de61ceff74cc760e82cd8f2d",
+      "checksum": "db501f08d7b26b250ac04b7fd334838db439a734de61ceff74cc760e82cd8f2d",
       "name": "Followups: Birthday",
       "title": {
         "en": "Send birthday greeting",
@@ -45973,7 +46285,7 @@
               "ro": "Trimite mesajul"
             },
             "destination": {
-              "url": "https://devnet-api.joai.ai/v1/agents/{{JOAI_AGENT_UUID}}/message",
+              "url": "https://devnet-api.joai.ai/v1/agents/{{JOAI_AGENT_UUID}}/room/message",
               "method": "POST",
               "headers": {
                 "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
@@ -45982,8 +46294,8 @@
             "auto": true,
             "inputs": [
               {
-                "name": "Integration Type",
-                "as": "integrationType",
+                "name": "Integration",
+                "as": "integration",
                 "type": "string",
                 "source": "field",
                 "value": "whatsapp",
@@ -46423,8 +46735,8 @@
       "identifier": "@followups-check-in",
       "alias": "followups-check-in",
       "chain": "none",
-      "hash": "12c73014629cf09dffb081d64f2db9f2925cb1405bc96dbc50a336e5e70f657a",
-      "checksum": "12c73014629cf09dffb081d64f2db9f2925cb1405bc96dbc50a336e5e70f657a",
+      "hash": "87d3b38feaac60dc39c588521b0487578148e4a33b7e02f4921ff601d4c24ec8",
+      "checksum": "87d3b38feaac60dc39c588521b0487578148e4a33b7e02f4921ff601d4c24ec8",
       "name": "Followups: Check In",
       "title": {
         "en": "Check in with a customer",
@@ -46563,7 +46875,7 @@
               "ro": "Trimite mesajul"
             },
             "destination": {
-              "url": "https://devnet-api.joai.ai/v1/agents/{{JOAI_AGENT_UUID}}/message",
+              "url": "https://devnet-api.joai.ai/v1/agents/{{JOAI_AGENT_UUID}}/room/message",
               "method": "POST",
               "headers": {
                 "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
@@ -46572,8 +46884,8 @@
             "auto": true,
             "inputs": [
               {
-                "name": "Integration Type",
-                "as": "integrationType",
+                "name": "Integration",
+                "as": "integration",
                 "type": "string",
                 "source": "field",
                 "value": "whatsapp",
@@ -47127,8 +47439,8 @@
       "identifier": "@followups-execute-step",
       "alias": "followups-execute-step",
       "chain": "none",
-      "hash": "009f55edacbe0e62d2423709a95a261bcc75a703e62690153612f960e7c0597e",
-      "checksum": "009f55edacbe0e62d2423709a95a261bcc75a703e62690153612f960e7c0597e",
+      "hash": "46ceaf4029e0300e81aa79a46898bc8392cab6a790d9948f551bb9883382d3c0",
+      "checksum": "46ceaf4029e0300e81aa79a46898bc8392cab6a790d9948f551bb9883382d3c0",
       "name": "Followups: Execute Step",
       "title": {
         "en": "Execute a follow-up step",
@@ -47265,7 +47577,7 @@
               "de": "Nachricht senden"
             },
             "destination": {
-              "url": "https://devnet-api.joai.ai/v1/agents/{{JOAI_AGENT_UUID}}/message",
+              "url": "https://devnet-api.joai.ai/v1/agents/{{JOAI_AGENT_UUID}}/room/message",
               "method": "POST",
               "headers": {
                 "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
@@ -47274,8 +47586,8 @@
             "auto": true,
             "inputs": [
               {
-                "name": "Integration Type",
-                "as": "integrationType",
+                "name": "Integration",
+                "as": "integration",
                 "type": "string",
                 "source": "field",
                 "value": "{{TEMPLATE_CHANNEL}}",
@@ -47625,8 +47937,8 @@
       "identifier": "@followups-inactive-scan",
       "alias": "followups-inactive-scan",
       "chain": "none",
-      "hash": "9fd83890383e9ef210aa0aa102e42808fecd2cfe61cf313c4f6c7a7bfa35dbbb",
-      "checksum": "9fd83890383e9ef210aa0aa102e42808fecd2cfe61cf313c4f6c7a7bfa35dbbb",
+      "hash": "e6495761c264778779ec77ac8b88af7003db0cbe77de891fdbca85d390195dcf",
+      "checksum": "e6495761c264778779ec77ac8b88af7003db0cbe77de891fdbca85d390195dcf",
       "name": "Followups: Inactive Scan",
       "title": {
         "en": "Scan for inactive customers",
@@ -47701,7 +48013,7 @@
               "ro": "Scaneaza clientii"
             },
             "destination": {
-              "url": "https://devnet-api.joai.ai/cortex/contacts/{{JOAI_AGENT_UUID}}/followup-candidates?minDays=30&maxDays=90",
+              "url": "https://devnet-api.joai.ai/v1/contacts/followup-candidates?minDays=30&maxDays=90",
               "method": "GET",
               "headers": {
                 "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
@@ -47887,8 +48199,8 @@
       "identifier": "@followups-post-treatment",
       "alias": "followups-post-treatment",
       "chain": "none",
-      "hash": "712ac737c350b3824938732ea51aa4e806ad6be028aceb07a71b670aa512059d",
-      "checksum": "712ac737c350b3824938732ea51aa4e806ad6be028aceb07a71b670aa512059d",
+      "hash": "b1446a400224f51da05da03ed46ce9d2d58c7e8fae3486a02c8f2b96e1b384d6",
+      "checksum": "b1446a400224f51da05da03ed46ce9d2d58c7e8fae3486a02c8f2b96e1b384d6",
       "name": "Followups: Post Treatment",
       "title": {
         "en": "Send aftercare instructions",
@@ -48027,7 +48339,7 @@
               "ro": "Trimite mesajul"
             },
             "destination": {
-              "url": "https://devnet-api.joai.ai/v1/agents/{{JOAI_AGENT_UUID}}/message",
+              "url": "https://devnet-api.joai.ai/v1/agents/{{JOAI_AGENT_UUID}}/room/message",
               "method": "POST",
               "headers": {
                 "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
@@ -48036,8 +48348,8 @@
             "auto": true,
             "inputs": [
               {
-                "name": "Integration Type",
-                "as": "integrationType",
+                "name": "Integration",
+                "as": "integration",
                 "type": "string",
                 "source": "field",
                 "value": "whatsapp",
@@ -48230,8 +48542,8 @@
       "identifier": "@followups-reorder-reminder",
       "alias": "followups-reorder-reminder",
       "chain": "none",
-      "hash": "65a208bfb3a18230cf33d3a0d6f9969dde5bd09268c53d6166be4dab13ad885a",
-      "checksum": "65a208bfb3a18230cf33d3a0d6f9969dde5bd09268c53d6166be4dab13ad885a",
+      "hash": "f72b1d7506ba0710dc53d07ba71a55631b5e74784105e5ff1ac319532718559f",
+      "checksum": "f72b1d7506ba0710dc53d07ba71a55631b5e74784105e5ff1ac319532718559f",
       "name": "Followups: Reorder Reminder",
       "title": {
         "en": "Send reorder reminder",
@@ -48386,7 +48698,7 @@
               "ro": "Trimite mesajul"
             },
             "destination": {
-              "url": "https://devnet-api.joai.ai/v1/agents/{{JOAI_AGENT_UUID}}/message",
+              "url": "https://devnet-api.joai.ai/v1/agents/{{JOAI_AGENT_UUID}}/room/message",
               "method": "POST",
               "headers": {
                 "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
@@ -48395,8 +48707,8 @@
             "auto": true,
             "inputs": [
               {
-                "name": "Integration Type",
-                "as": "integrationType",
+                "name": "Integration",
+                "as": "integration",
                 "type": "string",
                 "source": "field",
                 "value": "whatsapp",
@@ -48803,8 +49115,8 @@
       "identifier": "@followups-win-back",
       "alias": "followups-win-back",
       "chain": "none",
-      "hash": "8c8acf54deb05a2e468565624c2575a94f84aea217896a611ee6cffec3132228",
-      "checksum": "8c8acf54deb05a2e468565624c2575a94f84aea217896a611ee6cffec3132228",
+      "hash": "907a73aea9bac45d0343e36097044658bf4a37c56fdeea2c03b12d94ba9853ea",
+      "checksum": "907a73aea9bac45d0343e36097044658bf4a37c56fdeea2c03b12d94ba9853ea",
       "name": "Followups: Win Back",
       "title": {
         "en": "Send win-back message",
@@ -48959,7 +49271,7 @@
               "ro": "Trimite mesajul"
             },
             "destination": {
-              "url": "https://devnet-api.joai.ai/v1/agents/{{JOAI_AGENT_UUID}}/message",
+              "url": "https://devnet-api.joai.ai/v1/agents/{{JOAI_AGENT_UUID}}/room/message",
               "method": "POST",
               "headers": {
                 "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
@@ -48968,8 +49280,8 @@
             "auto": true,
             "inputs": [
               {
-                "name": "Integration Type",
-                "as": "integrationType",
+                "name": "Integration",
+                "as": "integration",
                 "type": "string",
                 "source": "field",
                 "value": "whatsapp",
@@ -64487,8 +64799,8 @@
       "identifier": "@joai-private-app-create",
       "alias": "joai-private-app-create",
       "chain": "none",
-      "hash": "ed12c48fc24a9d4e23048212f2ce24b91b8e7011d47631fe9e14e685c1053de6",
-      "checksum": "ed12c48fc24a9d4e23048212f2ce24b91b8e7011d47631fe9e14e685c1053de6",
+      "hash": "32877ede2cf261530a00059e9e51d3b3e3b5e264ab8aeb43967a8ae2a3b5eb03",
+      "checksum": "32877ede2cf261530a00059e9e51d3b3e3b5e264ab8aeb43967a8ae2a3b5eb03",
       "name": "JoAi: Create Private App",
       "title": {
         "en": "Create a private app",
@@ -64542,7 +64854,8 @@
         },
         "bot": "Use this when the user wants to set up a private warp brand for their team. Ask for the team slug, app name, and description.",
         "vars": {
-          "AGENT_UUID": "query:agent"
+          "AGENT_UUID": "query:agent",
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
         },
         "actions": [
           {
@@ -64552,27 +64865,13 @@
               "de": "Private App erstellen"
             },
             "destination": {
-              "url": "https://devnet-api.joai.ai/cortex/warps/brands/team/{{teamSlug}}",
+              "url": "https://devnet-api.joai.ai/v1/apps",
               "method": "POST",
               "headers": {
                 "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
               }
             },
             "inputs": [
-              {
-                "name": "Team Slug",
-                "as": "teamSlug",
-                "description": {
-                  "en": "The team slug to scope this app to",
-                  "de": "Der Team-Slug, auf den diese App beschränkt ist"
-                },
-                "bot": "The team's URL slug (e.g., 'my-company'). This scopes the private app to that team.",
-                "type": "string",
-                "position": "url:teamSlug",
-                "source": "field",
-                "required": true,
-                "min": 1
-              },
               {
                 "name": "Name",
                 "as": "name",
@@ -67139,8 +67438,8 @@
       "identifier": "@joai-task-delete",
       "alias": "joai-task-delete",
       "chain": "none",
-      "hash": "15015cc25f570e3a25bf77c1856afede8de87da2424247e8b6a9da4caafba5d3",
-      "checksum": "15015cc25f570e3a25bf77c1856afede8de87da2424247e8b6a9da4caafba5d3",
+      "hash": "098b762b8ba22c7fec6db8885a7e052d3ed655072c9230bb9524a5dda771980f",
+      "checksum": "098b762b8ba22c7fec6db8885a7e052d3ed655072c9230bb9524a5dda771980f",
       "name": "JoAi: Delete Scheduled Task",
       "title": {
         "en": "Delete a scheduled task",
@@ -67193,6 +67492,9 @@
           "de": "Breche eine geplante Aufgabe oder wiederkehrende Automatisierung ab und lösche sie."
         },
         "bot": "Use this when the user wants to cancel, stop, remove, or delete a scheduled task. The task ID is required — if the user doesn't provide one, list tasks first to find it.",
+        "vars": {
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+        },
         "actions": [
           {
             "type": "collect",
@@ -67201,8 +67503,11 @@
               "de": "Aufgabe löschen"
             },
             "destination": {
-              "url": "https://devnet-api.joai.ai/cortex/tasks/{{taskId}}",
-              "method": "DELETE"
+              "url": "https://devnet-api.joai.ai/v1/tasks/{{taskId}}",
+              "method": "DELETE",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+              }
             },
             "inputs": [
               {
@@ -67235,8 +67540,8 @@
       "identifier": "@joai-task-list",
       "alias": "joai-task-list",
       "chain": "none",
-      "hash": "6e85b777110dba2cd63b8b8b1f2444cf21da28c84c98428c7317cf77c156bc3d",
-      "checksum": "6e85b777110dba2cd63b8b8b1f2444cf21da28c84c98428c7317cf77c156bc3d",
+      "hash": "476921c6017ec69dbd149487bc8fff63cb633b07615a1db89d3a34e8075937cd",
+      "checksum": "476921c6017ec69dbd149487bc8fff63cb633b07615a1db89d3a34e8075937cd",
       "name": "JoAi: List Scheduled Tasks",
       "title": {
         "en": "List scheduled tasks",
@@ -67301,8 +67606,11 @@
               "de": "Aufgaben anzeigen"
             },
             "destination": {
-              "url": "https://devnet-api.joai.ai/cortex/tasks?agent={{JOAI_AGENT_UUID}}",
-              "method": "GET"
+              "url": "https://devnet-api.joai.ai/v1/tasks",
+              "method": "GET",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+              }
             },
             "inputs": []
           }
@@ -67315,8 +67623,8 @@
       "identifier": "@joai-task-toggle",
       "alias": "joai-task-toggle",
       "chain": "none",
-      "hash": "cc50e8cad62969de7f478d15bfe2d125605a5fad2eb7b450c5801fdf6ef589e7",
-      "checksum": "cc50e8cad62969de7f478d15bfe2d125605a5fad2eb7b450c5801fdf6ef589e7",
+      "hash": "a75cd8d3f8a2eceb61eb7d1738dfc376fa8fa89b5413772d53948eac4d339531",
+      "checksum": "a75cd8d3f8a2eceb61eb7d1738dfc376fa8fa89b5413772d53948eac4d339531",
       "name": "JoAi: Pause or Resume Scheduled Task",
       "title": {
         "en": "Pause or resume a scheduled task",
@@ -67369,6 +67677,9 @@
           "de": "Pausiere eine aktive geplante Aufgabe oder setze eine pausierte fort."
         },
         "bot": "Use this when the user wants to pause, unpause, resume, enable, or disable a scheduled task. The task ID is required — if the user doesn't provide one, list tasks first to find it.",
+        "vars": {
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+        },
         "actions": [
           {
             "type": "collect",
@@ -67377,8 +67688,11 @@
               "de": "Aufgabe umschalten"
             },
             "destination": {
-              "url": "https://devnet-api.joai.ai/cortex/tasks/{{taskId}}/toggle",
-              "method": "POST"
+              "url": "https://devnet-api.joai.ai/v1/tasks/{{taskId}}/toggle",
+              "method": "POST",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+              }
             },
             "inputs": [
               {
@@ -68156,142 +68470,6 @@
           "success": {
             "en": "Congrats {{USER_NAME}}! You are now a member of JoAi.",
             "de": "Glückwunsch {{USER_NAME}}! Du bist jetzt ein Mitglied von JoAi."
-          }
-        }
-      },
-      "extras": null
-    },
-    {
-      "key": "none:joai-user-onboarding-screen",
-      "identifier": "@joai-user-onboarding-screen",
-      "alias": "joai-user-onboarding-screen",
-      "chain": "none",
-      "hash": "5a7e47a59c473b1e2e8a7cd92c06fd14be7a7613d7da9fdb6ba45b2bbcb367d1",
-      "checksum": "5a7e47a59c473b1e2e8a7cd92c06fd14be7a7613d7da9fdb6ba45b2bbcb367d1",
-      "name": "JoAi: User Onboarding Screen",
-      "title": {
-        "en": "Let's Get Started!",
-        "de": "Los geht's!"
-      },
-      "description": {
-        "en": "Help us tailor your experience with AI agents by telling us a bit about yourself.",
-        "de": "Hilf uns, deine Erfahrung mit KI-Agenten anzupassen, indem du uns etwas über dich erzählst."
-      },
-      "preview": null,
-      "creator": "github:JoAiHQ/warps",
-      "privileges": [],
-      "listed": true,
-      "visibility": "public",
-      "primaryAddress": null,
-      "primaryFunc": null,
-      "brand": {
-        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
-        "slug": "joai",
-        "active": true,
-        "protocol": "brand:0.2.0",
-        "name": "JoAi",
-        "description": {
-          "en": "JoAi is a platform for creating and managing your own AI agents.",
-          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
-          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
-          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
-          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
-        },
-        "logo": {
-          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
-        },
-        "urls": {
-          "web": "https://joai.ai"
-        },
-        "colors": {
-          "primary": "#98FF98",
-          "secondary": "#FFFF66"
-        }
-      },
-      "warp": {
-        "protocol": "warp:3.0.0",
-        "name": "JoAi: User Onboarding Screen",
-        "title": {
-          "en": "Let's Get Started!",
-          "de": "Los geht's!"
-        },
-        "description": {
-          "en": "Help us tailor your experience with AI agents by telling us a bit about yourself.",
-          "de": "Hilf uns, deine Erfahrung mit KI-Agenten anzupassen, indem du uns etwas über dich erzählst."
-        },
-        "actions": [
-          {
-            "type": "collect",
-            "label": {
-              "en": "Submit Info",
-              "de": "Info senden"
-            },
-            "destination": {
-              "url": "https://devnet-api.joai.ai/warps/flow",
-              "method": "POST"
-            },
-            "inputs": [
-              {
-                "name": "Telegram Username",
-                "as": "telegramUsername",
-                "type": "string",
-                "source": "field",
-                "required": true
-              },
-              {
-                "name": "What is your biggest time-waster?",
-                "as": "biggestTimeWaster",
-                "description": {
-                  "en": "Tasks you spend the most time on and feel should be automated. Or just something you don't like doing.",
-                  "de": "Aufgaben, für die du die meiste Zeit aufwendest und die automatisiert werden sollten. Oder einfach etwas, das du nicht gerne tust."
-                },
-                "type": "string",
-                "source": "field",
-                "required": true
-              },
-              {
-                "name": "Primary Goal with AI Agents",
-                "as": "primaryGoalAI",
-                "description": {
-                  "en": "Do you have a primary goal for using AI agents?",
-                  "de": "Hast du ein primäres Ziel für die Nutzung von KI-Agenten?"
-                },
-                "type": "string",
-                "source": "field",
-                "required": true
-              },
-              {
-                "name": "Technical Comfort Level",
-                "as": "technicalComfortLevel",
-                "description": {
-                  "en": "1 = Beginner (ChatGPT level) ... 5 = Advanced (code APIs/bots).",
-                  "de": "1 = Anfänger (ChatGPT-Niveau) ... 5 = Fortgeschritten (APIs/Bots programmieren)."
-                },
-                "type": "string",
-                "source": "field",
-                "required": true
-              },
-              {
-                "name": "What blockchain/crypto apps do you use daily or weekly?",
-                "as": "blockchainCryptoApps",
-                "type": "string",
-                "source": "field",
-                "required": true
-              },
-              {
-                "name": "Which AI tools do you currently pay for?",
-                "as": "aiToolsPaid",
-                "type": "string",
-                "source": "field",
-                "required": true
-              }
-            ]
-          }
-        ],
-        "messages": {
-          "success": {
-            "en": "Your onboarding information has been submitted successfully! We'll be in touch soon.",
-            "de": "Deine Onboarding-Informationen wurden erfolgreich übermittelt! Wir melden uns bald bei dir."
           }
         }
       },
@@ -82160,8 +82338,8 @@
       "identifier": "@outreach-contact-message",
       "alias": "outreach-contact-message",
       "chain": "none",
-      "hash": "3885ca7fe4be407da567c3df2ef3a40a45e559b5f84dd4fd5686d4e5abd196c0",
-      "checksum": "3885ca7fe4be407da567c3df2ef3a40a45e559b5f84dd4fd5686d4e5abd196c0",
+      "hash": "3141a4057a4d9a7c128b5220567de9daa3edd7b468dd7db7fdad657017f15d2f",
+      "checksum": "3141a4057a4d9a7c128b5220567de9daa3edd7b468dd7db7fdad657017f15d2f",
       "name": "Outreach: Contact Message",
       "title": {
         "en": "Message a contact",
@@ -82296,7 +82474,7 @@
               "de": "Nachricht senden"
             },
             "destination": {
-              "url": "https://devnet-api.joai.ai/v1/agents/{{JOAI_AGENT_UUID}}/message",
+              "url": "https://devnet-api.joai.ai/v1/agents/{{JOAI_AGENT_UUID}}/room/message",
               "method": "POST",
               "headers": {
                 "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
@@ -82304,8 +82482,8 @@
             },
             "inputs": [
               {
-                "name": "Integration Type",
-                "as": "integrationType",
+                "name": "Integration",
+                "as": "integration",
                 "type": "string",
                 "source": "field",
                 "value": "{{channel}}",
@@ -82778,8 +82956,8 @@
       "identifier": "@outreach-execute-step",
       "alias": "outreach-execute-step",
       "chain": "none",
-      "hash": "4dfd2d256521dc04380bea254752661d9ad390e0ff2572cb7d7d1ef9d78aabe3",
-      "checksum": "4dfd2d256521dc04380bea254752661d9ad390e0ff2572cb7d7d1ef9d78aabe3",
+      "hash": "011abe5168d515628629a3c1a4b5de321180d050cde58c79d090f509125fcac8",
+      "checksum": "011abe5168d515628629a3c1a4b5de321180d050cde58c79d090f509125fcac8",
       "name": "Outreach: Execute Step",
       "title": {
         "en": "Execute an outreach step",
@@ -82916,7 +83094,7 @@
               "de": "Nachricht senden"
             },
             "destination": {
-              "url": "https://devnet-api.joai.ai/v1/agents/{{JOAI_AGENT_UUID}}/message",
+              "url": "https://devnet-api.joai.ai/v1/agents/{{JOAI_AGENT_UUID}}/room/message",
               "method": "POST",
               "headers": {
                 "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
@@ -82925,8 +83103,8 @@
             "auto": true,
             "inputs": [
               {
-                "name": "Integration Type",
-                "as": "integrationType",
+                "name": "Integration",
+                "as": "integration",
                 "type": "string",
                 "source": "field",
                 "value": "{{TEMPLATE_CHANNEL}}",
@@ -96833,8 +97011,8 @@
       "identifier": "@upsells-after-visit",
       "alias": "upsells-after-visit",
       "chain": "none",
-      "hash": "74f6d059d0ef4f4dd254f9d8a2b6101b45c72f63e5535786dda73890edf087f9",
-      "checksum": "74f6d059d0ef4f4dd254f9d8a2b6101b45c72f63e5535786dda73890edf087f9",
+      "hash": "85b14f036d93f2b41a74a2af4ac7d4de0e76961b1bf98e87fee972be58e27a32",
+      "checksum": "85b14f036d93f2b41a74a2af4ac7d4de0e76961b1bf98e87fee972be58e27a32",
       "name": "Upsells: After Visit",
       "title": {
         "en": "Post-visit upsell message",
@@ -96973,7 +97151,7 @@
               "ro": "Trimite mesajul"
             },
             "destination": {
-              "url": "https://devnet-api.joai.ai/v1/agents/{{JOAI_AGENT_UUID}}/message",
+              "url": "https://devnet-api.joai.ai/v1/agents/{{JOAI_AGENT_UUID}}/room/message",
               "method": "POST",
               "headers": {
                 "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
@@ -96982,8 +97160,8 @@
             "auto": true,
             "inputs": [
               {
-                "name": "Integration Type",
-                "as": "integrationType",
+                "name": "Integration",
+                "as": "integration",
                 "type": "string",
                 "source": "field",
                 "value": "whatsapp",
@@ -97176,8 +97354,8 @@
       "identifier": "@upsells-bundle-suggest",
       "alias": "upsells-bundle-suggest",
       "chain": "none",
-      "hash": "e4da3bdb0d736f1ace57a5ff9af0c283a013706917ba0ac5f34c2675c2b507b5",
-      "checksum": "e4da3bdb0d736f1ace57a5ff9af0c283a013706917ba0ac5f34c2675c2b507b5",
+      "hash": "2d6eecf607f2f2db3576816c92dd2f5b09e03643987310ba1e2056db307ad532",
+      "checksum": "2d6eecf607f2f2db3576816c92dd2f5b09e03643987310ba1e2056db307ad532",
       "name": "Upsells: Bundle Suggest",
       "title": {
         "en": "Suggest a service bundle",
@@ -97316,7 +97494,7 @@
               "ro": "Trimite mesajul"
             },
             "destination": {
-              "url": "https://devnet-api.joai.ai/v1/agents/{{JOAI_AGENT_UUID}}/message",
+              "url": "https://devnet-api.joai.ai/v1/agents/{{JOAI_AGENT_UUID}}/room/message",
               "method": "POST",
               "headers": {
                 "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
@@ -97325,8 +97503,8 @@
             "auto": true,
             "inputs": [
               {
-                "name": "Integration Type",
-                "as": "integrationType",
+                "name": "Integration",
+                "as": "integration",
                 "type": "string",
                 "source": "field",
                 "value": "whatsapp",
@@ -97519,8 +97697,8 @@
       "identifier": "@upsells-product-alert",
       "alias": "upsells-product-alert",
       "chain": "none",
-      "hash": "013b8e05cde4f2ab505f1e954b2148b5d146e02734377254b51a9f955d299095",
-      "checksum": "013b8e05cde4f2ab505f1e954b2148b5d146e02734377254b51a9f955d299095",
+      "hash": "9306bf8f13d814f4c8cda26fc775d30a5515b255696489c058a78f4f4cc5ea9e",
+      "checksum": "9306bf8f13d814f4c8cda26fc775d30a5515b255696489c058a78f4f4cc5ea9e",
       "name": "Upsells: Product Alert",
       "title": {
         "en": "Notify customer about a product",
@@ -97675,7 +97853,7 @@
               "ro": "Trimite mesajul"
             },
             "destination": {
-              "url": "https://devnet-api.joai.ai/v1/agents/{{JOAI_AGENT_UUID}}/message",
+              "url": "https://devnet-api.joai.ai/v1/agents/{{JOAI_AGENT_UUID}}/room/message",
               "method": "POST",
               "headers": {
                 "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
@@ -97684,8 +97862,8 @@
             "auto": true,
             "inputs": [
               {
-                "name": "Integration Type",
-                "as": "integrationType",
+                "name": "Integration",
+                "as": "integration",
                 "type": "string",
                 "source": "field",
                 "value": "whatsapp",
@@ -98172,8 +98350,8 @@
       "identifier": "@upsells-weekly-opportunities",
       "alias": "upsells-weekly-opportunities",
       "chain": "none",
-      "hash": "792937fe9c547063ea499834982ffeab24347282c78689b93111dd9b700dc692",
-      "checksum": "792937fe9c547063ea499834982ffeab24347282c78689b93111dd9b700dc692",
+      "hash": "fe122960e83ae3a267150caa33485022e88aeafafe63dd658b396859a691ea1b",
+      "checksum": "fe122960e83ae3a267150caa33485022e88aeafafe63dd658b396859a691ea1b",
       "name": "Upsells: Weekly Opportunities",
       "title": {
         "en": "Weekly upsell opportunities report",
@@ -98248,7 +98426,7 @@
               "ro": "Genereaza raportul"
             },
             "destination": {
-              "url": "https://devnet-api.joai.ai/v1/contacts/{{JOAI_AGENT_UUID}}/followup-candidates?minDays=3&maxDays=90",
+              "url": "https://devnet-api.joai.ai/v1/contacts/followup-candidates?minDays=3&maxDays=90",
               "method": "GET",
               "headers": {
                 "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"

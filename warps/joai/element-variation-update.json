@@ -1,0 +1,93 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Update Element Variation",
+  "title": {
+    "en": "Update element variation",
+    "de": "Element-Variation aktualisieren"
+  },
+  "description": {
+    "en": "Update an element variation's label, aspect ratio, or spec overrides.",
+    "de": "Aktualisiere das Label, das Seitenverhältnis oder die Spec-Überschreibungen einer Element-Variation."
+  },
+  "bot": "Use this when the user wants to relabel a variation or change its aspect ratio. Use list_element_variations first to find variation IDs.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Update variation",
+        "de": "Variation aktualisieren"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/studio/elements/{{elementId}}/variations/{{variationId}}",
+        "method": "PUT",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Element ID",
+          "as": "elementId",
+          "description": {
+            "en": "The ID of the parent element",
+            "de": "Die ID des übergeordneten Elements"
+          },
+          "bot": "The element hash ID this variation belongs to.",
+          "type": "string",
+          "position": "url:elementId",
+          "source": "field",
+          "required": true,
+          "min": 1
+        },
+        {
+          "name": "Variation ID",
+          "as": "variationId",
+          "description": {
+            "en": "The ID of the variation to update",
+            "de": "Die ID der zu aktualisierenden Variation"
+          },
+          "bot": "The variation hash ID. Use list_element_variations to find IDs.",
+          "type": "string",
+          "position": "url:variationId",
+          "source": "field",
+          "required": true,
+          "min": 1
+        },
+        {
+          "name": "Label",
+          "as": "label",
+          "description": {
+            "en": "Human-readable label for the variation",
+            "de": "Lesbares Label für die Variation"
+          },
+          "bot": "An optional new label, e.g. 'Dark moody', 'Outdoor scene'.",
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Aspect Ratio",
+          "as": "aspectRatio",
+          "description": {
+            "en": "Aspect ratio (e.g. 1:1, 16:9, 9:16)",
+            "de": "Seitenverhältnis (z.B. 1:1, 16:9, 9:16)"
+          },
+          "bot": "Optional aspect ratio for the variation images.",
+          "type": "string",
+          "source": "field",
+          "required": false
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Element variation updated.",
+      "de": "Element-Variation aktualisiert."
+    }
+  }
+}
