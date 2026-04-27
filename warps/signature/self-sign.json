@@ -21,13 +21,29 @@
     "SC_ADDRESS": "INJECT:SIGNATURE_SC_ADDRESS",
     "API_BASE": "INJECT:API_BASE",
     "TITLE": "field:title",
-    "DOCUMENT_HASH": "field:documentHash"
+    "DOCUMENT_HASH": "field:documentHash",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
   },
   "sections": [
     {
-      "title": { "en": "Document", "de": "Dokument", "fr": "Document", "es": "Documento", "ro": "Document" },
-      "description": { "en": "Upload the document you want to sign.", "de": "Lade das Dokument hoch, das du unterzeichnen möchtest.", "fr": "Telechargez le document que vous souhaitez signer.", "es": "Sube el documento que quieres firmar.", "ro": "Incarca documentul pe care doresti sa il semnezi." },
-      "inputs": ["title", "document"]
+      "title": {
+        "en": "Document",
+        "de": "Dokument",
+        "fr": "Document",
+        "es": "Documento",
+        "ro": "Document"
+      },
+      "description": {
+        "en": "Upload the document you want to sign.",
+        "de": "Lade das Dokument hoch, das du unterzeichnen möchtest.",
+        "fr": "Telechargez le document que vous souhaitez signer.",
+        "es": "Sube el documento que quieres firmar.",
+        "ro": "Incarca documentul pe care doresti sa il semnezi."
+      },
+      "inputs": [
+        "title",
+        "document"
+      ]
     }
   ],
   "actions": [
@@ -100,8 +116,11 @@
         "ro": "Se trimite copia semnata..."
       },
       "destination": {
-        "url": "{{API_BASE}}/cortex/agents/{{JOAI_AGENT_UUID}}/message",
-        "method": "POST"
+        "url": "INJECT:API_BASE/v1/agents/{{JOAI_AGENT_UUID}}/room/message",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
       },
       "inputs": [
         {
@@ -136,10 +155,10 @@
         }
       ],
       "body": {
-        "integrationType": "email",
         "recipientId": "{{recipientEmail}}",
         "recipientName": "{{recipientName}}",
-        "message": "Please find attached the signed document \"{{TITLE}}\".\n\nThis document has been signed on the MultiversX blockchain.\n\nDocument fingerprint (SHA-256): {{DOCUMENT_HASH}}\nView on blockchain: https://devnet-explorer.multiversx.com/transactions?receiver={{SC_ADDRESS}}"
+        "message": "Please find attached the signed document \"{{TITLE}}\".\n\nThis document has been signed on the MultiversX blockchain.\n\nDocument fingerprint (SHA-256): {{DOCUMENT_HASH}}\nView on blockchain: https://devnet-explorer.multiversx.com/transactions?receiver={{SC_ADDRESS}}",
+        "integration": "email"
       },
       "condition": "{{recipientEmail}} != ''"
     }

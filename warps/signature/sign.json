@@ -20,7 +20,8 @@
   "vars": {
     "SC_ADDRESS": "INJECT:SIGNATURE_SC_ADDRESS",
     "API_BASE": "INJECT:API_BASE",
-    "REQUEST_ID": "query:id"
+    "REQUEST_ID": "query:id",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
   },
   "actions": [
     {
@@ -87,8 +88,11 @@
         "ro": "Creatorul este notificat..."
       },
       "destination": {
-        "url": "{{API_BASE}}/cortex/agents/{{JOAI_AGENT_UUID}}/message",
-        "method": "POST"
+        "url": "INJECT:API_BASE/v1/agents/{{JOAI_AGENT_UUID}}/room/message",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
       },
       "inputs": [
         {
@@ -108,9 +112,9 @@
         }
       ],
       "body": {
-        "integrationType": "email",
         "recipientId": "{{creatorEmail}}",
-        "message": "{{JOAI_WALLET_ADDRESS}} has signed your document \"{{REQUEST_TITLE}}\".\n\nView request: https://devnet.joai.ai/{{JOAI_TEAM_SLUG}}/signature/view?id={{REQUEST_ID}}"
+        "message": "{{JOAI_WALLET_ADDRESS}} has signed your document \"{{REQUEST_TITLE}}\".\n\nView request: https://devnet.joai.ai/{{JOAI_TEAM_SLUG}}/signature/view?id={{REQUEST_ID}}",
+        "integration": "email"
       }
     }
   ],

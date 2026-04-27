@@ -20,7 +20,8 @@
   "vars": {
     "SC_ADDRESS": "INJECT:SIGNATURE_SC_ADDRESS",
     "API_BASE": "INJECT:API_BASE",
-    "REQUEST_ID": "query:id"
+    "REQUEST_ID": "query:id",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
   },
   "actions": [
     {
@@ -59,8 +60,11 @@
         "ro": "Se trimite reminderul..."
       },
       "destination": {
-        "url": "{{API_BASE}}/cortex/agents/{{JOAI_AGENT_UUID}}/message",
-        "method": "POST"
+        "url": "INJECT:API_BASE/v1/agents/{{JOAI_AGENT_UUID}}/room/message",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
       },
       "inputs": [
         {
@@ -125,10 +129,10 @@
         }
       ],
       "body": {
-        "integrationType": "email",
         "recipientId": "{{signerEmail}}",
         "recipientName": "{{signerName}}",
-        "message": "Reminder: your signature is still needed.\n\nhttps://devnet.joai.ai/{{teamSlug}}/signature/sign?id={{REQUEST_ID}}&signer={{signerAddress}}\n\nSHA-256: {{DOCUMENT_HASH}}"
+        "message": "Reminder: your signature is still needed.\n\nhttps://devnet.joai.ai/{{teamSlug}}/signature/sign?id={{REQUEST_ID}}&signer={{signerAddress}}\n\nSHA-256: {{DOCUMENT_HASH}}",
+        "integration": "email"
       }
     }
   ],
