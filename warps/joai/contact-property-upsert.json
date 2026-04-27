@@ -1,0 +1,81 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Set Contact Property",
+  "title": {
+    "en": "Set a property on a contact",
+    "de": "Eigenschaft bei einem Kontakt setzen"
+  },
+  "description": {
+    "en": "Set or update a custom property (key/value) on a contact — useful for CRM-style flags like status, segment, or pipeline stage. Supports kebab-case keys (e.g. `aiustria-status`).",
+    "de": "Setzt oder aktualisiert eine benutzerdefinierte Eigenschaft (Schlüssel/Wert) bei einem Kontakt – nützlich für CRM-Flags wie Status, Segment oder Pipeline-Stufe. Unterstützt Kebab-Case-Schlüssel (z. B. `aiustria-status`)."
+  },
+  "bot": "Use this to attach structured CRM properties to a contact. Pick stable, kebab-case keys (e.g. `aiustria-status`, `pipeline-stage`). Existing properties with the same key are overwritten.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Set property",
+        "de": "Eigenschaft setzen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/contacts/{{contactId}}/properties",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Contact ID",
+          "as": "contactId",
+          "description": {
+            "en": "The ID of the contact to set the property on.",
+            "de": "Die ID des Kontakts, bei dem die Eigenschaft gesetzt werden soll."
+          },
+          "bot": "The contact hash ID. If the user refers to a contact by name, list contacts first to find the matching ID.",
+          "type": "string",
+          "position": "url:contactId",
+          "source": "field",
+          "required": true,
+          "min": 1
+        },
+        {
+          "name": "Key",
+          "as": "key",
+          "description": {
+            "en": "Property key (alphanumeric, underscore, or hyphen — max 100 chars).",
+            "de": "Eigenschafts-Schlüssel (alphanumerisch, Unterstrich oder Bindestrich – max. 100 Zeichen)."
+          },
+          "bot": "A short, stable identifier for the property. Use kebab-case (e.g. `aiustria-status`, `pipeline-stage`, `card_id`).",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "min": 1
+        },
+        {
+          "name": "Value",
+          "as": "value",
+          "description": {
+            "en": "Property value (max 1000 chars).",
+            "de": "Eigenschaftswert (max. 1000 Zeichen)."
+          },
+          "bot": "The value to store under this key.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "min": 1
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Property set on contact.",
+      "de": "Eigenschaft beim Kontakt gesetzt."
+    }
+  }
+}
