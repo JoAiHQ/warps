@@ -114,6 +114,25 @@ export const meta: Record<string, WarpExtras> = {
       ],
     },
   },
+  'message-send': {
+    keywords: {
+      en: ['send message', 'deliver message', 'room message', 'post message', 'channel message'],
+      de: ['Nachricht senden', 'Nachricht übermitteln', 'Raum-Nachricht', 'Nachricht posten', 'Kanal-Nachricht'],
+    },
+    useCases: {
+      en: [
+        'Send a pre-written message to a specific room or channel',
+        'Deliver output from another warp to a destination',
+        'Forward generated alerts or notifications to a social channel',
+      ],
+      de: [
+        'Eine vorbereitete Nachricht an einen bestimmten Raum oder Kanal senden',
+        'Ausgabe eines anderen Warps an ein Ziel übermitteln',
+        'Generierte Warnungen oder Benachrichtigungen an einen sozialen Kanal weiterleiten',
+      ],
+    },
+    category: 'communication',
+  },
   'document-create': {
     keywords: {
       en: ['save document', 'agent knowledge', 'store template', 'create document', 'add reference material'],
