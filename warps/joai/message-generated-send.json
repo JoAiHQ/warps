@@ -6,19 +6,22 @@
     "de": "Generierte Nachricht senden"
   },
   "description": {
-    "en": "Generate a message from a prompt and send it to a room or social channel. Use for reminders, periodic checks, status updates, or any recurring notification.",
-    "de": "Generiere eine Nachricht aus einer Anweisung und sende sie an einen Raum oder sozialen Kanal. Nutzbar für Erinnerungen, regelmäßige Prüfungen, Status-Updates oder wiederkehrende Benachrichtigungen."
+    "en": "Generate a message from an instruction and send it to a message destination such as Telegram, Slack, or a JoAi room. Use it for reminders, periodic checks, status updates, and recurring notifications that should be written in the agent's voice.",
+    "de": "Generiere eine Nachricht aus einer Anweisung und sende sie an ein Nachrichtenziel wie Telegram, Slack oder einen JoAi-Raum. Nutze die Aktion für Erinnerungen, regelmäßige Checks, Status-Updates und wiederkehrende Benachrichtigungen im Stil des Agenten."
   },
-  "bot": "Use this when the user wants to generate and send a message based on an instruction, remind the group to do something, or periodically check/report on something. The agent generates a unique message each time using its character. Great for scheduled recurring messages like reminders, status checks, or updates.",
+  "bot": "Use this when the user wants to generate and send a message based on an instruction. The agent generates a unique message each time using its character.",
   "output": {
     "MESSAGE": "out.PROMPT"
+  },
+  "messages": {
+    "success": "{{MESSAGE}}"
   },
   "actions": [
     {
       "type": "prompt",
       "label": {
-        "en": "Send",
-        "de": "Senden"
+        "en": "Generate",
+        "de": "Generieren"
       },
       "prompt": "{{INSTRUCTION}}",
       "inputs": [
@@ -29,10 +32,10 @@
             "en": "What kind of message to generate",
             "de": "Welche Art von Nachricht generiert werden soll"
           },
-          "bot": "The instruction for generating the message content. E.g. 'ask how everybody is doing' or 'share a motivational quote'.",
           "type": "string",
           "position": "arg:1",
           "source": "field",
+          "default": "{{INSTRUCTION}}",
           "required": true,
           "min": 1
         },
@@ -43,21 +46,13 @@
             "en": "Target room (leave empty to send to current room)",
             "de": "Zielraum (leer lassen für aktuellen Raum)"
           },
-          "bot": "The room hash ID to send the generated message to. If omitted, sends to the current room.",
           "type": "string",
           "position": "destination",
           "source": "field",
-          "required": false,
-          "default": "room:{{JOAI_ROOM_ID}}"
+          "default": "{{DESTINATION}}",
+          "required": false
         }
       ]
     }
-  ],
-  "messages": {
-    "destination": "{{MESSAGE}}",
-    "success": {
-      "en": "Message sent.",
-      "de": "Nachricht gesendet."
-    }
-  }
+  ]
 }
