@@ -133,6 +133,47 @@ export const meta: Record<string, WarpExtras> = {
     },
     category: 'communication',
   },
+  'message-generated-send': {
+    keywords: {
+      en: ['generate message', 'send AI message', 'automated notification', 'recurring reminder', 'agent message'],
+      de: ['Nachricht generieren', 'KI Nachricht senden', 'automatische Benachrichtigung', 'wiederkehrende Erinnerung', 'Agent Nachricht'],
+    },
+    useCases: {
+      en: [
+        'Generate and send a daily status update to a Telegram room',
+        'Create a reminder in the agent voice and deliver it to Slack',
+        'Turn a monitoring result into a readable alert for a chat room',
+      ],
+      de: [
+        'Ein tägliches Status-Update generieren und an einen Telegram-Raum senden',
+        'Eine Erinnerung im Stil des Agenten erstellen und an Slack senden',
+        'Ein Monitoring-Ergebnis in eine verständliche Warnung für einen Chat-Raum umwandeln',
+      ],
+    },
+    category: 'communication',
+    faq: {
+      en: [
+        {
+          question: 'Can the agent write and send a message automatically?',
+          answer: 'Yes. Provide an instruction and a destination, and the agent generates the message before delivering it to the selected room or channel.',
+        },
+        {
+          question: 'Which destinations are supported?',
+          answer: 'Messages can be sent to supported JoAi destinations such as Telegram, Slack, and rooms connected to the agent.',
+        },
+      ],
+      de: [
+        {
+          question: 'Kann der Agent automatisch eine Nachricht schreiben und senden?',
+          answer: 'Ja. Gib eine Anweisung und ein Ziel an, dann generiert der Agent die Nachricht und sendet sie an den gewählten Raum oder Kanal.',
+        },
+        {
+          question: 'Welche Ziele werden unterstützt?',
+          answer: 'Nachrichten können an unterstützte JoAi-Ziele wie Telegram, Slack und mit dem Agenten verbundene Räume gesendet werden.',
+        },
+      ],
+    },
+  },
   'document-create': {
     keywords: {
       en: ['save document', 'agent knowledge', 'store template', 'create document', 'add reference material'],
