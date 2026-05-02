@@ -1,0 +1,102 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Find or Create Contact",
+  "title": {
+    "en": "Find or create a contact",
+    "de": "Kontakt suchen oder erstellen"
+  },
+  "description": {
+    "en": "Search for an existing contact by name, email, or phone. If no match is found, creates a new contact automatically. Returns the contact ID for use in further warps.",
+    "de": "Suche nach einem vorhandenen Kontakt per Name, E-Mail oder Telefon. Wenn keine Übereinstimmung gefunden wird, wird automatisch ein neuer Kontakt erstellt. Gibt die Kontakt-ID für weitere Warps zurück."
+  },
+  "bot": "Use this when you need a contact ID for another warp but don't know if the contact exists yet. The agent will find or create it automatically.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Find or create",
+        "de": "Suchen oder erstellen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/contacts/find-or-create",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Name",
+          "as": "name",
+          "description": {
+            "en": "Contact name",
+            "de": "Kontaktname"
+          },
+          "bot": "Full name of the contact to find or create.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "min": 1
+        },
+        {
+          "name": "Email",
+          "as": "email",
+          "description": {
+            "en": "Contact email",
+            "de": "E-Mail des Kontakts"
+          },
+          "bot": "Optional email address. Used for lookup if provided.",
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Phone",
+          "as": "phone",
+          "description": {
+            "en": "Contact phone",
+            "de": "Telefon des Kontakts"
+          },
+          "bot": "Optional phone number. Used for lookup if provided.",
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Company",
+          "as": "company",
+          "description": {
+            "en": "Company name",
+            "de": "Firmenname"
+          },
+          "bot": "Optional company.",
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Tags",
+          "as": "tags",
+          "description": {
+            "en": "Tags for new contacts",
+            "de": "Tags für neue Kontakte"
+          },
+          "bot": "Optional array of tags as JSON array. Only applied when creating a new contact.",
+          "type": "string",
+          "source": "field",
+          "required": false
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Contact '{{name}}' found or created.",
+      "de": "Kontakt '{{name}}' gefunden oder erstellt."
+    }
+  }
+}
