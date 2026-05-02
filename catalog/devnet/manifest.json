@@ -4,8 +4,8 @@
   "repo": "JoAiHQ/warps",
   "branch": "dev",
   "network": "devnet",
-  "commitSha": "d9d881a6f10ced2af1ff4d0d0400d22e5da47d92",
-  "generatedAt": "2026-05-02T08:30:06.850Z",
+  "commitSha": "a372e525f52e8cec7f18b8fba56c5af24d84badc",
+  "generatedAt": "2026-05-02T18:49:31.114Z",
   "warps": [
     {
       "key": "arbitrum:omniset-deposit-arbitrum",
@@ -64599,16 +64599,16 @@
       "identifier": "@joai-message-generated-send",
       "alias": "joai-message-generated-send",
       "chain": "none",
-      "hash": "16dc69ed860ddce215b797b3258973621b184790af91e30aec7e0e6039eabd25",
-      "checksum": "16dc69ed860ddce215b797b3258973621b184790af91e30aec7e0e6039eabd25",
+      "hash": "9e32530cab627be75617022ad9e5b72c07940863ec55df73738ee496ac140e11",
+      "checksum": "9e32530cab627be75617022ad9e5b72c07940863ec55df73738ee496ac140e11",
       "name": "JoAi: Send Generated Message",
       "title": {
         "en": "Send a generated message",
         "de": "Generierte Nachricht senden"
       },
       "description": {
-        "en": "Generate a message from a prompt and send it to a room or social channel. Use for reminders, periodic checks, status updates, or any recurring notification.",
-        "de": "Generiere eine Nachricht aus einer Anweisung und sende sie an einen Raum oder sozialen Kanal. Nutzbar für Erinnerungen, regelmäßige Prüfungen, Status-Updates oder wiederkehrende Benachrichtigungen."
+        "en": "Generate a message from an instruction and send it to a message destination such as Telegram, Slack, or a JoAi room. Use it for reminders, periodic checks, status updates, and recurring notifications that should be written in the agent's voice.",
+        "de": "Generiere eine Nachricht aus einer Anweisung und sende sie an ein Nachrichtenziel wie Telegram, Slack oder einen JoAi-Raum. Nutze die Aktion für Erinnerungen, regelmäßige Checks, Status-Updates und wiederkehrende Benachrichtigungen im Stil des Agenten."
       },
       "preview": null,
       "creator": "github:JoAiHQ/warps",
@@ -64649,19 +64649,22 @@
           "de": "Generierte Nachricht senden"
         },
         "description": {
-          "en": "Generate a message from a prompt and send it to a room or social channel. Use for reminders, periodic checks, status updates, or any recurring notification.",
-          "de": "Generiere eine Nachricht aus einer Anweisung und sende sie an einen Raum oder sozialen Kanal. Nutzbar für Erinnerungen, regelmäßige Prüfungen, Status-Updates oder wiederkehrende Benachrichtigungen."
+          "en": "Generate a message from an instruction and send it to a message destination such as Telegram, Slack, or a JoAi room. Use it for reminders, periodic checks, status updates, and recurring notifications that should be written in the agent's voice.",
+          "de": "Generiere eine Nachricht aus einer Anweisung und sende sie an ein Nachrichtenziel wie Telegram, Slack oder einen JoAi-Raum. Nutze die Aktion für Erinnerungen, regelmäßige Checks, Status-Updates und wiederkehrende Benachrichtigungen im Stil des Agenten."
         },
-        "bot": "Use this when the user wants to generate and send a message based on an instruction, remind the group to do something, or periodically check/report on something. The agent generates a unique message each time using its character. Great for scheduled recurring messages like reminders, status checks, or updates.",
+        "bot": "Use this when the user wants to generate and send a message based on an instruction. The agent generates a unique message each time using its character.",
         "output": {
           "MESSAGE": "out.PROMPT"
+        },
+        "messages": {
+          "success": "{{MESSAGE}}"
         },
         "actions": [
           {
             "type": "prompt",
             "label": {
-              "en": "Send",
-              "de": "Senden"
+              "en": "Generate",
+              "de": "Generieren"
             },
             "prompt": "{{INSTRUCTION}}",
             "inputs": [
@@ -64672,10 +64675,10 @@
                   "en": "What kind of message to generate",
                   "de": "Welche Art von Nachricht generiert werden soll"
                 },
-                "bot": "The instruction for generating the message content. E.g. 'ask how everybody is doing' or 'share a motivational quote'.",
                 "type": "string",
                 "position": "arg:1",
                 "source": "field",
+                "default": "{{INSTRUCTION}}",
                 "required": true,
                 "min": 1
               },
@@ -64686,33 +64689,77 @@
                   "en": "Target room (leave empty to send to current room)",
                   "de": "Zielraum (leer lassen für aktuellen Raum)"
                 },
-                "bot": "The room hash ID to send the generated message to. If omitted, sends to the current room.",
                 "type": "string",
                 "position": "destination",
                 "source": "field",
-                "required": false,
-                "default": "room:{{JOAI_ROOM_ID}}"
+                "default": "{{DESTINATION}}",
+                "required": false
               }
             ]
           }
-        ],
-        "messages": {
-          "destination": "{{MESSAGE}}",
-          "success": {
-            "en": "Message sent.",
-            "de": "Nachricht gesendet."
-          }
-        }
+        ]
       },
-      "extras": null
+      "extras": {
+        "keywords": {
+          "en": [
+            "generate message",
+            "send AI message",
+            "automated notification",
+            "recurring reminder",
+            "agent message"
+          ],
+          "de": [
+            "Nachricht generieren",
+            "KI Nachricht senden",
+            "automatische Benachrichtigung",
+            "wiederkehrende Erinnerung",
+            "Agent Nachricht"
+          ]
+        },
+        "useCases": {
+          "en": [
+            "Generate and send a daily status update to a Telegram room",
+            "Create a reminder in the agent voice and deliver it to Slack",
+            "Turn a monitoring result into a readable alert for a chat room"
+          ],
+          "de": [
+            "Ein tägliches Status-Update generieren und an einen Telegram-Raum senden",
+            "Eine Erinnerung im Stil des Agenten erstellen und an Slack senden",
+            "Ein Monitoring-Ergebnis in eine verständliche Warnung für einen Chat-Raum umwandeln"
+          ]
+        },
+        "category": "communication",
+        "faq": {
+          "en": [
+            {
+              "question": "Can the agent write and send a message automatically?",
+              "answer": "Yes. Provide an instruction and a destination, and the agent generates the message before delivering it to the selected room or channel."
+            },
+            {
+              "question": "Which destinations are supported?",
+              "answer": "Messages can be sent to supported JoAi destinations such as Telegram, Slack, and rooms connected to the agent."
+            }
+          ],
+          "de": [
+            {
+              "question": "Kann der Agent automatisch eine Nachricht schreiben und senden?",
+              "answer": "Ja. Gib eine Anweisung und ein Ziel an, dann generiert der Agent die Nachricht und sendet sie an den gewählten Raum oder Kanal."
+            },
+            {
+              "question": "Welche Ziele werden unterstützt?",
+              "answer": "Nachrichten können an unterstützte JoAi-Ziele wie Telegram, Slack und mit dem Agenten verbundene Räume gesendet werden."
+            }
+          ]
+        }
+      }
     },
     {
       "key": "none:joai-message-send",
       "identifier": "@joai-message-send",
       "alias": "joai-message-send",
       "chain": "none",
-      "hash": "799c76f911f3993f5a023cf36777f89c51d3477622e48e872a3a499319c70be1",
-      "checksum": "799c76f911f3993f5a023cf36777f89c51d3477622e48e872a3a499319c70be1",
+      "hash": "050c937dfdb277ba277561f9d390182ca0619f657732bb96f2755ec1b481deeb",
+      "checksum": "050c937dfdb277ba277561f9d390182ca0619f657732bb96f2755ec1b481deeb",
       "name": "JoAi: Send Message",
       "title": {
         "en": "Send a message",
@@ -64764,10 +64811,6 @@
           "en": "Send a pre-written message to a room or social channel. Use this to deliver messages generated by other warps.",
           "de": "Sende eine vorbereitete Nachricht an einen Raum oder sozialen Kanal. Nutze dies, um Nachrichten zu versenden, die von anderen Warps generiert wurden."
         },
-        "vars": {
-          "MESSAGE": "query:message",
-          "DESTINATION": "query:destination"
-        },
         "actions": [
           {
             "type": "collect",
@@ -64782,7 +64825,6 @@
                 "type": "string",
                 "position": "arg:1",
                 "source": "field",
-                "default": "{{MESSAGE}}",
                 "required": true
               },
               {
@@ -64791,18 +64833,13 @@
                 "type": "string",
                 "position": "destination",
                 "source": "field",
-                "default": "{{DESTINATION}}",
                 "required": false
               }
             ]
           }
         ],
         "messages": {
-          "destination": "{{message}}",
-          "success": {
-            "en": "Message sent.",
-            "de": "Nachricht gesendet."
-          }
+          "success": "{{message}}"
         }
       },
       "extras": {
