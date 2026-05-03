@@ -324,4 +324,45 @@ export const meta: Record<string, WarpExtras> = {
       ],
     },
   },
+  'contact-find-or-create': {
+    keywords: {
+      en: ['find contact', 'create contact', 'contact lookup', 'find or create', 'CRM', 'address book'],
+      de: ['Kontakt suchen', 'Kontakt erstellen', 'Kontakt lookup', 'suchen oder erstellen', 'CRM', 'Adressbuch'],
+    },
+    useCases: {
+      en: [
+        'Look up a customer contact by name before assigning them to a task',
+        'Create a contact on the fly when recording a new work order',
+        'Find an existing contact by email or phone to link to a new invoice',
+      ],
+      de: [
+        'Einen Kundenkontakt vor der Zuweisung zu einer Aufgabe suchen',
+        'Bei der Erfassung eines neuen Arbeitsauftrags automatisch einen Kontakt anlegen',
+        'Einen vorhandenen Kontakt per E-Mail oder Telefon finden und mit einer Rechnung verknüpfen',
+      ],
+    },
+    category: 'productivity',
+    faq: {
+      en: [
+        {
+          question: 'What happens if multiple contacts match?',
+          answer: 'The first matching contact by name, email, or phone is returned. If no match is found, a new contact is created.',
+        },
+        {
+          question: 'Can I link this to other actions?',
+          answer: 'Yes, the warp returns a contact ID that can be chained to item creation, invoicing, or other warps.',
+        },
+      ],
+      de: [
+        {
+          question: 'Was passiert bei mehreren Treffern?',
+          answer: 'Der erste passende Kontakt per Name, E-Mail oder Telefon wird zurückgegeben. Bei keinem Treffer wird ein neuer Kontakt angelegt.',
+        },
+        {
+          question: 'Kann ich das mit anderen Aktionen verknüpfen?',
+          answer: 'Ja, der Warp gibt eine Kontakt-ID zurück, die mit Aufgabenerstellung, Rechnungen oder anderen Warps verkettet werden kann.',
+        },
+      ],
+    },
+  },
 }

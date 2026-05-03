@@ -1,0 +1,89 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Invoice: Create",
+  "title": {
+    "en": "Create Invoice",
+    "de": "Rechnung erstellen"
+  },
+  "description": {
+    "en": "Generate a professional PDF invoice from line items — ideal for freelancers, contractors, and service providers who need to bill clients for completed work. Provide titles, quantities, and unit prices to create a downloadable invoice document stored in your team library.",
+    "de": "Erstelle eine professionelle PDF-Rechnung aus einzelnen Positionen – ideal für Freiberufler, Auftragnehmer und Dienstleister, die Kunden für abgeschlossene Arbeiten abrechnen müssen. Gib Titel, Mengen und Einzelpreise an, um ein herunterladbares Rechnungsdokument zu erstellen, das in deiner Team-Mediathek gespeichert wird."
+  },
+  "bot": "Trigger for freelancers, contractors, handymen, electricians, plumbers, or any service provider billing for labor and materials. Use when the user wants to bill a client or create a payment request.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Create invoice",
+        "de": "Rechnung erstellen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/invoices",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Buyer Name",
+          "as": "buyerName",
+          "description": {
+            "en": "Customer name",
+            "de": "Kundenname"
+          },
+          "bot": "The name of the customer or company to bill.",
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Buyer Address",
+          "as": "buyerAddress",
+          "description": {
+            "en": "Customer address",
+            "de": "Kundenadresse"
+          },
+          "bot": "The billing address of the customer.",
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Line Items",
+          "as": "lineItems",
+          "description": {
+            "en": "Items to bill",
+            "de": "Rechnungspositionen"
+          },
+          "bot": "Array of objects with title, quantity, and unitPrice (in cents). Pass as JSON array.",
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Notes",
+          "as": "notes",
+          "description": {
+            "en": "Internal notes",
+            "de": "Interne Notizen"
+          },
+          "bot": "Optional internal notes or message for the customer.",
+          "type": "string",
+          "source": "field",
+          "required": false
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Invoice created! [Download PDF]({{out.invoiceUrl}})",
+      "de": "Rechnung erstellt! [PDF herunterladen]({{out.invoiceUrl}})"
+    }
+  }
+}
