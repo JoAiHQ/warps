@@ -37,7 +37,7 @@ const UPPERCASE_VAR_PATTERN = /^[A-Z][A-Z0-9_]*$/
 
 type Issue = { file: string; message: string }
 
-type WarpInput = { name?: string; as?: string; position?: string }
+type WarpInput = { name?: unknown; as?: unknown; position?: unknown }
 type WarpDestination = { url?: string; method?: string } | string
 type WarpAction = { destination?: WarpDestination; inputs?: WarpInput[] }
 type Warp = { vars?: Record<string, unknown>; actions?: WarpAction[] }
@@ -124,11 +124,34 @@ function checkNoArgPositionsOnHttpActions(warp: Warp, relPath: string): Issue[] 
     if (!method || !HTTP_WRITE_METHODS.has(method)) continue
 
     for (const input of action.inputs ?? []) {
-      if (input.position?.startsWith('arg:')) {
+      if (typeof input.position === 'string' && input.position.startsWith('arg:')) {
         const label = input.as ?? input.name ?? '(unnamed)'
         issues.push({
           file: relPath,
           message: `Input "${label}" has position "${input.position}" on HTTP ${method} action — CLI arg positions never reach the JSON body. Remove the position (defaults to body) or use "payload:X" / "url:X".`,
+        })
+      }
+    }
+  }
+
+  return issues
+}
+
+function checkInputKeysAreStableStrings(warp: Warp, relPath: string): Issue[] {
+  const issues: Issue[] = []
+
+  for (const [actionIndex, action] of (warp.actions ?? []).entries()) {
+    for (const [inputIndex, input] of (action.inputs ?? []).entries()) {
+      if (input.name !== undefined && typeof input.name !== 'string') {
+        issues.push({
+          file: relPath,
+          message: `Input ${actionIndex + 1}.${inputIndex + 1} has non-string name. Use name for the stable key and label for localized text.`,
+        })
+      }
+      if (input.as !== undefined && typeof input.as !== 'string') {
+        issues.push({
+          file: relPath,
+          message: `Input ${actionIndex + 1}.${inputIndex + 1} has non-string as. Use as for a stable semantic key, not localized text.`,
         })
       }
     }
@@ -161,6 +184,7 @@ function main(): void {
 
     inspected++
     const relPath = path.relative(WARPS_DIR, file)
+    allIssues.push(...checkInputKeysAreStableStrings(warp, relPath))
     allIssues.push(...checkUrlPlaceholdersHaveInputs(warp, relPath))
     allIssues.push(...checkNoArgPositionsOnHttpActions(warp, relPath))
   }
