@@ -4,8 +4,8 @@
   "repo": "JoAiHQ/warps",
   "branch": "dev",
   "network": "devnet",
-  "commitSha": "9fe28ea9a843f576bff71f0ff6addc9c06de39c5",
-  "generatedAt": "2026-05-03T09:38:57.143Z",
+  "commitSha": "d756a851af935eadbdbba4d605f68ff30fb8baea",
+  "generatedAt": "2026-05-03T10:11:42.699Z",
   "warps": [
     {
       "key": "arbitrum:omniset-deposit-arbitrum",
@@ -57864,7 +57864,68 @@
           }
         }
       },
-      "extras": null
+      "extras": {
+        "keywords": {
+          "en": [
+            "invoice",
+            "billing",
+            "pdf invoice",
+            "create invoice",
+            "send invoice",
+            "line items"
+          ],
+          "de": [
+            "Rechnung",
+            "Rechnung erstellen",
+            "PDF-Rechnung",
+            "Rechnung senden",
+            "Rechnungspositionen"
+          ]
+        },
+        "useCases": {
+          "en": [
+            "A freelancer billing a client for completed work hours and materials",
+            "A contractor creating a professional PDF invoice after a site visit",
+            "A small business sending an itemized invoice with multiple line items"
+          ],
+          "de": [
+            "Ein Freelancer stellt einem Kunden Arbeitsstunden und Material in Rechnung",
+            "Ein Auftragnehmer erstellt nach einem Termin vor Ort eine professionelle PDF-Rechnung",
+            "Ein kleines Unternehmen sendet eine Aufstellung mit mehreren Rechnungspositionen"
+          ]
+        },
+        "category": "commerce",
+        "faq": {
+          "en": [
+            {
+              "question": "Can I add multiple line items?",
+              "answer": "Yes, pass an array of line items with title, quantity, and unit price for each."
+            },
+            {
+              "question": "What currency is used?",
+              "answer": "The invoice is generated in the currency configured for your team."
+            },
+            {
+              "question": "How do I share the invoice?",
+              "answer": "The response includes an invoiceUrl that you can send to your customer directly."
+            }
+          ],
+          "de": [
+            {
+              "question": "Kann ich mehrere Rechnungspositionen hinzufügen?",
+              "answer": "Ja, übergib ein Array von Positionen mit Titel, Menge und Einzelpreis."
+            },
+            {
+              "question": "Welche Währung wird verwendet?",
+              "answer": "Die Rechnung wird in der für dein Team eingestellten Währung erstellt."
+            },
+            {
+              "question": "Wie teile ich die Rechnung?",
+              "answer": "Die Antwort enthält eine invoiceUrl, die du direkt an deinen Kunden senden kannst."
+            }
+          ]
+        }
+      }
     },
     {
       "key": "none:jira-create-issue",
@@ -85861,6 +85922,179 @@
         }
       },
       "extras": null
+    },
+    {
+      "key": "none:pdf-render",
+      "identifier": "@pdf-render",
+      "alias": "pdf-render",
+      "chain": "none",
+      "hash": "807574989f9b4ef9c941fb1b2caad6cf92391b8aa0cfa7982cd512a1055b8c69",
+      "checksum": "807574989f9b4ef9c941fb1b2caad6cf92391b8aa0cfa7982cd512a1055b8c69",
+      "name": "PDF: Render from HTML",
+      "title": {
+        "en": "Render PDF from HTML",
+        "de": "PDF aus HTML erstellen"
+      },
+      "description": {
+        "en": "Convert HTML content to a PDF document using DomPDF. The generated PDF is stored in the team media library for sharing and download.",
+        "de": "Wandle HTML-Inhalt mit DomPDF in ein PDF-Dokument um. Das erstellte PDF wird in der Team-Mediathek gespeichert und kann geteilt und heruntergeladen werden."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "c11b54da5313df3bc4c78d69af32a4a02638245161ecbeac14ff30b25ff00476",
+        "slug": "pdf",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "PDF",
+        "description": {
+          "en": "PDF document rendering and generation.",
+          "de": "PDF-Dokumenterstellung und -generierung."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "PDF: Render from HTML",
+        "title": {
+          "en": "Render PDF from HTML",
+          "de": "PDF aus HTML erstellen"
+        },
+        "description": {
+          "en": "Convert HTML content to a PDF document using DomPDF. The generated PDF is stored in the team media library for sharing and download.",
+          "de": "Wandle HTML-Inhalt mit DomPDF in ein PDF-Dokument um. Das erstellte PDF wird in der Team-Mediathek gespeichert und kann geteilt und heruntergeladen werden."
+        },
+        "bot": "Use this when the user needs a PDF generated from HTML. Prepare clean, styled HTML and pass it as input. The PDF is automatically stored in team media.",
+        "vars": {
+          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Generate PDF",
+              "de": "PDF erstellen"
+            },
+            "destination": {
+              "url": "https://devnet-api.joai.ai/v1/media/render-pdf",
+              "method": "POST",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "HTML Content",
+                "as": "html",
+                "description": {
+                  "en": "HTML content to convert to PDF",
+                  "de": "HTML-Inhalt für die PDF-Erstellung"
+                },
+                "bot": "Full HTML document including head and body. Include inline CSS for styling.",
+                "type": "text",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Label",
+                "as": "label",
+                "description": {
+                  "en": "Display label for the media item",
+                  "de": "Anzeigename für das Medienelement"
+                },
+                "bot": "Human-readable label shown in the media library.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "File Name",
+                "as": "fileName",
+                "description": {
+                  "en": "Output file name",
+                  "de": "Ausgabedateiname"
+                },
+                "bot": "PDF file name including .pdf extension.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              }
+            ]
+          }
+        ],
+        "messages": {
+          "success": {
+            "en": "PDF rendered and saved to media library.",
+            "de": "PDF erstellt und in der Mediathek gespeichert."
+          }
+        }
+      },
+      "extras": {
+        "keywords": {
+          "en": [
+            "generate PDF",
+            "HTML to PDF",
+            "render document",
+            "create PDF",
+            "PDF from HTML",
+            "PDF generator"
+          ],
+          "de": [
+            "PDF erstellen",
+            "HTML zu PDF",
+            "Dokument rendern",
+            "PDF generieren",
+            "PDF aus HTML",
+            "PDF Generator"
+          ]
+        },
+        "useCases": {
+          "en": [
+            "Generate a PDF invoice from HTML for sending to a customer",
+            "Render a work report as a PDF for archival or sharing",
+            "Create a formatted PDF document from structured content"
+          ],
+          "de": [
+            "Eine PDF-Rechnung aus HTML erstellen und an einen Kunden senden",
+            "Einen Arbeitsbericht als PDF rendern und archivieren",
+            "Ein formatiertes PDF-Dokument aus strukturierten Inhalten erstellen"
+          ]
+        },
+        "category": "productivity",
+        "faq": {
+          "en": [
+            {
+              "question": "What CSS is supported?",
+              "answer": "The HTML is rendered with DomPDF which supports standard CSS for print. Use inline or embedded styles for best results."
+            },
+            {
+              "question": "Where is the PDF stored?",
+              "answer": "The generated PDF is saved to the team media library and can be downloaded or shared from there."
+            }
+          ],
+          "de": [
+            {
+              "question": "Welches CSS wird unterstützt?",
+              "answer": "Das HTML wird mit DomPDF gerendert, das Standard-CSS für Druck unterstützt. Verwende inline oder eingebettete Styles."
+            },
+            {
+              "question": "Wo wird das PDF gespeichert?",
+              "answer": "Das erstellte PDF wird in der Team-Mediathek gespeichert und kann von dort heruntergeladen oder geteilt werden."
+            }
+          ]
+        }
+      }
     },
     {
       "key": "none:perplexity-search",
