@@ -1,0 +1,79 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Create Product",
+  "title": {
+    "en": "Create a product",
+    "de": "Produkt erstellen"
+  },
+  "description": {
+    "en": "Create a new billable product or material that can be used on invoices. Set a name and price in cents.",
+    "de": "Ein neues abrechenbares Produkt oder Material erstellen, das auf Rechnungen verwendet werden kann. Name und Preis in Cent angeben."
+  },
+  "bot": "Use when the user wants to create a new product, material, or billable item. Extract name and price from their description.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Create product",
+        "de": "Produkt erstellen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/products",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Name",
+          "as": "name",
+          "description": {
+            "en": "Product name",
+            "de": "Produktname"
+          },
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Price",
+          "as": "price",
+          "description": {
+            "en": "Price in cents",
+            "de": "Preis in Cent"
+          },
+          "type": "number",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Unit",
+          "as": "unit",
+          "description": {
+            "en": "Unit (e.g. Stück, kg, h)",
+            "de": "Einheit (z.B. Stück, kg, h)"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Category",
+          "as": "category",
+          "description": {
+            "en": "Category (material, service, part)",
+            "de": "Kategorie (material, service, part)"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        }
+      ]
+    }
+  ]
+}
