@@ -4,10 +4,200 @@
   "repo": "JoAiHQ/warps",
   "branch": "dev",
   "network": "devnet",
-  "commitSha": "decf1932485af7f3fec9266276ec0867904c033e",
-  "committedAt": "2026-05-08T14:21:17.626Z",
-  "generatedAt": "2026-05-08T14:21:20.114Z",
+  "commitSha": "51c87d3cbe5fccfefcad9d47ed0d62f51285b9bf",
+  "committedAt": "2026-05-08T14:41:01.246Z",
+  "generatedAt": "2026-05-08T14:41:03.850Z",
   "upserts": [
+    {
+      "key": "none:joai-order-create",
+      "identifier": "@joai-order-create",
+      "alias": "joai-order-create",
+      "chain": "none",
+      "hash": "6aea15e9fe823a66bdbe65e846402b54a40261c66309858852946138ed199554",
+      "checksum": "6aea15e9fe823a66bdbe65e846402b54a40261c66309858852946138ed199554",
+      "name": "JoAi: Create Order",
+      "title": {
+        "en": "Create order",
+        "de": "Bestellung erstellen"
+      },
+      "description": {
+        "en": "Create a billing order from team products. Takes contact ID and product/service IDs, generates an order with invoice and payment URL through the billing system.",
+        "de": "Erstelle eine Bestellung aus Team-Produkten. Nimmt Kontakt-ID und Produkt-/Service-IDs entgegen, generiert eine Bestellung mit Rechnung und Zahlungslink."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: Create Order",
+        "title": {
+          "en": "Create order",
+          "de": "Bestellung erstellen"
+        },
+        "description": {
+          "en": "Create a billing order from team products. Takes contact ID and product/service IDs, generates an order with invoice and payment URL through the billing system.",
+          "de": "Erstelle eine Bestellung aus Team-Produkten. Nimmt Kontakt-ID und Produkt-/Service-IDs entgegen, generiert eine Bestellung mit Rechnung und Zahlungslink."
+        },
+        "bot": "Creates a billing order from team products and services. Use when the user needs to bill a customer. Provide the contact ID and product/service hash IDs from the team catalog.",
+        "vars": {
+          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Create order",
+              "de": "Bestellung erstellen"
+            },
+            "destination": {
+              "url": "https://devnet-api.joai.ai/v1/orders",
+              "method": "POST",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Contact ID",
+                "as": "contactId",
+                "type": "string",
+                "source": "field",
+                "required": true,
+                "description": {
+                  "en": "Contact hash ID from the CRM",
+                  "de": "Kontakt-Hash-ID aus dem CRM"
+                }
+              },
+              {
+                "name": "Product IDs",
+                "as": "productIds",
+                "type": "json",
+                "source": "field",
+                "required": false,
+                "description": {
+                  "en": "Array of product hash IDs from the team catalog",
+                  "de": "Array von Produkt-Hash-IDs aus dem Team-Katalog"
+                }
+              },
+              {
+                "name": "Service IDs",
+                "as": "serviceIds",
+                "type": "json",
+                "source": "field",
+                "required": false,
+                "description": {
+                  "en": "Array of service hash IDs from the team catalog",
+                  "de": "Array von Service-Hash-IDs aus dem Team-Katalog"
+                }
+              },
+              {
+                "name": "Notify Customer",
+                "as": "notify",
+                "type": "boolean",
+                "source": "field",
+                "required": false,
+                "description": {
+                  "en": "Send notification to the customer about the order",
+                  "de": "Benachrichtigung an den Kunden senden"
+                }
+              }
+            ]
+          }
+        ],
+        "output": {
+          "id": "out.data.id",
+          "total": "out.data.total",
+          "invoiceUrl": "out.data.invoiceUrl",
+          "paymentUrl": "out.data.paymentUrl",
+          "status": "out.data.status"
+        },
+        "messages": {
+          "success": {
+            "en": "Order created. Total: {{total}} cents. Payment: {{paymentUrl}}",
+            "de": "Bestellung erstellt. Gesamt: {{total}} Cent. Zahlung: {{paymentUrl}}"
+          }
+        }
+      },
+      "extras": {
+        "keywords": {
+          "en": [
+            "create order",
+            "billing order",
+            "generate invoice",
+            "bill customer",
+            "order from products"
+          ],
+          "de": [
+            "Bestellung erstellen",
+            "Rechnung erstellen",
+            "Kunde abrechnen",
+            "Produktbestellung"
+          ]
+        },
+        "useCases": {
+          "en": [
+            "Bill a customer for products used during a service call",
+            "Generate an order with invoice from team products"
+          ],
+          "de": [
+            "Kunden für verbaute Materialien abrechnen",
+            "Bestellung mit Rechnung aus Team-Produkten erstellen"
+          ]
+        },
+        "category": "commerce",
+        "faq": {
+          "en": [
+            {
+              "question": "What is the difference between an order and an invoice?",
+              "answer": "An order is created through the billing system and automatically generates an invoice with a payment URL."
+            },
+            {
+              "question": "Can I use products not in my catalog?",
+              "answer": "Products must exist in your team catalog. Create missing products first via Product Create."
+            }
+          ],
+          "de": [
+            {
+              "question": "Was ist der Unterschied zwischen Bestellung und Rechnung?",
+              "answer": "Eine Bestellung wird im Abrechnungssystem erstellt und erzeugt automatisch eine Rechnung mit Zahlungslink."
+            },
+            {
+              "question": "Kann ich Produkte verwenden, die nicht in meinem Katalog sind?",
+              "answer": "Produkte müssen im Team-Katalog existieren. Fehlende Produkte zuerst via Produkt erstellen anlegen."
+            }
+          ]
+        }
+      }
+    },
     {
       "key": "none:poll-results",
       "identifier": "@poll-results",
@@ -122,12 +312,5 @@
       "extras": null
     }
   ],
-  "deletes": [
-    {
-      "key": "none:invoice-create",
-      "alias": "invoice-create",
-      "chain": "none",
-      "hash": "f0fddce58017476bca302c743dcbafc3b2cced1357c1237837b7f1aa2ee3ede0"
-    }
-  ]
+  "deletes": []
 }
