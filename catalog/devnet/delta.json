@@ -4,25 +4,33 @@
   "repo": "JoAiHQ/warps",
   "branch": "dev",
   "network": "devnet",
-  "commitSha": "37f579e4c004775c4cf4ae9c50a941ba99663048",
-  "committedAt": "2026-05-09T16:03:51.938Z",
-  "generatedAt": "2026-05-09T16:03:54.049Z",
+  "commitSha": "c58b0195da68d39556efb54348f7df8596213086",
+  "committedAt": "2026-05-09T16:57:33.954Z",
+  "generatedAt": "2026-05-09T16:57:36.102Z",
   "upserts": [
     {
-      "key": "none:joai-order-create",
-      "identifier": "@joai-order-create",
-      "alias": "joai-order-create",
+      "key": "none:joai-contact-find-or-create",
+      "identifier": "@joai-contact-find-or-create",
+      "alias": "joai-contact-find-or-create",
       "chain": "none",
-      "hash": "52cf64c2ca303523019b7f9f05e760b4495b4ae01fe745433c1f7a756ee4607c",
-      "checksum": "52cf64c2ca303523019b7f9f05e760b4495b4ae01fe745433c1f7a756ee4607c",
-      "name": "JoAi: Create Order",
+      "hash": "ec2d00161e1be5842b10a187414514d5320165013a63fc3f3e160ab5455d784b",
+      "checksum": "ec2d00161e1be5842b10a187414514d5320165013a63fc3f3e160ab5455d784b",
+      "name": "JoAi: Find or Create Contact",
       "title": {
-        "en": "Create order",
-        "de": "Bestellung erstellen"
+        "en": "Find or create a contact",
+        "de": "Kontakt suchen oder erstellen",
+        "es": "Find or create a contact",
+        "fr": "Find or create a contact",
+        "ro": "Find or create a contact",
+        "it": "Find or create a contact"
       },
       "description": {
-        "en": "Create a billing order from team products. Takes contact ID and product/service IDs, generates an order with invoice and payment URL through the billing system.",
-        "de": "Erstelle eine Bestellung aus Team-Produkten. Nimmt Kontakt-ID und Produkt-/Service-IDs entgegen, generiert eine Bestellung mit Rechnung und Zahlungslink."
+        "en": "Search for an existing contact by name, email, or phone. If no match is found, creates a new contact automatically. Returns the contact ID for use in further warps.",
+        "de": "Suche nach einem vorhandenen Kontakt per Name, E-Mail oder Telefon. Wenn keine Übereinstimmung gefunden wird, wird automatisch ein neuer Kontakt erstellt. Gibt die Kontakt-ID für weitere Warps zurück.",
+        "es": "Search for an existing contact by name, email, or phone. If no match is found, creates a new contact automatically. Returns the contact ID for use in further warps.",
+        "fr": "Search for an existing contact by name, email, or phone. If no match is found, creates a new contact automatically. Returns the contact ID for use in further warps.",
+        "ro": "Search for an existing contact by name, email, or phone. If no match is found, creates a new contact automatically. Returns the contact ID for use in further warps.",
+        "it": "Search for an existing contact by name, email, or phone. If no match is found, creates a new contact automatically. Returns the contact ID for use in further warps."
       },
       "preview": null,
       "creator": "github:JoAiHQ/warps",
@@ -57,16 +65,24 @@
       },
       "warp": {
         "protocol": "warp:3.0.0",
-        "name": "JoAi: Create Order",
+        "name": "JoAi: Find or Create Contact",
         "title": {
-          "en": "Create order",
-          "de": "Bestellung erstellen"
+          "en": "Find or create a contact",
+          "de": "Kontakt suchen oder erstellen",
+          "es": "Find or create a contact",
+          "fr": "Find or create a contact",
+          "ro": "Find or create a contact",
+          "it": "Find or create a contact"
         },
         "description": {
-          "en": "Create a billing order from team products. Takes contact ID and product/service IDs, generates an order with invoice and payment URL through the billing system.",
-          "de": "Erstelle eine Bestellung aus Team-Produkten. Nimmt Kontakt-ID und Produkt-/Service-IDs entgegen, generiert eine Bestellung mit Rechnung und Zahlungslink."
+          "en": "Search for an existing contact by name, email, or phone. If no match is found, creates a new contact automatically. Returns the contact ID for use in further warps.",
+          "de": "Suche nach einem vorhandenen Kontakt per Name, E-Mail oder Telefon. Wenn keine Übereinstimmung gefunden wird, wird automatisch ein neuer Kontakt erstellt. Gibt die Kontakt-ID für weitere Warps zurück.",
+          "es": "Search for an existing contact by name, email, or phone. If no match is found, creates a new contact automatically. Returns the contact ID for use in further warps.",
+          "fr": "Search for an existing contact by name, email, or phone. If no match is found, creates a new contact automatically. Returns the contact ID for use in further warps.",
+          "ro": "Search for an existing contact by name, email, or phone. If no match is found, creates a new contact automatically. Returns the contact ID for use in further warps.",
+          "it": "Search for an existing contact by name, email, or phone. If no match is found, creates a new contact automatically. Returns the contact ID for use in further warps."
         },
-        "bot": "Creates a billing order from team products and services. Use when the user needs to bill a customer. Provide the contact ID and product/service hash IDs from the team catalog.",
+        "bot": "Use this when you need a contact ID for another warp but don't know if the contact exists yet. The agent will find or create it automatically.",
         "vars": {
           "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
           "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
@@ -75,11 +91,15 @@
           {
             "type": "collect",
             "label": {
-              "en": "Create order",
-              "de": "Bestellung erstellen"
+              "en": "Find or create",
+              "de": "Suchen oder erstellen",
+              "es": "Find or create",
+              "fr": "Find or create",
+              "ro": "Find or create",
+              "it": "Find or create"
             },
             "destination": {
-              "url": "https://devnet-api.joai.ai/v1/orders",
+              "url": "https://devnet-api.joai.ai/v1/contacts/find-or-create",
               "method": "POST",
               "headers": {
                 "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
@@ -87,112 +107,170 @@
             },
             "inputs": [
               {
-                "name": "Contact ID",
-                "as": "contactId",
+                "name": "Name",
+                "as": "name",
+                "description": {
+                  "en": "Contact name",
+                  "de": "Kontaktname",
+                  "es": "Contact name",
+                  "fr": "Contact name",
+                  "ro": "Contact name",
+                  "it": "Contact name"
+                },
+                "bot": "Full name of the contact to find or create.",
                 "type": "string",
                 "source": "field",
                 "required": true,
-                "description": {
-                  "en": "Contact hash ID from the CRM",
-                  "de": "Kontakt-Hash-ID aus dem CRM"
+                "min": 1,
+                "label": {
+                  "en": "Name",
+                  "de": "Name",
+                  "es": "Name",
+                  "fr": "Name",
+                  "ro": "Name",
+                  "it": "Name"
                 }
               },
               {
-                "name": "Product IDs",
-                "as": "productIds",
-                "type": "string[]",
-                "source": "field",
-                "required": false,
+                "name": "Email",
+                "as": "email",
                 "description": {
-                  "en": "Array of product hash IDs from the team catalog",
-                  "de": "Array von Produkt-Hash-IDs aus dem Team-Katalog"
-                }
+                  "en": "Contact email",
+                  "de": "E-Mail des Kontakts",
+                  "es": "Contact email",
+                  "fr": "Contact email",
+                  "ro": "Contact email",
+                  "it": "Contact email"
+                },
+                "bot": "Optional email address. Used for lookup if provided.",
+                "type": "string",
+                "source": "field",
+                "required": false
               },
               {
-                "name": "Service IDs",
-                "as": "serviceIds",
-                "type": "string[]",
-                "source": "field",
-                "required": false,
+                "name": "Phone",
+                "as": "phone",
                 "description": {
-                  "en": "Array of service hash IDs from the team catalog",
-                  "de": "Array von Service-Hash-IDs aus dem Team-Katalog"
-                }
+                  "en": "Contact phone",
+                  "de": "Telefon des Kontakts",
+                  "es": "Contact phone",
+                  "fr": "Contact phone",
+                  "ro": "Contact phone",
+                  "it": "Contact phone"
+                },
+                "bot": "Optional phone number. Used for lookup if provided.",
+                "type": "string",
+                "source": "field",
+                "required": false
               },
               {
-                "name": "Notify Customer",
-                "as": "notify",
-                "type": "boolean",
+                "name": "Company",
+                "as": "company",
+                "description": {
+                  "en": "Company name",
+                  "de": "Firmenname",
+                  "es": "Company name",
+                  "fr": "Company name",
+                  "ro": "Company name",
+                  "it": "Company name"
+                },
+                "bot": "Optional company.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Tags",
+                "as": "tags",
+                "description": {
+                  "en": "Tags for new contacts",
+                  "de": "Tags für neue Kontakte",
+                  "es": "Tags for new contacts",
+                  "fr": "Tags for new contacts",
+                  "ro": "Tags for new contacts",
+                  "it": "Tags for new contacts"
+                },
+                "bot": "Optional array of tags as JSON array. Only applied when creating a new contact.",
+                "type": "string",
                 "source": "field",
                 "required": false,
-                "description": {
-                  "en": "Send notification to the customer about the order",
-                  "de": "Benachrichtigung an den Kunden senden"
+                "label": {
+                  "en": "Tags",
+                  "de": "Tags",
+                  "es": "Tags",
+                  "fr": "Tags",
+                  "ro": "Tags",
+                  "it": "Tags"
                 }
               }
             ]
           }
         ],
         "output": {
-          "id": "out.data.id",
-          "total": "out.data.total",
-          "invoiceUrl": "out.data.invoiceUrl",
-          "paymentUrl": "out.data.paymentUrl",
-          "status": "out.data.status"
+          "contactId": "out.data.id"
         },
         "messages": {
           "success": {
-            "en": "Order created. Total: {{total}} cents. Payment: {{paymentUrl}}",
-            "de": "Bestellung erstellt. Gesamt: {{total}} Cent. Zahlung: {{paymentUrl}}"
+            "en": "Contact '{{name}}' found or created.",
+            "de": "Kontakt '{{name}}' gefunden oder erstellt.",
+            "es": "Contacto '{{name}}' encontrado o creado.",
+            "fr": "Contact '{{name}}' trouvé ou créé.",
+            "ro": "Contact '{{name}}' găsit sau creat.",
+            "it": "Contatto '{{name}}' trovato o creato."
           }
         }
       },
       "extras": {
         "keywords": {
           "en": [
-            "create order",
-            "billing order",
-            "generate invoice",
-            "bill customer",
-            "order from products"
+            "find contact",
+            "create contact",
+            "contact lookup",
+            "find or create",
+            "CRM",
+            "address book"
           ],
           "de": [
-            "Bestellung erstellen",
-            "Rechnung erstellen",
-            "Kunde abrechnen",
-            "Produktbestellung"
+            "Kontakt suchen",
+            "Kontakt erstellen",
+            "Kontakt lookup",
+            "suchen oder erstellen",
+            "CRM",
+            "Adressbuch"
           ]
         },
         "useCases": {
           "en": [
-            "Bill a customer for products used during a service call",
-            "Generate an order with invoice from team products"
+            "Look up a customer contact by name before assigning them to a task",
+            "Create a contact on the fly when recording a new work order",
+            "Find an existing contact by email or phone to link to a new order"
           ],
           "de": [
-            "Kunden für verbaute Materialien abrechnen",
-            "Bestellung mit Rechnung aus Team-Produkten erstellen"
+            "Einen Kundenkontakt vor der Zuweisung zu einer Aufgabe suchen",
+            "Bei der Erfassung eines neuen Arbeitsauftrags automatisch einen Kontakt anlegen",
+            "Einen vorhandenen Kontakt per E-Mail oder Telefon finden und mit einer Rechnung verknüpfen"
           ]
         },
-        "category": "commerce",
+        "category": "productivity",
         "faq": {
           "en": [
             {
-              "question": "What is the difference between an order and an invoice?",
-              "answer": "An order is created through the billing system and automatically generates an invoice with a payment URL."
+              "question": "What happens if multiple contacts match?",
+              "answer": "The first matching contact by name, email, or phone is returned. If no match is found, a new contact is created."
             },
             {
-              "question": "Can I use products not in my catalog?",
-              "answer": "Products must exist in your team catalog. Create missing products first via Product Create."
+              "question": "Can I link this to other actions?",
+              "answer": "Yes, the warp returns a contact ID that can be chained to item creation, invoicing, or other warps."
             }
           ],
           "de": [
             {
-              "question": "Was ist der Unterschied zwischen Bestellung und Rechnung?",
-              "answer": "Eine Bestellung wird im Abrechnungssystem erstellt und erzeugt automatisch eine Rechnung mit Zahlungslink."
+              "question": "Was passiert bei mehreren Treffern?",
+              "answer": "Der erste passende Kontakt per Name, E-Mail oder Telefon wird zurückgegeben. Bei keinem Treffer wird ein neuer Kontakt angelegt."
             },
             {
-              "question": "Kann ich Produkte verwenden, die nicht in meinem Katalog sind?",
-              "answer": "Produkte müssen im Team-Katalog existieren. Fehlende Produkte zuerst via Produkt erstellen anlegen."
+              "question": "Kann ich das mit anderen Aktionen verknüpfen?",
+              "answer": "Ja, der Warp gibt eine Kontakt-ID zurück, die mit Aufgabenerstellung, Rechnungen oder anderen Warps verkettet werden kann."
             }
           ]
         }
