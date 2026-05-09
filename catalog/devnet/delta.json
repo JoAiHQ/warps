@@ -4,33 +4,25 @@
   "repo": "JoAiHQ/warps",
   "branch": "dev",
   "network": "devnet",
-  "commitSha": "c58b0195da68d39556efb54348f7df8596213086",
-  "committedAt": "2026-05-09T16:57:33.954Z",
-  "generatedAt": "2026-05-09T16:57:36.102Z",
+  "commitSha": "452b6cd2f4607084437efd229a2b4516face95af",
+  "committedAt": "2026-05-09T19:13:11.584Z",
+  "generatedAt": "2026-05-09T19:13:15.143Z",
   "upserts": [
     {
-      "key": "none:joai-contact-find-or-create",
-      "identifier": "@joai-contact-find-or-create",
-      "alias": "joai-contact-find-or-create",
+      "key": "none:joai-product-list",
+      "identifier": "@joai-product-list",
+      "alias": "joai-product-list",
       "chain": "none",
-      "hash": "ec2d00161e1be5842b10a187414514d5320165013a63fc3f3e160ab5455d784b",
-      "checksum": "ec2d00161e1be5842b10a187414514d5320165013a63fc3f3e160ab5455d784b",
-      "name": "JoAi: Find or Create Contact",
+      "hash": "9714ad1cff574c925a7827f71eab8d852205b2d3fbfd81bbc63d8fe9f1605d1e",
+      "checksum": "9714ad1cff574c925a7827f71eab8d852205b2d3fbfd81bbc63d8fe9f1605d1e",
+      "name": "JoAi: List Products",
       "title": {
-        "en": "Find or create a contact",
-        "de": "Kontakt suchen oder erstellen",
-        "es": "Find or create a contact",
-        "fr": "Find or create a contact",
-        "ro": "Find or create a contact",
-        "it": "Find or create a contact"
+        "en": "List team products",
+        "de": "Team-Produkte anzeigen"
       },
       "description": {
-        "en": "Search for an existing contact by name, email, or phone. If no match is found, creates a new contact automatically. Returns the contact ID for use in further warps.",
-        "de": "Suche nach einem vorhandenen Kontakt per Name, E-Mail oder Telefon. Wenn keine Übereinstimmung gefunden wird, wird automatisch ein neuer Kontakt erstellt. Gibt die Kontakt-ID für weitere Warps zurück.",
-        "es": "Search for an existing contact by name, email, or phone. If no match is found, creates a new contact automatically. Returns the contact ID for use in further warps.",
-        "fr": "Search for an existing contact by name, email, or phone. If no match is found, creates a new contact automatically. Returns the contact ID for use in further warps.",
-        "ro": "Search for an existing contact by name, email, or phone. If no match is found, creates a new contact automatically. Returns the contact ID for use in further warps.",
-        "it": "Search for an existing contact by name, email, or phone. If no match is found, creates a new contact automatically. Returns the contact ID for use in further warps."
+        "en": "View all products and materials in your team catalog with names and prices.",
+        "de": "Alle Produkte und Materialien im Team-Katalog mit Namen und Preisen anzeigen."
       },
       "preview": null,
       "creator": "github:JoAiHQ/warps",
@@ -65,216 +57,43 @@
       },
       "warp": {
         "protocol": "warp:3.0.0",
-        "name": "JoAi: Find or Create Contact",
+        "name": "JoAi: List Products",
         "title": {
-          "en": "Find or create a contact",
-          "de": "Kontakt suchen oder erstellen",
-          "es": "Find or create a contact",
-          "fr": "Find or create a contact",
-          "ro": "Find or create a contact",
-          "it": "Find or create a contact"
+          "en": "List team products",
+          "de": "Team-Produkte anzeigen"
         },
         "description": {
-          "en": "Search for an existing contact by name, email, or phone. If no match is found, creates a new contact automatically. Returns the contact ID for use in further warps.",
-          "de": "Suche nach einem vorhandenen Kontakt per Name, E-Mail oder Telefon. Wenn keine Übereinstimmung gefunden wird, wird automatisch ein neuer Kontakt erstellt. Gibt die Kontakt-ID für weitere Warps zurück.",
-          "es": "Search for an existing contact by name, email, or phone. If no match is found, creates a new contact automatically. Returns the contact ID for use in further warps.",
-          "fr": "Search for an existing contact by name, email, or phone. If no match is found, creates a new contact automatically. Returns the contact ID for use in further warps.",
-          "ro": "Search for an existing contact by name, email, or phone. If no match is found, creates a new contact automatically. Returns the contact ID for use in further warps.",
-          "it": "Search for an existing contact by name, email, or phone. If no match is found, creates a new contact automatically. Returns the contact ID for use in further warps."
+          "en": "View all products and materials in your team catalog with names and prices.",
+          "de": "Alle Produkte und Materialien im Team-Katalog mit Namen und Preisen anzeigen."
         },
-        "bot": "Use this when you need a contact ID for another warp but don't know if the contact exists yet. The agent will find or create it automatically.",
+        "bot": "Use this when the user wants to see their available products, materials, or billable items that can be used for invoices.",
         "vars": {
           "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
           "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+        },
+        "output": {
+          "products": "out",
+          "productsList": "out.data"
         },
         "actions": [
           {
             "type": "collect",
             "label": {
-              "en": "Find or create",
-              "de": "Suchen oder erstellen",
-              "es": "Find or create",
-              "fr": "Find or create",
-              "ro": "Find or create",
-              "it": "Find or create"
+              "en": "List products",
+              "de": "Produkte anzeigen"
             },
             "destination": {
-              "url": "https://devnet-api.joai.ai/v1/contacts/find-or-create",
-              "method": "POST",
+              "url": "https://devnet-api.joai.ai/v1/products",
+              "method": "GET",
               "headers": {
                 "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
               }
             },
-            "inputs": [
-              {
-                "name": "Name",
-                "as": "name",
-                "description": {
-                  "en": "Contact name",
-                  "de": "Kontaktname",
-                  "es": "Contact name",
-                  "fr": "Contact name",
-                  "ro": "Contact name",
-                  "it": "Contact name"
-                },
-                "bot": "Full name of the contact to find or create.",
-                "type": "string",
-                "source": "field",
-                "required": true,
-                "min": 1,
-                "label": {
-                  "en": "Name",
-                  "de": "Name",
-                  "es": "Name",
-                  "fr": "Name",
-                  "ro": "Name",
-                  "it": "Name"
-                }
-              },
-              {
-                "name": "Email",
-                "as": "email",
-                "description": {
-                  "en": "Contact email",
-                  "de": "E-Mail des Kontakts",
-                  "es": "Contact email",
-                  "fr": "Contact email",
-                  "ro": "Contact email",
-                  "it": "Contact email"
-                },
-                "bot": "Optional email address. Used for lookup if provided.",
-                "type": "string",
-                "source": "field",
-                "required": false
-              },
-              {
-                "name": "Phone",
-                "as": "phone",
-                "description": {
-                  "en": "Contact phone",
-                  "de": "Telefon des Kontakts",
-                  "es": "Contact phone",
-                  "fr": "Contact phone",
-                  "ro": "Contact phone",
-                  "it": "Contact phone"
-                },
-                "bot": "Optional phone number. Used for lookup if provided.",
-                "type": "string",
-                "source": "field",
-                "required": false
-              },
-              {
-                "name": "Company",
-                "as": "company",
-                "description": {
-                  "en": "Company name",
-                  "de": "Firmenname",
-                  "es": "Company name",
-                  "fr": "Company name",
-                  "ro": "Company name",
-                  "it": "Company name"
-                },
-                "bot": "Optional company.",
-                "type": "string",
-                "source": "field",
-                "required": false
-              },
-              {
-                "name": "Tags",
-                "as": "tags",
-                "description": {
-                  "en": "Tags for new contacts",
-                  "de": "Tags für neue Kontakte",
-                  "es": "Tags for new contacts",
-                  "fr": "Tags for new contacts",
-                  "ro": "Tags for new contacts",
-                  "it": "Tags for new contacts"
-                },
-                "bot": "Optional array of tags as JSON array. Only applied when creating a new contact.",
-                "type": "string",
-                "source": "field",
-                "required": false,
-                "label": {
-                  "en": "Tags",
-                  "de": "Tags",
-                  "es": "Tags",
-                  "fr": "Tags",
-                  "ro": "Tags",
-                  "it": "Tags"
-                }
-              }
-            ]
+            "inputs": []
           }
-        ],
-        "output": {
-          "contactId": "out.data.id"
-        },
-        "messages": {
-          "success": {
-            "en": "Contact '{{name}}' found or created.",
-            "de": "Kontakt '{{name}}' gefunden oder erstellt.",
-            "es": "Contacto '{{name}}' encontrado o creado.",
-            "fr": "Contact '{{name}}' trouvé ou créé.",
-            "ro": "Contact '{{name}}' găsit sau creat.",
-            "it": "Contatto '{{name}}' trovato o creato."
-          }
-        }
+        ]
       },
-      "extras": {
-        "keywords": {
-          "en": [
-            "find contact",
-            "create contact",
-            "contact lookup",
-            "find or create",
-            "CRM",
-            "address book"
-          ],
-          "de": [
-            "Kontakt suchen",
-            "Kontakt erstellen",
-            "Kontakt lookup",
-            "suchen oder erstellen",
-            "CRM",
-            "Adressbuch"
-          ]
-        },
-        "useCases": {
-          "en": [
-            "Look up a customer contact by name before assigning them to a task",
-            "Create a contact on the fly when recording a new work order",
-            "Find an existing contact by email or phone to link to a new order"
-          ],
-          "de": [
-            "Einen Kundenkontakt vor der Zuweisung zu einer Aufgabe suchen",
-            "Bei der Erfassung eines neuen Arbeitsauftrags automatisch einen Kontakt anlegen",
-            "Einen vorhandenen Kontakt per E-Mail oder Telefon finden und mit einer Rechnung verknüpfen"
-          ]
-        },
-        "category": "productivity",
-        "faq": {
-          "en": [
-            {
-              "question": "What happens if multiple contacts match?",
-              "answer": "The first matching contact by name, email, or phone is returned. If no match is found, a new contact is created."
-            },
-            {
-              "question": "Can I link this to other actions?",
-              "answer": "Yes, the warp returns a contact ID that can be chained to item creation, invoicing, or other warps."
-            }
-          ],
-          "de": [
-            {
-              "question": "Was passiert bei mehreren Treffern?",
-              "answer": "Der erste passende Kontakt per Name, E-Mail oder Telefon wird zurückgegeben. Bei keinem Treffer wird ein neuer Kontakt angelegt."
-            },
-            {
-              "question": "Kann ich das mit anderen Aktionen verknüpfen?",
-              "answer": "Ja, der Warp gibt eine Kontakt-ID zurück, die mit Aufgabenerstellung, Rechnungen oder anderen Warps verkettet werden kann."
-            }
-          ]
-        }
-      }
+      "extras": null
     },
     {
       "key": "none:poll-results",
