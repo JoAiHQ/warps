@@ -1,0 +1,92 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Create Order",
+  "title": {
+    "en": "Create order",
+    "de": "Bestellung erstellen"
+  },
+  "description": {
+    "en": "Create a billing order from team products. Takes contact ID and product/service IDs, generates an order with invoice and payment URL through the billing system.",
+    "de": "Erstelle eine Bestellung aus Team-Produkten. Nimmt Kontakt-ID und Produkt-/Service-IDs entgegen, generiert eine Bestellung mit Rechnung und Zahlungslink."
+  },
+  "bot": "Creates a billing order from team products and services. Use when the user needs to bill a customer. Provide the contact ID and product/service hash IDs from the team catalog.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Create order",
+        "de": "Bestellung erstellen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/orders",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Contact ID",
+          "as": "contactId",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "description": {
+            "en": "Contact hash ID from the CRM",
+            "de": "Kontakt-Hash-ID aus dem CRM"
+          }
+        },
+        {
+          "name": "Product IDs",
+          "as": "productIds",
+          "type": "json",
+          "source": "field",
+          "required": false,
+          "description": {
+            "en": "Array of product hash IDs from the team catalog",
+            "de": "Array von Produkt-Hash-IDs aus dem Team-Katalog"
+          }
+        },
+        {
+          "name": "Service IDs",
+          "as": "serviceIds",
+          "type": "json",
+          "source": "field",
+          "required": false,
+          "description": {
+            "en": "Array of service hash IDs from the team catalog",
+            "de": "Array von Service-Hash-IDs aus dem Team-Katalog"
+          }
+        },
+        {
+          "name": "Notify Customer",
+          "as": "notify",
+          "type": "boolean",
+          "source": "field",
+          "required": false,
+          "description": {
+            "en": "Send notification to the customer about the order",
+            "de": "Benachrichtigung an den Kunden senden"
+          }
+        }
+      ]
+    }
+  ],
+  "output": {
+    "id": "out.data.id",
+    "total": "out.data.total",
+    "invoiceUrl": "out.data.invoiceUrl",
+    "paymentUrl": "out.data.paymentUrl",
+    "status": "out.data.status"
+  },
+  "messages": {
+    "success": {
+      "en": "Order created. Total: {{total}} cents. Payment: {{paymentUrl}}",
+      "de": "Bestellung erstellt. Gesamt: {{total}} Cent. Zahlung: {{paymentUrl}}"
+    }
+  }
+}

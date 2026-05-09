@@ -333,7 +333,7 @@ export const meta: Record<string, WarpExtras> = {
       en: [
         'Look up a customer contact by name before assigning them to a task',
         'Create a contact on the fly when recording a new work order',
-        'Find an existing contact by email or phone to link to a new invoice',
+        'Find an existing contact by email or phone to link to a new order',
       ],
       de: [
         'Einen Kundenkontakt vor der Zuweisung zu einer Aufgabe suchen',
@@ -362,6 +362,27 @@ export const meta: Record<string, WarpExtras> = {
           question: 'Kann ich das mit anderen Aktionen verknüpfen?',
           answer: 'Ja, der Warp gibt eine Kontakt-ID zurück, die mit Aufgabenerstellung, Rechnungen oder anderen Warps verkettet werden kann.',
         },
+      ],
+    },
+  },
+  'order-create': {
+    keywords: {
+      en: ['create order', 'billing order', 'generate invoice', 'bill customer', 'order from products'],
+      de: ['Bestellung erstellen', 'Rechnung erstellen', 'Kunde abrechnen', 'Produktbestellung'],
+    },
+    useCases: {
+      en: ['Bill a customer for products used during a service call', 'Generate an order with invoice from team products'],
+      de: ['Kunden für verbaute Materialien abrechnen', 'Bestellung mit Rechnung aus Team-Produkten erstellen'],
+    },
+    category: 'commerce',
+    faq: {
+      en: [
+        { question: 'What is the difference between an order and an invoice?', answer: 'An order is created through the billing system and automatically generates an invoice with a payment URL.' },
+        { question: 'Can I use products not in my catalog?', answer: 'Products must exist in your team catalog. Create missing products first via Product Create.' },
+      ],
+      de: [
+        { question: 'Was ist der Unterschied zwischen Bestellung und Rechnung?', answer: 'Eine Bestellung wird im Abrechnungssystem erstellt und erzeugt automatisch eine Rechnung mit Zahlungslink.' },
+        { question: 'Kann ich Produkte verwenden, die nicht in meinem Katalog sind?', answer: 'Produkte müssen im Team-Katalog existieren. Fehlende Produkte zuerst via Produkt erstellen anlegen.' },
       ],
     },
   },

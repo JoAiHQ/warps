@@ -342,4 +342,50 @@ export const meta: Record<string, WarpExtras> = {
       ],
     },
   },
+
+  'booking-link': {
+    keywords: {
+      en: ['booking link', 'appointment link', 'booking page', 'booking URL', 'share booking link', 'appointment booking page'],
+      de: ['Buchungslink', 'Terminlink', 'Buchungsseite', 'Terminbuchungsseite', 'Buchungs-URL', 'Termin-URL'],
+    },
+    useCases: {
+      en: [
+        'Get the shareable booking link to send to clients',
+        'Find your public appointment page URL',
+        'Share a direct link where people can book time with you',
+      ],
+      de: [
+        'Den teilbaren Buchungslink abrufen, um ihn an Kunden zu senden',
+        'Die URL deiner öffentlichen Terminseite finden',
+        'Einen direkten Link teilen, über dem Leute bei dir buchen können',
+      ],
+    },
+    category: 'productivity',
+    faq: {
+      en: [
+        {
+          question: 'How do I find my booking link?',
+          answer:
+            'Your booking link is a unique URL for your appointment page. Share it with anyone so they can pick a time and book directly — no back-and-forth needed.',
+        },
+        {
+          question: 'Can I share the booking link publicly?',
+          answer:
+            'Yes, the link is designed to be shared. Anyone with the link can see your available time slots and book an appointment.',
+        },
+      ],
+      de: [
+        {
+          question: 'Wie finde ich meinen Buchungslink?',
+          answer:
+            'Dein Buchungslink ist eine eindeutige URL für deine Terminseite. Teile sie mit jedem, damit sie einen Zeitraum auswählen und direkt buchen können.',
+        },
+        {
+          question: 'Kann ich den Buchungslink öffentlich teilen?',
+          answer:
+            'Ja, der Link ist zum Teilen gedacht. Jeder mit dem Link kann deine verfügbaren Zeitslots sehen und einen Termin buchen.',
+        },
+      ],
+    },
+  },
 }
