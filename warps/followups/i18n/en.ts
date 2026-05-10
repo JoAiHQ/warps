@@ -5,5 +5,6 @@ export const en = {
     activeContacts: 'Active Contacts',
     repliedContacts: 'Replied Contacts',
     templates: 'Templates',
+    stepLabel: 'Step',
   },
 }
