@@ -4,25 +4,25 @@
   "repo": "JoAiHQ/warps",
   "branch": "dev",
   "network": "devnet",
-  "commitSha": "84047ff8fcfe88ab996c29ef5e2c35d064039b91",
-  "committedAt": "2026-05-10T09:23:18.269Z",
-  "generatedAt": "2026-05-10T09:23:20.494Z",
+  "commitSha": "06709148551b0cd9b95df2ef6ca563f3f585c0ea",
+  "committedAt": "2026-05-10T18:40:16.508Z",
+  "generatedAt": "2026-05-10T18:40:18.979Z",
   "upserts": [
     {
-      "key": "none:joai-service-list",
-      "identifier": "@joai-service-list",
-      "alias": "joai-service-list",
+      "key": "none:joai-service-create",
+      "identifier": "@joai-service-create",
+      "alias": "joai-service-create",
       "chain": "none",
-      "hash": "c5800b8ff9a0ce4848e6b824dca95a889afc22642b03d949d88af69187796652",
-      "checksum": "c5800b8ff9a0ce4848e6b824dca95a889afc22642b03d949d88af69187796652",
-      "name": "JoAi: List Services",
+      "hash": "cfeb5c4e024b28688081e9b09e8a3ffbd284f2c24d76c63fd150c3d38254bf37",
+      "checksum": "cfeb5c4e024b28688081e9b09e8a3ffbd284f2c24d76c63fd150c3d38254bf37",
+      "name": "JoAi: Create Service",
       "title": {
-        "en": "List team services",
-        "de": "Team-Dienstleistungen anzeigen"
+        "en": "Create a service",
+        "de": "Dienstleistung erstellen"
       },
       "description": {
-        "en": "View all services and hourly rates in your team catalog with names, prices and durations.",
-        "de": "Alle Dienstleistungen und Stundensätze im Team-Katalog mit Namen, Preisen und Dauern anzeigen."
+        "en": "Create a new billable service with name, price, and duration for your team catalog. Services can be used for appointment booking and invoices.",
+        "de": "Eine neue abrechenbare Dienstleistung mit Name, Preis und Dauer für deinen Team-Katalog erstellen. Dienstleistungen können für Terminbuchungen und Rechnungen verwendet werden."
       },
       "preview": null,
       "creator": "github:JoAiHQ/warps",
@@ -57,42 +57,464 @@
       },
       "warp": {
         "protocol": "warp:3.0.0",
-        "name": "JoAi: List Services",
+        "name": "JoAi: Create Service",
         "title": {
-          "en": "List team services",
-          "de": "Team-Dienstleistungen anzeigen"
+          "en": "Create a service",
+          "de": "Dienstleistung erstellen"
         },
         "description": {
-          "en": "View all services and hourly rates in your team catalog with names, prices and durations.",
-          "de": "Alle Dienstleistungen und Stundensätze im Team-Katalog mit Namen, Preisen und Dauern anzeigen."
+          "en": "Create a new billable service with name, price, and duration for your team catalog. Services can be used for appointment booking and invoices.",
+          "de": "Eine neue abrechenbare Dienstleistung mit Name, Preis und Dauer für deinen Team-Katalog erstellen. Dienstleistungen können für Terminbuchungen und Rechnungen verwendet werden."
         },
-        "bot": "Use this when the user wants to see their available services, hourly rates, or billable services that can be used for invoices.",
+        "bot": "Use when the user wants to create a new service, billable offering, or appointment type. Extract name, price, and duration from their description.",
         "vars": {
           "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
           "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
         },
-        "output": {
-          "services": "out"
+        "messages": {
+          "error": {
+            "en": "Failed to create service: {{MESSAGE}}",
+            "de": "Dienstleistung konnte nicht erstellt werden: {{MESSAGE}}"
+          }
         },
         "actions": [
           {
             "type": "collect",
             "label": {
-              "en": "List services",
-              "de": "Dienstleistungen anzeigen"
+              "en": "Create service",
+              "de": "Dienstleistung erstellen"
             },
             "destination": {
               "url": "https://devnet-api.joai.ai/v1/services",
-              "method": "GET",
+              "method": "POST",
               "headers": {
                 "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
               }
             },
-            "inputs": []
+            "inputs": [
+              {
+                "name": "Name",
+                "as": "name",
+                "description": {
+                  "en": "Service name",
+                  "de": "Name der Dienstleistung"
+                },
+                "type": "string",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Price",
+                "as": "price",
+                "description": {
+                  "en": "Price in cents",
+                  "de": "Preis in Cent"
+                },
+                "type": "number",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Duration (minutes)",
+                "as": "duration_minutes",
+                "description": {
+                  "en": "Duration in minutes",
+                  "de": "Dauer in Minuten"
+                },
+                "type": "number",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Description",
+                "as": "description",
+                "description": {
+                  "en": "Service description",
+                  "de": "Beschreibung der Dienstleistung"
+                },
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Category",
+                "as": "category",
+                "description": {
+                  "en": "Category (consultation, maintenance, repair, etc.)",
+                  "de": "Kategorie (Beratung, Wartung, Reparatur, etc.)"
+                },
+                "type": "string",
+                "source": "field",
+                "required": false
+              }
+            ]
           }
         ]
       },
-      "extras": null
+      "extras": {
+        "keywords": {
+          "en": [
+            "create service",
+            "add service",
+            "new billable service",
+            "appointment type",
+            "service catalog"
+          ],
+          "de": [
+            "Dienstleistung erstellen",
+            "Service hinzufügen",
+            "neue abrechenbare Leistung",
+            "Terminart",
+            "Service-Katalog"
+          ]
+        },
+        "useCases": {
+          "en": [
+            "Add a new service type for appointment booking",
+            "Create a billable service with a set price and duration",
+            "Set up consultation, maintenance, or repair service offerings"
+          ],
+          "de": [
+            "Einen neuen Dienstleistungstyp für Terminbuchungen hinzufügen",
+            "Eine abrechenbare Dienstleistung mit festem Preis und Dauer erstellen",
+            "Beratungs-, Wartungs- oder Reparaturleistungen anlegen"
+          ]
+        },
+        "category": "productivity"
+      }
+    },
+    {
+      "key": "none:joai-service-delete",
+      "identifier": "@joai-service-delete",
+      "alias": "joai-service-delete",
+      "chain": "none",
+      "hash": "6acd2b1e964dc1f22ce5910a926b76b9cd606384889e1b4b3bc8a0ac5b84164f",
+      "checksum": "6acd2b1e964dc1f22ce5910a926b76b9cd606384889e1b4b3bc8a0ac5b84164f",
+      "name": "JoAi: Delete Service",
+      "title": {
+        "en": "Delete a service",
+        "de": "Dienstleistung löschen"
+      },
+      "description": {
+        "en": "Permanently remove a service from your team catalog. Deleted services can no longer be booked or used on invoices.",
+        "de": "Eine Dienstleistung dauerhaft aus deinem Team-Katalog entfernen. Gelöschte Dienstleistungen können nicht mehr gebucht oder auf Rechnungen verwendet werden."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: Delete Service",
+        "title": {
+          "en": "Delete a service",
+          "de": "Dienstleistung löschen"
+        },
+        "description": {
+          "en": "Permanently remove a service from your team catalog. Deleted services can no longer be booked or used on invoices.",
+          "de": "Eine Dienstleistung dauerhaft aus deinem Team-Katalog entfernen. Gelöschte Dienstleistungen können nicht mehr gebucht oder auf Rechnungen verwendet werden."
+        },
+        "bot": "Use when the user wants to remove a service. If the user refers to a service by name, list services first to find the matching ID.",
+        "vars": {
+          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Delete service",
+              "de": "Dienstleistung löschen"
+            },
+            "destination": {
+              "url": "https://devnet-api.joai.ai/v1/services/{{service_id}}",
+              "method": "DELETE",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Service ID",
+                "as": "service_id",
+                "description": {
+                  "en": "The ID or hashid of the service to delete",
+                  "de": "Die ID oder Hashid der zu löschenden Dienstleistung"
+                },
+                "bot": "The service hash ID. If the user refers to a service by name, list services first to find the matching ID.",
+                "type": "string",
+                "position": "url:service_id",
+                "source": "field",
+                "required": true,
+                "min": 1
+              }
+            ]
+          }
+        ],
+        "messages": {
+          "success": {
+            "en": "Service deleted.",
+            "de": "Dienstleistung gelöscht."
+          },
+          "error": {
+            "en": "Failed to delete service: {{MESSAGE}}",
+            "de": "Dienstleistung konnte nicht gelöscht werden: {{MESSAGE}}"
+          }
+        }
+      },
+      "extras": {
+        "keywords": {
+          "en": [
+            "delete service",
+            "remove service",
+            "archive service",
+            "service catalog cleanup"
+          ],
+          "de": [
+            "Dienstleistung löschen",
+            "Service entfernen",
+            "Service archivieren",
+            "Katalog bereinigen"
+          ]
+        },
+        "useCases": {
+          "en": [
+            "Remove an outdated service from your team catalog",
+            "Delete a service that is no longer offered",
+            "Clean up duplicate or unused service entries"
+          ],
+          "de": [
+            "Eine veraltete Dienstleistung aus dem Team-Katalog entfernen",
+            "Eine nicht mehr angebotene Dienstleistung löschen",
+            "Doppelte oder ungenutzte Service-Einträge bereinigen"
+          ]
+        },
+        "category": "productivity"
+      }
+    },
+    {
+      "key": "none:joai-service-update",
+      "identifier": "@joai-service-update",
+      "alias": "joai-service-update",
+      "chain": "none",
+      "hash": "6d0f27121cd4f5fc2306c7cee25d1d97aee453ac7a051e6f4f094e20e3719903",
+      "checksum": "6d0f27121cd4f5fc2306c7cee25d1d97aee453ac7a051e6f4f094e20e3719903",
+      "name": "JoAi: Update Service",
+      "title": {
+        "en": "Update a service",
+        "de": "Dienstleistung aktualisieren"
+      },
+      "description": {
+        "en": "Update an existing service's name, price, duration, or description in your team catalog. Changes apply immediately to new bookings and invoices.",
+        "de": "Eine bestehende Dienstleistung mit aktualisiertem Namen, Preis, Dauer oder Beschreibung in deinem Team-Katalog bearbeiten. Änderungen gelten sofort für neue Buchungen und Rechnungen."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: Update Service",
+        "title": {
+          "en": "Update a service",
+          "de": "Dienstleistung aktualisieren"
+        },
+        "description": {
+          "en": "Update an existing service's name, price, duration, or description in your team catalog. Changes apply immediately to new bookings and invoices.",
+          "de": "Eine bestehende Dienstleistung mit aktualisiertem Namen, Preis, Dauer oder Beschreibung in deinem Team-Katalog bearbeiten. Änderungen gelten sofort für neue Buchungen und Rechnungen."
+        },
+        "bot": "Use when the user wants to modify an existing service. Ask which service they want to update and what fields to change. Only include fields that changed.",
+        "vars": {
+          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+        },
+        "messages": {
+          "error": {
+            "en": "Failed to update service: {{MESSAGE}}",
+            "de": "Dienstleistung konnte nicht aktualisiert werden: {{MESSAGE}}"
+          }
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Update service",
+              "de": "Dienstleistung aktualisieren"
+            },
+            "destination": {
+              "url": "https://devnet-api.joai.ai/v1/services/{{service_id}}",
+              "method": "PUT",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Service ID",
+                "as": "service_id",
+                "description": {
+                  "en": "The ID or hashid of the service to update",
+                  "de": "Die ID oder Hashid der zu aktualisierenden Dienstleistung"
+                },
+                "type": "string",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Name",
+                "as": "name",
+                "description": {
+                  "en": "Service name",
+                  "de": "Name der Dienstleistung"
+                },
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Price",
+                "as": "price",
+                "description": {
+                  "en": "Price in cents",
+                  "de": "Preis in Cent"
+                },
+                "type": "number",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Duration (minutes)",
+                "as": "duration_minutes",
+                "description": {
+                  "en": "Duration in minutes",
+                  "de": "Dauer in Minuten"
+                },
+                "type": "number",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Description",
+                "as": "description",
+                "description": {
+                  "en": "Service description",
+                  "de": "Beschreibung der Dienstleistung"
+                },
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Category",
+                "as": "category",
+                "description": {
+                  "en": "Category (consultation, maintenance, repair, etc.)",
+                  "de": "Kategorie (Beratung, Wartung, Reparatur, etc.)"
+                },
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Active",
+                "as": "active",
+                "description": {
+                  "en": "Whether the service is active and bookable",
+                  "de": "Ob die Dienstleistung aktiv und buchbar ist"
+                },
+                "type": "boolean",
+                "source": "field",
+                "required": false
+              }
+            ]
+          }
+        ]
+      },
+      "extras": {
+        "keywords": {
+          "en": [
+            "update service",
+            "edit service",
+            "change service price",
+            "modify service duration",
+            "service settings"
+          ],
+          "de": [
+            "Dienstleistung aktualisieren",
+            "Service bearbeiten",
+            "Preis ändern",
+            "Dauer anpassen",
+            "Service-Einstellungen"
+          ]
+        },
+        "useCases": {
+          "en": [
+            "Change the price of an existing service",
+            "Update the duration of a service for appointment booking",
+            "Activate or deactivate a service in your catalog"
+          ],
+          "de": [
+            "Den Preis einer bestehenden Dienstleistung ändern",
+            "Die Dauer einer Dienstleistung für Terminbuchungen anpassen",
+            "Eine Dienstleistung im Katalog aktivieren oder deaktivieren"
+          ]
+        },
+        "category": "productivity"
+      }
     },
     {
       "key": "none:poll-results",
