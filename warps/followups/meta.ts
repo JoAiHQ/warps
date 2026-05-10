@@ -704,4 +704,202 @@ export const meta: Record<string, WarpExtras> = {
       ],
     },
   },
+
+  'template-list': {
+    keywords: {
+      en: ['list follow-up templates', 'browse templates', 'view message templates', 'follow-up template list', 'show templates'],
+      de: ['Follow-up-Templates auflisten', 'Templates durchsuchen', 'Nachrichtenvorlagen anzeigen', 'Follow-up-Template-Liste', 'Templates anzeigen'],
+      fr: ['lister les modèles de suivi', 'parcourir les modèles', 'afficher les modèles de message', 'liste des modèles de suivi'],
+      es: ['listar plantillas de seguimiento', 'explorar plantillas', 'ver plantillas de mensajes', 'lista de plantillas de seguimiento'],
+      ro: ['listează template-uri de follow-up', 'răsfoiește template-uri', 'vezi template-uri de mesaje', 'lista de template-uri follow-up'],
+      it: ['elenca template di follow-up', 'sfoglia template', 'vedi template di messaggi', 'lista template follow-up'],
+    },
+    useCases: {
+      en: [
+        'Browse all available follow-up message templates in one place',
+        'Search for a specific template by name before sending a follow-up',
+        'Review existing templates to decide which one to use or edit',
+      ],
+      de: [
+        'Alle verfügbaren Follow-up-Nachrichtenvorlagen auf einen Blick durchsuchen',
+        'Nach einem bestimmten Template mit Namen suchen, bevor du ein Follow-up sendest',
+        'Vorhandene Templates überprüfen, um zu entscheiden, welches du verwenden oder bearbeiten möchtest',
+      ],
+      fr: [
+        'Parcourir tous les modèles de messages de suivi disponibles en un coup d\'œil',
+        'Rechercher un modèle spécifique par nom avant d\'envoyer un suivi',
+        'Examiner les modèles existants pour décider lequel utiliser ou modifier',
+      ],
+      es: [
+        'Explorar todas las plantillas de mensajes de seguimiento disponibles de un vistazo',
+        'Buscar una plantilla específica por nombre antes de enviar un seguimiento',
+        'Revisar las plantillas existentes para decidir cuál usar o editar',
+      ],
+      ro: [
+        'Răsfoiește toate template-urile de mesaje de follow-up disponibile dintr-o privire',
+        'Caută un anumit template după nume înainte de a trimite un follow-up',
+        'Revizuiește template-urile existente pentru a decide pe care să-l folosești sau să-l editezi',
+      ],
+      it: [
+        'Sfoglia tutti i template di messaggi di follow-up disponibili in un colpo d\'occhio',
+        'Cerca un template specifico per nome prima di inviare un follow-up',
+        'Revisiona i template esistenti per decidere quale usare o modificare',
+      ],
+    },
+    category: 'engagement',
+    faq: {
+      en: [
+        {
+          question: 'What templates will I see?',
+          answer: 'You\'ll see all templates with type=template, including those from different apps. Templates created by the Followups app are tagged with app=followups.',
+        },
+        {
+          question: 'Can I search for specific templates?',
+          answer: 'Yes, you can optionally enter a search term to filter templates by their title.',
+        },
+      ],
+      de: [
+        {
+          question: 'Welche Templates werden angezeigt?',
+          answer: 'Du siehst alle Templates mit type=template, einschließlich solcher aus verschiedenen Apps. Vom Followups-App erstellte Templates sind mit app=followups gekennzeichnet.',
+        },
+        {
+          question: 'Kann ich nach bestimmten Templates suchen?',
+          answer: 'Ja, du kannst optional einen Suchbegriff eingeben, um Templates nach ihrem Titel zu filtern.',
+        },
+      ],
+    },
+  },
+
+  'template-update': {
+    keywords: {
+      en: ['update follow-up template', 'edit template', 'modify message template', 'change template content', 'edit follow-up sequence'],
+      de: ['Follow-up-Template aktualisieren', 'Template bearbeiten', 'Nachrichtenvorlage ändern', 'Template-Inhalt ändern', 'Follow-up-Sequenz bearbeiten'],
+      fr: ['modifier un modèle de suivi', 'éditer le modèle', 'changer le contenu du modèle', 'modifier la séquence de suivi'],
+      es: ['actualizar plantilla de seguimiento', 'editar plantilla', 'modificar contenido de plantilla', 'editar secuencia de seguimiento'],
+      ro: ['actualizează template de follow-up', 'editează template', 'modifică conținutul template-ului', 'editează secvența de follow-up'],
+      it: ['aggiorna template di follow-up', 'modifica template', 'cambia contenuto template', 'modifica sequenza follow-up'],
+    },
+    useCases: {
+      en: [
+        'Change the message content of an existing follow-up template',
+        'Update the step number or delay of a template in a sequence',
+        'Rename a template or change its channel from WhatsApp to email',
+      ],
+      de: [
+        'Den Nachrichteninhalt eines bestehenden Follow-up-Templates ändern',
+        'Die Schrittnummer oder Verzögerung eines Templates in einer Sequenz aktualisieren',
+        'Ein Template umbenennen oder den Kanal von WhatsApp auf E-Mail ändern',
+      ],
+      fr: [
+        'Modifier le contenu d\'un modèle de suivi existant',
+        'Mettre à jour le numéro d\'étape ou le délai d\'un modèle dans une séquence',
+        'Renommer un modèle ou changer son canal de WhatsApp à email',
+      ],
+      es: [
+        'Cambiar el contenido de un mensaje de una plantilla de seguimiento existente',
+        'Actualizar el número de paso o retraso de una plantilla en una secuencia',
+        'Renombrar una plantilla o cambiar su canal de WhatsApp a correo electrónico',
+      ],
+      ro: [
+        'Schimbă conținutul mesajului unui template de follow-up existent',
+        'Actualizează numărul pasului sau întârzierea unui template într-o secvență',
+        'Redenumește un template sau schimbă canalul de la WhatsApp la email',
+      ],
+      it: [
+        'Cambiare il contenuto del messaggio di un template di follow-up esistente',
+        'Aggiornare il numero del passo o il ritardo di un template in una sequenza',
+        'Rinominare un template o cambiare il canale da WhatsApp a email',
+      ],
+    },
+    category: 'engagement',
+    faq: {
+      en: [
+        {
+          question: 'What fields can I update?',
+          answer: 'You can update the title, content, slug, channel, step number, delay days, and variables. Only the fields you provide will be changed.',
+        },
+        {
+          question: 'Do I need the template ID?',
+          answer: 'Yes, you need the template\'s ID (hashid). You can find it by listing your templates first.',
+        },
+      ],
+      de: [
+        {
+          question: 'Welche Felder kann ich aktualisieren?',
+          answer: 'Du kannst Titel, Inhalt, Slug, Kanal, Schrittnummer, Verzögerungstage und Variablen aktualisieren. Nur die von dir angegebenen Felder werden geändert.',
+        },
+        {
+          question: 'Brauche ich die Template-ID?',
+          answer: 'Ja, du benötigst die ID (hashid) des Templates. Du findest sie, indem du zuerst deine Templates auflistest.',
+        },
+      ],
+    },
+  },
+
+  'template-delete': {
+    keywords: {
+      en: ['delete follow-up template', 'remove template', 'delete message template', 'remove follow-up sequence', 'clean up templates'],
+      de: ['Follow-up-Template löschen', 'Template entfernen', 'Nachrichtenvorlage löschen', 'Follow-up-Sequenz entfernen', 'Templates aufräumen'],
+      fr: ['supprimer un modèle de suivi', 'enlever le modèle', 'supprimer le modèle de message', 'nettoyer les modèles'],
+      es: ['eliminar plantilla de seguimiento', 'borrar plantilla', 'eliminar plantilla de mensaje', 'limpiar plantillas'],
+      ro: ['șterge template de follow-up', 'elimină template', 'șterge template de mesaj', 'curăță template-urile'],
+      it: ['elimina template di follow-up', 'rimuovi template', 'cancella template di messaggio', 'pulisci i template'],
+    },
+    useCases: {
+      en: [
+        'Remove an outdated follow-up template that is no longer needed',
+        'Clean up old templates to keep the template list organized',
+        'Delete a template that was created by mistake',
+      ],
+      de: [
+        'Ein veraltetes Follow-up-Template entfernen, das nicht mehr benötigt wird',
+        'Alte Templates aufräumen, um die Template-Liste übersichtlich zu halten',
+        'Ein versehentlich erstelltes Template löschen',
+      ],
+      fr: [
+        'Supprimer un modèle de suivi obsolète qui n\'est plus nécessaire',
+        'Nettoyer les anciens modèles pour garder la liste organisée',
+        'Supprimer un modèle créé par erreur',
+      ],
+      es: [
+        'Eliminar una plantilla de seguimiento obsoleta que ya no se necesita',
+        'Limpiar plantillas antiguas para mantener la lista organizada',
+        'Eliminar una plantilla creada por error',
+      ],
+      ro: [
+        'Elimină un template de follow-up învechit care nu mai este necesar',
+        'Curăță template-urile vechi pentru a menține lista organizată',
+        'Șterge un template creat din greșeală',
+      ],
+      it: [
+        'Rimuovere un template di follow-up obsoleto non più necessario',
+        'Pulire i template vecchi per mantenere la lista organizzata',
+        'Eliminare un template creato per errore',
+      ],
+    },
+    category: 'engagement',
+    faq: {
+      en: [
+        {
+          question: 'Can I recover a deleted template?',
+          answer: 'No, deletion is permanent and cannot be undone. Make sure you have the right template before deleting.',
+        },
+        {
+          question: 'What happens to active sequences using this template?',
+          answer: 'Existing sequences referencing the deleted template may fail at execution time. It\'s best to update active enrollments first.',
+        },
+      ],
+      de: [
+        {
+          question: 'Kann ich ein gelöschtes Template wiederherstellen?',
+          answer: 'Nein, das Löschen ist endgültig und kann nicht rückgängig gemacht werden. Stelle sicher, dass du das richtige Template löschst.',
+        },
+        {
+          question: 'Was passiert mit aktiven Sequenzen, die dieses Template verwenden?',
+          answer: 'Bestehende Sequenzen, die auf das gelöschte Template verweisen, können bei der Ausführung fehlschlagen. Aktualisiere am besten zuerst die aktiven Anmeldungen.',
+        },
+      ],
+    },
+  },
 }
