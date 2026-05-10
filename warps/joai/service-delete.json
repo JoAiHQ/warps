@@ -1,0 +1,59 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Delete Service",
+  "title": {
+    "en": "Delete a service",
+    "de": "Dienstleistung löschen"
+  },
+  "description": {
+    "en": "Permanently remove a service from your team catalog. Deleted services can no longer be booked or used on invoices.",
+    "de": "Eine Dienstleistung dauerhaft aus deinem Team-Katalog entfernen. Gelöschte Dienstleistungen können nicht mehr gebucht oder auf Rechnungen verwendet werden."
+  },
+  "bot": "Use when the user wants to remove a service. If the user refers to a service by name, list services first to find the matching ID.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Delete service",
+        "de": "Dienstleistung löschen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/services/{{service_id}}",
+        "method": "DELETE",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Service ID",
+          "as": "service_id",
+          "description": {
+            "en": "The ID or hashid of the service to delete",
+            "de": "Die ID oder Hashid der zu löschenden Dienstleistung"
+          },
+          "bot": "The service hash ID. If the user refers to a service by name, list services first to find the matching ID.",
+          "type": "string",
+          "position": "url:service_id",
+          "source": "field",
+          "required": true,
+          "min": 1
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Service deleted.",
+      "de": "Dienstleistung gelöscht."
+    },
+    "error": {
+      "en": "Failed to delete service: {{MESSAGE}}",
+      "de": "Dienstleistung konnte nicht gelöscht werden: {{MESSAGE}}"
+    }
+  }
+}

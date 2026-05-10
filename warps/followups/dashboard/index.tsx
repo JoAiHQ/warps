@@ -61,7 +61,7 @@ function ContactRow({ contact, isReplied }: { contact: Contact; isReplied: boole
         <p className="text-sm font-medium text-gray-900 dark:text-white truncate">{contact.name}</p>
         {sequence && (
           <p className="text-xs text-gray-400 truncate">
-            {sequence}{step ? ` · Step ${step}` : ''}
+            {sequence}{step ? ` · ${tr.stepLabel} ${step}` : ''}
           </p>
         )}
       </div>

@@ -1,0 +1,175 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Followups: Update Template",
+  "title": {
+    "en": "Update a follow-up template",
+    "de": "Follow-up-Template aktualisieren",
+    "fr": "Modifier un modèle de suivi",
+    "es": "Actualizar una plantilla de seguimiento",
+    "ro": "Actualizează un template de follow-up",
+    "it": "Aggiorna un template di follow-up"
+  },
+  "description": {
+    "en": "Update an existing follow-up message template's title, content, channel, step, delay, or variables. Only the fields you provide will be changed.",
+    "de": "Ein bestehendes Follow-up-Nachrichten-Template aktualisieren: Titel, Inhalt, Kanal, Schritt, Verzögerung oder Variablen. Nur die angegebenen Felder werden geändert.",
+    "fr": "Modifier le titre, le contenu, le canal, l'étape, le délai ou les variables d'un modèle de message de suivi existant. Seuls les champs fournis seront modifiés.",
+    "es": "Actualizar el título, contenido, canal, paso, retraso o variables de una plantilla de mensaje de seguimiento existente. Solo se cambiarán los campos que proporciones.",
+    "ro": "Actualizează titlul, conținutul, canalul, pasul, întârzierea sau variabilele unui template de mesaj de follow-up existent. Doar câmpurile furnizate vor fi modificate.",
+    "it": "Aggiorna il titolo, il contenuto, il canale, il passo, il ritardo o le variabili di un template di messaggio di follow-up esistente. Solo i campi forniti verranno modificati."
+  },
+  "bot": "Use this when the user wants to edit or modify an existing follow-up template. Collects the template ID and the fields to update, then chains to the generic document-update warp.",
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Update template",
+        "de": "Template aktualisieren",
+        "fr": "Modifier le modèle",
+        "es": "Actualizar plantilla",
+        "ro": "Actualizează template-ul",
+        "it": "Aggiorna template"
+      },
+      "inputs": [
+        {
+          "name": "Template ID",
+          "as": "documentId",
+          "description": {
+            "en": "The ID of the template to update",
+            "de": "Die ID des zu aktualisierenden Templates",
+            "fr": "L'ID du modèle à modifier",
+            "es": "El ID de la plantilla a actualizar",
+            "ro": "ID-ul template-ului de actualizat",
+            "it": "L'ID del template da aggiornare"
+          },
+          "bot": "The hashid of the template to update. You can get this from the template list.",
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Title",
+          "as": "title",
+          "description": {
+            "en": "New template name (e.g. 'Birthday Follow-up M2')",
+            "de": "Neuer Template-Name (z.B. 'Geburtstags-Follow-up M2')",
+            "fr": "Nouveau nom du modèle (ex. 'Anniversaire Suivi M2')",
+            "es": "Nuevo nombre de plantilla (ej. 'Seguimiento Cumpleaños M2')",
+            "ro": "Nume nou pentru template (ex. 'Urmărire Ziua Nașterii M2')",
+            "it": "Nuovo nome template (es. 'Follow-up Compleanno M2')"
+          },
+          "bot": "Updated template name. Omit to keep the current name.",
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Content",
+          "as": "content",
+          "description": {
+            "en": "New message body with variables like {{name}}",
+            "de": "Neuer Nachrichtentext mit Variablen wie {{name}}",
+            "fr": "Nouveau corps du message avec des variables comme {{name}}",
+            "es": "Nuevo cuerpo del mensaje con variables como {{name}}",
+            "ro": "Conținut nou al mesajului cu variabile precum {{name}}",
+            "it": "Nuovo corpo del messaggio con variabili come {{name}}"
+          },
+          "bot": "Updated template content with placeholder variables. Omit to keep current content.",
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Slug",
+          "as": "slug",
+          "description": {
+            "en": "Stable identifier (e.g. 'birthday-followup-m2')",
+            "de": "Stabile Kennung (z.B. 'geburtstags-followup-m2')",
+            "fr": "Identifiant stable (ex. 'anniversaire-suivi-m2')",
+            "es": "Identificador estable (ej. 'cumpleanos-seguimiento-m2')",
+            "ro": "Identificator stabil (ex. 'urmarire-zi-nastere-m2')",
+            "it": "Identificatore stabile (es. 'compleanno-followup-m2')"
+          },
+          "bot": "Updated slug for the template. Lowercase, hyphens, no spaces.",
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Channel",
+          "as": "channel",
+          "description": {
+            "en": "Channel: whatsapp, email, linkedin, or post",
+            "de": "Kanal: whatsapp, email, linkedin oder post",
+            "fr": "Canal: whatsapp, email, linkedin ou post",
+            "es": "Canal: whatsapp, email, linkedin o post",
+            "ro": "Canal: whatsapp, email, linkedin sau post",
+            "it": "Canale: whatsapp, email, linkedin o post"
+          },
+          "bot": "Updated communication channel for this template.",
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Step",
+          "as": "step",
+          "description": {
+            "en": "Sequence step number (1 = first touch)",
+            "de": "Sequenz-Schrittnummer (1 = Erstkontakt)",
+            "fr": "Numéro d'étape de séquence (1 = premier contact)",
+            "es": "Número de paso de secuencia (1 = primer contacto)",
+            "ro": "Numărul pasului în secvență (1 = primul contact)",
+            "it": "Numero passo sequenza (1 = primo contatto)"
+          },
+          "bot": "Updated step number in the sequence.",
+          "type": "uint16",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Delay Days",
+          "as": "delay_days",
+          "description": {
+            "en": "Days to wait before this step (0 for first step)",
+            "de": "Wartetage vor diesem Schritt (0 für den ersten Schritt)",
+            "fr": "Jours d'attente avant cette étape (0 pour la première)",
+            "es": "Días de espera antes de este paso (0 para el primero)",
+            "ro": "Zile de așteptare înainte de acest pas (0 pentru primul)",
+            "it": "Giorni di attesa prima di questo passo (0 per il primo)"
+          },
+          "bot": "Updated delay in days. Use 0 for the first step.",
+          "type": "uint16",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Variables",
+          "as": "variables",
+          "description": {
+            "en": "Template variables, comma-separated (e.g. name,company)",
+            "de": "Template-Variablen, kommagetrennt (z.B. name,company)",
+            "fr": "Variables du modèle, séparées par des virgules (ex. name,company)",
+            "es": "Variables de plantilla, separadas por comas (ej. name,company)",
+            "ro": "Variabilele template-ului, separate prin virgulă (ex. name,company)",
+            "it": "Variabili del template, separati da virgola (es. name,company)"
+          },
+          "bot": "Updated list of variable names used in the template content.",
+          "type": "string",
+          "source": "field",
+          "required": false
+        }
+      ]
+    }
+  ],
+  "next": "@joai-document-update?app=followups&documentId={{documentId}}&title={{title}}&content={{content}}&slug={{slug}}&channel={{channel}}&step={{step}}&delay_days={{delay_days}}&variables={{variables}}",
+  "messages": {
+    "success": {
+      "en": "Follow-up template fields collected — chaining to document-update.",
+      "de": "Follow-up-Template-Felder erfasst — chaining zu document-update.",
+      "fr": "Champs du modèle de suivi collectés — chaînage vers document-update.",
+      "es": "Campos de plantilla de seguimiento recopilados — encadenando a document-update.",
+      "ro": "Câmpurile template-ului de follow-up au fost colectate — se lansează document-update.",
+      "it": "Campi del template di follow-up raccolti — chaining a document-update."
+    }
+  }
+}

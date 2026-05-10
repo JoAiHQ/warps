@@ -5,5 +5,6 @@ export const de = {
     activeContacts: 'Aktive Kontakte',
     repliedContacts: 'Antwort-Kontakte',
     templates: 'Templates',
+    stepLabel: 'Schritt',
   },
 }
