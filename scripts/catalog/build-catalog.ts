@@ -361,7 +361,7 @@ function replaceAbiPlaceholders(warp: Dict, warpDir: string): Dict | null {
   return cloned
 }
 
-function ensureNoInjectPlaceholders(input: unknown): void {
+export function ensureNoInjectPlaceholders(input: unknown): void {
   if (input == null) return
 
   if (typeof input === 'string') {
@@ -756,7 +756,13 @@ async function buildManifest(args: CliArgs, network: SyncNetwork): Promise<Build
     }
 
     workingWarp = replaceGlobalPlaceholders(workingWarp) as Dict
-    ensureNoInjectPlaceholders(workingWarp)
+
+    try {
+      ensureNoInjectPlaceholders(workingWarp)
+    } catch (error) {
+      console.warn(`Skipping warp ${fileName}: ${error instanceof Error ? error.message : error}`)
+      continue
+    }
 
     const checksumTarget = normalizeWarpForChecksum(workingWarp)
     const checksum = hashDeterministic(checksumTarget)

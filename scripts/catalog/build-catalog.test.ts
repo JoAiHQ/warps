@@ -2,7 +2,7 @@
 import { describe, it, expect } from 'vitest'
 import path from 'path'
 import { fileURLToPath } from 'url'
-import { isDraftFile, isPrivateFile, getAliasFromFileName } from './build-catalog.js'
+import { isDraftFile, isPrivateFile, getAliasFromFileName, ensureNoInjectPlaceholders } from './build-catalog.js'
 import { buildDistributionCatalog, validateDistributionCatalog } from './distribution.js'
 
 const __filename = fileURLToPath(import.meta.url)
@@ -432,5 +432,34 @@ describe('distribution catalog', () => {
     })
 
     expect(errors).toContain('joai: openai marked submission_ready without screenshots')
+  })
+})
+
+describe('ensureNoInjectPlaceholders', () => {
+  it('passes when no INJECT: placeholders remain', () => {
+    expect(() => ensureNoInjectPlaceholders({ url: 'https://api.example.com/v1/products', method: 'GET' })).not.toThrow()
+  })
+
+  it('throws when INJECT: placeholder remains', () => {
+    expect(() => ensureNoInjectPlaceholders({ url: 'INJECT:API_BASE/v1/products' })).toThrow('Unresolved placeholder found: INJECT:API_BASE/v1/products')
+  })
+
+  it('passes for null input', () => {
+    expect(() => ensureNoInjectPlaceholders(null)).not.toThrow()
+  })
+
+  it('passes for simple string without INJECT:', () => {
+    expect(() => ensureNoInjectPlaceholders('just a string')).not.toThrow()
+  })
+
+  it('recursively checks nested objects', () => {
+    expect(() => ensureNoInjectPlaceholders({
+      destination: { url: 'INJECT:API_BASE/v1/products', method: 'GET' },
+      headers: { Authorization: 'Bearer token' },
+    })).toThrow()
+  })
+
+  it('recursively checks arrays', () => {
+    expect(() => ensureNoInjectPlaceholders([{ url: 'INJECT:API_BASE/test' }])).toThrow()
   })
 })
