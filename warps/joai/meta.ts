@@ -386,4 +386,80 @@ export const meta: Record<string, WarpExtras> = {
       ],
     },
   },
+  'service-list': {
+    keywords: {
+      en: ['list services', 'view services', 'service catalog', 'billable services', 'appointment services'],
+      de: ['Dienstleistungen anzeigen', 'Service-Katalog', 'abrechenbare Leistungen', 'Termin-Dienstleistungen'],
+    },
+    useCases: {
+      en: [
+        'View all services and hourly rates in your team catalog',
+        'Find a service ID to use in appointment settings',
+        'Check which services are available for invoicing',
+      ],
+      de: [
+        'Alle Dienstleistungen und Stundensätze im Team-Katalog anzeigen',
+        'Eine Service-ID für die Termineinstellungen finden',
+        'Prüfen, welche Dienstleistungen für Rechnungen verfügbar sind',
+      ],
+    },
+    category: 'productivity',
+  },
+  'service-create': {
+    keywords: {
+      en: ['create service', 'add service', 'new billable service', 'appointment type', 'service catalog'],
+      de: ['Dienstleistung erstellen', 'Service hinzufügen', 'neue abrechenbare Leistung', 'Terminart', 'Service-Katalog'],
+    },
+    useCases: {
+      en: [
+        'Add a new service type for appointment booking',
+        'Create a billable service with a set price and duration',
+        'Set up consultation, maintenance, or repair service offerings',
+      ],
+      de: [
+        'Einen neuen Dienstleistungstyp für Terminbuchungen hinzufügen',
+        'Eine abrechenbare Dienstleistung mit festem Preis und Dauer erstellen',
+        'Beratungs-, Wartungs- oder Reparaturleistungen anlegen',
+      ],
+    },
+    category: 'productivity',
+  },
+  'service-update': {
+    keywords: {
+      en: ['update service', 'edit service', 'change service price', 'modify service duration', 'service settings'],
+      de: ['Dienstleistung aktualisieren', 'Service bearbeiten', 'Preis ändern', 'Dauer anpassen', 'Service-Einstellungen'],
+    },
+    useCases: {
+      en: [
+        'Change the price of an existing service',
+        'Update the duration of a service for appointment booking',
+        'Activate or deactivate a service in your catalog',
+      ],
+      de: [
+        'Den Preis einer bestehenden Dienstleistung ändern',
+        'Die Dauer einer Dienstleistung für Terminbuchungen anpassen',
+        'Eine Dienstleistung im Katalog aktivieren oder deaktivieren',
+      ],
+    },
+    category: 'productivity',
+  },
+  'service-delete': {
+    keywords: {
+      en: ['delete service', 'remove service', 'archive service', 'service catalog cleanup'],
+      de: ['Dienstleistung löschen', 'Service entfernen', 'Service archivieren', 'Katalog bereinigen'],
+    },
+    useCases: {
+      en: [
+        'Remove an outdated service from your team catalog',
+        'Delete a service that is no longer offered',
+        'Clean up duplicate or unused service entries',
+      ],
+      de: [
+        'Eine veraltete Dienstleistung aus dem Team-Katalog entfernen',
+        'Eine nicht mehr angebotene Dienstleistung löschen',
+        'Doppelte oder ungenutzte Service-Einträge bereinigen',
+      ],
+    },
+    category: 'productivity',
+  },
 }

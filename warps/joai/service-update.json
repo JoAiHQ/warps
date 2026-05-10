@@ -1,0 +1,118 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Update Service",
+  "title": {
+    "en": "Update a service",
+    "de": "Dienstleistung aktualisieren"
+  },
+  "description": {
+    "en": "Update an existing service's name, price, duration, or description in your team catalog. Changes apply immediately to new bookings and invoices.",
+    "de": "Eine bestehende Dienstleistung mit aktualisiertem Namen, Preis, Dauer oder Beschreibung in deinem Team-Katalog bearbeiten. Änderungen gelten sofort für neue Buchungen und Rechnungen."
+  },
+  "bot": "Use when the user wants to modify an existing service. Ask which service they want to update and what fields to change. Only include fields that changed.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+  },
+  "messages": {
+    "error": {
+      "en": "Failed to update service: {{MESSAGE}}",
+      "de": "Dienstleistung konnte nicht aktualisiert werden: {{MESSAGE}}"
+    }
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Update service",
+        "de": "Dienstleistung aktualisieren"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/services/{{service_id}}",
+        "method": "PUT",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Service ID",
+          "as": "service_id",
+          "description": {
+            "en": "The ID or hashid of the service to update",
+            "de": "Die ID oder Hashid der zu aktualisierenden Dienstleistung"
+          },
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Name",
+          "as": "name",
+          "description": {
+            "en": "Service name",
+            "de": "Name der Dienstleistung"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Price",
+          "as": "price",
+          "description": {
+            "en": "Price in cents",
+            "de": "Preis in Cent"
+          },
+          "type": "number",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Duration (minutes)",
+          "as": "duration_minutes",
+          "description": {
+            "en": "Duration in minutes",
+            "de": "Dauer in Minuten"
+          },
+          "type": "number",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Description",
+          "as": "description",
+          "description": {
+            "en": "Service description",
+            "de": "Beschreibung der Dienstleistung"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Category",
+          "as": "category",
+          "description": {
+            "en": "Category (consultation, maintenance, repair, etc.)",
+            "de": "Kategorie (Beratung, Wartung, Reparatur, etc.)"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Active",
+          "as": "active",
+          "description": {
+            "en": "Whether the service is active and bookable",
+            "de": "Ob die Dienstleistung aktiv und buchbar ist"
+          },
+          "type": "boolean",
+          "source": "field",
+          "required": false
+        }
+      ]
+    }
+  ]
+}
