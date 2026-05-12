@@ -1,0 +1,241 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Work Order: Create",
+  "title": {
+    "en": "Create Work Order",
+    "de": "Arbeitsschein erstellen",
+    "es": "Crear orden de trabajo",
+    "fr": "Créer un bon de travail",
+    "it": "Crea ordine di lavoro",
+    "ro": "Creează ordin de lucru"
+  },
+  "description": {
+    "en": "Record field work: collect job details, match products and services, log activity to CRM, create a work item, and generate a PDF report.",
+    "de": "Erfasse einen Arbeitseinsatz: sammle Daten, ordne Produkte und Dienstleistungen zu, protokolliere Aktivität, erstelle Arbeitsnachweis und PDF.",
+    "es": "Registra el trabajo de campo: recopila datos, asigna productos y servicios, registra la actividad en el CRM, crea una tarea y genera un PDF.",
+    "fr": "Enregistrez une intervention : collectez les données, associez produits et services, journalisez l'activité dans le CRM, créez une tâche et générez un PDF.",
+    "it": "Registra un intervento: raccogli i dati, associa prodotti e servizi, registra l'attività nel CRM, crea un elemento di lavoro e genera un PDF.",
+    "ro": "Înregistrează o intervenție: colectează date, asociază produse și servicii, înregistrează activitatea în CRM, creează un element de lucru și generează un PDF."
+  },
+  "bot": "Use when a technician reports completed field work, a repair, a service call, or maintenance. Extract customer, work performed, hours, and materials used.",
+  "vars": {
+    "JOAI_API_BASE": "env:JOAI_API_BASE|https://api.joai.ai",
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_NAME": "env:JOAI_TEAM_NAME|Team",
+    "JOAI_USER_NAME": "env:JOAI_USER_NAME|Technician"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Job Details",
+        "de": "Auftragsdaten",
+        "es": "Detalles del trabajo",
+        "fr": "Détails de l'intervention",
+        "it": "Dettagli intervento",
+        "ro": "Detalii intervenție"
+      },
+      "inputs": [
+        {
+          "as": "customer",
+          "name": "Customer",
+          "type": "string",
+          "source": "field",
+          "position": "local",
+          "required": true,
+          "description": {
+            "en": "Customer name",
+            "de": "Kundenname",
+            "es": "Nombre del cliente",
+            "fr": "Nom du client",
+            "it": "Nome cliente",
+            "ro": "Nume client"
+          }
+        },
+        {
+          "as": "work",
+          "name": "Work Done",
+          "type": "text",
+          "source": "field",
+          "position": "local",
+          "required": true,
+          "description": {
+            "en": "Work performed",
+            "de": "Ausgeführte Arbeiten",
+            "es": "Trabajo realizado",
+            "fr": "Travaux effectués",
+            "it": "Lavoro eseguito",
+            "ro": "Lucrări efectuate"
+          }
+        },
+        {
+          "as": "hours",
+          "name": "Hours",
+          "type": "number",
+          "source": "field",
+          "position": "local",
+          "required": false,
+          "description": {
+            "en": "Hours worked",
+            "de": "Gearbeitete Stunden",
+            "es": "Horas trabajadas",
+            "fr": "Heures travaillées",
+            "it": "Ore lavorate",
+            "ro": "Ore lucrate"
+          }
+        },
+        {
+          "as": "materials",
+          "name": "Materials",
+          "type": "string",
+          "source": "field",
+          "position": "local",
+          "required": false,
+          "description": {
+            "en": "Materials used",
+            "de": "Verwendetes Material",
+            "es": "Materiales utilizados",
+            "fr": "Matériaux utilisés",
+            "it": "Materiali usati",
+            "ro": "Materiale folosite"
+          }
+        }
+      ]
+    },
+    {
+      "type": "inline",
+      "warp": "@joai-product-list",
+      "label": {
+        "en": "Load products",
+        "de": "Produkte laden",
+        "es": "Cargar productos",
+        "fr": "Charger les produits",
+        "it": "Carica prodotti",
+        "ro": "Încarcă produse"
+      }
+    },
+    {
+      "type": "inline",
+      "warp": "@joai-service-list",
+      "label": {
+        "en": "Load services",
+        "de": "Dienstleistungen laden",
+        "es": "Cargar servicios",
+        "fr": "Charger les services",
+        "it": "Carica servizi",
+        "ro": "Încarcă servicii"
+      }
+    },
+    {
+      "as": "productIds",
+      "type": "prompt",
+      "label": {
+        "en": "Match products",
+        "de": "Produkte zuordnen",
+        "es": "Asignar productos",
+        "fr": "Associer les produits",
+        "it": "Associa prodotti",
+        "ro": "Asociază produse"
+      },
+      "inputs": [],
+      "prompt": "The technician used these materials: {{materials}}\n\nAvailable team products: {{products}}\n\nOutput ONLY a JSON array of matching product hash IDs. Example: [\"abc123\",\"def456\"]. If no product matches, output []. Do NOT include any other text."
+    },
+    {
+      "as": "serviceIds",
+      "type": "prompt",
+      "label": {
+        "en": "Match services",
+        "de": "Dienstleistungen zuordnen",
+        "es": "Asignar servicios",
+        "fr": "Associer les services",
+        "it": "Associa servizi",
+        "ro": "Asociază servicii"
+      },
+      "inputs": [],
+      "prompt": "The technician worked {{hours}} hours.\n\nAvailable team services: {{services}}\n\nOutput ONLY a JSON array of matching service hash IDs for the hours worked. Example: [\"abc123\",\"def456\"]. If no service matches or no hourly rate is configured, output []. Do NOT include any other text."
+    },
+    {
+      "type": "inline",
+      "warp": "@joai-contact-find-or-create?name={{customer}}",
+      "label": {
+        "en": "Find or create contact",
+        "de": "Kontakt suchen oder erstellen",
+        "es": "Buscar o crear contacto",
+        "fr": "Chercher ou créer le contact",
+        "it": "Cerca o crea contatto",
+        "ro": "Caută sau creează contact"
+      }
+    },
+    {
+      "type": "inline",
+      "warp": "@joai-contact-activity-log?contactId={{contactId}}&type=custom&description=Work+Order+-+{{work}}+%28{{hours}}+h%29",
+      "label": {
+        "en": "Log activity",
+        "de": "Aktivität protokollieren",
+        "es": "Registrar actividad",
+        "fr": "Journaliser l'activité",
+        "it": "Registra attività",
+        "ro": "Înregistrează activitate"
+      }
+    },
+    {
+      "type": "inline",
+      "warp": "@joai-item-create?priority=normal&status=done&title=Work+Order+{{customer}}&description=Customer:+{{customer}}%0A%0AWork+done:%0A{{work}}%0A%0AHours:+{{hours}}&contactIds=[%22{{contactId}}%22]",
+      "label": {
+        "en": "Create work item",
+        "de": "Arbeitsnachweis anlegen",
+        "es": "Crear tarea",
+        "fr": "Créer une tâche",
+        "it": "Crea elemento di lavoro",
+        "ro": "Creează element de lucru"
+      }
+    },
+    {
+      "type": "prompt",
+      "label": {
+        "en": "Generate PDF HTML",
+        "de": "PDF HTML erstellen",
+        "es": "Generar HTML del PDF",
+        "fr": "Générer le HTML du PDF",
+        "it": "Genera HTML PDF",
+        "ro": "Generare HTML PDF"
+      },
+      "inputs": [],
+      "prompt": "Output ONLY this exact HTML with the values filled in. Do NOT add markdown, code blocks, or extra content.\n\n<!DOCTYPE html><html><head><meta charset=\"UTF-8\"><style>body{font-family:Helvetica,Arial,sans-serif;margin:0;padding:40px;color:#333;background:#f8f8f8}.content{max-width:700px;margin:0 auto;background:#fff;padding:40px}.header h1{font-size:22px;color:#1a1a1a;margin:0 0 2px 0}.sub{font-size:12px;color:#888;margin:0}.section{margin-bottom:24px}.label{font-size:11px;color:#999;text-transform:uppercase;letter-spacing:0.5px;margin:0 0 4px 0}.value{font-size:15px;color:#333;margin:0;line-height:1.4}.divider{height:1px;background:#eee;margin:24px 0}.footer{font-size:11px;color:#aaa;margin-top:40px;text-align:center}</style></head><body><div class=\"content\"><h1>{{JOAI_TEAM_NAME}}</h1><p class=\"sub\">Work Order</p><div class=\"divider\"></div><div class=\"section\"><p class=\"label\">{{i18n:customer}}</p><p class=\"value\">{{customer}}</p></div><div class=\"section\"><p class=\"label\">{{i18n:work_done}}</p><p class=\"value\">{{work}}</p></div><div class=\"section\"><p class=\"label\">{{i18n:technician}}</p><p class=\"value\">{{JOAI_USER_NAME}}</p></div><div class=\"section\"><p class=\"label\">{{i18n:hours}}</p><p class=\"value\">{{hours}} h</p></div><div class=\"divider\"></div><p class=\"footer\">{{i18n:created_at}} {{TODAY}}</p></div></body></html>"
+    },
+    {
+      "type": "inline",
+      "warp": "@pdf-render?html={{MESSAGE}}&label=Work+Order+{{customer}}",
+      "label": {
+        "en": "Save PDF",
+        "de": "PDF speichern",
+        "es": "Guardar PDF",
+        "fr": "Enregistrer le PDF",
+        "it": "Salva PDF",
+        "ro": "Salvează PDF"
+      }
+    }
+  ],
+  "related": [
+    "work-order-create-bill"
+  ],
+  "messages": {
+    "success": {
+      "en": "Work order for {{customer}} created. {{hours}}h worked, {{materials}} used. PDF saved.",
+      "de": "Arbeitsschein für {{customer}} erstellt. {{hours}}h geleistet, {{materials}} verwendet. PDF gespeichert.",
+      "es": "Orden de trabajo para {{customer}} creada. {{hours}}h trabajadas, {{materials}} usados. PDF guardado.",
+      "fr": "Bon de travail pour {{customer}} créé. {{hours}}h travaillées, {{materials}} utilisés. PDF enregistré.",
+      "it": "Ordine di lavoro per {{customer}} creato. {{hours}}h lavorate, {{materials}} usati. PDF salvato.",
+      "ro": "Ordin de lucru pentru {{customer}} creat. {{hours}}h lucrate, {{materials}} folosite. PDF salvat."
+    },
+    "error": {
+      "en": "Failed to create work order.",
+      "de": "Arbeitsschein fehlgeschlagen.",
+      "es": "Error al crear la orden de trabajo.",
+      "fr": "Échec de la création du bon de travail.",
+      "it": "Creazione ordine di lavoro fallita.",
+      "ro": "Eroare la crearea ordinului de lucru."
+    }
+  }
+}
