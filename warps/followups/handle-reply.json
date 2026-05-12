@@ -17,9 +17,8 @@
     "ro": "Record that a contact replied to a follow-up message. Tags the contact as 'followups-replied' so the sequence can be stopped and the response handled appropriately.",
     "it": "Record that a contact replied to a follow-up message. Tags the contact as 'followups-replied' so the sequence can be stopped and the response handled appropriately."
   },
-  "bot": "Use this when a contact replies to a follow-up message. Tags them as replied and logs the interaction as an activity.",
+  "bot": "Use this when a contact replies to a follow-up message. Tags them as replied and logs the interaction as an activity via the generic contact-activity-log warp.",
   "vars": {
-    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
     "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
   },
   "actions": [
@@ -65,94 +64,36 @@
           "source": "hidden",
           "value": "followups-replied",
           "position": "payload:tagsAppend[]"
-        }
-      ]
-    },
-    {
-      "type": "collect",
-      "auto": true,
-      "label": {
-        "en": "Log activity",
-        "de": "Aktivität protokollieren",
-        "es": "Log activity",
-        "fr": "Log activity",
-        "ro": "Log activity",
-        "it": "Log activity"
-      },
-      "destination": {
-        "url": "INJECT:API_BASE/v1/contacts/{{contactId}}/activities",
-        "method": "POST",
-        "headers": {
-          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
-          "Content-Type": "application/json",
-          "Accept": "application/json"
-        }
-      },
-      "inputs": [
-        {
-          "name": "Contact",
-          "as": "contactId",
-          "type": "string",
-          "source": "field",
-          "value": "{{contactId}}",
-          "hidden": true,
-          "position": "url:contactId"
-        },
-        {
-          "name": "Type",
-          "as": "type",
-          "type": "string",
-          "source": "hidden",
-          "default": "custom",
-          "label": {
-            "en": "Type",
-            "de": "Type",
-            "es": "Type",
-            "fr": "Type",
-            "ro": "Type",
-            "it": "Type"
-          }
         },
         {
           "name": "Description",
           "as": "description",
           "description": {
-            "en": "Summary of the reply",
-            "de": "Zusammenfassung der Antwort",
-            "es": "Summary of the reply",
-            "fr": "Summary of the reply",
-            "ro": "Summary of the reply",
-            "it": "Summary of the reply"
+            "en": "Summary of what the contact said",
+            "de": "Zusammenfassung der Antwort des Kontakts",
+            "fr": "Résumé de la réponse du contact",
+            "es": "Resumen de lo que dijo el contacto",
+            "ro": "Rezumatul răspunsului contactului",
+            "it": "Riepilogo di ciò che ha detto il contatto"
           },
-          "bot": "Brief summary of what the contact said in their reply.",
+          "bot": "Brief summary of what the contact said in their reply. This gets logged as an activity on the contact.",
           "type": "string",
           "source": "field",
           "required": false
-        },
-        {
-          "name": "Followups Flag",
-          "as": "followups",
-          "type": "boolean",
-          "source": "hidden",
-          "default": {
-            "en": "true",
-            "de": "true",
-            "es": "true",
-            "fr": "true",
-            "ro": "true",
-            "it": "true"
-          },
-          "position": "payload:meta"
-        },
-        {
-          "name": "Event",
-          "as": "event",
-          "type": "string",
-          "source": "hidden",
-          "default": "reply",
-          "position": "payload:meta"
         }
       ]
+    },
+    {
+      "type": "inline",
+      "warp": "@joai-contact-activity-log?contactId={{contactId}}&type=custom&description={{description}}",
+      "label": {
+        "en": "Log activity",
+        "de": "Aktivität protokollieren",
+        "es": "Registrar actividad",
+        "fr": "Journaliser l'activité",
+        "ro": "Înregistrează activitate",
+        "it": "Registra attività"
+      }
     }
   ],
   "messages": {
