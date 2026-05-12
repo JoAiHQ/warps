@@ -1,0 +1,123 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Work Order: Create Bill",
+  "title": {
+    "en": "Create Bill",
+    "de": "Rechnung erstellen",
+    "es": "Crear factura",
+    "fr": "Créer une facture",
+    "it": "Crea fattura",
+    "ro": "Creează factură"
+  },
+  "description": {
+    "en": "Create a billing order for a work order. Takes the contact and matched product/service IDs from the work order and generates an invoice with payment link.",
+    "de": "Erstelle eine Rechnung für einen Arbeitsschein. Nimmt Kontakt und zugeordnete Produkt-/Service-IDs und generiert eine Rechnung mit Zahlungslink.",
+    "es": "Crea una factura para una orden de trabajo. Toma el contacto y los IDs de productos/servicios asignados y genera una factura con enlace de pago.",
+    "fr": "Créez une facture pour un bon de travail. Prend le contact et les IDs des produits/services associés et génère une facture avec lien de paiement.",
+    "it": "Crea una fattura per un ordine di lavoro. Prende il contatto e gli ID di prodotti/servizi associati e genera una fattura con link di pagamento.",
+    "ro": "Creează o factură pentru un ordin de lucru. Preia contactul și ID-urile produselor/serviciilor asociate și generează o factură cu link de plată."
+  },
+  "bot": "Ask the user if they want to create an invoice for the work order. Only run after the work order has been created.",
+  "vars": {
+    "JOAI_API_BASE": "env:JOAI_API_BASE|https://api.joai.ai",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Create Invoice",
+        "de": "Rechnung erstellen",
+        "es": "Crear factura",
+        "fr": "Créer la facture",
+        "it": "Crea fattura",
+        "ro": "Creează factura"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/orders",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "as": "contactId",
+          "name": "Contact ID",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "description": {
+            "en": "Contact hash ID from the CRM",
+            "de": "Kontakt-Hash-ID aus dem CRM",
+            "es": "ID hash del contacto en el CRM",
+            "fr": "ID de hachage du contact dans le CRM",
+            "it": "ID hash del contatto nel CRM",
+            "ro": "ID-ul hash al contactului din CRM"
+          }
+        },
+        {
+          "as": "productIds",
+          "name": "Product IDs",
+          "type": "string[]",
+          "source": "field",
+          "required": false,
+          "description": {
+            "en": "Array of product hash IDs from the team catalog",
+            "de": "Array von Produkt-Hash-IDs aus dem Team-Katalog",
+            "es": "Array de IDs hash de productos del catálogo del equipo",
+            "fr": "Tableau d'IDs de hachage des produits du catalogue de l'équipe",
+            "it": "Array di ID hash dei prodotti dal catalogo del team",
+            "ro": "Array de ID-uri hash ale produselor din catalogul echipei"
+          }
+        },
+        {
+          "as": "serviceIds",
+          "name": "Service IDs",
+          "type": "string[]",
+          "source": "field",
+          "required": false,
+          "description": {
+            "en": "Array of service hash IDs from the team catalog",
+            "de": "Array von Service-Hash-IDs aus dem Team-Katalog",
+            "es": "Array de IDs hash de servicios del catálogo del equipo",
+            "fr": "Tableau d'IDs de hachage des services du catalogue de l'équipe",
+            "it": "Array di ID hash dei servizi dal catalogo del team",
+            "ro": "Array de ID-uri hash ale serviciilor din catalogul echipei"
+          }
+        }
+      ]
+    }
+  ],
+  "output": {
+    "id": "out.data.id",
+    "total": "out.data.total",
+    "invoiceUrl": "out.data.invoiceUrl",
+    "paymentUrl": "out.data.paymentUrl",
+    "status": "out.data.status"
+  },
+  "related": [
+    {
+      "identifier": "@email/send",
+      "bot": "Ask the user if they want to send the invoice + payment link to the customer via email"
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Invoice created. Total: {{total}} cents. Payment: {{paymentUrl}}",
+      "de": "Rechnung erstellt. Gesamt: {{total}} Cent. Zahlung: {{paymentUrl}}",
+      "es": "Factura creada. Total: {{total}} céntimos. Pago: {{paymentUrl}}",
+      "fr": "Facture créée. Total : {{total}} centimes. Paiement : {{paymentUrl}}",
+      "it": "Fattura creata. Totale: {{total}} centesimi. Pagamento: {{paymentUrl}}",
+      "ro": "Factură creată. Total: {{total}} cenți. Plată: {{paymentUrl}}"
+    },
+    "error": {
+      "en": "Failed to create invoice.",
+      "de": "Rechnungserstellung fehlgeschlagen.",
+      "es": "Error al crear la factura.",
+      "fr": "Échec de la création de la facture.",
+      "it": "Creazione fattura fallita.",
+      "ro": "Eroare la crearea facturii."
+    }
+  }
+}
