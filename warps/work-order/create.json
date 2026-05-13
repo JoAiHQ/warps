@@ -141,7 +141,11 @@
         "ro": "Asociază produse"
       },
       "inputs": [],
-      "prompt": "The technician used these materials: {{materials}}\n\nAvailable team products: {{products}}\n\nOutput ONLY a JSON array of matching product hash IDs. Example: [\"abc123\",\"def456\"]. If no product matches, output []. Do NOT include any other text."
+      "expect": {
+        "type": "array",
+        "items": { "type": "string" }
+      },
+      "prompt": "The technician used these materials: {{materials}}\n\nAvailable team products: {{products}}\n\nReturn the matching product hash IDs. If no product matches, return an empty array."
     },
     {
       "as": "serviceIds",
@@ -155,7 +159,11 @@
         "ro": "Asociază servicii"
       },
       "inputs": [],
-      "prompt": "The technician worked {{hours}} hours.\n\nAvailable team services: {{services}}\n\nOutput ONLY a JSON array of matching service hash IDs for the hours worked. Example: [\"abc123\",\"def456\"]. If no service matches or no hourly rate is configured, output []. Do NOT include any other text."
+      "expect": {
+        "type": "array",
+        "items": { "type": "string" }
+      },
+      "prompt": "The technician worked {{hours}} hours.\n\nAvailable team services: {{services}}\n\nReturn the matching service hash IDs. If no service matches or no hourly rate is configured, return an empty array."
     },
     {
       "type": "inline",
@@ -171,7 +179,7 @@
     },
     {
       "type": "inline",
-      "warp": "@joai-contact-activity-log?contactId={{contactId}}&type=custom&description=Work+Order+-+{{work}}+%28{{hours}}+h%29",
+      "warp": "@joai-contact-activity-log?contactId={{contactId}}&type=custom&description={{work}}+%28{{hours}}+h%29",
       "label": {
         "en": "Log activity",
         "de": "Aktivität protokollieren",
@@ -183,7 +191,7 @@
     },
     {
       "type": "inline",
-      "warp": "@joai-item-create?priority=normal&status=done&title=Work+Order+{{customer}}&description=Customer:+{{customer}}%0A%0AWork+done:%0A{{work}}%0A%0AHours:+{{hours}}&contactIds=[%22{{contactId}}%22]",
+      "warp": "@joai-item-create?priority=normal&status=done&title={{customer}}&description={{work}}+%28{{hours}}+h%29&contactIds=[%22{{contactId}}%22]",
       "label": {
         "en": "Create work item",
         "de": "Arbeitsnachweis anlegen",
@@ -204,11 +212,11 @@
         "ro": "Generare HTML PDF"
       },
       "inputs": [],
-      "prompt": "Output ONLY this exact HTML with the values filled in. Do NOT add markdown, code blocks, or extra content.\n\n<!DOCTYPE html><html><head><meta charset=\"UTF-8\"><style>body{font-family:Helvetica,Arial,sans-serif;margin:0;padding:40px;color:#333;background:#f8f8f8}.content{max-width:700px;margin:0 auto;background:#fff;padding:40px}.header h1{font-size:22px;color:#1a1a1a;margin:0 0 2px 0}.sub{font-size:12px;color:#888;margin:0}.section{margin-bottom:24px}.label{font-size:11px;color:#999;text-transform:uppercase;letter-spacing:0.5px;margin:0 0 4px 0}.value{font-size:15px;color:#333;margin:0;line-height:1.4}.divider{height:1px;background:#eee;margin:24px 0}.footer{font-size:11px;color:#aaa;margin-top:40px;text-align:center}</style></head><body><div class=\"content\"><h1>{{JOAI_TEAM_NAME}}</h1><p class=\"sub\">Work Order</p><div class=\"divider\"></div><div class=\"section\"><p class=\"label\">Customer</p><p class=\"value\">{{customer}}</p></div><div class=\"section\"><p class=\"label\">Work Done</p><p class=\"value\">{{work}}</p></div><div class=\"section\"><p class=\"label\">Technician</p><p class=\"value\">{{JOAI_USER_NAME}}</p></div><div class=\"section\"><p class=\"label\">Hours</p><p class=\"value\">{{hours}} h</p></div><div class=\"section\"><p class=\"label\">Materials Used</p><p class=\"value\">{{materials}}</p></div><div class=\"divider\"></div><p class=\"footer\">Created {{TODAY}}</p></div></body></html>"
+      "prompt": "Translate these labels to {{JOAI_TEAM_LOCALE}}: \"Work Order\", \"Customer\", \"Work Done\", \"Technician\", \"Hours\", \"Materials Used\", \"Created\". Keep the HTML structure, CSS, and variable values ({{JOAI_TEAM_NAME}}, {{customer}}, {{work}}, {{JOAI_USER_NAME}}, {{hours}}, {{materials}}, {{TODAY}}) exactly as shown. Output ONLY the final HTML.\n\n<!DOCTYPE html><html><head><meta charset=\"UTF-8\"><style>body{font-family:Helvetica,Arial,sans-serif;margin:0;padding:40px;color:#333;background:#f8f8f8}.content{max-width:700px;margin:0 auto;background:#fff;padding:40px}.header h1{font-size:22px;color:#1a1a1a;margin:0 0 2px 0}.sub{font-size:12px;color:#888;margin:0}.section{margin-bottom:24px}.label{font-size:11px;color:#999;text-transform:uppercase;letter-spacing:0.5px;margin:0 0 4px 0}.value{font-size:15px;color:#333;margin:0;line-height:1.4}.divider{height:1px;background:#eee;margin:24px 0}.footer{font-size:11px;color:#aaa;margin-top:40px;text-align:center}</style></head><body><div class=\"content\"><h1>{{JOAI_TEAM_NAME}}</h1><p class=\"sub\">Work Order</p><div class=\"divider\"></div><div class=\"section\"><p class=\"label\">Customer</p><p class=\"value\">{{customer}}</p></div><div class=\"section\"><p class=\"label\">Work Done</p><p class=\"value\">{{work}}</p></div><div class=\"section\"><p class=\"label\">Technician</p><p class=\"value\">{{JOAI_USER_NAME}}</p></div><div class=\"section\"><p class=\"label\">Hours</p><p class=\"value\">{{hours}} h</p></div><div class=\"section\"><p class=\"label\">Materials Used</p><p class=\"value\">{{materials}}</p></div><div class=\"divider\"></div><p class=\"footer\">Created {{TODAY}}</p></div></body></html>"
     },
     {
       "type": "inline",
-      "warp": "@pdf-render?html={{MESSAGE}}&label=Work+Order+{{customer}}",
+      "warp": "@pdf-render?html={{MESSAGE}}&label={{customer}}",
       "label": {
         "en": "Save PDF",
         "de": "PDF speichern",

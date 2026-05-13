@@ -1,0 +1,207 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Followups: Sequence Remove",
+  "title": {
+    "en": "Remove contact from follow-up sequence",
+    "de": "Kontakt aus Follow-up-Sequenz entfernen",
+    "fr": "Retirer un contact d'une séquence de suivi",
+    "es": "Eliminar contacto de la secuencia de seguimiento",
+    "ro": "Elimină contactul din secvența de follow-up",
+    "it": "Rimuovi contatto dalla sequenza di follow-up"
+  },
+  "description": {
+    "en": "Remove a contact from a follow-up sequence. Clears the sequence properties, removes the enrolled tag, and logs the removal as an activity. Use this when a contact opts out or was enrolled by mistake.",
+    "de": "Einen Kontakt aus einer Follow-up-Sequenz entfernen. Löscht die Sequenz-Eigenschaften, entfernt den enrolled-Tag und protokolliert die Entfernung als Aktivität. Verwende dies, wenn ein Kontakt widerspricht oder versehentlich angemeldet wurde.",
+    "fr": "Retirer un contact d'une séquence de suivi. Efface les propriétés de la séquence, supprime le tag enrolled et enregistre le retrait comme activité. À utiliser lorsqu'un contact se désiste ou a été inscrit par erreur.",
+    "es": "Eliminar un contacto de una secuencia de seguimiento. Limpia las propiedades de la secuencia, elimina la etiqueta enrolled y registra la eliminación como actividad. Úsalo cuando un contacto opta por no participar o fue inscrito por error.",
+    "ro": "Elimină un contact dintr-o secvență de follow-up. Șterge proprietățile secvenței, elimină tag-ul enrolled și înregistrează eliminarea ca activitate. Folosește când un contact se retrage sau a fost înscris din greșeală.",
+    "it": "Rimuovi un contatto da una sequenza di follow-up. Cancella le proprietà della sequenza, rimuove il tag enrolled e registra la rimozione come attività. Usalo quando un contatto rinuncia o è stato iscritto per errore."
+  },
+  "bot": "Use this when a contact asks to stop receiving follow-ups, or when you enrolled the wrong contact. Tags them as followups-removed and clears their sequence properties.",
+  "vars": {
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Remove enrollment tags",
+        "de": "Anmelde-Tags entfernen",
+        "fr": "Supprimer les tags d'inscription",
+        "es": "Eliminar etiquetas de inscripción",
+        "ro": "Elimină tag-urile de înscriere",
+        "it": "Rimuovi i tag di iscrizione"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/contacts/{{contactId}}",
+        "method": "PUT",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Contact",
+          "as": "contactId",
+          "description": {
+            "en": "Which contact to remove from the sequence?",
+            "de": "Welcher Kontakt soll aus der Sequenz entfernt werden?",
+            "fr": "Quel contact retirer de la séquence ?",
+            "es": "¿Qué contacto eliminar de la secuencia?",
+            "ro": "Ce contact să fie eliminat din secvență?",
+            "it": "Quale contatto rimuovere dalla sequenza?"
+          },
+          "bot": "The hashid of the CRM contact to remove from the follow-up sequence.",
+          "type": "string",
+          "position": "url:contactId",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Remove Tag",
+          "as": "tag_remove",
+          "type": "string",
+          "source": "hidden",
+          "value": "followups-enrolled",
+          "position": "payload:tagsRemove[]"
+        },
+        {
+          "name": "Add Tag",
+          "as": "tag_add",
+          "type": "string",
+          "source": "hidden",
+          "value": "followups-removed",
+          "position": "payload:tagsAppend[]"
+        },
+        {
+          "name": "Reason",
+          "as": "reason",
+          "description": {
+            "en": "Reason for removal (e.g. 'opted out', 'wrong contact')",
+            "de": "Grund für die Entfernung (z.B. 'widersprochen', 'falscher Kontakt')",
+            "fr": "Motif du retrait (ex. 'désistement', 'mauvais contact')",
+            "es": "Motivo de la eliminación (ej. 'optó por no participar', 'contacto incorrecto')",
+            "ro": "Motivul eliminării (ex. 's-a retras', 'contact greșit')",
+            "it": "Motivo della rimozione (es. 'rinuncia', 'contatto sbagliato')"
+          },
+          "bot": "Optional reason that will be logged as an activity.",
+          "type": "string",
+          "source": "field",
+          "required": false
+        }
+      ]
+    },
+    {
+      "type": "collect",
+      "auto": true,
+      "label": {
+        "en": "Clear sequence properties",
+        "de": "Sequenz-Eigenschaften löschen",
+        "fr": "Effacer les propriétés de séquence",
+        "es": "Limpiar propiedades de secuencia",
+        "ro": "Șterge proprietățile secvenței",
+        "it": "Cancella proprietà sequenza"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/contacts/{{contactId}}/properties",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Contact",
+          "as": "contactId",
+          "type": "string",
+          "source": "field",
+          "value": "{{contactId}}",
+          "hidden": true,
+          "position": "url:contactId"
+        },
+        {
+          "name": "Sequence Key",
+          "as": "key",
+          "type": "string",
+          "source": "hidden",
+          "value": "followups_sequence",
+          "position": "payload:key"
+        },
+        {
+          "name": "Clear Value",
+          "as": "value",
+          "type": "string",
+          "source": "hidden",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "type": "collect",
+      "auto": true,
+      "label": {
+        "en": "Clear step property",
+        "de": "Schritt-Eigenschaft löschen",
+        "fr": "Effacer la propriété d'étape",
+        "es": "Limpiar propiedad de paso",
+        "ro": "Șterge proprietatea pasului",
+        "it": "Cancella proprietà passo"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/contacts/{{contactId}}/properties",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Contact",
+          "as": "contactId",
+          "type": "string",
+          "source": "field",
+          "value": "{{contactId}}",
+          "hidden": true,
+          "position": "url:contactId"
+        },
+        {
+          "name": "Step Key",
+          "as": "key",
+          "type": "string",
+          "source": "hidden",
+          "value": "followups_step",
+          "position": "payload:key"
+        },
+        {
+          "name": "Clear Value",
+          "as": "value",
+          "type": "string",
+          "source": "hidden",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "type": "inline",
+      "warp": "@joai-contact-activity-log?contactId={{contactId}}&type=custom&description=Removed+from+follow-up+sequence:+{{reason}}",
+      "label": {
+        "en": "Log removal",
+        "de": "Entfernung protokollieren",
+        "fr": "Journaliser le retrait",
+        "es": "Registrar eliminación",
+        "ro": "Înregistrează eliminarea",
+        "it": "Registra rimozione"
+      }
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Contact removed from follow-up sequence.",
+      "de": "Kontakt aus Follow-up-Sequenz entfernt.",
+      "fr": "Contact retiré de la séquence de suivi.",
+      "es": "Contacto eliminado de la secuencia de seguimiento.",
+      "ro": "Contactul a fost eliminat din secvența de follow-up.",
+      "it": "Contatto rimosso dalla sequenza di follow-up."
+    }
+  }
+}

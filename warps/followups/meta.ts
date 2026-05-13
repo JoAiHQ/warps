@@ -561,6 +561,72 @@ export const meta: Record<string, WarpExtras> = {
     },
   },
 
+  'sequence-remove': {
+    keywords: {
+      en: ['remove contact from sequence', 'unsubscribe follow-up', 'stop follow-up sequence', 'opt out follow-up', 'delete enrollment', 'cancel follow-up'],
+      de: ['Kontakt aus Sequenz entfernen', 'Follow-up abbestellen', 'Follow-up-Sequenz stoppen', 'Follow-up abmelden', 'Anmeldung löschen', 'Follow-up kündigen'],
+      fr: ['retirer contact de séquence', 'désabonner suivi', 'arrêter séquence de suivi', 'se désinscrire du suivi', 'annuler inscription', 'supprimer inscription'],
+      es: ['eliminar contacto de secuencia', 'cancelar seguimiento', 'detener secuencia de seguimiento', 'optar por no participar', 'eliminar inscripción', 'anular seguimiento'],
+      ro: ['elimină contact din secvență', 'dezabonare follow-up', 'oprește secvența de follow-up', 'renunță la follow-up', 'șterge înscrierea', 'anulează follow-up'],
+      it: ['rimuovi contatto dalla sequenza', 'annulla follow-up', 'ferma sequenza di follow-up', 'rinuncia follow-up', 'elimina iscrizione', 'cancella sequenza'],
+    },
+    useCases: {
+      en: [
+        'Remove a contact from a follow-up sequence when they opt out',
+        'Clean up mistaken enrollments by removing the wrong contact from a sequence',
+        'Stop automated follow-ups for a contact who has already responded',
+      ],
+      de: [
+        'Einen Kontakt aus einer Follow-up-Sequenz entfernen, wenn er widerspricht',
+        'Falsche Anmeldungen bereinigen, indem der falsche Kontakt aus einer Sequenz entfernt wird',
+        'Automatische Follow-ups für einen Kontakt stoppen, der bereits geantwortet hat',
+      ],
+      fr: [
+        'Retirer un contact d\'une séquence de suivi lorsqu\'il se désiste',
+        'Nettoyer les inscriptions erronées en retirant le mauvais contact d\'une séquence',
+        'Arrêter les suivis automatisés pour un contact qui a déjà répondu',
+      ],
+      es: [
+        'Eliminar un contacto de una secuencia de seguimiento cuando opta por no participar',
+        'Limpiar inscripciones incorrectas eliminando el contacto equivocado de una secuencia',
+        'Detener los seguimientos automatizados para un contacto que ya ha respondido',
+      ],
+      ro: [
+        'Elimină un contact dintr-o secvență de follow-up când se retrage',
+        'Curăță înscrierile greșite eliminând contactul incorect dintr-o secvență',
+        'Oprește follow-up-urile automate pentru un contact care a răspuns deja',
+      ],
+      it: [
+        'Rimuovi un contatto da una sequenza di follow-up quando rinuncia',
+        'Pulisci le iscrizioni errate rimuovendo il contatto sbagliato da una sequenza',
+        'Ferma i follow-up automatici per un contatto che ha già risposto',
+      ],
+    },
+    category: 'engagement',
+    faq: {
+      en: [
+        {
+          question: 'Can the contact be re-enrolled later?',
+          answer: 'Yes, removing a contact from a sequence just clears their enrollment tags and properties. You can enroll them again at any time.',
+        },
+        {
+          question: 'What happens to the contact\'s reply history?',
+          answer: 'The reply history and activity log are preserved. Only the active enrollment tags and sequence properties are cleared.',
+        },
+      ],
+      de: [
+        {
+          question: 'Kann der Kontakt später erneut angemeldet werden?',
+          answer: 'Ja, das Entfernen eines Kontakts aus einer Sequenz löscht nur die Anmelde-Tags und Eigenschaften. Du kannst ihn jederzeit wieder anmelden.',
+        },
+        {
+          question: 'Was passiert mit dem Antwortverlauf des Kontakts?',
+          answer: 'Der Antwortverlauf und das Aktivitätsprotokoll bleiben erhalten. Nur die aktiven Anmelde-Tags und Sequenz-Eigenschaften werden gelöscht.',
+        },
+      ],
+    },
+  },
+
   'template-create': {
     keywords: {
       en: ['create follow-up template', 'follow-up message template', 'sequence template', 'automated follow-up template', 'whatsapp follow-up'],
