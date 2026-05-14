@@ -20,7 +20,8 @@
   "bot": "Ask the user if they want to create an invoice for the work order. Only run after the work order has been created.",
   "vars": {
     "JOAI_API_BASE": "env:JOAI_API_BASE|https://api.joai.ai",
-    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_CURRENCY": "env:JOAI_TEAM_CURRENCY|USD"
   },
   "actions": [
     {
@@ -92,6 +93,7 @@
   "output": {
     "id": "out.data.id",
     "total": "out.data.total",
+    "totalDisplay": "transform:() => (out.data.total / 100).toFixed(2)",
     "invoiceUrl": "out.data.invoiceUrl",
     "paymentUrl": "out.data.paymentUrl",
     "status": "out.data.status"
@@ -104,12 +106,12 @@
   ],
   "messages": {
     "success": {
-      "en": "Invoice created. Total: {{total}} cents. Payment: {{paymentUrl}}",
-      "de": "Rechnung erstellt. Gesamt: {{total}} Cent. Zahlung: {{paymentUrl}}",
-      "es": "Factura creada. Total: {{total}} céntimos. Pago: {{paymentUrl}}",
-      "fr": "Facture créée. Total : {{total}} centimes. Paiement : {{paymentUrl}}",
-      "it": "Fattura creata. Totale: {{total}} centesimi. Pagamento: {{paymentUrl}}",
-      "ro": "Factură creată. Total: {{total}} cenți. Plată: {{paymentUrl}}"
+      "en": "Invoice created. Total: {{totalDisplay}} {{JOAI_TEAM_CURRENCY}}. Payment: {{paymentUrl}}",
+      "de": "Rechnung erstellt. Gesamt: {{totalDisplay}} {{JOAI_TEAM_CURRENCY}}. Zahlung: {{paymentUrl}}",
+      "es": "Factura creada. Total: {{totalDisplay}} {{JOAI_TEAM_CURRENCY}}. Pago: {{paymentUrl}}",
+      "fr": "Facture créée. Total : {{totalDisplay}} {{JOAI_TEAM_CURRENCY}}. Paiement : {{paymentUrl}}",
+      "it": "Fattura creata. Totale: {{totalDisplay}} {{JOAI_TEAM_CURRENCY}}. Pagamento: {{paymentUrl}}",
+      "ro": "Factură creată. Total: {{totalDisplay}} {{JOAI_TEAM_CURRENCY}}. Plată: {{paymentUrl}}"
     },
     "error": {
       "en": "Failed to create invoice.",
