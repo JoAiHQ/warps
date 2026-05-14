@@ -164,15 +164,49 @@
           "source": "field",
           "required": false,
           "position": "payload:allDay"
+        },
+        {
+          "name": "Recurrence",
+          "as": "recurrence",
+          "description": {
+            "en": "Repeats the event (none, weekly, biweekly, monthly)",
+            "de": "Wiederholt den Termin (none, weekly, biweekly, monthly)",
+            "es": "Repeats the event (none, weekly, biweekly, monthly)",
+            "fr": "Repeats the event (none, weekly, biweekly, monthly)",
+            "ro": "Repeats the event (none, weekly, biweekly, monthly)",
+            "it": "Repeats the event (none, weekly, biweekly, monthly)"
+          },
+          "bot": "Set to biweekly for xAlliance Member Meet. Creates multiple event instances with auto-generated JoAi meeting links.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:recurrence"
+        },
+        {
+          "name": "Number of events",
+          "as": "recurrenceCount",
+          "description": {
+            "en": "How many events to create (e.g. 26 for 1 year bi-weekly)",
+            "de": "Wie viele Termine erstellt werden sollen (z.B. 26 für 1 Jahr alle 2 Wochen)",
+            "es": "How many events to create (e.g. 26 for 1 year bi-weekly)",
+            "fr": "How many events to create (e.g. 26 for 1 year bi-weekly)",
+            "ro": "How many events to create (e.g. 26 for 1 year bi-weekly)",
+            "it": "How many events to create (e.g. 26 for 1 year bi-weekly)"
+          },
+          "bot": "Defaults to 26 for weekly, 13 for biweekly, 6 for monthly.",
+          "type": "uint64",
+          "source": "field",
+          "required": false,
+          "position": "payload:recurrenceCount"
         }
       ]
     }
   ],
   "output": {
-    "EVENT_ID": "out.data.id",
-    "EVENT_EXTERNAL_ID": "out.data.externalId",
-    "EVENT_TITLE": "out.data.title",
-    "EVENT_START": "out.data.startAt"
+    "EVENT_ID": "transform: const events = out?.data?.events; const src = events ? events[0] : out?.data; out = src?.id ?? ''",
+    "EVENT_EXTERNAL_ID": "transform: const events = out?.data?.events; const src = events ? events[0] : out?.data; out = src?.externalId ?? ''",
+    "EVENT_TITLE": "transform: const events = out?.data?.events; const src = events ? events[0] : out?.data; out = src?.title ?? ''",
+    "EVENT_START": "transform: const events = out?.data?.events; const src = events ? events[0] : out?.data; out = src?.startAt ?? ''"
   },
   "messages": {
     "success": {
@@ -183,5 +217,9 @@
       "ro": "Created \"{{EVENT_TITLE}}\" on your calendar.",
       "it": "Created \"{{EVENT_TITLE}}\" on your calendar."
     }
+  },
+  "description": {
+    "en": "Create an event on the agent's local calendar or connected Google/Microsoft/Apple calendar. Supports weekly, biweekly, and monthly recurrence for scheduling recurring meetings like syncs and standups — each instance gets its own JoAi meeting invite link.",
+    "de": "Erstelle einen Termin im lokalen Kalender des Agenten oder im verbundenen Google/Microsoft/Apple-Kalender. Unterstützt wöchentliche, zweiwöchentliche und monatliche Wiederholungen für regelmäßige Meetings — jede Instanz erhält einen eigenen JoAi Meeting-Einladungslink."
   }
 }
