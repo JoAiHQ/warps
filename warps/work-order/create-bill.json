@@ -25,6 +25,25 @@
   },
   "actions": [
     {
+      "type": "prompt",
+      "silent": true,
+      "as": "itemsPayload",
+      "label": {
+        "en": "Build items",
+        "de": "Artikel zusammenstellen",
+        "es": "Armar artículos",
+        "fr": "Assembler les articles",
+        "it": "Componi articoli",
+        "ro": "Asamblează articole"
+      },
+      "inputs": [
+        { "as": "productIds", "type": "string[]", "source": "field" },
+        { "as": "serviceIds", "type": "string[]", "source": "field" },
+        { "as": "hours", "type": "string", "source": "field" }
+      ],
+      "prompt": "Output ONLY this exact JSON with values filled in, no other text: {\"items\":[PRODUCT_ITEMS,SERVICE_ITEMS]} where PRODUCT_ITEMS is each productIds entry as {\"id\":\"ID\",\"type\":\"product\",\"quantity\":1} and SERVICE_ITEMS is each serviceIds entry as {\"id\":\"ID\",\"type\":\"service\",\"quantity\":HOURS}. Example: productIds=[\"p1\"], serviceIds=[\"s1\"], hours=2.5 → {\"items\":[{\"id\":\"p1\",\"type\":\"product\",\"quantity\":1},{\"id\":\"s1\",\"type\":\"service\",\"quantity\":2.5}]}. If empty, omit that group."
+    },
+    {
       "type": "collect",
       "label": {
         "en": "Create Invoice",
@@ -58,48 +77,18 @@
           }
         },
         {
-          "as": "productIds",
-          "name": "Product IDs",
-          "type": "string[]",
-          "source": "field",
-          "required": false,
-          "description": {
-            "en": "Array of product hash IDs from the team catalog",
-            "de": "Array von Produkt-Hash-IDs aus dem Team-Katalog",
-            "es": "Array de IDs hash de productos del catálogo del equipo",
-            "fr": "Tableau d'IDs de hachage des produits du catalogue de l'équipe",
-            "it": "Array di ID hash dei prodotti dal catalogo del team",
-            "ro": "Array de ID-uri hash ale produselor din catalogul echipei"
-          }
-        },
-        {
-          "as": "serviceIds",
-          "name": "Service IDs",
-          "type": "string[]",
-          "source": "field",
-          "required": false,
-          "description": {
-            "en": "Array of service hash IDs from the team catalog",
-            "de": "Array von Service-Hash-IDs aus dem Team-Katalog",
-            "es": "Array de IDs hash de servicios del catálogo del equipo",
-            "fr": "Tableau d'IDs de hachage des services du catalogue de l'équipe",
-            "it": "Array di ID hash dei servizi dal catalogo del team",
-            "ro": "Array de ID-uri hash ale serviciilor din catalogul echipei"
-          }
-        },
-        {
-          "as": "quantity",
-          "name": "Quantity",
+          "as": "items",
+          "name": "Items",
           "type": "string",
           "source": "field",
-          "required": false,
+          "required": true,
           "description": {
-            "en": "Quantity for service items (e.g. hours worked)",
-            "de": "Menge für Dienstleistungen (z. B. gearbeitete Stunden)",
-            "es": "Cantidad para servicios (ej. horas trabajadas)",
-            "fr": "Quantité pour les services (ex. heures travaillées)",
-            "it": "Quantità per i servizi (es. ore lavorate)",
-            "ro": "Cantitate pentru servicii (ex. ore lucrate)"
+            "en": "Items array from build step",
+            "de": "Artikel-Array aus dem Build-Schritt",
+            "es": "Array de artículos del paso de construcción",
+            "fr": "Tableau d'articles de l'étape de construction",
+            "it": "Array di articoli dalla fase di build",
+            "ro": "Array de articole din etapa de construire"
           }
         }
       ]
