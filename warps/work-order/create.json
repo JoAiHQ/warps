@@ -23,7 +23,8 @@
     "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
     "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
     "JOAI_TEAM_NAME": "env:JOAI_TEAM_NAME|Team",
-    "JOAI_USER_NAME": "env:JOAI_USER_NAME|Technician"
+    "JOAI_USER_NAME": "env:JOAI_USER_NAME|Technician",
+    "HOURS": "query:hours"
   },
   "actions": [
     {
@@ -145,7 +146,7 @@
         "type": "array",
         "items": { "type": "string" }
       },
-      "prompt": "The technician used these materials: {{materials}}\n\nAvailable team products: {{products}}\n\nReturn the matching product hash IDs. If no product matches, return an empty array."
+      "prompt": "The technician used these materials: {{materials}}\n\nAvailable team products: {{products}}\n\nReturn ONLY the exact id value (hash) from the product list for each matching material — NOT the product name, NOT a made-up id. For each unit of material, include the id once (e.g. '2x Dichtung' → ['abc123', 'abc123']). If no product matches, return []."
     },
     {
       "as": "serviceIds",
@@ -163,7 +164,7 @@
         "type": "array",
         "items": { "type": "string" }
       },
-      "prompt": "The technician worked {{hours}} hours.\n\nAvailable team services: {{services}}\n\nReturn the matching service hash IDs. If no service matches or no hourly rate is configured, return an empty array."
+      "prompt": "The technician worked {{hours}} hours.\n\nAvailable team services: {{services}}\n\nIf empty, return [] immediately. Otherwise return ONLY the exact id values from the service list — NOT the names, NOT made-up values. One entry per service matched. Any non-matching value will cause an error."
     },
     {
       "type": "inline",
@@ -225,10 +226,37 @@
         "it": "Salva PDF",
         "ro": "Salvează PDF"
       }
+    },
+    {
+      "type": "prompt",
+      "silent": true,
+      "as": "items",
+      "label": {
+        "en": "Build items payload",
+        "de": "Artikel-Payload erstellen",
+        "es": "Crear carga de artículos",
+        "fr": "Créer la charge des articles",
+        "it": "Crea payload articoli",
+        "ro": "Creează payload articole"
+      },
+      "inputs": [],
+      "expect": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "id": { "type": "string" },
+            "type": { "type": "string", "enum": ["product", "service"] },
+            "quantity": { "type": "number" }
+          },
+          "required": ["id", "type"]
+        }
+      },
+      "prompt": "Build the items array for the billing system. Product IDs: {{productIds}}. Service IDs: {{serviceIds}}. Hours worked: {{HOURS}}. Each product gets quantity 1 per entry. Each service gets the hours value as quantity. Return the combined array."
     }
   ],
   "related": [
-    "work-order-create-bill?contactId={{contactId}}&productIds={{productIds}}&serviceIds={{serviceIds}}"
+    "work-order-create-bill?contactId={{contactId}}&items={{items}}"
   ],
   "messages": {
     "success": {
