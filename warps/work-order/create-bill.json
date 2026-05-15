@@ -25,37 +25,6 @@
   },
   "actions": [
     {
-      "type": "prompt",
-      "silent": true,
-      "as": "itemsPayload",
-      "label": {
-        "en": "Build items",
-        "de": "Artikel zusammenstellen",
-        "es": "Armar artículos",
-        "fr": "Assembler les articles",
-        "it": "Componi articoli",
-        "ro": "Asamblează articole"
-      },
-      "inputs": [
-        { "as": "productIds", "type": "string[]", "source": "field" },
-        { "as": "serviceIds", "type": "string[]", "source": "field" },
-        { "as": "hours", "type": "string", "source": "field" }
-      ],
-      "expect": {
-        "type": "array",
-        "items": {
-          "type": "object",
-          "properties": {
-            "id": { "type": "string" },
-            "type": { "type": "string", "enum": ["product", "service"] },
-            "quantity": { "type": "number" }
-          },
-          "required": ["id", "type"]
-        }
-      },
-      "prompt": "The work order has product IDs: {{productIds}} and service IDs: {{serviceIds}} with {{hours}} hours worked. Build the items array."
-    },
-    {
       "type": "collect",
       "label": {
         "en": "Create Invoice",
@@ -90,9 +59,18 @@
         },
         {
           "as": "items",
+          "name": "Items",
           "type": "string",
-          "source": "hidden",
-          "default": "{{itemsPayload}}"
+          "source": "field",
+          "required": true,
+          "description": {
+            "en": "JSON array of items with id, type (product/service), and quantity",
+            "de": "JSON-Array von Artikeln mit id, Typ (product/service) und quantity",
+            "es": "Array JSON de artículos con id, tipo (product/service) y cantidad",
+            "fr": "Tableau JSON d'articles avec id, type (product/service) et quantité",
+            "it": "Array JSON di articoli con id, tipo (product/service) e quantità",
+            "ro": "Array JSON de articole cu id, tip (product/service) și cantitate"
+          }
         }
       ]
     }
