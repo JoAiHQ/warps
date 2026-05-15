@@ -4,9 +4,9 @@
   "repo": "JoAiHQ/warps",
   "branch": "dev",
   "network": "devnet",
-  "commitSha": "46a21c9e3cb5462dae6ff422bd0330dc789d5cc2",
-  "committedAt": "2026-05-15T08:48:29.234Z",
-  "generatedAt": "2026-05-15T08:48:31.615Z",
+  "commitSha": "d1bf36a5a6767d187965c81b5d355148df597226",
+  "committedAt": "2026-05-15T11:11:15.089Z",
+  "generatedAt": "2026-05-15T11:11:17.359Z",
   "upserts": [
     {
       "key": "none:poll-results",
@@ -126,8 +126,8 @@
       "identifier": "@work-order-create",
       "alias": "work-order-create",
       "chain": "none",
-      "hash": "571e49661d93e31bba823c0f8ef7acd47192f03c4683ad25317412c4f0211f4a",
-      "checksum": "571e49661d93e31bba823c0f8ef7acd47192f03c4683ad25317412c4f0211f4a",
+      "hash": "d7db5c1f6f1f5e86110e2aef6c3007e851cab64cad72b14f47405bb1700844fa",
+      "checksum": "d7db5c1f6f1f5e86110e2aef6c3007e851cab64cad72b14f47405bb1700844fa",
       "name": "Work Order: Create",
       "title": {
         "en": "Create Work Order",
@@ -319,10 +319,11 @@
             "expect": {
               "type": "array",
               "items": {
-                "type": "string"
+                "type": "string",
+                "pattern": "^[a-zA-Z0-9]{6,12}$"
               }
             },
-            "prompt": "The technician used these materials: {{materials}}\n\nAvailable team products: {{products}}\n\nReturn ONLY the exact id value (hash) from the product list for each matching material — NOT the product name, NOT a made-up id. For each unit of material, include the id once (e.g. '2x Dichtung' → ['abc123', 'abc123']). If no product matches, return []."
+            "prompt": "Match each material to its product. Products: {{products}}. Materials: {{materials}}. Return the exact id field from the product list for each matching material, one entry per unit."
           },
           {
             "as": "serviceIds",
@@ -443,7 +444,7 @@
                 ]
               }
             },
-            "prompt": "Build the items array for the billing system. Product IDs: {{productIds}}. Service IDs: {{serviceIds}}. Hours worked: {{HOURS}}. Each product gets quantity 1 per entry. Each service gets the hours value as quantity. Return the combined array."
+            "prompt": "Build the items array. Product IDs: {{productIds}} (may contain duplicates for quantity). Service IDs: {{serviceIds}}. Hours: {{HOURS}}.\n\nGroup identical product IDs — count occurrences and use that count as quantity. Each unique product appears once. Each service ID gets quantity from hours. Return combined array."
           }
         ],
         "related": [
