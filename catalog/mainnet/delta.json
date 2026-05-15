@@ -4,9 +4,9 @@
   "repo": "JoAiHQ/warps",
   "branch": "main",
   "network": "mainnet",
-  "commitSha": "0e8bf41e5804b9bb6d0380b2881d56b1998f6e64",
-  "committedAt": "2026-05-15T09:06:41.750Z",
-  "generatedAt": "2026-05-15T09:06:43.951Z",
+  "commitSha": "d404d0eec80babf1c438f7add5a2d9a220f45b6e",
+  "committedAt": "2026-05-15T16:11:14.440Z",
+  "generatedAt": "2026-05-15T16:11:16.719Z",
   "upserts": [
     {
       "key": "none:poll-results",
@@ -126,8 +126,8 @@
       "identifier": "@work-order-create",
       "alias": "work-order-create",
       "chain": "none",
-      "hash": "571e49661d93e31bba823c0f8ef7acd47192f03c4683ad25317412c4f0211f4a",
-      "checksum": "571e49661d93e31bba823c0f8ef7acd47192f03c4683ad25317412c4f0211f4a",
+      "hash": "d7db5c1f6f1f5e86110e2aef6c3007e851cab64cad72b14f47405bb1700844fa",
+      "checksum": "d7db5c1f6f1f5e86110e2aef6c3007e851cab64cad72b14f47405bb1700844fa",
       "name": "Work Order: Create",
       "title": {
         "en": "Create Work Order",
@@ -319,10 +319,11 @@
             "expect": {
               "type": "array",
               "items": {
-                "type": "string"
+                "type": "string",
+                "pattern": "^[a-zA-Z0-9]{6,12}$"
               }
             },
-            "prompt": "The technician used these materials: {{materials}}\n\nAvailable team products: {{products}}\n\nReturn ONLY the exact id value (hash) from the product list for each matching material — NOT the product name, NOT a made-up id. For each unit of material, include the id once (e.g. '2x Dichtung' → ['abc123', 'abc123']). If no product matches, return []."
+            "prompt": "Match each material to its product. Products: {{products}}. Materials: {{materials}}. Return the exact id field from the product list for each matching material, one entry per unit."
           },
           {
             "as": "serviceIds",
@@ -443,7 +444,7 @@
                 ]
               }
             },
-            "prompt": "Build the items array for the billing system. Product IDs: {{productIds}}. Service IDs: {{serviceIds}}. Hours worked: {{HOURS}}. Each product gets quantity 1 per entry. Each service gets the hours value as quantity. Return the combined array."
+            "prompt": "Build the items array. Product IDs: {{productIds}} (may contain duplicates for quantity). Service IDs: {{serviceIds}}. Hours: {{HOURS}}.\n\nGroup identical product IDs — count occurrences and use that count as quantity. Each unique product appears once. Each service ID gets quantity from hours. Return combined array."
           }
         ],
         "related": [
@@ -537,228 +538,6 @@
             {
               "question": "Wird automatisch ein PDF erstellt?",
               "answer": "Ja. Der Arbeitsschein wird als PDF erstellt und in deiner Medienbibliothek gespeichert. Du kannst ihn von dort herunterladen oder teilen."
-            }
-          ]
-        }
-      }
-    },
-    {
-      "key": "none:work-order-create-bill",
-      "identifier": "@work-order-create-bill",
-      "alias": "work-order-create-bill",
-      "chain": "none",
-      "hash": "a064e5ada773d5bdaa3f1f9ac67928dcf7e81a9ccc21be938b9ee95a396fa1a5",
-      "checksum": "a064e5ada773d5bdaa3f1f9ac67928dcf7e81a9ccc21be938b9ee95a396fa1a5",
-      "name": "Work Order: Create Bill",
-      "title": {
-        "en": "Create Bill",
-        "de": "Rechnung erstellen",
-        "es": "Crear factura",
-        "fr": "Créer une facture",
-        "it": "Crea fattura",
-        "ro": "Creează factură"
-      },
-      "description": {
-        "en": "Create a billing order for a work order. Takes the contact and matched product/service IDs from the work order and generates an invoice with payment link.",
-        "de": "Erstelle eine Rechnung für einen Arbeitsschein. Nimmt Kontakt und zugeordnete Produkt-/Service-IDs und generiert eine Rechnung mit Zahlungslink.",
-        "es": "Crea una factura para una orden de trabajo. Toma el contacto y los IDs de productos/servicios asignados y genera una factura con enlace de pago.",
-        "fr": "Créez une facture pour un bon de travail. Prend le contact et les IDs des produits/services associés et génère une facture avec lien de paiement.",
-        "it": "Crea una fattura per un ordine di lavoro. Prende il contatto e gli ID di prodotti/servizi associati e genera una fattura con link di pagamento.",
-        "ro": "Creează o factură pentru un ordin de lucru. Preia contactul și ID-urile produselor/serviciilor asociate și generează o factură cu link de plată."
-      },
-      "preview": null,
-      "creator": "github:JoAiHQ/warps",
-      "privileges": [],
-      "listed": true,
-      "visibility": "public",
-      "primaryAddress": null,
-      "primaryFunc": null,
-      "brand": {
-        "hash": "61b39f57d4605a496f1c52fad8be858291ff328b30c4208a1eb93265edc20fb1",
-        "slug": "work-order",
-        "active": true,
-        "protocol": "brand:0.2.0",
-        "name": "Work Order",
-        "description": {
-          "en": "Create work orders, service reports, and invoices for field work. Track technician hours, match materials to products, and generate PDF documentation.",
-          "de": "Erstelle Arbeitsscheine, Serviceberichte und Rechnungen für Außeneinsätze. Erfasse Technikerstunden, ordne Material Produkten zu und generiere PDF-Dokumentation.",
-          "fr": "Créez des bons de travail, des rapports de service et des factures pour les interventions sur le terrain. Suivez les heures des techniciens, associez les matériaux aux produits et générez des PDF.",
-          "es": "Cree órdenes de trabajo, informes de servicio y facturas para el trabajo de campo. Realice un seguimiento de las horas de los técnicos, asigne materiales a productos y genere documentación en PDF.",
-          "ro": "Creați ordine de lucru, rapoarte de service și facturi pentru intervenții pe teren. Urmăriți orele tehnicienilor, asociați materialele cu produsele și generați documentație PDF."
-        },
-        "logo": {
-          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
-        },
-        "urls": {
-          "web": "https://joai.ai"
-        }
-      },
-      "warp": {
-        "protocol": "warp:3.0.0",
-        "name": "Work Order: Create Bill",
-        "title": {
-          "en": "Create Bill",
-          "de": "Rechnung erstellen",
-          "es": "Crear factura",
-          "fr": "Créer une facture",
-          "it": "Crea fattura",
-          "ro": "Creează factură"
-        },
-        "description": {
-          "en": "Create a billing order for a work order. Takes the contact and matched product/service IDs from the work order and generates an invoice with payment link.",
-          "de": "Erstelle eine Rechnung für einen Arbeitsschein. Nimmt Kontakt und zugeordnete Produkt-/Service-IDs und generiert eine Rechnung mit Zahlungslink.",
-          "es": "Crea una factura para una orden de trabajo. Toma el contacto y los IDs de productos/servicios asignados y genera una factura con enlace de pago.",
-          "fr": "Créez une facture pour un bon de travail. Prend le contact et les IDs des produits/services associés et génère une facture avec lien de paiement.",
-          "it": "Crea una fattura per un ordine di lavoro. Prende il contatto e gli ID di prodotti/servizi associati e genera una fattura con link di pagamento.",
-          "ro": "Creează o factură pentru un ordin de lucru. Preia contactul și ID-urile produselor/serviciilor asociate și generează o factură cu link de plată."
-        },
-        "bot": "Ask the user if they want to create an invoice for the work order. Only run after the work order has been created.",
-        "vars": {
-          "JOAI_API_BASE": "env:JOAI_API_BASE|https://api.joai.ai",
-          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
-          "JOAI_TEAM_CURRENCY": "env:JOAI_TEAM_CURRENCY|USD"
-        },
-        "actions": [
-          {
-            "type": "collect",
-            "label": {
-              "en": "Create Invoice",
-              "de": "Rechnung erstellen",
-              "es": "Crear factura",
-              "fr": "Créer la facture",
-              "it": "Crea fattura",
-              "ro": "Creează factura"
-            },
-            "destination": {
-              "url": "https://api.joai.ai/v1/orders",
-              "method": "POST",
-              "headers": {
-                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
-              }
-            },
-            "inputs": [
-              {
-                "as": "contactId",
-                "name": "Contact ID",
-                "type": "string",
-                "source": "field",
-                "required": true,
-                "description": {
-                  "en": "Contact hash ID from the CRM",
-                  "de": "Kontakt-Hash-ID aus dem CRM",
-                  "es": "ID hash del contacto en el CRM",
-                  "fr": "ID de hachage du contact dans le CRM",
-                  "it": "ID hash del contatto nel CRM",
-                  "ro": "ID-ul hash al contactului din CRM"
-                }
-              },
-              {
-                "as": "items",
-                "name": "Items",
-                "type": "string",
-                "source": "field",
-                "required": true,
-                "description": {
-                  "en": "JSON array of items with id, type (product/service), and quantity",
-                  "de": "JSON-Array von Artikeln mit id, Typ (product/service) und quantity",
-                  "es": "Array JSON de artículos con id, tipo (product/service) y cantidad",
-                  "fr": "Tableau JSON d'articles avec id, type (product/service) et quantité",
-                  "it": "Array JSON di articoli con id, tipo (product/service) e quantità",
-                  "ro": "Array JSON de articole cu id, tip (product/service) și cantitate"
-                }
-              }
-            ]
-          }
-        ],
-        "output": {
-          "id": "out.data.id",
-          "total": "out.data.total",
-          "totalDisplay": "transform:() => (out.data.total / 100).toFixed(2)",
-          "invoiceUrl": "out.data.invoiceUrl",
-          "paymentUrl": "out.data.paymentUrl",
-          "status": "out.data.status"
-        },
-        "related": [
-          {
-            "identifier": "@email/send",
-            "bot": "Ask the user if they want to send the invoice + payment link to the customer via email"
-          }
-        ],
-        "messages": {
-          "success": {
-            "en": "Invoice created. Total: {{totalDisplay}} {{JOAI_TEAM_CURRENCY}}. Payment: {{paymentUrl}}",
-            "de": "Rechnung erstellt. Gesamt: {{totalDisplay}} {{JOAI_TEAM_CURRENCY}}. Zahlung: {{paymentUrl}}",
-            "es": "Factura creada. Total: {{totalDisplay}} {{JOAI_TEAM_CURRENCY}}. Pago: {{paymentUrl}}",
-            "fr": "Facture créée. Total : {{totalDisplay}} {{JOAI_TEAM_CURRENCY}}. Paiement : {{paymentUrl}}",
-            "it": "Fattura creata. Totale: {{totalDisplay}} {{JOAI_TEAM_CURRENCY}}. Pagamento: {{paymentUrl}}",
-            "ro": "Factură creată. Total: {{totalDisplay}} {{JOAI_TEAM_CURRENCY}}. Plată: {{paymentUrl}}"
-          },
-          "error": {
-            "en": "Failed to create invoice.",
-            "de": "Rechnungserstellung fehlgeschlagen.",
-            "es": "Error al crear la factura.",
-            "fr": "Échec de la création de la facture.",
-            "it": "Creazione fattura fallita.",
-            "ro": "Eroare la crearea facturii."
-          }
-        }
-      },
-      "extras": {
-        "keywords": {
-          "en": [
-            "invoice",
-            "bill",
-            "create invoice",
-            "work order billing",
-            "service invoice",
-            "payment link",
-            "send invoice",
-            "customer invoice",
-            "job billing"
-          ],
-          "de": [
-            "Rechnung",
-            "Rechnung erstellen",
-            "Arbeitsschein Abrechnung",
-            "Service Rechnung",
-            "Zahlungslink",
-            "Rechnung senden",
-            "Kundenrechnung",
-            "Einsatz abrechnen"
-          ]
-        },
-        "useCases": {
-          "en": [
-            "Create an invoice for a completed work order with products and labor",
-            "Generate a payment link for a customer after a service visit",
-            "Bill a customer for materials used and hours worked on a repair"
-          ],
-          "de": [
-            "Eine Rechnung für einen abgeschlossenen Arbeitsschein mit Material und Arbeitszeit erstellen",
-            "Einen Zahlungslink für einen Kunden nach einem Serviceeinsatz generieren",
-            "Einem Kunden Material und Arbeitszeit einer Reparatur in Rechnung stellen"
-          ]
-        },
-        "category": "productivity",
-        "faq": {
-          "en": [
-            {
-              "question": "How is the invoice total calculated?",
-              "answer": "The total is the sum of all matched product and service prices from your team catalog. Each item's price is set in your billing settings."
-            },
-            {
-              "question": "Does the customer receive an email with the invoice?",
-              "answer": "The invoice is created with a payment link. You can send it to the customer via email using the related email-send action."
-            }
-          ],
-          "de": [
-            {
-              "question": "Wie wird der Rechnungsbetrag berechnet?",
-              "answer": "Der Betrag ergibt sich aus der Summe aller zugeordneten Produkt- und Service-Preise aus deinem Team-Katalog."
-            },
-            {
-              "question": "Erhält der Kunde eine E-Mail mit der Rechnung?",
-              "answer": "Die Rechnung wird mit einem Zahlungslink erstellt. Du kannst sie über die zugehörige E-Mail-Aktion an den Kunden senden."
             }
           ]
         }
