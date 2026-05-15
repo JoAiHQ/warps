@@ -4,9 +4,9 @@
   "repo": "JoAiHQ/warps",
   "branch": "dev",
   "network": "devnet",
-  "commitSha": "1398b17f385b8ee6f19b8b7108d9b1ea94d776b5",
-  "committedAt": "2026-05-15T06:39:18.972Z",
-  "generatedAt": "2026-05-15T06:39:21.307Z",
+  "commitSha": "6db634ad75d1d4cece555bebb47a22c99450ceba",
+  "committedAt": "2026-05-15T06:53:17.480Z",
+  "generatedAt": "2026-05-15T06:53:19.553Z",
   "upserts": [
     {
       "key": "none:poll-results",
@@ -122,12 +122,432 @@
       "extras": null
     },
     {
+      "key": "none:work-order-create",
+      "identifier": "@work-order-create",
+      "alias": "work-order-create",
+      "chain": "none",
+      "hash": "7d5a2e084c82bba6f770f6dd920efd089602a4aec711ce4ac379d6d8cd6aea54",
+      "checksum": "7d5a2e084c82bba6f770f6dd920efd089602a4aec711ce4ac379d6d8cd6aea54",
+      "name": "Work Order: Create",
+      "title": {
+        "en": "Create Work Order",
+        "de": "Arbeitsschein erstellen",
+        "es": "Crear orden de trabajo",
+        "fr": "Créer un bon de travail",
+        "it": "Crea ordine di lavoro",
+        "ro": "Creează ordin de lucru"
+      },
+      "description": {
+        "en": "Record field work: collect job details, match products and services, log activity to CRM, create a work item, and generate a PDF report.",
+        "de": "Erfasse einen Arbeitseinsatz: sammle Daten, ordne Produkte und Dienstleistungen zu, protokolliere Aktivität, erstelle Arbeitsnachweis und PDF.",
+        "es": "Registra el trabajo de campo: recopila datos, asigna productos y servicios, registra la actividad en el CRM, crea una tarea y genera un PDF.",
+        "fr": "Enregistrez une intervention : collectez les données, associez produits et services, journalisez l'activité dans le CRM, créez une tâche et générez un PDF.",
+        "it": "Registra un intervento: raccogli i dati, associa prodotti e servizi, registra l'attività nel CRM, crea un elemento di lavoro e genera un PDF.",
+        "ro": "Înregistrează o intervenție: colectează date, asociază produse și servicii, înregistrează activitatea în CRM, creează un element de lucru și generează un PDF."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "61b39f57d4605a496f1c52fad8be858291ff328b30c4208a1eb93265edc20fb1",
+        "slug": "work-order",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "Work Order",
+        "description": {
+          "en": "Create work orders, service reports, and invoices for field work. Track technician hours, match materials to products, and generate PDF documentation.",
+          "de": "Erstelle Arbeitsscheine, Serviceberichte und Rechnungen für Außeneinsätze. Erfasse Technikerstunden, ordne Material Produkten zu und generiere PDF-Dokumentation.",
+          "fr": "Créez des bons de travail, des rapports de service et des factures pour les interventions sur le terrain. Suivez les heures des techniciens, associez les matériaux aux produits et générez des PDF.",
+          "es": "Cree órdenes de trabajo, informes de servicio y facturas para el trabajo de campo. Realice un seguimiento de las horas de los técnicos, asigne materiales a productos y genere documentación en PDF.",
+          "ro": "Creați ordine de lucru, rapoarte de service și facturi pentru intervenții pe teren. Urmăriți orele tehnicienilor, asociați materialele cu produsele și generați documentație PDF."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "Work Order: Create",
+        "title": {
+          "en": "Create Work Order",
+          "de": "Arbeitsschein erstellen",
+          "es": "Crear orden de trabajo",
+          "fr": "Créer un bon de travail",
+          "it": "Crea ordine di lavoro",
+          "ro": "Creează ordin de lucru"
+        },
+        "description": {
+          "en": "Record field work: collect job details, match products and services, log activity to CRM, create a work item, and generate a PDF report.",
+          "de": "Erfasse einen Arbeitseinsatz: sammle Daten, ordne Produkte und Dienstleistungen zu, protokolliere Aktivität, erstelle Arbeitsnachweis und PDF.",
+          "es": "Registra el trabajo de campo: recopila datos, asigna productos y servicios, registra la actividad en el CRM, crea una tarea y genera un PDF.",
+          "fr": "Enregistrez une intervention : collectez les données, associez produits et services, journalisez l'activité dans le CRM, créez une tâche et générez un PDF.",
+          "it": "Registra un intervento: raccogli i dati, associa prodotti e servizi, registra l'attività nel CRM, crea un elemento di lavoro e genera un PDF.",
+          "ro": "Înregistrează o intervenție: colectează date, asociază produse și servicii, înregistrează activitatea în CRM, creează un element de lucru și generează un PDF."
+        },
+        "bot": "Use when a technician reports completed field work, a repair, a service call, or maintenance. Extract customer, work performed, hours, and materials used.",
+        "vars": {
+          "JOAI_API_BASE": "env:JOAI_API_BASE|https://api.joai.ai",
+          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+          "JOAI_TEAM_NAME": "env:JOAI_TEAM_NAME|Team",
+          "JOAI_USER_NAME": "env:JOAI_USER_NAME|Technician"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Job Details",
+              "de": "Auftragsdaten",
+              "es": "Detalles del trabajo",
+              "fr": "Détails de l'intervention",
+              "it": "Dettagli intervento",
+              "ro": "Detalii intervenție"
+            },
+            "inputs": [
+              {
+                "as": "customer",
+                "name": "Customer",
+                "type": "string",
+                "source": "field",
+                "position": "local",
+                "required": true,
+                "description": {
+                  "en": "Customer name",
+                  "de": "Kundenname",
+                  "es": "Nombre del cliente",
+                  "fr": "Nom du client",
+                  "it": "Nome cliente",
+                  "ro": "Nume client"
+                }
+              },
+              {
+                "as": "work",
+                "name": "Work Done",
+                "type": "text",
+                "source": "field",
+                "position": "local",
+                "required": true,
+                "description": {
+                  "en": "Work performed",
+                  "de": "Ausgeführte Arbeiten",
+                  "es": "Trabajo realizado",
+                  "fr": "Travaux effectués",
+                  "it": "Lavoro eseguito",
+                  "ro": "Lucrări efectuate"
+                }
+              },
+              {
+                "as": "hours",
+                "name": "Hours",
+                "type": "number",
+                "source": "field",
+                "position": "local",
+                "required": false,
+                "description": {
+                  "en": "Hours worked",
+                  "de": "Gearbeitete Stunden",
+                  "es": "Horas trabajadas",
+                  "fr": "Heures travaillées",
+                  "it": "Ore lavorate",
+                  "ro": "Ore lucrate"
+                }
+              },
+              {
+                "as": "materials",
+                "name": "Materials",
+                "type": "string",
+                "source": "field",
+                "position": "local",
+                "required": false,
+                "description": {
+                  "en": "Materials used",
+                  "de": "Verwendetes Material",
+                  "es": "Materiales utilizados",
+                  "fr": "Matériaux utilisés",
+                  "it": "Materiali usati",
+                  "ro": "Materiale folosite"
+                }
+              }
+            ]
+          },
+          {
+            "type": "inline",
+            "warp": "@joai-product-list",
+            "silent": true,
+            "label": {
+              "en": "Load products",
+              "de": "Produkte laden",
+              "es": "Cargar productos",
+              "fr": "Charger les produits",
+              "it": "Carica prodotti",
+              "ro": "Încarcă produse"
+            }
+          },
+          {
+            "type": "inline",
+            "warp": "@joai-service-list",
+            "silent": true,
+            "label": {
+              "en": "Load services",
+              "de": "Dienstleistungen laden",
+              "es": "Cargar servicios",
+              "fr": "Charger les services",
+              "it": "Carica servizi",
+              "ro": "Încarcă servicii"
+            }
+          },
+          {
+            "as": "productIds",
+            "type": "prompt",
+            "label": {
+              "en": "Match products",
+              "de": "Produkte zuordnen",
+              "es": "Asignar productos",
+              "fr": "Associer les produits",
+              "it": "Associa prodotti",
+              "ro": "Asociază produse"
+            },
+            "inputs": [],
+            "expect": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "prompt": "The technician used these materials: {{materials}}\n\nAvailable team products: {{products}}\n\nFor each material, return the matching product hash ID ONCE per unit. Example: '2x Dichtung' should return ['hash1', 'hash1'], not ['hash1']. If no product matches, return an empty array."
+          },
+          {
+            "as": "serviceIds",
+            "type": "prompt",
+            "label": {
+              "en": "Match services",
+              "de": "Dienstleistungen zuordnen",
+              "es": "Asignar servicios",
+              "fr": "Associer les services",
+              "it": "Associa servizi",
+              "ro": "Asociază servicii"
+            },
+            "inputs": [],
+            "expect": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "prompt": "The technician worked {{hours}} hours.\n\nAvailable team services: {{services}}\n\nReturn the hourly-rate service hash ID (single item array). If no hourly rate service is configured, return an empty array."
+          },
+          {
+            "type": "inline",
+            "warp": "@joai-contact-find-or-create?name={{customer}}",
+            "label": {
+              "en": "Find or create contact",
+              "de": "Kontakt suchen oder erstellen",
+              "es": "Buscar o crear contacto",
+              "fr": "Chercher ou créer le contact",
+              "it": "Cerca o crea contatto",
+              "ro": "Caută sau creează contact"
+            }
+          },
+          {
+            "type": "inline",
+            "warp": "@joai-contact-activity-log?contactId={{contactId}}&type=custom&description={{work}}+%28{{hours}}+h%29",
+            "label": {
+              "en": "Log activity",
+              "de": "Aktivität protokollieren",
+              "es": "Registrar actividad",
+              "fr": "Journaliser l'activité",
+              "it": "Registra attività",
+              "ro": "Înregistrează activitate"
+            }
+          },
+          {
+            "type": "inline",
+            "warp": "@joai-item-create?priority=normal&status=done&title={{customer}}&description={{work}}+%28{{hours}}+h%29&contactIds=[%22{{contactId}}%22]",
+            "label": {
+              "en": "Create work item",
+              "de": "Arbeitsnachweis anlegen",
+              "es": "Crear tarea",
+              "fr": "Créer une tâche",
+              "it": "Crea elemento di lavoro",
+              "ro": "Creează element de lucru"
+            }
+          },
+          {
+            "type": "prompt",
+            "label": {
+              "en": "Generate PDF HTML",
+              "de": "PDF HTML erstellen",
+              "es": "Generar HTML del PDF",
+              "fr": "Générer le HTML du PDF",
+              "it": "Genera HTML PDF",
+              "ro": "Generare HTML PDF"
+            },
+            "inputs": [],
+            "prompt": "Translate these labels to {{JOAI_TEAM_LOCALE}}: \"Work Order\", \"Customer\", \"Work Done\", \"Technician\", \"Hours\", \"Materials Used\", \"Created\". Keep the HTML structure, CSS, and variable values ({{JOAI_TEAM_NAME}}, {{customer}}, {{work}}, {{JOAI_USER_NAME}}, {{hours}}, {{materials}}, {{TODAY}}) exactly as shown. Output ONLY the final HTML.\n\n<!DOCTYPE html><html><head><meta charset=\"UTF-8\"><style>body{font-family:Helvetica,Arial,sans-serif;margin:0;padding:40px;color:#333;background:#f8f8f8}.content{max-width:700px;margin:0 auto;background:#fff;padding:40px}.header h1{font-size:22px;color:#1a1a1a;margin:0 0 2px 0}.sub{font-size:12px;color:#888;margin:0}.section{margin-bottom:24px}.label{font-size:11px;color:#999;text-transform:uppercase;letter-spacing:0.5px;margin:0 0 4px 0}.value{font-size:15px;color:#333;margin:0;line-height:1.4}.divider{height:1px;background:#eee;margin:24px 0}.footer{font-size:11px;color:#aaa;margin-top:40px;text-align:center}</style></head><body><div class=\"content\"><h1>{{JOAI_TEAM_NAME}}</h1><p class=\"sub\">Work Order</p><div class=\"divider\"></div><div class=\"section\"><p class=\"label\">Customer</p><p class=\"value\">{{customer}}</p></div><div class=\"section\"><p class=\"label\">Work Done</p><p class=\"value\">{{work}}</p></div><div class=\"section\"><p class=\"label\">Technician</p><p class=\"value\">{{JOAI_USER_NAME}}</p></div><div class=\"section\"><p class=\"label\">Hours</p><p class=\"value\">{{hours}} h</p></div><div class=\"section\"><p class=\"label\">Materials Used</p><p class=\"value\">{{materials}}</p></div><div class=\"divider\"></div><p class=\"footer\">Created {{TODAY}}</p></div></body></html>"
+          },
+          {
+            "type": "inline",
+            "warp": "@pdf-render?html={{MESSAGE}}&label={{customer}}",
+            "label": {
+              "en": "Save PDF",
+              "de": "PDF speichern",
+              "es": "Guardar PDF",
+              "fr": "Enregistrer le PDF",
+              "it": "Salva PDF",
+              "ro": "Salvează PDF"
+            }
+          },
+          {
+            "type": "prompt",
+            "silent": true,
+            "as": "items",
+            "label": {
+              "en": "Build items payload",
+              "de": "Artikel-Payload erstellen",
+              "es": "Crear carga de artículos",
+              "fr": "Créer la charge des articles",
+              "it": "Crea payload articoli",
+              "ro": "Creează payload articole"
+            },
+            "inputs": [],
+            "expect": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "product",
+                      "service"
+                    ]
+                  },
+                  "quantity": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "id",
+                  "type"
+                ]
+              }
+            },
+            "prompt": "Build the items array for the billing system. Product IDs: {{productIds}}. Service IDs: {{serviceIds}}. Hours worked: {{hours}}. Each product gets quantity 1 per entry. Each service gets the hours value as quantity. Return the combined array."
+          }
+        ],
+        "related": [
+          "work-order-create-bill?contactId={{contactId}}&items={{items}}"
+        ],
+        "messages": {
+          "success": {
+            "en": "Work order for {{customer}} created. {{hours}}h worked. PDF saved.",
+            "de": "Arbeitsschein für {{customer}} erstellt. {{hours}}h geleistet. PDF gespeichert.",
+            "es": "Orden de trabajo para {{customer}} creada. {{hours}}h trabajadas. PDF guardado.",
+            "fr": "Bon de travail pour {{customer}} créé. {{hours}}h travaillées. PDF enregistré.",
+            "it": "Ordine di lavoro per {{customer}} creato. {{hours}}h lavorate. PDF salvato.",
+            "ro": "Ordin de lucru pentru {{customer}} creat. {{hours}}h lucrate. PDF salvat."
+          },
+          "error": {
+            "en": "Failed to create work order.",
+            "de": "Arbeitsschein fehlgeschlagen.",
+            "es": "Error al crear la orden de trabajo.",
+            "fr": "Échec de la création du bon de travail.",
+            "it": "Creazione ordine di lavoro fallita.",
+            "ro": "Eroare la crearea ordinului de lucru."
+          }
+        }
+      },
+      "extras": {
+        "keywords": {
+          "en": [
+            "work order",
+            "service report",
+            "field work",
+            "technician report",
+            "job documentation",
+            "work confirmation",
+            "Arbeitsschein",
+            "service certificate",
+            "maintenance report",
+            "repair documentation"
+          ],
+          "de": [
+            "Arbeitsschein",
+            "Servicebericht",
+            "Außeneinsatz",
+            "Technikerbericht",
+            "Einsatzdokumentation",
+            "Arbeitsnachweis",
+            "Reparaturbericht",
+            "Wartungsprotokoll",
+            "Kundendienstbericht",
+            "Montageprotokoll"
+          ]
+        },
+        "useCases": {
+          "en": [
+            "A heating technician documents a boiler repair including materials used and hours worked",
+            "A field service engineer creates a work confirmation after completing an installation",
+            "A maintenance technician logs a preventive service visit with parts and labor",
+            "A plumber generates a PDF service report for a customer after a job"
+          ],
+          "de": [
+            "Ein Heizungstechniker dokumentiert eine Boiler-Reparatur mit Material und Arbeitszeit",
+            "Ein Servicetechniker erstellt einen Arbeitsnachweis nach einer Installation",
+            "Ein Wartungstechniker protokolliert einen Präventivbesuch mit Teilen und Arbeitszeit",
+            "Ein Klempner erstellt einen PDF-Servicebericht für den Kunden nach dem Einsatz"
+          ]
+        },
+        "category": "productivity",
+        "faq": {
+          "en": [
+            {
+              "question": "What information do I need to create a work order?",
+              "answer": "Just describe the job naturally — the agent extracts customer name, work performed, hours worked, and materials used from your description."
+            },
+            {
+              "question": "Can I add products and services to the work order?",
+              "answer": "Yes. The warp matches the materials you mention against your team's product catalog and the hours worked against your service catalog automatically."
+            },
+            {
+              "question": "Is a PDF generated automatically?",
+              "answer": "Yes. A PDF work order is created and saved to your media library. You can download or share it directly from there."
+            }
+          ],
+          "de": [
+            {
+              "question": "Welche Informationen brauche ich für einen Arbeitsschein?",
+              "answer": "Beschreibe einfach den Einsatz natürlich — der Agent extrahiert Kundenname, ausgeführte Arbeiten, Stunden und verwendetes Material aus deiner Beschreibung."
+            },
+            {
+              "question": "Kann ich Produkte und Dienstleistungen hinzufügen?",
+              "answer": "Ja. Der Agent ordnet die genannten Materialien automatisch Produkten aus deinem Katalog und die Stunden den Dienstleistungen zu."
+            },
+            {
+              "question": "Wird automatisch ein PDF erstellt?",
+              "answer": "Ja. Der Arbeitsschein wird als PDF erstellt und in deiner Medienbibliothek gespeichert. Du kannst ihn von dort herunterladen oder teilen."
+            }
+          ]
+        }
+      }
+    },
+    {
       "key": "none:work-order-create-bill",
       "identifier": "@work-order-create-bill",
       "alias": "work-order-create-bill",
       "chain": "none",
-      "hash": "fafe34b2bca2a18f16891c6919147b170ff3f60cd51a2c9bfb8b5bec40638f02",
-      "checksum": "fafe34b2bca2a18f16891c6919147b170ff3f60cd51a2c9bfb8b5bec40638f02",
+      "hash": "72e3a0e3d7a8a089e64ae1fad948e848e0b5552788db120f0dd31dc6954b6dd4",
+      "checksum": "72e3a0e3d7a8a089e64ae1fad948e848e0b5552788db120f0dd31dc6954b6dd4",
       "name": "Work Order: Create Bill",
       "title": {
         "en": "Create Bill",
@@ -199,62 +619,6 @@
         },
         "actions": [
           {
-            "type": "prompt",
-            "silent": true,
-            "as": "itemsPayload",
-            "label": {
-              "en": "Build items",
-              "de": "Artikel zusammenstellen",
-              "es": "Armar artículos",
-              "fr": "Assembler les articles",
-              "it": "Componi articoli",
-              "ro": "Asamblează articole"
-            },
-            "inputs": [
-              {
-                "as": "productIds",
-                "type": "string[]",
-                "source": "field"
-              },
-              {
-                "as": "serviceIds",
-                "type": "string[]",
-                "source": "field"
-              },
-              {
-                "as": "hours",
-                "type": "string",
-                "source": "field"
-              }
-            ],
-            "expect": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "properties": {
-                  "id": {
-                    "type": "string"
-                  },
-                  "type": {
-                    "type": "string",
-                    "enum": [
-                      "product",
-                      "service"
-                    ]
-                  },
-                  "quantity": {
-                    "type": "number"
-                  }
-                },
-                "required": [
-                  "id",
-                  "type"
-                ]
-              }
-            },
-            "prompt": "The work order has product IDs: {{productIds}} and service IDs: {{serviceIds}} with {{hours}} hours worked. Build the items array."
-          },
-          {
             "type": "collect",
             "label": {
               "en": "Create Invoice",
@@ -289,9 +653,18 @@
               },
               {
                 "as": "items",
+                "name": "Items",
                 "type": "string",
-                "source": "hidden",
-                "default": "{{itemsPayload}}"
+                "source": "field",
+                "required": true,
+                "description": {
+                  "en": "JSON array of items with id, type (product/service), and quantity",
+                  "de": "JSON-Array von Artikeln mit id, Typ (product/service) und quantity",
+                  "es": "Array JSON de artículos con id, tipo (product/service) y cantidad",
+                  "fr": "Tableau JSON d'articles avec id, type (product/service) et quantité",
+                  "it": "Array JSON di articoli con id, tipo (product/service) e quantità",
+                  "ro": "Array JSON de articole cu id, tip (product/service) și cantitate"
+                }
               }
             ]
           }
