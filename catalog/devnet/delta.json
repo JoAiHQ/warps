@@ -4,9 +4,9 @@
   "repo": "JoAiHQ/warps",
   "branch": "dev",
   "network": "devnet",
-  "commitSha": "73c7724f9798f4a112ec610eba463c238bb8b294",
-  "committedAt": "2026-05-16T15:14:22.921Z",
-  "generatedAt": "2026-05-16T15:14:25.022Z",
+  "commitSha": "959fff868a4126ecbedf24ec4d2bfa648eca704b",
+  "committedAt": "2026-05-16T15:33:37.757Z",
+  "generatedAt": "2026-05-16T15:33:39.931Z",
   "upserts": [
     {
       "key": "none:poll-results",
@@ -126,8 +126,8 @@
       "identifier": "@work-order-create",
       "alias": "work-order-create",
       "chain": "none",
-      "hash": "e542512e0614a42e425d80d17d8c532e245ea9fd40a967cca14e1cd80c722f4c",
-      "checksum": "e542512e0614a42e425d80d17d8c532e245ea9fd40a967cca14e1cd80c722f4c",
+      "hash": "843c9236d5133a0af3513e95f0a4348f93bf12007a12cb1df20ab98bc9801e05",
+      "checksum": "843c9236d5133a0af3513e95f0a4348f93bf12007a12cb1df20ab98bc9801e05",
       "name": "Work Order: Create",
       "title": {
         "en": "Create Work Order",
@@ -326,7 +326,7 @@
             "prompt": "Match each material to its product. Products: {{productsList}}. Materials: {{materials}}. Return the exact id field from the product list for each matching material, one entry per unit."
           },
           {
-            "as": "serviceInfo",
+            "as": "serviceIds",
             "type": "prompt",
             "label": {
               "en": "Match services",
@@ -338,25 +338,17 @@
             },
             "inputs": [],
             "expect": {
-              "type": "object",
-              "properties": {
-                "id": {
-                  "type": "string"
-                },
-                "name": {
-                  "type": "string"
-                },
-                "price": {
-                  "type": "number"
-                }
+              "type": "array",
+              "items": {
+                "type": "string"
               }
             },
-            "prompt": "The technician worked {{hours}} hours.\n\nAvailable team services: {{servicesList}}\n\nIf a matching hourly-rate service exists, respond with {\"id\":\"the-service-hashid\"}.\n\nIMPORTANT: If the services list is empty, you MUST ask the user: \"What hourly rate do you charge? (name and price, e.g. Hourly Rate at 5000 cents = 50€/h)\" and WAIT for their answer before responding.\n\nWhen the user answers, respond with {\"name\":\"the-name-they-gave\",\"price\":the-price-in-cents}.\n\nNever make up IDs. Never respond with empty data."
+            "prompt": "The technician worked {{hours}} hours.\n\nAvailable team services: {{servicesList}}\n\nIf a matching hourly-rate service exists, return its id. If the list is empty, return []. Never make up IDs."
           },
           {
             "type": "inline",
-            "when": "{{serviceInfo.name}}",
-            "warp": "@joai/service-create?name={{serviceInfo.name}}&price={{serviceInfo.price}}&duration_minutes=60",
+            "when": "{{servicesList.length}} === 0",
+            "warp": "@joai/service-create?name=Hourly+Rate&price=5000&duration_minutes=60",
             "label": {
               "en": "Set up hourly service",
               "de": "Stundensatz einrichten"
@@ -461,7 +453,7 @@
                 ]
               }
             },
-            "prompt": "Build the items array. Product IDs: {{productIds}} (may contain duplicates for quantity). Service info: {{serviceInfo}}. Hours worked: {{hours}}.\n\nGroup identical product IDs — count occurrences and use that count as quantity. Each unique product appears once. If serviceInfo has an id field, include a service item with that id and hours as quantity. If serviceInfo has a name instead, the service was just created for next time — only include products."
+            "prompt": "Build the items array. Product IDs: {{productIds}} (may contain duplicates for quantity). Service IDs: {{serviceIds}}. Hours worked: {{hours}}.\n\nGroup identical product IDs — count occurrences and use that count as quantity. Each unique product appears once. Each service ID gets quantity from hours worked.\n\nIf hours > 0 and no service IDs are available, the hourly service was just created and will be available for next time. Only include the product items."
           }
         ],
         "related": [
