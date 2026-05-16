@@ -4,9 +4,9 @@
   "repo": "JoAiHQ/warps",
   "branch": "dev",
   "network": "devnet",
-  "commitSha": "76d81e539fb7b854acc8796508954f5d2aa882e5",
-  "committedAt": "2026-05-16T13:33:40.653Z",
-  "generatedAt": "2026-05-16T13:33:42.929Z",
+  "commitSha": "c8aa25a214cacb0d7fc7a8ba8448da180891e0ab",
+  "committedAt": "2026-05-16T14:58:25.603Z",
+  "generatedAt": "2026-05-16T14:58:27.786Z",
   "upserts": [
     {
       "key": "none:poll-results",
@@ -126,8 +126,8 @@
       "identifier": "@work-order-create",
       "alias": "work-order-create",
       "chain": "none",
-      "hash": "362fd12f16a977afbf0aeea9457e1b6009c8503460b475ef523a224dc735f277",
-      "checksum": "362fd12f16a977afbf0aeea9457e1b6009c8503460b475ef523a224dc735f277",
+      "hash": "f35e022c1d676435027069d8cf4ace0f90a45593f9539af22e25395595a9c002",
+      "checksum": "f35e022c1d676435027069d8cf4ace0f90a45593f9539af22e25395595a9c002",
       "name": "Work Order: Create",
       "title": {
         "en": "Create Work Order",
@@ -326,7 +326,7 @@
             "prompt": "Match each material to its product. Products: {{productsList}}. Materials: {{materials}}. Return the exact id field from the product list for each matching material, one entry per unit."
           },
           {
-            "as": "serviceIds",
+            "as": "serviceInfo",
             "type": "prompt",
             "label": {
               "en": "Match services",
@@ -338,12 +338,29 @@
             },
             "inputs": [],
             "expect": {
-              "type": "array",
-              "items": {
-                "type": "string"
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "price": {
+                  "type": "number"
+                }
               }
             },
-            "prompt": "The technician worked {{hours}} hours.\n\nAvailable team services: {{servicesList}}\n\nIf the list contains a matching hourly-rate service, return its exact id (one entry). If the list is empty, ask the user for the hourly rate name and price, then use @joai/service-create via related warps to set it up. Never return made-up or guessed IDs."
+            "prompt": "The technician worked {{hours}} hours.\n\nAvailable team services: {{servicesList}}\n\nIf a matching hourly-rate service exists, respond with {\"id\":\"the-service-hashid\"}. If the list is empty, ask the user for the hourly rate name and price, then respond with {\"name\":\"Hourly Rate\",\"price\":5000}. Never make up IDs."
+          },
+          {
+            "type": "inline",
+            "when": "{{serviceInfo.name}}",
+            "warp": "@joai/service-create?name={{serviceInfo.name}}&price={{serviceInfo.price}}&duration_minutes=60",
+            "label": {
+              "en": "Set up hourly service",
+              "de": "Stundensatz einrichten"
+            }
           },
           {
             "type": "inline",
@@ -444,7 +461,7 @@
                 ]
               }
             },
-            "prompt": "Build the items array. Product IDs: {{productIds}} (may contain duplicates for quantity). Service IDs: {{serviceIds}}. Hours worked: {{hours}}.\n\nGroup identical product IDs — count occurrences and use that count as quantity. Each unique product appears once. Each service ID gets quantity from hours worked.\n\nIf hours > 0 and no service IDs are available, only include the product items and mention that the related service-create action can be used to set up an hourly service."
+            "prompt": "Build the items array. Product IDs: {{productIds}} (may contain duplicates for quantity). Service info: {{serviceInfo}}. Hours worked: {{hours}}.\n\nGroup identical product IDs — count occurrences and use that count as quantity. Each unique product appears once. If serviceInfo has an id field, include a service item with that id and hours as quantity. If serviceInfo has a name instead, the service was just created for next time — only include products."
           }
         ],
         "related": [
