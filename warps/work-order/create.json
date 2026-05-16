@@ -164,7 +164,7 @@
         "type": "array",
         "items": { "type": "string" }
       },
-      "prompt": "The technician worked {{hours}} hours.\n\nAvailable team services: {{servicesList}}\n\nIf empty, return [] immediately. Otherwise return ONLY the exact id values from the service list — NOT the names, NOT made-up values. One entry per service matched (if multiple, pick the first). Any non-matching value will cause an error."
+      "prompt": "The technician worked {{hours}} hours.\n\nAvailable team services: {{servicesList}}\n\nIf the list contains a matching hourly-rate service, return its exact id (one entry). If the list is empty, ask the user for the hourly rate name and price, then use @joai/service-create via related warps to set it up. Never return made-up or guessed IDs."
     },
     {
       "type": "inline",
@@ -252,11 +252,15 @@
           "required": ["id", "type"]
         }
       },
-      "prompt": "Build the items array. Product IDs: {{productIds}} (may contain duplicates for quantity). Service IDs: {{serviceIds}}. Hours worked: {{hours}}.\n\nGroup identical product IDs — count occurrences and use that count as quantity. Each unique product appears once. Each service ID gets quantity from hours worked. If hours > 0 but no service IDs exist, set serviceIds to []. Return combined array."
+      "prompt": "Build the items array. Product IDs: {{productIds}} (may contain duplicates for quantity). Service IDs: {{serviceIds}}. Hours worked: {{hours}}.\n\nGroup identical product IDs — count occurrences and use that count as quantity. Each unique product appears once. Each service ID gets quantity from hours worked.\n\nIf hours > 0 and no service IDs are available, only include the product items and mention that the related service-create action can be used to set up an hourly service."
     }
   ],
   "related": [
-    "work-order-create-bill?contactId={{contactId}}&items={{items}}"
+    "work-order-create-bill?contactId={{contactId}}&items={{items}}",
+    {
+      "identifier": "@joai/service-create",
+      "bot": "If no hourly service existed and the user wants to set one up for future orders, suggest creating it now with the rate they mentioned."
+    }
   ],
   "messages": {
     "success": {
