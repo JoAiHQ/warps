@@ -4,10 +4,127 @@
   "repo": "JoAiHQ/warps",
   "branch": "dev",
   "network": "devnet",
-  "commitSha": "f94f30b42c082180b363752092b77868c32ae203",
-  "committedAt": "2026-05-17T12:17:00.048Z",
-  "generatedAt": "2026-05-17T12:17:02.275Z",
+  "commitSha": "914cba457c602df08bfc0ce12ce55971ee2c433f",
+  "committedAt": "2026-05-17T12:18:06.678Z",
+  "generatedAt": "2026-05-17T12:18:08.818Z",
   "upserts": [
+    {
+      "key": "none:joai-service-list",
+      "identifier": "@joai-service-list",
+      "alias": "joai-service-list",
+      "chain": "none",
+      "hash": "8006fa46e05341aa32a6653050017df770dc4564a624555dd4c875cb321da938",
+      "checksum": "8006fa46e05341aa32a6653050017df770dc4564a624555dd4c875cb321da938",
+      "name": "JoAi: List Services",
+      "title": {
+        "en": "List team services",
+        "de": "Team-Dienstleistungen anzeigen"
+      },
+      "description": {
+        "en": "View all services and hourly rates in your team catalog with names, prices and durations.",
+        "de": "Alle Dienstleistungen und Stundensätze im Team-Katalog mit Namen, Preisen und Dauern anzeigen."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: List Services",
+        "title": {
+          "en": "List team services",
+          "de": "Team-Dienstleistungen anzeigen"
+        },
+        "description": {
+          "en": "View all services and hourly rates in your team catalog with names, prices and durations.",
+          "de": "Alle Dienstleistungen und Stundensätze im Team-Katalog mit Namen, Preisen und Dauern anzeigen."
+        },
+        "bot": "Use this when the user wants to see their available services, hourly rates, or billable services that can be used for invoices.",
+        "vars": {
+          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+        },
+        "output": {
+          "services": "out",
+          "servicesList": "out.data",
+          "firstService": "out.data[0]"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "List services",
+              "de": "Dienstleistungen anzeigen"
+            },
+            "destination": {
+              "url": "https://devnet-api.joai.ai/v1/services",
+              "method": "GET",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+              }
+            },
+            "inputs": []
+          }
+        ]
+      },
+      "extras": {
+        "keywords": {
+          "en": [
+            "list services",
+            "view services",
+            "service catalog",
+            "billable services",
+            "appointment services"
+          ],
+          "de": [
+            "Dienstleistungen anzeigen",
+            "Service-Katalog",
+            "abrechenbare Leistungen",
+            "Termin-Dienstleistungen"
+          ]
+        },
+        "useCases": {
+          "en": [
+            "View all services and hourly rates in your team catalog",
+            "Find a service ID to use in appointment settings",
+            "Check which services are available for invoicing"
+          ],
+          "de": [
+            "Alle Dienstleistungen und Stundensätze im Team-Katalog anzeigen",
+            "Eine Service-ID für die Termineinstellungen finden",
+            "Prüfen, welche Dienstleistungen für Rechnungen verfügbar sind"
+          ]
+        },
+        "category": "productivity"
+      }
+    },
     {
       "key": "none:poll-results",
       "identifier": "@poll-results",
@@ -126,8 +243,8 @@
       "identifier": "@work-order-create",
       "alias": "work-order-create",
       "chain": "none",
-      "hash": "2772b0ba74ae4de4b80ca4449fe6517c167e610b90a04abab6fb713c7b9c6ba7",
-      "checksum": "2772b0ba74ae4de4b80ca4449fe6517c167e610b90a04abab6fb713c7b9c6ba7",
+      "hash": "ee86451703e0b2313acb819fb91af48c94237c10b28d9120bfc2765b5aad65b6",
+      "checksum": "ee86451703e0b2313acb819fb91af48c94237c10b28d9120bfc2765b5aad65b6",
       "name": "Work Order: Create",
       "title": {
         "en": "Create Work Order",
@@ -347,7 +464,7 @@
           },
           {
             "type": "inline",
-            "when": "{{servicesList.length}} === 0",
+            "when": "{{serviceIds[0]}} === null",
             "warp": "@joai/service-create?name=Hourly+Rate&duration_minutes=60",
             "label": {
               "en": "Set up hourly service",
