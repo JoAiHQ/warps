@@ -167,8 +167,16 @@
       "prompt": "The technician worked {{hours}} hours.\n\nAvailable team services: {{servicesList}}\n\nIf a matching hourly-rate service exists, return its id. If the list is empty, return []. Never make up IDs."
     },
     {
+      "as": "shouldCreateService",
+      "type": "prompt",
+      "silent": true,
+      "inputs": [],
+      "expect": { "type": "boolean" },
+      "prompt": "Available services: {{servicesList}}\n\nIf the list is empty, respond with true. If it has items, respond with false."
+    },
+    {
       "type": "inline",
-      "when": "{{servicesList.length}} === 0",
+      "when": "{{shouldCreateService}}",
       "warp": "@joai/service-create?name=Hourly+Rate&price=5000&duration_minutes=60",
       "label": {
         "en": "Set up hourly service",
