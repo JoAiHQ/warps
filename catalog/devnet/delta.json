@@ -4,9 +4,9 @@
   "repo": "JoAiHQ/warps",
   "branch": "dev",
   "network": "devnet",
-  "commitSha": "d9b916f405cf9e7ade59d1a7d41047700a1e3380",
-  "committedAt": "2026-05-16T15:44:13.047Z",
-  "generatedAt": "2026-05-16T15:44:15.585Z",
+  "commitSha": "85d09e424802abddbf7c493176978a3e27e36dee",
+  "committedAt": "2026-05-17T11:29:08.042Z",
+  "generatedAt": "2026-05-17T11:29:10.323Z",
   "upserts": [
     {
       "key": "none:poll-results",
@@ -126,8 +126,8 @@
       "identifier": "@work-order-create",
       "alias": "work-order-create",
       "chain": "none",
-      "hash": "843c9236d5133a0af3513e95f0a4348f93bf12007a12cb1df20ab98bc9801e05",
-      "checksum": "843c9236d5133a0af3513e95f0a4348f93bf12007a12cb1df20ab98bc9801e05",
+      "hash": "672ea8dd597ad13df4a6742b241acad6657dee911b34fde722ebf6e275783371",
+      "checksum": "672ea8dd597ad13df4a6742b241acad6657dee911b34fde722ebf6e275783371",
       "name": "Work Order: Create",
       "title": {
         "en": "Create Work Order",
@@ -346,8 +346,18 @@
             "prompt": "The technician worked {{hours}} hours.\n\nAvailable team services: {{servicesList}}\n\nIf a matching hourly-rate service exists, return its id. If the list is empty, return []. Never make up IDs."
           },
           {
+            "as": "shouldCreateService",
+            "type": "prompt",
+            "silent": true,
+            "inputs": [],
+            "expect": {
+              "type": "boolean"
+            },
+            "prompt": "Available services: {{servicesList}}\n\nIf the list is empty, respond with true. If it has items, respond with false."
+          },
+          {
             "type": "inline",
-            "when": "{{servicesList.length}} === 0",
+            "when": "{{shouldCreateService}}",
             "warp": "@joai/service-create?name=Hourly+Rate&price=5000&duration_minutes=60",
             "label": {
               "en": "Set up hourly service",
