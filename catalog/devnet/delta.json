@@ -4,10 +4,313 @@
   "repo": "JoAiHQ/warps",
   "branch": "dev",
   "network": "devnet",
-  "commitSha": "1449d35717509fbc7b4da3200efddce52a52ffa0",
-  "committedAt": "2026-05-17T15:40:11.563Z",
-  "generatedAt": "2026-05-17T15:40:13.700Z",
+  "commitSha": "830aa0faaf86192c92a3625960e57fd621b0b463",
+  "committedAt": "2026-05-18T12:39:10.696Z",
+  "generatedAt": "2026-05-18T12:39:13.281Z",
   "upserts": [
+    {
+      "key": "none:joai-service-create",
+      "identifier": "@joai-service-create",
+      "alias": "joai-service-create",
+      "chain": "none",
+      "hash": "1509dbb8281b5d35256a0040de8261504b7ca35bd7ac53c89ca737ac6046f4ef",
+      "checksum": "1509dbb8281b5d35256a0040de8261504b7ca35bd7ac53c89ca737ac6046f4ef",
+      "name": "JoAi: Create Service",
+      "title": {
+        "en": "Create a service",
+        "de": "Dienstleistung erstellen"
+      },
+      "description": {
+        "en": "Create a new billable service with name, price, and duration for your team catalog. Services can be used for appointment booking and invoices.",
+        "de": "Eine neue abrechenbare Dienstleistung mit Name, Preis und Dauer für deinen Team-Katalog erstellen. Dienstleistungen können für Terminbuchungen und Rechnungen verwendet werden."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: Create Service",
+        "title": {
+          "en": "Create a service",
+          "de": "Dienstleistung erstellen"
+        },
+        "description": {
+          "en": "Create a new billable service with name, price, and duration for your team catalog. Services can be used for appointment booking and invoices.",
+          "de": "Eine neue abrechenbare Dienstleistung mit Name, Preis und Dauer für deinen Team-Katalog erstellen. Dienstleistungen können für Terminbuchungen und Rechnungen verwendet werden."
+        },
+        "bot": "Use when the user wants to create a new service, billable offering, or appointment type. Extract name, price, and duration from their description.",
+        "vars": {
+          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+        },
+        "messages": {
+          "error": {
+            "en": "Failed to create service: {{MESSAGE}}",
+            "de": "Dienstleistung konnte nicht erstellt werden: {{MESSAGE}}"
+          }
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Create service",
+              "de": "Dienstleistung erstellen"
+            },
+            "destination": {
+              "url": "https://devnet-api.joai.ai/v1/services",
+              "method": "POST",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Name",
+                "as": "name",
+                "description": {
+                  "en": "Service name",
+                  "de": "Name der Dienstleistung"
+                },
+                "type": "string",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Price",
+                "as": "price",
+                "description": {
+                  "en": "Price in cents",
+                  "de": "Preis in Cent"
+                },
+                "type": "number",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Duration (minutes)",
+                "as": "duration_minutes",
+                "description": {
+                  "en": "Duration in minutes",
+                  "de": "Dauer in Minuten"
+                },
+                "type": "number",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Description",
+                "as": "description",
+                "description": {
+                  "en": "Service description",
+                  "de": "Beschreibung der Dienstleistung"
+                },
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Tags",
+                "as": "tags",
+                "description": {
+                  "en": "Tags (e.g. hourly, consultation, maintenance, repair)",
+                  "de": "Tags (z.B. stundensatz, beratung, wartung, reparatur)"
+                },
+                "type": "string",
+                "source": "field",
+                "required": false
+              }
+            ]
+          }
+        ]
+      },
+      "extras": {
+        "keywords": {
+          "en": [
+            "create service",
+            "add service",
+            "new billable service",
+            "appointment type",
+            "service catalog"
+          ],
+          "de": [
+            "Dienstleistung erstellen",
+            "Service hinzufügen",
+            "neue abrechenbare Leistung",
+            "Terminart",
+            "Service-Katalog"
+          ]
+        },
+        "useCases": {
+          "en": [
+            "Add a new service type for appointment booking",
+            "Create a billable service with a set price and duration",
+            "Set up consultation, maintenance, or repair service offerings"
+          ],
+          "de": [
+            "Einen neuen Dienstleistungstyp für Terminbuchungen hinzufügen",
+            "Eine abrechenbare Dienstleistung mit festem Preis und Dauer erstellen",
+            "Beratungs-, Wartungs- oder Reparaturleistungen anlegen"
+          ]
+        },
+        "category": "productivity"
+      }
+    },
+    {
+      "key": "none:joai-service-list",
+      "identifier": "@joai-service-list",
+      "alias": "joai-service-list",
+      "chain": "none",
+      "hash": "a3c2507ab9b5b6f6360e92fba9be289d0237fa8630632a1fc5614d87feb3c768",
+      "checksum": "a3c2507ab9b5b6f6360e92fba9be289d0237fa8630632a1fc5614d87feb3c768",
+      "name": "JoAi: List Services",
+      "title": {
+        "en": "List team services",
+        "de": "Team-Dienstleistungen anzeigen"
+      },
+      "description": {
+        "en": "View all services and hourly rates in your team catalog with names, prices and durations.",
+        "de": "Alle Dienstleistungen und Stundensätze im Team-Katalog mit Namen, Preisen und Dauern anzeigen."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: List Services",
+        "title": {
+          "en": "List team services",
+          "de": "Team-Dienstleistungen anzeigen"
+        },
+        "description": {
+          "en": "View all services and hourly rates in your team catalog with names, prices and durations.",
+          "de": "Alle Dienstleistungen und Stundensätze im Team-Katalog mit Namen, Preisen und Dauern anzeigen."
+        },
+        "bot": "Use this when the user wants to see their available services, hourly rates, or billable services that can be used for invoices.",
+        "vars": {
+          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+        },
+        "output": {
+          "services": "out",
+          "servicesList": "out.data",
+          "servicesCount": "out.data.length"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "List services",
+              "de": "Dienstleistungen anzeigen"
+            },
+            "destination": {
+              "url": "https://devnet-api.joai.ai/v1/services",
+              "method": "GET",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "tags",
+                "type": "string",
+                "required": false,
+                "position": "query",
+                "description": {
+                  "en": "Filter by tags (e.g. hourly, consultation, maintenance, repair)",
+                  "de": "Nach Tags filtern (z.B. stundensatz, beratung, wartung, reparatur)"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "extras": {
+        "keywords": {
+          "en": [
+            "list services",
+            "view services",
+            "service catalog",
+            "billable services",
+            "appointment services"
+          ],
+          "de": [
+            "Dienstleistungen anzeigen",
+            "Service-Katalog",
+            "abrechenbare Leistungen",
+            "Termin-Dienstleistungen"
+          ]
+        },
+        "useCases": {
+          "en": [
+            "View all services and hourly rates in your team catalog",
+            "Find a service ID to use in appointment settings",
+            "Check which services are available for invoicing"
+          ],
+          "de": [
+            "Alle Dienstleistungen und Stundensätze im Team-Katalog anzeigen",
+            "Eine Service-ID für die Termineinstellungen finden",
+            "Prüfen, welche Dienstleistungen für Rechnungen verfügbar sind"
+          ]
+        },
+        "category": "productivity"
+      }
+    },
     {
       "key": "none:poll-results",
       "identifier": "@poll-results",
@@ -126,8 +429,8 @@
       "identifier": "@work-order-create",
       "alias": "work-order-create",
       "chain": "none",
-      "hash": "d1f81210933c0c7c61d27e865ed3a3ca341ade32f8f8e711a0996ceede159cdf",
-      "checksum": "d1f81210933c0c7c61d27e865ed3a3ca341ade32f8f8e711a0996ceede159cdf",
+      "hash": "6ddda1e8176452d7862ac3cd3db0b19fe8d50ef9cf54238ecb7ecbc319405fa9",
+      "checksum": "6ddda1e8176452d7862ac3cd3db0b19fe8d50ef9cf54238ecb7ecbc319405fa9",
       "name": "Work Order: Create",
       "title": {
         "en": "Create Work Order",
@@ -293,7 +596,7 @@
           },
           {
             "type": "inline",
-            "warp": "@joai-service-list",
+            "warp": "@joai-service-list?tags=hourly",
             "silent": true,
             "label": {
               "en": "Load services",
@@ -326,6 +629,18 @@
             "prompt": "Match each material to its product. Products: {{productsList}}. Materials: {{materials}}. Return the exact id field from the product list for each matching material, one entry per unit."
           },
           {
+            "type": "inline",
+            "when": "{{servicesCount}} === 0",
+            "warp": "@joai-service-create?name=Hourly+Rate&duration_minutes=60&tags=hourly",
+            "output": {
+              "createdServiceId": "out.id"
+            },
+            "label": {
+              "en": "Set up hourly service",
+              "de": "Stundensatz einrichten"
+            }
+          },
+          {
             "as": "serviceIds",
             "type": "prompt",
             "label": {
@@ -343,16 +658,7 @@
                 "type": "string"
               }
             },
-            "prompt": "The technician worked {{hours}} hours.\n\nAvailable team services: {{servicesList}}\n\nIf a matching hourly-rate service exists, return its id. If the list is empty, return []. Never make up IDs."
-          },
-          {
-            "type": "inline",
-            "when": "{{servicesCount}} === 0",
-            "warp": "@joai-service-create?name=Hourly+Rate&duration_minutes=60",
-            "label": {
-              "en": "Set up hourly service",
-              "de": "Stundensatz einrichten"
-            }
+            "prompt": "The technician worked {{hours}} hours.\n\nExisting services: {{servicesList}}. Just created service ID: {{createdServiceId}}.\n\nIf a just created service ID is shown above, return it. Otherwise find the matching id from existing services. If none exist, return []. Never make up IDs."
           },
           {
             "type": "inline",
