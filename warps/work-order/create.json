@@ -119,7 +119,7 @@
     },
     {
       "type": "inline",
-      "warp": "@joai-service-list",
+      "warp": "@joai-service-list?tags=hourly",
       "silent": true,
       "label": {
         "en": "Load services",
@@ -149,6 +149,18 @@
       "prompt": "Match each material to its product. Products: {{productsList}}. Materials: {{materials}}. Return the exact id field from the product list for each matching material, one entry per unit."
     },
     {
+      "type": "inline",
+      "when": "{{servicesCount}} === 0",
+      "warp": "@joai-service-create?name=Hourly+Rate&duration_minutes=60&tags=hourly",
+      "output": {
+        "createdServiceId": "out.id"
+      },
+      "label": {
+        "en": "Set up hourly service",
+        "de": "Stundensatz einrichten"
+      }
+    },
+    {
       "as": "serviceIds",
       "type": "prompt",
       "label": {
@@ -164,16 +176,7 @@
         "type": "array",
         "items": { "type": "string" }
       },
-      "prompt": "The technician worked {{hours}} hours.\n\nAvailable team services: {{servicesList}}\n\nIf a matching hourly-rate service exists, return its id. If the list is empty, return []. Never make up IDs."
-    },
-    {
-      "type": "inline",
-      "when": "{{servicesCount}} === 0",
-      "warp": "@joai-service-create?name=Hourly+Rate&duration_minutes=60",
-      "label": {
-        "en": "Set up hourly service",
-        "de": "Stundensatz einrichten"
-      }
+      "prompt": "The technician worked {{hours}} hours.\n\nExisting services: {{servicesList}}. Just created service ID: {{createdServiceId}}.\n\nIf a just created service ID is shown above, return it. Otherwise find the matching id from existing services. If none exist, return []. Never make up IDs."
     },
     {
       "type": "inline",
