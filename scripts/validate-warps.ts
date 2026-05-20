@@ -137,6 +137,26 @@ function checkNoArgPositionsOnHttpActions(warp: Warp, relPath: string): Issue[] 
   return issues
 }
 
+function checkInlineWarpsExist(warp: Warp, relPath: string, allWarpIds: Set<string>): Issue[] {
+  const issues: Issue[] = []
+  const warpNameFromPath = (relPath: string) => relPath.replace(/\.json$/, '').replace(/\//g, '-')
+
+  for (const [actionIndex, action] of (warp.actions ?? []).entries()) {
+    if (action.type !== 'inline') continue
+    const inlineAction = action as { warp?: string }
+    if (!inlineAction.warp) continue
+
+    const ref = inlineAction.warp.split('?')[0].replace(/^@/, '')
+    if (!allWarpIds.has(ref)) {
+      issues.push({
+        file: relPath,
+        message: `Inline action ${actionIndex + 1} references "${inlineAction.warp}" but no warp with that identifier exists. Expected file: warps/${ref.replace(/-/g, '/')}.json`,
+      })
+    }
+  }
+  return issues
+}
+
 function checkInputKeysAreStableStrings(warp: Warp, relPath: string): Issue[] {
   const issues: Issue[] = []
 
@@ -165,6 +185,15 @@ function main(): void {
   const allIssues: Issue[] = []
   let inspected = 0
 
+  // Build set of all registered warp identifiers
+  const allWarpIds = new Set<string>()
+  for (const file of files) {
+    const raw = fs.readFileSync(file, 'utf8')
+    if (!isWarpFile(raw)) continue
+    const relPath = path.relative(WARPS_DIR, file)
+    allWarpIds.add(relPath.replace(/\.json$/, '').replace(/\//g, '-'))
+  }
+
   for (const file of files) {
     let raw: string
     try {
@@ -187,6 +216,7 @@ function main(): void {
     allIssues.push(...checkInputKeysAreStableStrings(warp, relPath))
     allIssues.push(...checkUrlPlaceholdersHaveInputs(warp, relPath))
     allIssues.push(...checkNoArgPositionsOnHttpActions(warp, relPath))
+    allIssues.push(...checkInlineWarpsExist(warp, relPath, allWarpIds))
   }
 
   if (allIssues.length === 0) {
