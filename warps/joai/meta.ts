@@ -462,4 +462,52 @@ export const meta: Record<string, WarpExtras> = {
     },
     category: 'productivity',
   },
+    useCases: {
+      en: [
+        'Subscribe a customer to a monthly support service with auto-renewal',
+        'Set up recurring billing for a contact on a team service',
+        'Create a subscription plan for ongoing service delivery',
+      ],
+      de: [
+        'Einen Kunden für einen monatlichen Support-Service mit automatischer Verlängerung anmelden',
+        'Wiederkehrende Zahlungen für einen Kontakt auf einen Team-Service einrichten',
+        'Ein Abonnement für wiederkehrende Dienstleistungen erstellen',
+      ],
+    },
+    category: 'commerce',
+    faq: {
+      en: [
+        { question: 'What happens after the initial subscription order?', answer: 'The subscription renews automatically each month. A new pending order with invoice is created and the customer pays via the payment link.' },
+        { question: 'Can I cancel a subscription?', answer: 'Yes, use the Cancel Subscription action. Future renewals are stopped. Existing unpaid orders remain valid.' },
+      ],
+      de: [
+        { question: 'Was passiert nach der ersten Bestellung?', answer: 'Das Abonnement verlängert sich automatisch jeden Monat. Eine neue Bestellung mit Rechnung wird erstellt und der Kunde bezahlt über den Zahlungslink.' },
+        { question: 'Kann ich ein Abonnement kündigen?', answer: 'Ja, nutze die Aktion "Abonnement kündigen". Zukünftige Verlängerungen werden gestoppt. Bestehende unbezahlte Bestellungen bleiben gültig.' },
+      ],
+    },
+  },
+    useCases: {
+      en: [
+        'Cancel a customer subscription when they request to stop',
+        'End recurring billing for a service that is no longer needed',
+        'Stop auto-renewal of a monthly service plan',
+      ],
+      de: [
+        'Ein Kunden-Abonnement auf Wunsch kündigen',
+        'Wiederkehrende Zahlungen für einen nicht mehr benötigten Service beenden',
+        'Die automatische Verlängerung eines monatlichen Serviceplans stoppen',
+      ],
+    },
+    category: 'commerce',
+    faq: {
+      en: [
+        { question: 'Does canceling affect already paid orders?', answer: 'No, only future renewals are stopped. Already paid orders and invoices remain valid.' },
+        { question: 'Can I reactivate a canceled subscription?', answer: 'Not yet — you would need to create a new subscription via the Subscribe to Service action.' },
+      ],
+      de: [
+        { question: 'Hat die Kündigung Auswirkungen auf bereits bezahlte Bestellungen?', answer: 'Nein, nur zukünftige Verlängerungen werden gestoppt. Bereits bezahlte Bestellungen und Rechnungen bleiben gültig.' },
+        { question: 'Kann ich ein gekündigtes Abo reaktivieren?', answer: 'Noch nicht — du müsstest ein neues Abonnement über die Aktion "Service abonnieren" erstellen.' },
+      ],
+    },
+  },
 }
