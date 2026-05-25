@@ -51,19 +51,21 @@ export const meta: Record<string, WarpExtras> = {
 
   'swap-usdc-to-wegld': {
     keywords: {
-      en: ['swap USDC to WEGLD', 'buy EGLD with USDC', 'USDC WEGLD exchange', 'xExchange swap', 'MultiversX DEX', 'stablecoin to EGLD'],
-      de: ['USDC in WEGLD tauschen', 'EGLD mit USDC kaufen', 'USDC WEGLD Börse', 'xExchange Tausch', 'MultiversX DEX', 'Stablecoin zu EGLD'],
+      en: ['swap USDC to EGLD', 'swap USDC to WEGLD', 'buy EGLD with USDC', 'convert USDC to EGLD', 'USDC EGLD swap', 'USDC to native EGLD', 'xExchange swap', 'MultiversX DEX', 'stablecoin to EGLD'],
+      de: ['USDC in EGLD tauschen', 'USDC in WEGLD tauschen', 'EGLD mit USDC kaufen', 'USDC zu EGLD konvertieren', 'USDC EGLD Swap', 'xExchange Tausch', 'MultiversX DEX', 'Stablecoin zu EGLD'],
     },
     useCases: {
       en: [
-        'Convert stablecoins to EGLD for staking and earning rewards',
+        'Swap USDC for EGLD (via WEGLD) to stake and earn rewards on MultiversX',
         'Enter the MultiversX ecosystem from USDC holdings',
         'Buy WEGLD at market price to participate in DeFi protocols',
+        'Convert stablecoin holdings into wrapped EGLD for trading on xExchange',
       ],
       de: [
-        'Stablecoins in EGLD umwandeln für Staking und Belohnungen',
+        'Tausche USDC gegen EGLD (via WEGLD) zum Staken und Verdienen von Belohnungen auf MultiversX',
         'Mit USDC-Beständen in das MultiversX-Ökosystem einsteigen',
         'WEGLD zum Marktpreis kaufen, um an DeFi-Protokollen teilzunehmen',
+        'Wandle Stablecoin-Bestände in Wrapped EGLD um, um auf xExchange zu handeln',
       ],
     },
     category: 'defi',
@@ -73,6 +75,11 @@ export const meta: Record<string, WarpExtras> = {
           question: 'Can I buy EGLD with USDC on xExchange?',
           answer:
             'Yes. This action swaps your USDC for WEGLD (Wrapped EGLD) on xExchange. You can then unwrap WEGLD to native EGLD if needed.',
+        },
+        {
+          question: 'Will I get native EGLD or WEGLD when swapping USDC?',
+          answer:
+            'You will receive WEGLD (Wrapped EGLD), which is the tokenized version of native EGLD. WEGLD is needed for DeFi protocols on MultiversX and can be unwrapped 1:1 to native EGLD at any time via the unwrap action.',
         },
         {
           question: 'What slippage should I expect when swapping USDC to WEGLD?',
@@ -85,6 +92,11 @@ export const meta: Record<string, WarpExtras> = {
           question: 'Kann ich EGLD mit USDC auf xExchange kaufen?',
           answer:
             'Ja. Diese Aktion tauscht dein USDC auf xExchange gegen WEGLD (Wrapped EGLD). Du kannst WEGLD anschließend bei Bedarf in natives EGLD unwrappen.',
+        },
+        {
+          question: 'Bekomme ich natives EGLD oder WEGLD beim Tausch von USDC?',
+          answer:
+            'Du erhältst WEGLD (Wrapped EGLD), die tokenisierte Version von nativem EGLD. WEGLD wird für DeFi-Protokolle auf MultiversX benötigt und kann jederzeit 1:1 in natives EGLD zurückgetauscht werden.',
         },
         {
           question: 'Mit welcher Slippage muss ich beim Tausch von USDC zu WEGLD rechnen?',
