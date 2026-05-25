@@ -20,7 +20,8 @@
   "bot": "Creates a billing order from team products and services. Use when the user needs to bill a customer. Provide the contact ID and product/service hash IDs from the team catalog. Always pass service IDs as an array (serviceIds), not a single string.",
   "vars": {
     "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
-    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_CURRENCY": "env:JOAI_TEAM_CURRENCY|USD"
   },
   "actions": [
     {
@@ -107,18 +108,19 @@
   "output": {
     "id": "out.data.id",
     "total": "out.data.total",
+    "totalDisplay": "transform:() => (Number(out.data.total || 0) / 100).toFixed(2)",
     "invoiceUrl": "out.data.invoiceUrl",
     "paymentUrl": "out.data.paymentUrl",
     "status": "out.data.status"
   },
   "messages": {
     "success": {
-      "en": "Order created. Total: {{total}} cents. Payment: {{paymentUrl}}",
-      "de": "Bestellung erstellt. Gesamt: {{total}} Cent. Zahlung: {{paymentUrl}}",
-      "fr": "Commande créée. Total : {{total}} centimes. Paiement : {{paymentUrl}}",
-      "es": "Pedido creado. Total: {{total}} céntimos. Pago: {{paymentUrl}}",
-      "it": "Ordine creato. Totale: {{total}} centesimi. Pagamento: {{paymentUrl}}",
-      "ro": "Comandă creată. Total: {{total}} cenți. Plată: {{paymentUrl}}"
+      "en": "Order created. Total: {{totalDisplay}} {{JOAI_TEAM_CURRENCY}}. Payment: {{paymentUrl}}",
+      "de": "Bestellung erstellt. Gesamt: {{totalDisplay}} {{JOAI_TEAM_CURRENCY}}. Zahlung: {{paymentUrl}}",
+      "fr": "Commande créée. Total : {{totalDisplay}} {{JOAI_TEAM_CURRENCY}}. Paiement : {{paymentUrl}}",
+      "es": "Pedido creado. Total: {{totalDisplay}} {{JOAI_TEAM_CURRENCY}}. Pago: {{paymentUrl}}",
+      "it": "Ordine creato. Totale: {{totalDisplay}} {{JOAI_TEAM_CURRENCY}}. Pagamento: {{paymentUrl}}",
+      "ro": "Comandă creată. Total: {{totalDisplay}} {{JOAI_TEAM_CURRENCY}}. Plată: {{paymentUrl}}"
     }
   }
 }
