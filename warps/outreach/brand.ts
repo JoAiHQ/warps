@@ -28,9 +28,14 @@ export const brand = async (config: WarpClientConfig): Promise<WarpbaseBrand> =>
     },
   },
   site: {
-    enabled: false,
+    enabled: true,
     auth: false,
     indexPath: '/',
-    routes: [],
+    routes: [
+      { path: '/', warp: '@outreach-broadcast', label: { en: 'Broadcast', de: 'Rundmail' }, nav: true },
+      { path: '/segments', warp: '@outreach-segment-scan', label: { en: 'Segments', de: 'Segmente' }, nav: true },
+      { path: '/draft', warp: '@outreach-ai-draft', label: { en: 'AI Draft', de: 'KI-Entwurf' }, nav: true },
+      { path: '/stats', warp: '@outreach-stats', label: { en: 'Statistics', de: 'Statistiken' }, nav: true },
+    ],
   },
 })
