@@ -28,9 +28,14 @@ export const brand = async (config: WarpClientConfig): Promise<WarpbaseBrand> =>
     },
   },
   site: {
-    enabled: false,
+    enabled: true,
     auth: false,
     indexPath: '/',
-    routes: [],
+    routes: [
+      { path: '/', warp: '@followups-enroll', label: { en: 'Follow-ups', de: 'Follow-ups' }, nav: true },
+      { path: '/win-back', warp: '@followups-win-back', label: { en: 'Win Back', de: 'Zurückgewinnen' }, nav: true },
+      { path: '/check-in', warp: '@followups-check-in', label: { en: 'Check In', de: 'Check-in' }, nav: true },
+      { path: '/templates', warp: '@followups-template-list', label: { en: 'Templates', de: 'Vorlagen' }, nav: true },
+    ],
   },
 })

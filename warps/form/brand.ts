@@ -64,6 +64,12 @@ export const brand = async (config: WarpClientConfig): Promise<WarpbaseBrand> =>
         label: { en: 'Remove Field', de: 'Feld entfernen' },
         nav: false,
       },
+      {
+        path: '/submit',
+        warp: '@form-submit',
+        label: { en: 'Submit Form', de: 'Formular absenden' },
+        nav: true,
+      },
     ],
   },
 })

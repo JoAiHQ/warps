@@ -23,9 +23,12 @@ export const brand = async (config: WarpClientConfig): Promise<WarpbaseBrand> =>
     },
   },
   site: {
-    enabled: false,
+    enabled: true,
     auth: false,
     indexPath: '/',
-    routes: [],
+    routes: [
+      { path: '/', warp: '@work-order-create', label: { en: 'New Work Order', de: 'Neuer Arbeitsschein' }, nav: true },
+      { path: '/bill', warp: '@work-order-create-bill', label: { en: 'Create Bill', de: 'Rechnung erstellen' }, nav: true },
+    ],
   },
 })

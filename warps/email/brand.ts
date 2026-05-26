@@ -15,6 +15,14 @@ export const brand = async (config: WarpClientConfig): Promise<WarpbaseBrand> =>
     .setUrls({ web: 'https://joai.ai' })
     .build(),
   contracts: {},
+  site: {
+    enabled: true,
+    auth: false,
+    indexPath: '/',
+    routes: [
+      { path: '/', warp: '@email-send', label: { en: 'Send Email', de: 'E-Mail senden' }, nav: true },
+    ],
+  },
   destinations: {
     API_BASE: (env: WarpChainEnv) => {
       if (env === 'devnet') return 'https://devnet-api.joai.ai'
