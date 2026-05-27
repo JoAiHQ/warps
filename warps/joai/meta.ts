@@ -324,6 +324,49 @@ export const meta: Record<string, WarpExtras> = {
       ],
     },
   },
+  'ingest': {
+    keywords: {
+      en: ['ingest knowledge', 'extract insights', 'save notes', 'remember content', 'process text', 'AI extraction'],
+      de: ['Wissen erfassen', 'Erkenntnisse extrahieren', 'Notizen speichern', 'Inhalt merken', 'Text verarbeiten', 'KI Extraktion'],
+    },
+    useCases: {
+      en: [
+        'Turn meeting notes into action items and reminders automatically',
+        'Save an article and extract key memories and goals from it',
+        'Process a support ticket and create contacts, items, and follow-ups',
+        'Ingest CRM notes to automatically surface reminders and tasks',
+      ],
+      de: [
+        'Meeting-Notizen automatisch in Aufgaben und Erinnerungen umwandeln',
+        'Einen Artikel speichern und wichtige Erinnerungen und Ziele daraus extrahieren',
+        'Ein Support-Ticket verarbeiten und Kontakte, Aufgaben und Follow-ups erstellen',
+        'CRM-Notizen erfassen, um automatisch Erinnerungen und Aufgaben zu generieren',
+      ],
+    },
+    category: 'productivity',
+    faq: {
+      en: [
+        {
+          question: 'What types of content can be ingested?',
+          answer: 'Any text content — notes, articles, meeting transcripts, emails, or URLs to web pages, YouTube videos, and X/Twitter posts.',
+        },
+        {
+          question: 'What happens after ingestion?',
+          answer: 'Your agent extracts structured primitives like reminders, action items, goals, and memories from the content and creates them automatically.',
+        },
+      ],
+      de: [
+        {
+          question: 'Welche Inhalte können erfasst werden?',
+          answer: 'Jeglicher Text — Notizen, Artikel, Meeting-Transkripte, E-Mails oder URLs zu Webseiten, YouTube-Videos und X/Twitter-Beiträgen.',
+        },
+        {
+          question: 'Was passiert nach der Erfassung?',
+          answer: 'Dein Agent extrahiert strukturierte Primitive wie Erinnerungen, Aufgaben, Ziele und Erinnerungen aus dem Inhalt und legt sie automatisch an.',
+        },
+      ],
+    },
+  },
   'contact-find-or-create': {
     keywords: {
       en: ['find contact', 'create contact', 'contact lookup', 'find or create', 'CRM', 'address book'],
