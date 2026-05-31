@@ -4,9 +4,9 @@
   "repo": "JoAiHQ/warps",
   "branch": "dev",
   "network": "devnet",
-  "commitSha": "3b7e4b9e90edd7e2a319b1fa042abe74de093658",
-  "committedAt": "2026-05-31T14:24:38.640Z",
-  "generatedAt": "2026-05-31T14:24:40.789Z",
+  "commitSha": "df5197f7bf9e0011bbe2c676a5bea7b2c8e7cf17",
+  "committedAt": "2026-05-31T14:26:15.319Z",
+  "generatedAt": "2026-05-31T14:26:17.747Z",
   "upserts": [
     {
       "key": "none:poll-results",
@@ -122,165 +122,12 @@
       "extras": null
     },
     {
-      "key": "none:rating-setup",
-      "identifier": "@rating-setup",
-      "alias": "rating-setup",
-      "chain": "none",
-      "hash": "1fc67c7c0bb3337b493f3a15ab8e69a64c63ed907b720cc5771f927aa208fdc7",
-      "checksum": "1fc67c7c0bb3337b493f3a15ab8e69a64c63ed907b720cc5771f927aa208fdc7",
-      "name": "Rating: Configure",
-      "title": {
-        "en": "Configure rating",
-        "de": "Bewertung konfigurieren"
-      },
-      "description": {
-        "en": "Set up the rating form: customize the prompt text shown above the stars, and set the external review URL (e.g. Google Review) for 5-star ratings.",
-        "de": "Richte das Bewertungsformular ein: Passe den Text über den Sternen an und setze die externe Bewertungs-URL (z.B. Google Bewertung) für 5-Sterne-Bewertungen."
-      },
-      "preview": null,
-      "creator": "github:JoAiHQ/warps",
-      "privileges": [],
-      "listed": true,
-      "visibility": "public",
-      "primaryAddress": null,
-      "primaryFunc": null,
-      "brand": {
-        "hash": "a5e6364406c497202430d332b15dd2deb37b4f7652389db8aef13b3c4c11c952",
-        "slug": "rating",
-        "active": true,
-        "protocol": "brand:0.2.0",
-        "name": "Rating",
-        "description": {
-          "en": "Collect customer ratings and store them on contact profiles. Perfect for restaurants, cafes, and service businesses.",
-          "de": "Sammle Kundenbewertungen und speichere sie auf Kontaktprofilen. Perfekt für Restaurants, Cafés und Service-Unternehmen."
-        },
-        "logo": {
-          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
-        },
-        "urls": {
-          "web": "https://joai.ai"
-        }
-      },
-      "warp": {
-        "protocol": "warp:3.0.0",
-        "name": "Rating: Configure",
-        "title": {
-          "en": "Configure rating",
-          "de": "Bewertung konfigurieren"
-        },
-        "description": {
-          "en": "Set up the rating form: customize the prompt text shown above the stars, and set the external review URL (e.g. Google Review) for 5-star ratings.",
-          "de": "Richte das Bewertungsformular ein: Passe den Text über den Sternen an und setze die externe Bewertungs-URL (z.B. Google Bewertung) für 5-Sterne-Bewertungen."
-        },
-        "bot": "Use this to configure the rating form — set the question text and the external review link for happy customers.",
-        "vars": {
-          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
-        },
-        "actions": [
-          {
-            "type": "collect",
-            "name": "setup",
-            "label": {
-              "en": "Save settings",
-              "de": "Einstellungen speichern"
-            },
-            "inputs": [
-              {
-                "name": "promptText",
-                "as": "promptText",
-                "label": {
-                  "en": "Rating prompt",
-                  "de": "Bewertungstext"
-                },
-                "description": {
-                  "en": "The question shown above the stars, e.g. 'How do you rate your visit?'",
-                  "de": "Die Frage über den Sternen, z.B. 'Wie bewertest du deinen Besuch?'"
-                },
-                "type": "string",
-                "source": "field",
-                "required": true
-              },
-              {
-                "name": "reviewUrl",
-                "as": "reviewUrl",
-                "label": {
-                  "en": "Review URL",
-                  "de": "Bewertungs-URL"
-                },
-                "description": {
-                  "en": "External review page for 5-star ratings, e.g. Google Review link",
-                  "de": "Externe Bewertungsseite für 5-Sterne, z.B. Google-Review-Link"
-                },
-                "type": "string",
-                "source": "field",
-                "required": false
-              }
-            ]
-          }
-        ],
-        "next": [
-          {
-            "type": "collect",
-            "name": "save-prompt",
-            "label": {
-              "en": "Saving...",
-              "de": "Speichern..."
-            },
-            "destination": {
-              "url": "https://devnet-api.joai.ai/v1/stores/entries",
-              "method": "POST",
-              "headers": {
-                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
-              }
-            },
-            "inputs": [],
-            "body": {
-              "storeName": "rating",
-              "value": "{{PROMPT_TEXT}}"
-            }
-          },
-          {
-            "type": "collect",
-            "when": "{{REVIEW_URL}} != ''",
-            "name": "save-review-url",
-            "label": {
-              "en": "Saving...",
-              "de": "Speichern..."
-            },
-            "destination": {
-              "url": "https://devnet-api.joai.ai/v1/stores/entries",
-              "method": "POST",
-              "headers": {
-                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
-              }
-            },
-            "inputs": [],
-            "body": {
-              "storeName": "rating-review-url",
-              "value": "{{REVIEW_URL}}"
-            }
-          }
-        ],
-        "output": {
-          "PROMPT_TEXT": "out.promptText",
-          "REVIEW_URL": "out.reviewUrl"
-        },
-        "messages": {
-          "success": {
-            "en": "Rating settings saved!",
-            "de": "Bewertungseinstellungen gespeichert!"
-          }
-        }
-      },
-      "extras": null
-    },
-    {
       "key": "none:rating-star",
       "identifier": "@rating-star",
       "alias": "rating-star",
       "chain": "none",
-      "hash": "0cb02ba6e88747052573d56f3c84c5a2390919db4e8dea06fde4a4022c01d6bb",
-      "checksum": "0cb02ba6e88747052573d56f3c84c5a2390919db4e8dea06fde4a4022c01d6bb",
+      "hash": "e144290b866ab588c9d9e30fe5c27592bc3202230aa69f040cc22fc5f1a468f6",
+      "checksum": "e144290b866ab588c9d9e30fe5c27592bc3202230aa69f040cc22fc5f1a468f6",
       "name": "Review: Star Rating",
       "title": {
         "en": "Rate your visit",
@@ -396,7 +243,7 @@
               "name": "{{NAME}}",
               "phone": "{{PHONE}}",
               "props": {
-                "last_review_rating": "{{RATING}}"
+                "rating": "{{RATING}}"
               }
             }
           }
