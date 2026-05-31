@@ -22,5 +22,9 @@ export const brand = async (config: WarpClientConfig): Promise<WarpbaseBrand> =>
   site: {
     enabled: true,
     auth: false,
+    indexPath: '/',
+    routes: [
+      { path: '/', warp: '@rating-star', label: { en: 'Rate your visit', de: 'Besuch bewerten' }, nav: false },
+    ],
   },
 })
