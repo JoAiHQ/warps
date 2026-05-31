@@ -6,10 +6,13 @@
     "de": "Bewerte deinen Besuch"
   },
   "description": {
-    "en": "Rate your visit and help the team improve. Your feedback is stored on your contact profile so the team can follow up personally.",
-    "de": "Bewerte deinen Besuch und hilf dem Team, besser zu werden. Dein Feedback wird auf deinem Kontaktprofil gespeichert, damit das Team persönlich nachfassen kann."
+    "en": "Rate your visit. Your feedback is stored on your contact profile so the team can follow up personally.",
+    "de": "Bewerte deinen Besuch. Dein Feedback wird auf deinem Kontaktprofil gespeichert, damit das Team persönlich nachfassen kann."
   },
   "bot": "Use this when a customer wants to leave a review or rate their experience at a restaurant, cafe, or shop.",
+  "vars": {
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+  },
   "actions": [
     {
       "type": "collect",
@@ -57,7 +60,28 @@
       ]
     }
   ],
-  "next": "@joai-contact-find-or-create?name={{NAME}}&phone={{PHONE}}",
+  "next": [
+    {
+      "type": "collect",
+      "name": "create-contact",
+      "label": {
+        "en": "Creating contact...",
+        "de": "Kontakt wird erstellt..."
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/contacts/find-or-create",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [],
+      "body": {
+        "name": "{{NAME}}",
+        "phone": "{{PHONE}}"
+      }
+    }
+  ],
   "output": {
     "RATING": "out.rating",
     "NAME": "out.name",
@@ -65,8 +89,8 @@
   },
   "messages": {
     "success": {
-      "en": "Thanks {{name}}! You rated {{RATING}}/5.",
-      "de": "Danke {{name}}! Du hast {{RATING}}/5 bewertet."
+      "en": "Thanks {{NAME}}! You rated {{RATING}}/5.",
+      "de": "Danke {{NAME}}! Du hast {{RATING}}/5 bewertet."
     }
   }
 }
