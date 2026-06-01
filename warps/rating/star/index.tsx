@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import { App } from '../../ui/lib/components'
+import { App } from '../../../ui/lib/components'
 import { ReviewForm } from './components/ReviewForm'
 
 function Main() {

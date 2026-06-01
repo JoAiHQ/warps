@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useAppContext } from '../../../ui/lib/components'
+import { useAppContext } from '../../../../ui/lib/components'
 
 type Step = 'rate' | 'details' | 'done'
 
