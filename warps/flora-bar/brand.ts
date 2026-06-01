@@ -21,5 +21,7 @@ export const brand = async (config: WarpClientConfig): Promise<WarpbaseBrand> =>
   },
   site: {
     enabled: false,
+    indexPath: '/',
+    routes: [],
   },
 })

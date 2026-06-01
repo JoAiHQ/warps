@@ -505,6 +505,11 @@ export const meta: Record<string, WarpExtras> = {
     },
     category: 'productivity',
   },
+  'service-subscribe': {
+    keywords: {
+      en: ['subscribe', 'subscription', 'recurring', 'service', 'billing', 'monthly', 'auto-renew'],
+      de: ['abonnieren', 'abonnement', 'wiederkehrend', 'dienstleistung', 'monatlich', 'automatisch verlängern'],
+    },
     useCases: {
       en: [
         'Subscribe a customer to a monthly support service with auto-renewal',
@@ -529,6 +534,11 @@ export const meta: Record<string, WarpExtras> = {
       ],
     },
   },
+  'service-subscribe-cancel': {
+    keywords: {
+      en: ['cancel', 'subscription', 'unsubscribe', 'stop', 'service', 'recurring'],
+      de: ['kündigen', 'abonnement', 'abmelden', 'stoppen', 'dienstleistung', 'wiederkehrend'],
+    },
     useCases: {
       en: [
         'Cancel a customer subscription when they request to stop',
