@@ -47,7 +47,7 @@ function StatusBadge({ replied }: { replied: boolean }) {
   )
 }
 
-function ContactRow({ contact, isReplied }: { contact: Contact; isReplied: boolean }) {
+function ContactRow({ contact, isReplied, stepLabel }: { contact: Contact; isReplied: boolean; stepLabel: string }) {
   const initials = contact.name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase()
   const sequence = contact.props?.followups_sequence as string | undefined
   const step = contact.props?.followups_step as number | undefined
@@ -61,7 +61,7 @@ function ContactRow({ contact, isReplied }: { contact: Contact; isReplied: boole
         <p className="text-sm font-medium text-gray-900 dark:text-white truncate">{contact.name}</p>
         {sequence && (
           <p className="text-xs text-gray-400 truncate">
-            {sequence}{step ? ` · ${tr.stepLabel} ${step}` : ''}
+            {sequence}{step ? ` · ${stepLabel} ${step}` : ''}
           </p>
         )}
       </div>
@@ -115,7 +115,7 @@ function Main() {
             {tr.activeContacts}
           </p>
           <div className="divide-y divide-gray-100 dark:divide-gray-800">
-            {enrolled.map(c => <ContactRow key={c.id} contact={c} isReplied={false} />)}
+            {enrolled.map(c => <ContactRow key={c.id} contact={c} isReplied={false} stepLabel={tr.stepLabel} />)}
           </div>
         </div>
       )}
@@ -126,7 +126,7 @@ function Main() {
             {tr.repliedContacts}
           </p>
           <div className="divide-y divide-gray-100 dark:divide-gray-800">
-            {replied.map(c => <ContactRow key={c.id} contact={c} isReplied={true} />)}
+            {replied.map(c => <ContactRow key={c.id} contact={c} isReplied={true} stepLabel={tr.stepLabel} />)}
           </div>
         </div>
       )}

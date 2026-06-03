@@ -142,8 +142,8 @@ function checkInlineWarpsExist(warp: Warp, relPath: string, allWarpIds: Set<stri
   const warpNameFromPath = (relPath: string) => relPath.replace(/\.json$/, '').replace(/\//g, '-')
 
   for (const [actionIndex, action] of (warp.actions ?? []).entries()) {
-    if (action.type !== 'inline') continue
-    const inlineAction = action as { warp?: string }
+    if ((action as Record<string, unknown>).type !== 'inline') continue
+    const inlineAction = action as Record<string, unknown> & { warp?: string }
     if (!inlineAction.warp) continue
 
     const ref = inlineAction.warp.split('?')[0].replace(/^@/, '')
