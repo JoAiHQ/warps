@@ -1,0 +1,133 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Create Update",
+  "title": {
+    "en": "Post an update",
+    "de": "Update veröffentlichen"
+  },
+  "description": {
+    "en": "Post a deal, event, or news update that appears on your website. Supports scheduling, images, and links. Published updates are immediately visible to your customers.",
+    "de": "Veröffentliche ein Angebot, Event oder eine News, die auf deiner Website erscheint. Unterstützt Zeitplanung, Bilder und Links. Veröffentlichte Updates sind sofort für deine Kunden sichtbar."
+  },
+  "bot": "Use this to create a deal, event, or update for your customers. Set a schedule (startsAt/endsAt) for time-limited offers.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Post update",
+        "de": "Update veröffentlichen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/updates",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Title",
+          "as": "title",
+          "description": {
+            "en": "Headline of the update",
+            "de": "Überschrift des Updates"
+          },
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Type",
+          "as": "type",
+          "description": {
+            "en": "Type of update",
+            "de": "Art des Updates"
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "options": {
+            "deal": "Deal",
+            "event": "Event",
+            "update": "Update"
+          }
+        },
+        {
+          "name": "Body",
+          "as": "body",
+          "description": {
+            "en": "Detailed description (supports markdown)",
+            "de": "Detailbeschreibung (unterstützt Markdown)"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Starts At",
+          "as": "startsAt",
+          "description": {
+            "en": "When the update becomes active (ISO date, optional)",
+            "de": "Wann das Update aktiv wird (ISO-Datum, optional)"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Ends At",
+          "as": "endsAt",
+          "description": {
+            "en": "When the update expires (ISO date, optional)",
+            "de": "Wann das Update abläuft (ISO-Datum, optional)"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Image URL",
+          "as": "imageUrl",
+          "description": {
+            "en": "URL to an image for the update",
+            "de": "URL zu einem Bild für das Update"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Link URL",
+          "as": "linkUrl",
+          "description": {
+            "en": "URL to link from the update",
+            "de": "URL, auf die das Update verlinkt"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        }
+      ],
+      "output": {
+        "id": "out.data.id",
+        "title": "out.data.title",
+        "type": "out.data.type",
+        "status": "out.data.status"
+      }
+    }
+  ],
+  "output": {
+    "UPDATE_ID": "out.1.id",
+    "UPDATE_TITLE": "out.1.title"
+  },
+  "messages": {
+    "success": {
+      "en": "Update '{{UPDATE_TITLE}}' posted!",
+      "de": "Update '{{UPDATE_TITLE}}' veröffentlicht!"
+    }
+  }
+}
