@@ -9,7 +9,7 @@
     "en": "Create a new billable service with name, price, pricing model, and duration for your team catalog. Services can be one-time or monthly subscription. Monthly services use Stripe for recurring billing.",
     "de": "Erstelle eine neue abrechenbare Dienstleistung mit Name, Preis, Abrechnungsmodell und Dauer für deinen Team-Katalog. Dienstleistungen können einmalig oder monatlich als Abo sein. Monatliche Services nutzen Stripe für wiederkehrende Zahlungen."
   },
-  "bot": "Use when the user wants to create a new service, billable offering, appointment type, or subscription plan. Extract name, price, pricing model (one-time/monthly), and duration from their description. Ask for the price in a natural format like '€49' or '$29' — convert it to cents (multiply by 100) before sending to the API. If they say 'monthly' or 'subscription', set pricingModel to 'monthly'.",
+  "bot": "Use when the user wants to create a new service, billable offering, appointment type, or subscription plan. Extract name, price, pricing model (one-time/monthly), and duration from their description. If they say 'monthly' or 'subscription', set pricingModel to 'monthly'. The price modifier automatically converts euros to cents.",
   "vars": {
     "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
     "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
@@ -59,10 +59,11 @@
           "name": "Price",
           "as": "price",
           "description": {
-            "en": "Price in cents (e.g. 4900 for €49). For subscriptions this is the monthly price.",
-            "de": "Preis in Cent (z.B. 4900 für 49€). Bei Abos ist das der monatliche Preis."
+            "en": "Price in euros (e.g. 49 for €49). For subscriptions this is the monthly price.",
+            "de": "Preis in Euro (z.B. 49 für 49€). Bei Abos ist das der monatliche Preis."
           },
           "bot": "Ask for the price naturally. For subscriptions, ask if monthly or one-time.",
+          "modifier": "transform:(value) => Number(value) * 100",
           "type": "number",
           "source": "field",
           "required": true
