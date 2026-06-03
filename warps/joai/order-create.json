@@ -10,14 +10,14 @@
     "ro": "Creează comandă"
   },
   "description": {
-    "en": "Create a billing order from team products. Takes customer name, looks up the contact, then adds services or products to bill. Generates an order with invoice and payment URL.",
-    "de": "Erstelle eine Bestellung aus Team-Produkten. Nimmt den Kundenname, findet den Kontakt und fügt Services oder Produkte hinzu. Erstellt eine Bestellung mit Rechnung und Zahlungslink.",
-    "fr": "Crée une commande de facturation à partir des produits de l'équipe. Prend le nom du client, trouve le contact, puis ajoute des services ou produits à facturer. Génère une commande avec facture et lien de paiement.",
-    "es": "Crea un pedido de facturación desde los productos del equipo. Toma el nombre del cliente, busca el contacto, luego agrega servicios o productos a facturar. Genera un pedido con factura y enlace de pago.",
-    "it": "Crea un ordine di fatturazione dai prodotti del team. Prende il nome del cliente, trova il contatto, poi aggiunge servizi o prodotti da fatturare. Genera un ordine con fattura e link di pagamento.",
-    "ro": "Creează o comandă de facturare din produsele echipei. Preia numele clientului, găsește contactul, apoi adaugă servicii sau produse de facturat. Generează o comandă cu factură și link de plată."
+    "en": "Create a billing order from team products. Takes customer name and what to bill, looks up the contact and service catalog automatically, generates an order with invoice and payment URL.",
+    "de": "Erstelle eine Bestellung aus Team-Produkten. Nimmt Kundenname und Leistung, findet Kontakt und Service-Katalog automatisch, erstellt eine Bestellung mit Rechnung und Zahlungslink.",
+    "fr": "Crée une commande de facturation à partir des produits de l'équipe. Prend le nom du client et ce qui est à facturer, trouve le contact et le catalogue automatiquement, génère une commande avec facture et lien de paiement.",
+    "es": "Crea un pedido de facturación desde los productos del equipo. Toma el nombre del cliente y qué facturar, busca el contacto y el catálogo automáticamente, genera un pedido con factura y enlace de pago.",
+    "it": "Crea un ordine di fatturazione dai prodotti del team. Prende il nome del cliente e cosa fatturare, trova il contatto e il catalogo automaticamente, genera un ordine con fattura e link di pagamento.",
+    "ro": "Creează o comandă de facturare din produsele echipei. Preia numele clientului și ce se facturează, găsește contactul și catalogul automat, generează o comandă cu factură și link de plată."
   },
-  "bot": "Use when the user wants to create a billing order or invoice for a customer. The warp automatically resolves the customer name to a contact ID.",
+  "bot": "Use when the user wants to create a billing order or invoice for a customer. The warp looks up the contact and service catalog automatically.",
   "vars": {
     "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
     "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
@@ -50,6 +50,22 @@
             "it": "Nome cliente",
             "ro": "Nume client"
           }
+        },
+        {
+          "name": "Item",
+          "as": "billItem",
+          "type": "string",
+          "source": "field",
+          "position": "local",
+          "required": true,
+          "description": {
+            "en": "What to bill (service or product name)",
+            "de": "Was berechnet werden soll (Service- oder Produktname)",
+            "fr": "Ce qui doit être facturé (nom du service ou produit)",
+            "es": "Qué facturar (nombre del servicio o producto)",
+            "it": "Cosa fatturare (nome del servizio o prodotto)",
+            "ro": "Ce se facturează (numele serviciului sau produsului)"
+          }
         }
       ]
     },
@@ -59,15 +75,26 @@
       "silent": true
     },
     {
+      "type": "inline",
+      "warp": "@joai-service-list",
+      "silent": true
+    },
+    {
+      "type": "prompt",
+      "silent": true,
+      "as": "serviceIds",
+      "prompt": "The user wants to bill: {{billItem}}. Available services: {{servicesList}}. Find the matching service and return only its hash ID as a plain string. If no match, return an empty string.",
+      "expect": {
+        "type": "string"
+      }
+    },
+    {
       "type": "collect",
       "label": {
-        "en": "What to bill",
-        "de": "Was berechnet werden soll",
-        "fr": "Que facturer",
-        "es": "Qué facturar",
-        "it": "Cosa fatturare",
-        "ro": "Ce se facturează"
+        "en": "Create order",
+        "de": "Bestellung erstellen"
       },
+      "auto": true,
       "destination": {
         "url": "INJECT:API_BASE/v1/orders?fresh=true",
         "method": "POST",
@@ -82,34 +109,9 @@
           "value": "{{contactId}}"
         },
         {
-          "name": "Service ID",
           "as": "serviceIds",
-          "type": "string",
-          "source": "field",
-          "required": false,
-          "description": {
-            "en": "Service hash ID from the team catalog",
-            "de": "Service-Hash-ID aus dem Team-Katalog",
-            "fr": "ID de hachage du service dans le catalogue de l'équipe",
-            "es": "ID hash del servicio del catálogo del equipo",
-            "it": "ID hash del servizio dal catalogo del team",
-            "ro": "ID-ul hash al serviciului din catalogul echipei"
-          }
-        },
-        {
-          "name": "Product ID",
-          "as": "productIds",
-          "type": "string",
-          "source": "field",
-          "required": false,
-          "description": {
-            "en": "Product hash ID from the team catalog",
-            "de": "Produkt-Hash-ID aus dem Team-Katalog",
-            "fr": "ID de hachage du produit dans le catalogue de l'équipe",
-            "es": "ID hash del producto del catálogo del equipo",
-            "it": "ID hash del prodotto dal catalogo del team",
-            "ro": "ID-ul hash al produsului din catalogul echipei"
-          }
+          "source": "hidden",
+          "value": "{{serviceIds}}"
         }
       ]
     }
