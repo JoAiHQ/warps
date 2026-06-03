@@ -10,14 +10,14 @@
     "ro": "Creează comandă"
   },
   "description": {
-    "en": "Create a billing order from team products. Takes contact ID and product/service IDs, generates an order with invoice and payment URL through the billing system.",
-    "de": "Erstelle eine Bestellung aus Team-Produkten. Nimmt Kontakt-ID und Produkt-/Service-IDs entgegen, generiert eine Bestellung mit Rechnung und Zahlungslink.",
-    "fr": "Crée une commande de facturation à partir des produits de l'équipe. Prend l'ID du contact et les ID des produits/services, génère une commande avec facture et lien de paiement.",
-    "es": "Crea un pedido de facturación desde los productos del equipo. Toma el ID del contacto y los ID de productos/servicios, genera un pedido con factura y enlace de pago.",
-    "it": "Crea un ordine di fatturazione dai prodotti del team. Prende l'ID del contatto e gli ID di prodotti/servizi, genera un ordine con fattura e link di pagamento.",
-    "ro": "Creează o comandă de facturare din produsele echipei. Preia ID-ul contactului și ID-urile produselor/serviciilor, generează o comandă cu factură și link de plată."
+    "en": "Create a billing order from team products. Takes contact name and service IDs, resolves the contact, generates an order with invoice and payment URL.",
+    "de": "Erstelle eine Bestellung aus Team-Produkten. Nimmt Kontaktname und Service-IDs, findet den Kontakt und erstellt eine Bestellung mit Rechnung und Zahlungslink.",
+    "fr": "Crée une commande de facturation à partir des produits de l'équipe. Prend le nom du contact et les IDs des services, résout le contact, génère une commande avec facture et lien de paiement.",
+    "es": "Crea un pedido de facturación desde los productos del equipo. Toma el nombre del contacto y los IDs de servicios, resuelve el contacto, genera un pedido con factura y enlace de pago.",
+    "it": "Crea un ordine di fatturazione dai prodotti del team. Prende il nome del contatto e gli ID dei servizi, risolve il contatto, genera un ordine con fattura e link di pagamento.",
+    "ro": "Creează o comandă de facturare din produsele echipei. Preia numele contactului și ID-urile serviciilor, rezolvă contactul, generează o comandă cu factură și link de plată."
   },
-  "bot": "Creates a billing order from team products and services. Use when the user needs to bill a customer. Provide the contact ID and product/service hash IDs from the team catalog. Always pass service IDs as an array (serviceIds), not a single string.",
+  "bot": "Use when the user wants to create a billing order or invoice for a customer. Ask for the customer name and what products or services to bill. The warp automatically finds or creates the contact.",
   "vars": {
     "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
     "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
@@ -27,13 +27,76 @@
     {
       "type": "collect",
       "label": {
-        "en": "Create order",
-        "de": "Bestellung erstellen",
-        "fr": "Créer une commande",
-        "es": "Crear pedido",
-        "it": "Crea ordine",
-        "ro": "Creează comandă"
+        "en": "Order details",
+        "de": "Bestelldetails",
+        "fr": "Détails de la commande",
+        "es": "Detalles del pedido",
+        "it": "Dettagli ordine",
+        "ro": "Detalii comandă"
       },
+      "inputs": [
+        {
+          "name": "Customer",
+          "as": "contactName",
+          "type": "string",
+          "source": "field",
+          "position": "local",
+          "required": true,
+          "description": {
+            "en": "Customer name",
+            "de": "Kundenname",
+            "fr": "Nom du client",
+            "es": "Nombre del cliente",
+            "it": "Nome cliente",
+            "ro": "Nume client"
+          }
+        },
+        {
+          "name": "Service ID",
+          "as": "serviceId",
+          "type": "string",
+          "source": "field",
+          "position": "local",
+          "required": false,
+          "description": {
+            "en": "Hash ID of the service from the team catalog",
+            "de": "Hash-ID des Service aus dem Team-Katalog",
+            "fr": "ID de hachage du service dans le catalogue de l'équipe",
+            "es": "ID hash del servicio del catálogo del equipo",
+            "it": "ID hash del servizio dal catalogo del team",
+            "ro": "ID-ul hash al serviciului din catalogul echipei"
+          }
+        },
+        {
+          "name": "Product ID",
+          "as": "productId",
+          "type": "string",
+          "source": "field",
+          "position": "local",
+          "required": false,
+          "description": {
+            "en": "Hash ID of the product from the team catalog",
+            "de": "Hash-ID des Produkts aus dem Team-Katalog",
+            "fr": "ID de hachage du produit dans le catalogue de l'équipe",
+            "es": "ID hash del producto del catálogo del equipo",
+            "it": "ID hash del prodotto dal catalogo del team",
+            "ro": "ID-ul hash al produsului din catalogul echipei"
+          }
+        }
+      ]
+    },
+    {
+      "type": "inline",
+      "warp": "@joai-contact-find-or-create?name={{contactName}}",
+      "silent": true
+    },
+    {
+      "type": "collect",
+      "label": {
+        "en": "Create order",
+        "de": "Bestellung erstellen"
+      },
+      "auto": true,
       "destination": {
         "url": "INJECT:API_BASE/v1/orders",
         "method": "POST",
@@ -43,64 +106,24 @@
       },
       "inputs": [
         {
-          "name": "Contact ID",
           "as": "contactId",
-          "type": "string",
-          "source": "field",
-          "required": true,
-          "description": {
-            "en": "Contact hash ID from the CRM",
-            "de": "Kontakt-Hash-ID aus dem CRM",
-            "fr": "ID de hachage du contact depuis le CRM",
-            "es": "ID hash del contacto desde el CRM",
-            "it": "ID hash del contatto dal CRM",
-            "ro": "ID-ul hash al contactului din CRM"
-          }
+          "source": "hidden",
+          "value": "{{contactId}}"
         },
         {
-          "name": "Product IDs",
-          "as": "productIds",
-          "type": "string[]",
-          "source": "field",
-          "required": false,
-          "description": {
-            "en": "Array of product hash IDs from the team catalog",
-            "de": "Array von Produkt-Hash-IDs aus dem Team-Katalog",
-            "fr": "Tableau d'ID de hachage des produits du catalogue de l'équipe",
-            "es": "Array de ID hash de productos del catálogo del equipo",
-            "it": "Array di ID hash dei prodotti dal catalogo del team",
-            "ro": "Listă de ID-uri hash ale produselor din catalogul echipei"
-          }
-        },
-        {
-          "name": "Service IDs",
           "as": "serviceIds",
-          "type": "string[]",
-          "source": "field",
-          "required": false,
-          "description": {
-            "en": "Array of service hash IDs from the team catalog",
-            "de": "Array von Service-Hash-IDs aus dem Team-Katalog",
-            "fr": "Tableau d'ID de hachage des services du catalogue de l'équipe",
-            "es": "Array de ID hash de servicios del catálogo del equipo",
-            "it": "Array di ID hash dei servizi dal catalogo del team",
-            "ro": "Listă de ID-uri hash ale serviciilor din catalogul echipei"
-          }
+          "source": "hidden",
+          "value": "{{serviceId}}"
         },
         {
-          "name": "Notify Customer",
-          "as": "notify",
-          "type": "boolean",
-          "source": "field",
-          "required": false,
-          "description": {
-            "en": "Send notification to the customer about the order",
-            "de": "Benachrichtigung an den Kunden senden",
-            "fr": "Envoyer une notification au client concernant la commande",
-            "es": "Enviar notificación al cliente sobre el pedido",
-            "it": "Invia notifica al cliente riguardo l'ordine",
-            "ro": "Trimite notificare clientului despre comandă"
-          }
+          "as": "productIds",
+          "source": "hidden",
+          "value": "{{productId}}"
+        },
+        {
+          "as": "fresh",
+          "source": "hidden",
+          "value": "true"
         }
       ]
     }
