@@ -10,12 +10,23 @@
     "de": "Erstelle einen Kurzlink und schreibe ihn auf einen physischen NFC-Tag. Der Link leitet auf jede gewünschte URL weiter und zählt Scans automatisch. Halte einfach dein Telefon an den Tag, um ihn zu programmieren."
   },
   "bot": "Use this when the user wants to create a link for a physical NFC tag. The warp creates the short link and then triggers the native NFC writer to program the tag.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+  },
   "actions": [
     {
       "type": "collect",
       "label": {
         "en": "Create NFC link",
         "de": "NFC-Link erstellen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/links",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
       },
       "inputs": [
         {
@@ -27,7 +38,6 @@
           },
           "type": "string",
           "source": "field",
-          "position": "local",
           "required": true
         },
         {
@@ -39,21 +49,24 @@
           },
           "type": "string",
           "source": "field",
-          "position": "local",
           "required": false
+        },
+        {
+          "as": "type",
+          "source": "hidden",
+          "value": "nfc"
         }
-      ]
-    },
-    {
-      "type": "inline",
-      "warp": "@joai-link-create?url={{url}}&type=nfc&title={{title}}",
-      "silent": true
+      ],
+      "output": {
+        "shortUrl": "out.data.shortUrl",
+        "slug": "out.data.slug"
+      }
     }
   ],
   "output": {
-    "SHORT_URL": "{{SHORT_URL}}",
-    "SLUG": "{{SLUG}}",
-    "nfc": "{{SHORT_URL}}"
+    "SHORT_URL": "out.1.shortUrl",
+    "SLUG": "out.1.slug",
+    "nfc": "out.1.shortUrl"
   },
   "messages": {
     "success": {
