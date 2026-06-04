@@ -4,25 +4,25 @@
   "repo": "JoAiHQ/warps",
   "branch": "dev",
   "network": "devnet",
-  "commitSha": "14a59ffd951f67c5faa7ba35fd6c03458b8a8caa",
-  "committedAt": "2026-06-03T15:42:14.530Z",
-  "generatedAt": "2026-06-03T15:42:17.233Z",
+  "commitSha": "f92cf711acb6036adbbc7be69c931c756215b125",
+  "committedAt": "2026-06-04T15:18:01.306Z",
+  "generatedAt": "2026-06-04T15:18:03.891Z",
   "upserts": [
     {
-      "key": "none:joai-service-create",
-      "identifier": "@joai-service-create",
-      "alias": "joai-service-create",
+      "key": "none:joai-link-create",
+      "identifier": "@joai-link-create",
+      "alias": "joai-link-create",
       "chain": "none",
-      "hash": "7abce612b4663d8ee360d23aa10ee6f51301ff60ceffb8e91e597be9cbc82d79",
-      "checksum": "7abce612b4663d8ee360d23aa10ee6f51301ff60ceffb8e91e597be9cbc82d79",
-      "name": "JoAi: Create Service",
+      "hash": "8aa249cd71f7a28958b9a595af3ebc1ef5ed2a041129dd03848248e93374bb85",
+      "checksum": "8aa249cd71f7a28958b9a595af3ebc1ef5ed2a041129dd03848248e93374bb85",
+      "name": "JoAi: Create Link",
       "title": {
-        "en": "Create a service",
-        "de": "Dienstleistung erstellen"
+        "en": "Create a short link",
+        "de": "Kurzlink erstellen"
       },
       "description": {
-        "en": "Create a new billable service with name, price, pricing model, and duration for your team catalog. Services can be one-time or monthly subscription. Monthly services use Stripe for recurring billing.",
-        "de": "Erstelle eine neue abrechenbare Dienstleistung mit Name, Preis, Abrechnungsmodell und Dauer für deinen Team-Katalog. Dienstleistungen können einmalig oder monatlich als Abo sein. Monatliche Services nutzen Stripe für wiederkehrende Zahlungen."
+        "en": "Create a short link, QR code, or NFC link that redirects to any URL. Tracks scans automatically. Use for QR codes on cards, flyers, or NFC tags.",
+        "de": "Erstelle einen Kurzlink, QR-Code oder NFC-Link, der auf jede URL weiterleitet. Scannt automatisch mit. Ideal für QR-Codes auf Karten, Flyern oder NFC-Tags."
       },
       "preview": null,
       "creator": "github:JoAiHQ/warps",
@@ -57,44 +57,29 @@
       },
       "warp": {
         "protocol": "warp:3.0.0",
-        "name": "JoAi: Create Service",
+        "name": "JoAi: Create Link",
         "title": {
-          "en": "Create a service",
-          "de": "Dienstleistung erstellen"
+          "en": "Create a short link",
+          "de": "Kurzlink erstellen"
         },
         "description": {
-          "en": "Create a new billable service with name, price, pricing model, and duration for your team catalog. Services can be one-time or monthly subscription. Monthly services use Stripe for recurring billing.",
-          "de": "Erstelle eine neue abrechenbare Dienstleistung mit Name, Preis, Abrechnungsmodell und Dauer für deinen Team-Katalog. Dienstleistungen können einmalig oder monatlich als Abo sein. Monatliche Services nutzen Stripe für wiederkehrende Zahlungen."
+          "en": "Create a short link, QR code, or NFC link that redirects to any URL. Tracks scans automatically. Use for QR codes on cards, flyers, or NFC tags.",
+          "de": "Erstelle einen Kurzlink, QR-Code oder NFC-Link, der auf jede URL weiterleitet. Scannt automatisch mit. Ideal für QR-Codes auf Karten, Flyern oder NFC-Tags."
         },
-        "bot": "Use when the user wants to create a new service, billable offering, appointment type, or subscription plan. Extract name, price, pricing model (one-time/monthly), and duration from their description. If they say 'monthly' or 'subscription', set pricingModel to 'monthly'. The price modifier automatically converts euros to cents.",
+        "bot": "Use this to create a short link (go.joai.ai/slug) for QR codes, flyers, or NFC tags. Provide the target URL and optionally a custom slug or title. The slug is auto-generated from the title or domain name.",
         "vars": {
           "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
-          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
-          "JOAI_TEAM_CURRENCY": "env:JOAI_TEAM_CURRENCY|USD"
-        },
-        "messages": {
-          "success": {
-            "en": "Service created: {{name}} ({{priceDisplay}} {{JOAI_TEAM_CURRENCY}})",
-            "de": "Dienstleistung erstellt: {{name}} ({{priceDisplay}} {{JOAI_TEAM_CURRENCY}})",
-            "fr": "Service créé : {{name}} ({{priceDisplay}} {{JOAI_TEAM_CURRENCY}})",
-            "es": "Servicio creado: {{name}} ({{priceDisplay}} {{JOAI_TEAM_CURRENCY}})",
-            "it": "Servizio creato: {{name}} ({{priceDisplay}} {{JOAI_TEAM_CURRENCY}})",
-            "ro": "Serviciu creat: {{name}} ({{priceDisplay}} {{JOAI_TEAM_CURRENCY}})"
-          },
-          "error": {
-            "en": "Failed to create service: {{MESSAGE}}",
-            "de": "Dienstleistung konnte nicht erstellt werden: {{MESSAGE}}"
-          }
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
         },
         "actions": [
           {
             "type": "collect",
             "label": {
-              "en": "Create service",
-              "de": "Dienstleistung erstellen"
+              "en": "Create link",
+              "de": "Link erstellen"
             },
             "destination": {
-              "url": "https://devnet-api.joai.ai/v1/services",
+              "url": "https://devnet-api.joai.ai/v1/links",
               "method": "POST",
               "headers": {
                 "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
@@ -102,118 +87,265 @@
             },
             "inputs": [
               {
-                "name": "Name",
-                "as": "name",
+                "name": "URL",
+                "as": "url",
                 "description": {
-                  "en": "Service name",
-                  "de": "Name der Dienstleistung"
+                  "en": "The URL to redirect to",
+                  "de": "Die Ziel-URL"
                 },
                 "type": "string",
                 "source": "field",
                 "required": true
               },
               {
-                "name": "Price",
-                "as": "price",
+                "name": "Type",
+                "as": "type",
                 "description": {
-                  "en": "Price in euros (e.g. 49 for €49). For subscriptions this is the monthly price.",
-                  "de": "Preis in Euro (z.B. 49 für 49€). Bei Abos ist das der monatliche Preis."
-                },
-                "bot": "Ask for the price naturally. For subscriptions, ask if monthly or one-time.",
-                "modifier": "transform:(value) => Number(value) * 100",
-                "type": "number",
-                "source": "field",
-                "required": true
-              },
-              {
-                "name": "Pricing model",
-                "as": "pricingModel",
-                "description": {
-                  "en": "One-time payment or monthly subscription",
-                  "de": "Einmalzahlung oder monatliches Abo"
+                  "en": "Type of link",
+                  "de": "Art des Links"
                 },
                 "type": "string",
                 "source": "field",
-                "required": false,
-                "options": [
-                  "one-time",
-                  "monthly"
-                ]
+                "required": true,
+                "options": {
+                  "short": "Short Link",
+                  "qr": "QR Code",
+                  "nfc": "NFC Tag"
+                }
               },
               {
-                "name": "Duration (minutes)",
-                "as": "duration_minutes",
+                "name": "Title",
+                "as": "title",
                 "description": {
-                  "en": "Duration in minutes for appointments",
-                  "de": "Dauer in Minuten für Termine"
-                },
-                "type": "number",
-                "source": "field",
-                "required": false
-              },
-              {
-                "name": "Description",
-                "as": "description",
-                "description": {
-                  "en": "Service description",
-                  "de": "Beschreibung der Dienstleistung"
+                  "en": "Optional title for the link (used for slug generation)",
+                  "de": "Optionaler Titel (wird für den Slug verwendet)"
                 },
                 "type": "string",
                 "source": "field",
                 "required": false
               },
               {
-                "name": "Tags",
-                "as": "tags",
+                "name": "Custom Slug",
+                "as": "slug",
                 "description": {
-                  "en": "Tags (e.g. hourly, consultation, maintenance, repair)",
-                  "de": "Tags (z.B. stundensatz, beratung, wartung, reparatur)"
+                  "en": "Optional custom slug (e.g. 'florabar')",
+                  "de": "Optionaler eigener Slug (z.B. 'florabar')"
                 },
                 "type": "string",
                 "source": "field",
                 "required": false
               }
-            ]
+            ],
+            "output": {
+              "id": "out.data.id",
+              "slug": "out.data.slug",
+              "shortUrl": "out.data.shortUrl",
+              "url": "out.data.url"
+            }
           }
         ],
         "output": {
-          "id": "out.data.id",
-          "name": "out.data.name",
-          "price": "out.data.price",
-          "priceDisplay": "transform:() => (Number(out.data.price || 0) / 100).toFixed(2)"
+          "SHORT_URL": "out.1.shortUrl",
+          "SLUG": "out.1.slug"
+        },
+        "messages": {
+          "success": {
+            "en": "Link created: {{SHORT_URL}}",
+            "de": "Link erstellt: {{SHORT_URL}}"
+          }
         }
       },
-      "extras": {
-        "keywords": {
-          "en": [
-            "create service",
-            "add service",
-            "new billable service",
-            "appointment type",
-            "service catalog"
-          ],
-          "de": [
-            "Dienstleistung erstellen",
-            "Service hinzufügen",
-            "neue abrechenbare Leistung",
-            "Terminart",
-            "Service-Katalog"
-          ]
+      "extras": null
+    },
+    {
+      "key": "none:joai-link-list",
+      "identifier": "@joai-link-list",
+      "alias": "joai-link-list",
+      "chain": "none",
+      "hash": "f2a83ef4b522dc31facf67ae21c0ac6e5224190e3c07b216f0415955742090d4",
+      "checksum": "f2a83ef4b522dc31facf67ae21c0ac6e5224190e3c07b216f0415955742090d4",
+      "name": "JoAi: List Links",
+      "title": {
+        "en": "View links",
+        "de": "Links anzeigen"
+      },
+      "description": {
+        "en": "View all short links, QR codes, and NFC tags for your business. Shows scan counts and status.",
+        "de": "Zeige alle Kurzlinks, QR-Codes und NFC-Tags für dein Geschäft. Mit Scan-Zahlen und Status."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
         },
-        "useCases": {
-          "en": [
-            "Add a new service type for appointment booking",
-            "Create a billable service with a set price and duration",
-            "Set up consultation, maintenance, or repair service offerings"
-          ],
-          "de": [
-            "Einen neuen Dienstleistungstyp für Terminbuchungen hinzufügen",
-            "Eine abrechenbare Dienstleistung mit festem Preis und Dauer erstellen",
-            "Beratungs-, Wartungs- oder Reparaturleistungen anlegen"
-          ]
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
         },
-        "category": "productivity"
-      }
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: List Links",
+        "title": {
+          "en": "View links",
+          "de": "Links anzeigen"
+        },
+        "description": {
+          "en": "View all short links, QR codes, and NFC tags for your business. Shows scan counts and status.",
+          "de": "Zeige alle Kurzlinks, QR-Codes und NFC-Tags für dein Geschäft. Mit Scan-Zahlen und Status."
+        },
+        "bot": "Use this to see all created links and their scan statistics. Filter by type (short, qr, nfc) or show only active ones.",
+        "vars": {
+          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "View links",
+              "de": "Links anzeigen"
+            },
+            "destination": {
+              "url": "https://devnet-api.joai.ai/v1/links?active=true",
+              "method": "GET",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+              }
+            },
+            "inputs": []
+          }
+        ],
+        "messages": {
+          "success": {
+            "en": "Here are your active links.",
+            "de": "Hier sind deine aktiven Links."
+          }
+        }
+      },
+      "extras": null
+    },
+    {
+      "key": "none:nfc-write",
+      "identifier": "@nfc-write",
+      "alias": "nfc-write",
+      "chain": "none",
+      "hash": "3db5704c8f869ff200c032d0eea53555685643337ba615e0c4d188b23bd82b5e",
+      "checksum": "3db5704c8f869ff200c032d0eea53555685643337ba615e0c4d188b23bd82b5e",
+      "name": "NFC: Write",
+      "title": {
+        "en": "Write an NFC tag",
+        "de": "NFC-Tag beschreiben"
+      },
+      "description": {
+        "en": "Create a short link for an NFC tag. The link redirects to any URL you choose and tracks scans automatically. Works with any NFC tag writer app or device.",
+        "de": "Erstelle einen Kurzlink für einen NFC-Tag. Der Link leitet auf jede gewünschte URL weiter und zählt Scans automatisch. Funktioniert mit jeder NFC-Schreib-App oder jedem Gerät."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "de3f2818be4edbfa41e995c34773211e31604630906179074cc55bbf42809266",
+        "slug": "nfc",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "NFC",
+        "description": {
+          "en": "Create short links for NFC tags that redirect to any URL and track scans automatically.",
+          "de": "Erstelle Kurzlinks für NFC-Tags, die auf jede URL weiterleiten und Scans automatisch zählen."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "NFC: Write",
+        "title": {
+          "en": "Write an NFC tag",
+          "de": "NFC-Tag beschreiben"
+        },
+        "description": {
+          "en": "Create a short link for an NFC tag. The link redirects to any URL you choose and tracks scans automatically. Works with any NFC tag writer app or device.",
+          "de": "Erstelle einen Kurzlink für einen NFC-Tag. Der Link leitet auf jede gewünschte URL weiter und zählt Scans automatisch. Funktioniert mit jeder NFC-Schreib-App oder jedem Gerät."
+        },
+        "bot": "Use this when the user wants to create a link to write to a physical NFC tag. Just provide the target URL.",
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Create NFC link",
+              "de": "NFC-Link erstellen"
+            },
+            "inputs": [
+              {
+                "name": "URL",
+                "as": "url",
+                "description": {
+                  "en": "The URL the NFC tag should open",
+                  "de": "Die URL, die der NFC-Tag öffnen soll"
+                },
+                "type": "string",
+                "source": "field",
+                "position": "local",
+                "required": true
+              },
+              {
+                "name": "Title",
+                "as": "title",
+                "description": {
+                  "en": "Optional title for the link (used for slug generation)",
+                  "de": "Optionaler Titel (wird für den Slug verwendet)"
+                },
+                "type": "string",
+                "source": "field",
+                "position": "local",
+                "required": false
+              }
+            ]
+          },
+          {
+            "type": "inline",
+            "warp": "@joai-link-create?url={{url}}&type=nfc&title={{title}}",
+            "silent": true
+          }
+        ],
+        "messages": {
+          "success": {
+            "en": "NFC link created: {{SHORT_URL}} — write this to your tag.",
+            "de": "NFC-Link erstellt: {{SHORT_URL}} — schreibe ihn auf deinen Tag."
+          }
+        }
+      },
+      "extras": null
     },
     {
       "key": "none:poll-results",
