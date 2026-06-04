@@ -1,0 +1,100 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Create Link",
+  "title": {
+    "en": "Create a short link",
+    "de": "Kurzlink erstellen"
+  },
+  "description": {
+    "en": "Create a short link, QR code, or NFC link that redirects to any URL. Tracks scans automatically. Use for QR codes on cards, flyers, or NFC tags.",
+    "de": "Erstelle einen Kurzlink, QR-Code oder NFC-Link, der auf jede URL weiterleitet. Scannt automatisch mit. Ideal für QR-Codes auf Karten, Flyern oder NFC-Tags."
+  },
+  "bot": "Use this to create a short link (go.joai.ai/slug) for QR codes, flyers, or NFC tags. Provide the target URL and optionally a custom slug or title. The slug is auto-generated from the title or domain name.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Create link",
+        "de": "Link erstellen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/links",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "URL",
+          "as": "url",
+          "description": {
+            "en": "The URL to redirect to",
+            "de": "Die Ziel-URL"
+          },
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Type",
+          "as": "type",
+          "description": {
+            "en": "Type of link",
+            "de": "Art des Links"
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "options": {
+            "short": "Short Link",
+            "qr": "QR Code",
+            "nfc": "NFC Tag"
+          }
+        },
+        {
+          "name": "Title",
+          "as": "title",
+          "description": {
+            "en": "Optional title for the link (used for slug generation)",
+            "de": "Optionaler Titel (wird für den Slug verwendet)"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Custom Slug",
+          "as": "slug",
+          "description": {
+            "en": "Optional custom slug (e.g. 'florabar')",
+            "de": "Optionaler eigener Slug (z.B. 'florabar')"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        }
+      ],
+      "output": {
+        "id": "out.data.id",
+        "slug": "out.data.slug",
+        "shortUrl": "out.data.shortUrl",
+        "url": "out.data.url"
+      }
+    }
+  ],
+  "output": {
+    "SHORT_URL": "out.1.shortUrl",
+    "SLUG": "out.1.slug"
+  },
+  "messages": {
+    "success": {
+      "en": "Link created: {{SHORT_URL}}",
+      "de": "Link erstellt: {{SHORT_URL}}"
+    }
+  }
+}
