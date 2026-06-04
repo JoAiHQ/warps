@@ -4,17 +4,17 @@
   "repo": "JoAiHQ/warps",
   "branch": "dev",
   "network": "devnet",
-  "commitSha": "99e2c5aa4109ea2144cfc9ff7356b5d985d4df4d",
-  "committedAt": "2026-06-04T16:05:58.459Z",
-  "generatedAt": "2026-06-04T16:06:00.673Z",
+  "commitSha": "58b3b2d033e3d43fb53aaf8ddab49ebaa82e69e2",
+  "committedAt": "2026-06-04T16:48:34.665Z",
+  "generatedAt": "2026-06-04T16:48:36.875Z",
   "upserts": [
     {
       "key": "none:nfc-write",
       "identifier": "@nfc-write",
       "alias": "nfc-write",
       "chain": "none",
-      "hash": "db9feaad1227586b10cf654de6986e774e273fa632fb4934b31ec5761c8b41d6",
-      "checksum": "db9feaad1227586b10cf654de6986e774e273fa632fb4934b31ec5761c8b41d6",
+      "hash": "7e1265b1a645a5083adbcdd58cb347de0f6077445391b5bc377265ca9d8652ef",
+      "checksum": "7e1265b1a645a5083adbcdd58cb347de0f6077445391b5bc377265ca9d8652ef",
       "name": "NFC: Write",
       "title": {
         "en": "Write an NFC tag",
@@ -60,23 +60,12 @@
           "de": "Erstelle einen Kurzlink und schreibe ihn auf einen physischen NFC-Tag. Der Link leitet auf jede gewünschte URL weiter und zählt Scans automatisch. Halte einfach dein Telefon an den Tag, um ihn zu programmieren."
         },
         "bot": "Use this when the user wants to create a link for a physical NFC tag. The warp creates the short link and then triggers the native NFC writer to program the tag.",
-        "vars": {
-          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
-          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
-        },
         "actions": [
           {
             "type": "collect",
             "label": {
               "en": "Create NFC link",
               "de": "NFC-Link erstellen"
-            },
-            "destination": {
-              "url": "https://devnet-api.joai.ai/v1/links",
-              "method": "POST",
-              "headers": {
-                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
-              }
             },
             "inputs": [
               {
@@ -88,6 +77,7 @@
                 },
                 "type": "string",
                 "source": "field",
+                "position": "local",
                 "required": true
               },
               {
@@ -99,24 +89,21 @@
                 },
                 "type": "string",
                 "source": "field",
+                "position": "local",
                 "required": false
-              },
-              {
-                "as": "type",
-                "source": "hidden",
-                "value": "nfc"
               }
-            ],
-            "output": {
-              "shortUrl": "out.data.shortUrl",
-              "slug": "out.data.slug"
-            }
+            ]
+          },
+          {
+            "type": "inline",
+            "warp": "@joai-link-create?url={{url}}&type=nfc&title={{title}}",
+            "silent": true
           }
         ],
         "output": {
-          "SHORT_URL": "out.1.shortUrl",
-          "SLUG": "out.1.slug",
-          "nfc": "out.1.shortUrl"
+          "SHORT_URL": "{{SHORT_URL}}",
+          "SLUG": "{{SLUG}}",
+          "nfc": "{{SHORT_URL}}"
         },
         "messages": {
           "success": {
