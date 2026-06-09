@@ -6,10 +6,10 @@
     "de": "Variante zu einem Produkt hinzufügen"
   },
   "description": {
-    "en": "Add a volume-based pricing variation to an existing product. Each variation has its own SKU, name, price per unit, and a quantity range (min/max). Use this for volume discounts or multi-tier pricing.",
-    "de": "Füge eine mengenbasierte Preisvariante zu einem bestehenden Produkt hinzu. Jede Variante hat eigene SKU, Namen, Preis pro Einheit und einen Mengenbereich (min/max). Verwende dies für Mengenrabatte oder Preisstaffeln."
+    "en": "Add a pricing variation to an existing product. Each variation has its own SKU, name, price per unit, type, and optional meta attributes (e.g. volume ranges for tiered pricing). Use this for volume discounts, size variants, or multi-tier pricing.",
+    "de": "Füge eine Preisvariante zu einem bestehenden Produkt hinzu. Jede Variante hat eigene SKU, Namen, Preis pro Einheit, Typ und optionale Meta-Attribute (z.B. Mengenbereiche für Staffelpreise). Verwende dies für Mengenrabatte, Größenvarianten oder Preisstaffeln."
   },
-  "bot": "Use when the user wants to add volume pricing tiers to an existing product, e.g. '10 pieces at €4, 50 pieces at €3'. The product must already exist. Pass the product ID/SKU, and for each tier: a name, unique SKU, price in cents, min quantity, and optional max quantity.",
+  "bot": "Use when the user wants to add pricing tiers or variants to an existing product. The product must already exist. For each variation provide: a name, unique SKU, price in cents, and type. Optionally add meta attributes like volumeMin/volumeMax for quantity-based tiers.",
   "vars": {
     "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
     "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
@@ -45,8 +45,8 @@
           "name": "Name",
           "as": "name",
           "description": {
-            "en": "Variation name, e.g. '10-49 cards'",
-            "de": "Variantenname, z.B. '10-49 Karten'"
+            "en": "Variation name, e.g. '10-49 cards' or 'Large'",
+            "de": "Variantenname, z.B. '10-49 Karten' oder 'Groß'"
           },
           "type": "string",
           "source": "field",
@@ -81,33 +81,22 @@
           "name": "Type",
           "as": "type",
           "description": {
-            "en": "Variation type (default: volume)",
-            "de": "Variantentyp (Standard: volume)"
+            "en": "Variation type (e.g. volume, size, color)",
+            "de": "Variantentyp (z.B. volume, size, color)"
           },
           "type": "string",
           "source": "field",
-          "value": "volume",
-          "position": "body"
+          "position": "body",
+          "required": true
         },
         {
-          "name": "Min quantity",
-          "as": "volumeMin",
+          "name": "Meta",
+          "as": "meta",
           "description": {
-            "en": "Minimum quantity for this tier",
-            "de": "Mindestmenge für diese Stufe"
+            "en": "Additional attributes as JSON, e.g. {\"volumeMin\":10,\"volumeMax\":49}",
+            "de": "Zusätzliche Attribute als JSON, z.B. {\"volumeMin\":10,\"volumeMax\":49}"
           },
-          "type": "number",
-          "source": "field",
-          "position": "body"
-        },
-        {
-          "name": "Max quantity",
-          "as": "volumeMax",
-          "description": {
-            "en": "Maximum quantity for this tier (leave empty for unlimited)",
-            "de": "Maximalmenge für diese Stufe (leer für unbegrenzt)"
-          },
-          "type": "number",
+          "type": "string",
           "source": "field",
           "position": "body"
         }
