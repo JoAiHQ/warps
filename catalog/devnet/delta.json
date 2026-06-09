@@ -4,10 +4,236 @@
   "repo": "JoAiHQ/warps",
   "branch": "dev",
   "network": "devnet",
-  "commitSha": "43a724d4b60e0e0fdabe66cc72d60217f53677a4",
-  "committedAt": "2026-06-08T15:48:56.896Z",
-  "generatedAt": "2026-06-08T15:48:59.517Z",
+  "commitSha": "bdbbde15314f93f9ce2a8383527d6fcb31a12122",
+  "committedAt": "2026-06-09T11:22:05.473Z",
+  "generatedAt": "2026-06-09T11:22:07.898Z",
   "upserts": [
+    {
+      "key": "none:joai-product-variation-create",
+      "identifier": "@joai-product-variation-create",
+      "alias": "joai-product-variation-create",
+      "chain": "none",
+      "hash": "0ce35f3cecf92913d3fdb5d18b8776bbf508cd6dbbd045ba8830050fba3067a5",
+      "checksum": "0ce35f3cecf92913d3fdb5d18b8776bbf508cd6dbbd045ba8830050fba3067a5",
+      "name": "JoAi: Create Product Variation",
+      "title": {
+        "en": "Add a variation to a product",
+        "de": "Variante zu einem Produkt hinzufügen"
+      },
+      "description": {
+        "en": "Add a volume-based pricing variation to an existing product. Each variation has its own SKU, name, price per unit, and a quantity range (min/max). Use this for volume discounts or multi-tier pricing.",
+        "de": "Füge eine mengenbasierte Preisvariante zu einem bestehenden Produkt hinzu. Jede Variante hat eigene SKU, Namen, Preis pro Einheit und einen Mengenbereich (min/max). Verwende dies für Mengenrabatte oder Preisstaffeln."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: Create Product Variation",
+        "title": {
+          "en": "Add a variation to a product",
+          "de": "Variante zu einem Produkt hinzufügen"
+        },
+        "description": {
+          "en": "Add a volume-based pricing variation to an existing product. Each variation has its own SKU, name, price per unit, and a quantity range (min/max). Use this for volume discounts or multi-tier pricing.",
+          "de": "Füge eine mengenbasierte Preisvariante zu einem bestehenden Produkt hinzu. Jede Variante hat eigene SKU, Namen, Preis pro Einheit und einen Mengenbereich (min/max). Verwende dies für Mengenrabatte oder Preisstaffeln."
+        },
+        "bot": "Use when the user wants to add volume pricing tiers to an existing product, e.g. '10 pieces at €4, 50 pieces at €3'. The product must already exist. Pass the product ID/SKU, and for each tier: a name, unique SKU, price in cents, min quantity, and optional max quantity.",
+        "vars": {
+          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Create variation",
+              "de": "Variante erstellen"
+            },
+            "destination": {
+              "url": "https://devnet-api.joai.ai/v1/products/{{productId}}/variations",
+              "method": "POST",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Product",
+                "as": "productId",
+                "description": {
+                  "en": "The hash ID or slug of the existing product",
+                  "de": "Die Hash-ID oder der Slug des bestehenden Produkts"
+                },
+                "type": "string",
+                "source": "field",
+                "position": "url:productId",
+                "required": true
+              },
+              {
+                "name": "Name",
+                "as": "name",
+                "description": {
+                  "en": "Variation name, e.g. '10-49 cards'",
+                  "de": "Variantenname, z.B. '10-49 Karten'"
+                },
+                "type": "string",
+                "source": "field",
+                "position": "body",
+                "required": true
+              },
+              {
+                "name": "SKU",
+                "as": "sku",
+                "description": {
+                  "en": "Unique SKU for this variation",
+                  "de": "Eindeutige SKU für diese Variante"
+                },
+                "type": "string",
+                "source": "field",
+                "position": "body",
+                "required": true
+              },
+              {
+                "name": "Price",
+                "as": "price",
+                "description": {
+                  "en": "Price per unit in cents",
+                  "de": "Preis pro Einheit in Cent"
+                },
+                "type": "number",
+                "source": "field",
+                "position": "body",
+                "required": true
+              },
+              {
+                "name": "Type",
+                "as": "type",
+                "description": {
+                  "en": "Variation type (default: volume)",
+                  "de": "Variantentyp (Standard: volume)"
+                },
+                "type": "string",
+                "source": "field",
+                "value": "volume",
+                "position": "body"
+              },
+              {
+                "name": "Min quantity",
+                "as": "volumeMin",
+                "description": {
+                  "en": "Minimum quantity for this tier",
+                  "de": "Mindestmenge für diese Stufe"
+                },
+                "type": "number",
+                "source": "field",
+                "position": "body"
+              },
+              {
+                "name": "Max quantity",
+                "as": "volumeMax",
+                "description": {
+                  "en": "Maximum quantity for this tier (leave empty for unlimited)",
+                  "de": "Maximalmenge für diese Stufe (leer für unbegrenzt)"
+                },
+                "type": "number",
+                "source": "field",
+                "position": "body"
+              }
+            ]
+          }
+        ],
+        "messages": {
+          "success": {
+            "en": "Variation '{{name}}' ({{sku}}) added.",
+            "de": "Variante '{{name}}' ({{sku}}) hinzugefügt."
+          }
+        }
+      },
+      "extras": {
+        "keywords": {
+          "en": [
+            "add variation",
+            "volume pricing",
+            "price tier",
+            "bulk discount",
+            "product SKU",
+            "pricing tier"
+          ],
+          "de": [
+            "Variante hinzufügen",
+            "Mengenrabatt",
+            "Preisstaffel",
+            "Staffelpreis",
+            "Produkt-SKU",
+            "Preisstufe"
+          ]
+        },
+        "useCases": {
+          "en": [
+            "Add a \"10-49 cards\" volume pricing tier to a business card product",
+            "Set up bulk discount tiers: €8 for 1-9, €4 for 10-49, €3 for 50-99",
+            "Create a wholesale tier with custom pricing for orders above 100 units"
+          ],
+          "de": [
+            "Eine \"10-49 Karten\" Mengenrabatt-Stufe zu einem Visitenkartenprodukt hinzufügen",
+            "Staffelpreise einrichten: €8 für 1-9, €4 für 10-49, €3 für 50-99",
+            "Eine Großhandelsstufe mit individuellem Preis für Bestellungen über 100 Stück erstellen"
+          ]
+        },
+        "category": "commerce",
+        "faq": {
+          "en": [
+            {
+              "question": "Can I add multiple variations at once?",
+              "answer": "This warp adds one variation at a time. For multiple tiers, call it once per variation."
+            },
+            {
+              "question": "What is a volume variation?",
+              "answer": "A volume variation sets a different price per unit based on the quantity ordered. For example, €8/card for 1-9 cards and €4/card for 10-49 cards."
+            }
+          ],
+          "de": [
+            {
+              "question": "Kann ich mehrere Varianten auf einmal hinzufügen?",
+              "answer": "Dieser Warp fügt eine Variante auf einmal hinzu. Für mehrere Stufen rufe ihn pro Variante auf."
+            },
+            {
+              "question": "Was ist eine Mengenvariante?",
+              "answer": "Eine Mengenvariante setzt einen anderen Preis pro Einheit basierend auf der bestellten Menge. Zum Beispiel €8/Karte für 1-9 Karten und €4/Karte für 10-49 Karten."
+            }
+          ]
+        }
+      }
+    },
     {
       "key": "none:poll-results",
       "identifier": "@poll-results",
