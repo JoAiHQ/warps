@@ -4,25 +4,25 @@
   "repo": "JoAiHQ/warps",
   "branch": "dev",
   "network": "devnet",
-  "commitSha": "f12d8fa81e2028bb9bba1da00e6e344f8648f5a1",
-  "committedAt": "2026-06-09T14:14:26.542Z",
-  "generatedAt": "2026-06-09T14:14:29.061Z",
+  "commitSha": "aacb9a471a64f7d44797a39abcfffd654cbc4683",
+  "committedAt": "2026-06-12T15:51:18.434Z",
+  "generatedAt": "2026-06-12T15:51:21.849Z",
   "upserts": [
     {
-      "key": "none:joai-product-variation-create",
-      "identifier": "@joai-product-variation-create",
-      "alias": "joai-product-variation-create",
+      "key": "none:joai-link-create",
+      "identifier": "@joai-link-create",
+      "alias": "joai-link-create",
       "chain": "none",
-      "hash": "42e01b55363eeafeefc8a5faf36863436eb608688d42ab4468990663711bc74a",
-      "checksum": "42e01b55363eeafeefc8a5faf36863436eb608688d42ab4468990663711bc74a",
-      "name": "JoAi: Create Product Variation",
+      "hash": "1ccfb9a04430e020452bcf210362879dd7f96172620f0a66a0441b40ff473f52",
+      "checksum": "1ccfb9a04430e020452bcf210362879dd7f96172620f0a66a0441b40ff473f52",
+      "name": "JoAi: Create Link",
       "title": {
-        "en": "Add a variation to a product",
-        "de": "Variante zu einem Produkt hinzufügen"
+        "en": "Create a short link",
+        "de": "Kurzlink erstellen"
       },
       "description": {
-        "en": "Add a pricing variation to an existing product. Each variation has its own SKU, name, price per unit, type, and optional meta attributes (e.g. volume ranges for tiered pricing). Use this for volume discounts, size variants, or multi-tier pricing.",
-        "de": "Füge eine Preisvariante zu einem bestehenden Produkt hinzu. Jede Variante hat eigene SKU, Namen, Preis pro Einheit, Typ und optionale Meta-Attribute (z.B. Mengenbereiche für Staffelpreise). Verwende dies für Mengenrabatte, Größenvarianten oder Preisstaffeln."
+        "en": "Create a short link that redirects to any URL. Tracks scans automatically. The slug is auto-generated from the title or URL.",
+        "de": "Erstelle einen Kurzlink, der auf jede URL weiterleitet. Scannt automatisch mit. Der Slug wird automatisch aus dem Titel oder der URL generiert."
       },
       "preview": null,
       "creator": "github:JoAiHQ/warps",
@@ -57,16 +57,16 @@
       },
       "warp": {
         "protocol": "warp:3.0.0",
-        "name": "JoAi: Create Product Variation",
+        "name": "JoAi: Create Link",
         "title": {
-          "en": "Add a variation to a product",
-          "de": "Variante zu einem Produkt hinzufügen"
+          "en": "Create a short link",
+          "de": "Kurzlink erstellen"
         },
         "description": {
-          "en": "Add a pricing variation to an existing product. Each variation has its own SKU, name, price per unit, type, and optional meta attributes (e.g. volume ranges for tiered pricing). Use this for volume discounts, size variants, or multi-tier pricing.",
-          "de": "Füge eine Preisvariante zu einem bestehenden Produkt hinzu. Jede Variante hat eigene SKU, Namen, Preis pro Einheit, Typ und optionale Meta-Attribute (z.B. Mengenbereiche für Staffelpreise). Verwende dies für Mengenrabatte, Größenvarianten oder Preisstaffeln."
+          "en": "Create a short link that redirects to any URL. Tracks scans automatically. The slug is auto-generated from the title or URL.",
+          "de": "Erstelle einen Kurzlink, der auf jede URL weiterleitet. Scannt automatisch mit. Der Slug wird automatisch aus dem Titel oder der URL generiert."
         },
-        "bot": "Use when the user wants to add pricing tiers or variants to an existing product. The product must already exist. For each variation provide: a name, unique SKU, price in cents, and type. Optionally add meta attributes like volumeMin/volumeMax for quantity-based tiers.",
+        "bot": "Use this to create a short link (go.joai.ai/slug). Provide a name and the target URL. The slug is auto-generated from the name or URL.",
         "vars": {
           "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
           "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
@@ -75,11 +75,11 @@
           {
             "type": "collect",
             "label": {
-              "en": "Create variation",
-              "de": "Variante erstellen"
+              "en": "Create link",
+              "de": "Link erstellen"
             },
             "destination": {
-              "url": "https://devnet-api.joai.ai/v1/products/{{productId}}/variations",
+              "url": "https://devnet-api.joai.ai/v1/links",
               "method": "POST",
               "headers": {
                 "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
@@ -87,141 +87,48 @@
             },
             "inputs": [
               {
-                "name": "Product",
-                "as": "productId",
-                "description": {
-                  "en": "The hash ID or slug of the existing product",
-                  "de": "Die Hash-ID oder der Slug des bestehenden Produkts"
-                },
-                "type": "string",
-                "source": "field",
-                "position": "url:productId",
-                "required": true
-              },
-              {
                 "name": "Name",
-                "as": "name",
+                "as": "title",
                 "description": {
-                  "en": "Variation name, e.g. '10-49 cards' or 'Large'",
-                  "de": "Variantenname, z.B. '10-49 Karten' oder 'Groß'"
+                  "en": "A name for the link — the slug is auto-generated from this",
+                  "de": "Ein Name für den Link — der Slug wird daraus generiert"
                 },
                 "type": "string",
                 "source": "field",
-                "position": "body",
                 "required": true
               },
               {
-                "name": "SKU",
-                "as": "sku",
+                "name": "URL",
+                "as": "url",
                 "description": {
-                  "en": "Unique SKU for this variation",
-                  "de": "Eindeutige SKU für diese Variante"
+                  "en": "The URL to redirect to",
+                  "de": "Die Ziel-URL"
                 },
                 "type": "string",
                 "source": "field",
-                "position": "body",
                 "required": true
-              },
-              {
-                "name": "Price",
-                "as": "price",
-                "description": {
-                  "en": "Price per unit in cents",
-                  "de": "Preis pro Einheit in Cent"
-                },
-                "type": "number",
-                "source": "field",
-                "position": "body",
-                "required": true
-              },
-              {
-                "name": "Type",
-                "as": "type",
-                "description": {
-                  "en": "Variation type (e.g. volume, size, color)",
-                  "de": "Variantentyp (z.B. volume, size, color)"
-                },
-                "type": "string",
-                "source": "field",
-                "position": "body",
-                "required": true
-              },
-              {
-                "name": "Meta",
-                "as": "meta",
-                "description": {
-                  "en": "Additional attributes as JSON, e.g. {\"volumeMin\":10,\"volumeMax\":49}",
-                  "de": "Zusätzliche Attribute als JSON, z.B. {\"volumeMin\":10,\"volumeMax\":49}"
-                },
-                "type": "string",
-                "source": "field",
-                "position": "body"
               }
-            ]
+            ],
+            "output": {
+              "id": "out.data.id",
+              "slug": "out.data.slug",
+              "shortUrl": "out.data.shortUrl",
+              "url": "out.data.url"
+            }
           }
         ],
+        "output": {
+          "SHORT_URL": "out.1.shortUrl",
+          "SLUG": "out.1.slug"
+        },
         "messages": {
           "success": {
-            "en": "Variation '{{name}}' ({{sku}}) added.",
-            "de": "Variante '{{name}}' ({{sku}}) hinzugefügt."
+            "en": "Link created: {{SHORT_URL}}",
+            "de": "Link erstellt: {{SHORT_URL}}"
           }
         }
       },
-      "extras": {
-        "keywords": {
-          "en": [
-            "add variation",
-            "volume pricing",
-            "price tier",
-            "bulk discount",
-            "product SKU",
-            "pricing tier"
-          ],
-          "de": [
-            "Variante hinzufügen",
-            "Mengenrabatt",
-            "Preisstaffel",
-            "Staffelpreis",
-            "Produkt-SKU",
-            "Preisstufe"
-          ]
-        },
-        "useCases": {
-          "en": [
-            "Add a \"10-49 cards\" volume pricing tier to a business card product",
-            "Set up bulk discount tiers: €8 for 1-9, €4 for 10-49, €3 for 50-99",
-            "Create a wholesale tier with custom pricing for orders above 100 units"
-          ],
-          "de": [
-            "Eine \"10-49 Karten\" Mengenrabatt-Stufe zu einem Visitenkartenprodukt hinzufügen",
-            "Staffelpreise einrichten: €8 für 1-9, €4 für 10-49, €3 für 50-99",
-            "Eine Großhandelsstufe mit individuellem Preis für Bestellungen über 100 Stück erstellen"
-          ]
-        },
-        "category": "commerce",
-        "faq": {
-          "en": [
-            {
-              "question": "Can I add multiple variations at once?",
-              "answer": "This warp adds one variation at a time. For multiple tiers, call it once per variation."
-            },
-            {
-              "question": "What is a volume variation?",
-              "answer": "A volume variation sets a different price per unit based on the quantity ordered. For example, €8/card for 1-9 cards and €4/card for 10-49 cards."
-            }
-          ],
-          "de": [
-            {
-              "question": "Kann ich mehrere Varianten auf einmal hinzufügen?",
-              "answer": "Dieser Warp fügt eine Variante auf einmal hinzu. Für mehrere Stufen rufe ihn pro Variante auf."
-            },
-            {
-              "question": "Was ist eine Mengenvariante?",
-              "answer": "Eine Mengenvariante setzt einen anderen Preis pro Einheit basierend auf der bestellten Menge. Zum Beispiel €8/Karte für 1-9 Karten und €4/Karte für 10-49 Karten."
-            }
-          ]
-        }
-      }
+      "extras": null
     },
     {
       "key": "none:poll-results",
