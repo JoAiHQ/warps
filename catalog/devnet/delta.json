@@ -4,25 +4,25 @@
   "repo": "JoAiHQ/warps",
   "branch": "dev",
   "network": "devnet",
-  "commitSha": "aacb9a471a64f7d44797a39abcfffd654cbc4683",
-  "committedAt": "2026-06-12T15:51:18.434Z",
-  "generatedAt": "2026-06-12T15:51:21.849Z",
+  "commitSha": "e331820955841f2e66850e573feb23e81289b6a4",
+  "committedAt": "2026-06-15T10:36:18.852Z",
+  "generatedAt": "2026-06-15T10:36:21.233Z",
   "upserts": [
     {
-      "key": "none:joai-link-create",
-      "identifier": "@joai-link-create",
-      "alias": "joai-link-create",
+      "key": "none:joai-item-list",
+      "identifier": "@joai-item-list",
+      "alias": "joai-item-list",
       "chain": "none",
-      "hash": "1ccfb9a04430e020452bcf210362879dd7f96172620f0a66a0441b40ff473f52",
-      "checksum": "1ccfb9a04430e020452bcf210362879dd7f96172620f0a66a0441b40ff473f52",
-      "name": "JoAi: Create Link",
+      "hash": "911784c8c99279bc16c9e010ab20389915b6e46735b8aea6962bce888faed45b",
+      "checksum": "911784c8c99279bc16c9e010ab20389915b6e46735b8aea6962bce888faed45b",
+      "name": "JoAi: List Action Items",
       "title": {
-        "en": "Create a short link",
-        "de": "Kurzlink erstellen"
+        "en": "List action items",
+        "de": "Aufgaben anzeigen"
       },
       "description": {
-        "en": "Create a short link that redirects to any URL. Tracks scans automatically. The slug is auto-generated from the title or URL.",
-        "de": "Erstelle einen Kurzlink, der auf jede URL weiterleitet. Scannt automatisch mit. Der Slug wird automatisch aus dem Titel oder der URL generiert."
+        "en": "View all action items and tasks on your board with their status, priority, tags, and due dates. Filter by status or priority to find what needs attention.",
+        "de": "Alle Aufgaben und To-dos auf deinem Board mit Status, Priorität, Tags und Fälligkeitsdatum anzeigen. Filtere nach Status oder Priorität, um zu sehen, worauf du dich konzentrieren solltest."
       },
       "preview": null,
       "creator": "github:JoAiHQ/warps",
@@ -57,76 +57,66 @@
       },
       "warp": {
         "protocol": "warp:3.0.0",
-        "name": "JoAi: Create Link",
+        "name": "JoAi: List Action Items",
         "title": {
-          "en": "Create a short link",
-          "de": "Kurzlink erstellen"
+          "en": "List action items",
+          "de": "Aufgaben anzeigen"
         },
         "description": {
-          "en": "Create a short link that redirects to any URL. Tracks scans automatically. The slug is auto-generated from the title or URL.",
-          "de": "Erstelle einen Kurzlink, der auf jede URL weiterleitet. Scannt automatisch mit. Der Slug wird automatisch aus dem Titel oder der URL generiert."
+          "en": "View all action items and tasks on your board with their status, priority, tags, and due dates. Filter by status or priority to find what needs attention.",
+          "de": "Alle Aufgaben und To-dos auf deinem Board mit Status, Priorität, Tags und Fälligkeitsdatum anzeigen. Filtere nach Status oder Priorität, um zu sehen, worauf du dich konzentrieren solltest."
         },
-        "bot": "Use this to create a short link (go.joai.ai/slug). Provide a name and the target URL. The slug is auto-generated from the name or URL.",
+        "bot": "Use when the user wants to see their board, action items, task list, or what they need to work on. List items first if the user refers to an item by title to find the matching ID.",
         "vars": {
           "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
           "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
         },
+        "output": {
+          "items": "out",
+          "itemsList": "out.data",
+          "itemsCount": "out.data.length"
+        },
         "actions": [
           {
             "type": "collect",
+            "silent": true,
             "label": {
-              "en": "Create link",
-              "de": "Link erstellen"
+              "en": "List items",
+              "de": "Aufgaben anzeigen"
             },
             "destination": {
-              "url": "https://devnet-api.joai.ai/v1/links",
-              "method": "POST",
+              "url": "https://devnet-api.joai.ai/v1/items",
+              "method": "GET",
               "headers": {
                 "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
               }
             },
             "inputs": [
               {
-                "name": "Name",
-                "as": "title",
-                "description": {
-                  "en": "A name for the link — the slug is auto-generated from this",
-                  "de": "Ein Name für den Link — der Slug wird daraus generiert"
-                },
+                "name": "Status",
+                "as": "status",
                 "type": "string",
-                "source": "field",
-                "required": true
+                "position": "query",
+                "required": false,
+                "description": {
+                  "en": "Filter by status (backlog, active, review, done)",
+                  "de": "Nach Status filtern (backlog, active, review, done)"
+                }
               },
               {
-                "name": "URL",
-                "as": "url",
+                "name": "Due Today",
+                "as": "dueToday",
+                "type": "boolean",
+                "position": "query",
+                "required": false,
                 "description": {
-                  "en": "The URL to redirect to",
-                  "de": "Die Ziel-URL"
-                },
-                "type": "string",
-                "source": "field",
-                "required": true
+                  "en": "Show only items due today",
+                  "de": "Nur heute fällige Aufgaben anzeigen"
+                }
               }
-            ],
-            "output": {
-              "id": "out.data.id",
-              "slug": "out.data.slug",
-              "shortUrl": "out.data.shortUrl",
-              "url": "out.data.url"
-            }
+            ]
           }
-        ],
-        "output": {
-          "SHORT_URL": "out.1.shortUrl",
-          "SLUG": "out.1.slug"
-        },
-        "messages": {
-          "success": {
-            "en": "Link created: {{SHORT_URL}}",
-            "de": "Link erstellt: {{SHORT_URL}}"
-          }
-        }
+        ]
       },
       "extras": null
     },
