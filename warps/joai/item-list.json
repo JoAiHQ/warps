@@ -1,0 +1,63 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: List Action Items",
+  "title": {
+    "en": "List action items",
+    "de": "Aufgaben anzeigen"
+  },
+  "description": {
+    "en": "View all action items and tasks on your board with their status, priority, tags, and due dates. Filter by status or priority to find what needs attention.",
+    "de": "Alle Aufgaben und To-dos auf deinem Board mit Status, Priorität, Tags und Fälligkeitsdatum anzeigen. Filtere nach Status oder Priorität, um zu sehen, worauf du dich konzentrieren solltest."
+  },
+  "bot": "Use when the user wants to see their board, action items, task list, or what they need to work on. List items first if the user refers to an item by title to find the matching ID.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+  },
+  "output": {
+    "items": "out",
+    "itemsList": "out.data",
+    "itemsCount": "out.data.length"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "silent": true,
+      "label": {
+        "en": "List items",
+        "de": "Aufgaben anzeigen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/items",
+        "method": "GET",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Status",
+          "as": "status",
+          "type": "string",
+          "position": "query",
+          "required": false,
+          "description": {
+            "en": "Filter by status (backlog, active, review, done)",
+            "de": "Nach Status filtern (backlog, active, review, done)"
+          }
+        },
+        {
+          "name": "Due Today",
+          "as": "dueToday",
+          "type": "boolean",
+          "position": "query",
+          "required": false,
+          "description": {
+            "en": "Show only items due today",
+            "de": "Nur heute fällige Aufgaben anzeigen"
+          }
+        }
+      ]
+    }
+  ]
+}
