@@ -4,25 +4,25 @@
   "repo": "JoAiHQ/warps",
   "branch": "dev",
   "network": "devnet",
-  "commitSha": "e331820955841f2e66850e573feb23e81289b6a4",
-  "committedAt": "2026-06-15T10:36:18.852Z",
-  "generatedAt": "2026-06-15T10:36:21.233Z",
+  "commitSha": "dfae7824ef62ba57d832bc9ccbea8c93cb752921",
+  "committedAt": "2026-06-23T13:21:59.397Z",
+  "generatedAt": "2026-06-23T13:22:03.075Z",
   "upserts": [
     {
-      "key": "none:joai-item-list",
-      "identifier": "@joai-item-list",
-      "alias": "joai-item-list",
+      "key": "none:joai-api-token-create",
+      "identifier": "@joai-api-token-create",
+      "alias": "joai-api-token-create",
       "chain": "none",
-      "hash": "911784c8c99279bc16c9e010ab20389915b6e46735b8aea6962bce888faed45b",
-      "checksum": "911784c8c99279bc16c9e010ab20389915b6e46735b8aea6962bce888faed45b",
-      "name": "JoAi: List Action Items",
+      "hash": "b296e9252f9fa976bd4d6d005eb13897cb795c5021162f40e9429d4283a7c078",
+      "checksum": "b296e9252f9fa976bd4d6d005eb13897cb795c5021162f40e9429d4283a7c078",
+      "name": "JoAi: Create API Token",
       "title": {
-        "en": "List action items",
-        "de": "Aufgaben anzeigen"
+        "en": "Create an API token",
+        "de": "API-Token erstellen"
       },
       "description": {
-        "en": "View all action items and tasks on your board with their status, priority, tags, and due dates. Filter by status or priority to find what needs attention.",
-        "de": "Alle Aufgaben und To-dos auf deinem Board mit Status, Priorität, Tags und Fälligkeitsdatum anzeigen. Filtere nach Status oder Priorität, um zu sehen, worauf du dich konzentrieren solltest."
+        "en": "Create a desktop-session API token for server-to-server API access. The token allows external applications to authenticate against the JoAi API on behalf of your team.",
+        "de": "Erstelle einen Desktop-Session API-Token für Server-zu-Server API Zugriff. Der Token erlaubt externen Anwendungen die Authentifizierung gegen die JoAi API für dein Team."
       },
       "preview": null,
       "creator": "github:JoAiHQ/warps",
@@ -57,66 +57,218 @@
       },
       "warp": {
         "protocol": "warp:3.0.0",
-        "name": "JoAi: List Action Items",
+        "name": "JoAi: Create API Token",
         "title": {
-          "en": "List action items",
-          "de": "Aufgaben anzeigen"
+          "en": "Create an API token",
+          "de": "API-Token erstellen"
         },
         "description": {
-          "en": "View all action items and tasks on your board with their status, priority, tags, and due dates. Filter by status or priority to find what needs attention.",
-          "de": "Alle Aufgaben und To-dos auf deinem Board mit Status, Priorität, Tags und Fälligkeitsdatum anzeigen. Filtere nach Status oder Priorität, um zu sehen, worauf du dich konzentrieren solltest."
+          "en": "Create a desktop-session API token for server-to-server API access. The token allows external applications to authenticate against the JoAi API on behalf of your team.",
+          "de": "Erstelle einen Desktop-Session API-Token für Server-zu-Server API Zugriff. Der Token erlaubt externen Anwendungen die Authentifizierung gegen die JoAi API für dein Team."
         },
-        "bot": "Use when the user wants to see their board, action items, task list, or what they need to work on. List items first if the user refers to an item by title to find the matching ID.",
+        "bot": "Use this when the user needs an API token for external integrations, custom scripts, or server-to-server communication. The token is scoped to the team and can be revoked at any time.",
         "vars": {
           "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
           "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
         },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Create token",
+              "de": "Token erstellen"
+            },
+            "destination": {
+              "url": "https://devnet-api.joai.ai/v1/auth/api-tokens",
+              "method": "POST",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+              }
+            },
+            "auto": false,
+            "inputs": []
+          }
+        ],
         "output": {
-          "items": "out",
-          "itemsList": "out.data",
-          "itemsCount": "out.data.length"
+          "TOKEN": "out.data.plainTextToken"
+        },
+        "messages": {
+          "success": {
+            "en": "API token created!\n\n```\n{{TOKEN}}\n```\n\nSave this — it won't be shown again.",
+            "de": "API-Token erstellt!\n\n```\n{{TOKEN}}\n```\n\nSpeichere ihn — er wird nicht nochmal angezeigt."
+          }
+        }
+      },
+      "extras": null
+    },
+    {
+      "key": "none:joai-private-app-create",
+      "identifier": "@joai-private-app-create",
+      "alias": "joai-private-app-create",
+      "chain": "none",
+      "hash": "32ab294b1640b1d59e1a230a9a2341c99247a0c11f68c927d640d63b4d358575",
+      "checksum": "32ab294b1640b1d59e1a230a9a2341c99247a0c11f68c927d640d63b4d358575",
+      "name": "JoAi: Create Private App",
+      "title": {
+        "en": "Create a private app",
+        "de": "Private App erstellen",
+        "es": "Create a private app",
+        "fr": "Create a private app",
+        "ro": "Create a private app",
+        "it": "Create a private app"
+      },
+      "description": {
+        "en": "Create a private warp app scoped to your team, so you can publish private warps under your own brand.",
+        "de": "Erstelle eine private Warp-App, die auf dein Team beschränkt ist, damit du private Warps unter deiner eigenen Marke veröffentlichen kannst.",
+        "es": "Create a private warp app scoped to your team, so you can publish private warps under your own brand.",
+        "fr": "Create a private warp app scoped to your team, so you can publish private warps under your own brand.",
+        "ro": "Create a private warp app scoped to your team, so you can publish private warps under your own brand.",
+        "it": "Create a private warp app scoped to your team, so you can publish private warps under your own brand."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: Create Private App",
+        "title": {
+          "en": "Create a private app",
+          "de": "Private App erstellen",
+          "es": "Create a private app",
+          "fr": "Create a private app",
+          "ro": "Create a private app",
+          "it": "Create a private app"
+        },
+        "description": {
+          "en": "Create a private warp app scoped to your team, so you can publish private warps under your own brand.",
+          "de": "Erstelle eine private Warp-App, die auf dein Team beschränkt ist, damit du private Warps unter deiner eigenen Marke veröffentlichen kannst.",
+          "es": "Create a private warp app scoped to your team, so you can publish private warps under your own brand.",
+          "fr": "Create a private warp app scoped to your team, so you can publish private warps under your own brand.",
+          "ro": "Create a private warp app scoped to your team, so you can publish private warps under your own brand.",
+          "it": "Create a private warp app scoped to your team, so you can publish private warps under your own brand."
+        },
+        "bot": "Use this when the user wants to set up a private warp brand for their team. Ask for the team slug, app name, and description.",
+        "vars": {
+          "AGENT_UUID": "query:agent",
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
         },
         "actions": [
           {
             "type": "collect",
-            "silent": true,
             "label": {
-              "en": "List items",
-              "de": "Aufgaben anzeigen"
+              "en": "Create private app",
+              "de": "Private App erstellen",
+              "es": "Create private app",
+              "fr": "Create private app",
+              "ro": "Create private app",
+              "it": "Create private app"
             },
             "destination": {
-              "url": "https://devnet-api.joai.ai/v1/items",
-              "method": "GET",
+              "url": "https://devnet-api.joai.ai/v1/apps",
+              "method": "POST",
               "headers": {
                 "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
               }
             },
             "inputs": [
               {
-                "name": "Status",
-                "as": "status",
-                "type": "string",
-                "position": "query",
-                "required": false,
+                "name": "Name",
+                "as": "name",
                 "description": {
-                  "en": "Filter by status (backlog, active, review, done)",
-                  "de": "Nach Status filtern (backlog, active, review, done)"
+                  "en": "A name for this private app",
+                  "de": "Ein Name für diese private App",
+                  "es": "A name for this private app",
+                  "fr": "A name for this private app",
+                  "ro": "A name for this private app",
+                  "it": "A name for this private app"
+                },
+                "bot": "A short name for this private warp app or brand.",
+                "type": "string",
+                "source": "field",
+                "required": true,
+                "min": 2,
+                "label": {
+                  "en": "Name",
+                  "de": "Name",
+                  "es": "Name",
+                  "fr": "Name",
+                  "ro": "Name",
+                  "it": "Name"
                 }
               },
               {
-                "name": "Due Today",
-                "as": "dueToday",
-                "type": "boolean",
-                "position": "query",
-                "required": false,
+                "name": "Description",
+                "as": "description",
                 "description": {
-                  "en": "Show only items due today",
-                  "de": "Nur heute fällige Aufgaben anzeigen"
-                }
+                  "en": "What this private app is for",
+                  "de": "Wofür diese private App gedacht ist",
+                  "es": "What this private app is for",
+                  "fr": "What this private app is for",
+                  "ro": "What this private app is for",
+                  "it": "What this private app is for"
+                },
+                "bot": "A short description of this private app's purpose.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Public",
+                "as": "public",
+                "description": {
+                  "en": "Whether this app should be publicly visible",
+                  "de": "Ob diese App öffentlich sichtbar sein soll",
+                  "es": "Whether this app should be publicly visible",
+                  "fr": "Whether this app should be publicly visible",
+                  "ro": "Whether this app should be publicly visible",
+                  "it": "Whether this app should be publicly visible"
+                },
+                "bot": "Set to true to make this app publicly visible.",
+                "type": "boolean",
+                "source": "field",
+                "required": false
               }
             ]
           }
-        ]
+        ],
+        "messages": {
+          "success": {
+            "en": "Private app '{{name}}' created.",
+            "de": "Private App '{{name}}' erstellt.",
+            "es": "Private app '{{name}}' created.",
+            "fr": "Private app '{{name}}' created.",
+            "ro": "Private app '{{name}}' created.",
+            "it": "Private app '{{name}}' created."
+          }
+        }
       },
       "extras": null
     },
