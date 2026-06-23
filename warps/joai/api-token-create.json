@@ -1,0 +1,44 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Create API Token",
+  "title": {
+    "en": "Create an API token",
+    "de": "API-Token erstellen"
+  },
+  "description": {
+    "en": "Create a desktop-session API token for server-to-server API access. The token allows external applications to authenticate against the JoAi API on behalf of your team.",
+    "de": "Erstelle einen Desktop-Session API-Token für Server-zu-Server API Zugriff. Der Token erlaubt externen Anwendungen die Authentifizierung gegen die JoAi API für dein Team."
+  },
+  "bot": "Use this when the user needs an API token for external integrations, custom scripts, or server-to-server communication. The token is scoped to the team and can be revoked at any time.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Create token",
+        "de": "Token erstellen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/auth/api-tokens",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "auto": false,
+      "inputs": []
+    }
+  ],
+  "output": {
+    "TOKEN": "out.data.plainTextToken"
+  },
+  "messages": {
+    "success": {
+      "en": "API token created!\n\n```\n{{TOKEN}}\n```\n\nSave this — it won't be shown again.",
+      "de": "API-Token erstellt!\n\n```\n{{TOKEN}}\n```\n\nSpeichere ihn — er wird nicht nochmal angezeigt."
+    }
+  }
+}
