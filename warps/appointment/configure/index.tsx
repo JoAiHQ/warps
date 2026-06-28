@@ -56,18 +56,17 @@ function Main() {
     setSaved(false)
     try {
       await executeWarp('appointment-policy-upsert', {
-        policy: JSON.stringify({
-          availability: policy.availability ?? {},
-          minNoticeMinutes: policy.minNoticeMinutes ?? null,
-          bufferMinutes: policy.bufferMinutes ?? null,
-          maxDaysAhead: policy.maxDaysAhead ?? null,
-          slotIntervalMinutes: policy.slotIntervalMinutes ?? null,
-          blockedDates: policy.blockedDates ?? [],
-          holidays: policy.holidays ?? [],
-          conferenceEnabled: policy.conferenceEnabled ?? true,
-          serviceSelectionEnabled: policy.serviceSelectionEnabled ?? true,
-          marketplacePaymentEnabled: policy.marketplacePaymentEnabled ?? false,
-        }),
+        timezone: policy.timezone ?? null,
+        availability: policy.availability ?? {},
+        minNoticeMinutes: policy.minNoticeMinutes ?? null,
+        bufferMinutes: policy.bufferMinutes ?? null,
+        maxDaysAhead: policy.maxDaysAhead ?? null,
+        slotIntervalMinutes: policy.slotIntervalMinutes ?? null,
+        blockedDates: policy.blockedDates ?? [],
+        holidays: policy.holidays ?? [],
+        conferenceEnabled: policy.conferenceEnabled ?? true,
+        serviceSelectionEnabled: policy.serviceSelectionEnabled ?? true,
+        paymentEnabled: policy.paymentEnabled ?? false,
       })
       setSaved(true)
     } finally {
