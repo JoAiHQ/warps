@@ -563,4 +563,34 @@ export const meta: Record<string, WarpExtras> = {
       ],
     },
   },
+
+  'product-variation-create': {
+    keywords: {
+      en: ['add variation', 'volume pricing', 'price tier', 'bulk discount', 'product SKU', 'pricing tier'],
+      de: ['Variante hinzufügen', 'Mengenrabatt', 'Preisstaffel', 'Staffelpreis', 'Produkt-SKU', 'Preisstufe'],
+    },
+    useCases: {
+      en: [
+        'Add a "10-49 cards" volume pricing tier to a business card product',
+        'Set up bulk discount tiers: €8 for 1-9, €4 for 10-49, €3 for 50-99',
+        'Create a wholesale tier with custom pricing for orders above 100 units',
+      ],
+      de: [
+        'Eine "10-49 Karten" Mengenrabatt-Stufe zu einem Visitenkartenprodukt hinzufügen',
+        'Staffelpreise einrichten: €8 für 1-9, €4 für 10-49, €3 für 50-99',
+        'Eine Großhandelsstufe mit individuellem Preis für Bestellungen über 100 Stück erstellen',
+      ],
+    },
+    category: 'commerce',
+    faq: {
+      en: [
+        { question: 'Can I add multiple variations at once?', answer: 'This warp adds one variation at a time. For multiple tiers, call it once per variation.' },
+        { question: 'What is a volume variation?', answer: 'A volume variation sets a different price per unit based on the quantity ordered. For example, €8/card for 1-9 cards and €4/card for 10-49 cards.' },
+      ],
+      de: [
+        { question: 'Kann ich mehrere Varianten auf einmal hinzufügen?', answer: 'Dieser Warp fügt eine Variante auf einmal hinzu. Für mehrere Stufen rufe ihn pro Variante auf.' },
+        { question: 'Was ist eine Mengenvariante?', answer: 'Eine Mengenvariante setzt einen anderen Preis pro Einheit basierend auf der bestellten Menge. Zum Beispiel €8/Karte für 1-9 Karten und €4/Karte für 10-49 Karten.' },
+      ],
+    },
+  },
 }

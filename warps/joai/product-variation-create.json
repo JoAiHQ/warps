@@ -1,0 +1,112 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Create Product Variation",
+  "title": {
+    "en": "Add a variation to a product",
+    "de": "Variante zu einem Produkt hinzufügen"
+  },
+  "description": {
+    "en": "Add a pricing variation to an existing product. Each variation has its own SKU, name, price per unit, type, and optional meta attributes (e.g. volume ranges for tiered pricing). Use this for volume discounts, size variants, or multi-tier pricing.",
+    "de": "Füge eine Preisvariante zu einem bestehenden Produkt hinzu. Jede Variante hat eigene SKU, Namen, Preis pro Einheit, Typ und optionale Meta-Attribute (z.B. Mengenbereiche für Staffelpreise). Verwende dies für Mengenrabatte, Größenvarianten oder Preisstaffeln."
+  },
+  "bot": "Use when the user wants to add pricing tiers or variants to an existing product. The product must already exist. For each variation provide: a name, unique SKU, price in cents, and type. Optionally add meta attributes like volumeMin/volumeMax for quantity-based tiers.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Create variation",
+        "de": "Variante erstellen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/products/{{productId}}/variations",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Product",
+          "as": "productId",
+          "description": {
+            "en": "The hash ID or slug of the existing product",
+            "de": "Die Hash-ID oder der Slug des bestehenden Produkts"
+          },
+          "type": "string",
+          "source": "field",
+          "position": "url:productId",
+          "required": true
+        },
+        {
+          "name": "Name",
+          "as": "name",
+          "description": {
+            "en": "Variation name, e.g. '10-49 cards' or 'Large'",
+            "de": "Variantenname, z.B. '10-49 Karten' oder 'Groß'"
+          },
+          "type": "string",
+          "source": "field",
+          "position": "body",
+          "required": true
+        },
+        {
+          "name": "SKU",
+          "as": "sku",
+          "description": {
+            "en": "Unique SKU for this variation",
+            "de": "Eindeutige SKU für diese Variante"
+          },
+          "type": "string",
+          "source": "field",
+          "position": "body",
+          "required": true
+        },
+        {
+          "name": "Price",
+          "as": "price",
+          "description": {
+            "en": "Price per unit in cents",
+            "de": "Preis pro Einheit in Cent"
+          },
+          "type": "number",
+          "source": "field",
+          "position": "body",
+          "required": true
+        },
+        {
+          "name": "Type",
+          "as": "type",
+          "description": {
+            "en": "Variation type (e.g. volume, size, color)",
+            "de": "Variantentyp (z.B. volume, size, color)"
+          },
+          "type": "string",
+          "source": "field",
+          "position": "body",
+          "required": true
+        },
+        {
+          "name": "Meta",
+          "as": "meta",
+          "description": {
+            "en": "Additional attributes as JSON, e.g. {\"volumeMin\":10,\"volumeMax\":49}",
+            "de": "Zusätzliche Attribute als JSON, z.B. {\"volumeMin\":10,\"volumeMax\":49}"
+          },
+          "type": "string",
+          "source": "field",
+          "position": "body"
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Variation '{{name}}' ({{sku}}) added.",
+      "de": "Variante '{{name}}' ({{sku}}) hinzugefügt."
+    }
+  }
+}

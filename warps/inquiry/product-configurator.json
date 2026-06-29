@@ -1,0 +1,206 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Inquiry: Product Configurator",
+  "title": {
+    "en": "Send product inquiry",
+    "de": "Produktanfrage senden"
+  },
+  "description": {
+    "en": "Submit a product configuration inquiry. The agent captures the customer's choices (product, quantity, color, text, optional design file) and creates a contact, logs an activity, and creates a trackable item on the board for follow-up.",
+    "de": "Eine Produktkonfigurationsanfrage senden. Der Agent erfasst die Auswahl des Kunden (Produkt, Menge, Farbe, Text, optionales Design) und erstellt einen Kontakt, protokolliert eine Aktivität und erstellt einen nachverfolgbaren Eintrag im Board."
+  },
+  "bot": "Use when a customer submits a product configurator inquiry from the shop. The inputs are pre-filled from the configurator form.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_API_BASE": "env:JOAI_API_BASE|https://api.joai.ai"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "auto": true,
+      "label": {
+        "en": "Find or create contact",
+        "de": "Kontakt finden oder erstellen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/contacts/find-or-create",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Name",
+          "as": "name",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "body",
+          "description": {
+            "en": "Customer name"
+          }
+        },
+        {
+          "name": "Email",
+          "as": "email",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "body"
+        },
+        {
+          "name": "Phone",
+          "as": "phone",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "body"
+        },
+        {
+          "name": "Product",
+          "as": "productSlug",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "local"
+        },
+        {
+          "name": "Quantity",
+          "as": "quantity",
+          "type": "number",
+          "source": "field",
+          "required": true,
+          "position": "local"
+        },
+        {
+          "name": "Color",
+          "as": "color",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "local"
+        },
+        {
+          "name": "Text",
+          "as": "text",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "local"
+        },
+        {
+          "name": "Variation SKU",
+          "as": "variationSku",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "local"
+        }
+      ],
+      "output": {
+        "CONTACT_ID": "out.id"
+      }
+    },
+    {
+      "type": "prompt",
+      "label": {
+        "en": "Generate activity description",
+        "de": "Aktivitätsbeschreibung erstellen"
+      },
+      "prompt": "Generate a concise activity description for a product inquiry. Customer: {{name}}, Product: {{productSlug}}, Quantity: {{quantity}}, Variation: {{variationSku}}, Color: {{color}}, Text: {{text}}. Total price: {{totalPrice}}. Include whether the customer provided their own design file. Tone: professional, factual. Max 2 sentences."
+    },
+    {
+      "type": "collect",
+      "auto": true,
+      "label": {
+        "en": "Log activity on contact",
+        "de": "Aktivität beim Kontakt protokollieren"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/contacts/{{CONTACT_ID}}/activities",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Type",
+          "as": "type",
+          "type": "string",
+          "source": "field",
+          "value": "note",
+          "hidden": true
+        },
+        {
+          "name": "Description",
+          "as": "description",
+          "type": "string",
+          "source": "field",
+          "value": "{{MESSAGE}}",
+          "hidden": true
+        }
+      ],
+      "output": {
+        "ACTIVITY_ID": "out.id"
+      }
+    },
+    {
+      "type": "collect",
+      "auto": true,
+      "label": {
+        "en": "Create board item",
+        "de": "Board-Eintrag erstellen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/items",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Title",
+          "as": "title",
+          "type": "string",
+          "source": "field",
+          "value": "Product inquiry: {{name}} - {{productSlug}}",
+          "hidden": true
+        },
+        {
+          "name": "Description",
+          "as": "description",
+          "type": "string",
+          "source": "field",
+          "value": "{{MESSAGE}}",
+          "hidden": true
+        },
+        {
+          "name": "Tags",
+          "as": "tags",
+          "type": "string",
+          "source": "field",
+          "value": "inquiry,product-configurator,{{productSlug}}",
+          "hidden": true
+        },
+        {
+          "name": "Contact IDs",
+          "as": "contactIds",
+          "type": "string",
+          "source": "field",
+          "value": "{{CONTACT_ID}}",
+          "hidden": true
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Thanks, {{name}}! We've received your inquiry and will get back to you within 24 hours with a design draft.",
+      "de": "Danke, {{name}}! Wir haben deine Anfrage erhalten und melden uns innerhalb von 24 Stunden mit einem Designentwurf."
+    }
+  }
+}
