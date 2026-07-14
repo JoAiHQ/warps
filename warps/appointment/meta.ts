@@ -343,6 +343,64 @@ export const meta: Record<string, WarpExtras> = {
     },
   },
 
+  'request-approve': {
+    keywords: {
+      en: ['approve appointment request', 'confirm booking', 'approve reservation', 'accept appointment', 'manage requests'],
+      de: ['Terminanfrage bestätigen', 'Buchung freigeben', 'Reservierung bestätigen', 'Termin annehmen', 'Anfragen verwalten'],
+    },
+    useCases: {
+      en: [
+        'Approve pending appointment requests from customers',
+        'Decline booking requests with a reason when slots are unavailable',
+        'Review customer details and preferences before confirming a booking',
+        'Manage appointment queue for high-demand services like restaurant tables',
+      ],
+      de: [
+        'Ausstehende Terminanfragen von Kunden bestätigen',
+        'Buchungsanfragen mit Grund ablehnen, wenn Slots nicht verfügbar sind',
+        'Kundendetails und Präferenzen prüfen, bevor eine Buchung bestätigt wird',
+        'Terminwarteschlange für stark nachgefragte Dienstleistungen wie Restauranttische verwalten',
+      ],
+    },
+    category: 'productivity',
+    faq: {
+      en: [
+        {
+          question: 'How do I approve a pending appointment request?',
+          answer:
+            'Review the request details including the customer name, preferred time, and any notes they submitted. Click approve to confirm the booking — the meeting is created and the customer is notified.',
+        },
+        {
+          question: 'Can I decline a request and provide a reason?',
+          answer:
+            'Yes, you can decline any pending request with an optional reason like "slot no longer available" or "requested service needs consultation first".',
+        },
+        {
+          question: 'What happens when I approve a request?',
+          answer:
+            'The slot is confirmed, a meeting is created, and the team is notified. The customer receives their confirmation details automatically.',
+        },
+      ],
+      de: [
+        {
+          question: 'Wie bestätige ich eine ausstehende Terminanfrage?',
+          answer:
+            'Prüfe die Anfragedetails wie Kundenname, Wunschtermin und Notizen. Klicke auf Bestätigen, um die Buchung freizugeben — der Termin wird erstellt und der Kunde benachrichtigt.',
+        },
+        {
+          question: 'Kann ich eine Anfrage ablehnen und einen Grund angeben?',
+          answer:
+            'Ja, du kannst jede ausstehende Anfrage mit einem optionalen Grund ablehnen, z. B. "Slot nicht mehr verfügbar" oder "Gewünschter Dienst erfordert vorherige Beratung".',
+        },
+        {
+          question: 'Was passiert, wenn ich eine Anfrage bestätige?',
+          answer:
+            'Der Slot wird bestätigt, ein Termin erstellt und das Team benachrichtigt. Der Kunde erhält automatisch seine Bestätigungsdetails.',
+        },
+      ],
+    },
+  },
+
   'booking-link': {
     keywords: {
       en: ['booking link', 'appointment link', 'booking page', 'booking URL', 'share booking link', 'appointment booking page'],
