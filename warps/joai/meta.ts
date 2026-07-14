@@ -1,6 +1,49 @@
 import type { WarpExtras } from '../types'
 
 export const meta: Record<string, WarpExtras> = {
+  'team-create': {
+    keywords: {
+      en: ['create team', 'business onboarding', 'team profile', 'public directory listing', 'workspace setup'],
+      de: ['Team erstellen', 'Betrieb onboarden', 'Teamprofil', 'öffentlicher Verzeichniseintrag', 'Workspace einrichten'],
+    },
+    useCases: {
+      en: [
+        'Create a public business profile for a local directory',
+        'Set up a new workspace with contact details and tags',
+        'Onboard an organization so connected apps can display it',
+        'Prepare a team profile before adding services, products, media, or updates',
+      ],
+      de: [
+        'Ein öffentliches Betriebsprofil für ein lokales Verzeichnis erstellen',
+        'Einen neuen Workspace mit Kontaktinfos und Tags einrichten',
+        'Eine Organisation onboarden, damit verbundene Apps sie anzeigen können',
+        'Ein Teamprofil vorbereiten, bevor Services, Produkte, Medien oder Updates ergänzt werden',
+      ],
+    },
+    category: 'productivity',
+    faq: {
+      en: [
+        {
+          question: 'Can I create a public business team with tags?',
+          answer: 'Yes. Provide the team name, visibility, tags, and profile details, and the created team can be used by connected apps and directories.',
+        },
+        {
+          question: 'Can this action add contact details to a team?',
+          answer: 'Yes. It supports website, phone, email, address, location, and optional settings for the team profile.',
+        },
+      ],
+      de: [
+        {
+          question: 'Kann ich ein öffentliches Betriebs-Team mit Tags erstellen?',
+          answer: 'Ja. Gib Name, Sichtbarkeit, Tags und Profildaten an, damit verbundene Apps und Verzeichnisse das Team nutzen können.',
+        },
+        {
+          question: 'Kann diese Aktion Kontaktinfos zum Team hinzufügen?',
+          answer: 'Ja. Website, Telefon, E-Mail, Adresse, Standort und optionale Einstellungen können direkt im Teamprofil hinterlegt werden.',
+        },
+      ],
+    },
+  },
   'desk-upload': {
     keywords: {
       en: ['upload file', 'add to desk', 'pin document', 'attach pdf', 'share file with agent'],
