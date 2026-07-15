@@ -636,4 +636,109 @@ export const meta: Record<string, WarpExtras> = {
       ],
     },
   },
+  'update-create': {
+    keywords: {
+      en: ['post update', 'create deal', 'publish event', 'business news', 'local announcement'],
+      de: ['Update veröffentlichen', 'Angebot erstellen', 'Event veröffentlichen', 'Betriebsnews', 'lokale Ankündigung'],
+    },
+    useCases: {
+      en: ['Publish a limited-time offer for customers', 'Announce an upcoming event on a business profile', 'Post local business news to connected directories'],
+      de: ['Ein zeitlich begrenztes Angebot für Kunden veröffentlichen', 'Ein bevorstehendes Event im Betriebsprofil ankündigen', 'Lokale Betriebsnews in verbundenen Verzeichnissen posten'],
+    },
+    category: 'communication',
+    faq: {
+      en: [
+        { question: 'Can I publish deals, events, and news?', answer: 'Yes. Use deal for offers, event for appointments or happenings, and update for news-style announcements.' },
+        { question: 'Can an update be scheduled?', answer: 'Yes. Add startsAt and endsAt to control when the update is active.' },
+      ],
+      de: [
+        { question: 'Kann ich Angebote, Events und News veröffentlichen?', answer: 'Ja. Nutze deal für Angebote, event für Veranstaltungen und update für News oder allgemeine Ankündigungen.' },
+        { question: 'Kann ein Update geplant werden?', answer: 'Ja. Mit startsAt und endsAt steuerst du, wann das Update aktiv ist.' },
+      ],
+    },
+  },
+  'update-list': {
+    keywords: {
+      en: ['list updates', 'view deals', 'view events', 'business announcements', 'active updates'],
+      de: ['Updates anzeigen', 'Angebote anzeigen', 'Events anzeigen', 'Betriebsankündigungen', 'aktive Updates'],
+    },
+    useCases: {
+      en: ['Check currently active customer announcements', 'Filter updates by deal, event, or news type', 'Review published content before editing it'],
+      de: ['Aktive Kundenankündigungen prüfen', 'Updates nach Angebot, Event oder News filtern', 'Veröffentlichte Inhalte vor dem Bearbeiten prüfen'],
+    },
+    category: 'communication',
+    faq: {
+      en: [
+        { question: 'Can I filter updates by type?', answer: 'Yes. Filter by deal, event, or update. Use update for news-style posts.' },
+        { question: 'Does this show only visible updates?', answer: 'By default active updates are shown, but you can adjust the active and status filters.' },
+      ],
+      de: [
+        { question: 'Kann ich Updates nach Typ filtern?', answer: 'Ja. Filtere nach deal, event oder update. Für News verwendest du update.' },
+        { question: 'Zeigt diese Aktion nur sichtbare Updates?', answer: 'Standardmäßig werden aktive Updates angezeigt, du kannst active und status aber anpassen.' },
+      ],
+    },
+  },
+  'update-update': {
+    keywords: {
+      en: ['edit update', 'update deal', 'edit event', 'change business news', 'announcement status'],
+      de: ['Update bearbeiten', 'Angebot bearbeiten', 'Event bearbeiten', 'Betriebsnews ändern', 'Ankündigungsstatus'],
+    },
+    useCases: {
+      en: ['Change the dates of an event announcement', 'Archive an expired deal', 'Correct the title or link of a news post'],
+      de: ['Den Zeitraum einer Event-Ankündigung ändern', 'Ein abgelaufenes Angebot archivieren', 'Titel oder Link einer News korrigieren'],
+    },
+    category: 'communication',
+    faq: {
+      en: [
+        { question: 'Can I change the type of an update?', answer: 'Yes. Existing posts can be changed between deal, event, and update when needed.' },
+        { question: 'Can I unpublish an update?', answer: 'Yes. Set its status to draft or archived depending on whether it should be hidden or retired.' },
+      ],
+      de: [
+        { question: 'Kann ich den Typ eines Updates ändern?', answer: 'Ja. Bestehende Beiträge können bei Bedarf zwischen deal, event und update wechseln.' },
+        { question: 'Kann ich ein Update ausblenden?', answer: 'Ja. Setze den Status auf draft oder archived, je nachdem ob es versteckt oder endgültig erledigt ist.' },
+      ],
+    },
+  },
+  'update-delete': {
+    keywords: {
+      en: ['delete update', 'remove deal', 'delete event', 'remove announcement', 'delete business news'],
+      de: ['Update löschen', 'Angebot entfernen', 'Event löschen', 'Ankündigung entfernen', 'Betriebsnews löschen'],
+    },
+    useCases: {
+      en: ['Remove an outdated announcement from public feeds', 'Delete a duplicate deal', 'Clean up a canceled event'],
+      de: ['Eine veraltete Ankündigung aus öffentlichen Feeds entfernen', 'Ein doppeltes Angebot löschen', 'Ein abgesagtes Event bereinigen'],
+    },
+    category: 'communication',
+    faq: {
+      en: [
+        { question: 'Should I delete or archive an update?', answer: 'Archive content you may want to keep for history. Delete only when the update should be removed permanently.' },
+        { question: 'Do I need the update ID?', answer: 'Yes. If you only know the title, list updates first to find the matching ID.' },
+      ],
+      de: [
+        { question: 'Soll ich ein Update löschen oder archivieren?', answer: 'Archiviere Inhalte, die historisch erhalten bleiben sollen. Lösche nur, wenn das Update dauerhaft entfernt werden soll.' },
+        { question: 'Brauche ich die Update-ID?', answer: 'Ja. Wenn du nur den Titel kennst, liste zuerst die Updates, um die passende ID zu finden.' },
+      ],
+    },
+  },
+  'update-stats': {
+    keywords: {
+      en: ['update statistics', 'deal count', 'event count', 'news count', 'announcement analytics'],
+      de: ['Update Statistik', 'Anzahl Angebote', 'Anzahl Events', 'Anzahl News', 'Ankündigungsanalyse'],
+    },
+    useCases: {
+      en: ['Check how many deals are currently managed', 'See event and news post counts for a business profile', 'Audit customer-facing content coverage'],
+      de: ['Prüfen, wie viele Angebote verwaltet werden', 'Event- und News-Zahlen für ein Betriebsprofil ansehen', 'Kundenrelevante Inhalte auf Vollständigkeit prüfen'],
+    },
+    category: 'analytics',
+    faq: {
+      en: [
+        { question: 'What counts are included?', answer: 'The stats include deals, events, and news-style updates for the team.' },
+        { question: 'Can this help audit a business profile?', answer: 'Yes. Use it to see whether a profile has enough current customer-facing content.' },
+      ],
+      de: [
+        { question: 'Welche Zahlen sind enthalten?', answer: 'Die Statistik enthält Angebote, Events und News-Updates des Teams.' },
+        { question: 'Hilft das beim Prüfen eines Betriebsprofils?', answer: 'Ja. Damit siehst du, ob ein Profil genug aktuelle kundenrelevante Inhalte hat.' },
+      ],
+    },
+  },
 }

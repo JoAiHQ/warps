@@ -1,0 +1,151 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Update Update",
+  "title": {
+    "en": "Edit an update",
+    "de": "Update bearbeiten"
+  },
+  "description": {
+    "en": "Edit an existing deal, event, or news-style update for your team. Change the title, body, type, schedule, link, or publication status so connected websites and public feeds stay accurate.",
+    "de": "Bearbeite ein bestehendes Angebot, Event oder eine News für dein Team. Ändere Titel, Text, Typ, Zeitraum, Link oder Veröffentlichungsstatus, damit verbundene Websites und öffentliche Feeds aktuell bleiben."
+  },
+  "bot": "Use this when the user wants to edit an existing deal, event, or news-style update. Use type=update for news. If the user refers to an update by title, list updates first to find the matching ID.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Edit update",
+        "de": "Update bearbeiten"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/updates/{{updateId}}",
+        "method": "PATCH",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Update ID",
+          "as": "updateId",
+          "description": {
+            "en": "The ID of the update to edit",
+            "de": "Die ID des Updates, das bearbeitet werden soll"
+          },
+          "type": "string",
+          "position": "url:updateId",
+          "source": "field",
+          "required": true,
+          "min": 1
+        },
+        {
+          "name": "Title",
+          "as": "title",
+          "description": {
+            "en": "Updated headline",
+            "de": "Aktualisierte Überschrift"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Type",
+          "as": "type",
+          "description": {
+            "en": "Updated type. Use update for news.",
+            "de": "Aktualisierter Typ. Für News update verwenden."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "options": {
+            "deal": "Deal",
+            "event": "Event",
+            "update": "News / Update"
+          }
+        },
+        {
+          "name": "Body",
+          "as": "body",
+          "description": {
+            "en": "Updated description or announcement body",
+            "de": "Aktualisierte Beschreibung oder Nachricht"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Starts At",
+          "as": "startsAt",
+          "description": {
+            "en": "When the update becomes active (ISO date, optional)",
+            "de": "Wann das Update aktiv wird (ISO-Datum, optional)"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Ends At",
+          "as": "endsAt",
+          "description": {
+            "en": "When the update expires (ISO date, optional)",
+            "de": "Wann das Update abläuft (ISO-Datum, optional)"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Status",
+          "as": "status",
+          "description": {
+            "en": "Updated publication status",
+            "de": "Aktualisierter Veröffentlichungsstatus"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "options": {
+            "draft": "Draft",
+            "published": "Published",
+            "archived": "Archived"
+          }
+        },
+        {
+          "name": "Link URL",
+          "as": "linkUrl",
+          "description": {
+            "en": "URL to link from the update",
+            "de": "URL, auf die das Update verlinkt"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        }
+      ],
+      "output": {
+        "id": "out.data.id",
+        "title": "out.data.title",
+        "type": "out.data.type",
+        "status": "out.data.status"
+      }
+    }
+  ],
+  "output": {
+    "UPDATE_ID": "out.1.id",
+    "UPDATE_TITLE": "out.1.title"
+  },
+  "messages": {
+    "success": {
+      "en": "Update '{{UPDATE_TITLE}}' edited.",
+      "de": "Update '{{UPDATE_TITLE}}' bearbeitet."
+    }
+  }
+}
