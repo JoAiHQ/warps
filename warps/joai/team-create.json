@@ -1,0 +1,272 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Create Team",
+  "title": {
+    "en": "Create a team",
+    "de": "Team erstellen",
+    "es": "Create a team",
+    "fr": "Create a team",
+    "ro": "Create a team",
+    "it": "Create a team"
+  },
+  "description": {
+    "en": "Create a public or private JoAi team with profile details, tags, contact information, and settings. Use this action to onboard businesses, organizations, and workspaces so they can appear in connected apps, stores, directories, and public catalogs.",
+    "de": "Erstelle ein öffentliches oder privates JoAi-Team mit Profil, Tags, Kontaktinfos und Einstellungen. Diese Aktion eignet sich zum Onboarding von Betrieben, Organisationen und Workspaces, damit sie in verbundenen Apps, Stores, Verzeichnissen und öffentlichen Katalogen erscheinen können.",
+    "es": "Create a public or private JoAi team with profile details, tags, contact information, and settings. Use this action to onboard businesses, organizations, and workspaces so they can appear in connected apps, stores, directories, and public catalogs.",
+    "fr": "Create a public or private JoAi team with profile details, tags, contact information, and settings. Use this action to onboard businesses, organizations, and workspaces so they can appear in connected apps, stores, directories, and public catalogs.",
+    "ro": "Create a public or private JoAi team with profile details, tags, contact information, and settings. Use this action to onboard businesses, organizations, and workspaces so they can appear in connected apps, stores, directories, and public catalogs.",
+    "it": "Create a public or private JoAi team with profile details, tags, contact information, and settings. Use this action to onboard businesses, organizations, and workspaces so they can appear in connected apps, stores, directories, and public catalogs."
+  },
+  "bot": "Use this when the user wants to create or onboard a JoAi team, business, organization, or workspace. Extract profile fields, tags, website, phone, email, address, location, and optional settings from the user's request. Do not invent missing facts.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Create team",
+        "de": "Team erstellen",
+        "es": "Create team",
+        "fr": "Create team",
+        "ro": "Create team",
+        "it": "Create team"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/teams",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Name",
+          "as": "name",
+          "description": {
+            "en": "Public team or business name",
+            "de": "Öffentlicher Team- oder Betriebsname",
+            "es": "Public team or business name",
+            "fr": "Public team or business name",
+            "ro": "Public team or business name",
+            "it": "Public team or business name"
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "min": 2
+        },
+        {
+          "name": "Slug",
+          "as": "slug",
+          "description": {
+            "en": "Stable URL slug, lowercase with hyphens",
+            "de": "Stabiler URL-Slug, kleingeschrieben mit Bindestrichen",
+            "es": "Stable URL slug, lowercase with hyphens",
+            "fr": "Stable URL slug, lowercase with hyphens",
+            "ro": "Stable URL slug, lowercase with hyphens",
+            "it": "Stable URL slug, lowercase with hyphens"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Public",
+          "as": "public",
+          "description": {
+            "en": "Whether the team should be publicly visible",
+            "de": "Ob das Team öffentlich sichtbar sein soll",
+            "es": "Whether the team should be publicly visible",
+            "fr": "Whether the team should be publicly visible",
+            "ro": "Whether the team should be publicly visible",
+            "it": "Whether the team should be publicly visible"
+          },
+          "type": "boolean",
+          "source": "field",
+          "required": false,
+          "default": true
+        },
+        {
+          "name": "Tags",
+          "as": "tags",
+          "description": {
+            "en": "Tags as a comma-separated list",
+            "de": "Tags als kommagetrennte Liste",
+            "es": "Tags as a comma-separated list",
+            "fr": "Tags as a comma-separated list",
+            "ro": "Tags as a comma-separated list",
+            "it": "Tags as a comma-separated list"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "modifier": "transform:(value) => String(value || '').split(',').map((tag) => tag.trim()).filter(Boolean)"
+        },
+        {
+          "name": "Category",
+          "as": "category",
+          "description": {
+            "en": "Business category or team category",
+            "de": "Betriebs- oder Teamkategorie",
+            "es": "Business category or team category",
+            "fr": "Business category or team category",
+            "ro": "Business category or team category",
+            "it": "Business category or team category"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Tagline",
+          "as": "tagline",
+          "description": {
+            "en": "Short public tagline as JSON, e.g. {\"de\":\"...\"}",
+            "de": "Kurzer öffentlicher Untertitel als JSON, z.B. {\"de\":\"...\"}",
+            "es": "Short public tagline as JSON, e.g. {\"de\":\"...\"}",
+            "fr": "Short public tagline as JSON, e.g. {\"de\":\"...\"}",
+            "ro": "Short public tagline as JSON, e.g. {\"de\":\"...\"}",
+            "it": "Short public tagline as JSON, e.g. {\"de\":\"...\"}"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "modifier": "transform:(value) => value ? JSON.parse(value) : null"
+        },
+        {
+          "name": "Description",
+          "as": "description",
+          "description": {
+            "en": "Public description as JSON, e.g. {\"de\":\"...\"}",
+            "de": "Öffentliche Beschreibung als JSON, z.B. {\"de\":\"...\"}",
+            "es": "Public description as JSON, e.g. {\"de\":\"...\"}",
+            "fr": "Public description as JSON, e.g. {\"de\":\"...\"}",
+            "ro": "Public description as JSON, e.g. {\"de\":\"...\"}",
+            "it": "Public description as JSON, e.g. {\"de\":\"...\"}"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "modifier": "transform:(value) => value ? JSON.parse(value) : null"
+        },
+        {
+          "name": "Website",
+          "as": "website",
+          "description": {
+            "en": "Website URL",
+            "de": "Website-URL",
+            "es": "Website URL",
+            "fr": "Website URL",
+            "ro": "Website URL",
+            "it": "Website URL"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Phone",
+          "as": "phone",
+          "description": {
+            "en": "Phone number",
+            "de": "Telefonnummer",
+            "es": "Phone number",
+            "fr": "Phone number",
+            "ro": "Phone number",
+            "it": "Phone number"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Email",
+          "as": "email",
+          "description": {
+            "en": "Email address",
+            "de": "E-Mail-Adresse",
+            "es": "Email address",
+            "fr": "Email address",
+            "ro": "Email address",
+            "it": "Email address"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Address",
+          "as": "address",
+          "description": {
+            "en": "Postal address",
+            "de": "Postadresse",
+            "es": "Postal address",
+            "fr": "Postal address",
+            "ro": "Postal address",
+            "it": "Postal address"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Location",
+          "as": "location",
+          "description": {
+            "en": "City or region",
+            "de": "Ort oder Region",
+            "es": "City or region",
+            "fr": "City or region",
+            "ro": "City or region",
+            "it": "City or region"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Settings",
+          "as": "settings",
+          "description": {
+            "en": "Optional settings as JSON object",
+            "de": "Optionale Einstellungen als JSON-Objekt",
+            "es": "Optional settings as JSON object",
+            "fr": "Optional settings as JSON object",
+            "ro": "Optional settings as JSON object",
+            "it": "Optional settings as JSON object"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "modifier": "transform:(value) => value ? JSON.parse(value) : {}"
+        }
+      ],
+      "output": {
+        "id": "out.data.id",
+        "name": "out.data.name",
+        "slug": "out.data.slug"
+      }
+    }
+  ],
+  "output": {
+    "TEAM_ID": "out.1.id",
+    "TEAM_NAME": "out.1.name",
+    "TEAM_SLUG": "out.1.slug"
+  },
+  "messages": {
+    "success": {
+      "en": "Team created: {{TEAM_NAME}}",
+      "de": "Team erstellt: {{TEAM_NAME}}",
+      "es": "Team created: {{TEAM_NAME}}",
+      "fr": "Team created: {{TEAM_NAME}}",
+      "ro": "Team created: {{TEAM_NAME}}",
+      "it": "Team created: {{TEAM_NAME}}"
+    },
+    "error": {
+      "en": "Failed to create team: {{MESSAGE}}",
+      "de": "Team konnte nicht erstellt werden: {{MESSAGE}}"
+    }
+  }
+}

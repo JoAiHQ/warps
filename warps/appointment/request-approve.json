@@ -1,0 +1,95 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Appointments: Request Approval",
+  "title": {
+    "en": "Approve appointment request",
+    "de": "Terminanfrage bestätigen",
+    "fr": "Approuver la demande de rendez-vous",
+    "es": "Aprobar solicitud de cita",
+    "ro": "Aprobă cererea de programare",
+    "it": "Approva richiesta appuntamento"
+  },
+  "description": {
+    "en": "Notify team members about a new appointment request that needs manual approval. Used by service businesses like barbers, restaurants, and consultants to review and approve customer booking requests.",
+    "de": "Benachrichtigt Teammitglieder über eine neue Terminanfrage, die manuell bestätigt werden muss. Wird von Dienstleistern wie Friseuren, Restaurants und Beratern genutzt, um Kundenbuchungen zu prüfen und freizugeben."
+  },
+  "bot": "Use this when a new appointment request needs team approval. Pass the request details as inputs.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "auto": true,
+      "label": {
+        "en": "Notify team",
+        "de": "Team benachrichtigen",
+        "fr": "Notifier l'équipe",
+        "es": "Notificar al equipo",
+        "ro": "Notifică echipa",
+        "it": "Notifica il team"
+      },
+      "inputs": [
+        {
+          "name": "Title",
+          "as": "TITLE",
+          "type": "string",
+          "source": "query",
+          "required": true
+        },
+        {
+          "name": "Message",
+          "as": "MESSAGE",
+          "type": "string",
+          "source": "query",
+          "required": true
+        },
+        {
+          "name": "Requester Name",
+          "as": "REQUESTER_NAME",
+          "type": "string",
+          "source": "query",
+          "required": false
+        },
+        {
+          "name": "Requester Email",
+          "as": "REQUESTER_EMAIL",
+          "type": "string",
+          "source": "query",
+          "required": false
+        },
+        {
+          "name": "Notes",
+          "as": "NOTES",
+          "type": "string",
+          "source": "query",
+          "required": false
+        }
+      ]
+    },
+    {
+      "type": "inline",
+      "auto": true,
+      "next": "joai/team-members-notify?TITLE={{TITLE}}&MESSAGE={{MESSAGE}}"
+    }
+  ],
+  "messages": {
+    "error": {
+      "en": "Failed to process appointment request.",
+      "de": "Terminanfrage konnte nicht verarbeitet werden.",
+      "fr": "Échec du traitement de la demande de rendez-vous.",
+      "es": "No se pudo procesar la solicitud de cita.",
+      "ro": "Nu s-a putut procesa cererea de programare.",
+      "it": "Impossibile elaborare la richiesta di appuntamento."
+    },
+    "success": {
+      "en": "Appointment request approved.",
+      "de": "Terminanfrage bestätigt.",
+      "fr": "Demande de rendez-vous approuvée.",
+      "es": "Solicitud de cita aprobada.",
+      "ro": "Cererea de programare a fost aprobată.",
+      "it": "Richiesta di appuntamento approvata."
+    }
+  }
+}
