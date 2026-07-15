@@ -1,0 +1,50 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Update Stats",
+  "title": {
+    "en": "View update stats",
+    "de": "Update-Statistik anzeigen"
+  },
+  "description": {
+    "en": "View summary counts for your team updates, including deals, events, and news-style posts. Use this to understand how much active customer-facing content is available across connected websites and public feeds.",
+    "de": "Zeige zusammengefasste Zahlen für Team-Updates, inklusive Angeboten, Events und News. So siehst du, wie viele kundenrelevante Inhalte auf verbundenen Websites und öffentlichen Feeds verfügbar sind."
+  },
+  "bot": "Use this when the user asks how many updates, deals, events, or news posts the team has.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "View stats",
+        "de": "Statistik anzeigen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/updates/stats",
+        "method": "GET",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [],
+      "output": {
+        "dealsCount": "out.data.dealsCount",
+        "eventsCount": "out.data.eventsCount",
+        "newsCount": "out.data.newsCount"
+      }
+    }
+  ],
+  "output": {
+    "DEALS_COUNT": "out.1.dealsCount",
+    "EVENTS_COUNT": "out.1.eventsCount",
+    "NEWS_COUNT": "out.1.newsCount"
+  },
+  "messages": {
+    "success": {
+      "en": "Updates: {{DEALS_COUNT}} deals, {{EVENTS_COUNT}} events, {{NEWS_COUNT}} news posts.",
+      "de": "Updates: {{DEALS_COUNT}} Angebote, {{EVENTS_COUNT}} Events, {{NEWS_COUNT}} News."
+    }
+  }
+}

@@ -1,15 +1,15 @@
 {
   "protocol": "warp:3.0.0",
-  "name": "JoAi: Create Update",
+  "name": "JoAi: Update Update",
   "title": {
-    "en": "Post an update",
-    "de": "Update veröffentlichen"
+    "en": "Edit an update",
+    "de": "Update bearbeiten"
   },
   "description": {
-    "en": "Post a deal, event, or news-style update for your team so it can appear in connected websites, directories, and public feeds. Supports scheduled publishing windows, links, and draft or published status for local business communication.",
-    "de": "Veröffentliche ein Angebot, Event oder eine News für dein Team, damit sie auf verbundenen Websites, in Verzeichnissen und öffentlichen Feeds erscheinen kann. Unterstützt geplante Zeiträume, Links sowie Entwurf- oder Veröffentlichungsstatus für lokale Betriebsinfos."
+    "en": "Edit an existing deal, event, or news-style update for your team. Change the title, body, type, schedule, link, or publication status so connected websites and public feeds stay accurate.",
+    "de": "Bearbeite ein bestehendes Angebot, Event oder eine News für dein Team. Ändere Titel, Text, Typ, Zeitraum, Link oder Veröffentlichungsstatus, damit verbundene Websites und öffentliche Feeds aktuell bleiben."
   },
-  "bot": "Use this to create a deal, event, or news-style update for customers. Use type=update for news. Set startsAt/endsAt for time-limited offers or events.",
+  "bot": "Use this when the user wants to edit an existing deal, event, or news-style update. Use type=update for news. If the user refers to an update by title, list updates first to find the matching ID.",
   "vars": {
     "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
     "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
@@ -18,38 +18,51 @@
     {
       "type": "collect",
       "label": {
-        "en": "Post update",
-        "de": "Update veröffentlichen"
+        "en": "Edit update",
+        "de": "Update bearbeiten"
       },
       "destination": {
-        "url": "INJECT:API_BASE/v1/updates",
-        "method": "POST",
+        "url": "INJECT:API_BASE/v1/updates/{{updateId}}",
+        "method": "PATCH",
         "headers": {
           "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
         }
       },
       "inputs": [
         {
+          "name": "Update ID",
+          "as": "updateId",
+          "description": {
+            "en": "The ID of the update to edit",
+            "de": "Die ID des Updates, das bearbeitet werden soll"
+          },
+          "type": "string",
+          "position": "url:updateId",
+          "source": "field",
+          "required": true,
+          "min": 1
+        },
+        {
           "name": "Title",
           "as": "title",
           "description": {
-            "en": "Headline of the update",
-            "de": "Überschrift des Updates"
+            "en": "Updated headline",
+            "de": "Aktualisierte Überschrift"
           },
           "type": "string",
           "source": "field",
-          "required": true
+          "required": false
         },
         {
           "name": "Type",
           "as": "type",
           "description": {
-            "en": "Type of update",
-            "de": "Art des Updates"
+            "en": "Updated type. Use update for news.",
+            "de": "Aktualisierter Typ. Für News update verwenden."
           },
           "type": "string",
           "source": "field",
-          "required": true,
+          "required": false,
           "options": {
             "deal": "Deal",
             "event": "Event",
@@ -60,8 +73,8 @@
           "name": "Body",
           "as": "body",
           "description": {
-            "en": "Detailed description (supports markdown)",
-            "de": "Detailbeschreibung (unterstützt Markdown)"
+            "en": "Updated description or announcement body",
+            "de": "Aktualisierte Beschreibung oder Nachricht"
           },
           "type": "string",
           "source": "field",
@@ -93,8 +106,8 @@
           "name": "Status",
           "as": "status",
           "description": {
-            "en": "Publication status",
-            "de": "Veröffentlichungsstatus"
+            "en": "Updated publication status",
+            "de": "Aktualisierter Veröffentlichungsstatus"
           },
           "type": "string",
           "source": "field",
@@ -131,8 +144,8 @@
   },
   "messages": {
     "success": {
-      "en": "Update '{{UPDATE_TITLE}}' posted!",
-      "de": "Update '{{UPDATE_TITLE}}' veröffentlicht!"
+      "en": "Update '{{UPDATE_TITLE}}' edited.",
+      "de": "Update '{{UPDATE_TITLE}}' bearbeitet."
     }
   }
 }

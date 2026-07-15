@@ -1,0 +1,54 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Delete Update",
+  "title": {
+    "en": "Delete an update",
+    "de": "Update löschen"
+  },
+  "description": {
+    "en": "Remove an existing deal, event, or news-style update from your team. Use this when outdated announcements should no longer appear in connected websites, directories, or public feeds.",
+    "de": "Entferne ein bestehendes Angebot, Event oder eine News aus deinem Team. Nutze diese Aktion, wenn veraltete Ankündigungen nicht mehr auf verbundenen Websites, in Verzeichnissen oder öffentlichen Feeds erscheinen sollen."
+  },
+  "bot": "Use this when the user wants to delete an update. If the user refers to an update by title, list updates first to find the matching ID.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Delete update",
+        "de": "Update löschen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/updates/{{updateId}}",
+        "method": "DELETE",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Update ID",
+          "as": "updateId",
+          "description": {
+            "en": "The ID of the update to delete",
+            "de": "Die ID des Updates, das gelöscht werden soll"
+          },
+          "type": "string",
+          "position": "url:updateId",
+          "source": "field",
+          "required": true,
+          "min": 1
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Update deleted.",
+      "de": "Update gelöscht."
+    }
+  }
+}

@@ -6,10 +6,10 @@
     "de": "Updates anzeigen"
   },
   "description": {
-    "en": "View current deals, events, and news for your business. Shows only active updates by default.",
-    "de": "Zeige aktuelle Angebote, Events und News für dein Geschäft. Zeigt standardmäßig nur aktive Updates an."
+    "en": "View current or archived deals, events, and news-style updates for your team. Filter by type, status, or active publishing window to check what customers can see across connected websites and public feeds.",
+    "de": "Zeige aktuelle oder archivierte Angebote, Events und News für dein Team. Filtere nach Typ, Status oder aktivem Veröffentlichungszeitraum, um zu prüfen, was Kunden auf verbundenen Websites und öffentlichen Feeds sehen."
   },
-  "bot": "Use this to see what updates are currently active. Filter by type (deal, event, update) if needed.",
+  "bot": "Use this to see team updates. Use type=update for news. By default active=true returns currently visible updates.",
   "vars": {
     "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
     "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
@@ -22,13 +22,61 @@
         "de": "Updates anzeigen"
       },
       "destination": {
-        "url": "INJECT:API_BASE/v1/updates?active=true",
+        "url": "INJECT:API_BASE/v1/updates?active={{active}}&type={{type}}&status={{status}}",
         "method": "GET",
         "headers": {
           "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
         }
       },
-      "inputs": []
+      "inputs": [
+        {
+          "name": "Active",
+          "as": "active",
+          "description": {
+            "en": "Whether to show only currently active updates. Use true by default.",
+            "de": "Ob nur aktuell aktive Updates angezeigt werden sollen. Standardmäßig true verwenden."
+          },
+          "type": "boolean",
+          "position": "url:active",
+          "source": "field",
+          "required": false,
+          "default": true
+        },
+        {
+          "name": "Type",
+          "as": "type",
+          "description": {
+            "en": "Filter by update type. Use update for news.",
+            "de": "Nach Update-Typ filtern. Für News update verwenden."
+          },
+          "type": "string",
+          "position": "url:type",
+          "source": "field",
+          "required": false,
+          "options": {
+            "deal": "Deal",
+            "event": "Event",
+            "update": "News / Update"
+          }
+        },
+        {
+          "name": "Status",
+          "as": "status",
+          "description": {
+            "en": "Filter by publication status",
+            "de": "Nach Veröffentlichungsstatus filtern"
+          },
+          "type": "string",
+          "position": "url:status",
+          "source": "field",
+          "required": false,
+          "options": {
+            "draft": "Draft",
+            "published": "Published",
+            "archived": "Archived"
+          }
+        }
+      ]
     }
   ],
   "messages": {
