@@ -1,0 +1,83 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Set Team Meta",
+  "title": {
+    "en": "Set team metadata",
+    "de": "Team-Metadaten setzen"
+  },
+  "description": {
+    "en": "Save a key-value setting on a team's metadata, such as WhatsApp number, Google Place ID, address, opening hours, payment settings, or loyalty program links. Use this action to configure optional business metadata for portal listings without editing the main team profile.",
+    "de": "Speichere eine Schlüssel-Wert-Einstellung in den Metadaten eines Teams — etwa WhatsApp-Nummer, Google Place ID, Adresse, Öffnungszeiten, Zahlungseinstellungen oder Links zu Treueprogrammen. Nutze diese Aktion, um optionale Geschäfts-Metadaten für Portal-Einträge zu konfigurieren, ohne das Hauptprofil zu bearbeiten."
+  },
+  "bot": "Use this to save a single key-value setting on a team, like WhatsApp number, Google Place ID, or any other business metadata for portal listings. The slug identifies the team, the key is the setting name, and value is whatever should be stored.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Save metadata",
+        "de": "Metadaten speichern"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/teams/{{slug}}/settings/{{key}}",
+        "method": "PUT",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Slug",
+          "as": "slug",
+          "description": {
+            "en": "The team slug",
+            "de": "Das Team-Slug"
+          },
+          "bot": "The slug of the team to set metadata on. Required — ask the user or derive from context.",
+          "type": "string",
+          "source": "query",
+          "required": true
+        },
+        {
+          "name": "Key",
+          "as": "key",
+          "description": {
+            "en": "The setting key (e.g. whatsapp, google_place_id, opening_hours)",
+            "de": "Der Einstellungsschlüssel (z.B. whatsapp, google_place_id, opening_hours)"
+          },
+          "bot": "The metadata key to set. Examples: whatsapp, google_place_id, opening_hours, payment_settings, loyalty_url. Required.",
+          "type": "string",
+          "source": "query",
+          "required": true
+        },
+        {
+          "name": "Value",
+          "as": "value",
+          "description": {
+            "en": "The setting value — can be a string, number, or JSON object",
+            "de": "Der Einstellungswert — kann ein String, eine Zahl oder ein JSON-Objekt sein"
+          },
+          "bot": "The value to store. For structured data, provide as a JSON string (it will be parsed automatically). Examples: \"+123456789\", 42, {\"monday\":\"09:00-17:00\"}.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "modifier": "transform:(value) => { try { return JSON.parse(value) } catch { return value } }"
+        }
+      ],
+      "auto": true
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Setting '{{key}}' saved on team {{slug}}.",
+      "de": "Einstellung '{{key}}' für Team {{slug}} gespeichert."
+    },
+    "error": {
+      "en": "Failed to save setting: {{MESSAGE}}",
+      "de": "Einstellung konnte nicht gespeichert werden: {{MESSAGE}}"
+    }
+  }
+}
