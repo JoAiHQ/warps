@@ -1,0 +1,204 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Update Team",
+  "title": {
+    "en": "Update team profile",
+    "de": "Team-Profil aktualisieren",
+    "es": "Update team profile",
+    "fr": "Update team profile",
+    "ro": "Update team profile",
+    "it": "Update team profile"
+  },
+  "description": {
+    "en": "Update an existing JoAi team's profile — change its name, description, tags, contact details, category, tagline, or visibility. Use this action to keep your team's public listing current across connected apps, stores, directories, and catalogs without recreating the team.",
+    "de": "Aktualisiere das Profil eines bestehenden JoAi-Teams — ändere Name, Beschreibung, Tags, Kontaktdaten, Kategorie, Untertitel oder Sichtbarkeit. Nutze diese Aktion, um dein öffentliches Team-Profil in verbundenen Apps, Stores, Verzeichnissen und Katalogen aktuell zu halten, ohne das Team neu zu erstellen."
+  },
+  "bot": "Use this when the user wants to update or edit an existing JoAi team, business, or organization profile. First identify the team slug — it is required. Then collect only the fields the user explicitly wants to change. Do not ask for fields the user hasn't mentioned.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Update team",
+        "de": "Team aktualisieren",
+        "es": "Update team",
+        "fr": "Update team",
+        "ro": "Update team",
+        "it": "Update team"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/teams/{{slug}}",
+        "method": "PATCH",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Slug",
+          "as": "slug",
+          "description": {
+            "en": "The team slug to update",
+            "de": "Das zu aktualisierende Team-Slug"
+          },
+          "bot": "The unique slug of the team to update. Required — ask the user or derive from context.",
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Name",
+          "as": "name",
+          "description": {
+            "en": "New public team or business name",
+            "de": "Neuer öffentlicher Team- oder Betriebsname"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Public",
+          "as": "public",
+          "description": {
+            "en": "Whether the team should be publicly visible",
+            "de": "Ob das Team öffentlich sichtbar sein soll"
+          },
+          "type": "boolean",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Tags",
+          "as": "tags",
+          "description": {
+            "en": "Tags as a comma-separated list",
+            "de": "Tags als kommagetrennte Liste"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "modifier": "transform:(value) => String(value || '').split(',').map((tag) => tag.trim()).filter(Boolean)"
+        },
+        {
+          "name": "Category",
+          "as": "category",
+          "description": {
+            "en": "Business or team category",
+            "de": "Betriebs- oder Teamkategorie"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Tagline",
+          "as": "tagline",
+          "description": {
+            "en": "Short tagline as translatable JSON, e.g. {\"en\":\"...\",\"de\":\"...\"}",
+            "de": "Kurzer Untertitel als übersetzbares JSON, z.B. {\"en\":\"...\",\"de\":\"...\"}"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "modifier": "transform:(value) => value ? JSON.parse(value) : null"
+        },
+        {
+          "name": "Description",
+          "as": "description",
+          "description": {
+            "en": "Public description as translatable JSON, e.g. {\"en\":\"...\",\"de\":\"...\"}",
+            "de": "Öffentliche Beschreibung als übersetzbares JSON, z.B. {\"en\":\"...\",\"de\":\"...\"}"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "modifier": "transform:(value) => value ? JSON.parse(value) : null"
+        },
+        {
+          "name": "Website",
+          "as": "website",
+          "description": {
+            "en": "Website URL",
+            "de": "Website-URL"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Phone",
+          "as": "phone",
+          "description": {
+            "en": "Phone number",
+            "de": "Telefonnummer"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Email",
+          "as": "email",
+          "description": {
+            "en": "Email address",
+            "de": "E-Mail-Adresse"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Address",
+          "as": "address",
+          "description": {
+            "en": "Postal address",
+            "de": "Postadresse"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Location",
+          "as": "location",
+          "description": {
+            "en": "City or region",
+            "de": "Ort oder Region"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        }
+      ],
+      "auto": true,
+      "output": {
+        "id": "out.data.id",
+        "name": "out.data.name",
+        "slug": "out.data.slug"
+      }
+    }
+  ],
+  "output": {
+    "TEAM_ID": "out.1.id",
+    "TEAM_NAME": "out.1.name",
+    "TEAM_SLUG": "out.1.slug"
+  },
+  "messages": {
+    "success": {
+      "en": "Team '{{TEAM_NAME}}' updated!",
+      "de": "Team '{{TEAM_NAME}}' aktualisiert!",
+      "es": "Team '{{TEAM_NAME}}' updated!",
+      "fr": "Team '{{TEAM_NAME}}' updated!",
+      "ro": "Team '{{TEAM_NAME}}' updated!",
+      "it": "Team '{{TEAM_NAME}}' updated!"
+    },
+    "error": {
+      "en": "Failed to update team: {{MESSAGE}}",
+      "de": "Team konnte nicht aktualisiert werden: {{MESSAGE}}"
+    }
+  }
+}
