@@ -69,10 +69,10 @@ export function BookingRules({ policy, onChange }: Props) {
         />
       </div>
       <div className="flex items-center justify-between">
-        <label className="text-xs text-secondary">{tr.fields.marketplacePaymentEnabled}</label>
+        <label className="text-xs text-secondary">{tr.fields.paymentEnabled}</label>
         <Switch
-          checked={policy.marketplacePaymentEnabled ?? false}
-          onCheckedChange={(checked) => onChange({ marketplacePaymentEnabled: checked })}
+          checked={policy.paymentEnabled ?? false}
+          onCheckedChange={(checked) => onChange({ paymentEnabled: checked })}
         />
       </div>
     </section>

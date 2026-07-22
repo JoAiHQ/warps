@@ -21,7 +21,7 @@ function emptyPolicy(): AppointmentPolicy {
     holidays: [],
     conferenceEnabled: true,
     serviceSelectionEnabled: true,
-    marketplacePaymentEnabled: false,
+    paymentEnabled: false,
   }
 }
 

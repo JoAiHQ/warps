@@ -65,7 +65,7 @@ export const es: typeof en = {
       maxDaysAhead: 'Días de anticipación máx',
       conferenceEnabled: 'Enlace de reunión online',
       serviceSelectionEnabled: 'Permitir selección de servicio',
-      marketplacePaymentEnabled: 'Requerir pago en marketplace',
+      paymentEnabled: 'Requerir pago en marketplace',
       serviceDurationUnit: 'min',
     },
     days: {
