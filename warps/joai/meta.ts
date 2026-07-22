@@ -44,6 +44,68 @@ export const meta: Record<string, WarpExtras> = {
       ],
     },
   },
+  'team-update': {
+    keywords: {
+      en: ['update team', 'edit team profile', 'modify business listing', 'change team details'],
+      de: ['Team aktualisieren', 'Teamprofil bearbeiten', 'Betriebseintrag ändern', 'Teamdetails anpassen'],
+    },
+    useCases: {
+      en: [
+        'Update a business name, description, or contact details in a portal directory',
+        'Change team visibility or category without recreating the team',
+        'Add or replace tags to recategorize a team for portal listings',
+      ],
+      de: [
+        'Den Namen, die Beschreibung oder Kontaktdaten eines Betriebs in einem Portalverzeichnis aktualisieren',
+        'Die Sichtbarkeit oder Kategorie eines Teams ändern, ohne es neu zu erstellen',
+        'Tags hinzufügen oder ersetzen, um ein Team für Portal-Einträge neu zu kategorisieren',
+      ],
+    },
+    category: 'productivity',
+    faq: {
+      en: [
+        {
+          question: 'Can I update just one field without affecting others?',
+          answer: 'Yes. Only the fields you provide will be changed; all other team profile fields stay as they are.',
+        },
+        {
+          question: 'Can I change the team slug?',
+          answer: 'No, the slug is used as the stable URL identifier and cannot be changed after creation.',
+        },
+      ],
+      de: [
+        {
+          question: 'Kann ich nur ein Feld aktualisieren, ohne andere zu beeinflussen?',
+          answer: 'Ja. Nur die von dir angegebenen Felder werden geändert; alle anderen Teamprofilfelder bleiben unverändert.',
+        },
+        {
+          question: 'Kann ich das Team-Slug ändern?',
+          answer: 'Nein, das Slug dient als stabiler URL-Identifikator und kann nach der Erstellung nicht geändert werden.',
+        },
+      ],
+    },
+  },
+  'team-meta-set': {
+    keywords: {
+      en: ['team metadata', 'save setting', 'team configuration', 'whatsapp number', 'google place id', 'opening hours', 'loyalty link'],
+      de: ['Team-Metadaten', 'Einstellung speichern', 'Team-Konfiguration', 'WhatsApp-Nummer', 'Google Place ID', 'Öffnungszeiten', 'Treueprogramm-Link'],
+    },
+    useCases: {
+      en: [
+        'Set a WhatsApp number for a business so customers can message directly',
+        'Save a Google Place ID to pull reviews, ratings, and location data',
+        'Configure opening hours for a business listing in a local directory',
+        'Store a loyalty program link for customer rewards on a team profile',
+      ],
+      de: [
+        'Eine WhatsApp-Nummer für einen Betrieb hinterlegen, damit Kunden direkt schreiben können',
+        'Eine Google Place ID speichern, um Bewertungen und Standortdaten abzurufen',
+        'Öffnungszeiten für einen Betriebseintrag in einem lokalen Verzeichnis konfigurieren',
+        'Einen Treueprogramm-Link für Kundenbelohnungen im Teamprofil hinterlegen',
+      ],
+    },
+    category: 'productivity',
+  },
   'desk-upload': {
     keywords: {
       en: ['upload file', 'add to desk', 'pin document', 'attach pdf', 'share file with agent'],
