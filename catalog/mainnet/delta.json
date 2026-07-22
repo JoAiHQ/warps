@@ -4,25 +4,25 @@
   "repo": "JoAiHQ/warps",
   "branch": "main",
   "network": "mainnet",
-  "commitSha": "574bf4515dc10b14ca70a6d73022b05dcaf47ebe",
-  "committedAt": "2026-07-21T12:38:25.944Z",
-  "generatedAt": "2026-07-21T12:38:28.303Z",
+  "commitSha": "08b65b66ce98b5fc1622318f30362ff8a3ed3e16",
+  "committedAt": "2026-07-22T09:18:19.617Z",
+  "generatedAt": "2026-07-22T09:18:23.003Z",
   "upserts": [
     {
-      "key": "none:joai-product-create",
-      "identifier": "@joai-product-create",
-      "alias": "joai-product-create",
+      "key": "none:joai-team-meta-set",
+      "identifier": "@joai-team-meta-set",
+      "alias": "joai-team-meta-set",
       "chain": "none",
-      "hash": "f640eef9bf7af4a643e7a799320af3c387584ae3bcf6ce69d56ddce34ffcc747",
-      "checksum": "f640eef9bf7af4a643e7a799320af3c387584ae3bcf6ce69d56ddce34ffcc747",
-      "name": "JoAi: Create Product",
+      "hash": "7e5527388d9c90b35df5f04b1a8b5eb460c667d09555fb2c2b7cf9d1c62e2cb7",
+      "checksum": "7e5527388d9c90b35df5f04b1a8b5eb460c667d09555fb2c2b7cf9d1c62e2cb7",
+      "name": "JoAi: Set Team Meta",
       "title": {
-        "en": "Create a product",
-        "de": "Produkt erstellen"
+        "en": "Set team metadata",
+        "de": "Team-Metadaten setzen"
       },
       "description": {
-        "en": "Price in cents for the base product. For variations, set each variation's price in the input below.",
-        "de": "Preis in Cent für das Basisprodukt. Bei Varianten den Preis jeder Variante unten eingeben."
+        "en": "Save a key-value setting on a team's metadata, such as WhatsApp number, Google Place ID, address, opening hours, payment settings, or loyalty program links. Use this action to configure optional business metadata for portal listings without editing the main team profile.",
+        "de": "Speichere eine Schlüssel-Wert-Einstellung in den Metadaten eines Teams — etwa WhatsApp-Nummer, Google Place ID, Adresse, Öffnungszeiten, Zahlungseinstellungen oder Links zu Treueprogrammen. Nutze diese Aktion, um optionale Geschäfts-Metadaten für Portal-Einträge zu konfigurieren, ohne das Hauptprofil zu bearbeiten."
       },
       "preview": null,
       "creator": "github:JoAiHQ/warps",
@@ -57,16 +57,16 @@
       },
       "warp": {
         "protocol": "warp:3.0.0",
-        "name": "JoAi: Create Product",
+        "name": "JoAi: Set Team Meta",
         "title": {
-          "en": "Create a product",
-          "de": "Produkt erstellen"
+          "en": "Set team metadata",
+          "de": "Team-Metadaten setzen"
         },
         "description": {
-          "en": "Price in cents for the base product. For variations, set each variation's price in the input below.",
-          "de": "Preis in Cent für das Basisprodukt. Bei Varianten den Preis jeder Variante unten eingeben."
+          "en": "Save a key-value setting on a team's metadata, such as WhatsApp number, Google Place ID, address, opening hours, payment settings, or loyalty program links. Use this action to configure optional business metadata for portal listings without editing the main team profile.",
+          "de": "Speichere eine Schlüssel-Wert-Einstellung in den Metadaten eines Teams — etwa WhatsApp-Nummer, Google Place ID, Adresse, Öffnungszeiten, Zahlungseinstellungen oder Links zu Treueprogrammen. Nutze diese Aktion, um optionale Geschäfts-Metadaten für Portal-Einträge zu konfigurieren, ohne das Hauptprofil zu bearbeiten."
         },
-        "bot": "Use when the user wants to create a new product, material, or billable item with multiple variations/pricing tiers. Extract name, price, and variation names/SKUs/prices from their description. For example: '10 pieces at €4, 50 pieces at €3' becomes variations with different SKUs.",
+        "bot": "Use this to save a single key-value setting on a team, like WhatsApp number, Google Place ID, or any other business metadata for portal listings. The slug identifies the team, the key is the setting name, and value is whatever should be stored.",
         "vars": {
           "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
           "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
@@ -75,47 +75,192 @@
           {
             "type": "collect",
             "label": {
-              "en": "Create product",
-              "de": "Produkt erstellen"
+              "en": "Save metadata",
+              "de": "Metadaten speichern"
             },
             "destination": {
-              "url": "https://api.joai.ai/v1/products",
-              "method": "POST",
+              "url": "https://api.joai.ai/v1/teams/{{slug}}/settings/{{key}}",
+              "method": "PUT",
               "headers": {
                 "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
               }
             },
             "inputs": [
               {
+                "name": "Slug",
+                "as": "slug",
+                "description": {
+                  "en": "The team slug",
+                  "de": "Das Team-Slug"
+                },
+                "bot": "The slug of the team to set metadata on. Required — ask the user or derive from context.",
+                "type": "string",
+                "source": "query",
+                "required": true
+              },
+              {
+                "name": "Key",
+                "as": "key",
+                "description": {
+                  "en": "The setting key (e.g. whatsapp, google_place_id, opening_hours)",
+                  "de": "Der Einstellungsschlüssel (z.B. whatsapp, google_place_id, opening_hours)"
+                },
+                "bot": "The metadata key to set. Examples: whatsapp, google_place_id, opening_hours, payment_settings, loyalty_url. Required.",
+                "type": "string",
+                "source": "query",
+                "required": true
+              },
+              {
+                "name": "Value",
+                "as": "value",
+                "description": {
+                  "en": "The setting value — can be a string, number, or JSON object",
+                  "de": "Der Einstellungswert — kann ein String, eine Zahl oder ein JSON-Objekt sein"
+                },
+                "bot": "The value to store. For structured data, provide as a JSON string (it will be parsed automatically). Examples: \"+123456789\", 42, {\"monday\":\"09:00-17:00\"}.",
+                "type": "string",
+                "source": "field",
+                "required": true,
+                "modifier": "transform:(value) => { try { return JSON.parse(value) } catch { return value } }"
+              }
+            ],
+            "auto": true
+          }
+        ],
+        "messages": {
+          "success": {
+            "en": "Setting '{{key}}' saved on team {{slug}}.",
+            "de": "Einstellung '{{key}}' für Team {{slug}} gespeichert."
+          },
+          "error": {
+            "en": "Failed to save setting: {{MESSAGE}}",
+            "de": "Einstellung konnte nicht gespeichert werden: {{MESSAGE}}"
+          }
+        }
+      },
+      "extras": null
+    },
+    {
+      "key": "none:joai-team-update",
+      "identifier": "@joai-team-update",
+      "alias": "joai-team-update",
+      "chain": "none",
+      "hash": "2f97e99e36a1e2d58837ae3583ad400da04de0c31ef1903f50cd76524d3054ff",
+      "checksum": "2f97e99e36a1e2d58837ae3583ad400da04de0c31ef1903f50cd76524d3054ff",
+      "name": "JoAi: Update Team",
+      "title": {
+        "en": "Update team profile",
+        "de": "Team-Profil aktualisieren",
+        "es": "Update team profile",
+        "fr": "Update team profile",
+        "ro": "Update team profile",
+        "it": "Update team profile"
+      },
+      "description": {
+        "en": "Update an existing JoAi team's profile — change its name, description, tags, contact details, category, tagline, or visibility. Use this action to keep your team's public listing current across connected apps, stores, directories, and catalogs without recreating the team.",
+        "de": "Aktualisiere das Profil eines bestehenden JoAi-Teams — ändere Name, Beschreibung, Tags, Kontaktdaten, Kategorie, Untertitel oder Sichtbarkeit. Nutze diese Aktion, um dein öffentliches Team-Profil in verbundenen Apps, Stores, Verzeichnissen und Katalogen aktuell zu halten, ohne das Team neu zu erstellen."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: Update Team",
+        "title": {
+          "en": "Update team profile",
+          "de": "Team-Profil aktualisieren",
+          "es": "Update team profile",
+          "fr": "Update team profile",
+          "ro": "Update team profile",
+          "it": "Update team profile"
+        },
+        "description": {
+          "en": "Update an existing JoAi team's profile — change its name, description, tags, contact details, category, tagline, or visibility. Use this action to keep your team's public listing current across connected apps, stores, directories, and catalogs without recreating the team.",
+          "de": "Aktualisiere das Profil eines bestehenden JoAi-Teams — ändere Name, Beschreibung, Tags, Kontaktdaten, Kategorie, Untertitel oder Sichtbarkeit. Nutze diese Aktion, um dein öffentliches Team-Profil in verbundenen Apps, Stores, Verzeichnissen und Katalogen aktuell zu halten, ohne das Team neu zu erstellen."
+        },
+        "bot": "Use this when the user wants to update or edit an existing JoAi team, business, or organization profile. First identify the team slug — it is required. Then collect only the fields the user explicitly wants to change. Do not ask for fields the user hasn't mentioned.",
+        "vars": {
+          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Update team",
+              "de": "Team aktualisieren",
+              "es": "Update team",
+              "fr": "Update team",
+              "ro": "Update team",
+              "it": "Update team"
+            },
+            "destination": {
+              "url": "https://api.joai.ai/v1/teams/{{slug}}",
+              "method": "PATCH",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Slug",
+                "as": "slug",
+                "description": {
+                  "en": "The team slug to update",
+                  "de": "Das zu aktualisierende Team-Slug"
+                },
+                "bot": "The unique slug of the team to update. Required — ask the user or derive from context.",
+                "type": "string",
+                "source": "field",
+                "required": true
+              },
+              {
                 "name": "Name",
                 "as": "name",
                 "description": {
-                  "en": "Product name",
-                  "de": "Produktname"
+                  "en": "New public team or business name",
+                  "de": "Neuer öffentlicher Team- oder Betriebsname"
                 },
                 "type": "string",
                 "source": "field",
-                "required": true
+                "required": false
               },
               {
-                "name": "Price",
-                "as": "price",
+                "name": "Public",
+                "as": "public",
                 "description": {
-                  "en": "Price in cents",
-                  "de": "Preis in Cent"
+                  "en": "Whether the team should be publicly visible",
+                  "de": "Ob das Team öffentlich sichtbar sein soll"
                 },
-                "type": "number",
-                "source": "field",
-                "required": true
-              },
-              {
-                "name": "Unit",
-                "as": "unit",
-                "description": {
-                  "en": "Unit (e.g. Stück, kg, h)",
-                  "de": "Einheit (z.B. Stück, kg, h)"
-                },
-                "type": "string",
+                "type": "boolean",
                 "source": "field",
                 "required": false
               },
@@ -123,16 +268,132 @@
                 "name": "Tags",
                 "as": "tags",
                 "description": {
-                  "en": "Tags (e.g. appetizers, mains, desserts)",
-                  "de": "Tags (z.B. vorspeisen, hauptgerichte, nachspeisen)"
+                  "en": "Tags as a comma-separated list",
+                  "de": "Tags als kommagetrennte Liste"
+                },
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "modifier": "transform:(value) => String(value || '').split(',').map((tag) => tag.trim()).filter(Boolean)"
+              },
+              {
+                "name": "Category",
+                "as": "category",
+                "description": {
+                  "en": "Business or team category",
+                  "de": "Betriebs- oder Teamkategorie"
+                },
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Tagline",
+                "as": "tagline",
+                "description": {
+                  "en": "Short tagline as translatable JSON, e.g. {\"en\":\"...\",\"de\":\"...\"}",
+                  "de": "Kurzer Untertitel als übersetzbares JSON, z.B. {\"en\":\"...\",\"de\":\"...\"}"
+                },
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "modifier": "transform:(value) => value ? JSON.parse(value) : null"
+              },
+              {
+                "name": "Description",
+                "as": "description",
+                "description": {
+                  "en": "Public description as translatable JSON, e.g. {\"en\":\"...\",\"de\":\"...\"}",
+                  "de": "Öffentliche Beschreibung als übersetzbares JSON, z.B. {\"en\":\"...\",\"de\":\"...\"}"
+                },
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "modifier": "transform:(value) => value ? JSON.parse(value) : null"
+              },
+              {
+                "name": "Website",
+                "as": "website",
+                "description": {
+                  "en": "Website URL",
+                  "de": "Website-URL"
+                },
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Phone",
+                "as": "phone",
+                "description": {
+                  "en": "Phone number",
+                  "de": "Telefonnummer"
+                },
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Email",
+                "as": "email",
+                "description": {
+                  "en": "Email address",
+                  "de": "E-Mail-Adresse"
+                },
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Address",
+                "as": "address",
+                "description": {
+                  "en": "Postal address",
+                  "de": "Postadresse"
+                },
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Location",
+                "as": "location",
+                "description": {
+                  "en": "City or region",
+                  "de": "Ort oder Region"
                 },
                 "type": "string",
                 "source": "field",
                 "required": false
               }
-            ]
+            ],
+            "auto": true,
+            "output": {
+              "id": "out.data.id",
+              "name": "out.data.name",
+              "slug": "out.data.slug"
+            }
           }
-        ]
+        ],
+        "output": {
+          "TEAM_ID": "out.1.id",
+          "TEAM_NAME": "out.1.name",
+          "TEAM_SLUG": "out.1.slug"
+        },
+        "messages": {
+          "success": {
+            "en": "Team '{{TEAM_NAME}}' updated!",
+            "de": "Team '{{TEAM_NAME}}' aktualisiert!",
+            "es": "Team '{{TEAM_NAME}}' updated!",
+            "fr": "Team '{{TEAM_NAME}}' updated!",
+            "ro": "Team '{{TEAM_NAME}}' updated!",
+            "it": "Team '{{TEAM_NAME}}' updated!"
+          },
+          "error": {
+            "en": "Failed to update team: {{MESSAGE}}",
+            "de": "Team konnte nicht aktualisiert werden: {{MESSAGE}}"
+          }
+        }
       },
       "extras": null
     },
