@@ -710,7 +710,7 @@ export const meta: Record<string, WarpExtras> = {
     category: 'communication',
     faq: {
       en: [
-        { question: 'Can I publish deals, events, and news?', answer: 'Yes. Use deal for offers, event for appointments or happenings, and update for news-style announcements.' },
+        { question: 'Can I publish deals, events, and news?', answer: 'Yes. Use deal for offers, event for appointments or happenings, and news for announcements.' },
         { question: 'Can an update be scheduled?', answer: 'Yes. Add startsAt and endsAt to control when the update is active.' },
       ],
       de: [
@@ -731,7 +731,7 @@ export const meta: Record<string, WarpExtras> = {
     category: 'communication',
     faq: {
       en: [
-        { question: 'Can I filter updates by type?', answer: 'Yes. Filter by deal, event, or update. Use update for news-style posts.' },
+        { question: 'Can I filter updates by type?', answer: 'Yes. Filter by deal, event, or news.' },
         { question: 'Does this show only visible updates?', answer: 'By default active updates are shown, but you can adjust the active and status filters.' },
       ],
       de: [
