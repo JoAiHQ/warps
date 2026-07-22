@@ -65,7 +65,7 @@ export const ro: typeof en = {
       maxDaysAhead: 'Zile maxim în avans',
       conferenceEnabled: 'Link întâlnire online',
       serviceSelectionEnabled: 'Permite selectarea serviciului',
-      marketplacePaymentEnabled: 'Plată marketplace necesară',
+      paymentEnabled: 'Plată marketplace necesară',
       serviceDurationUnit: 'min',
     },
     days: {

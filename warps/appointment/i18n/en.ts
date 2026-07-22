@@ -63,7 +63,7 @@ export const en = {
       maxDaysAhead: 'Max days ahead',
       conferenceEnabled: 'Online meeting link',
       serviceSelectionEnabled: 'Allow service selection',
-      marketplacePaymentEnabled: 'Require marketplace payment',
+      paymentEnabled: 'Require marketplace payment',
       serviceDurationUnit: 'min',
     },
     days: {

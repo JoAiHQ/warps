@@ -65,7 +65,7 @@ export const de: typeof en = {
       maxDaysAhead: 'Maximale Vorlaufzeit (Tage)',
       conferenceEnabled: 'Online-Meeting-Link',
       serviceSelectionEnabled: 'Serviceauswahl erlauben',
-      marketplacePaymentEnabled: 'Marketplace-Zahlung erforderlich',
+      paymentEnabled: 'Marketplace-Zahlung erforderlich',
       serviceDurationUnit: 'Min.',
     },
     days: {

@@ -9,7 +9,7 @@ export type AppointmentPolicy = {
   holidays?: string[]
   conferenceEnabled?: boolean | null
   serviceSelectionEnabled?: boolean | null
-  marketplacePaymentEnabled?: boolean | null
+  paymentEnabled?: boolean | null
 }
 
 export type AvailableStaffMember = {
