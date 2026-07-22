@@ -1,6 +1,6 @@
 export const SOURCE_REPO = 'JoAiHQ/warps'
 
-export const SYNC_ENDPOINT_PATH = '/warps/sync/github'
+export const SYNC_ENDPOINT_PATH = '/v1/warps/sync/github'
 
 export const BRANCH_TO_NETWORK = {
   dev: 'devnet',
