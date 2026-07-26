@@ -10,14 +10,14 @@
     "ro": "Creează comandă"
   },
   "description": {
-    "en": "Create a billing order from team products. Takes customer name and what to bill, looks up the contact and service catalog automatically, generates an order with invoice and payment URL.",
-    "de": "Erstelle eine Bestellung aus Team-Produkten. Nimmt Kundenname und Leistung, findet Kontakt und Service-Katalog automatisch, erstellt eine Bestellung mit Rechnung und Zahlungslink.",
-    "fr": "Crée une commande de facturation à partir des produits de l'équipe. Prend le nom du client et ce qui est à facturer, trouve le contact et le catalogue automatiquement, génère une commande avec facture et lien de paiement.",
-    "es": "Crea un pedido de facturación desde los productos del equipo. Toma el nombre del cliente y qué facturar, busca el contacto y el catálogo automáticamente, genera un pedido con factura y enlace de pago.",
-    "it": "Crea un ordine di fatturazione dai prodotti del team. Prende il nome del cliente e cosa fatturare, trova il contatto e il catalogo automaticamente, genera un ordine con fattura e link di pagamento.",
-    "ro": "Creează o comandă de facturare din produsele echipei. Preia numele clientului și ce se facturează, găsește contactul și catalogul automat, generează o comandă cu factură și link de plată."
+    "en": "Create a billing order or quote (Angebot) from team products. Takes customer name and what to bill, looks up the contact and service catalog automatically, generates an order with invoice and payment URL. Supports both regular orders and quotes.",
+    "de": "Erstelle eine Bestellung oder ein Angebot aus Team-Produkten. Nimmt Kundenname und Leistung, findet Kontakt und Service-Katalog automatisch, erstellt eine Bestellung mit Rechnung und Zahlungslink. Unterstützt sowohl Bestellungen als auch Angebote.",
+    "fr": "Crée une commande de facturation ou un devis à partir des produits de l'équipe. Prend le nom du client et ce qui est à facturer, trouve le contact et le catalogue automatiquement, génère une commande avec facture et lien de paiement. Prend en charge les commandes et les devis.",
+    "es": "Crea un pedido de facturación o una oferta desde los productos del equipo. Toma el nombre del cliente y qué facturar, busca el contacto y el catálogo automáticamente, genera un pedido con factura y enlace de pago. Soporta tanto pedidos como ofertas.",
+    "it": "Crea un ordine di fatturazione o un'offerta dai prodotti del team. Prende il nome del cliente e cosa fatturare, trova il contatto e il catalogo automaticamente, genera un ordine con fattura e link di pagamento. Supporta sia ordini che offerte.",
+    "ro": "Creează o comandă de facturare sau o ofertă din produsele echipei. Preia numele clientului și ce se facturează, găsește contactul și catalogul automat, generează o comandă cu factură și link de plată. Suportă atât comenzi cât și oferte."
   },
-  "bot": "Use when the user wants to create a billing order or invoice for a customer. The warp looks up the contact and service catalog automatically.",
+  "bot": "Use when the user wants to create a billing order, invoice, or quote (Angebot) for a customer. Supports type \"order\" (default) or \"quote\". The warp looks up the contact and service catalog automatically.",
   "vars": {
     "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
     "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
@@ -66,6 +66,30 @@
             "it": "Cosa fatturare (nome del servizio o prodotto)",
             "ro": "Ce se facturează (numele serviciului sau produsului)"
           }
+        },
+        {
+          "name": "Type",
+          "as": "type",
+          "type": "string",
+          "source": "field",
+          "position": "local",
+          "required": false,
+          "description": {
+            "en": "Order type — \"order\" for a regular order, \"quote\" for an offer (Angebot)",
+            "de": "Bestelltyp — \"order\" für eine Bestellung, \"quote\" für ein Angebot"
+          }
+        },
+        {
+          "name": "Notes",
+          "as": "notes",
+          "type": "text",
+          "source": "field",
+          "position": "local",
+          "required": false,
+          "description": {
+            "en": "Order notes or internal comments",
+            "de": "Bestellnotizen oder interne Kommentare"
+          }
         }
       ]
     },
@@ -112,6 +136,16 @@
           "as": "serviceIds",
           "source": "hidden",
           "value": "{{serviceIds}}"
+        },
+        {
+          "as": "type",
+          "source": "hidden",
+          "value": "{{type}}"
+        },
+        {
+          "as": "notes",
+          "source": "hidden",
+          "value": "{{notes}}"
         }
       ]
     }
