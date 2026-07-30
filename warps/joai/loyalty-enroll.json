@@ -1,0 +1,62 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Enroll in Loyalty Program",
+  "title": {
+    "en": "Enroll in loyalty program",
+    "de": "Im Treueprogramm anmelden"
+  },
+  "description": {
+    "en": "Enroll an existing contact in the team's loyalty program. The contact receives their digital loyalty card and can start collecting points immediately. Use after finding or creating the contact.",
+    "de": "Melde einen vorhandenen Kontakt im Treueprogramm des Teams an. Der Kontakt erhält seine digitale Treuekarte und kann sofort Punkte sammeln. Nach dem Anlegen oder Suchen des Kontakts verwenden."
+  },
+  "bot": "Use this after finding or creating a contact to enroll them in the loyalty program. The contact will receive their pass link automatically.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Enroll",
+        "de": "Anmelden"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/loyalty/enroll",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Contact ID",
+          "as": "contactId",
+          "description": {
+            "en": "Contact hash ID from find-or-create",
+            "de": "Kontakt-Hash-ID aus Suchen oder Erstellen"
+          },
+          "bot": "The hash ID returned by find-or-create contact.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "min": 1,
+          "label": {
+            "en": "Contact ID",
+            "de": "Kontakt-ID"
+          }
+        }
+      ]
+    }
+  ],
+  "output": {
+    "contactId": "out.data.contact.id",
+    "points": "out.data.points"
+  },
+  "messages": {
+    "success": {
+      "en": "Enrolled in loyalty program.",
+      "de": "Im Treueprogramm angemeldet."
+    }
+  }
+}

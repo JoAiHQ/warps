@@ -513,6 +513,37 @@ export const meta: Record<string, WarpExtras> = {
       ],
     },
   },
+  'loyalty-enroll': {
+    keywords: {
+      en: ['enroll loyalty program', 'register loyalty card', 'sign up rewards', 'start collecting points', 'loyalty membership'],
+      de: ['Treueprogramm anmelden', 'Treuekarte registrieren', 'Punkte sammeln beginnen', 'Kundenkarte ausstellen'],
+    },
+    useCases: {
+      en: [
+        'Enroll a walk-in customer in the loyalty program during checkout',
+        'Register an online customer after their first purchase',
+        'Add a regular guest to the rewards program automatically',
+      ],
+      de: [
+        'Einen Laufkunden an der Kasse im Treueprogramm anmelden',
+        'Einen Online-Kunden nach dem ersten Einkauf registrieren',
+        'Einen Stammgast automatisch ins Prämienprogramm aufnehmen',
+      ],
+    },
+    category: 'commerce',
+    faq: {
+      en: [
+        { question: 'Does the customer need to have a contact record first?', answer: 'Yes, use Find or Create Contact first to get the contact ID, then chain this action.' },
+        { question: 'What happens after enrollment?', answer: 'The customer is enrolled and automatically receives their digital pass link via their preferred channel.' },
+        { question: 'Can I enroll the same customer twice?', answer: 'No, a contact can only be enrolled once. The action returns the existing account if already enrolled.' },
+      ],
+      de: [
+        { question: 'Muss der Kunde bereits als Kontakt existieren?', answer: 'Ja, nutze zuerst Kontakt suchen oder erstellen, um die Kontakt-ID zu erhalten, und verketten dann diese Aktion.' },
+        { question: 'Was passiert nach der Anmeldung?', answer: 'Der Kunde wird angemeldet und erhält automatisch seinen digitalen Kartenlink über den bevorzugten Kanal.' },
+        { question: 'Kann ich denselben Kunden zweimal anmelden?', answer: 'Nein, ein Kontakt kann nur einmal angemeldet werden. Die Aktion gibt das bestehende Konto zurück, falls bereits angemeldet.' },
+      ],
+    },
+  },
   'order-create': {
     keywords: {
       en: ['create order', 'billing order', 'generate invoice', 'bill customer', 'order from products'],
