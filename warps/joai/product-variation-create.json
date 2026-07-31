@@ -12,7 +12,8 @@
   "bot": "Use when the user wants to add pricing tiers or variants to an existing product. The product must already exist. For each variation provide: a name, unique SKU, price in cents, and type. Optionally add meta attributes like volumeMin/volumeMax for quantity-based tiers.",
   "vars": {
     "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
-    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
   },
   "actions": [
     {
@@ -25,7 +26,8 @@
         "url": "INJECT:API_BASE/v1/products/{{productId}}/variations",
         "method": "POST",
         "headers": {
-          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
         }
       },
       "inputs": [
@@ -99,6 +101,19 @@
           "type": "string",
           "source": "field",
           "position": "body"
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug of the product. Defaults to the current team.",
+            "de": "Team-Slug des Produkts. Standardmäßig das aktuelle Team."
+          },
+          "bot": "The slug of the team the product belongs to. Omit to use the current team.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
         }
       ]
     }

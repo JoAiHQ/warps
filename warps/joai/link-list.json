@@ -12,7 +12,8 @@
   "bot": "Use this to see all created links and their scan statistics. Filter by type (short, qr, nfc) or show only active ones.",
   "vars": {
     "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
-    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
   },
   "actions": [
     {
@@ -25,10 +26,25 @@
         "url": "INJECT:API_BASE/v1/links?active=true",
         "method": "GET",
         "headers": {
-          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
         }
       },
-      "inputs": []
+      "inputs": [
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug for this action. Defaults to the current team.",
+            "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team."
+          },
+          "bot": "The slug of the team to operate on. Omit to use the current team.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ]
     }
   ],
   "messages": {
