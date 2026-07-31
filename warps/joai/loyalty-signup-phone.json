@@ -1,0 +1,80 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Loyalty Signup (WhatsApp)",
+  "title": {
+    "en": "Join the loyalty program via WhatsApp",
+    "de": "Per WhatsApp am Treueprogramm teilnehmen"
+  },
+  "description": {
+    "en": "Enroll a new or existing customer in your loyalty program with just their name and phone number. The contact is created automatically if it does not exist yet and receives their digital loyalty card on WhatsApp right away. Perfect for forms, checkouts, and walk-in registrations.",
+    "de": "Melde einen neuen oder bestehenden Kunden mit nur Name und Telefonnummer in deinem Treueprogramm an. Der Kontakt wird bei Bedarf automatisch angelegt und erhält seine digitale Treuekarte sofort per WhatsApp. Ideal für Formulare, Kassen und Anmeldungen vor Ort."
+  },
+  "bot": "Use this to enroll a customer in the loyalty program from their name and phone number. The contact is created automatically if it does not exist yet and receives their card on WhatsApp.",
+  "vars": {
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Sign up",
+        "de": "Anmelden"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/loyalty/signup",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Name",
+          "as": "name",
+          "label": {
+            "en": "Name",
+            "de": "Name"
+          },
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Phone",
+          "as": "phone",
+          "label": {
+            "en": "Phone",
+            "de": "Telefon"
+          },
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "label": {
+            "en": "Team",
+            "de": "Team"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "contactId": "out.data.contactId",
+    "passUrl": "out.data.passUrl"
+  },
+  "messages": {
+    "success": {
+      "en": "Thank you! You've been enrolled and your digital loyalty card is on its way via WhatsApp.",
+      "de": "Danke! Du bist angemeldet und deine digitale Treuekarte ist per WhatsApp unterwegs."
+    }
+  }
+}
