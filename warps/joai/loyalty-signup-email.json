@@ -1,0 +1,80 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Loyalty Signup (Email)",
+  "title": {
+    "en": "Join the loyalty program by email",
+    "de": "Per E-Mail am Treueprogramm teilnehmen"
+  },
+  "description": {
+    "en": "Enroll a new or existing customer in your loyalty program with just their name and email address. The contact is created automatically if it does not exist yet and receives their digital loyalty card by email right away. Perfect for website forms, newsletters, and online signups.",
+    "de": "Melde einen neuen oder bestehenden Kunden mit nur Name und E-Mail-Adresse in deinem Treueprogramm an. Der Kontakt wird bei Bedarf automatisch angelegt und erhält seine digitale Treuekarte sofort per E-Mail. Ideal für Website-Formulare, Newsletter und Online-Anmeldungen."
+  },
+  "bot": "Use this to enroll a customer in the loyalty program from their name and email address. The contact is created automatically if it does not exist yet and receives their card by email.",
+  "vars": {
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Sign up",
+        "de": "Anmelden"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/loyalty/signup",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Name",
+          "as": "name",
+          "label": {
+            "en": "Name",
+            "de": "Name"
+          },
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Email",
+          "as": "email",
+          "label": {
+            "en": "Email",
+            "de": "E-Mail"
+          },
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "label": {
+            "en": "Team",
+            "de": "Team"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "contactId": "out.data.contactId",
+    "passUrl": "out.data.passUrl"
+  },
+  "messages": {
+    "success": {
+      "en": "Thank you! You've been enrolled and your digital loyalty card is on its way by email.",
+      "de": "Danke! Du bist angemeldet und deine digitale Treuekarte ist per E-Mail unterwegs."
+    }
+  }
+}

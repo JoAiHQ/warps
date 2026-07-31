@@ -544,6 +544,68 @@ export const meta: Record<string, WarpExtras> = {
       ],
     },
   },
+  'loyalty-signup-phone': {
+    keywords: {
+      en: ['join loyalty program whatsapp', 'loyalty signup phone', 'sign up for rewards', 'whatsapp loyalty card', 'new customer enrollment'],
+      de: ['Treueprogramm WhatsApp beitreten', 'Treueprogramm Anmeldung Telefon', 'Punkte sammeln anmelden', 'WhatsApp Treuekarte', 'Neukunden anmelden'],
+    },
+    useCases: {
+      en: [
+        'Enroll customers from a website or landing page form with just their name and phone',
+        'Sign up walk-in customers at the counter to start earning stamps',
+        'Collect new loyalty members via WhatsApp without a physical card',
+      ],
+      de: [
+        'Kunden über ein Formular auf der Website mit nur Name und Telefon anmelden',
+        'Laufkunden an der Kasse anmelden, damit sie Stempel sammeln können',
+        'Neue Treue-Mitglieder per WhatsApp gewinnen, ganz ohne physische Karte',
+      ],
+    },
+    category: 'commerce',
+    faq: {
+      en: [
+        { question: 'Does the customer need to exist as a contact first?', answer: 'No, the contact is created automatically from the name and phone number if it does not exist yet.' },
+        { question: 'How does the customer get their loyalty card?', answer: 'They receive the digital pass link on WhatsApp right after signing up.' },
+        { question: 'Can a customer sign up twice?', answer: 'No, reusing the same phone number returns the existing membership instead of creating a duplicate.' },
+      ],
+      de: [
+        { question: 'Muss der Kunde bereits als Kontakt existieren?', answer: 'Nein, der Kontakt wird bei Bedarf automatisch aus Name und Telefonnummer angelegt.' },
+        { question: 'Wie erhält der Kunde seine Treuekarte?', answer: 'Direkt nach der Anmeldung bekommt er den Link zur digitalen Karte per WhatsApp.' },
+        { question: 'Kann sich ein Kunde zweimal anmelden?', answer: 'Nein, bei derselben Telefonnummer wird die bestehende Mitgliedschaft zurückgegeben statt ein Duplikat anzulegen.' },
+      ],
+    },
+  },
+  'loyalty-signup-email': {
+    keywords: {
+      en: ['join loyalty program email', 'loyalty signup email', 'sign up for rewards online', 'digital loyalty card email', 'email enrollment'],
+      de: ['Treueprogramm per E-Mail beitreten', 'Treueprogramm Anmeldung E-Mail', 'Punkte sammeln online anmelden', 'digitale Treuekarte E-Mail', 'Anmeldung per E-Mail'],
+    },
+    useCases: {
+      en: [
+        'Enroll newsletter or website form subscribers with just their name and email',
+        'Send the loyalty card to online customers who sign up without a phone number',
+        'Build a loyalty email list for customers who prefer email over WhatsApp',
+      ],
+      de: [
+        'Newsletter- oder Website-Abonnenten mit nur Name und E-Mail anmelden',
+        'Online-Kunden ohne Telefonnummer die Treuekarte per E-Mail zusenden',
+        'Treue-Mitglieder per E-Mail gewinnen, die WhatsApp nicht bevorzugen',
+      ],
+    },
+    category: 'commerce',
+    faq: {
+      en: [
+        { question: 'Can I sign up a customer with only an email address?', answer: 'Yes, the contact is created from the name and email address and receives the card by email.' },
+        { question: 'What if the email is already a member?', answer: 'The existing membership is returned instead of creating a duplicate.' },
+        { question: 'Which channel is used to deliver the card?', answer: 'The card is emailed, since no phone number is provided for WhatsApp.' },
+      ],
+      de: [
+        { question: 'Kann ich einen Kunden nur mit E-Mail-Adresse anmelden?', answer: 'Ja, der Kontakt wird aus Name und E-Mail-Adresse angelegt und erhält die Karte per E-Mail.' },
+        { question: 'Was passiert, wenn die E-Mail schon Mitglied ist?', answer: 'Die bestehende Mitgliedschaft wird zurückgegeben statt ein Duplikat anzulegen.' },
+        { question: 'Über welchen Kanal wird die Karte zugestellt?', answer: 'Die Karte wird per E-Mail verschickt, da keine Telefonnummer für WhatsApp vorhanden ist.' },
+      ],
+    },
+  },
   'order-create': {
     keywords: {
       en: ['create order', 'billing order', 'generate invoice', 'bill customer', 'order from products'],
