@@ -12,7 +12,8 @@
   "bot": "Use this when the user wants to see their available products, materials, or billable items that can be used for invoices.",
   "vars": {
     "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
-    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
   },
   "output": {
     "products": "out",
@@ -29,10 +30,25 @@
         "url": "INJECT:API_BASE/v1/products",
         "method": "GET",
         "headers": {
-          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
         }
       },
-      "inputs": []
+      "inputs": [
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug to list products for. Defaults to the current team.",
+            "de": "Team-Slug, für das Produkte angezeigt werden. Standardmäßig das aktuelle Team."
+          },
+          "bot": "The slug of the team whose products to list. Omit to use the current team.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ]
     }
   ]
 }

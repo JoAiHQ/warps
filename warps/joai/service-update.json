@@ -12,7 +12,8 @@
   "bot": "Use when the user wants to modify an existing service. Ask which service they want to update and what fields to change. Only include fields that changed.",
   "vars": {
     "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
-    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
   },
   "messages": {
     "error": {
@@ -31,7 +32,8 @@
         "url": "INJECT:API_BASE/v1/services/{{service_id}}",
         "method": "PUT",
         "headers": {
-          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
         }
       },
       "inputs": [
@@ -111,6 +113,19 @@
           "type": "boolean",
           "source": "field",
           "required": false
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug of the service. Defaults to the current team.",
+            "de": "Team-Slug der Dienstleistung. Standardmäßig das aktuelle Team."
+          },
+          "bot": "The slug of the team the service belongs to. Omit to use the current team.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
         }
       ]
     }

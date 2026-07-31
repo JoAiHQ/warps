@@ -12,7 +12,8 @@
   "bot": "Use when the user wants to remove a service. If the user refers to a service by name, list services first to find the matching ID.",
   "vars": {
     "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
-    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
   },
   "actions": [
     {
@@ -25,7 +26,8 @@
         "url": "INJECT:API_BASE/v1/services/{{service_id}}",
         "method": "DELETE",
         "headers": {
-          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
         }
       },
       "inputs": [
@@ -42,6 +44,19 @@
           "source": "field",
           "required": true,
           "min": 1
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug of the service. Defaults to the current team.",
+            "de": "Team-Slug der Dienstleistung. Standardmäßig das aktuelle Team."
+          },
+          "bot": "The slug of the team the service belongs to. Omit to use the current team.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
         }
       ]
     }

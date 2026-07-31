@@ -5,14 +5,15 @@
     "en": "Create a product",
     "de": "Produkt erstellen"
   },
-          "description": {
-            "en": "Price in cents for the base product. For variations, set each variation's price in the input below.",
-            "de": "Preis in Cent für das Basisprodukt. Bei Varianten den Preis jeder Variante unten eingeben."
-          },
+  "description": {
+    "en": "Price in cents for the base product. For variations, set each variation's price in the input below.",
+    "de": "Preis in Cent für das Basisprodukt. Bei Varianten den Preis jeder Variante unten eingeben."
+  },
   "bot": "Use when the user wants to create a new product, material, or billable item with multiple variations/pricing tiers. Extract name, price, and variation names/SKUs/prices from their description. For example: '10 pieces at €4, 50 pieces at €3' becomes variations with different SKUs.",
   "vars": {
     "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
-    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
   },
   "actions": [
     {
@@ -25,7 +26,8 @@
         "url": "INJECT:API_BASE/v1/products",
         "method": "POST",
         "headers": {
-          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
         }
       },
       "inputs": [
@@ -72,6 +74,19 @@
           "type": "string",
           "source": "field",
           "required": false
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug to create the product for. Defaults to the current team.",
+            "de": "Team-Slug, für das das Produkt erstellt wird. Standardmäßig das aktuelle Team."
+          },
+          "bot": "The slug of the team the product belongs to. Omit to use the current team.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
         }
       ]
     }
