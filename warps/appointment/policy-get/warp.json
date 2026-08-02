@@ -1,0 +1,53 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Appointments: Get Policy",
+  "title": {
+    "en": "Get appointment policy",
+    "de": "Terminrichtlinie anzeigen"
+  },
+  "description": {
+    "en": "View the appointment booking policy for your team: availability, buffer times, notice periods, and configured services.",
+    "de": "Zeige die Terminbuchungsrichtlinie deines Teams: Verfügbarkeit, Pufferzeiten, Vorlaufzeiten und konfigurierte Services."
+  },
+  "bot": "Use this when the user wants to see the appointment policy, availability, buffer times, or booking rules.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "output": {
+    "policy": "out.data"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Get policy",
+        "de": "Richtlinie anzeigen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/teams/{{JOAI_TEAM_SLUG}}/appointments/policy",
+        "method": "GET",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Team",
+          "as": "team",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}",
+          "description": {
+            "en": "Team slug for this action. Defaults to the current team.",
+            "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team."
+          },
+          "bot": "The slug of the team whose appointment policy to fetch. Omit to use the current team."
+        }
+      ]
+    }
+  ],
+  "ui": "https://raw.githubusercontent.com/JoAiHQ/warps/main/warps/appointment/policy-get/chatapp.36898049.dist.html"
+}
