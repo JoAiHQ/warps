@@ -69,10 +69,7 @@ export type FollowupsExecuteStepData = {
 export type FollowupsHandleReplyInputs = {
   contactId: string;
   tag: string;
-  type: string;
   description: string;
-  followups: boolean;
-  event: string;
 };
 
 export type FollowupsInactiveScanInputs = {
@@ -113,7 +110,35 @@ export type FollowupsReorderReminderData = {
   CONTACT_EMAIL: any;
 };
 
+export type FollowupsSequenceRemoveInputs = {
+  contactId: string;
+  tag_remove: string;
+  tag_add: string;
+  reason: string;
+  key: string;
+  value: string;
+};
+
 export type FollowupsCreateTemplateInputs = {
+  title: string;
+  content: string;
+  slug: string;
+  channel: string;
+  step: string;
+  delay_days: string;
+  variables: string;
+};
+
+export type FollowupsDeleteTemplateInputs = {
+  documentId: string;
+};
+
+export type FollowupsListTemplatesInputs = {
+  search: string;
+};
+
+export type FollowupsUpdateTemplateInputs = {
+  documentId: string;
   title: string;
   content: string;
   slug: string;

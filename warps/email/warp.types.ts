@@ -3,7 +3,6 @@
 export type EmailSendInputs = {
   integration: string;
   recipientId: string;
-  recipientName: string;
   subject: string;
   message: string;
 };

@@ -2,9 +2,9 @@
 
 export type TypefullyCreateScheduleDraftInputs = {
   content: string;
-  threadify: string;
-  share: string;
+  threadify: boolean;
+  share: boolean;
   'schedule-date': string;
-  auto_retweet_enabled: string;
-  auto_plug_enabled: string;
+  auto_retweet_enabled: boolean;
+  auto_plug_enabled: boolean;
 };
