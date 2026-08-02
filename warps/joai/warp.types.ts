@@ -98,11 +98,6 @@ export type JoAiUpdateCharacterInputs = {
   bio: string;
 };
 
-export type JoAiListContactActivitiesInputs = {
-  contactId: string;
-  team: string;
-};
-
 export type JoAiDeleteContactActivityInputs = {
   contactId: string;
   activityId: string;
@@ -294,12 +289,6 @@ export type JoAiDeleteDocumentInputs = {
   documentId: string;
 };
 
-export type JoAiListDocumentsInputs = {
-  type: string;
-  search: string;
-  perPage: string;
-};
-
 export type JoAiUpdateDocumentInputs = {
   documentId: string;
   title: string;
@@ -389,17 +378,6 @@ export type JoAiCreateActionItemInputs = {
 
 export type JoAiDeleteItemInputs = {
   itemId: string;
-};
-
-export type JoAiListActionItemsInputs = {
-  status: string;
-  dueToday: boolean;
-};
-
-export type JoAiListActionItemsData = {
-  items: any;
-  itemsList: any;
-  itemsCount: any;
 };
 
 export type JoAiUpdateItemInputs = {
@@ -564,6 +542,9 @@ export type JoAiCreatePrivateWarpInputs = {
   brand: string;
   definition: string;
   public: boolean;
+  form: boolean;
+  store: boolean;
+  extras: string;
   team: string;
 };
 
@@ -578,21 +559,19 @@ export type JoAiCreateProductInputs = {
   price: number;
   unit: string;
   tags: string;
+  description: string;
+  public: string;
   team: string;
+};
+
+export type JoAiCreateProductData = {
+  id: any;
+  name: any;
 };
 
 export type JoAiDeleteProductInputs = {
   product_id: string;
   team: string;
-};
-
-export type JoAiListProductsInputs = {
-  team: string;
-};
-
-export type JoAiListProductsData = {
-  products: any;
-  productsList: any;
 };
 
 export type JoAiUpdateProductInputs = {
@@ -661,8 +640,11 @@ export type JoAiCreateServiceInputs = {
   name: string;
   price: number;
   pricingModel: string;
+  durationMinutes: string;
   description: string;
   tags: string;
+  digital: string;
+  public: string;
   team: string;
 };
 
@@ -678,25 +660,22 @@ export type JoAiDeleteServiceInputs = {
   team: string;
 };
 
-export type JoAiListServicesInputs = {
-  team: string;
-};
-
-export type JoAiListServicesData = {
-  services: any;
-  servicesList: any;
-  servicesCount: any;
-};
-
 export type JoAiUpdateServiceInputs = {
   service_id: string;
   name: string;
-  price: number;
-  duration_minutes: number;
+  price: string;
+  durationMinutes: string;
+  tags: string;
   description: string;
-  category: string;
-  active: boolean;
+  active: string;
+  digital: string;
+  public: string;
   team: string;
+};
+
+export type JoAiUpdateServiceData = {
+  SERVICE_ID: any;
+  SERVICE_NAME: any;
 };
 
 export type JoAiGetAgentSettingInputs = {
@@ -820,9 +799,6 @@ export type JoAiDeleteScheduledTaskInputs = {
   taskId: string;
 };
 
-export type JoAiListScheduledTasksInputs = {
-};
-
 export type JoAiPauseorResumeScheduledTaskInputs = {
   taskId: string;
 };
@@ -910,23 +886,6 @@ export type JoAiCreateUpdateData = {
 export type JoAiDeleteUpdateInputs = {
   updateId: string;
   team: string;
-};
-
-export type JoAiListUpdatesInputs = {
-  active: boolean;
-  type: string;
-  status: string;
-  team: string;
-};
-
-export type JoAiUpdateStatsInputs = {
-  team: string;
-};
-
-export type JoAiUpdateStatsData = {
-  DEALS_COUNT: number;
-  EVENTS_COUNT: number;
-  NEWS_COUNT: number;
 };
 
 export type JoAiUpdateUpdateInputs = {
