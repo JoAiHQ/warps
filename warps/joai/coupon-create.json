@@ -1,0 +1,187 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Create Coupon",
+  "title": {
+    "en": "Create a coupon",
+    "de": "Gutschein erstellen",
+    "fr": "Créer un coupon",
+    "es": "Crear un cupón",
+    "it": "Crea un coupon",
+    "ro": "Creează un cupon"
+  },
+  "description": {
+    "en": "Create a discount coupon for your shop. Provide either a percentage or a fixed amount discount, plus optional condition, usage limit, and expiry.",
+    "de": "Einen Rabatt-Gutschein für deinen Shop erstellen. Gib entweder einen Prozent- oder einen Festbetrag-Rabatt an, plus optional Bedingung, Nutzungslimit und Ablaufdatum.",
+    "fr": "Créez un coupon de réduction pour votre boutique. Fournissez un pourcentage ou un montant fixe, plus éventuellement une condition, une limite d'utilisation et une date d'expiration.",
+    "es": "Crea un cupón de descuento para tu tienda. Proporciona un porcentaje o un importe fijo, más opcionalmente una condición, un límite de usos y una fecha de caducidad.",
+    "it": "Crea un coupon sconto per il tuo negozio. Fornisci una percentuale o un importo fisso, più opzionalmente una condizione, un limite di utilizzi e una scadenza.",
+    "ro": "Creează un cupon de reducere pentru magazinul tău. Furnizează un procent sau o sumă fixă, plus opțional o condiție, o limită de utilizări și o dată de expirare."
+  },
+  "bot": "Use when the user wants to create a discount coupon. Collect the code and either percent or amount (not both), and optional condition, usesLeft, and expiresAt.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Create coupon",
+        "de": "Gutschein erstellen",
+        "fr": "Créer le coupon",
+        "es": "Crear el cupón",
+        "it": "Crea il coupon",
+        "ro": "Creează cuponul"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/coupons",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Code",
+          "as": "code",
+          "description": {
+            "en": "Coupon code",
+            "de": "Gutscheincode",
+            "fr": "Code du coupon",
+            "es": "Código del cupón",
+            "it": "Codice del coupon",
+            "ro": "Codul cuponului"
+          },
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Percent",
+          "as": "percent",
+          "description": {
+            "en": "Percentage discount (1-100). Provide percent or amount, not both.",
+            "de": "Prozentrabatt (1-100). Gib Prozent oder Betrag an, nicht beides.",
+            "fr": "Pourcentage de réduction (1-100). Fournissez un pourcentage ou un montant, pas les deux.",
+            "es": "Descuento en porcentaje (1-100). Proporciona porcentaje o importe, no ambos.",
+            "it": "Sconto percentuale (1-100). Fornisci percentuale o importo, non entrambi.",
+            "ro": "Reducere procentuală (1-100). Furnizează procent sau sumă, nu ambele."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Amount",
+          "as": "amount",
+          "description": {
+            "en": "Fixed discount in cents. Provide percent or amount, not both.",
+            "de": "Festbetrag-Rabatt in Cent. Gib Prozent oder Betrag an, nicht beides.",
+            "fr": "Montant fixe en centimes. Fournissez un pourcentage ou un montant, pas les deux.",
+            "es": "Importe fijo en céntimos. Proporciona porcentaje o importe, no ambos.",
+            "it": "Importo fisso in centesimi. Fornisci percentuale o importo, non entrambi.",
+            "ro": "Reducere fixă în cenți. Furnizează procent sau sumă, nu ambele."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Condition",
+          "as": "condition",
+          "description": {
+            "en": "Condition for using the coupon: none, onetime-use, or previous-purchase",
+            "de": "Bedingung für die Nutzung: keine, einmalige Nutzung oder vorheriger Kauf",
+            "fr": "Condition d'utilisation : aucune, usage unique ou achat précédent",
+            "es": "Condición de uso: ninguna, uso único o compra anterior",
+            "it": "Condizione d'uso: nessuna, uso singolo o acquisto precedente",
+            "ro": "Condiție de utilizare: niciuna, utilizare unică sau achiziție anterioară"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "options": {
+            "none": "No condition",
+            "onetime-use": "One-time use",
+            "previous-purchase": "Previous purchase"
+          }
+        },
+        {
+          "name": "Uses Left",
+          "as": "usesLeft",
+          "description": {
+            "en": "Number of uses left",
+            "de": "Verbleibende Nutzungen",
+            "fr": "Nombre d'utilisations restantes",
+            "es": "Usos restantes",
+            "it": "Utilizzazioni rimanenti",
+            "ro": "Utilizări rămase"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Expires At",
+          "as": "expiresAt",
+          "description": {
+            "en": "Expiry date (ISO date)",
+            "de": "Ablaufdatum (ISO-Datum)",
+            "fr": "Date d'expiration (date ISO)",
+            "es": "Fecha de caducidad (fecha ISO)",
+            "it": "Data di scadenza (data ISO)",
+            "ro": "Data de expirare (dată ISO)"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug for this action. Defaults to the current team.",
+            "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team.",
+            "fr": "Slug d'équipe pour cette action. Par défaut l'équipe actuelle.",
+            "es": "Slug del equipo para esta acción. Por defecto el equipo actual.",
+            "it": "Slug del team per questa azione. Predefinito: team attuale.",
+            "ro": "Slug-ul echipei pentru această acțiune. Implicit echipa curentă."
+          },
+          "bot": "The slug of the team to operate on. Omit to use the current team.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ],
+      "output": {
+        "id": "out.data.id",
+        "code": "out.data.code"
+      }
+    }
+  ],
+  "output": {
+    "COUPON_ID": "out.1.id",
+    "COUPON_CODE": "out.1.code"
+  },
+  "messages": {
+    "success": {
+      "en": "Coupon '{{COUPON_CODE}}' created.",
+      "de": "Gutschein '{{COUPON_CODE}}' erstellt.",
+      "fr": "Coupon « {{COUPON_CODE}} » créé.",
+      "es": "Cupón « {{COUPON_CODE}} » creado.",
+      "it": "Coupon « {{COUPON_CODE}} » creato.",
+      "ro": "Cuponul „{{COUPON_CODE}}” a fost creat."
+    },
+    "error": {
+      "en": "Failed to create coupon: {{MESSAGE}}",
+      "de": "Gutschein konnte nicht erstellt werden: {{MESSAGE}}",
+      "fr": "Échec de la création du coupon : {{MESSAGE}}",
+      "es": "Error al crear el cupón: {{MESSAGE}}",
+      "it": "Impossibile creare il coupon: {{MESSAGE}}",
+      "ro": "Nu s-a putut crea cuponul: {{MESSAGE}}"
+    }
+  }
+}

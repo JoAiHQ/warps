@@ -1,0 +1,98 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Delete Campaign",
+  "title": {
+    "en": "Delete a campaign",
+    "de": "Kampagne löschen",
+    "fr": "Supprimer une campagne",
+    "es": "Eliminar una campaña",
+    "it": "Elimina una campagna",
+    "ro": "Șterge o campanie"
+  },
+  "description": {
+    "en": "Permanently delete a campaign that is not currently sending. Use with care — this cannot be undone.",
+    "de": "Eine Kampagne, die gerade nicht versendet, dauerhaft löschen. Vorsicht — dies kann nicht rückgängig gemacht werden.",
+    "fr": "Supprimer définitivement une campagne qui n'est pas en cours d'envoi. À utiliser avec précaution — irréversible.",
+    "es": "Elimina permanentemente una campaña que no esté en envío. Úsalo con cuidado: no se puede deshacer.",
+    "it": "Elimina definitivamente una campagna che non è in invio. Da usare con cautela — non reversibile.",
+    "ro": "Șterge definitiv o campanie care nu este în curs de trimitere. Folosește cu atenție — nu poate fi anulată."
+  },
+  "bot": "Use when the user wants to remove a campaign. If the user refers to a campaign by name, list campaigns first to find the matching ID.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Delete campaign",
+        "de": "Kampagne löschen",
+        "fr": "Supprimer la campagne",
+        "es": "Eliminar la campaña",
+        "it": "Elimina la campagna",
+        "ro": "Șterge campania"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/campaigns/{{campaign_id}}",
+        "method": "DELETE",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Campaign ID",
+          "as": "campaign_id",
+          "description": {
+            "en": "The hashid of the campaign to delete",
+            "de": "Die Hashid der zu löschenden Kampagne",
+            "fr": "Le hashid de la campagne à supprimer",
+            "es": "El hashid de la campaña a eliminar",
+            "it": "L'hashid della campagna da eliminare",
+            "ro": "Hashid-ul campaniei de șters"
+          },
+          "bot": "The campaign hash ID. If the user refers to a campaign by name, list campaigns first to find the matching ID.",
+          "type": "string",
+          "position": "url:campaign_id",
+          "source": "field",
+          "required": true,
+          "min": 1
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug of the campaign. Defaults to the current team.",
+            "de": "Team-Slug der Kampagne. Standardmäßig das aktuelle Team.",
+            "fr": "Slug d'équipe de la campagne. Par défaut l'équipe actuelle.",
+            "es": "Slug del equipo de la campaña. Por defecto el equipo actual.",
+            "it": "Slug del team della campagna. Predefinito: team attuale.",
+            "ro": "Slug-ul echipei campaniei. Implicit echipa curentă."
+          },
+          "bot": "The slug of the team the campaign belongs to. Omit to use the current team.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Campaign deleted.",
+      "de": "Kampagne gelöscht.",
+      "fr": "Campagne supprimée.",
+      "es": "Campaña eliminada.",
+      "it": "Campagna eliminata.",
+      "ro": "Campanie ștearsă."
+    },
+    "error": {
+      "en": "Failed to delete campaign: {{MESSAGE}}",
+      "de": "Kampagne konnte nicht gelöscht werden: {{MESSAGE}}"
+    }
+  }
+}

@@ -1,0 +1,207 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Create Campaign",
+  "title": {
+    "en": "Create a campaign",
+    "de": "Kampagne erstellen",
+    "fr": "Créer une campagne",
+    "es": "Crear una campaña",
+    "it": "Crea una campagna",
+    "ro": "Creează o campanie"
+  },
+  "description": {
+    "en": "Create a marketing campaign to send messages to your contacts via email, WhatsApp, or SMS. Target a saved segment, contacts with specific tags, or specific contacts by ID. The campaign is created as a draft — use Send Campaign to start delivery.",
+    "de": "Erstelle eine Marketing-Kampagne, um Nachrichten per E-Mail, WhatsApp oder SMS an deine Kontakte zu senden. Zielgruppen: gespeichertes Segment, Kontakte mit bestimmten Tags oder bestimmte Kontakte per ID. Die Kampagne wird als Entwurf erstellt – verwende Kampagne senden, um den Versand zu starten.",
+    "fr": "Créez une campagne marketing pour envoyer des messages à vos contacts par e-mail, WhatsApp ou SMS. Ciblez un segment enregistré, des contacts avec des tags spécifiques ou des contacts spécifiques par ID. La campagne est créée comme brouillon — utilisez Envoyer la campagne pour lancer l'envoi.",
+    "es": "Crea una campaña de marketing para enviar mensajes a tus contactos por correo electrónico, WhatsApp o SMS. Dirígete a un segmento guardado, contactos con etiquetas específicas o contactos específicos por ID. La campaña se crea como borrador — usa Enviar campaña para iniciar el envío.",
+    "it": "Crea una campagna di marketing per inviare messaggi ai tuoi contatti via email, WhatsApp o SMS. Scegli come destinatario un segmento salvato, contatti con tag specifici o contatti specifici per ID. La campagna viene creata come bozza — usa Invia campagna per avviare l'invio.",
+    "ro": "Creează o campanie de marketing pentru a trimite mesaje contactelor tale prin email, WhatsApp sau SMS. Țintește un segment salvat, contacte cu anumite taguri sau contacte specifice după ID. Campania este creată ca schiță — folosește Trimite campanie pentru a începe livrarea."
+  },
+  "bot": "Use when the user wants to create a campaign to reach a group of contacts. Collect the message channel, content, and audience (segment, tags, or specific contacts). If they name a saved segment, pass its ID.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Create campaign",
+        "de": "Kampagne erstellen",
+        "fr": "Créer la campagne",
+        "es": "Crear la campaña",
+        "it": "Crea la campagna",
+        "ro": "Creează campania"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/campaigns",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Name",
+          "as": "name",
+          "description": {
+            "en": "Campaign name",
+            "de": "Kampagnenname",
+            "fr": "Nom de la campagne",
+            "es": "Nombre de la campaña",
+            "it": "Nome della campagna",
+            "ro": "Numele campaniei"
+          },
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Channel",
+          "as": "channel",
+          "description": {
+            "en": "Delivery channel",
+            "de": "Versandkanal",
+            "fr": "Canal de livraison",
+            "es": "Canal de entrega",
+            "it": "Canale di invio",
+            "ro": "Canal de livrare"
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "options": {
+            "email": "Email",
+            "whatsapp": "WhatsApp",
+            "sms": "SMS",
+            "push": "Push"
+          }
+        },
+        {
+          "name": "Subject",
+          "as": "subject",
+          "description": {
+            "en": "Email subject line (email channel only)",
+            "de": "E-Mail-Betreff (nur E-Mail-Kanal)",
+            "fr": "Objet de l'e-mail (canal e-mail uniquement)",
+            "es": "Asunto del correo (solo canal de correo)",
+            "it": "Oggetto dell'email (solo canale email)",
+            "ro": "Subiectul emailului (doar canalul email)"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Content",
+          "as": "content",
+          "description": {
+            "en": "Message content",
+            "de": "Nachrichteninhalt",
+            "fr": "Contenu du message",
+            "es": "Contenido del mensaje",
+            "it": "Contenuto del messaggio",
+            "ro": "Conținutul mesajului"
+          },
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Tags",
+          "as": "tags",
+          "description": {
+            "en": "Tags — target contacts with any of these",
+            "de": "Tags — Kontakte mit einem dieser Tags ansprechen",
+            "fr": "Tags — cibler les contacts avec l'un de ces tags",
+            "es": "Etiquetas — dirigirse a contactos con cualquiera de estas",
+            "it": "Tag — contattare chi ha uno di questi tag",
+            "ro": "Taguri — țintește contactele cu oricare dintre acestea"
+          },
+          "type": "json",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Contact IDs",
+          "as": "contactIds",
+          "description": {
+            "en": "Specific contact hashids to target",
+            "de": "Bestimmte Kontakt-Hashids als Zielgruppe",
+            "fr": "Hashids de contacts spécifiques à cibler",
+            "es": "Hashids de contactos específicos a los que dirigirse",
+            "it": "Hashid di contatti specifici da contattare",
+            "ro": "Hashid-uri de contacte specifice de țintit"
+          },
+          "type": "json",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Segment ID",
+          "as": "segmentId",
+          "description": {
+            "en": "Saved segment (hashid) to target",
+            "de": "Gespeichertes Segment (Hashid) als Zielgruppe",
+            "fr": "Segment enregistré (hashid) à cibler",
+            "es": "Segmento guardado (hashid) al que dirigirse",
+            "it": "Segmento salvato (hashid) da contattare",
+            "ro": "Segment salvat (hashid) de țintit"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug for this action. Defaults to the current team.",
+            "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team.",
+            "fr": "Slug d'équipe pour cette action. Par défaut l'équipe actuelle.",
+            "es": "Slug del equipo para esta acción. Por defecto el equipo actual.",
+            "it": "Slug del team per questa azione. Predefinito: team attuale.",
+            "ro": "Slug-ul echipei pentru această acțiune. Implicit echipa curentă."
+          },
+          "bot": "The slug of the team to operate on. Omit to use the current team.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ],
+      "output": {
+        "id": "out.data.id",
+        "name": "out.data.name",
+        "channel": "out.data.channel",
+        "status": "out.data.status",
+        "totalCount": "out.data.totalCount"
+      }
+    }
+  ],
+  "output": {
+    "CAMPAIGN_ID": "out.1.id",
+    "CAMPAIGN_NAME": "out.1.name",
+    "CAMPAIGN_TOTAL": "out.1.totalCount"
+  },
+  "messages": {
+    "success": {
+      "en": "Campaign '{{CAMPAIGN_NAME}}' created as draft targeting {{CAMPAIGN_TOTAL}} contacts.",
+      "de": "Kampagne '{{CAMPAIGN_NAME}}' als Entwurf erstellt, Zielgruppe: {{CAMPAIGN_TOTAL}} Kontakte.",
+      "fr": "Campagne « {{CAMPAIGN_NAME}} » créée comme brouillon ciblant {{CAMPAIGN_TOTAL}} contacts.",
+      "es": "Campaña « {{CAMPAIGN_NAME}} » creada como borrador con {{CAMPAIGN_TOTAL}} contactos.",
+      "it": "Campagna « {{CAMPAIGN_NAME}} » creata come bozza con {{CAMPAIGN_TOTAL}} contatti.",
+      "ro": "Campania „{{CAMPAIGN_NAME}}” a fost creată ca schiță țintind {{CAMPAIGN_TOTAL}} contacte."
+    },
+    "error": {
+      "en": "Failed to create campaign: {{MESSAGE}}",
+      "de": "Kampagne konnte nicht erstellt werden: {{MESSAGE}}",
+      "fr": "Échec de la création de la campagne : {{MESSAGE}}",
+      "es": "Error al crear la campaña: {{MESSAGE}}",
+      "it": "Impossibile creare la campagna: {{MESSAGE}}",
+      "ro": "Nu s-a putut crea campania: {{MESSAGE}}"
+    }
+  }
+}

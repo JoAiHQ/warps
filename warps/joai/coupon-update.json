@@ -1,0 +1,201 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Update Coupon",
+  "title": {
+    "en": "Update a coupon",
+    "de": "Gutschein aktualisieren",
+    "fr": "Mettre à jour un coupon",
+    "es": "Actualizar un cupón",
+    "it": "Aggiorna un coupon",
+    "ro": "Actualizează un cupon"
+  },
+  "description": {
+    "en": "Update an existing discount coupon — code, percentage or amount, minimum order value, usage limit, or expiry. Only the fields you provide are changed.",
+    "de": "Einen bestehenden Rabatt-Gutschein aktualisieren — Code, Prozent oder Betrag, Mindestbestellwert, Nutzungslimit oder Ablaufdatum. Nur die angegebenen Felder werden geändert.",
+    "fr": "Mettez à jour un coupon existant — code, pourcentage ou montant, montant minimum, limite d'utilisation ou expiration. Seuls les champs fournis sont modifiés.",
+    "es": "Actualiza un cupón existente — código, porcentaje o importe, pedido mínimo, límite de usos o caducidad. Solo cambian los campos proporcionados.",
+    "it": "Aggiorna un coupon esistente — codice, percentuale o importo, ordine minimo, limite di utilizzi o scadenza. Vengono modificati solo i campi forniti.",
+    "ro": "Actualizează un cupon existent — cod, procent sau sumă, valoare minimă, limită de utilizări sau expirare. Se schimbă doar câmpurile furnizate."
+  },
+  "bot": "Use when the user wants to change an existing coupon. If the user refers to a coupon by code, list coupons first to find the matching ID.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Update coupon",
+        "de": "Gutschein aktualisieren",
+        "fr": "Mettre à jour le coupon",
+        "es": "Actualizar el cupón",
+        "it": "Aggiorna il coupon",
+        "ro": "Actualizează cuponul"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/coupons/{{coupon_id}}",
+        "method": "PUT",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Coupon ID",
+          "as": "coupon_id",
+          "description": {
+            "en": "The hashid of the coupon to update",
+            "de": "Die Hashid des zu aktualisierenden Gutscheins",
+            "fr": "Le hashid du coupon à mettre à jour",
+            "es": "El hashid del cupón a actualizar",
+            "it": "L'hashid del coupon da aggiornare",
+            "ro": "Hashid-ul cuponului de actualizat"
+          },
+          "bot": "The coupon hash ID. If the user refers to a coupon by code, list coupons first to find the matching ID.",
+          "type": "string",
+          "position": "url:coupon_id",
+          "source": "field",
+          "required": true,
+          "min": 1
+        },
+        {
+          "name": "Code",
+          "as": "code",
+          "description": {
+            "en": "Coupon code",
+            "de": "Gutscheincode",
+            "fr": "Code du coupon",
+            "es": "Código del cupón",
+            "it": "Codice del coupon",
+            "ro": "Codul cuponului"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Percent",
+          "as": "percent",
+          "description": {
+            "en": "Percentage discount (1-100)",
+            "de": "Prozentrabatt (1-100)",
+            "fr": "Pourcentage de réduction (1-100)",
+            "es": "Descuento en porcentaje (1-100)",
+            "it": "Sconto percentuale (1-100)",
+            "ro": "Reducere procentuală (1-100)"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Amount",
+          "as": "amount",
+          "description": {
+            "en": "Fixed discount in cents",
+            "de": "Festbetrag-Rabatt in Cent",
+            "fr": "Montant fixe en centimes",
+            "es": "Importe fijo en céntimos",
+            "it": "Importo fisso in centesimi",
+            "ro": "Reducere fixă în cenți"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Condition",
+          "as": "condition",
+          "description": {
+            "en": "Condition for using the coupon: none, onetime-use, or previous-purchase",
+            "de": "Bedingung für die Nutzung: keine, einmalige Nutzung oder vorheriger Kauf",
+            "fr": "Condition d'utilisation : aucune, usage unique ou achat précédent",
+            "es": "Condición de uso: ninguna, uso único o compra anterior",
+            "it": "Condizione d'uso: nessuna, uso singolo o acquisto precedente",
+            "ro": "Condiție de utilizare: niciuna, utilizare unică sau achiziție anterioară"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "options": {
+            "none": "No condition",
+            "onetime-use": "One-time use",
+            "previous-purchase": "Previous purchase"
+          }
+        },
+        {
+          "name": "Uses Left",
+          "as": "usesLeft",
+          "description": {
+            "en": "Number of uses left",
+            "de": "Verbleibende Nutzungen",
+            "fr": "Nombre d'utilisations restantes",
+            "es": "Usos restantes",
+            "it": "Utilizzazioni rimanenti",
+            "ro": "Utilizări rămase"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Expires At",
+          "as": "expiresAt",
+          "description": {
+            "en": "Expiry date (ISO date)",
+            "de": "Ablaufdatum (ISO-Datum)",
+            "fr": "Date d'expiration (date ISO)",
+            "es": "Fecha de caducidad (fecha ISO)",
+            "it": "Data di scadenza (data ISO)",
+            "ro": "Data de expirare (dată ISO)"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug of the coupon. Defaults to the current team.",
+            "de": "Team-Slug des Gutscheins. Standardmäßig das aktuelle Team.",
+            "fr": "Slug d'équipe du coupon. Par défaut l'équipe actuelle.",
+            "es": "Slug del equipo del cupón. Por defecto el equipo actual.",
+            "it": "Slug del team del coupon. Predefinito: team attuale.",
+            "ro": "Slug-ul echipei cuponului. Implicit echipa curentă."
+          },
+          "bot": "The slug of the team the coupon belongs to. Omit to use the current team.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ],
+      "output": {
+        "id": "out.data.id",
+        "code": "out.data.code"
+      }
+    }
+  ],
+  "output": {
+    "COUPON_ID": "out.1.id",
+    "COUPON_CODE": "out.1.code"
+  },
+  "messages": {
+    "success": {
+      "en": "Coupon '{{COUPON_CODE}}' updated.",
+      "de": "Gutschein '{{COUPON_CODE}}' aktualisiert.",
+      "fr": "Coupon « {{COUPON_CODE}} » mis à jour.",
+      "es": "Cupón « {{COUPON_CODE}} » actualizado.",
+      "it": "Coupon « {{COUPON_CODE}} » aggiornato.",
+      "ro": "Cuponul „{{COUPON_CODE}}” a fost actualizat."
+    },
+    "error": {
+      "en": "Failed to update coupon: {{MESSAGE}}",
+      "de": "Gutschein konnte nicht aktualisiert werden: {{MESSAGE}}"
+    }
+  }
+}
