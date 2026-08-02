@@ -1,0 +1,84 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: List Contacts",
+  "title": {
+    "en": "List contacts",
+    "de": "Kontakte anzeigen",
+    "es": "List contacts",
+    "fr": "List contacts",
+    "it": "List contacts",
+    "ro": "List contacts"
+  },
+  "description": {
+    "en": "View all CRM contacts for your team, with their contact details.",
+    "de": "Zeige alle CRM-Kontakte deines Teams mit ihren Kontaktdaten an.",
+    "es": "View all CRM contacts for your team, with their contact details.",
+    "fr": "View all CRM contacts for your team, with their contact details.",
+    "it": "View all CRM contacts for your team, with their contact details.",
+    "ro": "View all CRM contacts for your team, with their contact details."
+  },
+  "bot": "Use this when the user wants to see, list, or check their contacts or CRM.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "auto": true,
+      "label": {
+        "en": "List contacts",
+        "de": "Kontakte anzeigen",
+        "es": "List contacts",
+        "fr": "List contacts",
+        "it": "List contacts",
+        "ro": "List contacts"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/contacts?filter[search]={{search}}",
+        "method": "GET",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Search",
+          "as": "search",
+          "type": "string",
+          "position": "query",
+          "required": false,
+          "description": {
+            "en": "Search contacts by name, email, or company",
+            "de": "Kontakte nach Name, E-Mail oder Firma durchsuchen",
+            "es": "Search contacts by name, email, or company",
+            "fr": "Search contacts by name, email, or company",
+            "ro": "Search contacts by name, email, or company",
+            "it": "Search contacts by name, email, or company"
+          },
+          "bot": "Search term for contacts. Omit to return all."
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}",
+          "description": {
+            "en": "Team slug for this action. Defaults to the current team.",
+            "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team.",
+            "es": "Team slug for this action. Defaults to the current team.",
+            "fr": "Team slug for this action. Defaults to the current team.",
+            "it": "Team slug for this action. Defaults to the current team.",
+            "ro": "Team slug for this action. Defaults to the current team."
+          },
+          "bot": "The slug of the team to operate on. Omit to use the current team."
+        }
+      ]
+    }
+  ],
+  "ui": "https://raw.githubusercontent.com/JoAiHQ/warps/main/warps/joai/contact-list/chatapp.e2b5828a.dist.html"
+}

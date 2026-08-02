@@ -1,0 +1,67 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: List Services",
+  "title": {
+    "en": "List team services",
+    "de": "Team-Dienstleistungen anzeigen"
+  },
+  "description": {
+    "en": "View all services and hourly rates in your team catalog with names, prices and durations.",
+    "de": "Alle Dienstleistungen und Stundensätze im Team-Katalog mit Namen, Preisen und Dauern anzeigen."
+  },
+  "bot": "Use this when the user wants to see their available services, hourly rates, or billable services that can be used for invoices.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "output": {
+    "services": "out",
+    "servicesList": "out.data",
+    "servicesCount": "out.data.length"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "silent": true,
+      "label": {
+        "en": "List services",
+        "de": "Dienstleistungen anzeigen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/services",
+        "method": "GET",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "tags",
+          "type": "string",
+          "required": false,
+          "position": "query",
+          "description": {
+            "en": "Filter by tags (e.g. hourly, consultation, maintenance, repair)",
+            "de": "Nach Tags filtern (z.B. stundensatz, beratung, wartung, reparatur)"
+          }
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug for this action. Defaults to the current team.",
+            "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team."
+          },
+          "bot": "The slug of the team to operate on. Omit to use the current team.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ]
+    }
+  ],
+  "ui": "https://raw.githubusercontent.com/JoAiHQ/warps/main/warps/joai/service-list/chatapp.e3212737.dist.html"
+}
