@@ -1,0 +1,78 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Get Room Messages",
+  "title": {
+    "en": "Get room messages",
+    "de": "Raumnachrichten anzeigen"
+  },
+  "description": {
+    "en": "View the message history from a specific room, ordered newest-first.",
+    "de": "Zeige den Nachrichtenverlauf eines Raums, neueste zuerst."
+  },
+  "bot": "Use this when the user wants to see the messages, conversation, or chat history in a room or channel.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Get messages",
+        "de": "Nachrichten anzeigen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/rooms/{{room}}/messages?limit={{limit}}",
+        "method": "GET",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Room",
+          "as": "room",
+          "type": "string",
+          "position": "url:room",
+          "source": "field",
+          "required": true,
+          "description": {
+            "en": "The room hashid",
+            "de": "Die Raum-Hashid"
+          },
+          "bot": "The room hashid from list_rooms."
+        },
+        {
+          "name": "Limit",
+          "as": "limit",
+          "type": "number",
+          "position": "query",
+          "source": "field",
+          "required": false,
+          "default": "50",
+          "description": {
+            "en": "Max messages to return (default 50, max 200)",
+            "de": "Maximale Anzahl Nachrichten (Standard 50, max 200)"
+          },
+          "bot": "Max messages to fetch. Omit for 50."
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}",
+          "description": {
+            "en": "Team slug for this action. Defaults to the current team.",
+            "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team."
+          },
+          "bot": "The slug of the team to operate on. Omit to use the current team."
+        }
+      ]
+    }
+  ],
+  "ui": "https://raw.githubusercontent.com/JoAiHQ/warps/main/warps/joai/room-messages/chatapp.b8402c85.dist.html"
+}
