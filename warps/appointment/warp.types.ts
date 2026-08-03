@@ -41,6 +41,9 @@ export type AppointmentsBookData = {
   SCHEDULED_AT: any;
 };
 
+export type AppointmentsBookingLinkInputs = {
+};
+
 export type AppointmentsCancelPublicInputs = {
   meetingId: string;
   reason: string;
@@ -83,7 +86,25 @@ export type AppointmentsOnboardingInputs = {
 };
 
 export type AppointmentsUpsertPolicyInputs = {
-  policy: string;
+  timezone: string;
+  availability: string;
+  minNoticeMinutes: number;
+  bufferMinutes: number;
+  maxDaysAhead: number;
+  slotIntervalMinutes: number;
+  blockedDates: string;
+  holidays: string;
+  conferenceEnabled: boolean;
+  serviceSelectionEnabled: boolean;
+  paymentEnabled: boolean;
+};
+
+export type AppointmentsRequestApprovalInputs = {
+  TITLE: string;
+  MESSAGE: string;
+  REQUESTER_NAME: string;
+  REQUESTER_EMAIL: string;
+  NOTES: string;
 };
 
 export type AppointmentsCreateRequestInputs = {

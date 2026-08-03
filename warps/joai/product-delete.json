@@ -1,0 +1,98 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Delete Product",
+  "title": {
+    "en": "Delete a product",
+    "de": "Produkt löschen",
+    "fr": "Supprimer un produit",
+    "es": "Eliminar un producto",
+    "it": "Elimina un prodotto",
+    "ro": "Șterge un produs"
+  },
+  "description": {
+    "en": "Permanently remove a product from your shop catalog. Use with care — this cannot be undone.",
+    "de": "Ein Produkt dauerhaft aus deinem Shop-Katalog entfernen. Vorsicht — dies kann nicht rückgängig gemacht werden.",
+    "fr": "Supprimer définitivement un produit de votre catalogue boutique. À utiliser avec précaution — irréversible.",
+    "es": "Elimina permanentemente un producto de tu catálogo de tienda. Úsalo con cuidado: no se puede deshacer.",
+    "it": "Rimuovi definitivamente un prodotto dal catalogo del negozio. Da usare con cautela — non reversibile.",
+    "ro": "Scoate definitiv un produs din catalogul magazinului tău. Folosește cu atenție — nu poate fi anulat."
+  },
+  "bot": "Use when the user wants to remove a product. If the user refers to a product by name, list products first to find the matching ID.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Delete product",
+        "de": "Produkt löschen",
+        "fr": "Supprimer le produit",
+        "es": "Eliminar el producto",
+        "it": "Elimina il prodotto",
+        "ro": "Șterge produsul"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/products/{{product_id}}",
+        "method": "DELETE",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Product ID",
+          "as": "product_id",
+          "description": {
+            "en": "The hashid of the product to delete",
+            "de": "Die Hashid des zu löschenden Produkts",
+            "fr": "Le hashid du produit à supprimer",
+            "es": "El hashid del producto a eliminar",
+            "it": "L'hashid del prodotto da eliminare",
+            "ro": "Hashid-ul produsului de șters"
+          },
+          "bot": "The product hash ID. If the user refers to a product by name, list products first to find the matching ID.",
+          "type": "string",
+          "position": "url:product_id",
+          "source": "field",
+          "required": true,
+          "min": 1
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug of the product. Defaults to the current team.",
+            "de": "Team-Slug des Produkts. Standardmäßig das aktuelle Team.",
+            "fr": "Slug d'équipe du produit. Par défaut l'équipe actuelle.",
+            "es": "Slug del equipo del producto. Por defecto el equipo actual.",
+            "it": "Slug del team del prodotto. Predefinito: team attuale.",
+            "ro": "Slug-ul echipei produsului. Implicit echipa curentă."
+          },
+          "bot": "The slug of the team the product belongs to. Omit to use the current team.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Product deleted.",
+      "de": "Produkt gelöscht.",
+      "fr": "Produit supprimé.",
+      "es": "Producto eliminado.",
+      "it": "Prodotto eliminato.",
+      "ro": "Produs șters."
+    },
+    "error": {
+      "en": "Failed to delete product: {{MESSAGE}}",
+      "de": "Produkt konnte nicht gelöscht werden: {{MESSAGE}}"
+    }
+  }
+}

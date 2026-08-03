@@ -1,0 +1,104 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: List Updates",
+  "title": {
+    "en": "View updates",
+    "de": "Updates anzeigen"
+  },
+  "description": {
+    "en": "View current or archived deals, events, and news-style updates for your team. Filter by type, status, or active publishing window to check what customers can see across connected websites and public feeds.",
+    "de": "Zeige aktuelle oder archivierte Angebote, Events und News für dein Team. Filtere nach Typ, Status oder aktivem Veröffentlichungszeitraum, um zu prüfen, was Kunden auf verbundenen Websites und öffentlichen Feeds sehen."
+  },
+  "bot": "Use this to see team updates. By default active=true returns currently visible updates.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "View updates",
+        "de": "Updates anzeigen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/updates?active={{active}}&type={{type}}&status={{status}}",
+        "method": "GET",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Active",
+          "as": "active",
+          "description": {
+            "en": "Whether to show only currently active updates. Use true by default.",
+            "de": "Ob nur aktuell aktive Updates angezeigt werden sollen. Standardmäßig true verwenden."
+          },
+          "type": "boolean",
+          "position": "url:active",
+          "source": "field",
+          "required": false,
+          "default": true
+        },
+        {
+          "name": "Type",
+          "as": "type",
+          "description": {
+            "en": "Filter by update type.",
+            "de": "Nach Update-Typ filtern."
+          },
+          "type": "string",
+          "position": "url:type",
+          "source": "field",
+          "required": false,
+          "options": {
+            "deal": "Deal",
+            "event": "Event",
+            "news": "News"
+          }
+        },
+        {
+          "name": "Status",
+          "as": "status",
+          "description": {
+            "en": "Filter by publication status",
+            "de": "Nach Veröffentlichungsstatus filtern"
+          },
+          "type": "string",
+          "position": "url:status",
+          "source": "field",
+          "required": false,
+          "options": {
+            "draft": "Draft",
+            "published": "Published",
+            "archived": "Archived"
+          }
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug for this action. Defaults to the current team.",
+            "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team."
+          },
+          "bot": "The slug of the team to operate on. Omit to use the current team.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Here are your updates.",
+      "de": "Hier sind deine Updates."
+    }
+  },
+  "ui": "https://raw.githubusercontent.com/JoAiHQ/warps/main/warps/joai/update-list/chatapp.3c265140.dist.html"
+}

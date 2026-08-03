@@ -8,6 +8,8 @@ export type CalendarCreateEventInputs = {
   timezone: string;
   location: string;
   allDay: boolean;
+  recurrence: string;
+  recurrenceCount: string;
 };
 
 export type CalendarCreateEventData = {
@@ -29,6 +31,7 @@ export type CalendarDeleteEventData = {
 export type CalendarListEventsInputs = {
   from: string;
   to: string;
+  title: string;
 };
 
 export type CalendarListEventsData = {

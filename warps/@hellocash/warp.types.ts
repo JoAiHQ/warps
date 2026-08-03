@@ -40,7 +40,7 @@ export type helloCashListCustomersData = {
 
 export type helloCashListInvoicesInputs = {
   limit: number;
-  showDetails: string;
+  showDetails: boolean;
 };
 
 export type helloCashListInvoicesData = {

@@ -791,6 +791,27 @@ export const meta: Record<string, WarpExtras> = {
       ],
     },
   },
+  'product-create': {
+    keywords: {
+      en: ['create product', 'add product', 'new item', 'shop product', 'sell online', 'product catalog'],
+      de: ['Produkt erstellen', 'Produkt hinzufügen', 'neuer Artikel', 'Shop-Produkt', 'online verkaufen', 'Produktkatalog'],
+    },
+    useCases: {
+      en: ['Add a new product with a price to your shop catalog', 'Create a product with variations and volume pricing tiers', 'Set up a digital product that is publicly visible'],
+      de: ['Ein neues Produkt mit Preis zum Shop-Katalog hinzufügen', 'Ein Produkt mit Varianten und Mengenrabatt-Stufen erstellen', 'Ein digitales, öffentlich sichtbares Produkt anlegen'],
+    },
+    category: 'commerce',
+    faq: {
+      en: [
+        { question: 'What do I need to create a product?', answer: 'A name and a price in cents. Unit, tags, and description are optional.' },
+        { question: 'Can I add volume pricing?', answer: 'Yes. Add variations with different SKUs and prices for bulk or volume tiers.' },
+      ],
+      de: [
+        { question: 'Was brauche ich, um ein Produkt zu erstellen?', answer: 'Einen Namen und einen Preis in Cent. Einheit, Tags und Beschreibung sind optional.' },
+        { question: 'Kann ich Mengenrabatte anlegen?', answer: 'Ja. Füge Varianten mit unterschiedlichen SKUs und Preisen für Mengenstufen hinzu.' },
+      ],
+    },
+  },
   'update-create': {
     keywords: {
       en: ['post update', 'create deal', 'publish event', 'business news', 'local announcement'],
@@ -893,6 +914,242 @@ export const meta: Record<string, WarpExtras> = {
       de: [
         { question: 'Welche Zahlen sind enthalten?', answer: 'Die Statistik enthält Angebote, Events und News-Updates des Teams.' },
         { question: 'Hilft das beim Prüfen eines Betriebsprofils?', answer: 'Ja. Damit siehst du, ob ein Profil genug aktuelle kundenrelevante Inhalte hat.' },
+      ],
+    },
+  },
+  'campaign-create': {
+    keywords: {
+      en: ['create campaign', 'marketing campaign', 'email blast', 'sms blast', 'newsletter', 'audience messaging'],
+      de: ['Kampagne erstellen', 'Marketing-Kampagne', 'Newsletter', 'SMS-Versand', 'Zielgruppen-Messaging'],
+    },
+    useCases: {
+      en: ['Create an email campaign for a saved segment of contacts', 'Send a WhatsApp promo to customers tagged as loyal', 'Draft a campaign before scheduling the send'],
+      de: ['Eine E-Mail-Kampagne für ein gespeichertes Segment erstellen', 'WhatsApp-Aktion an treue Kunden senden', 'Eine Kampagne vor dem Versand als Entwurf anlegen'],
+    },
+    category: 'communication',
+    faq: {
+      en: [
+        { question: 'Can I target specific contacts?', answer: 'Yes. Use a saved segment, tags, or explicit contact IDs to define the audience.' },
+        { question: 'Is the campaign sent immediately?', answer: 'No. The campaign is created as a draft — use Send Campaign to start delivery.' },
+      ],
+      de: [
+        { question: 'Kann ich bestimmte Kontakte ansprechen?', answer: 'Ja. Nutze ein gespeichertes Segment, Tags oder konkrete Kontakt-IDs für die Zielgruppe.' },
+        { question: 'Wird die Kampagne sofort versendet?', answer: 'Nein. Die Kampagne wird als Entwurf angelegt – zum Versand nutze Kampagne senden.' },
+      ],
+    },
+  },
+  'campaign-send': {
+    keywords: {
+      en: ['send campaign', 'start campaign', 'launch email', 'deliver messages', 'send newsletter'],
+      de: ['Kampagne senden', 'Kampagne starten', 'Newsletter versenden', 'Nachrichten zustellen'],
+    },
+    useCases: {
+      en: ['Start sending a drafted email campaign to its audience', 'Launch a WhatsApp promo campaign you just created'],
+      de: ['Den Versand einer entworfenen E-Mail-Kampagne starten', 'Eine gerade erstellte WhatsApp-Aktion starten'],
+    },
+    category: 'communication',
+    faq: {
+      en: [
+        { question: 'What happens after I send?', answer: 'Messages are delivered to the campaign audience over time. Only draft campaigns can be sent.' },
+      ],
+      de: [
+        { question: 'Was passiert nach dem Senden?', answer: 'Die Nachrichten werden nach und nach an die Zielgruppe zugestellt. Nur Entwurfs-Kampagnen können gesendet werden.' },
+      ],
+    },
+  },
+  'campaign-delete': {
+    keywords: {
+      en: ['delete campaign', 'remove campaign', 'cancel campaign', 'clean up campaigns'],
+      de: ['Kampagne löschen', 'Kampagne entfernen', 'Kampagnen bereinigen'],
+    },
+    useCases: {
+      en: ['Remove a campaign you no longer need', 'Clean up unused draft campaigns'],
+      de: ['Eine nicht mehr benötigte Kampagne entfernen', 'Ungenutzte Entwurfs-Kampagnen aufräumen'],
+    },
+    category: 'communication',
+    faq: {
+      en: [
+        { question: 'Can I delete a campaign that is sending?', answer: 'No. Only campaigns that are not currently sending can be deleted.' },
+      ],
+      de: [
+        { question: 'Kann ich eine laufende Kampagne löschen?', answer: 'Nein. Nur Kampagnen, die gerade nicht versenden, können gelöscht werden.' },
+      ],
+    },
+  },
+  'segment-create': {
+    keywords: {
+      en: ['create segment', 'audience segment', 'filter contacts', 'contact list', 'build audience'],
+      de: ['Segment erstellen', 'Zielgruppe erstellen', 'Kontakte filtern', 'Audience aufbauen'],
+    },
+    useCases: {
+      en: ['Build a reusable audience of contacts with a specific tag', 'Create a segment of contacts with an email address for campaigns', 'Save a filter for contacts created after a date'],
+      de: ['Eine wiederverwendbare Zielgruppe mit einem bestimmten Tag aufbauen', 'Ein Segment mit E-Mail-Adresse für Kampagnen erstellen', 'Einen Filter für Kontakte nach einem Datum speichern'],
+    },
+    category: 'communication',
+    faq: {
+      en: [
+        { question: 'What conditions can I use?', answer: 'Tag, has email, has phone, created before/after a date, and email contains.' },
+        { question: 'Do all conditions need to match?', answer: 'Yes. Contacts must satisfy every condition to be included in the segment.' },
+      ],
+      de: [
+        { question: 'Welche Bedingungen gibt es?', answer: 'Tag, hat E-Mail, hat Telefon, erstellt vor/nach einem Datum und E-Mail enthält.' },
+        { question: 'Müssen alle Bedingungen zutreffen?', answer: 'Ja. Kontakte müssen jede Bedingung erfüllen, um ins Segment zu kommen.' },
+      ],
+    },
+  },
+  'segment-delete': {
+    keywords: {
+      en: ['delete segment', 'remove segment', 'delete audience', 'clean up segments'],
+      de: ['Segment löschen', 'Zielgruppe löschen', 'Segmente bereinigen'],
+    },
+    useCases: {
+      en: ['Remove a saved audience you no longer use', 'Clean up duplicate segments'],
+      de: ['Eine nicht mehr genutzte Zielgruppe entfernen', 'Doppelte Segmente aufräumen'],
+    },
+    category: 'communication',
+    faq: {
+      en: [
+        { question: 'Can I delete a segment used by a campaign?', answer: 'No. Segments referenced by a campaign must be removed from that campaign first.' },
+      ],
+      de: [
+        { question: 'Kann ich ein von einer Kampagne genutztes Segment löschen?', answer: 'Nein. Zuerst muss das Segment aus der Kampagne entfernt werden.' },
+      ],
+    },
+  },
+  'product-update': {
+    keywords: {
+      en: ['update product', 'edit product', 'change product price', 'product settings', 'product visibility'],
+      de: ['Produkt aktualisieren', 'Produkt bearbeiten', 'Produktpreis ändern', 'Produkt-Sichtbarkeit'],
+    },
+    useCases: {
+      en: ['Change the name or description of a shop product', 'Deactivate a product that is out of stock', 'Toggle whether a product is publicly visible'],
+      de: ['Name oder Beschreibung eines Shop-Produkts ändern', 'Ein vergriffenes Produkt deaktivieren', 'Sichtbarkeit eines Produkts umschalten'],
+    },
+    category: 'commerce',
+    faq: {
+      en: [
+        { question: 'What can I update?', answer: 'Name, unit, tags, description, active state, virtual, and public visibility.' },
+        { question: 'Do I need to provide all fields?', answer: 'No. Only the fields you provide are changed.' },
+      ],
+      de: [
+        { question: 'Was kann ich aktualisieren?', answer: 'Name, Einheit, Tags, Beschreibung, Aktiv-Status, virtuell und Sichtbarkeit.' },
+        { question: 'Muss ich alle Felder angeben?', answer: 'Nein. Nur die angegebenen Felder werden geändert.' },
+      ],
+    },
+  },
+  'product-delete': {
+    keywords: {
+      en: ['delete product', 'remove product', 'delete item', 'remove from catalog'],
+      de: ['Produkt löschen', 'Produkt entfernen', 'Artikel löschen', 'Aus Katalog entfernen'],
+    },
+    useCases: {
+      en: ['Remove a product no longer sold', 'Clean up the shop catalog'],
+      de: ['Ein nicht mehr verkauftes Produkt entfernen', 'Den Shop-Katalog bereinigen'],
+    },
+    category: 'commerce',
+    faq: {
+      en: [
+        { question: 'Can I undo a product deletion?', answer: 'No. Deletion is permanent.' },
+      ],
+      de: [
+        { question: 'Kann ich das Löschen rückgängig machen?', answer: 'Nein. Das Löschen ist endgültig.' },
+      ],
+    },
+  },
+  'order-delete': {
+    keywords: {
+      en: ['delete order', 'delete quote', 'remove order', 'cancel order', 'clean up orders'],
+      de: ['Bestellung löschen', 'Angebot löschen', 'Bestellung entfernen', 'Bestellungen bereinigen'],
+    },
+    useCases: {
+      en: ['Remove an incorrect order or quote', 'Clean up test orders'],
+      de: ['Eine fehlerhafte Bestellung oder ein falsches Angebot entfernen', 'Test-Bestellungen aufräumen'],
+    },
+    category: 'commerce',
+    faq: {
+      en: [
+        { question: 'Can I undo an order deletion?', answer: 'No. Deletion is permanent.' },
+      ],
+      de: [
+        { question: 'Kann ich das Löschen rückgängig machen?', answer: 'Nein. Das Löschen ist endgültig.' },
+      ],
+    },
+  },
+  'coupon-create': {
+    keywords: {
+      en: ['create coupon', 'discount code', 'promo code', 'coupon code', 'create discount'],
+      de: ['Gutschein erstellen', 'Rabattcode', 'Promo-Code', 'Gutscheincode', 'Rabatt erstellen'],
+    },
+    useCases: {
+      en: ['Create a percentage discount code for a sale', 'Create a fixed-amount coupon for loyal customers', 'Set a coupon with a minimum order value and expiry'],
+      de: ['Einen Prozent-Rabattcode für einen Sale erstellen', 'Einen Festbetrag-Gutschein für treue Kunden anlegen', 'Einen Gutschein mit Mindestbestellwert und Ablaufdatum erstellen'],
+    },
+    category: 'commerce',
+    faq: {
+      en: [
+        { question: 'Can I combine percent and amount?', answer: 'No. Provide either a percentage or a fixed amount, not both.' },
+      ],
+      de: [
+        { question: 'Kann ich Prozent und Betrag kombinieren?', answer: 'Nein. Gib entweder einen Prozentsatz oder einen Festbetrag an.' },
+      ],
+    },
+  },
+  'coupon-update': {
+    keywords: {
+      en: ['update coupon', 'edit coupon', 'change discount', 'coupon settings'],
+      de: ['Gutschein aktualisieren', 'Gutschein bearbeiten', 'Rabatt ändern', 'Gutschein-Einstellungen'],
+    },
+    useCases: {
+      en: ['Change the discount percentage of a coupon', 'Extend a coupon expiry date', 'Increase how many times a coupon can be used'],
+      de: ['Den Rabattsatz eines Gutscheins ändern', 'Das Ablaufdatum eines Gutscheins verlängern', 'Die Nutzungsanzahl eines Gutscheins erhöhen'],
+    },
+    category: 'commerce',
+    faq: {
+      en: [
+        { question: 'Do I need to provide all fields?', answer: 'No. Only the fields you provide are changed.' },
+      ],
+      de: [
+        { question: 'Muss ich alle Felder angeben?', answer: 'Nein. Nur die angegebenen Felder werden geändert.' },
+      ],
+    },
+  },
+  'coupon-delete': {
+    keywords: {
+      en: ['delete coupon', 'remove coupon', 'delete discount', 'remove promo code'],
+      de: ['Gutschein löschen', 'Gutschein entfernen', 'Rabattcode löschen'],
+    },
+    useCases: {
+      en: ['Remove an expired discount coupon', 'Clean up unused promo codes'],
+      de: ['Einen abgelaufenen Rabatt-Gutschein entfernen', 'Ungenutzte Promo-Codes aufräumen'],
+    },
+    category: 'commerce',
+    faq: {
+      en: [
+        { question: 'Can I undo a coupon deletion?', answer: 'No. Deletion is permanent.' },
+      ],
+      de: [
+        { question: 'Kann ich das Löschen rückgängig machen?', answer: 'Nein. Das Löschen ist endgültig.' },
+      ],
+    },
+  },
+  'private-warp-create': {
+    keywords: {
+      en: ['create private automation', 'custom action', 'create form', 'submit form', 'build automation'],
+      de: ['Private Automation erstellen', 'Benutzerdefinierte Aktion', 'Formular erstellen', 'Formular senden', 'Automation bauen'],
+    },
+    useCases: {
+      en: ['Create a custom action for your team that calls an endpoint', 'Build a customer submission form for your business', 'Turn a form into a reusable automation for your agent'],
+      de: ['Eine benutzerdefinierte Aktion für dein Team erstellen, die einen Endpunkt aufruft', 'Ein Kundenformular für deinen Betrieb bauen', 'Ein Formular in eine wiederverwendbare Automation für deinen Agenten verwandeln'],
+    },
+    category: 'productivity',
+    faq: {
+      en: [
+        { question: 'What can I build with this?', answer: 'A private action for your team that submits data to an endpoint, optionally rendered as a customer form.' },
+        { question: 'Can submissions be stored?', answer: 'Yes. Enable store to save submissions in your CRM.' },
+      ],
+      de: [
+        { question: 'Was kann ich damit bauen?', answer: 'Eine private Aktion für dein Team, die Daten an einen Endpunkt sendet – optional als Kundenformular.' },
+        { question: 'Können Übermittlungen gespeichert werden?', answer: 'Ja. Aktiviere Speichern, um Übermittlungen in deinem CRM abzulegen.' },
       ],
     },
   },

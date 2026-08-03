@@ -1,0 +1,109 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Send Campaign",
+  "title": {
+    "en": "Send a campaign",
+    "de": "Kampagne senden",
+    "fr": "Envoyer une campagne",
+    "es": "Enviar una campaña",
+    "it": "Invia una campagna",
+    "ro": "Trimite o campanie"
+  },
+  "description": {
+    "en": "Start sending a draft campaign to its audience. The campaign must exist and be in draft status.",
+    "de": "Starte den Versand einer Entwurfs-Kampagne an die Zielgruppe. Die Kampagne muss existieren und den Status Entwurf haben.",
+    "fr": "Lancez l'envoi d'une campagne brouillon à son audience. La campagne doit exister et être en statut brouillon.",
+    "es": "Inicia el envío de una campaña borrador a su audiencia. La campaña debe existir y estar en estado borrador.",
+    "it": "Avvia l'invio di una campagna bozza al suo pubblico. La campagna deve esistere e essere in stato bozza.",
+    "ro": "Începe trimiterea unei campanii schiță către audiența sa. Campania trebuie să existe și să fie în stadiul de schiță."
+  },
+  "bot": "Use when the user wants to send or start a campaign that was created as a draft. Ask for the campaign ID if not provided.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Send campaign",
+        "de": "Kampagne senden",
+        "fr": "Envoyer la campagne",
+        "es": "Enviar la campaña",
+        "it": "Invia la campagna",
+        "ro": "Trimite campania"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/campaigns/{{campaign_id}}/send",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Campaign ID",
+          "as": "campaign_id",
+          "description": {
+            "en": "The hashid of the campaign to send",
+            "de": "Die Hashid der zu sendenden Kampagne",
+            "fr": "Le hashid de la campagne à envoyer",
+            "es": "El hashid de la campaña a enviar",
+            "it": "L'hashid della campagna da inviare",
+            "ro": "Hashid-ul campaniei de trimis"
+          },
+          "bot": "The campaign hash ID. If the user refers to a campaign by name, list campaigns first to find the matching ID.",
+          "type": "string",
+          "position": "url:campaign_id",
+          "source": "field",
+          "required": true,
+          "min": 1
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug of the campaign. Defaults to the current team.",
+            "de": "Team-Slug der Kampagne. Standardmäßig das aktuelle Team.",
+            "fr": "Slug d'équipe de la campagne. Par défaut l'équipe actuelle.",
+            "es": "Slug del equipo de la campaña. Por defecto el equipo actual.",
+            "it": "Slug del team della campagna. Predefinito: team attuale.",
+            "ro": "Slug-ul echipei campaniei. Implicit echipa curentă."
+          },
+          "bot": "The slug of the team the campaign belongs to. Omit to use the current team.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ],
+      "output": {
+        "id": "out.data.id",
+        "name": "out.data.name",
+        "status": "out.data.status",
+        "totalCount": "out.data.totalCount"
+      }
+    }
+  ],
+  "output": {
+    "CAMPAIGN_ID": "out.1.id",
+    "CAMPAIGN_NAME": "out.1.name",
+    "CAMPAIGN_STATUS": "out.1.status"
+  },
+  "messages": {
+    "success": {
+      "en": "Campaign '{{CAMPAIGN_NAME}}' is now {{CAMPAIGN_STATUS}}.",
+      "de": "Kampagne '{{CAMPAIGN_NAME}}' ist jetzt {{CAMPAIGN_STATUS}}.",
+      "fr": "La campagne « {{CAMPAIGN_NAME}} » est maintenant {{CAMPAIGN_STATUS}}.",
+      "es": "La campaña « {{CAMPAIGN_NAME}} » ahora está {{CAMPAIGN_STATUS}}.",
+      "it": "La campagna « {{CAMPAIGN_NAME}} » è ora {{CAMPAIGN_STATUS}}.",
+      "ro": "Campania „{{CAMPAIGN_NAME}}” este acum {{CAMPAIGN_STATUS}}."
+    },
+    "error": {
+      "en": "Failed to send campaign: {{MESSAGE}}",
+      "de": "Kampagne konnte nicht gesendet werden: {{MESSAGE}}"
+    }
+  }
+}

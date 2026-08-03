@@ -3,30 +3,36 @@
   "name": "JoAi: Update Service",
   "title": {
     "en": "Update a service",
-    "de": "Dienstleistung aktualisieren"
+    "de": "Dienstleistung aktualisieren",
+    "fr": "Mettre à jour un service",
+    "es": "Actualizar un servicio",
+    "it": "Aggiorna un servizio",
+    "ro": "Actualizează un serviciu"
   },
   "description": {
-    "en": "Update an existing service's name, price, duration, or description in your team catalog. Changes apply immediately to new bookings and invoices.",
-    "de": "Eine bestehende Dienstleistung mit aktualisiertem Namen, Preis, Dauer oder Beschreibung in deinem Team-Katalog bearbeiten. Änderungen gelten sofort für neue Buchungen und Rechnungen."
+    "en": "Update an existing service in your team catalog — name, price, duration, tags, description, or active state. Only the fields you provide are changed, so bookings and invoices keep working.",
+    "de": "Eine bestehende Dienstleistung in deinem Team-Katalog aktualisieren — Name, Preis, Dauer, Tags, Beschreibung oder Aktiv-Status. Nur die angegebenen Felder werden geändert, Buchungen und Rechnungen funktionieren weiter.",
+    "fr": "Mettez à jour un service existant de votre catalogue — nom, prix, durée, tags, description ou état actif. Seuls les champs fournis sont modifiés, les réservations et factures continuent de fonctionner.",
+    "es": "Actualiza un servicio existente de tu catálogo — nombre, precio, duración, etiquetas, descripción o estado activo. Solo cambian los campos proporcionados; reservas y facturas siguen funcionando.",
+    "it": "Aggiorna un servizio esistente del tuo catalogo — nome, prezzo, durata, tag, descrizione o stato attivo. Vengono modificati solo i campi forniti; prenotazioni e fatture continuano a funzionare.",
+    "ro": "Actualizează un serviciu existent din catalogul echipei tale — nume, preț, durată, taguri, descriere sau stare activă. Se schimbă doar câmpurile furnizate; rezervările și facturile continuă să funcționeze."
   },
-  "bot": "Use when the user wants to modify an existing service. Ask which service they want to update and what fields to change. Only include fields that changed.",
+  "bot": "Use when the user wants to modify an existing service. If the user refers to a service by name, list services first to find the matching ID. Only include fields that changed.",
   "vars": {
     "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
     "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
     "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
-  },
-  "messages": {
-    "error": {
-      "en": "Failed to update service: {{MESSAGE}}",
-      "de": "Dienstleistung konnte nicht aktualisiert werden: {{MESSAGE}}"
-    }
   },
   "actions": [
     {
       "type": "collect",
       "label": {
         "en": "Update service",
-        "de": "Dienstleistung aktualisieren"
+        "de": "Dienstleistung aktualisieren",
+        "fr": "Mettre à jour le service",
+        "es": "Actualizar el servicio",
+        "it": "Aggiorna il servizio",
+        "ro": "Actualizează serviciul"
       },
       "destination": {
         "url": "INJECT:API_BASE/v1/services/{{service_id}}",
@@ -41,19 +47,30 @@
           "name": "Service ID",
           "as": "service_id",
           "description": {
-            "en": "The ID or hashid of the service to update",
-            "de": "Die ID oder Hashid der zu aktualisierenden Dienstleistung"
+            "en": "The hashid of the service to update",
+            "de": "Die Hashid der zu aktualisierenden Dienstleistung",
+            "fr": "Le hashid du service à mettre à jour",
+            "es": "El hashid del servicio a actualizar",
+            "it": "L'hashid del servizio da aggiornare",
+            "ro": "Hashid-ul serviciului de actualizat"
           },
+          "bot": "The service hash ID. If the user refers to a service by name, list services first to find the matching ID.",
           "type": "string",
+          "position": "url:service_id",
           "source": "field",
-          "required": true
+          "required": true,
+          "min": 1
         },
         {
           "name": "Name",
           "as": "name",
           "description": {
             "en": "Service name",
-            "de": "Name der Dienstleistung"
+            "de": "Name der Dienstleistung",
+            "fr": "Nom du service",
+            "es": "Nombre del servicio",
+            "it": "Nome del servizio",
+            "ro": "Numele serviciului"
           },
           "type": "string",
           "source": "field",
@@ -63,21 +80,44 @@
           "name": "Price",
           "as": "price",
           "description": {
-            "en": "Price in cents",
-            "de": "Preis in Cent"
+            "en": "Price in cents (number)",
+            "de": "Preis in Cent (Zahl)",
+            "fr": "Prix en centimes (nombre)",
+            "es": "Precio en céntimos (número)",
+            "it": "Prezzo in centesimi (numero)",
+            "ro": "Preț în cenți (număr)"
           },
-          "type": "number",
+          "type": "string",
           "source": "field",
           "required": false
         },
         {
           "name": "Duration (minutes)",
-          "as": "duration_minutes",
+          "as": "durationMinutes",
           "description": {
-            "en": "Duration in minutes",
-            "de": "Dauer in Minuten"
+            "en": "Duration in minutes (number, or empty for digital services)",
+            "de": "Dauer in Minuten (Zahl, oder leer bei digitalen Leistungen)",
+            "fr": "Durée en minutes (nombre, ou vide pour les services numériques)",
+            "es": "Duración en minutos (número, o vacío para servicios digitales)",
+            "it": "Durata in minuti (numero, o vuoto per servizi digitali)",
+            "ro": "Durată în minute (număr, sau gol pentru servicii digitale)"
           },
-          "type": "number",
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Tags",
+          "as": "tags",
+          "description": {
+            "en": "Replacement tags, e.g. [\"hourly\",\"consultation\"]",
+            "de": "Ersatz-Tags, z.B. [\"stundensatz\",\"beratung\"]",
+            "fr": "Tags de remplacement, ex. [\"horaire\",\"consultation\"]",
+            "es": "Etiquetas de reemplazo, p. ej. [\"por hora\",\"consulta\"]",
+            "it": "Tag sostitutivi, es. [\"orario\",\"consulenza\"]",
+            "ro": "Taguri de înlocuire, ex. [\"orar\",\"consultare\"]"
+          },
+          "type": "json",
           "source": "field",
           "required": false
         },
@@ -86,18 +126,11 @@
           "as": "description",
           "description": {
             "en": "Service description",
-            "de": "Beschreibung der Dienstleistung"
-          },
-          "type": "string",
-          "source": "field",
-          "required": false
-        },
-        {
-          "name": "Category",
-          "as": "category",
-          "description": {
-            "en": "Category (consultation, maintenance, repair, etc.)",
-            "de": "Kategorie (Beratung, Wartung, Reparatur, etc.)"
+            "de": "Beschreibung der Dienstleistung",
+            "fr": "Description du service",
+            "es": "Descripción del servicio",
+            "it": "Descrizione del servizio",
+            "ro": "Descrierea serviciului"
           },
           "type": "string",
           "source": "field",
@@ -107,10 +140,44 @@
           "name": "Active",
           "as": "active",
           "description": {
-            "en": "Whether the service is active and bookable",
-            "de": "Ob die Dienstleistung aktiv und buchbar ist"
+            "en": "Whether the service is active and bookable (\"true\"/\"false\")",
+            "de": "Ob die Dienstleistung aktiv und buchbar ist (\"true\"/\"false\")",
+            "fr": "Si le service est actif et réservable (\"true\"/\"false\")",
+            "es": "Si el servicio está activo y se puede reservar (\"true\"/\"false\")",
+            "it": "Se il servizio è attivo e prenotabile (\"true\"/\"false\")",
+            "ro": "Dacă serviciul este activ și poate fi rezervat (\"true\"/\"false\")"
           },
-          "type": "boolean",
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Digital",
+          "as": "digital",
+          "description": {
+            "en": "Whether the service is digital (\"true\"/\"false\")",
+            "de": "Ob die Dienstleistung digital ist (\"true\"/\"false\")",
+            "fr": "Si le service est numérique (\"true\"/\"false\")",
+            "es": "Si el servicio es digital (\"true\"/\"false\")",
+            "it": "Se il servizio è digitale (\"true\"/\"false\")",
+            "ro": "Dacă serviciul este digital (\"true\"/\"false\")"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Public",
+          "as": "public",
+          "description": {
+            "en": "Whether the service is publicly visible (\"true\"/\"false\")",
+            "de": "Ob die Dienstleistung öffentlich sichtbar ist (\"true\"/\"false\")",
+            "fr": "Si le service est visible publiquement (\"true\"/\"false\")",
+            "es": "Si el servicio es visible públicamente (\"true\"/\"false\")",
+            "it": "Se il servizio è visibile pubblicamente (\"true\"/\"false\")",
+            "ro": "Dacă serviciul este vizibil public (\"true\"/\"false\")"
+          },
+          "type": "string",
           "source": "field",
           "required": false
         },
@@ -119,7 +186,11 @@
           "as": "team",
           "description": {
             "en": "Team slug of the service. Defaults to the current team.",
-            "de": "Team-Slug der Dienstleistung. Standardmäßig das aktuelle Team."
+            "de": "Team-Slug der Dienstleistung. Standardmäßig das aktuelle Team.",
+            "fr": "Slug d'équipe du service. Par défaut l'équipe actuelle.",
+            "es": "Slug del equipo del servicio. Por defecto el equipo actual.",
+            "it": "Slug del team del servizio. Predefinito: team attuale.",
+            "ro": "Slug-ul echipei serviciului. Implicit echipa curentă."
           },
           "bot": "The slug of the team the service belongs to. Omit to use the current team.",
           "type": "string",
@@ -127,7 +198,33 @@
           "required": false,
           "default": "{{JOAI_TEAM_SLUG}}"
         }
-      ]
+      ],
+      "output": {
+        "id": "out.data.id",
+        "name": "out.data.name"
+      }
     }
-  ]
+  ],
+  "output": {
+    "SERVICE_ID": "out.1.id",
+    "SERVICE_NAME": "out.1.name"
+  },
+  "messages": {
+    "success": {
+      "en": "Service '{{SERVICE_NAME}}' updated.",
+      "de": "Dienstleistung '{{SERVICE_NAME}}' aktualisiert.",
+      "fr": "Service « {{SERVICE_NAME}} » mis à jour.",
+      "es": "Servicio « {{SERVICE_NAME}} » actualizado.",
+      "it": "Servizio « {{SERVICE_NAME}} » aggiornato.",
+      "ro": "Serviciul „{{SERVICE_NAME}}” a fost actualizat."
+    },
+    "error": {
+      "en": "Failed to update service: {{MESSAGE}}",
+      "de": "Dienstleistung konnte nicht aktualisiert werden: {{MESSAGE}}",
+      "fr": "Échec de la mise à jour du service : {{MESSAGE}}",
+      "es": "Error al actualizar el servicio: {{MESSAGE}}",
+      "it": "Impossibile aggiornare il servizio: {{MESSAGE}}",
+      "ro": "Nu s-a putut actualiza serviciul: {{MESSAGE}}"
+    }
+  }
 }

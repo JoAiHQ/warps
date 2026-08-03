@@ -1,0 +1,98 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Delete Order",
+  "title": {
+    "en": "Delete an order",
+    "de": "Bestellung löschen",
+    "fr": "Supprimer une commande",
+    "es": "Eliminar un pedido",
+    "it": "Elimina un ordine",
+    "ro": "Șterge o comandă"
+  },
+  "description": {
+    "en": "Permanently delete an order or quote. Use with care — this cannot be undone.",
+    "de": "Eine Bestellung oder ein Angebot dauerhaft löschen. Vorsicht — dies kann nicht rückgängig gemacht werden.",
+    "fr": "Supprimer définitivement une commande ou un devis. À utiliser avec précaution — irréversible.",
+    "es": "Elimina permanentemente un pedido u oferta. Úsalo con cuidado: no se puede deshacer.",
+    "it": "Elimina definitivamente un ordine o un'offerta. Da usare con cautela — non reversibile.",
+    "ro": "Șterge definitiv o comandă sau o ofertă. Folosește cu atenție — nu poate fi anulată."
+  },
+  "bot": "Use when the user wants to remove an order or quote. If the user refers to an order by customer or item, list orders first to find the matching ID.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Delete order",
+        "de": "Bestellung löschen",
+        "fr": "Supprimer la commande",
+        "es": "Eliminar el pedido",
+        "it": "Elimina l'ordine",
+        "ro": "Șterge comanda"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/orders/{{order_id}}",
+        "method": "DELETE",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Order ID",
+          "as": "order_id",
+          "description": {
+            "en": "The hashid of the order to delete",
+            "de": "Die Hashid der zu löschenden Bestellung",
+            "fr": "Le hashid de la commande à supprimer",
+            "es": "El hashid del pedido a eliminar",
+            "it": "L'hashid dell'ordine da eliminare",
+            "ro": "Hashid-ul comenzii de șters"
+          },
+          "bot": "The order hash ID. If the user refers to an order by customer or item, list orders first to find the matching ID.",
+          "type": "string",
+          "position": "url:order_id",
+          "source": "field",
+          "required": true,
+          "min": 1
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug of the order. Defaults to the current team.",
+            "de": "Team-Slug der Bestellung. Standardmäßig das aktuelle Team.",
+            "fr": "Slug d'équipe de la commande. Par défaut l'équipe actuelle.",
+            "es": "Slug del equipo del pedido. Por defecto el equipo actual.",
+            "it": "Slug del team dell'ordine. Predefinito: team attuale.",
+            "ro": "Slug-ul echipei comenzii. Implicit echipa curentă."
+          },
+          "bot": "The slug of the team the order belongs to. Omit to use the current team.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Order deleted.",
+      "de": "Bestellung gelöscht.",
+      "fr": "Commande supprimée.",
+      "es": "Pedido eliminado.",
+      "it": "Ordine eliminato.",
+      "ro": "Comandă ștearsă."
+    },
+    "error": {
+      "en": "Failed to delete order: {{MESSAGE}}",
+      "de": "Bestellung konnte nicht gelöscht werden: {{MESSAGE}}"
+    }
+  }
+}

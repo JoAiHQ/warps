@@ -1,0 +1,74 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Campaign Stats",
+  "title": {
+    "en": "View campaign stats",
+    "de": "Kampagnen-Statistik anzeigen",
+    "es": "View campaign stats",
+    "fr": "View campaign stats",
+    "ro": "View campaign stats",
+    "it": "View campaign stats"
+  },
+  "description": {
+    "en": "View summary statistics for your team campaigns: total campaigns, drafts ready, and contacts reached.",
+    "de": "Zeige zusammenfassende Statistiken für deine Team-Kampagnen: Gesamtzahl, bereite Entwürfe und erreichte Kontakte.",
+    "es": "View summary statistics for your team campaigns: total campaigns, drafts ready, and contacts reached.",
+    "fr": "View summary statistics for your team campaigns: total campaigns, drafts ready, and contacts reached.",
+    "ro": "View summary statistics for your team campaigns: total campaigns, drafts ready, and contacts reached.",
+    "it": "View summary statistics for your team campaigns: total campaigns, drafts ready, and contacts reached."
+  },
+  "bot": "Use this when the user asks how many campaigns the team has, how many are ready as drafts, or how many contacts were reached.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "View stats",
+        "de": "Statistik anzeigen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/campaigns/stats",
+        "method": "GET",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Team",
+          "as": "team",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}",
+          "description": {
+            "en": "Team slug for this action. Defaults to the current team.",
+            "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team."
+          }
+        }
+      ],
+      "output": {
+        "totalCampaigns": "out.data.totalCampaigns",
+        "draftCampaigns": "out.data.draftCampaigns",
+        "totalSent": "out.data.totalSent"
+      }
+    }
+  ],
+  "output": {
+    "TOTAL_CAMPAIGNS": "out.1.totalCampaigns",
+    "DRAFT_CAMPAIGNS": "out.1.draftCampaigns",
+    "TOTAL_SENT": "out.1.totalSent"
+  },
+  "messages": {
+    "success": {
+      "en": "Campaigns: {{TOTAL_CAMPAIGNS}} total, {{DRAFT_CAMPAIGNS}} drafts ready, {{TOTAL_SENT}} contacts reached.",
+      "de": "Kampagnen: {{TOTAL_CAMPAIGNS}} gesamt, {{DRAFT_CAMPAIGNS}} Entwürfe bereit, {{TOTAL_SENT}} Kontakte erreicht."
+    }
+  },
+  "ui": "https://raw.githubusercontent.com/JoAiHQ/warps/main/warps/joai/campaign-stats/chatapp.62f91567.dist.html"
+}

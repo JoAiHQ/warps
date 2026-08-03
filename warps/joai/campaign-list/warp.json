@@ -1,0 +1,63 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: List Campaigns",
+  "title": {
+    "en": "List campaigns",
+    "de": "Kampagnen anzeigen",
+    "es": "List campaigns",
+    "fr": "List campaigns",
+    "ro": "List campaigns",
+    "it": "List campaigns"
+  },
+  "description": {
+    "en": "View all marketing campaigns for your team, with their channel, status, and send progress.",
+    "de": "Zeige alle Marketing-Kampagnen deines Teams mit Kanal, Status und Versandfortschritt an.",
+    "es": "View all marketing campaigns for your team, with their channel, status, and send progress.",
+    "fr": "View all marketing campaigns for your team, with their channel, status, and send progress.",
+    "ro": "View all marketing campaigns for your team, with their channel, status, and send progress.",
+    "it": "View all marketing campaigns for your team, with their channel, status, and send progress."
+  },
+  "bot": "Use this when the user wants to see, list, or check their marketing campaigns.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "output": {
+    "campaigns": "out",
+    "campaignsList": "out.data",
+    "campaignsCount": "out.data.length"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "List campaigns",
+        "de": "Kampagnen anzeigen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/campaigns",
+        "method": "GET",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Team",
+          "as": "team",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}",
+          "description": {
+            "en": "Team slug to list campaigns for. Defaults to the current team.",
+            "de": "Team-Slug, für das Kampagnen angezeigt werden. Standardmäßig das aktuelle Team."
+          }
+        }
+      ]
+    }
+  ],
+  "ui": "https://raw.githubusercontent.com/JoAiHQ/warps/main/warps/joai/campaign-list/chatapp.32a5f7e5.dist.html"
+}

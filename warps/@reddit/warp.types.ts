@@ -17,9 +17,9 @@ export type RedditCreatePostInputs = {
   text: string;
   url: string;
   kind: string;
-  sendreplies: string;
-  nsfw: string;
-  spoiler: string;
+  sendreplies: boolean;
+  nsfw: boolean;
+  spoiler: boolean;
 };
 
 export type RedditCreatePostData = {

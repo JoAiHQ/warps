@@ -5,7 +5,7 @@ export type CloudflareCreateDNSRecordInputs = {
   type: string;
   name: string;
   content: string;
-  proxied: string;
+  proxied: boolean;
   ttl: number;
 };
 
@@ -79,7 +79,7 @@ export type CloudflareListZonesData = {
 
 export type CloudflarePurgeCacheInputs = {
   ZONE_ID: string;
-  purge_everything: string;
+  purge_everything: boolean;
   files: string;
 };
 

@@ -1,0 +1,72 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: List Element Variations",
+  "title": {
+    "en": "List element variations",
+    "de": "Element-Variationen anzeigen",
+    "es": "List element variations",
+    "fr": "List element variations",
+    "ro": "List element variations",
+    "it": "List element variations"
+  },
+  "description": {
+    "en": "View all variations of an element in your team library, including their labels, aspect ratios, and generated images.",
+    "de": "Zeige alle Variationen eines Elements in deiner Team-Bibliothek, inklusive Label, Seitenverhältnis und generierter Bilder."
+  },
+  "bot": "Use this when the user wants to see the variations, versions, or generated images of an element.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "List variations",
+        "de": "Variationen anzeigen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/studio/elements/{{elementId}}/variations",
+        "method": "GET",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Element ID",
+          "as": "elementId",
+          "type": "string",
+          "position": "url:elementId",
+          "source": "field",
+          "required": true,
+          "description": {
+            "en": "The ID of the element",
+            "de": "Die ID des Elements",
+            "es": "The ID of the element",
+            "fr": "The ID of the element",
+            "ro": "The ID of the element",
+            "it": "The ID of the element"
+          },
+          "bot": "The ID of the element whose variations to list."
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}",
+          "description": {
+            "en": "Team slug for this action. Defaults to the current team.",
+            "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team."
+          },
+          "bot": "The slug of the team to operate on. Omit to use the current team."
+        }
+      ]
+    }
+  ],
+  "ui": "https://raw.githubusercontent.com/JoAiHQ/warps/main/warps/joai/element-list-variations/chatapp.a5c1e705.dist.html"
+}

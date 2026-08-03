@@ -1,0 +1,98 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Delete Coupon",
+  "title": {
+    "en": "Delete a coupon",
+    "de": "Gutschein löschen",
+    "fr": "Supprimer un coupon",
+    "es": "Eliminar un cupón",
+    "it": "Elimina un coupon",
+    "ro": "Șterge un cupon"
+  },
+  "description": {
+    "en": "Permanently delete a discount coupon. Use with care — this cannot be undone.",
+    "de": "Einen Rabatt-Gutschein dauerhaft löschen. Vorsicht — dies kann nicht rückgängig gemacht werden.",
+    "fr": "Supprimer définitivement un coupon de réduction. À utiliser avec précaution — irréversible.",
+    "es": "Elimina permanentemente un cupón de descuento. Úsalo con cuidado: no se puede deshacer.",
+    "it": "Elimina definitivamente un coupon sconto. Da usare con cautela — non reversibile.",
+    "ro": "Șterge definitiv un cupon de reducere. Folosește cu atenție — nu poate fi anulat."
+  },
+  "bot": "Use when the user wants to remove a coupon. If the user refers to a coupon by code, list coupons first to find the matching ID.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Delete coupon",
+        "de": "Gutschein löschen",
+        "fr": "Supprimer le coupon",
+        "es": "Eliminar el cupón",
+        "it": "Elimina il coupon",
+        "ro": "Șterge cuponul"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/coupons/{{coupon_id}}",
+        "method": "DELETE",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Coupon ID",
+          "as": "coupon_id",
+          "description": {
+            "en": "The hashid of the coupon to delete",
+            "de": "Die Hashid des zu löschenden Gutscheins",
+            "fr": "Le hashid du coupon à supprimer",
+            "es": "El hashid del cupón a eliminar",
+            "it": "L'hashid del coupon da eliminare",
+            "ro": "Hashid-ul cuponului de șters"
+          },
+          "bot": "The coupon hash ID. If the user refers to a coupon by code, list coupons first to find the matching ID.",
+          "type": "string",
+          "position": "url:coupon_id",
+          "source": "field",
+          "required": true,
+          "min": 1
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug of the coupon. Defaults to the current team.",
+            "de": "Team-Slug des Gutscheins. Standardmäßig das aktuelle Team.",
+            "fr": "Slug d'équipe du coupon. Par défaut l'équipe actuelle.",
+            "es": "Slug del equipo del cupón. Por defecto el equipo actual.",
+            "it": "Slug del team del coupon. Predefinito: team attuale.",
+            "ro": "Slug-ul echipei cuponului. Implicit echipa curentă."
+          },
+          "bot": "The slug of the team the coupon belongs to. Omit to use the current team.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Coupon deleted.",
+      "de": "Gutschein gelöscht.",
+      "fr": "Coupon supprimé.",
+      "es": "Cupón eliminado.",
+      "it": "Coupon eliminato.",
+      "ro": "Cupon șters."
+    },
+    "error": {
+      "en": "Failed to delete coupon: {{MESSAGE}}",
+      "de": "Gutschein konnte nicht gelöscht werden: {{MESSAGE}}"
+    }
+  }
+}

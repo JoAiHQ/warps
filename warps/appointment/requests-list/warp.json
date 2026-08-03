@@ -1,0 +1,53 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Appointments: List Requests",
+  "title": {
+    "en": "List appointment requests",
+    "de": "Terminanfragen anzeigen"
+  },
+  "description": {
+    "en": "View all appointment requests for your team with their status, requester, and requested time.",
+    "de": "Zeige alle Terminanfragen deines Teams mit Status, Anfragendem und gewünschter Zeit an."
+  },
+  "bot": "Use this when the user wants to see, list, or check pending appointment requests.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "output": {
+    "requests": "out.data"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "List requests",
+        "de": "Anfragen anzeigen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/teams/{{JOAI_TEAM_SLUG}}/appointment-requests",
+        "method": "GET",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Team",
+          "as": "team",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}",
+          "description": {
+            "en": "Team slug for this action. Defaults to the current team.",
+            "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team."
+          },
+          "bot": "The slug of the team whose appointment requests to list. Omit to use the current team."
+        }
+      ]
+    }
+  ],
+  "ui": "https://raw.githubusercontent.com/JoAiHQ/warps/main/warps/appointment/requests-list/chatapp.28a5e258.dist.html"
+}

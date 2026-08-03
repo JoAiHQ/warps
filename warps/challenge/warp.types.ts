@@ -24,7 +24,7 @@ export type ChallengeBrowseData = {
 
 export type ChallengeResolveInputs = {
   challengeId: string;
-  creatorSucceeded: string;
+  creatorSucceeded: boolean;
 };
 
 export type ChallengeViewInputs = {

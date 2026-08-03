@@ -1,0 +1,124 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Create Segment",
+  "title": {
+    "en": "Create a segment",
+    "de": "Segment erstellen",
+    "fr": "Créer un segment",
+    "es": "Crear un segmento",
+    "it": "Crea un segmento",
+    "ro": "Creează un segment"
+  },
+  "description": {
+    "en": "Create a saved audience segment from a list of conditions. All conditions must match (AND). Conditions: tag (has tag), has_email, has_phone, created_after, created_before, email_contains.",
+    "de": "Erstelle ein gespeichertes Zielgruppen-Segment aus einer Liste von Bedingungen. Alle Bedingungen müssen zutreffen (UND). Bedingungen: tag (hat Tag), has_email, has_phone, created_after, created_before, email_contains.",
+    "fr": "Créez un segment d'audience enregistré à partir d'une liste de conditions. Toutes les conditions doivent correspondre (ET). Conditions : tag (a le tag), has_email, has_phone, created_after, created_before, email_contains.",
+    "es": "Crea un segmento de audiencia guardado a partir de una lista de condiciones. Todas las condiciones deben cumplirse (Y). Condiciones: tag (tiene etiqueta), has_email, has_phone, created_after, created_before, email_contains.",
+    "it": "Crea un segmento di pubblico salvato da un elenco di condizioni. Tutte le condizioni devono corrispondere (AND). Condizioni: tag (ha tag), has_email, has_phone, created_after, created_before, email_contains.",
+    "ro": "Creează un segment de audiență salvat dintr-o listă de condiții. Toate condițiile trebuie să se potrivească (ȘI). Condiții: tag (are tag), has_email, has_phone, created_after, created_before, email_contains."
+  },
+  "bot": "Use when the user wants to build a reusable audience by criteria, e.g. contacts with a tag, with email, or created in a period. Pass conditions as an array of objects like [{\"type\":\"tag\",\"value\":\"vip\"}].",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Create segment",
+        "de": "Segment erstellen",
+        "fr": "Créer le segment",
+        "es": "Crear el segmento",
+        "it": "Crea il segmento",
+        "ro": "Creează segmentul"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/segments",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Name",
+          "as": "name",
+          "description": {
+            "en": "Segment name",
+            "de": "Segmentname",
+            "fr": "Nom du segment",
+            "es": "Nombre del segmento",
+            "it": "Nome del segmento",
+            "ro": "Numele segmentului"
+          },
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Conditions",
+          "as": "conditions",
+          "description": {
+            "en": "Conditions — all must match. Array of objects",
+            "de": "Bedingungen — alle müssen zutreffen. Array von Objekten",
+            "fr": "Conditions — toutes doivent correspondre. Tableau d'objets",
+            "es": "Condiciones — todas deben cumplirse. Matriz de objetos",
+            "it": "Condizioni — tutte devono corrispondere. Array di oggetti",
+            "ro": "Condiții — toate trebuie să se potrivească. Matrice de obiecte"
+          },
+          "type": "json",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug for this action. Defaults to the current team.",
+            "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team.",
+            "fr": "Slug d'équipe pour cette action. Par défaut l'équipe actuelle.",
+            "es": "Slug del equipo para esta acción. Por defecto el equipo actual.",
+            "it": "Slug del team per questa azione. Predefinito: team attuale.",
+            "ro": "Slug-ul echipei pentru această acțiune. Implicit echipa curentă."
+          },
+          "bot": "The slug of the team to operate on. Omit to use the current team.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ],
+      "output": {
+        "id": "out.data.id",
+        "name": "out.data.name",
+        "count": "out.data.count"
+      }
+    }
+  ],
+  "output": {
+    "SEGMENT_ID": "out.1.id",
+    "SEGMENT_NAME": "out.1.name",
+    "SEGMENT_COUNT": "out.1.count"
+  },
+  "messages": {
+    "success": {
+      "en": "Segment '{{SEGMENT_NAME}}' created with {{SEGMENT_COUNT}} contacts.",
+      "de": "Segment '{{SEGMENT_NAME}}' mit {{SEGMENT_COUNT}} Kontakten erstellt.",
+      "fr": "Segment « {{SEGMENT_NAME}} » créé avec {{SEGMENT_COUNT}} contacts.",
+      "es": "Segmento « {{SEGMENT_NAME}} » creado con {{SEGMENT_COUNT}} contactos.",
+      "it": "Segmento « {{SEGMENT_NAME}} » creato con {{SEGMENT_COUNT}} contatti.",
+      "ro": "Segmentul „{{SEGMENT_NAME}}” a fost creat cu {{SEGMENT_COUNT}} contacte."
+    },
+    "error": {
+      "en": "Failed to create segment: {{MESSAGE}}",
+      "de": "Segment konnte nicht erstellt werden: {{MESSAGE}}",
+      "fr": "Échec de la création du segment : {{MESSAGE}}",
+      "es": "Error al crear el segmento: {{MESSAGE}}",
+      "it": "Impossibile creare il segmento: {{MESSAGE}}",
+      "ro": "Nu s-a putut crea segmentul: {{MESSAGE}}"
+    }
+  }
+}

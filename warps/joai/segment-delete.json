@@ -1,0 +1,98 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Delete Segment",
+  "title": {
+    "en": "Delete a segment",
+    "de": "Segment löschen",
+    "fr": "Supprimer un segment",
+    "es": "Eliminar un segmento",
+    "it": "Elimina un segmento",
+    "ro": "Șterge un segment"
+  },
+  "description": {
+    "en": "Permanently delete a saved audience segment. Segments that are used by a campaign cannot be deleted.",
+    "de": "Ein gespeichertes Zielgruppen-Segment dauerhaft löschen. Segmente, die von einer Kampagne verwendet werden, können nicht gelöscht werden.",
+    "fr": "Supprimer définitivement un segment d'audience enregistré. Les segments utilisés par une campagne ne peuvent pas être supprimés.",
+    "es": "Elimina permanentemente un segmento de audiencia guardado. Los segmentos usados por una campaña no se pueden eliminar.",
+    "it": "Elimina definitivamente un segmento di pubblico salvato. I segmenti usati da una campagna non possono essere eliminati.",
+    "ro": "Șterge definitiv un segment de audiență salvat. Segmentele folosite de o campanie nu pot fi șterse."
+  },
+  "bot": "Use when the user wants to remove a saved segment. If the user refers to a segment by name, list segments first to find the matching ID.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Delete segment",
+        "de": "Segment löschen",
+        "fr": "Supprimer le segment",
+        "es": "Eliminar el segmento",
+        "it": "Elimina il segmento",
+        "ro": "Șterge segmentul"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/segments/{{segment_id}}",
+        "method": "DELETE",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Segment ID",
+          "as": "segment_id",
+          "description": {
+            "en": "The hashid of the segment to delete",
+            "de": "Die Hashid des zu löschenden Segments",
+            "fr": "Le hashid du segment à supprimer",
+            "es": "El hashid del segmento a eliminar",
+            "it": "L'hashid del segmento da eliminare",
+            "ro": "Hashid-ul segmentului de șters"
+          },
+          "bot": "The segment hash ID. If the user refers to a segment by name, list segments first to find the matching ID.",
+          "type": "string",
+          "position": "url:segment_id",
+          "source": "field",
+          "required": true,
+          "min": 1
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug of the segment. Defaults to the current team.",
+            "de": "Team-Slug des Segments. Standardmäßig das aktuelle Team.",
+            "fr": "Slug d'équipe du segment. Par défaut l'équipe actuelle.",
+            "es": "Slug del equipo del segmento. Por defecto el equipo actual.",
+            "it": "Slug del team del segmento. Predefinito: team attuale.",
+            "ro": "Slug-ul echipei segmentului. Implicit echipa curentă."
+          },
+          "bot": "The slug of the team the segment belongs to. Omit to use the current team.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Segment deleted.",
+      "de": "Segment gelöscht.",
+      "fr": "Segment supprimé.",
+      "es": "Segmento eliminado.",
+      "it": "Segmento eliminato.",
+      "ro": "Segment șters."
+    },
+    "error": {
+      "en": "Failed to delete segment: {{MESSAGE}}",
+      "de": "Segment konnte nicht gelöscht werden: {{MESSAGE}}"
+    }
+  }
+}

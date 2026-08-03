@@ -22,6 +22,14 @@ export type JoAiAgentNameUpdateData = {
 export type JoAiPublishAgentInputs = {
 };
 
+export type JoAiCreateAPITokenInputs = {
+  name: string;
+};
+
+export type JoAiCreateAPITokenData = {
+  TOKEN: any;
+};
+
 export type JoAiSetBillingAddressInputs = {
   userId: string;
   firstName: string;
@@ -35,6 +43,7 @@ export type JoAiCreateBlueprintInputs = {
   description: string;
   agentId: string;
   config: string;
+  team: string;
 };
 
 export type JoAiUpdateBlueprintInputs = {
@@ -42,11 +51,45 @@ export type JoAiUpdateBlueprintInputs = {
   name: string;
   description: string;
   config: string;
+  team: string;
 };
 
 export type JoAiBroadcastMessageInputs = {
   message: string;
   roomId: string;
+};
+
+export type JoAiCreateCampaignInputs = {
+  name: string;
+  channel: string;
+  subject: string;
+  content: string;
+  tags: string;
+  contactIds: string;
+  segmentId: string;
+  team: string;
+};
+
+export type JoAiCreateCampaignData = {
+  CAMPAIGN_ID: any;
+  CAMPAIGN_NAME: any;
+  CAMPAIGN_TOTAL: any;
+};
+
+export type JoAiDeleteCampaignInputs = {
+  campaign_id: string;
+  team: string;
+};
+
+export type JoAiSendCampaignInputs = {
+  campaign_id: string;
+  team: string;
+};
+
+export type JoAiSendCampaignData = {
+  CAMPAIGN_ID: any;
+  CAMPAIGN_NAME: any;
+  CAMPAIGN_STATUS: any;
 };
 
 export type JoAiUpdateCharacterInputs = {
@@ -55,19 +98,18 @@ export type JoAiUpdateCharacterInputs = {
   bio: string;
 };
 
-export type JoAiListContactActivitiesInputs = {
-  contactId: string;
-};
-
 export type JoAiDeleteContactActivityInputs = {
   contactId: string;
   activityId: string;
+  team: string;
 };
 
 export type JoAiLogContactActivityInputs = {
   contactId: string;
   type: string;
   description: string;
+  meta: string;
+  team: string;
 };
 
 export type JoAiCreateContactInputs = {
@@ -81,13 +123,29 @@ export type JoAiCreateContactInputs = {
   website: string;
   birthday: string;
   socials: string;
+  team: string;
 };
 
 export type JoAiDeleteContactInputs = {
   contactId: string;
+  team: string;
+};
+
+export type JoAiFindorCreateContactInputs = {
+  name: string;
+  email: string;
+  phone: string;
+  company: string;
+  tags: string;
+  team: string;
+};
+
+export type JoAiFindorCreateContactData = {
+  contactId: any;
 };
 
 export type JoAiSendContactMessageInputs = {
+  team: string;
   integration: string;
   recipientId: string;
   recipientName: string;
@@ -103,6 +161,7 @@ export type JoAiSetContactPropertyInputs = {
   contactId: string;
   key: string;
   value: string;
+  team: string;
 };
 
 export type JoAiUpdateContactInputs = {
@@ -118,6 +177,7 @@ export type JoAiUpdateContactInputs = {
   socials: string;
   tags: string;
   tagsAppend: string;
+  team: string;
 };
 
 export type JoAiCreateContractInputs = {
@@ -125,33 +185,74 @@ export type JoAiCreateContractInputs = {
   description: string;
   type: string;
   chain: string;
+  team: string;
 };
 
 export type JoAiDeleteContractInputs = {
   contractId: string;
+  team: string;
 };
 
 export type JoAiDeployContractInputs = {
   contractId: string;
   version: string;
   network: string;
+  team: string;
 };
 
 export type JoAiSetContractAddressInputs = {
   contractId: string;
   address: string;
   network: string;
+  team: string;
 };
 
 export type JoAiUpdateContractInputs = {
   contractId: string;
   name: string;
   description: string;
+  team: string;
+};
+
+export type JoAiCreateCouponInputs = {
+  code: string;
+  percent: string;
+  amount: string;
+  condition: string;
+  usesLeft: string;
+  expiresAt: string;
+  team: string;
+};
+
+export type JoAiCreateCouponData = {
+  COUPON_ID: any;
+  COUPON_CODE: any;
+};
+
+export type JoAiDeleteCouponInputs = {
+  coupon_id: string;
+  team: string;
+};
+
+export type JoAiUpdateCouponInputs = {
+  coupon_id: string;
+  code: string;
+  percent: string;
+  amount: string;
+  condition: string;
+  usesLeft: string;
+  expiresAt: string;
+  team: string;
+};
+
+export type JoAiUpdateCouponData = {
+  COUPON_ID: any;
+  COUPON_CODE: any;
 };
 
 export type JoAiUploadtoDeskInputs = {
   url: string;
-  pin: string;
+  pin: boolean;
   room: string;
 };
 
@@ -188,12 +289,6 @@ export type JoAiDeleteDocumentInputs = {
   documentId: string;
 };
 
-export type JoAiListDocumentsInputs = {
-  type: string;
-  search: string;
-  perPage: string;
-};
-
 export type JoAiUpdateDocumentInputs = {
   documentId: string;
   title: string;
@@ -214,12 +309,10 @@ export type JoAiCreateElementInputs = {
 };
 
 export type JoAiDeleteElementInputs = {
-  agentId: string;
   elementId: string;
 };
 
 export type JoAiUpdateElementInputs = {
-  agentId: string;
   elementId: string;
   name: string;
   type: string;
@@ -227,10 +320,21 @@ export type JoAiUpdateElementInputs = {
   prompt: string;
 };
 
+export type JoAiDeleteElementVariationInputs = {
+  elementId: string;
+  variationId: string;
+};
+
 export type JoAiGenerateElementVariationInputs = {
-  agentId: string;
   elementId: string;
   prompt: string;
+};
+
+export type JoAiUpdateElementVariationInputs = {
+  elementId: string;
+  variationId: string;
+  label: string;
+  aspectRatio: string;
 };
 
 export type JoAiCreateGoalInputs = {
@@ -267,6 +371,9 @@ export type JoAiCreateActionItemInputs = {
   dueDate: string;
   tags: string;
   goalId: string;
+  status: string;
+  contactIds: string;
+  meta: string;
 };
 
 export type JoAiDeleteItemInputs = {
@@ -296,15 +403,68 @@ export type JoAiIdentityVerificationInputs = {
   companyName: string;
 };
 
+export type JoAiCreateLinkInputs = {
+  title: string;
+  url: string;
+  team: string;
+};
+
+export type JoAiCreateLinkData = {
+  SHORT_URL: any;
+  SLUG: any;
+};
+
+export type JoAiListLinksInputs = {
+  team: string;
+};
+
+export type JoAiEnrollinLoyaltyProgramInputs = {
+  contactId: string;
+  team: string;
+};
+
+export type JoAiEnrollinLoyaltyProgramData = {
+  contactId: any;
+  points: any;
+};
+
+export type JoAiLoyaltySignupEmailInputs = {
+  name: string;
+  email: string;
+  team: string;
+};
+
+export type JoAiLoyaltySignupEmailData = {
+  contactId: any;
+  passUrl: any;
+};
+
+export type JoAiLoyaltySignupWhatsAppInputs = {
+  name: string;
+  phone: string;
+  team: string;
+};
+
+export type JoAiLoyaltySignupWhatsAppData = {
+  contactId: any;
+  passUrl: any;
+};
+
 export type JoAiDeleteMediaInputs = {
-  agentId: string;
   mediaId: string;
+  team: string;
 };
 
 export type JoAiUploadMediaInputs = {
   url: string;
   label: string;
   type: string;
+  team: string;
+};
+
+export type JoAiUploadMediaData = {
+  mediaId: any;
+  mediaUrl: any;
 };
 
 export type JoAiStartMeetingInputs = {
@@ -329,6 +489,15 @@ export type JoAiSendGeneratedMessageInputs = {
   DESTINATION: string;
 };
 
+export type JoAiSendGeneratedMessageData = {
+  MESSAGE: any;
+};
+
+export type JoAiSendMessageInputs = {
+  message: string;
+  destination: string;
+};
+
 export type JoAiSetNotificationPreferenceInputs = {
   app: string;
   channel: string;
@@ -338,23 +507,103 @@ export type JoAiSetNotificationPreferenceInputs = {
   brand: string;
 };
 
+export type JoAiCreateOrderInputs = {
+  contactName: string;
+  billItem: string;
+  type: string;
+  notes: string;
+  contactId: string;
+  serviceIds: string;
+  team: string;
+};
+
+export type JoAiCreateOrderData = {
+  id: any;
+  total: any;
+  totalDisplay: number;
+  invoiceUrl: any;
+  paymentUrl: any;
+  status: any;
+};
+
+export type JoAiDeleteOrderInputs = {
+  order_id: string;
+  team: string;
+};
+
 export type JoAiCreatePrivateAppInputs = {
   name: string;
   description: string;
+  public: boolean;
+  team: string;
 };
 
 export type JoAiCreatePrivateWarpInputs = {
-  PAYLOAD: string;
+  brand: string;
+  definition: string;
+  public: boolean;
+  form: boolean;
+  store: boolean;
+  extras: string;
+  team: string;
 };
 
 export type JoAiUpdatePrivateWarpInputs = {
   identifier: string;
   PAYLOAD: string;
+  team: string;
+};
+
+export type JoAiCreateProductInputs = {
+  name: string;
+  price: number;
+  unit: string;
+  tags: string;
+  description: string;
+  public: string;
+  team: string;
+};
+
+export type JoAiCreateProductData = {
+  id: any;
+  name: any;
+};
+
+export type JoAiDeleteProductInputs = {
+  product_id: string;
+  team: string;
+};
+
+export type JoAiUpdateProductInputs = {
+  product_id: string;
+  name: string;
+  unit: string;
+  tags: string;
+  description: string;
+  active: string;
+  virtual: string;
+  public: string;
+  team: string;
+};
+
+export type JoAiUpdateProductData = {
+  PRODUCT_ID: any;
+  PRODUCT_NAME: any;
+};
+
+export type JoAiCreateProductVariationInputs = {
+  productId: string;
+  name: string;
+  sku: string;
+  price: number;
+  type: string;
+  meta: string;
+  team: string;
 };
 
 export type JoAiCreateProjectInputs = {
   name: string;
-  description: string;
+  brief: string;
 };
 
 export type JoAiDeleteProjectInputs = {
@@ -368,6 +617,65 @@ export type JoAiCreateReminderInputs = {
 
 export type JoAiDeleteReminderInputs = {
   reminderId: string;
+};
+
+export type JoAiCreateSegmentInputs = {
+  name: string;
+  conditions: string;
+  team: string;
+};
+
+export type JoAiCreateSegmentData = {
+  SEGMENT_ID: any;
+  SEGMENT_NAME: any;
+  SEGMENT_COUNT: number;
+};
+
+export type JoAiDeleteSegmentInputs = {
+  segment_id: string;
+  team: string;
+};
+
+export type JoAiCreateServiceInputs = {
+  name: string;
+  price: number;
+  pricingModel: string;
+  durationMinutes: string;
+  description: string;
+  tags: string;
+  digital: string;
+  public: string;
+  team: string;
+};
+
+export type JoAiCreateServiceData = {
+  id: any;
+  name: any;
+  price: any;
+  priceDisplay: number;
+};
+
+export type JoAiDeleteServiceInputs = {
+  service_id: string;
+  team: string;
+};
+
+export type JoAiUpdateServiceInputs = {
+  service_id: string;
+  name: string;
+  price: string;
+  durationMinutes: string;
+  tags: string;
+  description: string;
+  active: string;
+  digital: string;
+  public: string;
+  team: string;
+};
+
+export type JoAiUpdateServiceData = {
+  SERVICE_ID: any;
+  SERVICE_NAME: any;
 };
 
 export type JoAiGetAgentSettingInputs = {
@@ -394,6 +702,7 @@ export type JoAiSetTeamSettingInputs = {
   brand: string;
   key: string;
   value: string;
+  team: string;
 };
 
 export type JoAiProvisionSiteInputs = {
@@ -411,10 +720,12 @@ export type JoAiCreateSkillInputs = {
   name: string;
   description: string;
   content: string;
+  team: string;
 };
 
 export type JoAiDeleteSkillInputs = {
   skillId: string;
+  team: string;
 };
 
 export type JoAiUpdateSkillInputs = {
@@ -422,6 +733,7 @@ export type JoAiUpdateSkillInputs = {
   name: string;
   description: string;
   content: string;
+  team: string;
 };
 
 export type JoAiRecordStoreEntryInputs = {
@@ -441,6 +753,10 @@ export type JoAiDeleteStoreInputs = {
   storeName: string;
 };
 
+export type JoAiGetStoreValueInputs = {
+  storeName: string;
+};
+
 export type JoAiListStoresInputs = {
 };
 
@@ -449,6 +765,19 @@ export type JoAiQueryStoreDataInputs = {
   since: string;
   until: string;
   last: string;
+};
+
+export type JoAiSetFieldInputs = {
+  field: string;
+  value: string;
+};
+
+export type JoAiToggleFieldInputs = {
+  field: string;
+};
+
+export type JoAiStudioExportInputs = {
+  projectId: string;
 };
 
 export type JoAiOpenStudioInputs = {
@@ -463,17 +792,37 @@ export type JoAiStudioSendInputs = {
   projectId: string;
   outputType: string;
   sourceUrl: string;
+  references: string;
 };
 
 export type JoAiDeleteScheduledTaskInputs = {
   taskId: string;
 };
 
-export type JoAiListScheduledTasksInputs = {
-};
-
 export type JoAiPauseorResumeScheduledTaskInputs = {
   taskId: string;
+};
+
+export type JoAiCreateTeamInputs = {
+  name: string;
+  public: string;
+  locale: string;
+  tags: string;
+  category: string;
+  tagline: string;
+  description: string;
+  website: string;
+  phone: string;
+  email: string;
+  address: string;
+  location: string;
+  settings: string;
+};
+
+export type JoAiCreateTeamData = {
+  TEAM_ID: any;
+  TEAM_NAME: any;
+  TEAM_SLUG: any;
 };
 
 export type TeamNotifyMembersInputs = {
@@ -484,9 +833,76 @@ export type TeamNotifyMembersInputs = {
 export type TeamNotifyMembersData = {
 };
 
+export type JoAiSetTeamMetaInputs = {
+  slug: string;
+  key: string;
+  value: string;
+};
+
+export type JoAiUpdateTeamInputs = {
+  slug: string;
+  name: string;
+  public: string;
+  tags: string;
+  category: string;
+  tagline: string;
+  description: string;
+  website: string;
+  phone: string;
+  email: string;
+  address: string;
+  location: string;
+  logoMediaId: string;
+  coverMediaId: string;
+};
+
+export type JoAiUpdateTeamData = {
+  TEAM_ID: any;
+  TEAM_NAME: any;
+  TEAM_SLUG: any;
+};
+
 export type JoAiTrainfromURLInputs = {
   url: string;
   maxPages: string;
+};
+
+export type JoAiCreateUpdateInputs = {
+  title: string;
+  type: string;
+  body: string;
+  startsAt: string;
+  endsAt: string;
+  status: string;
+  linkUrl: string;
+  team: string;
+};
+
+export type JoAiCreateUpdateData = {
+  UPDATE_ID: any;
+  UPDATE_TITLE: any;
+};
+
+export type JoAiDeleteUpdateInputs = {
+  updateId: string;
+  team: string;
+};
+
+export type JoAiUpdateUpdateInputs = {
+  updateId: string;
+  title: string;
+  type: string;
+  body: string;
+  startsAt: string;
+  endsAt: string;
+  status: string;
+  linkUrl: string;
+  team: string;
+};
+
+export type JoAiUpdateUpdateData = {
+  UPDATE_ID: any;
+  UPDATE_TITLE: any;
 };
 
 export type JoAiGenerateUpgradeLinkInputs = {
