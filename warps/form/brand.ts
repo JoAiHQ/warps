@@ -1,28 +1,15 @@
 import { WarpBrandBuilder, WarpChainEnv, WarpClientConfig } from '@joai/warps'
 import { WarpbaseBrand } from '../types'
 
-/**
- * Form — custom forms backed by private warps.
- *
- * Each form is a private warp (collect action) stored under the "form" brand
- * per team. No blockchain or wallet required — forms are managed via the
- * JoAi API and rendered through the standard warp UI.
- *
- * Submissions flow through the warp's `next` chain: lead forms →
- * @joai-contact-create, feedback forms → @joai-store-append, etc.
- *
- * Use cases: lead capture, event RSVP, quote requests, waitlists, feedback,
- * NPS surveys, walk-in registration, contact page replacement.
- */
 export const brand = async (config: WarpClientConfig): Promise<WarpbaseBrand> => ({
   info: await new WarpBrandBuilder(config)
     .setName('Form')
     .setDescription({
-      en: 'Custom forms that capture leads, RSVPs, feedback, and sign-ups — powered by private warps.',
-      de: 'Maßgeschneiderte Formulare, die Leads, RSVPs, Feedback und Anmeldungen erfassen — mit privaten Warps.',
-      fr: 'Formulaires personnalisés qui capturent leads, RSVPs, feedbacks et inscriptions — avec des warps privés.',
-      es: 'Formularios personalizados que capturan leads, RSVPs, comentarios e inscripciones — con warps privados.',
-      ro: 'Formulare personalizate care capteaza lead-uri, RSVPs, feedback si inscrieri — cu warps private.',
+      en: 'Create, manage, publish, and install standalone forms for leads, registrations, feedback, and contact requests.',
+      de: 'Erstelle, verwalte, veröffentliche und installiere eigenständige Formulare für Leads, Anmeldungen, Feedback und Kontaktanfragen.',
+      fr: 'Créez, gérez, publiez et installez des formulaires autonomes pour les prospects, inscriptions et retours.',
+      es: 'Crea, gestiona, publica e instala formularios independientes para contactos, registros y comentarios.',
+      ro: 'Creeaza, gestioneaza, publica si instaleaza formulare independente pentru lead-uri, inscrieri si feedback.',
     })
     .setLogo('https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg')
     .setUrls({ web: 'https://joai.ai' })
@@ -38,13 +25,19 @@ export const brand = async (config: WarpClientConfig): Promise<WarpbaseBrand> =>
   site: {
     enabled: true,
     auth: false,
-    indexPath: '/admin/create',
+    indexPath: '/admin/forms',
     routes: [
+      {
+        path: '/admin/forms',
+        warp: '@form-list',
+        label: { en: 'Forms', de: 'Formulare' },
+        nav: true,
+      },
       {
         path: '/admin/create',
         warp: '@form-create',
         label: { en: 'Create Form', de: 'Formular erstellen' },
-        nav: false,
+        nav: true,
       },
       {
         path: '/admin/field/add',
@@ -63,12 +56,6 @@ export const brand = async (config: WarpClientConfig): Promise<WarpbaseBrand> =>
         warp: '@form-field-remove',
         label: { en: 'Remove Field', de: 'Feld entfernen' },
         nav: false,
-      },
-      {
-        path: '/submit',
-        warp: '@form-submit',
-        label: { en: 'Submit Form', de: 'Formular absenden' },
-        nav: true,
       },
     ],
   },

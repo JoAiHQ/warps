@@ -1,0 +1,28 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Form: Publish",
+  "title": { "en": "Publish a form", "de": "Formular veröffentlichen" },
+  "description": {
+    "en": "Publish a public form in the Form store so other teams can discover and install it. The original form remains owned by the current team.",
+    "de": "Veröffentliche ein öffentliches Formular im Formular-Store, damit andere Teams es finden und installieren können. Das Original bleibt im Besitz des aktuellen Teams."
+  },
+  "bot": "Use this when the user wants to make an existing form installable from the Form store.",
+  "actions": [
+    {
+      "type": "collect",
+      "label": { "en": "Publish form", "de": "Formular veröffentlichen" },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/warps/{{formId}}",
+        "method": "PATCH",
+        "headers": { "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}" }
+      },
+      "inputs": [
+        { "name": "Form ID", "as": "formId", "type": "string", "position": "url:formId", "source": "field", "required": true },
+        { "name": "Public", "as": "public", "type": "boolean", "source": "hidden", "required": true, "default": true },
+        { "name": "Store", "as": "store", "type": "boolean", "source": "hidden", "required": true, "default": true }
+      ]
+    }
+  ],
+  "output": { "FORM": "out.data" },
+  "messages": { "success": { "en": "Form published in the Form store.", "de": "Formular im Formular-Store veröffentlicht." } }
+}

@@ -1,0 +1,27 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Form: Unpublish",
+  "title": { "en": "Unpublish a form", "de": "Formular aus dem Store entfernen" },
+  "description": {
+    "en": "Remove a form from the Form store while keeping its public form URL active. Existing installed copies are not affected.",
+    "de": "Entferne ein Formular aus dem Formular-Store, ohne seine öffentliche Formular-URL zu deaktivieren. Bereits installierte Kopien bleiben bestehen."
+  },
+  "bot": "Use this when the user wants to stop offering a form for installation without deleting it.",
+  "actions": [
+    {
+      "type": "collect",
+      "label": { "en": "Unpublish form", "de": "Aus Store entfernen" },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/warps/{{formId}}",
+        "method": "PATCH",
+        "headers": { "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}" }
+      },
+      "inputs": [
+        { "name": "Form ID", "as": "formId", "type": "string", "position": "url:formId", "source": "field", "required": true },
+        { "name": "Store", "as": "store", "type": "boolean", "source": "hidden", "required": true, "default": false }
+      ]
+    }
+  ],
+  "output": { "FORM": "out.data" },
+  "messages": { "success": { "en": "Form removed from the Form store.", "de": "Formular aus dem Formular-Store entfernt." } }
+}
