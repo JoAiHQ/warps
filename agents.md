@@ -33,6 +33,10 @@
 - Never use formal "Sie/Ihre" in German translations. Always use informal "du/dein" (lowercase) or rephrase to avoid the pronoun entirely.
 - Lowercase "sie/ihre" referring to things (not users) is fine — e.g. "einer Transaktion anhand ihres Hashes" (its hash).
 
+## Repository Checks
+
+Before finishing any change, run `npm run check` — it type-checks, validates all warp definitions (including UI wiring), and runs the UI contract tests in one command. It must pass before pushing.
+
 ## Generated Files — Never Commit Manually
 
 The following files are produced by GitHub Actions and must never be committed by hand. Always leave them out of your commits — CI rebuilds and updates them on every push:
