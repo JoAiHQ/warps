@@ -13,7 +13,7 @@
  * Exit 0: all warps pass. Exit 1: at least one warp failed — PRs get
  * blocked.
  *
- * Run via `npm run warps:validate`.
+ * Run via `npm run check` (this script runs as one of its steps).
  */
 
 import fs from 'fs'
@@ -40,7 +40,7 @@ type Issue = { file: string; message: string }
 type WarpInput = { name?: unknown; as?: unknown; position?: unknown }
 type WarpDestination = { url?: string; method?: string } | string
 type WarpAction = { destination?: WarpDestination; inputs?: WarpInput[] }
-type Warp = { vars?: Record<string, unknown>; actions?: WarpAction[] }
+type Warp = { vars?: Record<string, unknown>; actions?: WarpAction[]; ui?: unknown }
 
 function walkWarpJsonFiles(root: string): string[] {
   const results: string[] = []
@@ -139,7 +139,6 @@ function checkNoArgPositionsOnHttpActions(warp: Warp, relPath: string): Issue[] 
 
 function checkInlineWarpsExist(warp: Warp, relPath: string, allWarpIds: Set<string>): Issue[] {
   const issues: Issue[] = []
-  const warpNameFromPath = (relPath: string) => relPath.replace(/\.json$/, '').replace(/\//g, '-')
 
   for (const [actionIndex, action] of (warp.actions ?? []).entries()) {
     if ((action as Record<string, unknown>).type !== 'inline') continue
@@ -180,6 +179,55 @@ function checkInputKeysAreStableStrings(warp: Warp, relPath: string): Issue[] {
   return issues
 }
 
+/**
+ * The `ui` field (a string URL or `{ type, src }`) points at the built artifact
+ * for the warp's UI. When it references a `chatapp.*.dist.html` we require that
+ * file to exist next to the warp JSON — otherwise the app loads a 404 and the
+ * UI silently never renders. A warp with an `index.tsx` source but no `ui` field
+ * is a UI that was never built/wired up.
+ */
+function getUiSource(ui: unknown): string | null {
+  if (typeof ui === 'string') return ui
+  if (ui && typeof ui === 'object') {
+    const src = (ui as Record<string, unknown>).src
+    if (typeof src === 'string') return src
+  }
+  return null
+}
+
+function appNameFromRelPath(relPath: string): string {
+  if (relPath.endsWith('/warp.json')) return relPath.slice(0, -'/warp.json'.length)
+  return relPath.replace(/\.json$/, '')
+}
+
+function checkUiReference(warp: Warp, warpDir: string, relPath: string): Issue[] {
+  const issues: Issue[] = []
+  const hasUiSource = fs.existsSync(path.join(warpDir, 'index.tsx'))
+  const uiSource = getUiSource(warp.ui)
+
+  if (hasUiSource && !uiSource) {
+    issues.push({
+      file: relPath,
+      message: `UI source (index.tsx) exists but no "ui" field points to a built artifact. Build it with \`npm run build ${appNameFromRelPath(relPath)}\` to generate and wire up the artifact.`,
+    })
+    return issues
+  }
+
+  if (!uiSource) return issues
+
+  const filename = uiSource.split('/').pop() ?? ''
+  if (!/^chatapp\..+\.dist\.html$/.test(filename)) return issues
+
+  if (!fs.existsSync(path.join(warpDir, filename))) {
+    issues.push({
+      file: relPath,
+      message: `"ui" references "${filename}" but that built artifact does not exist in ${path.relative(process.cwd(), warpDir)}. Rebuild the UI or fix the reference.`,
+    })
+  }
+
+  return issues
+}
+
 function main(): void {
   const files = walkWarpJsonFiles(WARPS_DIR)
   const allIssues: Issue[] = []
@@ -191,7 +239,7 @@ function main(): void {
     const raw = fs.readFileSync(file, 'utf8')
     if (!isWarpFile(raw)) continue
     const relPath = path.relative(WARPS_DIR, file)
-    allWarpIds.add(relPath.replace(/\.json$/, '').replace(/\//g, '-'))
+    allWarpIds.add(relPath.replace(/\/warp\.json$/, '').replace(/\.json$/, '').replace(/\//g, '-'))
   }
 
   for (const file of files) {
@@ -217,6 +265,7 @@ function main(): void {
     allIssues.push(...checkUrlPlaceholdersHaveInputs(warp, relPath))
     allIssues.push(...checkNoArgPositionsOnHttpActions(warp, relPath))
     allIssues.push(...checkInlineWarpsExist(warp, relPath, allWarpIds))
+    allIssues.push(...checkUiReference(warp, path.dirname(file), relPath))
   }
 
   if (allIssues.length === 0) {

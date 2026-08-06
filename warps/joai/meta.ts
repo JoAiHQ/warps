@@ -1,6 +1,35 @@
 import type { WarpExtras } from '../types'
 
 export const meta: Record<string, WarpExtras> = {
+  'agent-list': {
+    keywords: {
+      en: ['list agents', 'view agents', 'workspace agents', 'team agents', 'agent MCP endpoints'],
+      de: ['Agenten anzeigen', 'Agenten auflisten', 'Workspace-Agenten', 'Team-Agenten', 'Agenten-Endpunkte'],
+    },
+    useCases: {
+      en: [
+        'See all agents in your workspace with their status and IDs',
+        'Discover the MCP server URL for a specific agent',
+        'Find an agent UUID to use in other actions',
+      ],
+      de: [
+        'Alle Agenten im Workspace mit Status und IDs anzeigen',
+        'Die MCP-Server-URL eines bestimmten Agenten finden',
+        'Eine Agenten-UUID für andere Aktionen abrufen',
+      ],
+    },
+    category: 'productivity',
+    faq: {
+      en: [
+        { question: 'How do I see all the agents in my workspace?', answer: 'Run the list agents action to see every agent with its ID, status, and MCP endpoint.' },
+        { question: 'How do I find an agent\u2019s MCP server URL?', answer: 'Open the list agents action and copy the MCP endpoint shown next to the agent.' },
+      ],
+      de: [
+        { question: 'Wie sehe ich alle Agenten in meinem Workspace?', answer: 'Nutze die Aktion \u201eAgenten anzeigen\u201c, um jeden Agenten mit ID, Status und MCP-Endpunkt zu sehen.' },
+        { question: 'Wie finde ich die MCP-Server-URL eines Agenten?', answer: 'Öffne \u201eAgenten anzeigen\u201c und kopiere den MCP-Endpunkt neben dem Agenten.' },
+      ],
+    },
+  },
   'team-create': {
     keywords: {
       en: ['create team', 'business onboarding', 'team profile', 'public directory listing', 'workspace setup'],
