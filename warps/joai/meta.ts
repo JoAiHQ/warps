@@ -1153,4 +1153,19 @@ export const meta: Record<string, WarpExtras> = {
       ],
     },
   },
+  'private-warp-delete': {
+    keywords: {
+      en: ['delete private warp', 'remove custom action', 'delete automation'],
+      de: ['Privaten Warp löschen', 'Eigene Aktion entfernen', 'Automation löschen'],
+    },
+    useCases: {
+      en: ['Permanently remove a custom action that is no longer used', 'Clean up a private warp after its workflow is replaced'],
+      de: ['Eine nicht mehr genutzte eigene Aktion dauerhaft entfernen', 'Einen privaten Warp nach dem Austausch eines Workflows bereinigen'],
+    },
+    category: 'productivity',
+    faq: {
+      en: [{ question: 'Can I undo a deletion?', answer: 'No. Deleting a private warp is permanent and also removes its linked smart link.' }],
+      de: [{ question: 'Kann ich das Löschen rückgängig machen?', answer: 'Nein. Das Löschen eines privaten Warps ist endgültig und entfernt auch seinen verknüpften Smart-Link.' }],
+    },
+  },
 }
