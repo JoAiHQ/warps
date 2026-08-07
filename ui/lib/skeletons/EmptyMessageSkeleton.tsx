@@ -15,12 +15,12 @@ export function EmptyMessageSkeleton(props: Props) {
       aria-live="polite"
       aria-busy="true"
     >
-      <div className="h-6 w-44 bg-surface-secondary rounded" />
+      <div className="h-6 w-44 rounded-md bg-warp-surface-secondary" />
       <div className="flex flex-col gap-2">
         {Array.from({ length: lines }).map((_, idx) => (
           <div
             key={idx}
-            className={`h-3 bg-surface-secondary rounded ${
+            className={`h-3 rounded-md bg-warp-surface-secondary ${
               idx % 2 === 0 ? 'w-56' : 'w-48'
             }`}
           />

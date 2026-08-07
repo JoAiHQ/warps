@@ -154,7 +154,10 @@ async function buildApp(targetAppName) {
 <div id="root"></div>
 <script type="module">
 if (window.openai?.theme) {
-  document.documentElement.setAttribute('data-theme', window.openai.theme);
+  var openaiTheme = window.openai.theme === 'auto'
+    ? (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+    : window.openai.theme;
+  document.documentElement.setAttribute('data-theme', openaiTheme);
 }
 ${jsContent}
 </script>
