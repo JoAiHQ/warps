@@ -67,6 +67,32 @@ if (!warpConfig.CHAIN_API) {
     }
 }
 
+// Set default JoAi API base based on WARP_ENV (used by INJECT:API_BASE)
+if (!warpConfig.API_BASE) {
+    warpConfig.API_BASE = warpConfig.WARP_ENV === 'mainnet' ? 'https://api.joai.ai' : 'https://devnet-api.joai.ai'
+}
+
+const SAMPLE_RESULT = {
+    _DATA: {
+        data: [
+            { name: 'Sample Item 1', title: 'Sample Item 1', uuid: 'sample-1', type: 'sample', status: 'active' },
+            { name: 'Sample Item 2', title: 'Sample Item 2', uuid: 'sample-2', type: 'sample', status: 'active' },
+        ],
+    },
+}
+
+/**
+ * Resolve a warp output mapping value against the collected JSON, mirroring the
+ * runtime semantics: `out`, `out.a.b`, `out[0].x`, `out.a.length`, `$`.
+ */
+function resolveOutputPath(value, json) {
+    if (value === 'out' || value === '$') return json
+    if (typeof value !== 'string') return undefined
+    const segments = value.split(/[.[\]]+/).filter(Boolean)
+    if (segments[0] !== 'out' && segments[0] !== '$') return undefined
+    return segments.slice(1).reduce((acc, key) => (acc == null ? undefined : acc[key]), json)
+}
+
 async function startServer() {
   if (!appName) {
     console.error('Please specify an app to serve.')
@@ -180,46 +206,53 @@ async function startServer() {
                 Object.entries(warpInputs).forEach(([key, value]) => {
                     actionUrl = actionUrl.replace(new RegExp(`{{${key}}}`, 'g'), value)
                 })
-                // Replace config in URL
+                // Replace config in URL (env / INJECT:API_BASE)
                 Object.entries(warpConfig).forEach(([key, value]) => {
                     actionUrl = actionUrl.replace(new RegExp(`{{${key}}}`, 'g'), value)
                 })
+                actionUrl = actionUrl.replace(/^INJECT:API_BASE/, warpConfig.API_BASE || 'https://devnet-api.joai.ai')
+
+                // Resolve the action's auth headers from env values
+                const headers = {}
+                const rawHeaders = action.destination?.headers || {}
+                Object.entries(rawHeaders).forEach(([key, value]) => {
+                    headers[key] = String(value).replace(/\{\{([A-Z_][A-Z0-9_]*)\}\}/g, (_, name) => warpConfig[name] ?? '')
+                })
 
                 console.log(`Fetching data from: ${actionUrl}`)
-                const response = await fetch(actionUrl)
+                const response = await fetch(actionUrl, { headers })
+                if (!response.ok) throw new Error(`HTTP ${response.status}`)
                 const json = await response.json()
 
                 const results = {}
-                // Process output mapping
+                // Process output mapping: `out`, `out.a.b`, `out[0].x`, `transform:...`
                 if (warp.output) {
-                     // First pass: direct assignments
-                     Object.entries(warp.output).forEach(([key, value]) => {
-                         if (value === 'out') {
-                             results[key] = json
-                         }
-                     })
-
-                     const out = json
-                     // Second pass: transformations
-                     Object.entries(warp.output).forEach(([key, value]) => {
-                         if (typeof value === 'string' && value.startsWith('transform:')) {
-                             const transformCode = value.substring(10)
-                             try {
-                                 // Safe eval of simple transform
-                                 const fn = eval(transformCode)
-                                 results[key] = fn()
-                             } catch (e) {
-                                 console.error(`Transform error for ${key}:`, e)
-                                 results[key] = null
-                             }
-                         }
-                     })
+                    Object.entries(warp.output).forEach(([key, value]) => {
+                        if (typeof value === 'string' && value.startsWith('transform:')) {
+                            const transformCode = value.substring(10)
+                            try {
+                                // Safe eval of simple transform
+                                const fn = eval(transformCode)
+                                results[key] = fn()
+                            } catch (e) {
+                                console.error(`Transform error for ${key}:`, e)
+                                results[key] = null
+                            }
+                            return
+                        }
+                        const resolved = resolveOutputPath(value, json)
+                        if (resolved !== undefined) results[key] = resolved
+                    })
                 }
                 warpResult = results
             }
         }
     } catch (e) {
         console.error('Error executing warp on server:', e)
+        // No live data (e.g. auth required) — fall back to a sample payload so
+        // the UI still renders for styling preview.
+        console.log('Using sample payload for preview.')
+        warpResult = SAMPLE_RESULT
     }
 
     try {
