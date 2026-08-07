@@ -47,31 +47,29 @@ const APPS = discoverListUis()
 
 /**
  * A realistic non-empty executor result. The warp output is the `_DATA`-wrapped
- * HTTP envelope `{ data: { data: [...] } }`. Fixture items carry the common keys
- * the list UIs read (name/title/type/status/description) so every UI renders rows.
+ * HTTP envelope `{ data: [...] }`. Fixture items carry the common keys the list
+ * UIs read (name/title/type/status/description) so every UI renders rows.
  */
 const FIXTURE = {
   _DATA: {
-    data: {
-      data: [
-        {
-          name: 'Fixture Alpha',
-          title: 'Fixture Alpha',
-          uuid: 'fixture-alpha',
-          type: 'sample',
-          status: 'active',
-          description: 'sample entry',
-        },
-        {
-          name: 'Fixture Beta',
-          title: 'Fixture Beta',
-          uuid: 'fixture-beta',
-          type: 'sample',
-          status: 'active',
-          description: 'sample entry',
-        },
-      ],
-    },
+    data: [
+      {
+        name: 'Fixture Alpha',
+        title: 'Fixture Alpha',
+        uuid: 'fixture-alpha',
+        type: 'sample',
+        status: 'active',
+        description: 'sample entry',
+      },
+      {
+        name: 'Fixture Beta',
+        title: 'Fixture Beta',
+        uuid: 'fixture-beta',
+        type: 'sample',
+        status: 'active',
+        description: 'sample entry',
+      },
+    ],
   },
 }
 

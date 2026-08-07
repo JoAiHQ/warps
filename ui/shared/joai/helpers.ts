@@ -3,9 +3,9 @@ import { ListItem } from './ListResult'
 /**
  * Extract the array of items from a warp collect result.
  * The warp output is usually the response envelope `{ data: [...], meta: ... }`,
- * but can also be a bare array, an object keyed by the output alias, or a
- * nested envelope produced by the executor (`{ _DATA: { data: { data: [...] } } }`).
- * Descends into `data`/`_DATA` wrappers until the first array is found.
+ * but can also be a bare array, an object keyed by the output alias, or the
+ * executor `_DATA` wrapper around that envelope. Descends into `data`/`_DATA`
+ * wrappers until the first array is found (handles nested wraps defensively).
  */
 export function extractList<T = ListItem>(value: unknown): T[] {
   if (Array.isArray(value)) return value as T[]
