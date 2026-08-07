@@ -34,6 +34,9 @@ describe('extractList', () => {
 
   it('descends into the executor _DATA wrapper', () => {
     const items = [{ name: 'A' }]
+    // Real shape: `{ data: [...] }` envelope wrapped in _DATA.
+    expect(extractList({ _DATA: { data: items } })).toEqual(items)
+    // Defensive: nested `{ data: { data: [...] } }` wraps also resolve.
     expect(extractList({ _DATA: { data: { data: items } } })).toEqual(items)
   })
 

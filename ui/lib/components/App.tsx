@@ -3,6 +3,7 @@ import { App as McpApp } from '@modelcontextprotocol/ext-apps'
 import { useApp, UseAppResult } from '../hooks/useApp'
 import { useMcpHostContext } from '../hooks/useMcpGlobal'
 import { createTranslator, normalizeLocale } from '../i18n'
+import { useTheme } from '../theme'
 import { UpgradePrompt } from './Billing/UpgradePrompt'
 
 const AppContext = React.createContext<UseAppResult<any, any> | null>(null)
@@ -48,14 +49,7 @@ export function App(props: Props) {
   }, [appName, appVersion])
 
   const hostContext = useMcpHostContext(app)
-
-  useEffect(() => {
-    const theme = hostContext?.theme
-    if (!theme || theme === 'auto') return
-
-    document.documentElement.setAttribute('data-theme', theme)
-    ;(window as any).openai = { theme }
-  }, [hostContext?.theme])
+  useTheme(hostContext?.theme)
 
   const locale = useMemo(() => normalizeLocale(hostContext?.locale ?? (typeof navigator !== 'undefined' ? navigator.language : 'en')), [hostContext?.locale])
   const t = useMemo(() => createTranslator(locale), [locale])

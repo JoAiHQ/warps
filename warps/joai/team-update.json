@@ -101,10 +101,10 @@
             "ro": "Tags as a comma-separated list",
             "it": "Tags as a comma-separated list"
           },
-          "type": "string",
+          "type": "json",
           "source": "field",
           "required": false,
-          "modifier": "transform:(inputs) => !inputs.tags ? null : (Array.isArray(inputs.tags) ? inputs.tags : String(inputs.tags).split(',')).map((tag) => String(tag).trim()).filter(Boolean)"
+          "modifier": "transform:(inputs) => { const raw = inputs.tags; if (raw === undefined || raw === null || raw === \"\") return null; let arr = raw; if (typeof raw === \"string\") { try { arr = JSON.parse(raw) } catch { arr = raw.split(\",\"); } } return Array.isArray(arr) ? arr.map((tag) => String(tag).trim()).filter(Boolean) : null; }"
         },
         {
           "name": "Category",
