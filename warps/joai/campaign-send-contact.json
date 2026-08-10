@@ -1,0 +1,120 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Send Campaign to Contact",
+  "title": {
+    "en": "Send a campaign to a contact",
+    "de": "Kampagne an einen Kontakt senden",
+    "fr": "Envoyer une campagne à un contact",
+    "es": "Enviar una campaña a un contacto",
+    "it": "Invia una campagna a un contatto",
+    "ro": "Trimite o campanie unui contact"
+  },
+  "description": {
+    "en": "Send an email or messaging campaign to a single contact. Useful as a follow-up after a form submission: pass the submitted email and the campaign goes out immediately or after a delay.",
+    "de": "Sende eine E-Mail- oder Messaging-Kampagne an einen einzelnen Kontakt. Ideal als Follow-up nach einer Formular-Einreichung: Gib die eingereichte E-Mail an, die Kampagne geht sofort oder nach einer Verzögerung raus."
+  },
+  "bot": "Use when the user wants to send a campaign to a specific contact (e.g. as a form follow-up). Provide the campaign ID and the contact email; optionally a name and a delay like '2h' or '3d'.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Send campaign to contact",
+        "de": "Kampagne an Kontakt senden",
+        "fr": "Envoyer la campagne au contact",
+        "es": "Enviar la campaña al contacto",
+        "it": "Invia la campagna al contatto",
+        "ro": "Trimite campania contactului"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/campaigns/{{campaign_id}}/contacts",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Campaign ID",
+          "as": "campaign_id",
+          "description": {
+            "en": "The hashid of the campaign to send",
+            "de": "Die Hashid der zu sendenden Kampagne",
+            "fr": "Le hashid de la campagne à envoyer",
+            "es": "El hashid de la campaña a enviar",
+            "it": "L'hashid della campagna da inviare",
+            "ro": "Hashid-ul campaniei de trimis"
+          },
+          "bot": "The campaign hash ID. If the user refers to a campaign by name, list campaigns first to find the matching ID.",
+          "type": "string",
+          "position": "url:campaign_id",
+          "source": "field",
+          "required": true,
+          "min": 1
+        },
+        {
+          "name": "Contact Email",
+          "as": "email",
+          "description": {
+            "en": "The contact's email address to send the campaign to",
+            "de": "Die E-Mail-Adresse des Kontakts, an den die Kampagne gehen soll"
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "min": 1
+        },
+        {
+          "name": "Contact Name",
+          "as": "name",
+          "description": {
+            "en": "Optional contact name",
+            "de": "Optionaler Kontaktname"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Delay",
+          "as": "delay",
+          "description": {
+            "en": "Optional delay before sending, e.g. '30m', '2h', or '3d'",
+            "de": "Optionale Verzögerung vor dem Versand, z.B. '30m', '2h' oder '3d'"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug of the campaign. Defaults to the current team.",
+            "de": "Team-Slug der Kampagne. Standardmäßig das aktuelle Team."
+          },
+          "bot": "The slug of the team the campaign belongs to. Omit to use the current team.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Campaign will be sent to {{email}}.",
+      "de": "Die Kampagne wird an {{email}} gesendet."
+    },
+    "error": {
+      "en": "Failed to send campaign to contact: {{MESSAGE}}",
+      "de": "Kampagne konnte nicht an den Kontakt gesendet werden: {{MESSAGE}}"
+    }
+  }
+}
