@@ -4,12 +4,12 @@ const category = 'productivity' as const
 
 export const meta: Record<string, WarpExtras> = {
   create: {
-    keywords: { en: ['create form', 'form builder', 'contact form', 'lead form'], de: ['Formular erstellen', 'Formular-Builder', 'Kontaktformular', 'Lead-Formular'] },
-    useCases: { en: ['Create a contact form for a website', 'Build a registration or feedback form', 'Publish a reusable form template'], de: ['Ein Kontaktformular für eine Website erstellen', 'Ein Anmelde- oder Feedbackformular bauen', 'Eine wiederverwendbare Formularvorlage veröffentlichen'] },
+    keywords: { en: ['create form', 'form builder', 'contact form', 'lead form', 'double opt-in form', 'CRM consent'], de: ['Formular erstellen', 'Formular-Builder', 'Kontaktformular', 'Lead-Formular', 'Double-Opt-in-Formular', 'CRM-Einwilligung'] },
+    useCases: { en: ['Create a contact form for a website', 'Collect confirmed email consent in the CRM', 'Build a registration or feedback form', 'Publish a reusable form template'], de: ['Ein Kontaktformular für eine Website erstellen', 'Bestätigte E-Mail-Einwilligungen im CRM erfassen', 'Ein Anmelde- oder Feedbackformular bauen', 'Eine wiederverwendbare Formularvorlage veröffentlichen'] },
     category,
     faq: {
-      en: [{ question: 'Does a form need a brand?', answer: 'No. Forms are standalone team resources and are created without a brand.' }, { question: 'Can other teams install my form?', answer: 'Yes. Publish it in the Form store to make it installable.' }],
-      de: [{ question: 'Braucht ein Formular eine Marke?', answer: 'Nein. Formulare sind eigenständige Team-Ressourcen und werden ohne Marke erstellt.' }, { question: 'Können andere Teams mein Formular installieren?', answer: 'Ja. Veröffentliche es im Formular-Store, damit es installiert werden kann.' }],
+      en: [{ question: 'Does a form need a brand?', answer: 'No. Forms are standalone team resources and are created without a brand.' }, { question: 'Can a form collect confirmed marketing consent?', answer: 'Yes. Enable CRM email consent to create the contact, send a confirmation email, and track consent status.' }, { question: 'Can other teams install my form?', answer: 'Yes. Publish it in the Form store to make it installable.' }],
+      de: [{ question: 'Braucht ein Formular eine Marke?', answer: 'Nein. Formulare sind eigenständige Team-Ressourcen und werden ohne Marke erstellt.' }, { question: 'Kann ein Formular bestätigte Marketing-Einwilligungen erfassen?', answer: 'Ja. Aktiviere die CRM-E-Mail-Einwilligung, um Kontakte anzulegen, eine Bestätigungs-E-Mail zu senden und den Status zu verfolgen.' }, { question: 'Können andere Teams mein Formular installieren?', answer: 'Ja. Veröffentliche es im Formular-Store, damit es installiert werden kann.' }],
     },
   },
   list: {
