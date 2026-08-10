@@ -1,0 +1,73 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Get KV Value",
+  "title": {
+    "en": "Get KV value",
+    "de": "KV-Wert abrufen",
+    "es": "Obtener valor KV",
+    "fr": "Obtenir la valeur KV",
+    "ro": "Obține valoarea KV",
+    "it": "Ottieni valore KV"
+  },
+  "description": {
+    "en": "Get the current scalar value from a named KV field. Returns the most recent entry's value for status pages, counters, and configuration.",
+    "de": "Den aktuellen skalaren Wert aus einem benannten KV-Feld abrufen. Gibt den Wert des letzten Eintrags für Statusseiten, Zähler und Konfiguration zurück.",
+    "es": "Obtén el valor escalar actual de un campo KV con nombre. Devuelve el valor de la entrada más reciente para páginas de estado, contadores y configuración.",
+    "fr": "Obtenir la valeur scalaire actuelle d'un champ KV nommé. Renvoie la valeur de l'entrée la plus récente pour les pages de statut, les compteurs et la configuration.",
+    "ro": "Obține valoarea scalară curentă dintr-un câmp KV denumit. Returnează valoarea celei mai recente intrări pentru pagini de stare, contoare și configurare.",
+    "it": "Ottieni il valore scalare corrente da un campo KV nominato. Restituisce il valore dell'ultimo inserimento per pagine di stato, contatori e configurazione."
+  },
+  "bot": "Used by other warps to get the current scalar value from a KV field. Not meant to be invoked directly.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Get value",
+        "de": "Wert abrufen",
+        "es": "Obtener valor",
+        "fr": "Obtenir la valeur",
+        "ro": "Obține valoarea",
+        "it": "Ottieni valore"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/kv/entries?last=1",
+        "method": "GET",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Store Name",
+          "as": "storeName",
+          "description": {
+            "en": "Name of the store",
+            "de": "Name des Stores",
+            "es": "Nombre del store",
+            "fr": "Nom du store",
+            "ro": "Numele store-ului",
+            "it": "Nome dello store"
+          },
+          "type": "string",
+          "position": "query",
+          "source": "field",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Fetched {{storeName}}.",
+      "de": "{{storeName}} abgerufen.",
+      "es": "{{storeName}} obtenido.",
+      "fr": "{{storeName}} récupéré.",
+      "ro": "{{storeName}} obținut.",
+      "it": "{{storeName}} ottenuto."
+    }
+  }
+}
