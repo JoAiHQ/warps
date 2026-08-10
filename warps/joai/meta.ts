@@ -986,6 +986,27 @@ export const meta: Record<string, WarpExtras> = {
       ],
     },
   },
+  'campaign-send-contact': {
+    keywords: {
+      en: ['send campaign to contact', 'send email to contact', 'form follow-up email', 'send one email'],
+      de: ['Kampagne an Kontakt senden', 'E-Mail an Kontakt senden', 'Formular-Follow-up', 'Einzel-E-Mail senden'],
+    },
+    useCases: {
+      en: ['Send a welcome campaign to a new form submitter', 'Send a delayed follow-up email to a single contact'],
+      de: ['Eine Willkommens-Kampagne an einen neuen Formular-Einsender senden', 'Eine verzögerte Follow-up-E-Mail an einen einzelnen Kontakt senden'],
+    },
+    category: 'communication',
+    faq: {
+      en: [
+        { question: 'Can I delay the send?', answer: 'Yes. Pass a delay like "2h" or "3d" and the campaign goes out after that time.' },
+        { question: 'Does this create a contact?', answer: 'Yes. The contact is created or updated from the email address if it does not exist yet.' },
+      ],
+      de: [
+        { question: 'Kann ich den Versand verzögern?', answer: 'Ja. Gib eine Verzögerung wie "2h" oder "3d" an, die Kampagne geht dann später raus.' },
+        { question: 'Wird ein Kontakt angelegt?', answer: 'Ja. Der Kontakt wird aus der E-Mail-Adresse angelegt oder aktualisiert, falls er noch nicht existiert.' },
+      ],
+    },
+  },
   'campaign-delete': {
     keywords: {
       en: ['delete campaign', 'remove campaign', 'cancel campaign', 'clean up campaigns'],
