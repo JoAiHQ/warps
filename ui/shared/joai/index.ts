@@ -1,4 +1,5 @@
 export { ListResult, JsonResult } from './ListResult'
+export { MediaListResult } from './MediaListResult'
 export { TimelineResult } from './TimelineResult'
 export { MessageThreadResult } from './MessageThreadResult'
 export { extractList, asRecord } from './helpers'

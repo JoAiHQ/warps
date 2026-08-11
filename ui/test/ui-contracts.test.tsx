@@ -60,6 +60,8 @@ const FIXTURE = {
         type: 'sample',
         status: 'active',
         description: 'sample entry',
+        mime: 'image/jpeg',
+        url: 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==',
       },
       {
         name: 'Fixture Beta',
@@ -68,6 +70,8 @@ const FIXTURE = {
         type: 'sample',
         status: 'active',
         description: 'sample entry',
+        mime: 'image/jpeg',
+        url: 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==',
       },
     ],
   },

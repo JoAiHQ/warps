@@ -81,6 +81,25 @@ const SAMPLE_RESULT = {
     },
 }
 
+const mediaPreview = (title, start, end) => `data:image/svg+xml,${encodeURIComponent(`
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600">
+    <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop stop-color="${start}"/><stop offset="1" stop-color="${end}"/></linearGradient></defs>
+    <rect width="800" height="600" fill="url(#g)"/>
+    <circle cx="640" cy="120" r="180" fill="white" fill-opacity=".12"/>
+    <path d="M0 520L210 300l140 130 120-95 330 265H0z" fill="white" fill-opacity=".22"/>
+    <text x="48" y="76" fill="white" font-family="system-ui, sans-serif" font-size="34" font-weight="650">${title}</text>
+  </svg>
+`)}`
+
+const SAMPLE_MEDIA_RESULT = {
+    _DATA: {
+        data: [
+            { id: 'sample-media-1', name: 'Product launch', mime: 'image/png', url: mediaPreview('Product launch', '#6d5dfc', '#ec4899'), tags: ['campaign'] },
+            { id: 'sample-media-2', name: 'Brand landscape', mime: 'image/jpeg', url: mediaPreview('Brand landscape', '#0f766e', '#22c55e'), tags: ['brand'] },
+        ],
+    },
+}
+
 /**
  * Resolve a warp output mapping value against the collected JSON, mirroring the
  * runtime semantics: `out`, `out.a.b`, `out[0].x`, `out.a.length`, `$`.
@@ -252,7 +271,7 @@ async function startServer() {
         // No live data (e.g. auth required) — fall back to a sample payload so
         // the UI still renders for styling preview.
         console.log('Using sample payload for preview.')
-        warpResult = SAMPLE_RESULT
+        warpResult = appName === 'joai/media-list' ? SAMPLE_MEDIA_RESULT : SAMPLE_RESULT
     }
 
     try {
