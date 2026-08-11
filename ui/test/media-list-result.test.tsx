@@ -14,7 +14,7 @@ const renderList = (items: Record<string, unknown>[]) => {
 }
 
 describe('MediaListResult', () => {
-  it('renders actual image, video, and audio media', () => {
+  it('renders image and video previews with a compact audio tile', () => {
     const { container } = render(
       <AppContext.Provider value={{ copyToClipboard: vi.fn() } as any}>
         <MediaListResult
@@ -31,7 +31,8 @@ describe('MediaListResult', () => {
 
     expect(screen.getByRole('img', { name: 'Portrait' })).toHaveAttribute('src', 'https://example.com/portrait.jpg')
     expect(container.querySelector('video')).toHaveAttribute('src', 'https://example.com/launch.mp4')
-    expect(container.querySelector('audio')).toHaveAttribute('src', 'https://example.com/theme.mp3')
+    expect(screen.getByLabelText('Theme song audio')).toBeInTheDocument()
+    expect(screen.queryByText('https://example.com/portrait.jpg')).not.toBeInTheDocument()
   })
 
   it('uses library URLs and falls back when a preview fails', () => {
