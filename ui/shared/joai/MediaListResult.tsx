@@ -1,5 +1,5 @@
 import { EmptyMessage } from '@openai/apps-sdk-ui/components/EmptyMessage'
-import { Copy, ExternalLink, File, FileAudio, FileImage, FileVideo } from '@openai/apps-sdk-ui/components/Icon'
+import { Copy, ExternalLink, File, FileAudio, FileImage, FileVideo, PlayCircleFilled } from '@openai/apps-sdk-ui/components/Icon'
 import React from 'react'
 import { useAppContext } from '../../lib/components'
 import type { ListItem } from './ListResult'
@@ -43,10 +43,10 @@ function MediaIcon({ kind, className }: { kind: MediaKind; className: string }) 
   return <File className={className} />
 }
 
-function MediaPlaceholder({ kind, label, name }: { kind: MediaKind; label: string; name: string }) {
+function MediaPlaceholder({ kind, label, ariaLabel }: { kind: MediaKind; label: string; ariaLabel: string }) {
   return (
-    <div aria-label={`${name} preview unavailable`} className="flex h-full w-full flex-col items-center justify-center gap-2 bg-warp-surface-secondary text-warp-fg-muted">
-      <MediaIcon kind={kind} className="size-9" />
+    <div aria-label={ariaLabel} className="flex h-full w-full flex-col items-center justify-center gap-2 bg-warp-surface-secondary text-warp-fg-muted">
+      <MediaIcon kind={kind} className="size-8" />
       <span className="text-[10px] font-semibold tracking-wider">{label}</span>
     </div>
   )
@@ -58,26 +58,26 @@ function MediaPreview({ item, name }: { item: ListItem; name: string }) {
   const label = getMediaLabel(item)
   const [failedUrl, setFailedUrl] = React.useState('')
 
-  if (!url || failedUrl === url) return <MediaPlaceholder kind={kind} label={label} name={name} />
+  if (!url || failedUrl === url) return <MediaPlaceholder kind={kind} label={label} ariaLabel={`${name} preview unavailable`} />
 
   if (kind === 'image') {
     return <img src={url} alt={name} loading="lazy" onError={() => setFailedUrl(url)} className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.02]" />
   }
 
   if (kind === 'video') {
-    return <video src={url} aria-label={name} controls preload="metadata" onError={() => setFailedUrl(url)} className="h-full w-full bg-black object-contain" />
-  }
-
-  if (kind === 'audio') {
     return (
-      <div className="flex h-full w-full flex-col items-center justify-center gap-4 bg-warp-surface-secondary px-4 text-warp-fg-muted">
-        <FileAudio className="size-9" />
-        <audio src={url} aria-label={name} controls preload="metadata" onError={() => setFailedUrl(url)} className="h-9 w-full" />
+      <div className="relative h-full w-full bg-black">
+        <video src={url} aria-label={name} muted playsInline preload="metadata" onError={() => setFailedUrl(url)} className="h-full w-full object-cover" />
+        <PlayCircleFilled className="absolute left-1/2 top-1/2 size-8 -translate-x-1/2 -translate-y-1/2 text-white drop-shadow" />
       </div>
     )
   }
 
-  return <MediaPlaceholder kind={kind} label={label} name={name} />
+  if (kind === 'audio') {
+    return <MediaPlaceholder kind={kind} label={label} ariaLabel={`${name} audio`} />
+  }
+
+  return <MediaPlaceholder kind={kind} label={label} ariaLabel={`${name} file`} />
 }
 
 function MediaCard({ item, index }: { item: ListItem; index: number }) {
@@ -87,19 +87,14 @@ function MediaCard({ item, index }: { item: ListItem; index: number }) {
   const openUrl = /^https?:\/\//i.test(url) ? url : ''
 
   return (
-    <article className="group min-w-0 overflow-hidden rounded-xl border border-warp-border bg-warp-surface">
-      <div className="relative aspect-[4/3] overflow-hidden">
-        <MediaPreview item={item} name={name} />
-        {openUrl && (
-          <a href={openUrl} target="_blank" rel="noopener noreferrer" aria-label={`Open ${name}`} className="absolute right-2 top-2 flex size-8 items-center justify-center rounded-full border border-warp-border bg-warp-surface text-warp-fg-secondary shadow-sm transition-colors hover:bg-warp-surface-secondary hover:text-warp-fg">
-            <ExternalLink className="size-4" />
-          </a>
-        )}
+    <article className="group relative aspect-square min-w-0 overflow-hidden rounded-lg border border-warp-border bg-warp-surface">
+      <MediaPreview item={item} name={name} />
+      {openUrl && <a href={openUrl} target="_blank" rel="noopener noreferrer" aria-label={`Open ${name}`} className="absolute inset-0 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-white" />}
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 flex items-end justify-between gap-2 bg-gradient-to-t from-black/80 via-black/35 to-transparent px-2.5 pb-2 pt-8 text-white">
+        <span title={name} className="truncate text-xs font-medium">{name}</span>
+        <span className="shrink-0 text-[9px] font-semibold tracking-wide text-white/70">{label}</span>
       </div>
-      <div className="flex min-w-0 items-center justify-between gap-3 px-3 py-2.5">
-        <span title={name} className="truncate text-sm font-medium text-warp-fg">{name}</span>
-        <span className="shrink-0 text-[10px] font-semibold tracking-wide text-warp-fg-muted">{label}</span>
-      </div>
+      {openUrl && <ExternalLink className="pointer-events-none absolute right-2 top-2 size-3.5 text-white opacity-0 drop-shadow transition-opacity group-hover:opacity-100" />}
     </article>
   )
 }
@@ -126,7 +121,7 @@ export function MediaListResult({ title, emptyText, items }: Props) {
           Copy
         </button>
       </div>
-      <div className="grid gap-3 [grid-template-columns:repeat(auto-fit,minmax(14rem,1fr))]">
+      <div className="grid gap-2 [grid-template-columns:repeat(auto-fill,minmax(8rem,1fr))]">
         {items.map((item, index) => <MediaCard key={`${stringValue(item.id) || getMediaUrl(item) || 'media'}-${index}`} item={item} index={index} />)}
       </div>
     </div>
