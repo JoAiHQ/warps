@@ -2,20 +2,17 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { App, useAppContext } from '../../../ui/lib/components'
 import { EmptyMessageSkeleton } from '../../../ui/lib/skeletons'
-import { ListResult, extractList } from '../../../ui/shared/joai'
+import { MediaListResult, extractList } from '../../../ui/shared/joai'
 
 function Main() {
   const { data } = useAppContext()
   if (!data) return <EmptyMessageSkeleton />
   const items = extractList(data)
   return (
-    <ListResult
+    <MediaListResult
       title="Media"
       emptyText="No media found."
       items={items}
-      primaryKey={'name'}
-      secondaryKey={undefined}
-      detailKeys={["mime","url"]}
     />
   )
 }
