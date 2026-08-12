@@ -1,0 +1,109 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Form: Submissions",
+  "title": {
+    "en": "List form submissions",
+    "de": "Formulareinreichungen auflisten",
+    "es": "Listar respuestas del formulario",
+    "fr": "Lister les réponses du formulaire",
+    "ro": "Listează răspunsurile formularului",
+    "it": "Elenca le risposte del modulo"
+  },
+  "description": {
+    "en": "List the submissions (answers) of a form, newest first, with the submitted field values, status, and timestamp. Useful to see live results or to review what customers submitted.",
+    "de": "Liste die Einreichungen (Antworten) eines Formulars auf, neueste zuerst, mit den übermittelten Feldwerten, Status und Zeitstempel. Praktisch für Live-Ergebnisse oder die Prüfung eingehender Antworten.",
+    "es": "Lista las respuestas de un formulario, las más recientes primero, con los valores enviados, estado y marca de tiempo.",
+    "fr": "Liste les réponses d'un formulaire, les plus récentes d'abord, avec les valeurs soumises, le statut et l'horodatage.",
+    "ro": "Listează răspunsurile unui formular, cele mai recente primele, cu valorile trimise, statusul și marca de timp.",
+    "it": "Elenca le risposte di un modulo, dalle più recenti, con i valori inviati, lo stato e il timestamp."
+  },
+  "bot": "Use to fetch the submissions of a form — e.g. to check live results or review what customers submitted. Pass the form identifier (private_...) and optionally a page.",
+  "vars": {
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "List submissions",
+        "de": "Einreichungen auflisten",
+        "es": "Listar respuestas",
+        "fr": "Lister les réponses",
+        "ro": "Listează răspunsurile",
+        "it": "Elenca le risposte"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/warps/{{formId}}/executions?page={{page}}&perPage={{perPage}}",
+        "method": "GET",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Form ID",
+          "as": "formId",
+          "description": {
+            "en": "The form identifier (e.g. private_...).",
+            "de": "Die Formular-ID (z.B. private_...)."
+          },
+          "type": "string",
+          "position": "url:formId",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Page",
+          "as": "page",
+          "description": {
+            "en": "Page number for paginated results (default 1).",
+            "de": "Seitennummer für die paginierten Ergebnisse (Standard 1)."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "1"
+        },
+        {
+          "name": "Per Page",
+          "as": "perPage",
+          "description": {
+            "en": "Number of submissions per page (default 20, max 100).",
+            "de": "Einreichungen pro Seite (Standard 20, max. 100)."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "20"
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug of the form. Defaults to the current team.",
+            "de": "Team-Slug des Formulars. Standardmäßig das aktuelle Team."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "SUBMISSIONS": "out.data",
+    "COUNT": "out.meta.total"
+  },
+  "messages": {
+    "success": {
+      "en": "{{COUNT}} submissions.",
+      "de": "{{COUNT}} Einreichungen.",
+      "es": "{{COUNT}} respuestas.",
+      "fr": "{{COUNT}} réponses.",
+      "ro": "{{COUNT}} răspunsuri.",
+      "it": "{{COUNT}} risposte."
+    }
+  }
+}

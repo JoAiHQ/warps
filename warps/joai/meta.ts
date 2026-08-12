@@ -116,24 +116,53 @@ export const meta: Record<string, WarpExtras> = {
   },
   'team-meta-set': {
     keywords: {
-      en: ['team metadata', 'save setting', 'team configuration', 'whatsapp number', 'google place id', 'opening hours', 'loyalty link'],
-      de: ['Team-Metadaten', 'Einstellung speichern', 'Team-Konfiguration', 'WhatsApp-Nummer', 'Google Place ID', 'Öffnungszeiten', 'Treueprogramm-Link'],
+      en: ['team metadata', 'save setting', 'team configuration', 'whatsapp number', 'social profile', 'loyalty link'],
+      de: ['Team-Metadaten', 'Einstellung speichern', 'Team-Konfiguration', 'WhatsApp-Nummer', 'Social-Media-Profil', 'Treueprogramm-Link'],
     },
     useCases: {
       en: [
         'Set a WhatsApp number for a business so customers can message directly',
-        'Save a Google Place ID to pull reviews, ratings, and location data',
-        'Configure opening hours for a business listing in a local directory',
+        'Add social profile links to a public business listing',
+        'Choose whether prices should be displayed publicly',
         'Store a loyalty program link for customer rewards on a team profile',
       ],
       de: [
         'Eine WhatsApp-Nummer für einen Betrieb hinterlegen, damit Kunden direkt schreiben können',
-        'Eine Google Place ID speichern, um Bewertungen und Standortdaten abzurufen',
-        'Öffnungszeiten für einen Betriebseintrag in einem lokalen Verzeichnis konfigurieren',
+        'Social-Media-Profile zu einem öffentlichen Betriebseintrag hinzufügen',
+        'Festlegen, ob Preise öffentlich angezeigt werden',
         'Einen Treueprogramm-Link für Kundenbelohnungen im Teamprofil hinterlegen',
       ],
     },
     category: 'productivity',
+  },
+  'team-place-update': {
+    keywords: {
+      en: ['set business location', 'business address', 'company location', 'native place selection', 'local business map'],
+      de: ['Geschäftsstandort festlegen', 'Geschäftsadresse', 'Standort wählen', 'native Standortauswahl', 'lokale Businesskarte'],
+    },
+    useCases: {
+      en: [
+        'Set the verified business location on a team profile from a place search result',
+        'Update an address and coordinates after a business relocates',
+        'Clear a business location from a team when it is no longer needed',
+      ],
+      de: [
+        'Den verifizierten Geschäftsstandort eines Teams aus einem Ortssuchergebnis festlegen',
+        'Adresse und Koordinaten nach einem Umzug aktualisieren',
+        'Einen Geschäftsstandort aus einem Team entfernen, wenn er nicht mehr benötigt wird',
+      ],
+    },
+    category: 'productivity',
+    faq: {
+      en: [
+        { question: 'How do I set a business location?', answer: 'Search for the place first, then pass the matching sourceId to set the verified location on the team.' },
+        { question: 'Can I remove a location?', answer: 'Yes, pass null as the sourceId to clear the business location from the team.' },
+      ],
+      de: [
+        { question: 'Wie lege ich einen Geschäftsstandort fest?', answer: 'Suche zuerst nach dem Ort und übergib dann die passende Ortskennung, um den verifizierten Standort im Team zu setzen.' },
+        { question: 'Kann ich einen Standort entfernen?', answer: 'Ja, übergib null als Ortskennung, um den Geschäftsstandort vom Team zu entfernen.' },
+      ],
+    },
   },
   'desk-upload': {
     keywords: {
