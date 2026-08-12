@@ -269,12 +269,12 @@ export const meta: Record<string, WarpExtras> = {
 
   'configure': {
     keywords: {
-      en: ['configure appointments', 'appointment settings', 'setup booking system', 'appointment configuration', 'manage availability'],
-      de: ['Termine konfigurieren', 'Termineinstellungen', 'Buchungssystem einrichten', 'Terminkonfiguration', 'Verfügbarkeit verwalten'],
+      en: ['configure appointments', 'appointment settings', 'setup booking system', 'appointment configuration', 'manage availability', 'sync opening hours'],
+      de: ['Termine konfigurieren', 'Termineinstellungen', 'Buchungssystem einrichten', 'Terminkonfiguration', 'Verfügbarkeit verwalten', 'Öffnungszeiten synchronisieren'],
     },
     useCases: {
-      en: ['Set different availability hours for each day of the week', 'Configure buffer times between consecutive appointments', 'Adjust notification settings for booking confirmations and reminders'],
-      de: ['Verschiedene Verfügbarkeitszeiten für jeden Wochentag festlegen', 'Pufferzeiten zwischen aufeinanderfolgenden Terminen konfigurieren', 'Benachrichtigungseinstellungen für Buchungsbestätigungen und Erinnerungen anpassen'],
+      en: ['Set different availability hours for each day of the week', 'Keep availability synchronized with published business hours', 'Configure buffer times between consecutive appointments'],
+      de: ['Verschiedene Verfügbarkeitszeiten für jeden Wochentag festlegen', 'Verfügbarkeit mit veröffentlichten Geschäftszeiten synchron halten', 'Pufferzeiten zwischen aufeinanderfolgenden Terminen konfigurieren'],
     },
     category: 'productivity',
     faq: {

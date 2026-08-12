@@ -1,0 +1,99 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Update Team Place",
+  "title": {
+    "en": "Set business location",
+    "de": "Standort festlegen",
+    "fr": "Définir l'emplacement",
+    "es": "Establecer ubicación",
+    "ro": "Setează locația",
+    "it": "Imposta posizione"
+  },
+  "description": {
+    "en": "Select or change the native business location of a team from a confirmed place search result, including address, coordinates, and provider details. Use this dedicated action for location identity instead of storing raw place identifiers or opening hours in team metadata.",
+    "de": "Wähle oder ändere den nativen Geschäftsstandort eines Teams anhand eines bestätigten Ortssuchergebnisses, inklusive Adresse, Koordinaten und Anbieterdetails. Nutze diese eigene Aktion für die Standort-Identität, statt rohe Ortskennungen oder Öffnungszeiten in Team-Metadaten zu speichern.",
+    "fr": "Sélectionnez ou modifiez l'emplacement professionnel natif d'une équipe à partir d'un résultat de recherche confirmé, avec adresse, coordonnées et détails du fournisseur. Utilisez cette action dédiée pour l'identité du lieu au lieu de stocker des identifiants bruts ou des horaires dans les métadonnées de l'équipe.",
+    "es": "Selecciona o cambia la ubicación comercial nativa de un equipo a partir de un resultado de búsqueda confirmado, incluidos dirección, coordenadas y detalles del proveedor. Usa esta acción dedicada para la identidad de ubicación en lugar de guardar identificadores o horarios en los metadatos del equipo.",
+    "ro": "Selectează sau schimbă locația nativă de afaceri a unei echipe dintr-un rezultat de căutare confirmat, inclusiv adresă, coordonate și detalii despre furnizor. Folosește această acțiune dedicată pentru identitatea locației în loc să salvezi identificatori sau programe în metadatele echipei.",
+    "it": "Seleziona o cambia la posizione aziendale nativa di un team da un risultato di ricerca confermato, inclusi indirizzo, coordinate e dettagli del fornitore. Usa questa azione dedicata per l'identità della posizione invece di salvare identificatori o orari nei metadati del team."
+  },
+  "bot": "Use this when a confirmed place search result should become the team's native business location. Pass the sourceId of the place to select it, or null to remove the location. Do not use it for opening hours; enable synchronization through the appointment policy after the place is selected.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Save location",
+        "de": "Standort speichern",
+        "fr": "Enregistrer l'emplacement",
+        "es": "Guardar ubicación",
+        "ro": "Salvează locația",
+        "it": "Salva posizione"
+      },
+      "auto": true,
+      "destination": {
+        "url": "INJECT:API_BASE/v1/teams/{{slug}}/place",
+        "method": "PUT",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Slug",
+          "as": "slug",
+          "description": {
+            "en": "The team slug",
+            "de": "Das Team-Slug",
+            "fr": "Le slug de l'équipe",
+            "es": "El slug del equipo",
+            "ro": "Slug-ul echipei",
+            "it": "Lo slug del team"
+          },
+          "bot": "The slug of the team to set the location on. Required — ask the user or derive from context.",
+          "type": "string",
+          "source": "field",
+          "position": "url:slug",
+          "required": true
+        },
+        {
+          "name": "Source ID",
+          "as": "sourceId",
+          "description": {
+            "en": "The provider place identifier from a place search result, or null to clear the location",
+            "de": "Die Ortskennung des Anbieters aus einem Ortssuchergebnis, oder null zum Entfernen des Standorts",
+            "fr": "L'identifiant du lieu du fournisseur issu d'un résultat de recherche, ou null pour supprimer l'emplacement",
+            "es": "El identificador del lugar del proveedor de un resultado de búsqueda, o null para eliminar la ubicación",
+            "ro": "Identificatorul locului de la furnizor dintr-un rezultat de căutare, sau null pentru a șterge locația",
+            "it": "L'identificatore del luogo del fornitore da un risultato di ricerca, o null per rimuovere la posizione"
+          },
+          "bot": "The provider place identifier from a confirmed place search result. Pass null to remove the current location.",
+          "type": "json",
+          "source": "field",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Location saved on team {{slug}}.",
+      "de": "Standort für Team {{slug}} gespeichert.",
+      "fr": "Emplacement enregistré pour l'équipe {{slug}}.",
+      "es": "Ubicación guardada para el equipo {{slug}}.",
+      "ro": "Locația a fost salvată pentru echipa {{slug}}.",
+      "it": "Posizione salvata per il team {{slug}}."
+    },
+    "error": {
+      "en": "Failed to save location: {{MESSAGE}}",
+      "de": "Standort konnte nicht gespeichert werden: {{MESSAGE}}",
+      "fr": "Échec de l'enregistrement de l'emplacement : {{MESSAGE}}",
+      "es": "Error al guardar la ubicación: {{MESSAGE}}",
+      "ro": "Eroare la salvarea locației: {{MESSAGE}}",
+      "it": "Impossibile salvare la posizione: {{MESSAGE}}"
+    }
+  }
+}
