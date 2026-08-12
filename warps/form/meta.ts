@@ -22,6 +22,11 @@ export const meta: Record<string, WarpExtras> = {
     useCases: { en: ['Read a form before editing fields', 'Retrieve a public form URL', 'Inspect store publication status'], de: ['Ein Formular vor der Feldbearbeitung lesen', 'Eine öffentliche Formular-URL abrufen', 'Den Store-Veröffentlichungsstatus prüfen'] },
     category,
   },
+  submissions: {
+    keywords: { en: ['form submissions', 'form answers', 'live results', 'responses'], de: ['Formulareinreichungen', 'Formularantworten', 'Live-Ergebnisse', 'Antworten'] },
+    useCases: { en: ['Review every answer submitted to a form', 'Show live results during an event or training', 'Check whether customers have submitted yet'], de: ['Alle Antworten eines Formulars prüfen', 'Live-Ergebnisse während eines Events oder Trainings zeigen', 'Prüfen, ob Kunden bereits eingereicht haben'] },
+    category,
+  },
   'field-add': {
     keywords: { en: ['add form field', 'form input', 'custom form field'], de: ['Formularfeld hinzufügen', 'Formulareingabe', 'Eigenes Formularfeld'] },
     useCases: { en: ['Add an email field to a contact form', 'Add a message textarea', 'Add an optional phone field'], de: ['Ein E-Mail-Feld zu einem Kontaktformular hinzufügen', 'Ein Nachrichtenfeld hinzufügen', 'Ein optionales Telefonfeld hinzufügen'] },
