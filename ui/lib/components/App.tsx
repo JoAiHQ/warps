@@ -64,7 +64,11 @@ export function App(props: Props) {
     return <UpgradePrompt title={upgrade.title} description={upgrade.description} actionLabel={upgrade.actionLabel} paymentUrl={upgrade.paymentUrl} current={upgrade.current} limit={upgrade.limit} />
   }
 
-  return <AppContext.Provider value={appResult}>{children}</AppContext.Provider>
+  return (
+    <AppContext.Provider value={appResult}>
+      <div className="flex w-full flex-col bg-warp-surface p-4">{children}</div>
+    </AppContext.Provider>
+  )
 }
 
 export { AppContext }
