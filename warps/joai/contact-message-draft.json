@@ -1,0 +1,127 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Draft Contact Message",
+  "title": {
+    "en": "Draft a message for a contact",
+    "de": "Nachricht für einen Kontakt entwerfen",
+    "es": "Draft a message for a contact",
+    "fr": "Draft a message for a contact",
+    "ro": "Draft a message for a contact",
+    "it": "Draft a message for a contact"
+  },
+  "description": {
+    "en": "Draft a personalized CRM message using a contact's unified timeline, including activities and conversation history. The result is returned for review and is never sent automatically.",
+    "de": "Entwirf anhand der einheitlichen Kontakt-Zeitachse mit Aktivitäten und Gesprächsverlauf eine persönliche CRM-Nachricht. Der Entwurf wird nur zur Prüfung zurückgegeben und niemals automatisch gesendet.",
+    "es": "Draft a personalized CRM message using a contact's unified timeline, including activities and conversation history. The result is returned for review and is never sent automatically.",
+    "fr": "Draft a personalized CRM message using a contact's unified timeline, including activities and conversation history. The result is returned for review and is never sent automatically.",
+    "ro": "Draft a personalized CRM message using a contact's unified timeline, including activities and conversation history. The result is returned for review and is never sent automatically.",
+    "it": "Draft a personalized CRM message using a contact's unified timeline, including activities and conversation history. The result is returned for review and is never sent automatically."
+  },
+  "bot": "Use when the user wants a personalized draft for a CRM contact. Provide the contact ID, the reason for writing, and optional verified context; return the draft for review without sending it.",
+  "vars": {
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "output": {
+    "DRAFT": "out.DRAFT"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Set draft context",
+        "de": "Kontext festlegen",
+        "es": "Set draft context",
+        "fr": "Set draft context",
+        "ro": "Set draft context",
+        "it": "Set draft context"
+      },
+      "inputs": [
+        {
+          "name": "Contact ID",
+          "as": "contactId",
+          "description": {
+            "en": "CRM contact to draft the message for",
+            "de": "CRM-Kontakt, für den die Nachricht entworfen wird"
+          },
+          "bot": "The hash ID of the CRM contact.",
+          "type": "string",
+          "source": "field",
+          "position": "local",
+          "required": true
+        },
+        {
+          "name": "Reason",
+          "as": "reason",
+          "description": {
+            "en": "Why the message should be sent now",
+            "de": "Warum die Nachricht jetzt sinnvoll ist"
+          },
+          "bot": "Examples include following up on an inquiry, checking in after a purchase, thanking the contact, or reconnecting.",
+          "type": "string",
+          "source": "field",
+          "position": "local",
+          "required": true
+        },
+        {
+          "name": "Context",
+          "as": "context",
+          "description": {
+            "en": "Optional verified context not yet recorded in the timeline",
+            "de": "Optionaler geprüfter Kontext, der noch nicht in der Zeitachse steht"
+          },
+          "bot": "Only provide facts known to be true, such as a recent event or a specific topic to mention.",
+          "type": "string",
+          "source": "field",
+          "position": "local",
+          "required": false
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug for this action. Defaults to the current team.",
+            "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team."
+          },
+          "bot": "The slug of the team to operate on. Omit to use the current team.",
+          "type": "string",
+          "source": "field",
+          "position": "local",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ]
+    },
+    {
+      "type": "inline",
+      "warp": "@joai-contact-timeline-list?contactId={{contactId}}&team={{team}}",
+      "silent": true,
+      "label": {
+        "en": "Load contact timeline",
+        "de": "Kontakt-Zeitachse laden",
+        "es": "Load contact timeline",
+        "fr": "Load contact timeline",
+        "ro": "Load contact timeline",
+        "it": "Load contact timeline"
+      }
+    },
+    {
+      "type": "prompt",
+      "as": "DRAFT",
+      "label": {
+        "en": "Draft message",
+        "de": "Nachricht entwerfen",
+        "es": "Draft message",
+        "fr": "Draft message",
+        "ro": "Draft message",
+        "it": "Draft message"
+      },
+      "expect": {
+        "type": "string"
+      },
+      "prompt": "Write a personalized message for the CRM contact using only verified facts from the timeline and optional context below. Include one concrete historical anchor when available, explain the reason for writing within the first sentence, and end with one specific low-effort next step when a response is needed. If the timeline has no useful history, write an honest first-touch message without pretending there is an existing relationship. Use 3-5 natural sentences, match the tone of prior interactions, and avoid corporate filler, generic pleasantries, a signature, quotation marks, and meta-commentary.\n\nReason: {{reason}}\nOptional verified context: {{context}}\nContact timeline: {{timeline}}\n\nReturn only the message body."
+    }
+  ],
+  "messages": {
+    "success": "{{DRAFT}}"
+  }
+}
