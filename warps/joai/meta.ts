@@ -360,24 +360,24 @@ export const meta: Record<string, WarpExtras> = {
         {
           question: 'What types of documents can I save?',
           answer:
-            'You can save text documents, templates, PDFs, HTML, and Markdown. Templates include metadata like slug, channel, and step number for use in outreach sequences.',
+            'You can save text documents, templates, PDFs, HTML, and Markdown. Templates can include metadata such as a slug, channel, and step number for reusable workflows.',
         },
         {
           question: 'What is a template document?',
           answer:
-            'A template is a reusable message with variables like {{name}} and structured metadata (slug, channel, step). It is used by outreach and followup sequences to personalize messages.',
+            'A template is a reusable message with variables like {{name}} and structured metadata such as a slug, channel, and step.',
         },
       ],
       de: [
         {
           question: 'Welche Dokumenttypen kann ich speichern?',
           answer:
-            'Du kannst Textdokumente, Templates, PDFs, HTML und Markdown speichern. Templates enthalten Metadaten wie Slug, Kanal und Schrittnummer für Outreach-Sequenzen.',
+            'Du kannst Textdokumente, Templates, PDFs, HTML und Markdown speichern. Templates können Metadaten wie Slug, Kanal und Schrittnummer für wiederverwendbare Abläufe enthalten.',
         },
         {
           question: 'Was ist ein Template-Dokument?',
           answer:
-            'Ein Template ist eine wiederverwendbare Nachricht mit Variablen wie {{name}} und strukturierten Metadaten (Slug, Kanal, Schritt). Es wird von Outreach- und Followup-Sequenzen für personalisierte Nachrichten genutzt.',
+            'Ein Template ist eine wiederverwendbare Nachricht mit Variablen wie {{name}} und strukturierten Metadaten wie Slug, Kanal und Schritt.',
         },
       ],
     },
@@ -389,12 +389,12 @@ export const meta: Record<string, WarpExtras> = {
     },
     useCases: {
       en: [
-        'List all message templates for outreach sequences',
+        'List all reusable message templates',
         'Search for a specific document by title',
         'Browse all stored knowledge base documents',
       ],
       de: [
-        'Alle Nachrichten-Templates für Outreach-Sequenzen auflisten',
+        'Alle wiederverwendbaren Nachrichten-Templates auflisten',
         'Nach einem bestimmten Dokument im Titel suchen',
         'Alle gespeicherten Wissensbasis-Dokumente durchsuchen',
       ],
@@ -527,6 +527,35 @@ export const meta: Record<string, WarpExtras> = {
           question: 'Was passiert nach der Erfassung?',
           answer: 'Dein Agent extrahiert strukturierte Primitive wie Erinnerungen, Aufgaben, Ziele und Erinnerungen aus dem Inhalt und legt sie automatisch an.',
         },
+      ],
+    },
+  },
+  'contact-message-draft': {
+    keywords: {
+      en: ['draft contact message', 'personalized CRM message', 'follow-up draft', 'customer message', 'AI message draft'],
+      de: ['Kontaktnachricht entwerfen', 'persönliche CRM-Nachricht', 'Follow-up-Entwurf', 'Kundennachricht', 'KI-Nachrichtenentwurf'],
+    },
+    useCases: {
+      en: [
+        'Draft a personalized follow-up based on a contact\'s actual conversation history',
+        'Prepare a customer check-in for review without sending it automatically',
+        'Write an honest first-touch message when no previous interaction exists',
+      ],
+      de: [
+        'Ein persönliches Follow-up anhand des tatsächlichen Gesprächsverlaufs entwerfen',
+        'Eine Nachricht zur Kundenpflege vorbereiten, ohne sie automatisch zu senden',
+        'Eine ehrliche Erstkontakt-Nachricht verfassen, wenn noch kein Austausch stattgefunden hat',
+      ],
+    },
+    category: 'communication',
+    faq: {
+      en: [
+        { question: 'Does this action send the message?', answer: 'No. It only returns a draft for review; use a campaign action for approved delivery.' },
+        { question: 'What information does the draft use?', answer: 'It uses the contact timeline and any optional verified context you provide.' },
+      ],
+      de: [
+        { question: 'Wird die Nachricht direkt gesendet?', answer: 'Nein. Du erhältst nur einen Entwurf zur Prüfung; für den freigegebenen Versand nutzt du eine Kampagnen-Aktion.' },
+        { question: 'Welche Informationen verwendet der Entwurf?', answer: 'Verwendet werden die Kontakt-Zeitachse und optionaler geprüfter Kontext von dir.' },
       ],
     },
   },
