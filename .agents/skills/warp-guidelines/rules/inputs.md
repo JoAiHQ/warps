@@ -202,13 +202,23 @@ Dynamic scaling from another input:
 
 ### Transform Modifier
 
-Custom transformation:
+Custom transformation. The first argument is the current input's native value. Use it alone when the transform does not need sibling inputs:
 
 ```json
 {
   "modifier": "transform:(value) => value.toUpperCase()"
 }
 ```
+
+When sibling context is necessary, the second argument contains all inputs, keyed by `as` or `name`:
+
+```json
+{
+  "modifier": "transform:(value, inputs) => inputs.currency === 'USD' ? value * 100 : value"
+}
+```
+
+Transforms that use neither argument may remain zero-argument callbacks, such as `transform:() => Math.random()`.
 
 ## Options
 
