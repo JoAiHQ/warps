@@ -1,0 +1,81 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Form: Clear Submissions",
+  "title": {
+    "en": "Clear all form submissions",
+    "de": "Alle Formulareinreichungen löschen",
+    "es": "Borrar todas las respuestas del formulario",
+    "fr": "Effacer toutes les réponses du formulaire",
+    "ro": "Șterge toate răspunsurile formularului",
+    "it": "Cancella tutte le risposte del modulo"
+  },
+  "description": {
+    "en": "Delete every submission of a form, newest and oldest alike. Useful to reset a form before an event or campaign. This cannot be undone.",
+    "de": "Lösche alle Einreichungen eines Formulars — egal ob neu oder alt. Praktisch zum Zurücksetzen vor einem Event oder einer Kampagne. Dies kann nicht rückgängig gemacht werden.",
+    "es": "Elimina todas las respuestas de un formulario, nuevas y antiguas. Útil para reiniciar un formulario antes de un evento o campaña. Esta acción no se puede deshacer.",
+    "fr": "Supprime toutes les réponses d'un formulaire, anciennes et récentes. Utile pour réinitialiser un formulaire avant un événement ou une campagne. Action irréversible.",
+    "ro": "Șterge toate răspunsurile unui formular, noi și vechi. Util pentru resetarea unui formular înainte de un eveniment sau campanie. Această acțiune nu poate fi anulată.",
+    "it": "Elimina tutte le risposte di un modulo, nuove e vecchie. Utile per resettare un modulo prima di un evento o campagna. Questa azione non può essere annullata."
+  },
+  "bot": "Use to delete all submissions of a form — e.g. to reset a poll form before an event. Pass the form identifier (private_...).",
+  "vars": {
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Clear submissions",
+        "de": "Einreichungen löschen",
+        "es": "Borrar respuestas",
+        "fr": "Effacer les réponses",
+        "ro": "Șterge răspunsurile",
+        "it": "Cancella le risposte"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/warps/{{formId}}/executions",
+        "method": "DELETE",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Form ID",
+          "as": "formId",
+          "description": {
+            "en": "The form identifier (e.g. private_...).",
+            "de": "Die Formular-ID (z.B. private_...)."
+          },
+          "type": "string",
+          "position": "url:formId",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug of the form. Defaults to the current team.",
+            "de": "Team-Slug des Formulars. Standardmäßig das aktuelle Team."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "All submissions cleared.",
+      "de": "Alle Einreichungen gelöscht.",
+      "es": "Todas las respuestas borradas.",
+      "fr": "Toutes les réponses effacées.",
+      "ro": "Toate răspunsurile au fost șterse.",
+      "it": "Tutte le risposte cancellate."
+    }
+  }
+}

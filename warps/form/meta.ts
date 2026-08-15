@@ -27,6 +27,16 @@ export const meta: Record<string, WarpExtras> = {
     useCases: { en: ['Review every answer submitted to a form', 'Show live results during an event or training', 'Check whether customers have submitted yet'], de: ['Alle Antworten eines Formulars prüfen', 'Live-Ergebnisse während eines Events oder Trainings zeigen', 'Prüfen, ob Kunden bereits eingereicht haben'] },
     category,
   },
+  'submissions-clear': {
+    keywords: { en: ['clear form submissions', 'reset form', 'delete all answers'], de: ['Einreichungen löschen', 'Formular zurücksetzen', 'Alle Antworten löschen'] },
+    useCases: { en: ['Reset a poll form before an event', 'Remove test submissions before a campaign', 'Start a form fresh for the next session'], de: ['Ein Poll-Formular vor einem Event zurücksetzen', 'Test-Einreichungen vor einer Kampagne entfernen', 'Ein Formular für die nächste Session leeren'] },
+    category,
+  },
+  'submissions-delete': {
+    keywords: { en: ['delete form submission', 'remove answer', 'single submission'], de: ['Einreichung löschen', 'Antwort entfernen', 'Einzelne Einreichung'] },
+    useCases: { en: ['Remove a duplicate submission', 'Delete an obsolete or test entry', 'Correct a mistaken answer'], de: ['Eine Duplikat-Einreichung entfernen', 'Einen veralteten oder Test-Eintrag löschen', 'Eine falsche Antwort korrigieren'] },
+    category,
+  },
   'field-add': {
     keywords: { en: ['add form field', 'form input', 'custom form field'], de: ['Formularfeld hinzufügen', 'Formulareingabe', 'Eigenes Formularfeld'] },
     useCases: { en: ['Add an email field to a contact form', 'Add a message textarea', 'Add an optional phone field'], de: ['Ein E-Mail-Feld zu einem Kontaktformular hinzufügen', 'Ein Nachrichtenfeld hinzufügen', 'Ein optionales Telefonfeld hinzufügen'] },
