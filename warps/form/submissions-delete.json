@@ -1,0 +1,93 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Form: Delete Submission",
+  "title": {
+    "en": "Delete a form submission",
+    "de": "Eine Formulareinreichung löschen",
+    "es": "Eliminar una respuesta del formulario",
+    "fr": "Supprimer une réponse du formulaire",
+    "ro": "Șterge un răspuns al formularului",
+    "it": "Elimina una risposta del modulo"
+  },
+  "description": {
+    "en": "Delete a single submission of a form by its ID, for example to remove a duplicate or an obsolete entry. This cannot be undone.",
+    "de": "Lösche eine einzelne Einreichung eines Formulars anhand ihrer ID — z.B. um einen Duplikat oder einen veralteten Eintrag zu entfernen. Dies kann nicht rückgängig gemacht werden.",
+    "es": "Elimina una única respuesta de un formulario por su ID, por ejemplo para quitar un duplicado o una entrada obsoleta. Esta acción no se puede deshacer.",
+    "fr": "Supprime une réponse unique d'un formulaire par son ID, par exemple pour retirer un doublon ou une entrée obsolète. Action irréversible.",
+    "ro": "Șterge un singur răspuns al unui formular după ID, de exemplu pentru a elimina un duplicat sau o intrare veche. Această acțiune nu poate fi anulată.",
+    "it": "Elimina una singola risposta di un modulo tramite il suo ID, ad esempio per rimuovere un duplicato o una voce obsoleta. Questa azione non può essere annullata."
+  },
+  "bot": "Use to delete a single submission of a form by its execution ID. Pass the form identifier (private_...) and the execution ID.",
+  "vars": {
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Delete submission",
+        "de": "Einreichung löschen",
+        "es": "Eliminar respuesta",
+        "fr": "Supprimer la réponse",
+        "ro": "Șterge răspunsul",
+        "it": "Elimina la risposta"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/warps/{{formId}}/executions/{{executionId}}",
+        "method": "DELETE",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Form ID",
+          "as": "formId",
+          "description": {
+            "en": "The form identifier (e.g. private_...).",
+            "de": "Die Formular-ID (z.B. private_...)."
+          },
+          "type": "string",
+          "position": "url:formId",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Execution ID",
+          "as": "executionId",
+          "description": {
+            "en": "The ID of the submission to delete (e.g. from form_submissions).",
+            "de": "Die ID der zu löschenden Einreichung (z.B. aus form_submissions)."
+          },
+          "type": "string",
+          "position": "url:executionId",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug of the form. Defaults to the current team.",
+            "de": "Team-Slug des Formulars. Standardmäßig das aktuelle Team."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Submission deleted.",
+      "de": "Einreichung gelöscht.",
+      "es": "Respuesta eliminada.",
+      "fr": "Réponse supprimée.",
+      "ro": "Răspunsul a fost șters.",
+      "it": "Risposta eliminata."
+    }
+  }
+}
