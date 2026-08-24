@@ -5,7 +5,8 @@ export const brand = async (config: WarpClientConfig): Promise<WarpbaseBrand> =>
   info: await new WarpBrandBuilder(config)
     .setName('WhatsApp')
     .setDescription({
-      en: 'Send WhatsApp messages via wacli CLI.',
+      en: 'Pair personal WhatsApp and forward inbound messages to agent hooks.',
+      de: 'Persönliches WhatsApp koppeln und eingehende Nachrichten an Agent-Hooks weiterleiten.',
     })
     .setLogo('https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/whatsapp.png')
     .setColors({ primary: '#25D366' })
