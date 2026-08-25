@@ -4,3 +4,8 @@ export type JoAiListContactTimelineInputs = {
   contactId: string;
   team: string;
 };
+
+export type JoAiListContactTimelineData = {
+  timeline: any;
+  timelineEntries: any;
+};

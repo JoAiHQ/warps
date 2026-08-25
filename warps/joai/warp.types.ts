@@ -81,6 +81,14 @@ export type JoAiDeleteCampaignInputs = {
   team: string;
 };
 
+export type JoAiSendCampaigntoContactInputs = {
+  campaign_id: string;
+  email: string;
+  name: string;
+  delay: string;
+  team: string;
+};
+
 export type JoAiSendCampaignInputs = {
   campaign_id: string;
   team: string;
@@ -144,6 +152,17 @@ export type JoAiFindorCreateContactData = {
   contactId: any;
 };
 
+export type JoAiDraftContactMessageInputs = {
+  contactId: string;
+  reason: string;
+  context: string;
+  team: string;
+};
+
+export type JoAiDraftContactMessageData = {
+  DRAFT: any;
+};
+
 export type JoAiSendContactMessageInputs = {
   team: string;
   integration: string;
@@ -177,6 +196,8 @@ export type JoAiUpdateContactInputs = {
   socials: string;
   tags: string;
   tagsAppend: string;
+  nextFollowUpAt: string;
+  followUpNote: string;
   team: string;
 };
 
@@ -350,9 +371,26 @@ export type JoAiUpdateGoalInputs = {
   notes: string;
 };
 
+export type JoAiCreateHookInputs = {
+  source: string;
+  warpIdentifier: string;
+  event: string;
+  tag: string;
+  name: string;
+  url: string;
+};
+
+export type JoAiDeleteHookInputs = {
+  hookId: string;
+};
+
 export type JoAiRespondtoHookInputs = {
   requestId: string;
   decision: string;
+};
+
+export type JoAiToggleHookInputs = {
+  hookId: string;
 };
 
 export type JoAiIngestKnowledgeInputs = {
@@ -385,6 +423,48 @@ export type JoAiUpdateItemInputs = {
   title: string;
   content: string;
   status: string;
+};
+
+export type JoAiRecordKVEntryInputs = {
+  field: string;
+  value: string;
+  label: string;
+};
+
+export type JoAiCreateKVInputs = {
+  name: string;
+  description: string;
+  valueType: string;
+  unit: string;
+};
+
+export type JoAiDeleteKVInputs = {
+  field: string;
+};
+
+export type JoAiGetKVValueInputs = {
+  field: string;
+};
+
+export type JoAiListKVInputs = {
+};
+
+export type JoAiQueryKVDataInputs = {
+  field: string;
+  since: string;
+  until: string;
+  last: string;
+  cursor: string;
+};
+
+export type JoAiSetKVFieldInputs = {
+  field: string;
+  value: string;
+  label: string;
+};
+
+export type JoAiToggleKVFieldInputs = {
+  field: string;
 };
 
 export type JoAiBusinessIdentityVerificationInputs = {
@@ -455,18 +535,6 @@ export type JoAiDeleteMediaInputs = {
   team: string;
 };
 
-export type JoAiUploadMediaInputs = {
-  url: string;
-  label: string;
-  type: string;
-  team: string;
-};
-
-export type JoAiUploadMediaData = {
-  mediaId: any;
-  mediaUrl: any;
-};
-
 export type JoAiStartMeetingInputs = {
 };
 
@@ -475,6 +543,12 @@ export type JoAiCreateMemoryInputs = {
   category: string;
   tags: string;
   teamVisible: boolean;
+  confidence: number;
+  stateful: boolean;
+  importance: number;
+  entities: string;
+  sentiment: number;
+  temporal: string;
 };
 
 export type JoAiUpdateMemoryInputs = {
@@ -482,6 +556,12 @@ export type JoAiUpdateMemoryInputs = {
   content: string;
   category: string;
   tags: string;
+  stateful: boolean;
+  importance: number;
+  entities: string;
+  sentiment: number;
+  temporal: string;
+  tier: string;
 };
 
 export type JoAiSendGeneratedMessageInputs = {
@@ -512,6 +592,7 @@ export type JoAiCreateOrderInputs = {
   billItem: string;
   type: string;
   notes: string;
+  priceMode: string;
   contactId: string;
   serviceIds: string;
   team: string;
@@ -546,6 +627,10 @@ export type JoAiCreatePrivateWarpInputs = {
   store: boolean;
   extras: string;
   team: string;
+};
+
+export type JoAiDeletePrivateWarpInputs = {
+  identifier: string;
 };
 
 export type JoAiUpdatePrivateWarpInputs = {
@@ -736,46 +821,6 @@ export type JoAiUpdateSkillInputs = {
   team: string;
 };
 
-export type JoAiRecordStoreEntryInputs = {
-  storeName: string;
-  value: string;
-  label: string;
-};
-
-export type JoAiCreateStoreInputs = {
-  name: string;
-  description: string;
-  valueType: string;
-  unit: string;
-};
-
-export type JoAiDeleteStoreInputs = {
-  storeName: string;
-};
-
-export type JoAiGetStoreValueInputs = {
-  storeName: string;
-};
-
-export type JoAiListStoresInputs = {
-};
-
-export type JoAiQueryStoreDataInputs = {
-  storeName: string;
-  since: string;
-  until: string;
-  last: string;
-};
-
-export type JoAiSetFieldInputs = {
-  field: string;
-  value: string;
-};
-
-export type JoAiToggleFieldInputs = {
-  field: string;
-};
-
 export type JoAiStudioExportInputs = {
   projectId: string;
 };
@@ -793,6 +838,16 @@ export type JoAiStudioSendInputs = {
   outputType: string;
   sourceUrl: string;
   references: string;
+};
+
+export type JoAiCreateScheduledTaskInputs = {
+  warp: string;
+  cronExpression: string;
+  inputs: string;
+  maxRuns: number;
+  startsAt: string;
+  endsAt: string;
+  agent: string;
 };
 
 export type JoAiDeleteScheduledTaskInputs = {
@@ -837,6 +892,11 @@ export type JoAiSetTeamMetaInputs = {
   slug: string;
   key: string;
   value: string;
+};
+
+export type JoAiUpdateTeamPlaceInputs = {
+  slug: string;
+  sourceId: string;
 };
 
 export type JoAiUpdateTeamInputs = {
