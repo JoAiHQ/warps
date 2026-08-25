@@ -2,3 +2,7 @@
 
 export type JoAiListAgentsInputs = {
 };
+
+export type JoAiListAgentsData = {
+  AGENTS: any;
+};

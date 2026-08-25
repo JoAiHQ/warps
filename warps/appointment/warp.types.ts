@@ -86,6 +86,7 @@ export type AppointmentsOnboardingInputs = {
 };
 
 export type AppointmentsUpsertPolicyInputs = {
+  team: string;
   timezone: string;
   availability: string;
   minNoticeMinutes: number;
@@ -97,6 +98,7 @@ export type AppointmentsUpsertPolicyInputs = {
   conferenceEnabled: boolean;
   serviceSelectionEnabled: boolean;
   paymentEnabled: boolean;
+  sync: string;
 };
 
 export type AppointmentsRequestApprovalInputs = {
