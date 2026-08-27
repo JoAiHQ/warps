@@ -98,6 +98,7 @@ export type AppointmentsUpsertPolicyInputs = {
   conferenceEnabled: boolean;
   serviceSelectionEnabled: boolean;
   paymentEnabled: boolean;
+  notificationEmail: string;
   sync: string;
 };
 
