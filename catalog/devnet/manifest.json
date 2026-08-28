@@ -4,8 +4,8 @@
   "repo": "JoAiHQ/warps",
   "branch": "dev",
   "network": "devnet",
-  "commitSha": "f94d95c2ba60495425d8ec10e9d0d3ef9c6bc45c",
-  "generatedAt": "2026-08-28T15:52:00.860Z",
+  "commitSha": "46186401255088b879beb61dc786d41570709576",
+  "generatedAt": "2026-08-28T16:45:43.433Z",
   "warps": [
     {
       "key": "arbitrum:omniset-deposit-arbitrum",
@@ -92714,6 +92714,156 @@
           ]
         }
       }
+    },
+    {
+      "key": "none:joai-product-variation-update",
+      "identifier": "@joai-product-variation-update",
+      "alias": "joai-product-variation-update",
+      "chain": "none",
+      "hash": "065b9b93c866f2be33601226ea4aa07192e1a6337602cd8e2cd934a4d1f9346c",
+      "checksum": "065b9b93c866f2be33601226ea4aa07192e1a6337602cd8e2cd934a4d1f9346c",
+      "name": "JoAi: Update Product Variation",
+      "title": {
+        "en": "Update a product variation",
+        "de": "Produktvariante aktualisieren"
+      },
+      "description": {
+        "en": "Update an existing product variation price, name, or visibility. Only the fields you provide are changed.",
+        "de": "Aktualisiere Preis, Name oder Sichtbarkeit einer bestehenden Produktvariante. Nur die angegebenen Felder werden geändert."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: Update Product Variation",
+        "title": {
+          "en": "Update a product variation",
+          "de": "Produktvariante aktualisieren"
+        },
+        "description": {
+          "en": "Update an existing product variation price, name, or visibility. Only the fields you provide are changed.",
+          "de": "Aktualisiere Preis, Name oder Sichtbarkeit einer bestehenden Produktvariante. Nur die angegebenen Felder werden geändert."
+        },
+        "bot": "Use when the user wants to change the price or details of an existing product variation. Price is in cents (100 = €1). List products first to find variation IDs.",
+        "vars": {
+          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+          "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Update variation",
+              "de": "Variante aktualisieren"
+            },
+            "destination": {
+              "url": "https://devnet-api.joai.ai/v1/products/variations/{{variationId}}",
+              "method": "PUT",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+                "X-Team": "{{team}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Variation ID",
+                "as": "variationId",
+                "description": {
+                  "en": "The hash ID of the variation to update",
+                  "de": "Die Hash-ID der zu aktualisierenden Variante"
+                },
+                "type": "string",
+                "source": "field",
+                "position": "url:variationId",
+                "required": true
+              },
+              {
+                "name": "Price",
+                "as": "price",
+                "description": {
+                  "en": "Price per unit in cents",
+                  "de": "Preis pro Einheit in Cent"
+                },
+                "type": "number",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Name",
+                "as": "name",
+                "description": {
+                  "en": "Variation name",
+                  "de": "Variantenname"
+                },
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Active",
+                "as": "active",
+                "description": {
+                  "en": "Whether the variation is active (\"true\"/\"false\")",
+                  "de": "Ob die Variante aktiv ist (\"true\"/\"false\")"
+                },
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Team",
+                "as": "team",
+                "description": {
+                  "en": "Team slug of the product. Defaults to the current team.",
+                  "de": "Team-Slug des Produkts. Standardmäßig das aktuelle Team."
+                },
+                "bot": "The slug of the team the product belongs to. Omit to use the current team.",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "default": "{{JOAI_TEAM_SLUG}}"
+              }
+            ]
+          }
+        ],
+        "messages": {
+          "success": {
+            "en": "Product variation updated.",
+            "de": "Produktvariante aktualisiert."
+          }
+        }
+      },
+      "extras": null
     },
     {
       "key": "none:joai-project-create",
