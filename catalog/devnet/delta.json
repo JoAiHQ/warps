@@ -4,25 +4,33 @@
   "repo": "JoAiHQ/warps",
   "branch": "dev",
   "network": "devnet",
-  "commitSha": "46186401255088b879beb61dc786d41570709576",
-  "committedAt": "2026-08-28T16:45:40.738Z",
-  "generatedAt": "2026-08-28T16:45:43.433Z",
+  "commitSha": "c4d66559ed79c84483f79f52b92f0398f41526b0",
+  "committedAt": "2026-08-28T16:57:32.497Z",
+  "generatedAt": "2026-08-28T16:57:34.694Z",
   "upserts": [
     {
-      "key": "none:joai-product-variation-update",
-      "identifier": "@joai-product-variation-update",
-      "alias": "joai-product-variation-update",
+      "key": "none:joai-contract-get",
+      "identifier": "@joai-contract-get",
+      "alias": "joai-contract-get",
       "chain": "none",
-      "hash": "065b9b93c866f2be33601226ea4aa07192e1a6337602cd8e2cd934a4d1f9346c",
-      "checksum": "065b9b93c866f2be33601226ea4aa07192e1a6337602cd8e2cd934a4d1f9346c",
-      "name": "JoAi: Update Product Variation",
+      "hash": "4b4b1811e85ada53e51a1609006c3c9c653b2033ca803b3ea0447e3508b9b983",
+      "checksum": "4b4b1811e85ada53e51a1609006c3c9c653b2033ca803b3ea0447e3508b9b983",
+      "name": "JoAi: Get Contract",
       "title": {
-        "en": "Update a product variation",
-        "de": "Produktvariante aktualisieren"
+        "en": "Get contract",
+        "de": "Smart Contract anzeigen",
+        "es": "Get contract",
+        "fr": "Get contract",
+        "it": "Get contract",
+        "ro": "Get contract"
       },
       "description": {
-        "en": "Update an existing product variation price, name, or visibility. Only the fields you provide are changed.",
-        "de": "Aktualisiere Preis, Name oder Sichtbarkeit einer bestehenden Produktvariante. Nur die angegebenen Felder werden geändert."
+        "en": "Get the details of a specific smart contract.",
+        "de": "Zeige die Details eines bestimmten Smart Contracts an.",
+        "es": "Get the details of a specific smart contract.",
+        "fr": "Get the details of a specific smart contract.",
+        "it": "Get the details of a specific smart contract.",
+        "ro": "Get the details of a specific smart contract."
       },
       "preview": null,
       "creator": "github:JoAiHQ/warps",
@@ -57,104 +65,167 @@
       },
       "warp": {
         "protocol": "warp:3.0.0",
-        "name": "JoAi: Update Product Variation",
+        "name": "JoAi: Get Contract",
         "title": {
-          "en": "Update a product variation",
-          "de": "Produktvariante aktualisieren"
+          "en": "Get contract",
+          "de": "Smart Contract anzeigen",
+          "es": "Get contract",
+          "fr": "Get contract",
+          "it": "Get contract",
+          "ro": "Get contract"
         },
         "description": {
-          "en": "Update an existing product variation price, name, or visibility. Only the fields you provide are changed.",
-          "de": "Aktualisiere Preis, Name oder Sichtbarkeit einer bestehenden Produktvariante. Nur die angegebenen Felder werden geändert."
+          "en": "Get the details of a specific smart contract.",
+          "de": "Zeige die Details eines bestimmten Smart Contracts an.",
+          "es": "Get the details of a specific smart contract.",
+          "fr": "Get the details of a specific smart contract.",
+          "it": "Get the details of a specific smart contract.",
+          "ro": "Get the details of a specific smart contract."
         },
-        "bot": "Use when the user wants to change the price or details of an existing product variation. Price is in cents (100 = €1). List products first to find variation IDs.",
+        "bot": "Use this when the user wants details about a specific contract.",
         "vars": {
           "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
-          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
-          "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
         },
         "actions": [
           {
             "type": "collect",
+            "auto": true,
             "label": {
-              "en": "Update variation",
-              "de": "Variante aktualisieren"
+              "en": "Get contract",
+              "de": "Smart Contract anzeigen",
+              "es": "Get contract",
+              "fr": "Get contract",
+              "it": "Get contract",
+              "ro": "Get contract"
             },
             "destination": {
-              "url": "https://devnet-api.joai.ai/v1/products/variations/{{variationId}}",
-              "method": "PUT",
+              "url": "https://devnet-api.joai.ai/v1/contracts/{{contract}}",
+              "method": "GET",
               "headers": {
-                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
-                "X-Team": "{{team}}"
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
               }
             },
             "inputs": [
               {
-                "name": "Variation ID",
-                "as": "variationId",
-                "description": {
-                  "en": "The hash ID of the variation to update",
-                  "de": "Die Hash-ID der zu aktualisierenden Variante"
-                },
+                "name": "Contract",
+                "as": "contract",
                 "type": "string",
-                "source": "field",
-                "position": "url:variationId",
-                "required": true
-              },
-              {
-                "name": "Price",
-                "as": "price",
-                "description": {
-                  "en": "Price per unit in cents",
-                  "de": "Preis pro Einheit in Cent"
-                },
-                "type": "number",
-                "source": "field",
-                "required": false
-              },
-              {
-                "name": "Name",
-                "as": "name",
-                "description": {
-                  "en": "Variation name",
-                  "de": "Variantenname"
-                },
-                "type": "string",
-                "source": "field",
-                "required": false
-              },
-              {
-                "name": "Active",
-                "as": "active",
-                "description": {
-                  "en": "Whether the variation is active (\"true\"/\"false\")",
-                  "de": "Ob die Variante aktiv ist (\"true\"/\"false\")"
-                },
-                "type": "string",
-                "source": "field",
-                "required": false
-              },
-              {
-                "name": "Team",
-                "as": "team",
-                "description": {
-                  "en": "Team slug of the product. Defaults to the current team.",
-                  "de": "Team-Slug des Produkts. Standardmäßig das aktuelle Team."
-                },
-                "bot": "The slug of the team the product belongs to. Omit to use the current team.",
-                "type": "string",
-                "source": "field",
-                "required": false,
-                "default": "{{JOAI_TEAM_SLUG}}"
+                "position": "url:contract",
+                "required": true,
+                "desc": "The UUID of the contract",
+                "deDesc": "Die UUID des Contracts",
+                "bot": "The UUID of the contract to fetch."
               }
             ]
           }
         ],
-        "messages": {
-          "success": {
-            "en": "Product variation updated.",
-            "de": "Produktvariante aktualisiert."
-          }
+        "ui": "https://raw.githubusercontent.com/JoAiHQ/warps/main/warps/joai/contract-get/chatapp.6c085729.dist.html"
+      },
+      "extras": null
+    },
+    {
+      "key": "none:joai-contract-list",
+      "identifier": "@joai-contract-list",
+      "alias": "joai-contract-list",
+      "chain": "none",
+      "hash": "b485e7fd63225bd1573ff8c543f30cad7ed83e3e91c4445efab5ad061cc3064c",
+      "checksum": "b485e7fd63225bd1573ff8c543f30cad7ed83e3e91c4445efab5ad061cc3064c",
+      "name": "JoAi: List Contracts",
+      "title": {
+        "en": "List contracts",
+        "de": "Smart Contracts anzeigen",
+        "es": "List contracts",
+        "fr": "List contracts",
+        "it": "List contracts",
+        "ro": "List contracts"
+      },
+      "description": {
+        "en": "View all smart contracts managed by your agent.",
+        "de": "Zeige alle von deinem Agenten verwalteten Smart Contracts an.",
+        "es": "View all smart contracts managed by your agent.",
+        "fr": "View all smart contracts managed by your agent.",
+        "it": "View all smart contracts managed by your agent.",
+        "ro": "View all smart contracts managed by your agent."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
         }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: List Contracts",
+        "title": {
+          "en": "List contracts",
+          "de": "Smart Contracts anzeigen",
+          "es": "List contracts",
+          "fr": "List contracts",
+          "it": "List contracts",
+          "ro": "List contracts"
+        },
+        "description": {
+          "en": "View all smart contracts managed by your agent.",
+          "de": "Zeige alle von deinem Agenten verwalteten Smart Contracts an.",
+          "es": "View all smart contracts managed by your agent.",
+          "fr": "View all smart contracts managed by your agent.",
+          "it": "View all smart contracts managed by your agent.",
+          "ro": "View all smart contracts managed by your agent."
+        },
+        "bot": "Use this when the user wants to see, list, or check their smart contracts.",
+        "vars": {
+          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "auto": true,
+            "label": {
+              "en": "List contracts",
+              "de": "Smart Contracts anzeigen",
+              "es": "List contracts",
+              "fr": "List contracts",
+              "it": "List contracts",
+              "ro": "List contracts"
+            },
+            "destination": {
+              "url": "https://devnet-api.joai.ai/v1/contracts?agent={{JOAI_AGENT_UUID}}",
+              "method": "GET",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+              }
+            },
+            "inputs": []
+          }
+        ],
+        "ui": "https://raw.githubusercontent.com/JoAiHQ/warps/main/warps/joai/contract-list/chatapp.cc1c56cf.dist.html"
       },
       "extras": null
     },
