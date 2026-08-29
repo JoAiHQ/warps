@@ -1,0 +1,116 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Delete Shipping Rate",
+  "title": {
+    "en": "Delete a shipping rate",
+    "de": "Versandtarif löschen",
+    "fr": "Supprimer un tarif d'expédition",
+    "es": "Eliminar una tarifa de envío",
+    "it": "Elimina una tariffa di spedizione",
+    "ro": "Șterge un tarif de livrare"
+  },
+  "description": {
+    "en": "Permanently delete a shipping rate from a zone. Use with care — this cannot be undone.",
+    "de": "Versandtarif aus einer Zone dauerhaft löschen. Vorsicht — dies kann nicht rückgängig gemacht werden.",
+    "fr": "Supprime définitivement un tarif d'expédition d'une zone. À utiliser avec précaution — irréversible.",
+    "es": "Elimina permanentemente una tarifa de envío de una zona. Úsalo con cuidado: no se puede deshacer.",
+    "it": "Elimina definitivamente una tariffa di spedizione da una zona. Da usare con cautela — non reversibile.",
+    "ro": "Șterge definitiv un tarif de livrare dintr-o zonă. Folosește cu atenție — nu poate fi anulat."
+  },
+  "bot": "Use when the user wants to remove a shipping rate. List shipping zones to find zone and rate IDs if unknown.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Delete shipping rate",
+        "de": "Versandtarif löschen",
+        "fr": "Supprimer le tarif",
+        "es": "Eliminar la tarifa",
+        "it": "Elimina la tariffa",
+        "ro": "Șterge tariful"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/teams/{{team}}/shipping-zones/{{zoneId}}/rates/{{rateId}}",
+        "method": "DELETE",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Zone ID",
+          "as": "zoneId",
+          "description": {
+            "en": "The shipping zone ID",
+            "de": "Die Versandzonen-ID",
+            "fr": "L'ID de la zone d'expédition",
+            "es": "El ID de la zona de envío",
+            "it": "L'ID della zona di spedizione",
+            "ro": "ID-ul zonei de livrare"
+          },
+          "type": "string",
+          "position": "url:zoneId",
+          "source": "field",
+          "required": true,
+          "min": 1
+        },
+        {
+          "name": "Rate ID",
+          "as": "rateId",
+          "description": {
+            "en": "The shipping rate ID to delete",
+            "de": "Die ID des zu löschenden Versandtarifs",
+            "fr": "L'ID du tarif à supprimer",
+            "es": "El ID de la tarifa a eliminar",
+            "it": "L'ID della tariffa da eliminare",
+            "ro": "ID-ul tarifului de șters"
+          },
+          "bot": "The shipping rate ID. List shipping zones to find it if unknown.",
+          "type": "string",
+          "position": "url:rateId",
+          "source": "field",
+          "required": true,
+          "min": 1
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug for this action. Defaults to the current team.",
+            "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team.",
+            "fr": "Slug d'équipe pour cette action. Par défaut l'équipe actuelle.",
+            "es": "Slug del equipo para esta acción. Por defecto el equipo actual.",
+            "it": "Slug del team per questa azione. Predefinito: team attuale.",
+            "ro": "Slug-ul echipei pentru această acțiune. Implicit echipa curentă."
+          },
+          "bot": "The slug of the team to operate on. Omit to use the current team.",
+          "type": "string",
+          "position": "url:team",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Shipping rate deleted.",
+      "de": "Versandtarif gelöscht.",
+      "fr": "Tarif d'expédition supprimé.",
+      "es": "Tarifa de envío eliminada.",
+      "it": "Tariffa di spedizione eliminata.",
+      "ro": "Tariful de livrare șters."
+    },
+    "error": {
+      "en": "Failed to delete shipping rate: {{MESSAGE}}",
+      "de": "Versandtarif konnte nicht gelöscht werden: {{MESSAGE}}"
+    }
+  }
+}

@@ -7,6 +7,44 @@ export type JoAiChangelogEntryAddInputs = {
   description: string;
 };
 
+export type JoAiDeleteAddressInputs = {
+  addressId: string;
+};
+
+export type JoAiListAddressesInputs = {
+  type: string;
+};
+
+export type JoAiListAddressesData = {
+  addresses: any;
+};
+
+export type JoAiStoreAddressInputs = {
+  name: string;
+  country: string;
+  type: string;
+  addressOne: string;
+  city: string;
+  zipCode: string;
+  vatId: string;
+  team: string;
+};
+
+export type JoAiStoreAddressData = {
+  ADDRESS_ID: any;
+  ADDRESS_NAME: any;
+};
+
+export type JoAiUpdateAddressInputs = {
+  addressId: string;
+  name: string;
+  country: string;
+  addressOne: string;
+  city: string;
+  zipCode: string;
+  type: string;
+};
+
 export type JoAiCreateAgentInputs = {
   name: string;
 };
@@ -28,14 +66,6 @@ export type JoAiCreateAPITokenInputs = {
 
 export type JoAiCreateAPITokenData = {
   TOKEN: any;
-};
-
-export type JoAiSetBillingAddressInputs = {
-  userId: string;
-  firstName: string;
-  lastName: string;
-  country: string;
-  vatId: string;
 };
 
 export type JoAiCreateBlueprintInputs = {
@@ -104,6 +134,60 @@ export type JoAiUpdateCharacterInputs = {
   name: string;
   systemPrompt: string;
   bio: string;
+};
+
+export type JoAiCheckoutFulfillmentLocationsInputs = {
+  team: string;
+};
+
+export type JoAiCheckoutFulfillmentLocationsData = {
+  LOCATIONS: any;
+};
+
+export type JoAiPlaceCheckoutOrderInputs = {
+  items: string;
+  fulfillmentMethod: string;
+  guest: string;
+  billingAddress: string;
+  shippingAddress: string;
+  idempotencyKey: string;
+  notes: string;
+  sendConfirmation: boolean;
+  team: string;
+};
+
+export type JoAiPlaceCheckoutOrderData = {
+  ORDER_ID: any;
+  ORDER_STATUS: any;
+  PAYMENT_URL: any;
+  GUEST_ACCESS_TOKEN: any;
+};
+
+export type JoAiCheckoutShippingRatesInputs = {
+  items: string;
+  'address.country': string;
+  'address.zipCode': string;
+  team: string;
+};
+
+export type JoAiCheckoutShippingRatesData = {
+  SHIPPING_RATES: any;
+};
+
+export type JoAiCheckoutSnapshotInputs = {
+  items: string;
+  fulfillmentMethod: string;
+  billingAddressId: string;
+  shippingAddressId: string;
+  shippingRateId: string;
+  fulfillmentLocationId: string;
+  team: string;
+};
+
+export type JoAiCheckoutSnapshotData = {
+  SNAPSHOT_ID: any;
+  SNAPSHOT_TOTALS: any;
+  SNAPSHOT_ACCESS_TOKEN: any;
 };
 
 export type JoAiDeleteContactActivityInputs = {
@@ -356,6 +440,73 @@ export type JoAiUpdateElementVariationInputs = {
   variationId: string;
   label: string;
   aspectRatio: string;
+};
+
+export type JoAiCreateFulfillmentInputs = {
+  orderId: string;
+  items: string;
+  carrierCode: string;
+  trackingNumber: string;
+  trackingUrl: string;
+  team: string;
+};
+
+export type JoAiCreateFulfillmentData = {
+  FULFILLMENT_ID: any;
+  FULFILLMENT_STATUS: any;
+};
+
+export type JoAiListFulfillmentsInputs = {
+  orderId: string;
+  team: string;
+};
+
+export type JoAiCreateFulfillmentLocationInputs = {
+  name: string;
+  addressId: string;
+  instructions: string;
+  active: string;
+  team: string;
+};
+
+export type JoAiCreateFulfillmentLocationData = {
+  LOCATION_ID: any;
+  LOCATION_NAME: any;
+};
+
+export type JoAiDeleteFulfillmentLocationInputs = {
+  locationId: string;
+  team: string;
+};
+
+export type JoAiListFulfillmentLocationsInputs = {
+  team: string;
+};
+
+export type JoAiUpdateFulfillmentLocationInputs = {
+  locationId: string;
+  name: string;
+  addressId: string;
+  instructions: string;
+  active: string;
+  team: string;
+};
+
+export type JoAiUpdateFulfillmentLocationData = {
+  LOCATION_ID: any;
+  LOCATION_NAME: any;
+};
+
+export type JoAiUpdateFulfillmentInputs = {
+  orderId: string;
+  fulfillmentId: string;
+  status: string;
+  team: string;
+};
+
+export type JoAiUpdateFulfillmentData = {
+  FULFILLMENT_ID: any;
+  FULFILLMENT_STATUS: any;
 };
 
 export type JoAiCreateGoalInputs = {
@@ -612,6 +763,36 @@ export type JoAiDeleteOrderInputs = {
   team: string;
 };
 
+export type JoAiGetOrderInputs = {
+  orderId: string;
+  orderAccessToken: string;
+  team: string;
+};
+
+export type JoAiGetOrderData = {
+  ORDER_ID: any;
+  ORDER_STATUS: any;
+  ORDER_TOTAL: any;
+  PAYMENT_URL: any;
+};
+
+export type JoAiPayOrderInputs = {
+  orderId: string;
+  team: string;
+};
+
+export type JoAiPayOrderData = {
+  PAYMENT_URL: any;
+};
+
+export type JoAiCreatePortalSessionInputs = {
+  redirect: string;
+};
+
+export type JoAiCreatePortalSessionData = {
+  portalUrl: any;
+};
+
 export type JoAiCreatePrivateAppInputs = {
   name: string;
   description: string;
@@ -668,6 +849,7 @@ export type JoAiUpdateProductInputs = {
   active: string;
   virtual: string;
   public: string;
+  media: string;
   team: string;
 };
 
@@ -683,6 +865,14 @@ export type JoAiCreateProductVariationInputs = {
   price: number;
   type: string;
   meta: string;
+  team: string;
+};
+
+export type JoAiUpdateProductVariationInputs = {
+  variationId: string;
+  price: number;
+  name: string;
+  active: string;
   team: string;
 };
 
@@ -702,6 +892,38 @@ export type JoAiCreateReminderInputs = {
 
 export type JoAiDeleteReminderInputs = {
   reminderId: string;
+};
+
+export type JoAiCreateReturnInputs = {
+  orderId: string;
+  reason: string;
+  items: string;
+  fulfillmentId: string;
+  team: string;
+};
+
+export type JoAiCreateReturnData = {
+  RETURN_ID: any;
+  RETURN_STATUS: any;
+};
+
+export type JoAiListReturnsInputs = {
+  orderId: string;
+  orderAccessToken: string;
+  team: string;
+};
+
+export type JoAiUpdateReturnInputs = {
+  returnId: string;
+  status: string;
+  merchantNote: string;
+  refundAmount: string;
+  team: string;
+};
+
+export type JoAiUpdateReturnData = {
+  RETURN_ID: any;
+  RETURN_STATUS: any;
 };
 
 export type JoAiCreateSegmentInputs = {
@@ -790,6 +1012,89 @@ export type JoAiSetTeamSettingInputs = {
   team: string;
 };
 
+export type JoAiCreateShippingRateInputs = {
+  zoneId: string;
+  name: string;
+  price: string;
+  freeShippingThreshold: string;
+  minOrderValue: string;
+  maxOrderValue: string;
+  minWeight: string;
+  maxWeight: string;
+  estimatedMinDays: string;
+  estimatedMaxDays: string;
+  active: string;
+  team: string;
+};
+
+export type JoAiCreateShippingRateData = {
+  RATE_ID: any;
+  RATE_NAME: any;
+};
+
+export type JoAiDeleteShippingRateInputs = {
+  zoneId: string;
+  rateId: string;
+  team: string;
+};
+
+export type JoAiUpdateShippingRateInputs = {
+  zoneId: string;
+  rateId: string;
+  name: string;
+  price: string;
+  freeShippingThreshold: string;
+  minOrderValue: string;
+  maxOrderValue: string;
+  minWeight: string;
+  maxWeight: string;
+  estimatedMinDays: string;
+  estimatedMaxDays: string;
+  active: string;
+  team: string;
+};
+
+export type JoAiUpdateShippingRateData = {
+  RATE_ID: any;
+  RATE_NAME: any;
+};
+
+export type JoAiCreateShippingZoneInputs = {
+  name: string;
+  countries: string;
+  postalCodeRules: string;
+  active: string;
+  team: string;
+};
+
+export type JoAiCreateShippingZoneData = {
+  ZONE_ID: any;
+  ZONE_NAME: any;
+};
+
+export type JoAiDeleteShippingZoneInputs = {
+  zoneId: string;
+  team: string;
+};
+
+export type JoAiListShippingZonesInputs = {
+  team: string;
+};
+
+export type JoAiUpdateShippingZoneInputs = {
+  zoneId: string;
+  name: string;
+  countries: string;
+  postalCodeRules: string;
+  active: string;
+  team: string;
+};
+
+export type JoAiUpdateShippingZoneData = {
+  ZONE_ID: any;
+  ZONE_NAME: any;
+};
+
 export type JoAiProvisionSiteInputs = {
   brand: string;
   team: string;
@@ -838,6 +1143,49 @@ export type JoAiStudioSendInputs = {
   outputType: string;
   sourceUrl: string;
   references: string;
+};
+
+export type JoAiCancelSubscriptionInputs = {
+  subscriptionId: string;
+  team: string;
+};
+
+export type JoAiUpdateSubscriptionDeliveryInputs = {
+  subscriptionId: string;
+  fulfillmentMethod: string;
+  shippingAddressId: string;
+  shippingRateId: string;
+  fulfillmentLocationId: string;
+  team: string;
+};
+
+export type JoAiListSubscriptionsInputs = {
+  team: string;
+};
+
+export type JoAiPauseSubscriptionDeliveryInputs = {
+  subscriptionId: string;
+  team: string;
+};
+
+export type JoAiResumeSubscriptionDeliveryInputs = {
+  subscriptionId: string;
+  team: string;
+};
+
+export type JoAiResumeSubscriptionInputs = {
+  subscriptionId: string;
+  team: string;
+};
+
+export type JoAiShowSubscriptionInputs = {
+  subscriptionId: string;
+  team: string;
+};
+
+export type JoAiSkipSubscriptionDeliveryInputs = {
+  subscriptionId: string;
+  team: string;
 };
 
 export type JoAiCreateScheduledTaskInputs = {
@@ -981,6 +1329,7 @@ export type JoAiCreateUserInputs = {
 
 export type JoAiCreateUserData = {
   userId: any;
+  personalTeamSlug: any;
 };
 
 export type JoAiUserNameUpdateInputs = {

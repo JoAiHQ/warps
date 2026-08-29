@@ -1,0 +1,85 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Show Subscription",
+  "title": {
+    "en": "Show subscription",
+    "de": "Abonnement anzeigen",
+    "fr": "Afficher l'abonnement",
+    "es": "Ver suscripción",
+    "it": "Mostra abbonamento",
+    "ro": "Afișează abonamentul"
+  },
+  "description": {
+    "en": "Get details of a specific subscription, including status, renewal date, contact, and delivery profile.",
+    "de": "Zeige Details eines bestimmten Abonnements mit Status, Verlängerungsdatum, Kontakt und Lieferprofil an.",
+    "fr": "Obtenez les détails d'un abonnement, y compris le statut, la date de renouvellement, le contact et le profil de livraison.",
+    "es": "Obtén los detalles de una suscripción, incluidos estado, fecha de renovación, contacto y perfil de entrega.",
+    "it": "Ottieni i dettagli di un abbonamento, inclusi stato, data di rinnovo, contatto e profilo di consegna.",
+    "ro": "Obține detaliile unui abonament, inclusiv status, data reînnoirii, contactul și profilul de livrare."
+  },
+  "bot": "Use this when the user wants details about a specific subscription. If they refer to a subscription by customer or product, list subscriptions first to find the matching ID.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "auto": true,
+      "label": {
+        "en": "Show subscription",
+        "de": "Abonnement anzeigen",
+        "fr": "Afficher l'abonnement",
+        "es": "Ver suscripción",
+        "it": "Mostra abbonamento",
+        "ro": "Afișează abonamentul"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/subscriptions/{{subscriptionId}}",
+        "method": "GET",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Subscription ID",
+          "as": "subscriptionId",
+          "description": {
+            "en": "The hashid of the subscription to show",
+            "de": "Die Hashid des anzuzeigenden Abonnements",
+            "fr": "Le hashid de l'abonnement à afficher",
+            "es": "El hashid de la suscripción a consultar",
+            "it": "L'hashid dell'abbonamento da mostrare",
+            "ro": "Hashid-ul abonamentului de afișat"
+          },
+          "bot": "The subscription hash ID. If the user refers to a subscription by customer or product, list subscriptions first to find the matching ID.",
+          "type": "string",
+          "position": "url:subscriptionId",
+          "source": "field",
+          "required": true,
+          "min": 1
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug for this action. Defaults to the current team.",
+            "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team.",
+            "fr": "Slug d'équipe pour cette action. Par défaut l'équipe actuelle.",
+            "es": "Slug del equipo para esta acción. Por defecto el equipo actual.",
+            "it": "Slug del team per questa azione. Predefinito: team attuale.",
+            "ro": "Slug-ul echipei pentru această acțiune. Implicit echipa curentă."
+          },
+          "bot": "The slug of the team to operate on. Omit to use the current team.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ]
+    }
+  ]
+}

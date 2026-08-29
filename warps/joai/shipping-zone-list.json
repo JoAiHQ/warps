@@ -1,0 +1,81 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: List Shipping Zones",
+  "title": {
+    "en": "List shipping zones",
+    "de": "Versandzonen anzeigen",
+    "fr": "Lister les zones d'expédition",
+    "es": "Listar zonas de envío",
+    "it": "Elenca zone di spedizione",
+    "ro": "Listează zonele de livrare"
+  },
+  "description": {
+    "en": "List all shipping zones configured for your team, including countries and rates.",
+    "de": "Alle Versandzonen deines Teams anzeigen, inklusive Länder und Tarife.",
+    "fr": "Liste toutes les zones d'expédition configurées pour votre équipe, pays et tarifs inclus.",
+    "es": "Lista todas las zonas de envío configuradas para tu equipo, incluidos países y tarifas.",
+    "it": "Elenca tutte le zone di spedizione configurate per il team, inclusi paesi e tariffe.",
+    "ro": "Listează toate zonele de livrare configurate pentru echipă, inclusiv țări și tarife."
+  },
+  "bot": "Use when the user wants to see shipping zones or check which countries are covered.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "List shipping zones",
+        "de": "Versandzonen anzeigen",
+        "fr": "Lister les zones",
+        "es": "Listar zonas",
+        "it": "Elenca zone",
+        "ro": "Listează zonele"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/teams/{{team}}/shipping-zones",
+        "method": "GET",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug for this action. Defaults to the current team.",
+            "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team.",
+            "fr": "Slug d'équipe pour cette action. Par défaut l'équipe actuelle.",
+            "es": "Slug del equipo para esta acción. Por defecto el equipo actual.",
+            "it": "Slug del team per questa azione. Predefinito: team attuale.",
+            "ro": "Slug-ul echipei pentru această acțiune. Implicit echipa curentă."
+          },
+          "bot": "The slug of the team to operate on. Omit to use the current team.",
+          "type": "string",
+          "position": "url:team",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Shipping zones loaded.",
+      "de": "Versandzonen geladen.",
+      "fr": "Zones d'expédition chargées.",
+      "es": "Zonas de envío cargadas.",
+      "it": "Zone di spedizione caricate.",
+      "ro": "Zonele de livrare au fost încărcate."
+    },
+    "error": {
+      "en": "Failed to list shipping zones: {{MESSAGE}}",
+      "de": "Versandzonen konnten nicht geladen werden: {{MESSAGE}}"
+    }
+  }
+}

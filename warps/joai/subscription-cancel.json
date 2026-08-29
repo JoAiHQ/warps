@@ -1,0 +1,102 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Cancel Subscription",
+  "title": {
+    "en": "Cancel subscription",
+    "de": "Abonnement kündigen",
+    "fr": "Annuler l'abonnement",
+    "es": "Cancelar suscripción",
+    "it": "Annulla abbonamento",
+    "ro": "Anulează abonamentul"
+  },
+  "description": {
+    "en": "Cancel an active subscription. The customer keeps access until the current billing period ends.",
+    "de": "Kündige ein aktives Abonnement. Der Kunde behält den Zugang bis zum Ende des aktuellen Abrechnungszeitraums.",
+    "fr": "Annulez un abonnement actif. Le client conserve l'accès jusqu'à la fin de la période de facturation en cours.",
+    "es": "Cancela una suscripción activa. El cliente mantiene el acceso hasta el final del periodo de facturación actual.",
+    "it": "Annulla un abbonamento attivo. Il cliente mantiene l'accesso fino alla fine del periodo di fatturazione corrente.",
+    "ro": "Anulează un abonament activ. Clientul păstrează accesul până la sfârșitul perioadei de facturare curente."
+  },
+  "bot": "Use when the user wants to cancel a subscription. If they refer to a subscription by customer or product, list subscriptions first to find the matching ID.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Cancel subscription",
+        "de": "Abonnement kündigen",
+        "fr": "Annuler l'abonnement",
+        "es": "Cancelar suscripción",
+        "it": "Annulla abbonamento",
+        "ro": "Anulează abonamentul"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/subscriptions/{{subscriptionId}}/cancel",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Subscription ID",
+          "as": "subscriptionId",
+          "description": {
+            "en": "The hashid of the subscription to cancel",
+            "de": "Die Hashid des zu kündigenden Abonnements",
+            "fr": "Le hashid de l'abonnement à annuler",
+            "es": "El hashid de la suscripción a cancelar",
+            "it": "L'hashid dell'abbonamento da annullare",
+            "ro": "Hashid-ul abonamentului de anulat"
+          },
+          "bot": "The subscription hash ID. If the user refers to a subscription by customer or product, list subscriptions first to find the matching ID.",
+          "type": "string",
+          "position": "url:subscriptionId",
+          "source": "field",
+          "required": true,
+          "min": 1
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug for this action. Defaults to the current team.",
+            "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team.",
+            "fr": "Slug d'équipe pour cette action. Par défaut l'équipe actuelle.",
+            "es": "Slug del equipo para esta acción. Por defecto el equipo actual.",
+            "it": "Slug del team per questa azione. Predefinito: team attuale.",
+            "ro": "Slug-ul echipei pentru această acțiune. Implicit echipa curentă."
+          },
+          "bot": "The slug of the team to operate on. Omit to use the current team.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Subscription cancelled.",
+      "de": "Abonnement gekündigt.",
+      "fr": "Abonnement annulé.",
+      "es": "Suscripción cancelada.",
+      "it": "Abbonamento annullato.",
+      "ro": "Abonament anulat."
+    },
+    "error": {
+      "en": "Failed to cancel subscription: {{MESSAGE}}",
+      "de": "Abonnement konnte nicht gekündigt werden: {{MESSAGE}}",
+      "fr": "Échec de l'annulation de l'abonnement : {{MESSAGE}}",
+      "es": "Error al cancelar la suscripción: {{MESSAGE}}",
+      "it": "Impossibile annullare l'abbonamento: {{MESSAGE}}",
+      "ro": "Nu s-a putut anula abonamentul: {{MESSAGE}}"
+    }
+  }
+}

@@ -1,0 +1,157 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Update Return",
+  "title": {
+    "en": "Update a return",
+    "de": "Retoure aktualisieren",
+    "fr": "Mettre à jour un retour",
+    "es": "Actualizar una devolución",
+    "it": "Aggiorna un reso",
+    "ro": "Actualizează un retur"
+  },
+  "description": {
+    "en": "Update a return request — approve, reject, mark received, or close. Optionally add a merchant note and refund amount in cents.",
+    "de": "Retourenanfrage aktualisieren — genehmigen, ablehnen, als eingegangen markieren oder schließen. Optional Händlernotiz und Erstattungsbetrag in Cent.",
+    "fr": "Met à jour une demande de retour — approuver, rejeter, marquer reçu ou clôturer. Note marchand et montant de remboursement en centimes optionnels.",
+    "es": "Actualiza una solicitud de devolución — aprobar, rechazar, marcar recibida o cerrar. Nota del comercio e importe de reembolso en céntimos opcionales.",
+    "it": "Aggiorna una richiesta di reso — approva, rifiuta, segna ricevuto o chiudi. Nota commerciante e importo rimborso in centesimi opzionali.",
+    "ro": "Actualizează o cerere de retur — aprobă, respinge, marchează primită sau închide. Notă comerciant și sumă ramburs în cenți opționale."
+  },
+  "bot": "Use when the merchant wants to process a return — set status to approved, rejected, received, or closed. Optional merchantNote and refundAmount (cents).",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Update return",
+        "de": "Retoure aktualisieren",
+        "fr": "Mettre à jour le retour",
+        "es": "Actualizar la devolución",
+        "it": "Aggiorna il reso",
+        "ro": "Actualizează returul"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/returns/{{returnId}}",
+        "method": "PATCH",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Return ID",
+          "as": "returnId",
+          "description": {
+            "en": "The ID of the return request to update",
+            "de": "Die ID der zu aktualisierenden Retourenanfrage",
+            "fr": "L'ID de la demande de retour à mettre à jour",
+            "es": "El ID de la solicitud de devolución a actualizar",
+            "it": "L'ID della richiesta di reso da aggiornare",
+            "ro": "ID-ul cererii de retur de actualizat"
+          },
+          "bot": "The return request ID. List returns for the order if unknown.",
+          "type": "string",
+          "position": "url:returnId",
+          "source": "field",
+          "required": true,
+          "min": 1
+        },
+        {
+          "name": "Status",
+          "as": "status",
+          "description": {
+            "en": "New return status",
+            "de": "Neuer Retouren-Status",
+            "fr": "Nouveau statut de retour",
+            "es": "Nuevo estado de la devolución",
+            "it": "Nuovo stato del reso",
+            "ro": "Noul status al returului"
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "options": {
+            "approved": "Approved",
+            "rejected": "Rejected",
+            "received": "Received",
+            "closed": "Closed"
+          }
+        },
+        {
+          "name": "Merchant Note",
+          "as": "merchantNote",
+          "description": {
+            "en": "Internal note for the merchant (optional)",
+            "de": "Interne Händlernotiz (optional)",
+            "fr": "Note interne marchand (optionnel)",
+            "es": "Nota interna del comercio (opcional)",
+            "it": "Nota interna commerciante (opzionale)",
+            "ro": "Notă internă comerciant (opțional)"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Refund Amount",
+          "as": "refundAmount",
+          "description": {
+            "en": "Refund amount in cents (optional)",
+            "de": "Erstattungsbetrag in Cent (optional)",
+            "fr": "Montant du remboursement en centimes (optionnel)",
+            "es": "Importe del reembolso en céntimos (opcional)",
+            "it": "Importo rimborso in centesimi (opzionale)",
+            "ro": "Sumă ramburs în cenți (opțional)"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug for this action. Defaults to the current team.",
+            "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team.",
+            "fr": "Slug d'équipe pour cette action. Par défaut l'équipe actuelle.",
+            "es": "Slug del equipo para esta acción. Por defecto el equipo actual.",
+            "it": "Slug del team per questa azione. Predefinito: team attuale.",
+            "ro": "Slug-ul echipei pentru această acțiune. Implicit echipa curentă."
+          },
+          "bot": "The slug of the team to operate on. Omit to use the current team.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ],
+      "output": {
+        "id": "out.data.id",
+        "status": "out.data.status"
+      }
+    }
+  ],
+  "output": {
+    "RETURN_ID": "out.1.id",
+    "RETURN_STATUS": "out.1.status"
+  },
+  "messages": {
+    "success": {
+      "en": "Return updated to {{RETURN_STATUS}}.",
+      "de": "Retoure auf {{RETURN_STATUS}} aktualisiert.",
+      "fr": "Retour mis à jour : {{RETURN_STATUS}}.",
+      "es": "Devolución actualizada a {{RETURN_STATUS}}.",
+      "it": "Reso aggiornato a {{RETURN_STATUS}}.",
+      "ro": "Retur actualizat la {{RETURN_STATUS}}."
+    },
+    "error": {
+      "en": "Failed to update return: {{MESSAGE}}",
+      "de": "Retoure konnte nicht aktualisiert werden: {{MESSAGE}}"
+    }
+  }
+}

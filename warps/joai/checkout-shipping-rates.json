@@ -1,0 +1,95 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Checkout Shipping Rates",
+  "title": {
+    "en": "Get checkout shipping rates"
+  },
+  "description": {
+    "en": "Calculate available shipping rates for cart items and a destination address."
+  },
+  "bot": "Use during checkout to quote shipping. Pass items as a JSON array and the destination country and zip code.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Get shipping rates"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/shops/{{team}}/checkout/shipping-rates",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}",
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Items",
+          "as": "items",
+          "description": {
+            "en": "Cart items — array of {id, type, quantity} objects"
+          },
+          "bot": "JSON array of line items, e.g. [{\"id\":\"abc\",\"type\":\"product\",\"quantity\":1}].",
+          "type": "json",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Country",
+          "as": "address.country",
+          "description": {
+            "en": "Destination country (two-letter ISO code)"
+          },
+          "bot": "Convert the country to the two-letter ISO 3166-1 alpha-2 code before submitting.",
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Zip Code",
+          "as": "address.zipCode",
+          "description": {
+            "en": "Destination postal or ZIP code"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug for this action. Defaults to the current team."
+          },
+          "bot": "The slug of the shop team. Omit to use the current team.",
+          "type": "string",
+          "source": "field",
+          "position": "url:team",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ],
+      "output": {
+        "rates": "out.data"
+      }
+    }
+  ],
+  "output": {
+    "SHIPPING_RATES": "out.1.rates"
+  },
+  "messages": {
+    "success": {
+      "en": "Shipping rates loaded."
+    },
+    "error": {
+      "en": "Failed to get shipping rates: {{MESSAGE}}"
+    }
+  }
+}

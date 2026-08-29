@@ -714,6 +714,39 @@ export const meta: Record<string, WarpExtras> = {
       ],
     },
   },
+  'checkout-place-order': {
+    keywords: {
+      en: ['place order', 'checkout', 'shop order', 'guest checkout', 'storefront order'],
+      de: ['Bestellung aufgeben', 'Checkout', 'Shop-Bestellung', 'Gast-Checkout'],
+    },
+    useCases: {
+      en: ['Place a storefront order with shipping or pickup fulfillment', 'Complete guest checkout with cart items and addresses'],
+      de: ['Storefront-Bestellung mit Versand oder Abholung aufgeben', 'Gast-Checkout mit Warenkorb und Adressen abschließen'],
+    },
+    category: 'commerce',
+  },
+  'fulfillment-create': {
+    keywords: {
+      en: ['create fulfillment', 'ship order', 'pickup ready', 'tracking number'],
+      de: ['Fulfillment erstellen', 'Bestellung versenden', 'Abholung bereit', 'Sendungsnummer'],
+    },
+    useCases: {
+      en: ['Mark order items as shipped with tracking', 'Create a pickup fulfillment for an order'],
+      de: ['Bestellpositionen als versendet markieren', 'Abhol-Fulfillment für eine Bestellung erstellen'],
+    },
+    category: 'commerce',
+  },
+  'shipping-zone-list': {
+    keywords: {
+      en: ['shipping zones', 'delivery zones', 'shipping rates setup'],
+      de: ['Versandzonen', 'Lieferzonen', 'Versandtarife'],
+    },
+    useCases: {
+      en: ['View configured shipping zones and rates for the shop'],
+      de: ['Konfigurierte Versandzonen und Tarife des Shops anzeigen'],
+    },
+    category: 'commerce',
+  },
   'service-list': {
     keywords: {
       en: ['list services', 'view services', 'service catalog', 'billable services', 'appointment services'],

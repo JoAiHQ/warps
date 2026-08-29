@@ -1,0 +1,90 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Get Order",
+  "title": {
+    "en": "Get order"
+  },
+  "description": {
+    "en": "Fetch order details by ID. Guest access requires the X-Order-Access-Token from checkout."
+  },
+  "bot": "Use when the user wants order details. For guest orders, pass the access token returned at checkout.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Get order"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/orders/{{orderId}}",
+        "method": "GET",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Order ID",
+          "as": "orderId",
+          "description": {
+            "en": "The hashid of the order"
+          },
+          "bot": "The order hash ID. List orders first if the user refers to an order by customer or item.",
+          "type": "string",
+          "position": "url:orderId",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Order Access Token",
+          "as": "orderAccessToken",
+          "description": {
+            "en": "Guest access token for the order"
+          },
+          "bot": "Optional. Required for guest checkout orders — use the guestAccessToken from place-order.",
+          "type": "string",
+          "source": "field",
+          "position": "header:X-Order-Access-Token",
+          "required": false
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug for this action. Defaults to the current team."
+          },
+          "bot": "The slug of the team to operate on. Omit to use the current team.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ],
+      "output": {
+        "id": "out.data.id",
+        "status": "out.data.status",
+        "total": "out.data.total",
+        "paymentUrl": "out.data.paymentUrl"
+      }
+    }
+  ],
+  "output": {
+    "ORDER_ID": "out.1.id",
+    "ORDER_STATUS": "out.1.status",
+    "ORDER_TOTAL": "out.1.total",
+    "PAYMENT_URL": "out.1.paymentUrl"
+  },
+  "messages": {
+    "success": {
+      "en": "Order {{ORDER_ID}} — status: {{ORDER_STATUS}}."
+    },
+    "error": {
+      "en": "Failed to get order: {{MESSAGE}}"
+    }
+  }
+}

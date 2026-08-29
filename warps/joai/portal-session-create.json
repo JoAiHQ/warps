@@ -1,0 +1,88 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Create Portal Session",
+  "title": {
+    "en": "Create portal session",
+    "de": "Portal-Sitzung erstellen",
+    "fr": "Créer une session portail",
+    "es": "Crear sesión del portal",
+    "it": "Crea sessione portale",
+    "ro": "Creează sesiune portal"
+  },
+  "description": {
+    "en": "Create a one-time portal login URL for an authenticated user. Redirects them to a safe storefront or app destination after sign-in.",
+    "de": "Erstelle eine einmalige Portal-Anmelde-URL für einen authentifizierten Nutzer. Leitet ihn nach dem Login zu einem sicheren Storefront- oder App-Ziel weiter.",
+    "fr": "Créez une URL de connexion portail à usage unique pour un utilisateur authentifié. Redirige vers une destination storefront ou app sécurisée après connexion.",
+    "es": "Crea una URL de inicio de sesión del portal de un solo uso para un usuario autenticado. Le redirige a un destino seguro de tienda o app tras iniciar sesión.",
+    "it": "Crea un URL di accesso al portale monouso per un utente autenticato. Lo reindirizza a una destinazione sicura di storefront o app dopo l'accesso.",
+    "ro": "Creează un URL de autentificare portal de unică folosință pentru un utilizator autentificat. Îl redirecționează către o destinație sigură de storefront sau app după autentificare."
+  },
+  "bot": "Use when you need to send a customer a secure portal link to manage orders, subscriptions, or their account. The redirect must be an allowed app or registered storefront URL.",
+  "vars": {
+    "JOAI_API_TOKEN": "env:JOAI_API_TOKEN|Admin Sanctum API token"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Create portal session",
+        "de": "Portal-Sitzung erstellen",
+        "fr": "Créer une session portail",
+        "es": "Crear sesión del portal",
+        "it": "Crea sessione portale",
+        "ro": "Creează sesiune portal"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/auth/portal-sessions",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{JOAI_API_TOKEN}}",
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Redirect URL",
+          "as": "redirect",
+          "description": {
+            "en": "URL to redirect the user to after portal sign-in",
+            "de": "URL, zu der der Nutzer nach dem Portal-Login weitergeleitet wird",
+            "fr": "URL de redirection après connexion au portail",
+            "es": "URL a la que redirigir al usuario tras iniciar sesión en el portal",
+            "it": "URL a cui reindirizzare l'utente dopo l'accesso al portale",
+            "ro": "URL către care utilizatorul este redirecționat după autentificarea în portal"
+          },
+          "bot": "Must be an allowed app or registered storefront URL, e.g. https://app.example/shop?tab=orders&team=demo.",
+          "type": "string",
+          "source": "field",
+          "required": true
+        }
+      ],
+      "output": {
+        "url": "out.data.url"
+      }
+    }
+  ],
+  "output": {
+    "portalUrl": "out.1.url"
+  },
+  "messages": {
+    "success": {
+      "en": "Portal link ready: {{portalUrl}}",
+      "de": "Portal-Link bereit: {{portalUrl}}",
+      "fr": "Lien portail prêt : {{portalUrl}}",
+      "es": "Enlace del portal listo: {{portalUrl}}",
+      "it": "Link portale pronto: {{portalUrl}}",
+      "ro": "Link portal gata: {{portalUrl}}"
+    },
+    "error": {
+      "en": "Failed to create portal session: {{MESSAGE}}",
+      "de": "Portal-Sitzung konnte nicht erstellt werden: {{MESSAGE}}",
+      "fr": "Échec de la création de la session portail : {{MESSAGE}}",
+      "es": "Error al crear la sesión del portal: {{MESSAGE}}",
+      "it": "Impossibile creare la sessione portale: {{MESSAGE}}",
+      "ro": "Nu s-a putut crea sesiunea portal: {{MESSAGE}}"
+    }
+  }
+}

@@ -1,0 +1,102 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Resume Subscription Delivery",
+  "title": {
+    "en": "Resume subscription delivery",
+    "de": "Abonnement-Lieferung fortsetzen",
+    "fr": "Reprendre la livraison de l'abonnement",
+    "es": "Reanudar entrega de suscripción",
+    "it": "Riprendi consegna abbonamento",
+    "ro": "Reia livrarea abonamentului"
+  },
+  "description": {
+    "en": "Resume paused subscription deliveries so the next order is scheduled again.",
+    "de": "Setze pausierte Abonnement-Lieferungen fort, damit die nächste Bestellung wieder geplant wird.",
+    "fr": "Reprenez les livraisons d'abonnement en pause pour que la prochaine commande soit replanifiée.",
+    "es": "Reanuda las entregas de suscripción pausadas para que se vuelva a programar el próximo pedido.",
+    "it": "Riprendi le consegne abbonamento in pausa così il prossimo ordine viene ripianificato.",
+    "ro": "Reia livrările abonamentului puse pe pauză, astfel încât următoarea comandă să fie reprogramată."
+  },
+  "bot": "Use when the user wants to resume deliveries after pausing a subscription. If they refer to a subscription by customer or product, list subscriptions first to find the matching ID.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Resume delivery",
+        "de": "Lieferung fortsetzen",
+        "fr": "Reprendre la livraison",
+        "es": "Reanudar entrega",
+        "it": "Riprendi consegna",
+        "ro": "Reia livrarea"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/subscriptions/{{subscriptionId}}/resume-delivery",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Subscription ID",
+          "as": "subscriptionId",
+          "description": {
+            "en": "The hashid of the subscription",
+            "de": "Die Hashid des Abonnements",
+            "fr": "Le hashid de l'abonnement",
+            "es": "El hashid de la suscripción",
+            "it": "L'hashid dell'abbonamento",
+            "ro": "Hashid-ul abonamentului"
+          },
+          "bot": "The subscription hash ID. If the user refers to a subscription by customer or product, list subscriptions first to find the matching ID.",
+          "type": "string",
+          "position": "url:subscriptionId",
+          "source": "field",
+          "required": true,
+          "min": 1
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug for this action. Defaults to the current team.",
+            "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team.",
+            "fr": "Slug d'équipe pour cette action. Par défaut l'équipe actuelle.",
+            "es": "Slug del equipo para esta acción. Por defecto el equipo actual.",
+            "it": "Slug del team per questa azione. Predefinito: team attuale.",
+            "ro": "Slug-ul echipei pentru această acțiune. Implicit echipa curentă."
+          },
+          "bot": "The slug of the team to operate on. Omit to use the current team.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Subscription delivery resumed.",
+      "de": "Abonnement-Lieferung fortgesetzt.",
+      "fr": "Livraison de l'abonnement reprise.",
+      "es": "Entrega de suscripción reanudada.",
+      "it": "Consegna abbonamento ripresa.",
+      "ro": "Livrarea abonamentului a fost reluată."
+    },
+    "error": {
+      "en": "Failed to resume subscription delivery: {{MESSAGE}}",
+      "de": "Abonnement-Lieferung konnte nicht fortgesetzt werden: {{MESSAGE}}",
+      "fr": "Échec de la reprise de la livraison : {{MESSAGE}}",
+      "es": "Error al reanudar la entrega de la suscripción: {{MESSAGE}}",
+      "it": "Impossibile riprendere la consegna dell'abbonamento: {{MESSAGE}}",
+      "ro": "Nu s-a putut relua livrarea abonamentului: {{MESSAGE}}"
+    }
+  }
+}

@@ -1,0 +1,102 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Resume Subscription",
+  "title": {
+    "en": "Resume subscription",
+    "de": "Abonnement fortsetzen",
+    "fr": "Reprendre l'abonnement",
+    "es": "Reanudar suscripción",
+    "it": "Riprendi abbonamento",
+    "ro": "Reia abonamentul"
+  },
+  "description": {
+    "en": "Resume a cancelled subscription before it expires, so billing and renewals continue.",
+    "de": "Setze ein gekündigtes Abonnement fort, bevor es abläuft, damit Abrechnung und Verlängerungen weiterlaufen.",
+    "fr": "Reprenez un abonnement annulé avant son expiration pour que la facturation et les renouvellements continuent.",
+    "es": "Reanuda una suscripción cancelada antes de que expire para que la facturación y las renovaciones continúen.",
+    "it": "Riprendi un abbonamento annullato prima della scadenza, così fatturazione e rinnovi continuano.",
+    "ro": "Reia un abonament anulat înainte să expire, astfel încât facturarea și reînnoirile să continue."
+  },
+  "bot": "Use when the user wants to undo a subscription cancellation. If they refer to a subscription by customer or product, list subscriptions first to find the matching ID.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Resume subscription",
+        "de": "Abonnement fortsetzen",
+        "fr": "Reprendre l'abonnement",
+        "es": "Reanudar suscripción",
+        "it": "Riprendi abbonamento",
+        "ro": "Reia abonamentul"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/subscriptions/{{subscriptionId}}/resume",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Subscription ID",
+          "as": "subscriptionId",
+          "description": {
+            "en": "The hashid of the subscription to resume",
+            "de": "Die Hashid des fortzusetzenden Abonnements",
+            "fr": "Le hashid de l'abonnement à reprendre",
+            "es": "El hashid de la suscripción a reanudar",
+            "it": "L'hashid dell'abbonamento da riprendere",
+            "ro": "Hashid-ul abonamentului de reluat"
+          },
+          "bot": "The subscription hash ID. If the user refers to a subscription by customer or product, list subscriptions first to find the matching ID.",
+          "type": "string",
+          "position": "url:subscriptionId",
+          "source": "field",
+          "required": true,
+          "min": 1
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug for this action. Defaults to the current team.",
+            "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team.",
+            "fr": "Slug d'équipe pour cette action. Par défaut l'équipe actuelle.",
+            "es": "Slug del equipo para esta acción. Por defecto el equipo actual.",
+            "it": "Slug del team per questa azione. Predefinito: team attuale.",
+            "ro": "Slug-ul echipei pentru această acțiune. Implicit echipa curentă."
+          },
+          "bot": "The slug of the team to operate on. Omit to use the current team.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Subscription resumed.",
+      "de": "Abonnement fortgesetzt.",
+      "fr": "Abonnement repris.",
+      "es": "Suscripción reanudada.",
+      "it": "Abbonamento ripreso.",
+      "ro": "Abonament reluat."
+    },
+    "error": {
+      "en": "Failed to resume subscription: {{MESSAGE}}",
+      "de": "Abonnement konnte nicht fortgesetzt werden: {{MESSAGE}}",
+      "fr": "Échec de la reprise de l'abonnement : {{MESSAGE}}",
+      "es": "Error al reanudar la suscripción: {{MESSAGE}}",
+      "it": "Impossibile riprendere l'abbonamento: {{MESSAGE}}",
+      "ro": "Nu s-a putut relua abonamentul: {{MESSAGE}}"
+    }
+  }
+}

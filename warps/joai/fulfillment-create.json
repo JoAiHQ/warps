@@ -1,0 +1,166 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Create Fulfillment",
+  "title": {
+    "en": "Create a fulfillment",
+    "de": "Fulfillment erstellen",
+    "fr": "Créer une expédition",
+    "es": "Crear un envío",
+    "it": "Crea un'evasione",
+    "ro": "Creează o livrare"
+  },
+  "description": {
+    "en": "Create a fulfillment for an order with line items to ship. Optionally add carrier code and tracking details.",
+    "de": "Erstelle ein Fulfillment für eine Bestellung mit zu versendenden Positionen. Optional mit Carrier-Code und Tracking.",
+    "fr": "Crée une expédition pour une commande avec les lignes à expédier. Ajoutez optionnellement le transporteur et le suivi.",
+    "es": "Crea un envío para un pedido con las líneas a enviar. Opcionalmente añade transportista y seguimiento.",
+    "it": "Crea un'evasione per un ordine con le righe da spedire. Opzionalmente aggiungi corriere e tracking.",
+    "ro": "Creează o livrare pentru o comandă cu liniile de expediat. Opțional adaugă curierul și tracking-ul."
+  },
+  "bot": "Use when the user wants to ship or fulfill part of an order. Pass items as a JSON array like [{\"orderItemId\":1,\"quantity\":2}]. Optional: carrierCode, trackingNumber, trackingUrl.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Create fulfillment",
+        "de": "Fulfillment erstellen",
+        "fr": "Créer l'expédition",
+        "es": "Crear el envío",
+        "it": "Crea l'evasione",
+        "ro": "Creează livrarea"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/orders/{{orderId}}/fulfillments",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Order ID",
+          "as": "orderId",
+          "description": {
+            "en": "The hashid of the order to fulfill",
+            "de": "Die Hashid der zu erfüllenden Bestellung",
+            "fr": "Le hashid de la commande à expédier",
+            "es": "El hashid del pedido a enviar",
+            "it": "L'hashid dell'ordine da evadere",
+            "ro": "Hashid-ul comenzii de livrat"
+          },
+          "bot": "The order hash ID. If the user refers to an order by customer or item, list orders first to find the matching ID.",
+          "type": "string",
+          "position": "url:orderId",
+          "source": "field",
+          "required": true,
+          "min": 1
+        },
+        {
+          "name": "Items",
+          "as": "items",
+          "description": {
+            "en": "Line items to fulfill — JSON array of {orderItemId, quantity}",
+            "de": "Zu erfüllende Positionen — JSON-Array mit {orderItemId, quantity}",
+            "fr": "Lignes à expédier — tableau JSON {orderItemId, quantity}",
+            "es": "Líneas a enviar — array JSON {orderItemId, quantity}",
+            "it": "Righe da evadere — array JSON {orderItemId, quantity}",
+            "ro": "Linii de livrat — array JSON {orderItemId, quantity}"
+          },
+          "type": "json",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Carrier Code",
+          "as": "carrierCode",
+          "description": {
+            "en": "Shipping carrier code (optional)",
+            "de": "Carrier-Code (optional)",
+            "fr": "Code transporteur (optionnel)",
+            "es": "Código del transportista (opcional)",
+            "it": "Codice corriere (opzionale)",
+            "ro": "Cod curier (opțional)"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Tracking Number",
+          "as": "trackingNumber",
+          "description": {
+            "en": "Tracking number (optional)",
+            "de": "Sendungsnummer (optional)",
+            "fr": "Numéro de suivi (optionnel)",
+            "es": "Número de seguimiento (opcional)",
+            "it": "Numero di tracking (opzionale)",
+            "ro": "Număr de tracking (opțional)"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Tracking URL",
+          "as": "trackingUrl",
+          "description": {
+            "en": "Tracking URL (optional)",
+            "de": "Tracking-URL (optional)",
+            "fr": "URL de suivi (optionnel)",
+            "es": "URL de seguimiento (opcional)",
+            "it": "URL di tracking (opzionale)",
+            "ro": "URL de tracking (opțional)"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug for this action. Defaults to the current team.",
+            "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team.",
+            "fr": "Slug d'équipe pour cette action. Par défaut l'équipe actuelle.",
+            "es": "Slug del equipo para esta acción. Por defecto el equipo actual.",
+            "it": "Slug del team per questa azione. Predefinito: team attuale.",
+            "ro": "Slug-ul echipei pentru această acțiune. Implicit echipa curentă."
+          },
+          "bot": "The slug of the team to operate on. Omit to use the current team.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ],
+      "output": {
+        "id": "out.data.id",
+        "status": "out.data.status"
+      }
+    }
+  ],
+  "output": {
+    "FULFILLMENT_ID": "out.1.id",
+    "FULFILLMENT_STATUS": "out.1.status"
+  },
+  "messages": {
+    "success": {
+      "en": "Fulfillment created (status: {{FULFILLMENT_STATUS}}).",
+      "de": "Fulfillment erstellt (Status: {{FULFILLMENT_STATUS}}).",
+      "fr": "Expédition créée (statut : {{FULFILLMENT_STATUS}}).",
+      "es": "Envío creado (estado: {{FULFILLMENT_STATUS}}).",
+      "it": "Evasione creata (stato: {{FULFILLMENT_STATUS}}).",
+      "ro": "Livrare creată (status: {{FULFILLMENT_STATUS}})."
+    },
+    "error": {
+      "en": "Failed to create fulfillment: {{MESSAGE}}",
+      "de": "Fulfillment konnte nicht erstellt werden: {{MESSAGE}}"
+    }
+  }
+}
