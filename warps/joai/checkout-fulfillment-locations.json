@@ -1,0 +1,63 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Checkout Fulfillment Locations",
+  "title": {
+    "en": "List pickup locations"
+  },
+  "description": {
+    "en": "List active pickup/fulfillment locations for shop checkout."
+  },
+  "bot": "Use during checkout when fulfillmentMethod is pickup to show available pickup locations.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "auto": true,
+      "label": {
+        "en": "List pickup locations"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/shops/{{team}}/checkout/fulfillment-locations",
+        "method": "GET",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}",
+          "Accept": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug for this action. Defaults to the current team."
+          },
+          "bot": "The slug of the shop team. Omit to use the current team.",
+          "type": "string",
+          "source": "field",
+          "position": "url:team",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ],
+      "output": {
+        "locations": "out.data"
+      }
+    }
+  ],
+  "output": {
+    "LOCATIONS": "out.1.locations"
+  },
+  "messages": {
+    "success": {
+      "en": "Pickup locations loaded."
+    },
+    "error": {
+      "en": "Failed to list pickup locations: {{MESSAGE}}"
+    }
+  }
+}

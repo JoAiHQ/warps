@@ -1,0 +1,81 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: List Fulfillment Locations",
+  "title": {
+    "en": "List fulfillment locations",
+    "de": "Abholorte anzeigen",
+    "fr": "Lister les points de retrait",
+    "es": "Listar puntos de recogida",
+    "it": "Elenca punti di ritiro",
+    "ro": "Listează locațiile de ridicare"
+  },
+  "description": {
+    "en": "List pickup and fulfillment locations configured for your team.",
+    "de": "Abhol- und Fulfillment-Standorte deines Teams anzeigen.",
+    "fr": "Liste les points de retrait et d'expédition configurés pour votre équipe.",
+    "es": "Lista los puntos de recogida y cumplimiento configurados para tu equipo.",
+    "it": "Elenca i punti di ritiro e evasione configurati per il team.",
+    "ro": "Listează locațiile de ridicare și livrare configurate pentru echipă."
+  },
+  "bot": "Use when the user wants to see pickup locations or fulfillment addresses for local delivery.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "List fulfillment locations",
+        "de": "Abholorte anzeigen",
+        "fr": "Lister les points",
+        "es": "Listar puntos",
+        "it": "Elenca punti",
+        "ro": "Listează locațiile"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/teams/{{team}}/fulfillment-locations",
+        "method": "GET",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug for this action. Defaults to the current team.",
+            "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team.",
+            "fr": "Slug d'équipe pour cette action. Par défaut l'équipe actuelle.",
+            "es": "Slug del equipo para esta acción. Por defecto el equipo actual.",
+            "it": "Slug del team per questa azione. Predefinito: team attuale.",
+            "ro": "Slug-ul echipei pentru această acțiune. Implicit echipa curentă."
+          },
+          "bot": "The slug of the team to operate on. Omit to use the current team.",
+          "type": "string",
+          "position": "url:team",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Fulfillment locations loaded.",
+      "de": "Abholorte geladen.",
+      "fr": "Points de retrait chargés.",
+      "es": "Puntos de recogida cargados.",
+      "it": "Punti di ritiro caricati.",
+      "ro": "Locațiile de ridicare au fost încărcate."
+    },
+    "error": {
+      "en": "Failed to list fulfillment locations: {{MESSAGE}}",
+      "de": "Abholorte konnten nicht geladen werden: {{MESSAGE}}"
+    }
+  }
+}

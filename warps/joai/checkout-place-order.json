@@ -1,0 +1,156 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Place Checkout Order",
+  "title": {
+    "en": "Place checkout order"
+  },
+  "description": {
+    "en": "Place a shop checkout order with items, fulfillment method, and guest or saved addresses."
+  },
+  "bot": "Use to complete checkout. fulfillmentMethod is required. For guests pass guest {name, email} and billingAddress/shippingAddress JSON. Returns order and guestAccessToken for guest orders.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Place order"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/shops/{{team}}/checkout/orders",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}",
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Items",
+          "as": "items",
+          "description": {
+            "en": "Cart items — array of {id, type, quantity} objects"
+          },
+          "bot": "JSON array of line items, e.g. [{\"id\":\"abc\",\"type\":\"product\",\"quantity\":1}].",
+          "type": "json",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Fulfillment Method",
+          "as": "fulfillmentMethod",
+          "description": {
+            "en": "shipping or pickup"
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "options": ["shipping", "pickup"]
+        },
+        {
+          "name": "Guest",
+          "as": "guest",
+          "description": {
+            "en": "Guest buyer — {name, email} object"
+          },
+          "bot": "Required for guest checkout. JSON object with name and email.",
+          "type": "json",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Billing Address",
+          "as": "billingAddress",
+          "description": {
+            "en": "Guest billing address object"
+          },
+          "bot": "For guests: JSON with name, addressOne, city, zipCode, country, and optional vatId.",
+          "type": "json",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Shipping Address",
+          "as": "shippingAddress",
+          "description": {
+            "en": "Guest shipping address object"
+          },
+          "bot": "For guest shipping: JSON with name, addressOne, city, zipCode, country.",
+          "type": "json",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Idempotency Key",
+          "as": "idempotencyKey",
+          "description": {
+            "en": "Unique key to prevent duplicate orders"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Notes",
+          "as": "notes",
+          "description": {
+            "en": "Order notes"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Send Confirmation",
+          "as": "sendConfirmation",
+          "description": {
+            "en": "Send order confirmation email"
+          },
+          "type": "boolean",
+          "source": "field",
+          "required": false,
+          "default": true
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug for this action. Defaults to the current team."
+          },
+          "bot": "The slug of the shop team. Omit to use the current team.",
+          "type": "string",
+          "source": "field",
+          "position": "url:team",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ],
+      "output": {
+        "id": "out.data.id",
+        "status": "out.data.status",
+        "total": "out.data.total",
+        "paymentUrl": "out.data.paymentUrl",
+        "guestAccessToken": "out.meta.guestAccessToken"
+      }
+    }
+  ],
+  "output": {
+    "ORDER_ID": "out.1.id",
+    "ORDER_STATUS": "out.1.status",
+    "PAYMENT_URL": "out.1.paymentUrl",
+    "GUEST_ACCESS_TOKEN": "out.1.guestAccessToken"
+  },
+  "messages": {
+    "success": {
+      "en": "Order {{ORDER_ID}} placed. Payment: {{PAYMENT_URL}}"
+    },
+    "error": {
+      "en": "Failed to place order: {{MESSAGE}}"
+    }
+  }
+}

@@ -1,0 +1,257 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Create Shipping Rate",
+  "title": {
+    "en": "Create a shipping rate",
+    "de": "Versandtarif erstellen",
+    "fr": "Créer un tarif d'expédition",
+    "es": "Crear una tarifa de envío",
+    "it": "Crea una tariffa di spedizione",
+    "ro": "Creează un tarif de livrare"
+  },
+  "description": {
+    "en": "Add a shipping rate to a zone. Set name and price in cents. Optionally configure order value thresholds, weight limits, and delivery estimates.",
+    "de": "Versandtarif zu einer Zone hinzufügen. Name und Preis in Cent. Optional Bestellwert-Schwellen, Gewichtsgrenzen und Lieferzeiten.",
+    "fr": "Ajoute un tarif d'expédition à une zone. Nom et prix en centimes. Seuils de commande, limites de poids et délais optionnels.",
+    "es": "Añade una tarifa de envío a una zona. Nombre y precio en céntimos. Umbrales de pedido, límites de peso y plazos opcionales.",
+    "it": "Aggiunge una tariffa di spedizione a una zona. Nome e prezzo in centesimi. Soglie ordine, limiti peso e tempi opzionali.",
+    "ro": "Adaugă un tarif de livrare la o zonă. Nume și preț în cenți. Praguri comandă, limite greutate și termene opționale."
+  },
+  "bot": "Use when the user wants to add a shipping option to a zone. Price is in cents. Optional: freeShippingThreshold, minOrderValue, maxOrderValue, minWeight, maxWeight, estimatedMinDays, estimatedMaxDays, active.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Create shipping rate",
+        "de": "Versandtarif erstellen",
+        "fr": "Créer le tarif",
+        "es": "Crear la tarifa",
+        "it": "Crea la tariffa",
+        "ro": "Creează tariful"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/teams/{{team}}/shipping-zones/{{zoneId}}/rates",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Zone ID",
+          "as": "zoneId",
+          "description": {
+            "en": "The shipping zone ID",
+            "de": "Die Versandzonen-ID",
+            "fr": "L'ID de la zone d'expédition",
+            "es": "El ID de la zona de envío",
+            "it": "L'ID della zona di spedizione",
+            "ro": "ID-ul zonei de livrare"
+          },
+          "bot": "The shipping zone ID. List shipping zones if unknown.",
+          "type": "string",
+          "position": "url:zoneId",
+          "source": "field",
+          "required": true,
+          "min": 1
+        },
+        {
+          "name": "Name",
+          "as": "name",
+          "description": {
+            "en": "Rate name, e.g. Standard Shipping",
+            "de": "Tarifname, z. B. Standardversand",
+            "fr": "Nom du tarif, ex. Livraison standard",
+            "es": "Nombre de la tarifa, p. ej. Envío estándar",
+            "it": "Nome tariffa, es. Spedizione standard",
+            "ro": "Numele tarifului, ex. Livrare standard"
+          },
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Price",
+          "as": "price",
+          "description": {
+            "en": "Shipping price in cents",
+            "de": "Versandpreis in Cent",
+            "fr": "Prix d'expédition en centimes",
+            "es": "Precio de envío en céntimos",
+            "it": "Prezzo spedizione in centesimi",
+            "ro": "Preț livrare în cenți"
+          },
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Free Shipping Threshold",
+          "as": "freeShippingThreshold",
+          "description": {
+            "en": "Order total in cents for free shipping (optional)",
+            "de": "Bestellwert in Cent für kostenlosen Versand (optional)",
+            "fr": "Montant de commande en centimes pour livraison gratuite (optionnel)",
+            "es": "Total del pedido en céntimos para envío gratis (opcional)",
+            "it": "Totale ordine in centesimi per spedizione gratuita (opzionale)",
+            "ro": "Total comandă în cenți pentru livrare gratuită (opțional)"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Min Order Value",
+          "as": "minOrderValue",
+          "description": {
+            "en": "Minimum order value in cents (optional)",
+            "de": "Mindestbestellwert in Cent (optional)",
+            "fr": "Montant minimum de commande en centimes (optionnel)",
+            "es": "Valor mínimo del pedido en céntimos (opcional)",
+            "it": "Valore minimo ordine in centesimi (opzionale)",
+            "ro": "Valoare minimă comandă în cenți (opțional)"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Max Order Value",
+          "as": "maxOrderValue",
+          "description": {
+            "en": "Maximum order value in cents (optional)",
+            "de": "Maximaler Bestellwert in Cent (optional)",
+            "fr": "Montant maximum de commande en centimes (optionnel)",
+            "es": "Valor máximo del pedido en céntimos (opcional)",
+            "it": "Valore massimo ordine in centesimi (opzionale)",
+            "ro": "Valoare maximă comandă în cenți (opțional)"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Min Weight",
+          "as": "minWeight",
+          "description": {
+            "en": "Minimum weight (optional)",
+            "de": "Mindestgewicht (optional)",
+            "fr": "Poids minimum (optionnel)",
+            "es": "Peso mínimo (opcional)",
+            "it": "Peso minimo (opzionale)",
+            "ro": "Greutate minimă (opțional)"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Max Weight",
+          "as": "maxWeight",
+          "description": {
+            "en": "Maximum weight (optional)",
+            "de": "Maximalgewicht (optional)",
+            "fr": "Poids maximum (optionnel)",
+            "es": "Peso máximo (opcional)",
+            "it": "Peso massimo (opzionale)",
+            "ro": "Greutate maximă (opțional)"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Estimated Min Days",
+          "as": "estimatedMinDays",
+          "description": {
+            "en": "Minimum delivery days (optional)",
+            "de": "Mindest-Liefertage (optional)",
+            "fr": "Jours de livraison minimum (optionnel)",
+            "es": "Días mínimos de entrega (opcional)",
+            "it": "Giorni minimi di consegna (opzionale)",
+            "ro": "Zile minime de livrare (opțional)"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Estimated Max Days",
+          "as": "estimatedMaxDays",
+          "description": {
+            "en": "Maximum delivery days (optional)",
+            "de": "Maximale Liefertage (optional)",
+            "fr": "Jours de livraison maximum (optionnel)",
+            "es": "Días máximos de entrega (opcional)",
+            "it": "Giorni massimi di consegna (opzionale)",
+            "ro": "Zile maxime de livrare (opțional)"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Active",
+          "as": "active",
+          "description": {
+            "en": "Whether the rate is active (optional)",
+            "de": "Ob der Tarif aktiv ist (optional)",
+            "fr": "Si le tarif est actif (optionnel)",
+            "es": "Si la tarifa está activa (opcional)",
+            "it": "Se la tariffa è attiva (opzionale)",
+            "ro": "Dacă tariful este activ (opțional)"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug for this action. Defaults to the current team.",
+            "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team.",
+            "fr": "Slug d'équipe pour cette action. Par défaut l'équipe actuelle.",
+            "es": "Slug del equipo para esta acción. Por defecto el equipo actual.",
+            "it": "Slug del team per questa azione. Predefinito: team attuale.",
+            "ro": "Slug-ul echipei pentru această acțiune. Implicit echipa curentă."
+          },
+          "bot": "The slug of the team to operate on. Omit to use the current team.",
+          "type": "string",
+          "position": "url:team",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ],
+      "output": {
+        "id": "out.data.id",
+        "name": "out.data.name"
+      }
+    }
+  ],
+  "output": {
+    "RATE_ID": "out.1.id",
+    "RATE_NAME": "out.1.name"
+  },
+  "messages": {
+    "success": {
+      "en": "Shipping rate '{{RATE_NAME}}' created.",
+      "de": "Versandtarif '{{RATE_NAME}}' erstellt.",
+      "fr": "Tarif d'expédition « {{RATE_NAME}} » créé.",
+      "es": "Tarifa de envío « {{RATE_NAME}} » creada.",
+      "it": "Tariffa di spedizione « {{RATE_NAME}} » creata.",
+      "ro": "Tariful de livrare „{{RATE_NAME}}” a fost creat."
+    },
+    "error": {
+      "en": "Failed to create shipping rate: {{MESSAGE}}",
+      "de": "Versandtarif konnte nicht erstellt werden: {{MESSAGE}}"
+    }
+  }
+}

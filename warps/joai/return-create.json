@@ -1,0 +1,150 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Create Return",
+  "title": {
+    "en": "Create a return",
+    "de": "Retoure erstellen",
+    "fr": "Créer un retour",
+    "es": "Crear una devolución",
+    "it": "Crea un reso",
+    "ro": "Creează un retur"
+  },
+  "description": {
+    "en": "Create a return request for an order. Provide a reason and items to return as a JSON array. Optionally link to a fulfillment.",
+    "de": "Retourenanfrage für eine Bestellung erstellen. Grund und zurückzugebende Positionen als JSON-Array. Optional mit Fulfillment-Verknüpfung.",
+    "fr": "Crée une demande de retour pour une commande. Fournissez un motif et les lignes à retourner en JSON. Lien optionnel vers une expédition.",
+    "es": "Crea una solicitud de devolución para un pedido. Indica el motivo y las líneas a devolver en JSON. Opcionalmente vincula un envío.",
+    "it": "Crea una richiesta di reso per un ordine. Fornisci motivo e righe da restituire in JSON. Opzionalmente collega un'evasione.",
+    "ro": "Creează o cerere de retur pentru o comandă. Furnizează motivul și liniile de returnat ca JSON. Opțional leagă o livrare."
+  },
+  "bot": "Use when the user wants to start a return. Pass items as JSON like [{\"orderItemId\":1,\"quantity\":1}]. Optional fulfillmentId links the return to a shipment.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Create return",
+        "de": "Retoure erstellen",
+        "fr": "Créer le retour",
+        "es": "Crear la devolución",
+        "it": "Crea il reso",
+        "ro": "Creează returul"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/orders/{{orderId}}/returns",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Order ID",
+          "as": "orderId",
+          "description": {
+            "en": "The hashid of the order",
+            "de": "Die Hashid der Bestellung",
+            "fr": "Le hashid de la commande",
+            "es": "El hashid del pedido",
+            "it": "L'hashid dell'ordine",
+            "ro": "Hashid-ul comenzii"
+          },
+          "type": "string",
+          "position": "url:orderId",
+          "source": "field",
+          "required": true,
+          "min": 1
+        },
+        {
+          "name": "Reason",
+          "as": "reason",
+          "description": {
+            "en": "Reason for the return",
+            "de": "Grund für die Retoure",
+            "fr": "Motif du retour",
+            "es": "Motivo de la devolución",
+            "it": "Motivo del reso",
+            "ro": "Motivul returului"
+          },
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Items",
+          "as": "items",
+          "description": {
+            "en": "Items to return — JSON array of {orderItemId, quantity, condition?}",
+            "de": "Zurückzugebende Positionen — JSON-Array mit {orderItemId, quantity, condition?}",
+            "fr": "Lignes à retourner — tableau JSON {orderItemId, quantity, condition?}",
+            "es": "Líneas a devolver — array JSON {orderItemId, quantity, condition?}",
+            "it": "Righe da restituire — array JSON {orderItemId, quantity, condition?}",
+            "ro": "Linii de returnat — array JSON {orderItemId, quantity, condition?}"
+          },
+          "type": "json",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Fulfillment ID",
+          "as": "fulfillmentId",
+          "description": {
+            "en": "Related fulfillment ID (optional)",
+            "de": "Zugehörige Fulfillment-ID (optional)",
+            "fr": "ID d'expédition associée (optionnel)",
+            "es": "ID del envío relacionado (opcional)",
+            "it": "ID evasione correlata (opzionale)",
+            "ro": "ID livrare asociată (opțional)"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug for this action. Defaults to the current team.",
+            "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team.",
+            "fr": "Slug d'équipe pour cette action. Par défaut l'équipe actuelle.",
+            "es": "Slug del equipo para esta acción. Por defecto el equipo actual.",
+            "it": "Slug del team per questa azione. Predefinito: team attuale.",
+            "ro": "Slug-ul echipei pentru această acțiune. Implicit echipa curentă."
+          },
+          "bot": "The slug of the team to operate on. Omit to use the current team.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ],
+      "output": {
+        "id": "out.data.id",
+        "status": "out.data.status"
+      }
+    }
+  ],
+  "output": {
+    "RETURN_ID": "out.1.id",
+    "RETURN_STATUS": "out.1.status"
+  },
+  "messages": {
+    "success": {
+      "en": "Return request created (status: {{RETURN_STATUS}}).",
+      "de": "Retourenanfrage erstellt (Status: {{RETURN_STATUS}}).",
+      "fr": "Demande de retour créée (statut : {{RETURN_STATUS}}).",
+      "es": "Solicitud de devolución creada (estado: {{RETURN_STATUS}}).",
+      "it": "Richiesta di reso creata (stato: {{RETURN_STATUS}}).",
+      "ro": "Cerere de retur creată (status: {{RETURN_STATUS}})."
+    },
+    "error": {
+      "en": "Failed to create return: {{MESSAGE}}",
+      "de": "Retoure konnte nicht erstellt werden: {{MESSAGE}}"
+    }
+  }
+}

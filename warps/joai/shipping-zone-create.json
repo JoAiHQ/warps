@@ -1,0 +1,149 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Create Shipping Zone",
+  "title": {
+    "en": "Create a shipping zone",
+    "de": "Versandzone erstellen",
+    "fr": "Créer une zone d'expédition",
+    "es": "Crear una zona de envío",
+    "it": "Crea una zona di spedizione",
+    "ro": "Creează o zonă de livrare"
+  },
+  "description": {
+    "en": "Create a shipping zone with a name and country list. Optionally add postal code rules and set active status.",
+    "de": "Versandzone mit Name und Länderliste erstellen. Optional mit Postleitzahl-Regeln und Aktiv-Status.",
+    "fr": "Crée une zone d'expédition avec un nom et une liste de pays. Règles de codes postaux et statut actif optionnels.",
+    "es": "Crea una zona de envío con nombre y lista de países. Reglas de códigos postales y estado activo opcionales.",
+    "it": "Crea una zona di spedizione con nome e lista paesi. Regole CAP e stato attivo opzionali.",
+    "ro": "Creează o zonă de livrare cu nume și listă de țări. Reguli cod poștal și status activ opționale."
+  },
+  "bot": "Use when the user wants to add a new shipping region. Pass countries as a JSON array of ISO 3166-1 alpha-2 codes, e.g. [\"DE\",\"AT\"]. Optional postalCodeRules JSON array.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Create shipping zone",
+        "de": "Versandzone erstellen",
+        "fr": "Créer la zone",
+        "es": "Crear la zona",
+        "it": "Crea la zona",
+        "ro": "Creează zona"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/teams/{{team}}/shipping-zones",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Name",
+          "as": "name",
+          "description": {
+            "en": "Zone name",
+            "de": "Zonenname",
+            "fr": "Nom de la zone",
+            "es": "Nombre de la zona",
+            "it": "Nome della zona",
+            "ro": "Numele zonei"
+          },
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Countries",
+          "as": "countries",
+          "description": {
+            "en": "ISO country codes — JSON array, e.g. [\"DE\",\"AT\"]",
+            "de": "ISO-Ländercodes — JSON-Array, z. B. [\"DE\",\"AT\"]",
+            "fr": "Codes pays ISO — tableau JSON, ex. [\"DE\",\"AT\"]",
+            "es": "Códigos de país ISO — array JSON, p. ej. [\"DE\",\"AT\"]",
+            "it": "Codici paese ISO — array JSON, es. [\"DE\",\"AT\"]",
+            "ro": "Coduri țări ISO — array JSON, ex. [\"DE\",\"AT\"]"
+          },
+          "type": "json",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Postal Code Rules",
+          "as": "postalCodeRules",
+          "description": {
+            "en": "Postal code patterns (optional JSON array)",
+            "de": "Postleitzahl-Muster (optionales JSON-Array)",
+            "fr": "Motifs de codes postaux (tableau JSON optionnel)",
+            "es": "Patrones de código postal (array JSON opcional)",
+            "it": "Pattern CAP (array JSON opzionale)",
+            "ro": "Modele cod poștal (array JSON opțional)"
+          },
+          "type": "json",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Active",
+          "as": "active",
+          "description": {
+            "en": "Whether the zone is active (optional)",
+            "de": "Ob die Zone aktiv ist (optional)",
+            "fr": "Si la zone est active (optionnel)",
+            "es": "Si la zona está activa (opcional)",
+            "it": "Se la zona è attiva (opzionale)",
+            "ro": "Dacă zona este activă (opțional)"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug for this action. Defaults to the current team.",
+            "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team.",
+            "fr": "Slug d'équipe pour cette action. Par défaut l'équipe actuelle.",
+            "es": "Slug del equipo para esta acción. Por defecto el equipo actual.",
+            "it": "Slug del team per questa azione. Predefinito: team attuale.",
+            "ro": "Slug-ul echipei pentru această acțiune. Implicit echipa curentă."
+          },
+          "bot": "The slug of the team to operate on. Omit to use the current team.",
+          "type": "string",
+          "position": "url:team",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ],
+      "output": {
+        "id": "out.data.id",
+        "name": "out.data.name"
+      }
+    }
+  ],
+  "output": {
+    "ZONE_ID": "out.1.id",
+    "ZONE_NAME": "out.1.name"
+  },
+  "messages": {
+    "success": {
+      "en": "Shipping zone '{{ZONE_NAME}}' created.",
+      "de": "Versandzone '{{ZONE_NAME}}' erstellt.",
+      "fr": "Zone d'expédition « {{ZONE_NAME}} » créée.",
+      "es": "Zona de envío « {{ZONE_NAME}} » creada.",
+      "it": "Zona di spedizione « {{ZONE_NAME}} » creata.",
+      "ro": "Zona de livrare „{{ZONE_NAME}}” a fost creată."
+    },
+    "error": {
+      "en": "Failed to create shipping zone: {{MESSAGE}}",
+      "de": "Versandzone konnte nicht erstellt werden: {{MESSAGE}}"
+    }
+  }
+}

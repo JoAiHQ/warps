@@ -1,0 +1,170 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Update Subscription Delivery",
+  "title": {
+    "en": "Update subscription delivery",
+    "de": "Abonnement-Lieferung aktualisieren",
+    "fr": "Mettre à jour la livraison de l'abonnement",
+    "es": "Actualizar entrega de suscripción",
+    "it": "Aggiorna consegna abbonamento",
+    "ro": "Actualizează livrarea abonamentului"
+  },
+  "description": {
+    "en": "Change how a subscription is fulfilled — shipping or pickup — including address, shipping rate, or pickup location.",
+    "de": "Ändere, wie ein Abonnement erfüllt wird — Versand oder Abholung — einschließlich Adresse, Versandtarif oder Abholort.",
+    "fr": "Modifiez la façon dont un abonnement est livré — expédition ou retrait — y compris l'adresse, le tarif d'expédition ou le point de retrait.",
+    "es": "Cambia cómo se cumple una suscripción — envío o recogida — incluyendo dirección, tarifa de envío o punto de recogida.",
+    "it": "Modifica come viene evaso un abbonamento — spedizione o ritiro — inclusi indirizzo, tariffa di spedizione o punto di ritiro.",
+    "ro": "Schimbă modul în care este onorat un abonament — livrare sau ridicare — inclusiv adresa, tariful de livrare sau locația de ridicare."
+  },
+  "bot": "Use when the user wants to change subscription delivery settings. fulfillmentMethod is required. For shipping, provide shippingAddressId and shippingRateId. For pickup, provide fulfillmentLocationId.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Update delivery",
+        "de": "Lieferung aktualisieren",
+        "fr": "Mettre à jour la livraison",
+        "es": "Actualizar entrega",
+        "it": "Aggiorna consegna",
+        "ro": "Actualizează livrarea"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/subscriptions/{{subscriptionId}}/delivery",
+        "method": "PATCH",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Subscription ID",
+          "as": "subscriptionId",
+          "description": {
+            "en": "The hashid of the subscription to update",
+            "de": "Die Hashid des zu aktualisierenden Abonnements",
+            "fr": "Le hashid de l'abonnement à mettre à jour",
+            "es": "El hashid de la suscripción a actualizar",
+            "it": "L'hashid dell'abbonamento da aggiornare",
+            "ro": "Hashid-ul abonamentului de actualizat"
+          },
+          "bot": "The subscription hash ID. If the user refers to a subscription by customer or product, list subscriptions first to find the matching ID.",
+          "type": "string",
+          "position": "url:subscriptionId",
+          "source": "field",
+          "required": true,
+          "min": 1
+        },
+        {
+          "name": "Fulfillment Method",
+          "as": "fulfillmentMethod",
+          "description": {
+            "en": "How the subscription is fulfilled: shipping or pickup",
+            "de": "Wie das Abonnement erfüllt wird: Versand oder Abholung",
+            "fr": "Mode de livraison de l'abonnement : expédition ou retrait",
+            "es": "Cómo se cumple la suscripción: envío o recogida",
+            "it": "Come viene evaso l'abbonamento: spedizione o ritiro",
+            "ro": "Modul de onorare al abonamentului: livrare sau ridicare"
+          },
+          "bot": "Required. Use shipping for delivery to an address, or pickup for collection at a location.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "options": {
+            "shipping": "Shipping",
+            "pickup": "Pickup"
+          }
+        },
+        {
+          "name": "Shipping Address ID",
+          "as": "shippingAddressId",
+          "description": {
+            "en": "Address ID for shipping fulfillment",
+            "de": "Adress-ID für Versand",
+            "fr": "ID d'adresse pour l'expédition",
+            "es": "ID de dirección para envío",
+            "it": "ID indirizzo per la spedizione",
+            "ro": "ID adresă pentru livrare"
+          },
+          "bot": "Required when fulfillmentMethod is shipping.",
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Shipping Rate ID",
+          "as": "shippingRateId",
+          "description": {
+            "en": "Shipping rate ID for shipping fulfillment",
+            "de": "Versandtarif-ID für Versand",
+            "fr": "ID du tarif d'expédition",
+            "es": "ID de tarifa de envío",
+            "it": "ID tariffa di spedizione",
+            "ro": "ID tarif de livrare"
+          },
+          "bot": "Required when fulfillmentMethod is shipping.",
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Fulfillment Location ID",
+          "as": "fulfillmentLocationId",
+          "description": {
+            "en": "Pickup location ID for pickup fulfillment",
+            "de": "Abholort-ID für Abholung",
+            "fr": "ID du point de retrait",
+            "es": "ID del punto de recogida",
+            "it": "ID punto di ritiro",
+            "ro": "ID locație de ridicare"
+          },
+          "bot": "Required when fulfillmentMethod is pickup.",
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug for this action. Defaults to the current team.",
+            "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team.",
+            "fr": "Slug d'équipe pour cette action. Par défaut l'équipe actuelle.",
+            "es": "Slug del equipo para esta acción. Por defecto el equipo actual.",
+            "it": "Slug del team per questa azione. Predefinito: team attuale.",
+            "ro": "Slug-ul echipei pentru această acțiune. Implicit echipa curentă."
+          },
+          "bot": "The slug of the team to operate on. Omit to use the current team.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Subscription delivery updated.",
+      "de": "Abonnement-Lieferung aktualisiert.",
+      "fr": "Livraison de l'abonnement mise à jour.",
+      "es": "Entrega de suscripción actualizada.",
+      "it": "Consegna abbonamento aggiornata.",
+      "ro": "Livrarea abonamentului a fost actualizată."
+    },
+    "error": {
+      "en": "Failed to update subscription delivery: {{MESSAGE}}",
+      "de": "Abonnement-Lieferung konnte nicht aktualisiert werden: {{MESSAGE}}",
+      "fr": "Échec de la mise à jour de la livraison : {{MESSAGE}}",
+      "es": "Error al actualizar la entrega de la suscripción: {{MESSAGE}}",
+      "it": "Impossibile aggiornare la consegna dell'abbonamento: {{MESSAGE}}",
+      "ro": "Nu s-a putut actualiza livrarea abonamentului: {{MESSAGE}}"
+    }
+  }
+}

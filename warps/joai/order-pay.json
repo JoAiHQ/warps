@@ -1,0 +1,72 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Pay Order",
+  "title": {
+    "en": "Pay order"
+  },
+  "description": {
+    "en": "Start payment for a pending order and return the payment URL."
+  },
+  "bot": "Use when the user wants to pay an existing order. Returns a payment URL to complete checkout.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Pay order"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/orders/{{orderId}}/pay",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Order ID",
+          "as": "orderId",
+          "description": {
+            "en": "The hashid of the order to pay"
+          },
+          "bot": "The order hash ID. List orders first if the user refers to an order by customer or item.",
+          "type": "string",
+          "position": "url:orderId",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug for this action. Defaults to the current team."
+          },
+          "bot": "The slug of the team to operate on. Omit to use the current team.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ],
+      "output": {
+        "url": "out.data.url"
+      }
+    }
+  ],
+  "output": {
+    "PAYMENT_URL": "out.1.url"
+  },
+  "messages": {
+    "success": {
+      "en": "Payment URL: {{PAYMENT_URL}}"
+    },
+    "error": {
+      "en": "Failed to start payment: {{MESSAGE}}"
+    }
+  }
+}

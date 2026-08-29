@@ -1,0 +1,102 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Skip Subscription Delivery",
+  "title": {
+    "en": "Skip subscription delivery",
+    "de": "Abonnement-Lieferung überspringen",
+    "fr": "Passer une livraison d'abonnement",
+    "es": "Omitir entrega de suscripción",
+    "it": "Salta consegna abbonamento",
+    "ro": "Sari peste livrarea abonamentului"
+  },
+  "description": {
+    "en": "Skip the next scheduled delivery for a subscription without cancelling the subscription.",
+    "de": "Überspringe die nächste geplante Lieferung eines Abonnements, ohne das Abonnement zu kündigen.",
+    "fr": "Passez la prochaine livraison planifiée d'un abonnement sans annuler l'abonnement.",
+    "es": "Omite la próxima entrega programada de una suscripción sin cancelar la suscripción.",
+    "it": "Salta la prossima consegna programmata di un abbonamento senza annullare l'abbonamento.",
+    "ro": "Sari peste următoarea livrare programată a unui abonament fără a anula abonamentul."
+  },
+  "bot": "Use when the user wants to skip the next subscription delivery or box. If they refer to a subscription by customer or product, list subscriptions first to find the matching ID.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Skip delivery",
+        "de": "Lieferung überspringen",
+        "fr": "Passer la livraison",
+        "es": "Omitir entrega",
+        "it": "Salta consegna",
+        "ro": "Sari peste livrare"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/subscriptions/{{subscriptionId}}/skip",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Subscription ID",
+          "as": "subscriptionId",
+          "description": {
+            "en": "The hashid of the subscription",
+            "de": "Die Hashid des Abonnements",
+            "fr": "Le hashid de l'abonnement",
+            "es": "El hashid de la suscripción",
+            "it": "L'hashid dell'abbonamento",
+            "ro": "Hashid-ul abonamentului"
+          },
+          "bot": "The subscription hash ID. If the user refers to a subscription by customer or product, list subscriptions first to find the matching ID.",
+          "type": "string",
+          "position": "url:subscriptionId",
+          "source": "field",
+          "required": true,
+          "min": 1
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug for this action. Defaults to the current team.",
+            "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team.",
+            "fr": "Slug d'équipe pour cette action. Par défaut l'équipe actuelle.",
+            "es": "Slug del equipo para esta acción. Por defecto el equipo actual.",
+            "it": "Slug del team per questa azione. Predefinito: team attuale.",
+            "ro": "Slug-ul echipei pentru această acțiune. Implicit echipa curentă."
+          },
+          "bot": "The slug of the team to operate on. Omit to use the current team.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Next subscription delivery skipped.",
+      "de": "Nächste Abonnement-Lieferung übersprungen.",
+      "fr": "Prochaine livraison d'abonnement passée.",
+      "es": "Próxima entrega de suscripción omitida.",
+      "it": "Prossima consegna abbonamento saltata.",
+      "ro": "Următoarea livrare a abonamentului a fost omisă."
+    },
+    "error": {
+      "en": "Failed to skip subscription delivery: {{MESSAGE}}",
+      "de": "Abonnement-Lieferung konnte nicht übersprungen werden: {{MESSAGE}}",
+      "fr": "Échec du passage de la livraison : {{MESSAGE}}",
+      "es": "Error al omitir la entrega de la suscripción: {{MESSAGE}}",
+      "it": "Impossibile saltare la consegna dell'abbonamento: {{MESSAGE}}",
+      "ro": "Nu s-a putut omite livrarea abonamentului: {{MESSAGE}}"
+    }
+  }
+}

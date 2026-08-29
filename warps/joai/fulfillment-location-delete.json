@@ -1,0 +1,99 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Delete Fulfillment Location",
+  "title": {
+    "en": "Delete a fulfillment location",
+    "de": "Abholort löschen",
+    "fr": "Supprimer un point de retrait",
+    "es": "Eliminar un punto de recogida",
+    "it": "Elimina un punto di ritiro",
+    "ro": "Șterge o locație de ridicare"
+  },
+  "description": {
+    "en": "Permanently delete a pickup or fulfillment location. Use with care — this cannot be undone.",
+    "de": "Abhol- oder Fulfillment-Standort dauerhaft löschen. Vorsicht — dies kann nicht rückgängig gemacht werden.",
+    "fr": "Supprime définitivement un point de retrait. À utiliser avec précaution — irréversible.",
+    "es": "Elimina permanentemente un punto de recogida. Úsalo con cuidado: no se puede deshacer.",
+    "it": "Elimina definitivamente un punto di ritiro. Da usare con cautela — non reversibile.",
+    "ro": "Șterge definitiv o locație de ridicare. Folosește cu atenție — nu poate fi anulată."
+  },
+  "bot": "Use when the user wants to remove a pickup location. List fulfillment locations first if the ID is unknown.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Delete fulfillment location",
+        "de": "Abholort löschen",
+        "fr": "Supprimer le point",
+        "es": "Eliminar el punto",
+        "it": "Elimina il punto",
+        "ro": "Șterge locația"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/teams/{{team}}/fulfillment-locations/{{locationId}}",
+        "method": "DELETE",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Location ID",
+          "as": "locationId",
+          "description": {
+            "en": "The fulfillment location ID to delete",
+            "de": "Die ID des zu löschenden Abholorts",
+            "fr": "L'ID du point de retrait à supprimer",
+            "es": "El ID del punto de recogida a eliminar",
+            "it": "L'ID del punto di ritiro da eliminare",
+            "ro": "ID-ul locației de șters"
+          },
+          "bot": "The fulfillment location ID. List fulfillment locations if unknown.",
+          "type": "string",
+          "position": "url:locationId",
+          "source": "field",
+          "required": true,
+          "min": 1
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug for this action. Defaults to the current team.",
+            "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team.",
+            "fr": "Slug d'équipe pour cette action. Par défaut l'équipe actuelle.",
+            "es": "Slug del equipo para esta acción. Por defecto el equipo actual.",
+            "it": "Slug del team per questa azione. Predefinito: team attuale.",
+            "ro": "Slug-ul echipei pentru această acțiune. Implicit echipa curentă."
+          },
+          "bot": "The slug of the team to operate on. Omit to use the current team.",
+          "type": "string",
+          "position": "url:team",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Fulfillment location deleted.",
+      "de": "Abholort gelöscht.",
+      "fr": "Point de retrait supprimé.",
+      "es": "Punto de recogida eliminado.",
+      "it": "Punto di ritiro eliminato.",
+      "ro": "Locația de ridicare ștearsă."
+    },
+    "error": {
+      "en": "Failed to delete fulfillment location: {{MESSAGE}}",
+      "de": "Abholort konnte nicht gelöscht werden: {{MESSAGE}}"
+    }
+  }
+}

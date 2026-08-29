@@ -1,0 +1,167 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Update Fulfillment Location",
+  "title": {
+    "en": "Update a fulfillment location",
+    "de": "Abholort aktualisieren",
+    "fr": "Mettre à jour un point de retrait",
+    "es": "Actualizar un punto de recogida",
+    "it": "Aggiorna un punto di ritiro",
+    "ro": "Actualizează o locație de ridicare"
+  },
+  "description": {
+    "en": "Update a pickup or fulfillment location — name, address, instructions, or active status. Only provided fields are changed.",
+    "de": "Abhol- oder Fulfillment-Standort aktualisieren — Name, Adresse, Anweisungen oder Aktiv-Status. Nur angegebene Felder werden geändert.",
+    "fr": "Met à jour un point de retrait — nom, adresse, instructions ou statut actif. Seuls les champs fournis sont modifiés.",
+    "es": "Actualiza un punto de recogida — nombre, dirección, instrucciones o estado activo. Solo cambian los campos proporcionados.",
+    "it": "Aggiorna un punto di ritiro — nome, indirizzo, istruzioni o stato attivo. Vengono modificati solo i campi forniti.",
+    "ro": "Actualizează o locație de ridicare — nume, adresă, instrucțiuni sau status activ. Se schimbă doar câmpurile furnizate."
+  },
+  "bot": "Use when the user wants to change a pickup location. List fulfillment locations first if the ID is unknown.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Update fulfillment location",
+        "de": "Abholort aktualisieren",
+        "fr": "Mettre à jour le point",
+        "es": "Actualizar el punto",
+        "it": "Aggiorna il punto",
+        "ro": "Actualizează locația"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/teams/{{team}}/fulfillment-locations/{{locationId}}",
+        "method": "PATCH",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Location ID",
+          "as": "locationId",
+          "description": {
+            "en": "The fulfillment location ID to update",
+            "de": "Die ID des zu aktualisierenden Abholorts",
+            "fr": "L'ID du point de retrait à mettre à jour",
+            "es": "El ID del punto de recogida a actualizar",
+            "it": "L'ID del punto di ritiro da aggiornare",
+            "ro": "ID-ul locației de actualizat"
+          },
+          "bot": "The fulfillment location ID. List fulfillment locations if unknown.",
+          "type": "string",
+          "position": "url:locationId",
+          "source": "field",
+          "required": true,
+          "min": 1
+        },
+        {
+          "name": "Name",
+          "as": "name",
+          "description": {
+            "en": "Location name",
+            "de": "Standortname",
+            "fr": "Nom du point",
+            "es": "Nombre del punto",
+            "it": "Nome del punto",
+            "ro": "Numele locației"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Address ID",
+          "as": "addressId",
+          "description": {
+            "en": "Linked address ID",
+            "de": "Verknüpfte Adress-ID",
+            "fr": "ID d'adresse liée",
+            "es": "ID de dirección vinculada",
+            "it": "ID indirizzo collegato",
+            "ro": "ID adresă legată"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Instructions",
+          "as": "instructions",
+          "description": {
+            "en": "Pickup instructions for customers",
+            "de": "Abholhinweise für Kunden",
+            "fr": "Instructions de retrait pour les clients",
+            "es": "Instrucciones de recogida para clientes",
+            "it": "Istruzioni di ritiro per i clienti",
+            "ro": "Instrucțiuni de ridicare pentru clienți"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Active",
+          "as": "active",
+          "description": {
+            "en": "Whether the location is active",
+            "de": "Ob der Standort aktiv ist",
+            "fr": "Si le point est actif",
+            "es": "Si el punto está activo",
+            "it": "Se il punto è attivo",
+            "ro": "Dacă locația este activă"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug for this action. Defaults to the current team.",
+            "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team.",
+            "fr": "Slug d'équipe pour cette action. Par défaut l'équipe actuelle.",
+            "es": "Slug del equipo para esta acción. Por defecto el equipo actual.",
+            "it": "Slug del team per questa azione. Predefinito: team attuale.",
+            "ro": "Slug-ul echipei pentru această acțiune. Implicit echipa curentă."
+          },
+          "bot": "The slug of the team to operate on. Omit to use the current team.",
+          "type": "string",
+          "position": "url:team",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ],
+      "output": {
+        "id": "out.data.id",
+        "name": "out.data.name"
+      }
+    }
+  ],
+  "output": {
+    "LOCATION_ID": "out.1.id",
+    "LOCATION_NAME": "out.1.name"
+  },
+  "messages": {
+    "success": {
+      "en": "Fulfillment location '{{LOCATION_NAME}}' updated.",
+      "de": "Abholort '{{LOCATION_NAME}}' aktualisiert.",
+      "fr": "Point de retrait « {{LOCATION_NAME}} » mis à jour.",
+      "es": "Punto de recogida « {{LOCATION_NAME}} » actualizado.",
+      "it": "Punto di ritiro « {{LOCATION_NAME}} » aggiornato.",
+      "ro": "Locația de ridicare „{{LOCATION_NAME}}” a fost actualizată."
+    },
+    "error": {
+      "en": "Failed to update fulfillment location: {{MESSAGE}}",
+      "de": "Abholort konnte nicht aktualisiert werden: {{MESSAGE}}"
+    }
+  }
+}

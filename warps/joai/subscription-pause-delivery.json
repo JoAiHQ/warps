@@ -1,0 +1,102 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Pause Subscription Delivery",
+  "title": {
+    "en": "Pause subscription delivery",
+    "de": "Abonnement-Lieferung pausieren",
+    "fr": "Mettre en pause la livraison de l'abonnement",
+    "es": "Pausar entrega de suscripción",
+    "it": "Metti in pausa consegna abbonamento",
+    "ro": "Pune pe pauză livrarea abonamentului"
+  },
+  "description": {
+    "en": "Pause all upcoming subscription deliveries until delivery is resumed.",
+    "de": "Pausiere alle kommenden Abonnement-Lieferungen, bis die Lieferung fortgesetzt wird.",
+    "fr": "Mettez en pause toutes les livraisons d'abonnement à venir jusqu'à reprise de la livraison.",
+    "es": "Pausa todas las entregas de suscripción pendientes hasta que se reanude la entrega.",
+    "it": "Metti in pausa tutte le consegne abbonamento in arrivo fino alla ripresa della consegna.",
+    "ro": "Pune pe pauză toate livrările viitoare ale abonamentului până când livrarea este reluată."
+  },
+  "bot": "Use when the user wants to temporarily pause subscription deliveries. If they refer to a subscription by customer or product, list subscriptions first to find the matching ID.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Pause delivery",
+        "de": "Lieferung pausieren",
+        "fr": "Mettre en pause la livraison",
+        "es": "Pausar entrega",
+        "it": "Metti in pausa consegna",
+        "ro": "Pune livrarea pe pauză"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/subscriptions/{{subscriptionId}}/pause",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Subscription ID",
+          "as": "subscriptionId",
+          "description": {
+            "en": "The hashid of the subscription",
+            "de": "Die Hashid des Abonnements",
+            "fr": "Le hashid de l'abonnement",
+            "es": "El hashid de la suscripción",
+            "it": "L'hashid dell'abbonamento",
+            "ro": "Hashid-ul abonamentului"
+          },
+          "bot": "The subscription hash ID. If the user refers to a subscription by customer or product, list subscriptions first to find the matching ID.",
+          "type": "string",
+          "position": "url:subscriptionId",
+          "source": "field",
+          "required": true,
+          "min": 1
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug for this action. Defaults to the current team.",
+            "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team.",
+            "fr": "Slug d'équipe pour cette action. Par défaut l'équipe actuelle.",
+            "es": "Slug del equipo para esta acción. Por defecto el equipo actual.",
+            "it": "Slug del team per questa azione. Predefinito: team attuale.",
+            "ro": "Slug-ul echipei pentru această acțiune. Implicit echipa curentă."
+          },
+          "bot": "The slug of the team to operate on. Omit to use the current team.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Subscription delivery paused.",
+      "de": "Abonnement-Lieferung pausiert.",
+      "fr": "Livraison de l'abonnement mise en pause.",
+      "es": "Entrega de suscripción pausada.",
+      "it": "Consegna abbonamento in pausa.",
+      "ro": "Livrarea abonamentului a fost pusă pe pauză."
+    },
+    "error": {
+      "en": "Failed to pause subscription delivery: {{MESSAGE}}",
+      "de": "Abonnement-Lieferung konnte nicht pausiert werden: {{MESSAGE}}",
+      "fr": "Échec de la mise en pause de la livraison : {{MESSAGE}}",
+      "es": "Error al pausar la entrega de la suscripción: {{MESSAGE}}",
+      "it": "Impossibile mettere in pausa la consegna dell'abbonamento: {{MESSAGE}}",
+      "ro": "Nu s-a putut pune pe pauză livrarea abonamentului: {{MESSAGE}}"
+    }
+  }
+}

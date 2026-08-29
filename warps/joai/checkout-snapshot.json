@@ -1,0 +1,130 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Checkout Snapshot",
+  "title": {
+    "en": "Create checkout snapshot"
+  },
+  "description": {
+    "en": "Create a checkout snapshot with totals for the selected items, fulfillment method, and addresses."
+  },
+  "bot": "Use during checkout after collecting items, fulfillment method, and address or rate IDs. Returns snapshot id, totals, and guest access token.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Create snapshot"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/shops/{{team}}/checkout/snapshots",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}",
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Items",
+          "as": "items",
+          "description": {
+            "en": "Cart items — array of {id, type, quantity} objects"
+          },
+          "bot": "JSON array of line items, e.g. [{\"id\":\"abc\",\"type\":\"product\",\"quantity\":1}].",
+          "type": "json",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Fulfillment Method",
+          "as": "fulfillmentMethod",
+          "description": {
+            "en": "shipping or pickup"
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "options": ["shipping", "pickup"]
+        },
+        {
+          "name": "Billing Address ID",
+          "as": "billingAddressId",
+          "description": {
+            "en": "Saved billing address ID for authenticated users"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Shipping Address ID",
+          "as": "shippingAddressId",
+          "description": {
+            "en": "Saved shipping address ID for authenticated users"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Shipping Rate ID",
+          "as": "shippingRateId",
+          "description": {
+            "en": "Selected shipping rate ID"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Fulfillment Location ID",
+          "as": "fulfillmentLocationId",
+          "description": {
+            "en": "Pickup location ID when fulfillmentMethod is pickup"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug for this action. Defaults to the current team."
+          },
+          "bot": "The slug of the shop team. Omit to use the current team.",
+          "type": "string",
+          "source": "field",
+          "position": "url:team",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ],
+      "output": {
+        "id": "out.data.id",
+        "expiresAt": "out.data.expiresAt",
+        "totals": "out.data.totals",
+        "accessToken": "out.data.accessToken"
+      }
+    }
+  ],
+  "output": {
+    "SNAPSHOT_ID": "out.1.id",
+    "SNAPSHOT_TOTALS": "out.1.totals",
+    "SNAPSHOT_ACCESS_TOKEN": "out.1.accessToken"
+  },
+  "messages": {
+    "success": {
+      "en": "Checkout snapshot created."
+    },
+    "error": {
+      "en": "Failed to create checkout snapshot: {{MESSAGE}}"
+    }
+  }
+}

@@ -1,0 +1,133 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Store Address",
+  "title": {
+    "en": "Store address"
+  },
+  "description": {
+    "en": "Create or update a billing or shipping address. For the upgrade flow, pass type=billing and team with personalTeamSlug from user-create."
+  },
+  "bot": "Use when saving a billing or shipping address. For user-create → upgrade-link flow, pass type=billing, team=personalTeamSlug, and optional vatId for business accounts.",
+  "vars": {
+    "JOAI_API_TOKEN": "env:JOAI_API_TOKEN|Admin Sanctum API token"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Store address"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/addresses",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer {{JOAI_API_TOKEN}}",
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Name",
+          "as": "name",
+          "description": {
+            "en": "Full name or company name"
+          },
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Country",
+          "as": "country",
+          "description": {
+            "en": "Two-letter ISO country code"
+          },
+          "bot": "Convert the country to the two-letter ISO 3166-1 alpha-2 code before submitting.",
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Type",
+          "as": "type",
+          "description": {
+            "en": "Address type: billing or shipping"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "shipping",
+          "options": ["billing", "shipping"]
+        },
+        {
+          "name": "Address",
+          "as": "addressOne",
+          "description": {
+            "en": "Street address line 1"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "City",
+          "as": "city",
+          "description": {
+            "en": "City"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Zip Code",
+          "as": "zipCode",
+          "description": {
+            "en": "Postal or ZIP code"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "VAT ID",
+          "as": "vatId",
+          "description": {
+            "en": "VAT ID for business addresses"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug when storing a team billing address"
+          },
+          "bot": "Required for team billing in the user-create → address-store → upgrade-link flow. Use personalTeamSlug from user-create.",
+          "type": "string",
+          "source": "field",
+          "required": false
+        }
+      ],
+      "output": {
+        "id": "out.data.id",
+        "name": "out.data.name"
+      }
+    }
+  ],
+  "output": {
+    "ADDRESS_ID": "out.1.id",
+    "ADDRESS_NAME": "out.1.name"
+  },
+  "messages": {
+    "success": {
+      "en": "Address saved: {{ADDRESS_NAME}}."
+    },
+    "error": {
+      "en": "Failed to save address: {{MESSAGE}}"
+    }
+  }
+}

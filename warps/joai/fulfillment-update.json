@@ -1,0 +1,145 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Update Fulfillment",
+  "title": {
+    "en": "Update a fulfillment",
+    "de": "Fulfillment aktualisieren",
+    "fr": "Mettre à jour une expédition",
+    "es": "Actualizar un envío",
+    "it": "Aggiorna un'evasione",
+    "ro": "Actualizează o livrare"
+  },
+  "description": {
+    "en": "Update fulfillment status — pending, ready_for_pickup, shipped, delivered, or cancelled.",
+    "de": "Fulfillment-Status aktualisieren — pending, ready_for_pickup, shipped, delivered oder cancelled.",
+    "fr": "Met à jour le statut d'expédition — pending, ready_for_pickup, shipped, delivered ou cancelled.",
+    "es": "Actualiza el estado del envío — pending, ready_for_pickup, shipped, delivered o cancelled.",
+    "it": "Aggiorna lo stato dell'evasione — pending, ready_for_pickup, shipped, delivered o cancelled.",
+    "ro": "Actualizează statusul livrării — pending, ready_for_pickup, shipped, delivered sau cancelled."
+  },
+  "bot": "Use when the user wants to mark an order as shipped, delivered, ready for pickup, or cancelled. If the fulfillment ID is unknown, list fulfillments for the order first.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Update fulfillment",
+        "de": "Fulfillment aktualisieren",
+        "fr": "Mettre à jour l'expédition",
+        "es": "Actualizar el envío",
+        "it": "Aggiorna l'evasione",
+        "ro": "Actualizează livrarea"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/orders/{{orderId}}/fulfillments/{{fulfillmentId}}",
+        "method": "PATCH",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Order ID",
+          "as": "orderId",
+          "description": {
+            "en": "The hashid of the order",
+            "de": "Die Hashid der Bestellung",
+            "fr": "Le hashid de la commande",
+            "es": "El hashid del pedido",
+            "it": "L'hashid dell'ordine",
+            "ro": "Hashid-ul comenzii"
+          },
+          "type": "string",
+          "position": "url:orderId",
+          "source": "field",
+          "required": true,
+          "min": 1
+        },
+        {
+          "name": "Fulfillment ID",
+          "as": "fulfillmentId",
+          "description": {
+            "en": "The ID of the fulfillment to update",
+            "de": "Die ID des zu aktualisierenden Fulfillments",
+            "fr": "L'ID de l'expédition à mettre à jour",
+            "es": "El ID del envío a actualizar",
+            "it": "L'ID dell'evasione da aggiornare",
+            "ro": "ID-ul livrării de actualizat"
+          },
+          "bot": "The fulfillment ID. List fulfillments for the order if unknown.",
+          "type": "string",
+          "position": "url:fulfillmentId",
+          "source": "field",
+          "required": true,
+          "min": 1
+        },
+        {
+          "name": "Status",
+          "as": "status",
+          "description": {
+            "en": "New fulfillment status",
+            "de": "Neuer Fulfillment-Status",
+            "fr": "Nouveau statut d'expédition",
+            "es": "Nuevo estado del envío",
+            "it": "Nuovo stato dell'evasione",
+            "ro": "Noul status al livrării"
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "options": {
+            "pending": "Pending",
+            "ready_for_pickup": "Ready for pickup",
+            "shipped": "Shipped",
+            "delivered": "Delivered",
+            "cancelled": "Cancelled"
+          }
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug for this action. Defaults to the current team.",
+            "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team.",
+            "fr": "Slug d'équipe pour cette action. Par défaut l'équipe actuelle.",
+            "es": "Slug del equipo para esta acción. Por defecto el equipo actual.",
+            "it": "Slug del team per questa azione. Predefinito: team attuale.",
+            "ro": "Slug-ul echipei pentru această acțiune. Implicit echipa curentă."
+          },
+          "bot": "The slug of the team to operate on. Omit to use the current team.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ],
+      "output": {
+        "id": "out.data.id",
+        "status": "out.data.status"
+      }
+    }
+  ],
+  "output": {
+    "FULFILLMENT_ID": "out.1.id",
+    "FULFILLMENT_STATUS": "out.1.status"
+  },
+  "messages": {
+    "success": {
+      "en": "Fulfillment updated to {{FULFILLMENT_STATUS}}.",
+      "de": "Fulfillment auf {{FULFILLMENT_STATUS}} aktualisiert.",
+      "fr": "Expédition mise à jour : {{FULFILLMENT_STATUS}}.",
+      "es": "Envío actualizado a {{FULFILLMENT_STATUS}}.",
+      "it": "Evasione aggiornata a {{FULFILLMENT_STATUS}}.",
+      "ro": "Livrare actualizată la {{FULFILLMENT_STATUS}}."
+    },
+    "error": {
+      "en": "Failed to update fulfillment: {{MESSAGE}}",
+      "de": "Fulfillment konnte nicht aktualisiert werden: {{MESSAGE}}"
+    }
+  }
+}

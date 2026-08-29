@@ -1,0 +1,98 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: List Fulfillments",
+  "title": {
+    "en": "List fulfillments",
+    "de": "Fulfillments anzeigen",
+    "fr": "Lister les expéditions",
+    "es": "Listar envíos",
+    "it": "Elenca evasioni",
+    "ro": "Listează livrările"
+  },
+  "description": {
+    "en": "List all fulfillments for an order — shipment status, tracking, and fulfilled line items.",
+    "de": "Alle Fulfillments einer Bestellung anzeigen — Versandstatus, Tracking und erfüllte Positionen.",
+    "fr": "Liste toutes les expéditions d'une commande — statut, suivi et lignes expédiées.",
+    "es": "Lista todos los envíos de un pedido — estado, seguimiento y líneas cumplidas.",
+    "it": "Elenca tutte le evasioni di un ordine — stato spedizione, tracking e righe evase.",
+    "ro": "Listează toate livrările unei comenzi — status, tracking și articole livrate."
+  },
+  "bot": "Use when the user wants to see fulfillment or shipping status for an order. If the order is unknown, list orders first to find the matching ID.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "List fulfillments",
+        "de": "Fulfillments anzeigen",
+        "fr": "Lister les expéditions",
+        "es": "Listar envíos",
+        "it": "Elenca evasioni",
+        "ro": "Listează livrările"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/orders/{{orderId}}/fulfillments",
+        "method": "GET",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Order ID",
+          "as": "orderId",
+          "description": {
+            "en": "The hashid of the order",
+            "de": "Die Hashid der Bestellung",
+            "fr": "Le hashid de la commande",
+            "es": "El hashid del pedido",
+            "it": "L'hashid dell'ordine",
+            "ro": "Hashid-ul comenzii"
+          },
+          "bot": "The order hash ID. If the user refers to an order by customer or item, list orders first to find the matching ID.",
+          "type": "string",
+          "position": "url:orderId",
+          "source": "field",
+          "required": true,
+          "min": 1
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug for this action. Defaults to the current team.",
+            "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team.",
+            "fr": "Slug d'équipe pour cette action. Par défaut l'équipe actuelle.",
+            "es": "Slug del equipo para esta acción. Por defecto el equipo actual.",
+            "it": "Slug del team per questa azione. Predefinito: team attuale.",
+            "ro": "Slug-ul echipei pentru această acțiune. Implicit echipa curentă."
+          },
+          "bot": "The slug of the team to operate on. Omit to use the current team.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Fulfillments loaded.",
+      "de": "Fulfillments geladen.",
+      "fr": "Expéditions chargées.",
+      "es": "Envíos cargados.",
+      "it": "Evasioni caricate.",
+      "ro": "Livrările au fost încărcate."
+    },
+    "error": {
+      "en": "Failed to list fulfillments: {{MESSAGE}}",
+      "de": "Fulfillments konnten nicht geladen werden: {{MESSAGE}}"
+    }
+  }
+}

@@ -1,0 +1,99 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Delete Shipping Zone",
+  "title": {
+    "en": "Delete a shipping zone",
+    "de": "Versandzone löschen",
+    "fr": "Supprimer une zone d'expédition",
+    "es": "Eliminar una zona de envío",
+    "it": "Elimina una zona di spedizione",
+    "ro": "Șterge o zonă de livrare"
+  },
+  "description": {
+    "en": "Permanently delete a shipping zone and its rates. Use with care — this cannot be undone.",
+    "de": "Versandzone und zugehörige Tarife dauerhaft löschen. Vorsicht — dies kann nicht rückgängig gemacht werden.",
+    "fr": "Supprime définitivement une zone d'expédition et ses tarifs. À utiliser avec précaution — irréversible.",
+    "es": "Elimina permanentemente una zona de envío y sus tarifas. Úsalo con cuidado: no se puede deshacer.",
+    "it": "Elimina definitivamente una zona di spedizione e le sue tariffe. Da usare con cautela — non reversibile.",
+    "ro": "Șterge definitiv o zonă de livrare și tarifele sale. Folosește cu atenție — nu poate fi anulată."
+  },
+  "bot": "Use when the user wants to remove a shipping zone. If the zone is unknown, list shipping zones first.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Delete shipping zone",
+        "de": "Versandzone löschen",
+        "fr": "Supprimer la zone",
+        "es": "Eliminar la zona",
+        "it": "Elimina la zona",
+        "ro": "Șterge zona"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/teams/{{team}}/shipping-zones/{{zoneId}}",
+        "method": "DELETE",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Zone ID",
+          "as": "zoneId",
+          "description": {
+            "en": "The ID of the shipping zone to delete",
+            "de": "Die ID der zu löschenden Versandzone",
+            "fr": "L'ID de la zone à supprimer",
+            "es": "El ID de la zona a eliminar",
+            "it": "L'ID della zona da eliminare",
+            "ro": "ID-ul zonei de șters"
+          },
+          "bot": "The shipping zone ID. List shipping zones if unknown.",
+          "type": "string",
+          "position": "url:zoneId",
+          "source": "field",
+          "required": true,
+          "min": 1
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug for this action. Defaults to the current team.",
+            "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team.",
+            "fr": "Slug d'équipe pour cette action. Par défaut l'équipe actuelle.",
+            "es": "Slug del equipo para esta acción. Por defecto el equipo actual.",
+            "it": "Slug del team per questa azione. Predefinito: team attuale.",
+            "ro": "Slug-ul echipei pentru această acțiune. Implicit echipa curentă."
+          },
+          "bot": "The slug of the team to operate on. Omit to use the current team.",
+          "type": "string",
+          "position": "url:team",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Shipping zone deleted.",
+      "de": "Versandzone gelöscht.",
+      "fr": "Zone d'expédition supprimée.",
+      "es": "Zona de envío eliminada.",
+      "it": "Zona di spedizione eliminata.",
+      "ro": "Zona de livrare ștearsă."
+    },
+    "error": {
+      "en": "Failed to delete shipping zone: {{MESSAGE}}",
+      "de": "Versandzone konnte nicht gelöscht werden: {{MESSAGE}}"
+    }
+  }
+}

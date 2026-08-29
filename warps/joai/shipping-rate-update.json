@@ -1,0 +1,274 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Update Shipping Rate",
+  "title": {
+    "en": "Update a shipping rate",
+    "de": "Versandtarif aktualisieren",
+    "fr": "Mettre à jour un tarif d'expédition",
+    "es": "Actualizar una tarifa de envío",
+    "it": "Aggiorna una tariffa di spedizione",
+    "ro": "Actualizează un tarif de livrare"
+  },
+  "description": {
+    "en": "Update a shipping rate within a zone. Change name, price, thresholds, weight limits, delivery estimates, or active status.",
+    "de": "Versandtarif in einer Zone aktualisieren. Name, Preis, Schwellen, Gewichtsgrenzen, Lieferzeiten oder Aktiv-Status ändern.",
+    "fr": "Met à jour un tarif d'expédition dans une zone. Modifie nom, prix, seuils, limites de poids, délais ou statut actif.",
+    "es": "Actualiza una tarifa de envío en una zona. Cambia nombre, precio, umbrales, límites de peso, plazos o estado activo.",
+    "it": "Aggiorna una tariffa di spedizione in una zona. Modifica nome, prezzo, soglie, limiti peso, tempi o stato attivo.",
+    "ro": "Actualizează un tarif de livrare într-o zonă. Schimbă nume, preț, praguri, limite greutate, termene sau status activ."
+  },
+  "bot": "Use when the user wants to change a shipping rate. List shipping zones to find zone and rate IDs if unknown.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Update shipping rate",
+        "de": "Versandtarif aktualisieren",
+        "fr": "Mettre à jour le tarif",
+        "es": "Actualizar la tarifa",
+        "it": "Aggiorna la tariffa",
+        "ro": "Actualizează tariful"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/teams/{{team}}/shipping-zones/{{zoneId}}/rates/{{rateId}}",
+        "method": "PATCH",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Zone ID",
+          "as": "zoneId",
+          "description": {
+            "en": "The shipping zone ID",
+            "de": "Die Versandzonen-ID",
+            "fr": "L'ID de la zone d'expédition",
+            "es": "El ID de la zona de envío",
+            "it": "L'ID della zona di spedizione",
+            "ro": "ID-ul zonei de livrare"
+          },
+          "type": "string",
+          "position": "url:zoneId",
+          "source": "field",
+          "required": true,
+          "min": 1
+        },
+        {
+          "name": "Rate ID",
+          "as": "rateId",
+          "description": {
+            "en": "The shipping rate ID to update",
+            "de": "Die ID des zu aktualisierenden Versandtarifs",
+            "fr": "L'ID du tarif à mettre à jour",
+            "es": "El ID de la tarifa a actualizar",
+            "it": "L'ID della tariffa da aggiornare",
+            "ro": "ID-ul tarifului de actualizat"
+          },
+          "bot": "The shipping rate ID. List shipping zones to find it if unknown.",
+          "type": "string",
+          "position": "url:rateId",
+          "source": "field",
+          "required": true,
+          "min": 1
+        },
+        {
+          "name": "Name",
+          "as": "name",
+          "description": {
+            "en": "Rate name",
+            "de": "Tarifname",
+            "fr": "Nom du tarif",
+            "es": "Nombre de la tarifa",
+            "it": "Nome tariffa",
+            "ro": "Numele tarifului"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Price",
+          "as": "price",
+          "description": {
+            "en": "Shipping price in cents",
+            "de": "Versandpreis in Cent",
+            "fr": "Prix d'expédition en centimes",
+            "es": "Precio de envío en céntimos",
+            "it": "Prezzo spedizione in centesimi",
+            "ro": "Preț livrare în cenți"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Free Shipping Threshold",
+          "as": "freeShippingThreshold",
+          "description": {
+            "en": "Order total in cents for free shipping",
+            "de": "Bestellwert in Cent für kostenlosen Versand",
+            "fr": "Montant de commande en centimes pour livraison gratuite",
+            "es": "Total del pedido en céntimos para envío gratis",
+            "it": "Totale ordine in centesimi per spedizione gratuita",
+            "ro": "Total comandă în cenți pentru livrare gratuită"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Min Order Value",
+          "as": "minOrderValue",
+          "description": {
+            "en": "Minimum order value in cents",
+            "de": "Mindestbestellwert in Cent",
+            "fr": "Montant minimum de commande en centimes",
+            "es": "Valor mínimo del pedido en céntimos",
+            "it": "Valore minimo ordine in centesimi",
+            "ro": "Valoare minimă comandă în cenți"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Max Order Value",
+          "as": "maxOrderValue",
+          "description": {
+            "en": "Maximum order value in cents",
+            "de": "Maximaler Bestellwert in Cent",
+            "fr": "Montant maximum de commande en centimes",
+            "es": "Valor máximo del pedido en céntimos",
+            "it": "Valore massimo ordine in centesimi",
+            "ro": "Valoare maximă comandă în cenți"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Min Weight",
+          "as": "minWeight",
+          "description": {
+            "en": "Minimum weight",
+            "de": "Mindestgewicht",
+            "fr": "Poids minimum",
+            "es": "Peso mínimo",
+            "it": "Peso minimo",
+            "ro": "Greutate minimă"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Max Weight",
+          "as": "maxWeight",
+          "description": {
+            "en": "Maximum weight",
+            "de": "Maximalgewicht",
+            "fr": "Poids maximum",
+            "es": "Peso máximo",
+            "it": "Peso massimo",
+            "ro": "Greutate maximă"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Estimated Min Days",
+          "as": "estimatedMinDays",
+          "description": {
+            "en": "Minimum delivery days",
+            "de": "Mindest-Liefertage",
+            "fr": "Jours de livraison minimum",
+            "es": "Días mínimos de entrega",
+            "it": "Giorni minimi di consegna",
+            "ro": "Zile minime de livrare"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Estimated Max Days",
+          "as": "estimatedMaxDays",
+          "description": {
+            "en": "Maximum delivery days",
+            "de": "Maximale Liefertage",
+            "fr": "Jours de livraison maximum",
+            "es": "Días máximos de entrega",
+            "it": "Giorni massimi di consegna",
+            "ro": "Zile maxime de livrare"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Active",
+          "as": "active",
+          "description": {
+            "en": "Whether the rate is active",
+            "de": "Ob der Tarif aktiv ist",
+            "fr": "Si le tarif est actif",
+            "es": "Si la tarifa está activa",
+            "it": "Se la tariffa è attiva",
+            "ro": "Dacă tariful este activ"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug for this action. Defaults to the current team.",
+            "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team.",
+            "fr": "Slug d'équipe pour cette action. Par défaut l'équipe actuelle.",
+            "es": "Slug del equipo para esta acción. Por defecto el equipo actual.",
+            "it": "Slug del team per questa azione. Predefinito: team attuale.",
+            "ro": "Slug-ul echipei pentru această acțiune. Implicit echipa curentă."
+          },
+          "bot": "The slug of the team to operate on. Omit to use the current team.",
+          "type": "string",
+          "position": "url:team",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ],
+      "output": {
+        "id": "out.data.id",
+        "name": "out.data.name"
+      }
+    }
+  ],
+  "output": {
+    "RATE_ID": "out.1.id",
+    "RATE_NAME": "out.1.name"
+  },
+  "messages": {
+    "success": {
+      "en": "Shipping rate '{{RATE_NAME}}' updated.",
+      "de": "Versandtarif '{{RATE_NAME}}' aktualisiert.",
+      "fr": "Tarif d'expédition « {{RATE_NAME}} » mis à jour.",
+      "es": "Tarifa de envío « {{RATE_NAME}} » actualizada.",
+      "it": "Tariffa di spedizione « {{RATE_NAME}} » aggiornata.",
+      "ro": "Tariful de livrare „{{RATE_NAME}}” a fost actualizat."
+    },
+    "error": {
+      "en": "Failed to update shipping rate: {{MESSAGE}}",
+      "de": "Versandtarif konnte nicht aktualisiert werden: {{MESSAGE}}"
+    }
+  }
+}

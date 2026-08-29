@@ -1,0 +1,167 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Update Shipping Zone",
+  "title": {
+    "en": "Update a shipping zone",
+    "de": "Versandzone aktualisieren",
+    "fr": "Mettre à jour une zone d'expédition",
+    "es": "Actualizar una zona de envío",
+    "it": "Aggiorna una zona di spedizione",
+    "ro": "Actualizează o zonă de livrare"
+  },
+  "description": {
+    "en": "Update a shipping zone — name, countries, postal code rules, or active status. Only provided fields are changed.",
+    "de": "Versandzone aktualisieren — Name, Länder, Postleitzahl-Regeln oder Aktiv-Status. Nur angegebene Felder werden geändert.",
+    "fr": "Met à jour une zone d'expédition — nom, pays, règles de codes postaux ou statut actif. Seuls les champs fournis sont modifiés.",
+    "es": "Actualiza una zona de envío — nombre, países, reglas de códigos postales o estado activo. Solo cambian los campos proporcionados.",
+    "it": "Aggiorna una zona di spedizione — nome, paesi, regole CAP o stato attivo. Vengono modificati solo i campi forniti.",
+    "ro": "Actualizează o zonă de livrare — nume, țări, reguli cod poștal sau status activ. Se schimbă doar câmpurile furnizate."
+  },
+  "bot": "Use when the user wants to change an existing shipping zone. If the zone is unknown, list shipping zones first.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Update shipping zone",
+        "de": "Versandzone aktualisieren",
+        "fr": "Mettre à jour la zone",
+        "es": "Actualizar la zona",
+        "it": "Aggiorna la zona",
+        "ro": "Actualizează zona"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/teams/{{team}}/shipping-zones/{{zoneId}}",
+        "method": "PATCH",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Zone ID",
+          "as": "zoneId",
+          "description": {
+            "en": "The ID of the shipping zone to update",
+            "de": "Die ID der zu aktualisierenden Versandzone",
+            "fr": "L'ID de la zone à mettre à jour",
+            "es": "El ID de la zona a actualizar",
+            "it": "L'ID della zona da aggiornare",
+            "ro": "ID-ul zonei de actualizat"
+          },
+          "bot": "The shipping zone ID. List shipping zones if unknown.",
+          "type": "string",
+          "position": "url:zoneId",
+          "source": "field",
+          "required": true,
+          "min": 1
+        },
+        {
+          "name": "Name",
+          "as": "name",
+          "description": {
+            "en": "Zone name",
+            "de": "Zonenname",
+            "fr": "Nom de la zone",
+            "es": "Nombre de la zona",
+            "it": "Nome della zona",
+            "ro": "Numele zonei"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Countries",
+          "as": "countries",
+          "description": {
+            "en": "ISO country codes — JSON array",
+            "de": "ISO-Ländercodes — JSON-Array",
+            "fr": "Codes pays ISO — tableau JSON",
+            "es": "Códigos de país ISO — array JSON",
+            "it": "Codici paese ISO — array JSON",
+            "ro": "Coduri țări ISO — array JSON"
+          },
+          "type": "json",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Postal Code Rules",
+          "as": "postalCodeRules",
+          "description": {
+            "en": "Postal code patterns (optional JSON array)",
+            "de": "Postleitzahl-Muster (optionales JSON-Array)",
+            "fr": "Motifs de codes postaux (tableau JSON optionnel)",
+            "es": "Patrones de código postal (array JSON opcional)",
+            "it": "Pattern CAP (array JSON opzionale)",
+            "ro": "Modele cod poștal (array JSON opțional)"
+          },
+          "type": "json",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Active",
+          "as": "active",
+          "description": {
+            "en": "Whether the zone is active",
+            "de": "Ob die Zone aktiv ist",
+            "fr": "Si la zone est active",
+            "es": "Si la zona está activa",
+            "it": "Se la zona è attiva",
+            "ro": "Dacă zona este activă"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug for this action. Defaults to the current team.",
+            "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team.",
+            "fr": "Slug d'équipe pour cette action. Par défaut l'équipe actuelle.",
+            "es": "Slug del equipo para esta acción. Por defecto el equipo actual.",
+            "it": "Slug del team per questa azione. Predefinito: team attuale.",
+            "ro": "Slug-ul echipei pentru această acțiune. Implicit echipa curentă."
+          },
+          "bot": "The slug of the team to operate on. Omit to use the current team.",
+          "type": "string",
+          "position": "url:team",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ],
+      "output": {
+        "id": "out.data.id",
+        "name": "out.data.name"
+      }
+    }
+  ],
+  "output": {
+    "ZONE_ID": "out.1.id",
+    "ZONE_NAME": "out.1.name"
+  },
+  "messages": {
+    "success": {
+      "en": "Shipping zone '{{ZONE_NAME}}' updated.",
+      "de": "Versandzone '{{ZONE_NAME}}' aktualisiert.",
+      "fr": "Zone d'expédition « {{ZONE_NAME}} » mise à jour.",
+      "es": "Zona de envío « {{ZONE_NAME}} » actualizada.",
+      "it": "Zona di spedizione « {{ZONE_NAME}} » aggiornata.",
+      "ro": "Zona de livrare „{{ZONE_NAME}}” a fost actualizată."
+    },
+    "error": {
+      "en": "Failed to update shipping zone: {{MESSAGE}}",
+      "de": "Versandzone konnte nicht aktualisiert werden: {{MESSAGE}}"
+    }
+  }
+}

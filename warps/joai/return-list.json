@@ -1,0 +1,116 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: List Returns",
+  "title": {
+    "en": "List returns",
+    "de": "Retouren anzeigen",
+    "fr": "Lister les retours",
+    "es": "Listar devoluciones",
+    "it": "Elenca resi",
+    "ro": "Listează retururile"
+  },
+  "description": {
+    "en": "List return requests for an order. Guest access may require an order access token header.",
+    "de": "Retourenanfragen einer Bestellung anzeigen. Gastzugriff kann ein Order-Access-Token erfordern.",
+    "fr": "Liste les demandes de retour d'une commande. L'accès invité peut nécessiter un jeton d'accès commande.",
+    "es": "Lista las solicitudes de devolución de un pedido. El acceso de invitado puede requerir un token de acceso al pedido.",
+    "it": "Elenca le richieste di reso di un ordine. L'accesso ospite può richiedere un token di accesso ordine.",
+    "ro": "Listează cererile de retur ale unei comenzi. Accesul pentru oaspeți poate necesita un token de acces la comandă."
+  },
+  "bot": "Use when the user wants to see return requests for an order. For guest checkout access, pass the X-Order-Access-Token header.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "List returns",
+        "de": "Retouren anzeigen",
+        "fr": "Lister les retours",
+        "es": "Listar devoluciones",
+        "it": "Elenca resi",
+        "ro": "Listează retururile"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/orders/{{orderId}}/returns",
+        "method": "GET",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}",
+          "X-Order-Access-Token": "{{orderAccessToken}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Order ID",
+          "as": "orderId",
+          "description": {
+            "en": "The hashid of the order",
+            "de": "Die Hashid der Bestellung",
+            "fr": "Le hashid de la commande",
+            "es": "El hashid del pedido",
+            "it": "L'hashid dell'ordine",
+            "ro": "Hashid-ul comenzii"
+          },
+          "bot": "The order hash ID. If the user refers to an order by customer or item, list orders first to find the matching ID.",
+          "type": "string",
+          "position": "url:orderId",
+          "source": "field",
+          "required": true,
+          "min": 1
+        },
+        {
+          "name": "Order Access Token",
+          "as": "orderAccessToken",
+          "description": {
+            "en": "Guest order access token (optional)",
+            "de": "Gast-Order-Access-Token (optional)",
+            "fr": "Jeton d'accès commande invité (optionnel)",
+            "es": "Token de acceso al pedido para invitados (opcional)",
+            "it": "Token di accesso ordine ospite (opzionale)",
+            "ro": "Token de acces comandă pentru oaspeți (opțional)"
+          },
+          "bot": "Required for guest access to the order. Omit when authenticated as the merchant team.",
+          "type": "string",
+          "position": "header:X-Order-Access-Token",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug for this action. Defaults to the current team.",
+            "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team.",
+            "fr": "Slug d'équipe pour cette action. Par défaut l'équipe actuelle.",
+            "es": "Slug del equipo para esta acción. Por defecto el equipo actual.",
+            "it": "Slug del team per questa azione. Predefinito: team attuale.",
+            "ro": "Slug-ul echipei pentru această acțiune. Implicit echipa curentă."
+          },
+          "bot": "The slug of the team to operate on. Omit to use the current team.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Returns loaded.",
+      "de": "Retouren geladen.",
+      "fr": "Retours chargés.",
+      "es": "Devoluciones cargadas.",
+      "it": "Resi caricati.",
+      "ro": "Retururile au fost încărcate."
+    },
+    "error": {
+      "en": "Failed to list returns: {{MESSAGE}}",
+      "de": "Retouren konnten nicht geladen werden: {{MESSAGE}}"
+    }
+  }
+}

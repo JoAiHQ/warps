@@ -1,0 +1,149 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Create Fulfillment Location",
+  "title": {
+    "en": "Create a fulfillment location",
+    "de": "Abholort erstellen",
+    "fr": "Créer un point de retrait",
+    "es": "Crear un punto de recogida",
+    "it": "Crea un punto di ritiro",
+    "ro": "Creează o locație de ridicare"
+  },
+  "description": {
+    "en": "Create a pickup or fulfillment location with name, linked address, instructions, and active status.",
+    "de": "Abhol- oder Fulfillment-Standort mit Name, verknüpfter Adresse, Anweisungen und Aktiv-Status erstellen.",
+    "fr": "Crée un point de retrait avec nom, adresse liée, instructions et statut actif.",
+    "es": "Crea un punto de recogida con nombre, dirección vinculada, instrucciones y estado activo.",
+    "it": "Crea un punto di ritiro con nome, indirizzo collegato, istruzioni e stato attivo.",
+    "ro": "Creează o locație de ridicare cu nume, adresă legată, instrucțiuni și status activ."
+  },
+  "bot": "Use when the user wants to add a pickup location. Provide addressId from the team's address book if linking an existing address.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Create fulfillment location",
+        "de": "Abholort erstellen",
+        "fr": "Créer le point",
+        "es": "Crear el punto",
+        "it": "Crea il punto",
+        "ro": "Creează locația"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/teams/{{team}}/fulfillment-locations",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Name",
+          "as": "name",
+          "description": {
+            "en": "Location name",
+            "de": "Standortname",
+            "fr": "Nom du point",
+            "es": "Nombre del punto",
+            "it": "Nome del punto",
+            "ro": "Numele locației"
+          },
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Address ID",
+          "as": "addressId",
+          "description": {
+            "en": "Linked address ID (optional)",
+            "de": "Verknüpfte Adress-ID (optional)",
+            "fr": "ID d'adresse liée (optionnel)",
+            "es": "ID de dirección vinculada (opcional)",
+            "it": "ID indirizzo collegato (opzionale)",
+            "ro": "ID adresă legată (opțional)"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Instructions",
+          "as": "instructions",
+          "description": {
+            "en": "Pickup instructions for customers (optional)",
+            "de": "Abholhinweise für Kunden (optional)",
+            "fr": "Instructions de retrait pour les clients (optionnel)",
+            "es": "Instrucciones de recogida para clientes (opcional)",
+            "it": "Istruzioni di ritiro per i clienti (opzionale)",
+            "ro": "Instrucțiuni de ridicare pentru clienți (opțional)"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Active",
+          "as": "active",
+          "description": {
+            "en": "Whether the location is active (optional)",
+            "de": "Ob der Standort aktiv ist (optional)",
+            "fr": "Si le point est actif (optionnel)",
+            "es": "Si el punto está activo (opcional)",
+            "it": "Se il punto è attivo (opzionale)",
+            "ro": "Dacă locația este activă (opțional)"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug for this action. Defaults to the current team.",
+            "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team.",
+            "fr": "Slug d'équipe pour cette action. Par défaut l'équipe actuelle.",
+            "es": "Slug del equipo para esta acción. Por defecto el equipo actual.",
+            "it": "Slug del team per questa azione. Predefinito: team attuale.",
+            "ro": "Slug-ul echipei pentru această acțiune. Implicit echipa curentă."
+          },
+          "bot": "The slug of the team to operate on. Omit to use the current team.",
+          "type": "string",
+          "position": "url:team",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ],
+      "output": {
+        "id": "out.data.id",
+        "name": "out.data.name"
+      }
+    }
+  ],
+  "output": {
+    "LOCATION_ID": "out.1.id",
+    "LOCATION_NAME": "out.1.name"
+  },
+  "messages": {
+    "success": {
+      "en": "Fulfillment location '{{LOCATION_NAME}}' created.",
+      "de": "Abholort '{{LOCATION_NAME}}' erstellt.",
+      "fr": "Point de retrait « {{LOCATION_NAME}} » créé.",
+      "es": "Punto de recogida « {{LOCATION_NAME}} » creado.",
+      "it": "Punto di ritiro « {{LOCATION_NAME}} » creato.",
+      "ro": "Locația de ridicare „{{LOCATION_NAME}}” a fost creată."
+    },
+    "error": {
+      "en": "Failed to create fulfillment location: {{MESSAGE}}",
+      "de": "Abholort konnte nicht erstellt werden: {{MESSAGE}}"
+    }
+  }
+}
