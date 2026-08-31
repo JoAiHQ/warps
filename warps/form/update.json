@@ -1,0 +1,37 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Form: Update",
+  "title": { "en": "Update a form", "de": "Formular aktualisieren" },
+  "description": {
+    "en": "Update an existing form. Only the fields you provide are changed — title, description, definition, store visibility, public access, CRM opt-in, and extras.",
+    "de": "Aktualisiere ein bestehendes Formular. Es werden nur die übergebenen Felder geändert — Titel, Beschreibung, Definition, Store-Sichtbarkeit, öffentlicher Zugriff, CRM-Opt-in und Extras."
+  },
+  "bot": "Use this to update form metadata, definition, publication settings, notifications, or public results.",
+  "vars": {
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": { "en": "Update form", "de": "Formular aktualisieren" },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/warps/{{formId}}",
+        "method": "PATCH",
+        "headers": { "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}" }
+      },
+      "inputs": [
+        { "name": "Form ID", "as": "formId", "type": "string", "position": "url:formId", "source": "field", "required": true },
+        { "name": "Name", "as": "name", "type": "string", "source": "field", "required": false },
+        { "name": "Title", "as": "title", "type": "json", "source": "field", "required": false },
+        { "name": "Description", "as": "description", "type": "json", "source": "field", "required": false },
+        { "name": "Definition", "as": "definition", "type": "json", "source": "field", "required": false },
+        { "name": "Publish to Store", "as": "store", "type": "boolean", "source": "field", "required": false },
+        { "name": "Public", "as": "public", "type": "boolean", "source": "field", "required": false },
+        { "name": "CRM Email Consent", "as": "optIn", "type": "boolean", "source": "field", "required": false },
+        { "name": "Extras", "as": "extras", "type": "json", "source": "field", "required": false }
+      ]
+    }
+  ],
+  "output": { "FORM": "out.data" },
+  "messages": { "success": { "en": "Form updated.", "de": "Formular aktualisiert." } }
+}

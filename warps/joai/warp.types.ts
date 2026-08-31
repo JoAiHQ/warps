@@ -160,7 +160,7 @@ export type JoAiPlaceCheckoutOrderData = {
   ORDER_ID: any;
   ORDER_STATUS: any;
   PAYMENT_URL: any;
-  GUEST_ACCESS_TOKEN: any;
+  ORDER_ACCESS_TOKEN: any;
 };
 
 export type JoAiCheckoutShippingRatesInputs = {
@@ -778,6 +778,7 @@ export type JoAiGetOrderData = {
 
 export type JoAiPayOrderInputs = {
   orderId: string;
+  orderAccessToken: string;
   team: string;
 };
 
@@ -896,6 +897,7 @@ export type JoAiDeleteReminderInputs = {
 
 export type JoAiCreateReturnInputs = {
   orderId: string;
+  orderAccessToken: string;
   reason: string;
   items: string;
   fulfillmentId: string;

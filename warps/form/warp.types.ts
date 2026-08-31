@@ -6,6 +6,7 @@ export type FormCreateInputs = {
   optIn: boolean;
   agent: string;
   public: boolean;
+  extras: string;
   form: boolean;
 };
 
@@ -107,5 +108,21 @@ export type FormUnpublishInputs = {
 };
 
 export type FormUnpublishData = {
+  FORM: any;
+};
+
+export type FormUpdateInputs = {
+  formId: string;
+  name: string;
+  title: string;
+  description: string;
+  definition: string;
+  store: boolean;
+  public: boolean;
+  optIn: boolean;
+  extras: string;
+};
+
+export type FormUpdateData = {
   FORM: any;
 };

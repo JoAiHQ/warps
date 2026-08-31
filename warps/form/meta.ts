@@ -72,4 +72,9 @@ export const meta: Record<string, WarpExtras> = {
     useCases: { en: ['Install a ready-made contact form', 'Copy a registration template into a team'], de: ['Ein fertiges Kontaktformular installieren', 'Eine Anmeldevorlage in ein Team kopieren'] },
     category,
   },
+  update: {
+    keywords: { en: ['update form', 'edit form', 'form settings'], de: ['Formular aktualisieren', 'Formular bearbeiten', 'Formular-Einstellungen'] },
+    useCases: { en: ['Change form title or description', 'Update form fields or success messages', 'Toggle notifications or public results'], de: ['Formular-Titel oder -Beschreibung ändern', 'Formularfelder oder Erfolgsmeldungen aktualisieren', 'Benachrichtigungen oder öffentliche Ergebnisse umschalten'] },
+    category,
+  },
 }

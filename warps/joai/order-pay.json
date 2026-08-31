@@ -7,7 +7,7 @@
   "description": {
     "en": "Start payment for a pending order and return the payment URL."
   },
-  "bot": "Use when the user wants to pay an existing order. Returns a payment URL to complete checkout.",
+  "bot": "Use when the user wants to pay an existing order. For guest orders pass the orderAccessToken from place-order. Returns a payment URL to complete checkout.",
   "vars": {
     "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
     "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
@@ -24,7 +24,8 @@
         "method": "POST",
         "headers": {
           "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
-          "X-Team": "{{team}}"
+          "X-Team": "{{team}}",
+          "X-Order-Access-Token": "{{orderAccessToken}}"
         }
       },
       "inputs": [
@@ -39,6 +40,18 @@
           "position": "url:orderId",
           "source": "field",
           "required": true
+        },
+        {
+          "name": "Order Access Token",
+          "as": "orderAccessToken",
+          "description": {
+            "en": "Guest order access token (optional)"
+          },
+          "bot": "Optional. Required for guest checkout orders — use the orderAccessToken from place-order.",
+          "type": "string",
+          "source": "field",
+          "position": "header:X-Order-Access-Token",
+          "required": false
         },
         {
           "name": "Team",
