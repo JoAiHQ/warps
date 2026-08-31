@@ -4,20 +4,20 @@
   "title": {
     "en": "Add a contact",
     "de": "Kontakt hinzufügen",
-    "es": "Add a contact",
-    "fr": "Add a contact",
-    "ro": "Add a contact",
-    "it": "Add a contact"
+    "es": "Añadir un contacto",
+    "fr": "Ajouter un contact",
+    "ro": "Adaugă un contact",
+    "it": "Aggiungi un contatto"
   },
   "description": {
-    "en": "Add a new contact to your AI-managed address book with details like name, email, phone, company, and tags. Your agent uses your contacts as a built-in CRM to remember relationships and personalize interactions.",
-    "de": "Füge einen neuen Kontakt zu deinem KI-gestützten Adressbuch hinzu — mit Name, E-Mail, Telefon, Firma und Tags. Dein Agent nutzt deine Kontakte als integriertes CRM, um Beziehungen zu merken und Interaktionen zu personalisieren.",
-    "es": "Add a new contact to your AI-managed address book with details like name, email, phone, company, and tags. Your agent uses your contacts as a built-in CRM to remember relationships and personalize interactions.",
-    "fr": "Add a new contact to your AI-managed address book with details like name, email, phone, company, and tags. Your agent uses your contacts as a built-in CRM to remember relationships and personalize interactions.",
-    "ro": "Add a new contact to your AI-managed address book with details like name, email, phone, company, and tags. Your agent uses your contacts as a built-in CRM to remember relationships and personalize interactions.",
-    "it": "Add a new contact to your AI-managed address book with details like name, email, phone, company, and tags. Your agent uses your contacts as a built-in CRM to remember relationships and personalize interactions."
+    "en": "Add someone to your address book with name, email, phone, company, and tags. If the person already exists (same name, email, or phone), the existing contact is reused — no duplicates.",
+    "de": "Lege jemanden im Adressbuch an — mit Name, E-Mail, Telefon, Firma und Tags. Gibt es die Person schon (gleicher Name, gleiche E-Mail oder gleiches Telefon), wird der bestehende Kontakt verwendet — ohne Duplikate.",
+    "es": "Añade a alguien a tu agenda con nombre, correo, teléfono, empresa y etiquetas. Si la persona ya existe (mismo nombre, correo o teléfono), se reutiliza el contacto — sin duplicados.",
+    "fr": "Ajoute quelqu’un à ton carnet d’adresses avec nom, e-mail, téléphone, entreprise et tags. Si la personne existe déjà (même nom, e-mail ou téléphone), le contact existant est réutilisé — sans doublons.",
+    "ro": "Adaugă pe cineva în agenda ta cu nume, e-mail, telefon, firmă și etichete. Dacă persoana există deja (același nume, e-mail sau telefon), se folosește contactul existent — fără duplicate.",
+    "it": "Aggiungi qualcuno alla rubrica con nome, e-mail, telefono, azienda e tag. Se la persona esiste già (stesso nome, e-mail o telefono), viene riusato il contatto esistente — senza duplicati."
   },
-  "bot": "Help the user add a contact. Extract whatever info is available — at minimum a name. Don't force the user to provide all fields.",
+  "bot": "Find-or-create a contact by name, email, or phone. Extract whatever info is available — at least a name; prefer email and phone when known. If a match is returned, do not create another contact — use contact update for non-empty field changes.",
   "vars": {
     "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
     "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
@@ -29,13 +29,13 @@
       "label": {
         "en": "Add contact",
         "de": "Kontakt hinzufügen",
-        "es": "Add contact",
-        "fr": "Add contact",
-        "ro": "Add contact",
-        "it": "Add contact"
+        "es": "Añadir contacto",
+        "fr": "Ajouter le contact",
+        "ro": "Adaugă contactul",
+        "it": "Aggiungi contatto"
       },
       "destination": {
-        "url": "INJECT:API_BASE/v1/contacts",
+        "url": "INJECT:API_BASE/v1/contacts/find-or-create",
         "method": "POST",
         "headers": {
           "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
@@ -47,12 +47,12 @@
           "name": "Name",
           "as": "name",
           "description": {
-            "en": "The contact's name",
-            "de": "Der Name des Kontakts",
-            "es": "The contact's name",
-            "fr": "The contact's name",
-            "ro": "The contact's name",
-            "it": "The contact's name"
+            "en": "Name",
+            "de": "Name",
+            "es": "Nombre",
+            "fr": "Nom",
+            "ro": "Nume",
+            "it": "Nome"
           },
           "bot": "The contact's name — first name, full name, or nickname.",
           "type": "string",
@@ -62,10 +62,10 @@
           "label": {
             "en": "Name",
             "de": "Name",
-            "es": "Name",
-            "fr": "Name",
-            "ro": "Name",
-            "it": "Name"
+            "es": "Nombre",
+            "fr": "Nom",
+            "ro": "Nume",
+            "it": "Nome"
           }
         },
         {
@@ -74,10 +74,10 @@
           "description": {
             "en": "Email address",
             "de": "E-Mail-Adresse",
-            "es": "Email address",
-            "fr": "Email address",
-            "ro": "Email address",
-            "it": "Email address"
+            "es": "Correo electrónico",
+            "fr": "Adresse e-mail",
+            "ro": "Adresă de e-mail",
+            "it": "Indirizzo e-mail"
           },
           "bot": "The contact's email address, if mentioned.",
           "type": "string",
@@ -90,10 +90,10 @@
           "description": {
             "en": "Phone number",
             "de": "Telefonnummer",
-            "es": "Phone number",
-            "fr": "Phone number",
-            "ro": "Phone number",
-            "it": "Phone number"
+            "es": "Número de teléfono",
+            "fr": "Numéro de téléphone",
+            "ro": "Număr de telefon",
+            "it": "Numero di telefono"
           },
           "bot": "The contact's phone number, if mentioned.",
           "type": "string",
@@ -106,10 +106,10 @@
           "description": {
             "en": "Company or organization",
             "de": "Unternehmen oder Organisation",
-            "es": "Company or organization",
-            "fr": "Company or organization",
-            "ro": "Company or organization",
-            "it": "Company or organization"
+            "es": "Empresa u organización",
+            "fr": "Entreprise ou organisation",
+            "ro": "Companie sau organizație",
+            "it": "Azienda o organizzazione"
           },
           "bot": "The contact's company or organization, if mentioned.",
           "type": "string",
@@ -122,10 +122,10 @@
           "description": {
             "en": "Job title or role",
             "de": "Jobtitel oder Rolle",
-            "es": "Job title or role",
-            "fr": "Job title or role",
-            "ro": "Job title or role",
-            "it": "Job title or role"
+            "es": "Cargo o función",
+            "fr": "Poste ou rôle",
+            "ro": "Funcție sau rol",
+            "it": "Ruolo o posizione"
           },
           "bot": "The contact's job title or role (e.g., CEO, Developer), if mentioned.",
           "type": "string",
@@ -136,12 +136,12 @@
           "name": "Notes",
           "as": "notes",
           "description": {
-            "en": "Any additional notes",
-            "de": "Zusätzliche Notizen",
-            "es": "Any additional notes",
-            "fr": "Any additional notes",
-            "ro": "Any additional notes",
-            "it": "Any additional notes"
+            "en": "Notes",
+            "de": "Notizen",
+            "es": "Notas",
+            "fr": "Notes",
+            "ro": "Note",
+            "it": "Note"
           },
           "bot": "Any extra context or notes about this contact.",
           "type": "string",
@@ -152,12 +152,12 @@
           "name": "Tags",
           "as": "tags",
           "description": {
-            "en": "Tags for categorization",
-            "de": "Tags zur Kategorisierung",
-            "es": "Tags for categorization",
-            "fr": "Tags for categorization",
-            "ro": "Tags for categorization",
-            "it": "Tags for categorization"
+            "en": "Tags",
+            "de": "Tags",
+            "es": "Etiquetas",
+            "fr": "Tags",
+            "ro": "Etichete",
+            "it": "Tag"
           },
           "bot": "Tags to categorize this contact (e.g., client, investor, partner). Provide as a comma-separated list.",
           "type": "string",
@@ -166,22 +166,22 @@
           "label": {
             "en": "Tags",
             "de": "Tags",
-            "es": "Tags",
+            "es": "Etiquetas",
             "fr": "Tags",
-            "ro": "Tags",
-            "it": "Tags"
+            "ro": "Etichete",
+            "it": "Tag"
           }
         },
         {
           "name": "Website",
           "as": "website",
           "description": {
-            "en": "Website URL",
-            "de": "Website-URL",
-            "es": "Website URL",
-            "fr": "Website URL",
-            "ro": "Website URL",
-            "it": "Website URL"
+            "en": "Website",
+            "de": "Website",
+            "es": "Sitio web",
+            "fr": "Site web",
+            "ro": "Site web",
+            "it": "Sito web"
           },
           "bot": "The contact's website URL, if mentioned.",
           "type": "string",
@@ -194,10 +194,10 @@
           "description": {
             "en": "Birthday (YYYY-MM-DD)",
             "de": "Geburtstag (JJJJ-MM-TT)",
-            "es": "Birthday (YYYY-MM-DD)",
-            "fr": "Birthday (YYYY-MM-DD)",
-            "ro": "Birthday (YYYY-MM-DD)",
-            "it": "Birthday (YYYY-MM-DD)"
+            "es": "Cumpleaños (AAAA-MM-DD)",
+            "fr": "Anniversaire (AAAA-MM-JJ)",
+            "ro": "Ziua de naștere (AAAA-LL-ZZ)",
+            "it": "Compleanno (AAAA-MM-GG)"
           },
           "bot": "The contact's birthday in YYYY-MM-DD format, if mentioned.",
           "type": "string",
@@ -208,12 +208,12 @@
           "name": "Socials",
           "as": "socials",
           "description": {
-            "en": "Social profile URLs as a JSON object keyed by platform",
-            "de": "Social-Media-URLs als JSON-Objekt nach Plattform",
-            "es": "Social profile URLs as a JSON object keyed by platform",
-            "fr": "Social profile URLs as a JSON object keyed by platform",
-            "ro": "Social profile URLs as a JSON object keyed by platform",
-            "it": "Social profile URLs as a JSON object keyed by platform"
+            "en": "Social profiles (JSON by platform)",
+            "de": "Social-Profile (JSON nach Plattform)",
+            "es": "Perfiles sociales (JSON por plataforma)",
+            "fr": "Profils sociaux (JSON par plateforme)",
+            "ro": "Profiluri sociale (JSON pe platformă)",
+            "it": "Profili social (JSON per piattaforma)"
           },
           "bot": "Pass a platform-to-URL object, e.g. {\"linkedin\":\"https://linkedin.com/in/name\",\"instagram\":\"https://instagram.com/name\"}. Do not pass an array of platform/url objects.",
           "type": "string",
@@ -224,8 +224,12 @@
           "name": "Team",
           "as": "team",
           "description": {
-            "en": "Team slug for this action. Defaults to the current team.",
-            "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team."
+            "en": "Team for this action (defaults to the current team)",
+            "de": "Team für diese Aktion (Standard: aktuelles Team)",
+            "es": "Equipo para esta acción (por defecto el actual)",
+            "fr": "Équipe pour cette action (par défaut : l’équipe actuelle)",
+            "ro": "Echipa pentru această acțiune (implicit: echipa curentă)",
+            "it": "Team per questa azione (predefinito: il team attuale)"
           },
           "bot": "The slug of the team to operate on. Omit to use the current team.",
           "type": "string",
@@ -236,14 +240,17 @@
       ]
     }
   ],
+  "output": {
+    "contactId": "out.data.id"
+  },
   "messages": {
     "success": {
-      "en": "Contact '{{name}}' added!",
-      "de": "Kontakt '{{name}}' hinzugefügt!",
-      "es": "Contact '{{name}}' added!",
-      "fr": "Contact '{{name}}' added!",
-      "ro": "Contact '{{name}}' added!",
-      "it": "Contact '{{name}}' added!"
+      "en": "Contact '{{name}}' is ready.",
+      "de": "Kontakt '{{name}}' ist bereit.",
+      "es": "El contacto '{{name}}' está listo.",
+      "fr": "Le contact « {{name}} » est prêt.",
+      "ro": "Contactul '{{name}}' este gata.",
+      "it": "Il contatto '{{name}}' è pronto."
     }
   }
 }
