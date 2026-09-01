@@ -15,7 +15,7 @@ function Main() {
       items={items}
       primaryKey={'name'}
       secondaryKey={undefined}
-      detailKeys={["price","durationMinutes","tags"]}
+      detailKeys={["price","durationMinutes","bookable","public","tags"]}
     />
   )
 }
