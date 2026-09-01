@@ -4,8 +4,8 @@
   "repo": "JoAiHQ/warps",
   "branch": "main",
   "network": "mainnet",
-  "commitSha": "f063b5b7753447d9dfa769cb5c23f6de9c81a526",
-  "generatedAt": "2026-08-31T17:32:10.323Z",
+  "commitSha": "c146ac40626a1596fd42fe28bcb293ef2944e23c",
+  "generatedAt": "2026-09-01T18:19:59.298Z",
   "warps": [
     {
       "key": "arbitrum:omniset-deposit-arbitrum",
@@ -98147,8 +98147,8 @@
       "identifier": "@joai-service-create",
       "alias": "joai-service-create",
       "chain": "none",
-      "hash": "eac5dc3b15fbc4254cd33edcee7677e8e5a742d2712f9ad26137f59ef409933b",
-      "checksum": "eac5dc3b15fbc4254cd33edcee7677e8e5a742d2712f9ad26137f59ef409933b",
+      "hash": "f09920ffbeaf14f9aa8c8c4e69f6a2fec82f430cf435b774c5d378db05b0a9d4",
+      "checksum": "f09920ffbeaf14f9aa8c8c4e69f6a2fec82f430cf435b774c5d378db05b0a9d4",
       "name": "JoAi: Create Service",
       "title": {
         "en": "Create a service",
@@ -98200,7 +98200,7 @@
           "en": "Create a new billable service with name, price, and pricing model for your team catalog. Services can be one-time or monthly subscription. Monthly services use Stripe for recurring billing.",
           "de": "Erstelle eine neue abrechenbare Dienstleistung mit Name, Preis und Abrechnungsmodell für deinen Team-Katalog. Dienstleistungen können einmalig oder monatlich als Abo sein. Monatliche Services nutzen Stripe für wiederkehrende Zahlungen."
         },
-        "bot": "Use when the user wants to create a new service, billable offering, or subscription plan. Extract name, price, and pricing model from their description. If they say 'monthly' or 'subscription', set pricingModel to 'monthly'. The price modifier automatically converts euros to cents.",
+        "bot": "Use when the user wants to create a new service, billable offering, or subscription plan. Extract name, price, and pricing model from their description. If they say 'monthly' or 'subscription', set pricingModel to 'monthly'. The price modifier automatically converts euros to cents. Use public for store visibility and bookable for appointment booking — a service can be public without being bookable.",
         "vars": {
           "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
           "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
@@ -98324,8 +98324,19 @@
                 "name": "Public",
                 "as": "public",
                 "description": {
-                  "en": "Whether the service is publicly visible (\"true\"/\"false\")",
-                  "de": "Ob die Dienstleistung öffentlich sichtbar ist (\"true\"/\"false\")"
+                  "en": "Whether the service is publicly visible in the store (\"true\"/\"false\")",
+                  "de": "Ob die Dienstleistung öffentlich im Store sichtbar ist (\"true\"/\"false\")"
+                },
+                "type": "bool",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Bookable",
+                "as": "bookable",
+                "description": {
+                  "en": "Whether customers can book this service via the booking page (\"true\"/\"false\"). Requires duration when true. Defaults to true when duration is set.",
+                  "de": "Ob Kund:innen diese Dienstleistung über die Buchungsseite buchen können (\"true\"/\"false\"). Bei true ist eine Dauer erforderlich. Standard: true, wenn eine Dauer gesetzt ist."
                 },
                 "type": "bool",
                 "source": "field",
@@ -98361,26 +98372,31 @@
             "add service",
             "new billable service",
             "appointment type",
-            "service catalog"
+            "service catalog",
+            "bookable service",
+            "public service"
           ],
           "de": [
             "Dienstleistung erstellen",
             "Service hinzufügen",
             "neue abrechenbare Leistung",
             "Terminart",
-            "Service-Katalog"
+            "Service-Katalog",
+            "buchbare Dienstleistung"
           ]
         },
         "useCases": {
           "en": [
             "Add a new service type for appointment booking",
             "Create a billable service with a set price and duration",
-            "Set up consultation, maintenance, or repair service offerings"
+            "Set up consultation, maintenance, or repair service offerings",
+            "List a service in the store without enabling appointment booking"
           ],
           "de": [
             "Einen neuen Dienstleistungstyp für Terminbuchungen hinzufügen",
             "Eine abrechenbare Dienstleistung mit festem Preis und Dauer erstellen",
-            "Beratungs-, Wartungs- oder Reparaturleistungen anlegen"
+            "Beratungs-, Wartungs- oder Reparaturleistungen anlegen",
+            "Eine Dienstleistung im Store listen, ohne Terminbuchung zu aktivieren"
           ]
         },
         "category": "productivity"
@@ -98542,8 +98558,8 @@
       "identifier": "@joai-service-list",
       "alias": "joai-service-list",
       "chain": "none",
-      "hash": "71c6dee3138138772e3a86abe4c63b723b017791770d329d9128b855ca8e01b1",
-      "checksum": "71c6dee3138138772e3a86abe4c63b723b017791770d329d9128b855ca8e01b1",
+      "hash": "391c470be4cea4a9b640a2bf9df1186f0b9dc2f638410158142f39e575902019",
+      "checksum": "391c470be4cea4a9b640a2bf9df1186f0b9dc2f638410158142f39e575902019",
       "name": "JoAi: List Services",
       "title": {
         "en": "List team services",
@@ -98624,6 +98640,16 @@
             },
             "inputs": [
               {
+                "name": "bookable",
+                "type": "string",
+                "required": false,
+                "position": "query",
+                "description": {
+                  "en": "Filter by bookable status (\"1\" or \"0\")",
+                  "de": "Nach Buchbarkeit filtern (\"1\" oder \"0\")"
+                }
+              },
+              {
                 "name": "tags",
                 "type": "string",
                 "required": false,
@@ -98649,7 +98675,7 @@
             ]
           }
         ],
-        "ui": "https://raw.githubusercontent.com/JoAiHQ/warps/main/warps/joai/service-list/chatapp.03c97515.dist.html"
+        "ui": "https://raw.githubusercontent.com/JoAiHQ/warps/main/warps/joai/service-list/chatapp.e9fc5b1f.dist.html"
       },
       "extras": {
         "keywords": {
@@ -98687,8 +98713,8 @@
       "identifier": "@joai-service-update",
       "alias": "joai-service-update",
       "chain": "none",
-      "hash": "ec1095f5e146c87b616ac5f6974df1d6488c19c77c9ed8f84d8c0e9a8efb56fc",
-      "checksum": "ec1095f5e146c87b616ac5f6974df1d6488c19c77c9ed8f84d8c0e9a8efb56fc",
+      "hash": "3f473a6ad1958d82dda54f247a262369571253b8b248a76c08db16fb4845793d",
+      "checksum": "3f473a6ad1958d82dda54f247a262369571253b8b248a76c08db16fb4845793d",
       "name": "JoAi: Update Service",
       "title": {
         "en": "Update a service",
@@ -98756,7 +98782,7 @@
           "it": "Aggiorna un servizio esistente del tuo catalogo — nome, prezzo, durata, tag, descrizione o stato attivo. Vengono modificati solo i campi forniti; prenotazioni e fatture continuano a funzionare.",
           "ro": "Actualizează un serviciu existent din catalogul echipei tale — nume, preț, durată, taguri, descriere sau stare activă. Se schimbă doar câmpurile furnizate; rezervările și facturile continuă să funcționeze."
         },
-        "bot": "Use when the user wants to modify an existing service. If the user refers to a service by name, list services first to find the matching ID. Only include fields that changed.",
+        "bot": "Use when the user wants to modify an existing service. If the user refers to a service by name, list services first to find the matching ID. Only include fields that changed. Use bookable to control appointment booking separately from public store visibility and active.",
         "vars": {
           "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
           "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
@@ -98879,12 +98905,12 @@
                 "name": "Active",
                 "as": "active",
                 "description": {
-                  "en": "Whether the service is active and bookable (\"true\"/\"false\")",
-                  "de": "Ob die Dienstleistung aktiv und buchbar ist (\"true\"/\"false\")",
-                  "fr": "Si le service est actif et réservable (\"true\"/\"false\")",
-                  "es": "Si el servicio está activo y se puede reservar (\"true\"/\"false\")",
-                  "it": "Se il servizio è attivo e prenotabile (\"true\"/\"false\")",
-                  "ro": "Dacă serviciul este activ și poate fi rezervat (\"true\"/\"false\")"
+                  "en": "Whether the service is active (\"true\"/\"false\")",
+                  "de": "Ob die Dienstleistung aktiv ist (\"true\"/\"false\")",
+                  "fr": "Si le service est actif (\"true\"/\"false\")",
+                  "es": "Si el servicio está activo (\"true\"/\"false\")",
+                  "it": "Se il servizio è attivo (\"true\"/\"false\")",
+                  "ro": "Dacă serviciul este activ (\"true\"/\"false\")"
                 },
                 "type": "string",
                 "source": "field",
@@ -98909,12 +98935,27 @@
                 "name": "Public",
                 "as": "public",
                 "description": {
-                  "en": "Whether the service is publicly visible (\"true\"/\"false\")",
-                  "de": "Ob die Dienstleistung öffentlich sichtbar ist (\"true\"/\"false\")",
-                  "fr": "Si le service est visible publiquement (\"true\"/\"false\")",
-                  "es": "Si el servicio es visible públicamente (\"true\"/\"false\")",
-                  "it": "Se il servizio è visibile pubblicamente (\"true\"/\"false\")",
-                  "ro": "Dacă serviciul este vizibil public (\"true\"/\"false\")"
+                  "en": "Whether the service is publicly visible in the store (\"true\"/\"false\")",
+                  "de": "Ob die Dienstleistung öffentlich im Store sichtbar ist (\"true\"/\"false\")",
+                  "fr": "Si le service est visible publiquement dans le Store (\"true\"/\"false\")",
+                  "es": "Si el servicio es visible públicamente en el Store (\"true\"/\"false\")",
+                  "it": "Se il servizio è visibile pubblicamente nello Store (\"true\"/\"false\")",
+                  "ro": "Dacă serviciul este vizibil public în Store (\"true\"/\"false\")"
+                },
+                "type": "bool",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Bookable",
+                "as": "bookable",
+                "description": {
+                  "en": "Whether customers can book this service via the booking page (\"true\"/\"false\"). Requires duration when true.",
+                  "de": "Ob Kund:innen diese Dienstleistung über die Buchungsseite buchen können (\"true\"/\"false\"). Bei true ist eine Dauer erforderlich.",
+                  "fr": "Si les clients peuvent réserver ce service via la page de réservation (\"true\"/\"false\"). Une durée est requise si true.",
+                  "es": "Si los clientes pueden reservar este servicio en la página de reservas (\"true\"/\"false\"). Requiere duración si es true.",
+                  "it": "Se i clienti possono prenotare questo servizio dalla pagina prenotazioni (\"true\"/\"false\"). Richiede durata se true.",
+                  "ro": "Dacă clienții pot rezerva acest serviciu din pagina de programări (\"true\"/\"false\"). Necesită durată când e true."
                 },
                 "type": "bool",
                 "source": "field",
@@ -98974,26 +99015,34 @@
             "edit service",
             "change service price",
             "modify service duration",
-            "service settings"
+            "service settings",
+            "enable booking",
+            "disable booking"
           ],
           "de": [
             "Dienstleistung aktualisieren",
             "Service bearbeiten",
             "Preis ändern",
             "Dauer anpassen",
-            "Service-Einstellungen"
+            "Service-Einstellungen",
+            "Buchung aktivieren",
+            "Buchung deaktivieren"
           ]
         },
         "useCases": {
           "en": [
             "Change the price of an existing service",
             "Update the duration of a service for appointment booking",
-            "Activate or deactivate a service in your catalog"
+            "Activate or deactivate a service in your catalog",
+            "Make a service public in the store but not bookable",
+            "Enable or disable appointment booking for a service"
           ],
           "de": [
             "Den Preis einer bestehenden Dienstleistung ändern",
             "Die Dauer einer Dienstleistung für Terminbuchungen anpassen",
-            "Eine Dienstleistung im Katalog aktivieren oder deaktivieren"
+            "Eine Dienstleistung im Katalog aktivieren oder deaktivieren",
+            "Eine Dienstleistung im Store listen, aber nicht buchbar machen",
+            "Terminbuchung für eine Dienstleistung aktivieren oder deaktivieren"
           ]
         },
         "category": "productivity"
