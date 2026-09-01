@@ -768,38 +768,44 @@ export const meta: Record<string, WarpExtras> = {
   },
   'service-create': {
     keywords: {
-      en: ['create service', 'add service', 'new billable service', 'appointment type', 'service catalog'],
-      de: ['Dienstleistung erstellen', 'Service hinzufügen', 'neue abrechenbare Leistung', 'Terminart', 'Service-Katalog'],
+      en: ['create service', 'add service', 'new billable service', 'appointment type', 'service catalog', 'bookable service', 'public service'],
+      de: ['Dienstleistung erstellen', 'Service hinzufügen', 'neue abrechenbare Leistung', 'Terminart', 'Service-Katalog', 'buchbare Dienstleistung'],
     },
     useCases: {
       en: [
         'Add a new service type for appointment booking',
         'Create a billable service with a set price and duration',
         'Set up consultation, maintenance, or repair service offerings',
+        'List a service in the store without enabling appointment booking',
       ],
       de: [
         'Einen neuen Dienstleistungstyp für Terminbuchungen hinzufügen',
         'Eine abrechenbare Dienstleistung mit festem Preis und Dauer erstellen',
         'Beratungs-, Wartungs- oder Reparaturleistungen anlegen',
+        'Eine Dienstleistung im Store listen, ohne Terminbuchung zu aktivieren',
       ],
     },
     category: 'productivity',
   },
   'service-update': {
     keywords: {
-      en: ['update service', 'edit service', 'change service price', 'modify service duration', 'service settings'],
-      de: ['Dienstleistung aktualisieren', 'Service bearbeiten', 'Preis ändern', 'Dauer anpassen', 'Service-Einstellungen'],
+      en: ['update service', 'edit service', 'change service price', 'modify service duration', 'service settings', 'enable booking', 'disable booking'],
+      de: ['Dienstleistung aktualisieren', 'Service bearbeiten', 'Preis ändern', 'Dauer anpassen', 'Service-Einstellungen', 'Buchung aktivieren', 'Buchung deaktivieren'],
     },
     useCases: {
       en: [
         'Change the price of an existing service',
         'Update the duration of a service for appointment booking',
         'Activate or deactivate a service in your catalog',
+        'Make a service public in the store but not bookable',
+        'Enable or disable appointment booking for a service',
       ],
       de: [
         'Den Preis einer bestehenden Dienstleistung ändern',
         'Die Dauer einer Dienstleistung für Terminbuchungen anpassen',
         'Eine Dienstleistung im Katalog aktivieren oder deaktivieren',
+        'Eine Dienstleistung im Store listen, aber nicht buchbar machen',
+        'Terminbuchung für eine Dienstleistung aktivieren oder deaktivieren',
       ],
     },
     category: 'productivity',
