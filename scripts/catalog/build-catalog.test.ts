@@ -181,21 +181,17 @@ describe('distribution catalog', () => {
           enabled: true,
           status: 'ready',
           warpIdentifier: 'anthropic-joai-plugin-install',
-          title: 'Claude Plugin',
+          title: 'Claude',
           primaryAction: {
-            type: 'copy',
-            label: 'Copy marketplace command',
+            type: 'link',
+            label: 'Open Claude',
           },
         },
         codex: {
-          enabled: true,
-          status: 'ready',
+          enabled: false,
+          status: 'disabled',
           warpIdentifier: 'openai-joai-plugin-install',
           title: 'Codex Plugin',
-          primaryAction: {
-            type: 'copy',
-            value: 'joai-joai',
-          },
         },
         cursor: {
           enabled: true,
@@ -207,7 +203,7 @@ describe('distribution catalog', () => {
           enabled: true,
           status: 'runtime_ready',
           warpIdentifier: 'openai-joai-app-connect',
-          title: 'ChatGPT App',
+          title: 'ChatGPT',
         },
       },
     })
