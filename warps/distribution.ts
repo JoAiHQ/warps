@@ -92,26 +92,26 @@ function createDefaultProviderDistribution(
         enabled: true,
         status: 'ready',
         warpIdentifier: 'anthropic-joai-plugin-install',
-        title: 'Claude Plugin',
-        description: 'Add the official JoAi Claude marketplace once, then install this app plugin by name.',
-        sourceUrl: 'https://github.com/JoAiHQ/claude-plugins',
+        title: 'Claude',
+        description: 'Open Claude connector settings and add the MCP URL.',
+        sourceUrl: appPageUrl,
         fallbackUrl: mcpUrl,
-        primaryAction: createAction('copy', 'Copy marketplace command', 'claude plugin marketplace add --scope user JoAiHQ/claude-plugins'),
-        secondaryAction: createAction('copy', 'Copy install command', `claude plugin install --scope user ${pluginName}@joai-claude-plugins`),
-        notes: ['Add the JoAi Claude marketplace once, then install this plugin by name.'],
+        primaryAction: createAction('link', 'Open Claude', 'https://claude.ai/settings/connectors'),
+        secondaryAction: null,
+        notes: [],
       }
     case 'codex':
       return {
-        enabled: true,
-        status: 'ready',
+        enabled: false,
+        status: 'disabled',
         warpIdentifier: 'openai-joai-plugin-install',
         title: 'Codex Plugin',
-        description: 'Install this app from the official JoAi Codex marketplace, or use the MCP URL if your Codex build still relies on direct MCP setup.',
+        description: 'Deprecated. Use ChatGPT instead.',
         sourceUrl: 'https://github.com/JoAiHQ/codex-plugins',
         fallbackUrl: mcpUrl,
         primaryAction: createAction('copy', 'Copy plugin name', pluginName),
-        secondaryAction: createAction('copy', 'Copy MCP URL', mcpUrl),
-        notes: ['Add the JoAi Codex marketplace in Codex first, then install this plugin by name.'],
+        secondaryAction: null,
+        notes: ['Codex marketplace installs are deprecated in favor of ChatGPT.'],
       }
     case 'cursor':
       return {
@@ -119,11 +119,11 @@ function createDefaultProviderDistribution(
         status: 'ready',
         warpIdentifier: 'cursor-joai-plugin-install',
         title: 'Cursor Plugin',
-        description: 'Install this app in Cursor with one click, or fall back to the hosted MCP URL manually.',
+        description: 'Install this app in Cursor with one click.',
         sourceUrl: appPageUrl,
         fallbackUrl: mcpUrl,
         primaryAction: createAction('deeplink', 'Install in Cursor', createCursorMcpInstallLink(mcpUrl, pluginName)),
-        secondaryAction: createAction('copy', 'Copy MCP URL', mcpUrl),
+        secondaryAction: null,
         notes: ['The one-click install opens Cursor directly with this app prefilled.'],
       }
     case 'openai':
@@ -131,13 +131,13 @@ function createDefaultProviderDistribution(
         enabled: true,
         status: 'runtime_ready',
         warpIdentifier: 'openai-joai-app-connect',
-        title: 'ChatGPT App',
-        description: 'Use this app in ChatGPT today by connecting the hosted MCP URL.',
+        title: 'ChatGPT',
+        description: 'Open ChatGPT Apps settings, enable Developer mode, then create an app with the MCP URL.',
         sourceUrl: appPageUrl,
         fallbackUrl: mcpUrl,
-        primaryAction: createAction('copy', 'Copy MCP URL', mcpUrl),
+        primaryAction: createAction('link', 'Open ChatGPT apps', 'https://chatgpt.com/#settings/Connectors/Advanced'),
         secondaryAction: null,
-        notes: ['Paste the hosted MCP URL into ChatGPT to connect the app today.'],
+        notes: ['Use Developer mode in Apps settings to add the hosted MCP URL.'],
       }
   }
 }
@@ -148,7 +148,7 @@ function createDefaultManifest(brandName: string, brand: WarpbaseBrand | null, b
 
   return {
     install: {
-      summary: `Connect ${appName} to Claude, Codex, and ChatGPT through JoAi's hosted MCP app server.`,
+      summary: `Connect ${appName} to Claude, Cursor, and ChatGPT through JoAi's hosted MCP app server.`,
       examplePrompts: [
         `List the ${appName} tools available in this app.`,
         `Explain what setup or authentication ${appName} needs before I run an action.`,
