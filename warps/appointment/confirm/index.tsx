@@ -52,12 +52,15 @@ function Main() {
     joinUrl: conferenceUrl ?? undefined,
   }
 
-  const handleCancel = async () => {
+  const handleCancel = async (reason?: string) => {
     if (!data.MEETING_ID) return
     setCancelling(true)
     setCancelError(null)
     try {
-      await executeWarp('appointment-cancel-public', { meetingId: data.MEETING_ID })
+      await executeWarp('appointment-cancel-public', {
+        meetingId: data.MEETING_ID,
+        reason: reason || undefined,
+      })
       setCancelled(true)
     } catch (err) {
       setCancelError(err instanceof Error ? err.message : tr.cancelError)
@@ -78,6 +81,11 @@ function Main() {
       cancellingLabel={tr.cancelling}
       cancelledTitle={tr.cancelled}
       cancelledMessage={tr.cancelledMessage}
+      cancelConfirmLabel={tr.cancelConfirm}
+      cancelConfirmYesLabel={tr.cancelConfirmYes}
+      cancelConfirmNoLabel={tr.cancelConfirmNo}
+      cancelReasonLabel={tr.cancelReasonLabel}
+      cancelReasonPlaceholder={tr.cancelReasonPlaceholder}
       cancelling={cancelling}
       cancelled={cancelled}
       cancelError={cancelError}
