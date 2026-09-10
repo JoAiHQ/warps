@@ -1,6 +1,42 @@
 import type { WarpExtras } from '../types'
 
 export const meta: Record<string, WarpExtras> = {
+  'content-create': {
+    keywords: { en: ['JoAi website content', 'create editable website page', 'versioned website content'], de: ['JoAi Website-Inhalt', 'bearbeitbare Website-Seite anlegen', 'versionierter Website-Inhalt'] },
+    useCases: { en: ['Set up editable content for a new client website', 'Define text and image fields for a landing page', 'Create a reusable content section for several pages'], de: ['Bearbeitbare Inhalte für eine neue Kundenwebsite einrichten', 'Text- und Bildfelder für eine Landingpage definieren', 'Einen wiederverwendbaren Inhaltsbereich für mehrere Seiten anlegen'] },
+    category: 'developer',
+    faq: { en: [{ question: 'How do I make a website section editable?', answer: 'Create a website content record and define its text, image, and structured fields once.' }, { question: 'Can content be edited without changing the website code?', answer: 'Yes. The website reads the published content record while edits are safely prepared as drafts.' }], de: [{ question: 'Wie mache ich einen Website-Bereich bearbeitbar?', answer: 'Lege einen Website-Inhalt an und definiere einmalig seine Text-, Bild- und strukturierten Felder.' }, { question: 'Kann man Inhalte ohne Änderungen am Website-Code bearbeiten?', answer: 'Ja. Die Website liest den veröffentlichten Inhalt, während Änderungen sicher als Entwurf vorbereitet werden.' }] },
+  },
+  'content-list': {
+    keywords: { en: ['list website content', 'JoAi content pages', 'editable website sections'], de: ['Website-Inhalte anzeigen', 'JoAi Inhaltsseiten', 'bearbeitbare Website-Bereiche'] },
+    useCases: { en: ['Find a homepage section before editing it', 'Review all editable content for a client site', 'Locate a content ID for publishing or restoring'], de: ['Einen Startseitenbereich vor der Bearbeitung finden', 'Alle bearbeitbaren Inhalte einer Kundenwebsite prüfen', 'Eine Inhalts-ID zum Veröffentlichen oder Wiederherstellen finden'] },
+    category: 'productivity',
+    faq: { en: [{ question: 'How do I find an editable website page?', answer: 'List the team’s website content and select it by its name or slug.' }, { question: 'Can I see all editable sections for a site?', answer: 'Yes. The list shows the content records available to the current team.' }], de: [{ question: 'Wie finde ich eine bearbeitbare Website-Seite?', answer: 'Zeige die Website-Inhalte des Teams an und wähle sie anhand von Name oder Slug aus.' }, { question: 'Kann ich alle bearbeitbaren Bereiche einer Seite sehen?', answer: 'Ja. Die Liste zeigt die Inhaltsbereiche, die dem aktuellen Team zur Verfügung stehen.' }] },
+  },
+  'content-update': {
+    keywords: { en: ['edit website text', 'update website images', 'JoAi content draft'], de: ['Website-Text bearbeiten', 'Website-Bilder aktualisieren', 'JoAi Inhaltsentwurf'] },
+    useCases: { en: ['Change a homepage headline without code', 'Prepare new client images as a draft', 'Update prices or service descriptions for review'], de: ['Eine Startseitenüberschrift ohne Code ändern', 'Neue Kundenbilder als Entwurf vorbereiten', 'Preise oder Leistungsbeschreibungen zur Prüfung aktualisieren'] },
+    category: 'productivity',
+    faq: { en: [{ question: 'Does editing website content change the live site immediately?', answer: 'No. Edits create a draft, which can be reviewed before publishing.' }, { question: 'Can I change images as well as text?', answer: 'Yes, when the content definition includes image or media fields.' }], de: [{ question: 'Ändert das Bearbeiten von Website-Inhalten sofort die Live-Seite?', answer: 'Nein. Änderungen erstellen einen Entwurf, der vor der Veröffentlichung geprüft werden kann.' }, { question: 'Kann ich neben Texten auch Bilder ändern?', answer: 'Ja, wenn die Inhaltsdefinition Bild- oder Medienfelder enthält.' }] },
+  },
+  'content-publish': {
+    keywords: { en: ['publish website changes', 'JoAi publish content', 'make website draft live'], de: ['Website-Änderungen veröffentlichen', 'JoAi Inhalt veröffentlichen', 'Website-Entwurf live schalten'] },
+    useCases: { en: ['Make a reviewed homepage update live', 'Publish approved images and copy', 'Release a prepared client website change'], de: ['Eine geprüfte Startseitenänderung live schalten', 'Freigegebene Bilder und Texte veröffentlichen', 'Eine vorbereitete Kundenwebsite-Änderung freigeben'] },
+    category: 'productivity',
+    faq: { en: [{ question: 'When should I publish website content?', answer: 'Publish only after the change has been reviewed and the user explicitly approves it.' }, { question: 'Can I recover the old content after publishing?', answer: 'Yes. Earlier versions are kept and can be restored as a new draft.' }], de: [{ question: 'Wann soll ich Website-Inhalte veröffentlichen?', answer: 'Veröffentliche erst, nachdem die Änderung geprüft wurde und eine ausdrückliche Freigabe vorliegt.' }, { question: 'Kann ich alte Inhalte nach der Veröffentlichung wiederherstellen?', answer: 'Ja. Frühere Versionen bleiben erhalten und können als neuer Entwurf wiederhergestellt werden.' }] },
+  },
+  'content-restore': {
+    keywords: { en: ['restore website content', 'undo website update', 'website content version history'], de: ['Website-Inhalt wiederherstellen', 'Website-Änderung rückgängig machen', 'Website Inhaltsverlauf'] },
+    useCases: { en: ['Undo a published homepage change', 'Recover previous wording after feedback', 'Prepare a safe rollback for review'], de: ['Eine veröffentlichte Startseitenänderung rückgängig machen', 'Frühere Texte nach Feedback wiederherstellen', 'Ein sicheres Rollback zur Prüfung vorbereiten'] },
+    category: 'security',
+    faq: { en: [{ question: 'Can I undo a published website change?', answer: 'Yes. Restore the earlier version, review the resulting draft, then publish it when approved.' }, { question: 'Does restoring erase the content history?', answer: 'No. Restoration creates a new draft and retains the full version history.' }], de: [{ question: 'Kann ich eine veröffentlichte Website-Änderung rückgängig machen?', answer: 'Ja. Stelle die frühere Version wieder her, prüfe den neuen Entwurf und veröffentliche ihn nach Freigabe.' }, { question: 'Löscht die Wiederherstellung den Inhaltsverlauf?', answer: 'Nein. Die Wiederherstellung erstellt einen neuen Entwurf und behält den vollständigen Versionsverlauf.' }] },
+  },
+  'content-versions': {
+    keywords: { en: ['website content history', 'JoAi content versions', 'website change audit'], de: ['Website Inhaltsverlauf', 'JoAi Inhaltsversionen', 'Website Änderungsverlauf'] },
+    useCases: { en: ['Review a content change before publishing', 'Find an earlier version to restore', 'Audit who changed a website section and when'], de: ['Eine Inhaltsänderung vor der Veröffentlichung prüfen', 'Eine frühere Version zur Wiederherstellung finden', 'Prüfen, wann ein Website-Bereich geändert wurde'] },
+    category: 'analytics',
+    faq: { en: [{ question: 'Can I see earlier versions of website content?', answer: 'Yes. The history shows drafts and published versions for the selected content record.' }, { question: 'How do I choose a version to restore?', answer: 'Review the version history, then use the returned version ID in the restore website content action.' }], de: [{ question: 'Kann ich frühere Versionen von Website-Inhalten sehen?', answer: 'Ja. Der Verlauf zeigt Entwürfe und veröffentlichte Versionen des ausgewählten Inhalts.' }, { question: 'Wie wähle ich eine Version zur Wiederherstellung aus?', answer: 'Prüfe den Versionsverlauf und verwende dann die zurückgegebene Versions-ID in der Aktion zum Wiederherstellen.' }] },
+  },
   'agent-list': {
     keywords: {
       en: ['list agents', 'view agents', 'workspace agents', 'team agents', 'agent MCP endpoints'],

@@ -1,0 +1,31 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Create Content",
+  "title": {
+    "en": "Create website content", "de": "Website-Inhalt anlegen", "es": "Crear contenido web", "fr": "Créer du contenu web", "ro": "Creează conținut web", "it": "Crea contenuti web"
+  },
+  "description": {
+    "en": "Create a versioned JoAi content record for a website, landing page, or reusable page section. Define the editable fields once so teams can safely update text, images, and structured content without changing source code.",
+    "de": "Erstelle einen versionierten JoAi-Inhalt für eine Website, Landingpage oder einen wiederverwendbaren Seitenbereich. Definiere die bearbeitbaren Felder einmal, damit Teams Texte, Bilder und strukturierte Inhalte sicher ohne Änderungen am Quellcode aktualisieren können.",
+    "es": "Crea un registro de contenido JoAi versionado para un sitio web, una página de destino o una sección reutilizable. Define los campos editables una vez para que los equipos actualicen texto, imágenes y contenido estructurado sin cambiar el código.",
+    "fr": "Crée un contenu JoAi versionné pour un site, une page d’accueil ou une section réutilisable. Définis les champs modifiables une seule fois afin que les équipes mettent à jour textes, images et contenu structuré sans modifier le code source.",
+    "ro": "Creează o înregistrare de conținut JoAi cu versiuni pentru un site, o pagină de destinație sau o secțiune reutilizabilă. Definește câmpurile editabile o singură dată, astfel încât echipele să actualizeze textul, imaginile și conținutul structurat fără modificarea codului.",
+    "it": "Crea un contenuto JoAi versionato per un sito, una landing page o una sezione riutilizzabile. Definisci una volta i campi modificabili, così i team possono aggiornare testi, immagini e contenuti strutturati senza cambiare il codice sorgente."
+  },
+  "bot": "Use this when a team needs a new editable website page or section. Define only fields that will actually be edited; do not invent the content model.",
+  "vars": { "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY", "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG" },
+  "actions": [{
+    "type": "collect", "label": { "en": "Create content", "de": "Inhalt anlegen", "es": "Crear contenido", "fr": "Créer le contenu", "ro": "Creează conținut", "it": "Crea contenuto" },
+    "destination": { "url": "INJECT:API_BASE/v1/contents", "method": "POST", "headers": { "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}", "X-Team": "{{team}}" } },
+    "inputs": [
+      { "name": "Name", "as": "name", "description": { "en": "Clear internal name for this page or section", "de": "Klarer interner Name für diese Seite oder diesen Bereich" }, "type": "string", "source": "field", "required": true, "min": 2 },
+      { "name": "Slug", "as": "slug", "description": { "en": "Stable lowercase identifier, for example home or homepage-hero", "de": "Stabile Kennung in Kleinbuchstaben, zum Beispiel home oder homepage-hero" }, "type": "string", "source": "field", "required": true, "min": 2 },
+      { "name": "Field definition", "as": "definition", "description": { "en": "JSON with a fields array. Each field needs a key and type, for example {\"fields\":[{\"key\":\"hero.title\",\"type\":\"text\"}]}", "de": "JSON mit einem fields-Array. Jedes Feld braucht key und type, zum Beispiel {\"fields\":[{\"key\":\"hero.title\",\"type\":\"text\"}]}" }, "type": "json", "source": "field", "required": true },
+      { "name": "Schema", "as": "schema", "description": { "en": "Optional schema name used by the consuming website", "de": "Optionaler Schemaname, den die Website verwendet" }, "type": "string", "source": "field", "required": false },
+      { "name": "Metadata", "as": "metadata", "description": { "en": "Optional JSON metadata for the website integration", "de": "Optionale JSON-Metadaten für die Website-Integration" }, "type": "json", "source": "field", "required": false },
+      { "name": "Team", "as": "team", "description": { "en": "Team slug. Uses the current team by default.", "de": "Team-Slug. Standardmäßig wird das aktuelle Team verwendet." }, "type": "string", "source": "field", "required": false, "default": "{{JOAI_TEAM_SLUG}}" }
+    ]
+  }],
+  "output": { "CONTENT_ID": "out.data.id", "CONTENT_SLUG": "out.data.slug", "CONTENT_NAME": "out.data.name" },
+  "messages": { "success": { "en": "Website content '{{CONTENT_NAME}}' is ready to edit.", "de": "Website-Inhalt „{{CONTENT_NAME}}“ kann jetzt bearbeitet werden.", "es": "El contenido web '{{CONTENT_NAME}}' está listo para editarse.", "fr": "Le contenu web « {{CONTENT_NAME}} » est prêt à être modifié.", "ro": "Conținutul web „{{CONTENT_NAME}}” este gata de editare.", "it": "Il contenuto web '{{CONTENT_NAME}}' è pronto per la modifica." } }
+}
