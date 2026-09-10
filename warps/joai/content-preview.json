@@ -1,0 +1,48 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Preview Content",
+  "title": {
+    "en": "Preview website content draft",
+    "de": "Website-Inhaltsentwurf prüfen",
+    "es": "Vista previa del borrador web",
+    "fr": "Prévisualiser le brouillon du site",
+    "ro": "Previzualizează versiunea în lucru",
+    "it": "Anteprima bozza del sito"
+  },
+  "description": {
+    "en": "Retrieve the current draft of a versioned JoAi website content record before it goes live. This keeps review separate from publishing and lets teams verify text, images, and structured values safely.",
+    "de": "Rufe den aktuellen Entwurf eines versionierten JoAi-Website-Inhalts ab, bevor er live geht. So bleiben Prüfung und Veröffentlichung getrennt und Teams können Texte, Bilder und strukturierte Werte sicher kontrollieren.",
+    "es": "Recupera el borrador actual de un contenido web JoAi versionado antes de publicarlo. Así la revisión queda separada de la publicación y los equipos pueden comprobar textos, imágenes y valores estructurados con seguridad.",
+    "fr": "Récupère le brouillon actuel d’un contenu de site JoAi versionné avant sa mise en ligne. La vérification reste ainsi distincte de la publication et les équipes peuvent contrôler textes, images et valeurs structurées en toute sécurité.",
+    "ro": "Obține versiunea în lucru curentă a unui conținut web JoAi cu versiuni înainte de publicare. Astfel, revizuirea rămâne separată de publicare, iar echipele pot verifica în siguranță textele, imaginile și valorile structurate.",
+    "it": "Recupera la bozza attuale di un contenuto del sito JoAi con versioni prima che venga pubblicata. In questo modo revisione e pubblicazione restano separate e i team possono verificare testi, immagini e valori strutturati in sicurezza."
+  },
+  "bot": "Use this after an edit and before publishing. Present the draft for review; do not publish unless the user explicitly asks to make it live.",
+  "vars": { "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY" },
+  "actions": [
+    {
+      "type": "collect",
+      "label": { "en": "Preview draft", "de": "Entwurf prüfen", "es": "Vista previa", "fr": "Prévisualiser", "ro": "Previzualizează", "it": "Anteprima" },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/contents/{{contentId}}/preview",
+        "method": "GET",
+        "headers": { "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}" }
+      },
+      "inputs": [
+        {
+          "name": "Content ID",
+          "as": "contentId",
+          "description": { "en": "ID of the website content whose draft should be reviewed", "de": "ID des Website-Inhalts, dessen Entwurf geprüft werden soll" },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:contentId"
+        }
+      ]
+    }
+  ],
+  "output": { "VERSION": "out.data.number", "STATUS": "out.data.status", "ENTRIES": "out.data.entries" },
+  "messages": {
+    "success": { "en": "Website content draft loaded for review.", "de": "Website-Inhaltsentwurf zur Prüfung geladen.", "es": "Borrador de contenido web cargado para revisión.", "fr": "Brouillon du site chargé pour vérification.", "ro": "Versiunea în lucru a site-ului a fost încărcată pentru revizuire.", "it": "Bozza del sito caricata per la revisione." }
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Get Content",
+  "title": {
+    "en": "View website content",
+    "de": "Website-Inhalt ansehen",
+    "es": "Ver contenido web",
+    "fr": "Voir le contenu du site",
+    "ro": "Vezi conținutul site-ului",
+    "it": "Visualizza contenuti del sito"
+  },
+  "description": {
+    "en": "View one versioned JoAi website content record with its editable field definition and latest version. Use it before editing or publishing so the right content ID and current version are always used.",
+    "de": "Zeige einen versionierten JoAi-Website-Inhalt mit seiner bearbeitbaren Felddefinition und der neuesten Version an. Nutze diese Aktion vor dem Bearbeiten oder Veröffentlichen, damit immer die richtige Inhalts-ID und aktuelle Version verwendet wird.",
+    "es": "Consulta un contenido web JoAi versionado con su definición de campos editables y su última versión. Úsalo antes de editar o publicar para utilizar siempre el ID y la versión correctos.",
+    "fr": "Affiche un contenu de site JoAi versionné avec sa définition de champs modifiables et sa dernière version. Utilise cette action avant toute modification ou publication afin d’employer le bon identifiant et la bonne version.",
+    "ro": "Vezi un conținut web JoAi cu versiuni, definiția câmpurilor editabile și cea mai recentă versiune. Folosește această acțiune înainte de editare sau publicare pentru a utiliza mereu ID-ul și versiunea corecte.",
+    "it": "Visualizza un contenuto del sito JoAi con versioni, la definizione dei campi modificabili e l’ultima versione. Usalo prima di modificare o pubblicare per usare sempre l’ID e la versione corretti."
+  },
+  "bot": "Use this when the content ID is known and the agent needs its field definition or current version before making a change.",
+  "vars": { "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY" },
+  "actions": [
+    {
+      "type": "collect",
+      "label": { "en": "View content", "de": "Inhalt ansehen", "es": "Ver contenido", "fr": "Voir le contenu", "ro": "Vezi conținutul", "it": "Visualizza contenuto" },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/contents/{{contentId}}",
+        "method": "GET",
+        "headers": { "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}" }
+      },
+      "inputs": [
+        {
+          "name": "Content ID",
+          "as": "contentId",
+          "description": { "en": "ID of the website content to view", "de": "ID des Website-Inhalts, der angezeigt werden soll" },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:contentId"
+        }
+      ]
+    }
+  ],
+  "output": { "CONTENT": "out.data", "CONTENT_ID": "out.data.id", "VERSION": "out.data.version.number" },
+  "messages": {
+    "success": { "en": "Website content loaded.", "de": "Website-Inhalt geladen.", "es": "Contenido web cargado.", "fr": "Contenu du site chargé.", "ro": "Conținutul site-ului a fost încărcat.", "it": "Contenuto del sito caricato." }
+  }
+}
