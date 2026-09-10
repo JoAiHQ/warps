@@ -9,7 +9,9 @@
   },
   "bot": "Use when saving a billing or shipping address. For a CRM contact invoice/billing address, pass contact (hashid from contact-find-or-create / contact-list) plus name, country, and optional addressOne/city/zipCode/vatId — the address is stored as billing on that contact. For user-create → upgrade-link flow, pass type=billing, team=personalTeamSlug, and optional vatId. Do not pass contact and team together.",
   "vars": {
-    "JOAI_API_TOKEN": "env:JOAI_API_TOKEN|Admin Sanctum API token"
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
   },
   "actions": [
     {
@@ -21,7 +23,8 @@
         "url": "INJECT:API_BASE/v1/addresses",
         "method": "POST",
         "headers": {
-          "Authorization": "Bearer {{JOAI_API_TOKEN}}",
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{JOAI_TEAM_SLUG}}",
           "Content-Type": "application/json",
           "Accept": "application/json"
         }
@@ -118,7 +121,7 @@
           "description": {
             "en": "Team slug when storing a team billing address"
           },
-          "bot": "Required for team billing in the user-create → address-store → upgrade-link flow. Use personalTeamSlug from user-create. Do not use together with contact.",
+          "bot": "Required for team billing in the user-create → address-store → upgrade-link flow. Use personalTeamSlug from user-create. Do not use together with contact. Do not pass the current workspace team here unless you intend to set that team's billing address.",
           "type": "string",
           "source": "field",
           "required": false
