@@ -15,10 +15,15 @@ type Props = {
   cancellingLabel: string
   cancelledTitle: string
   cancelledMessage: string
+  cancelConfirmLabel: string
+  cancelConfirmYesLabel: string
+  cancelConfirmNoLabel: string
+  cancelReasonLabel: string
+  cancelReasonPlaceholder: string
   cancelling: boolean
   cancelled: boolean
   cancelError: string | null
-  onCancel: () => void
+  onCancel: (reason?: string) => void
   servicePrice?: string
   serviceToken?: string
   serviceName?: string
@@ -36,12 +41,16 @@ type Props = {
 export function BookingConfirmed({
   booked, selectedDate, displayTimezone, locale, title, subtitle,
   cancelLabel, cancellingLabel, cancelledTitle, cancelledMessage,
+  cancelConfirmLabel, cancelConfirmYesLabel, cancelConfirmNoLabel,
+  cancelReasonLabel, cancelReasonPlaceholder,
   cancelling, cancelled, cancelError, onCancel,
   servicePrice, serviceToken, serviceName, payLabel, payingLabel, paying, payError, onPay,
   shareUrl, copyLinkLabel, copiedLabel, joinLabel,
 }: Props) {
   const { copyToClipboard } = useAppContext()
   const [copied, setCopied] = useState(false)
+  const [confirmingCancel, setConfirmingCancel] = useState(false)
+  const [cancelReason, setCancelReason] = useState('')
 
   const handleCopy = () => {
     if (!shareUrl) return
@@ -49,6 +58,12 @@ export function BookingConfirmed({
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
   }
+
+  const handleConfirmCancel = () => {
+    const reason = cancelReason.trim() || undefined
+    onCancel(reason)
+  }
+
   if (cancelled) {
     return (
       <div className="flex flex-col items-center gap-5 p-6 text-center">
@@ -170,13 +185,50 @@ export function BookingConfirmed({
           {cancelError}
         </div>
       )}
-      <button
-        onClick={onCancel}
-        disabled={cancelling}
-        className="text-xs text-gray-400 dark:text-gray-500 hover:text-red-500 dark:hover:text-red-400 transition-colors disabled:opacity-50 mt-1"
-      >
-        {cancelling ? cancellingLabel : cancelLabel}
-      </button>
+      {confirmingCancel ? (
+        <div className="w-full rounded-xl border border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-900 p-4 text-left space-y-3">
+          <p className="text-sm text-gray-700 dark:text-gray-300">{cancelConfirmLabel}</p>
+          <div className="space-y-1.5">
+            <label className="text-xs font-medium text-gray-500 dark:text-gray-400">{cancelReasonLabel}</label>
+            <textarea
+              value={cancelReason}
+              onChange={(event) => setCancelReason(event.target.value)}
+              placeholder={cancelReasonPlaceholder}
+              rows={2}
+              maxLength={500}
+              disabled={cancelling}
+              className="w-full resize-none rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-3 py-2 text-sm text-gray-900 dark:text-white outline-none"
+            />
+          </div>
+          <div className="flex gap-2">
+            <button
+              onClick={handleConfirmCancel}
+              disabled={cancelling}
+              className="flex-1 rounded-lg bg-red-600 text-white px-3 py-2 text-sm font-medium disabled:opacity-50"
+            >
+              {cancelling ? cancellingLabel : cancelConfirmYesLabel}
+            </button>
+            <button
+              onClick={() => {
+                setConfirmingCancel(false)
+                setCancelReason('')
+              }}
+              disabled={cancelling}
+              className="flex-1 rounded-lg border border-gray-200 dark:border-gray-700 px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 disabled:opacity-50"
+            >
+              {cancelConfirmNoLabel}
+            </button>
+          </div>
+        </div>
+      ) : (
+        <button
+          onClick={() => setConfirmingCancel(true)}
+          disabled={cancelling}
+          className="text-xs text-gray-400 dark:text-gray-500 hover:text-red-500 dark:hover:text-red-400 transition-colors disabled:opacity-50 mt-1"
+        >
+          {cancelLabel}
+        </button>
+      )}
     </div>
   )
 }
