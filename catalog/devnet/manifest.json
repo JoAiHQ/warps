@@ -4,8 +4,8 @@
   "repo": "JoAiHQ/warps",
   "branch": "dev",
   "network": "devnet",
-  "commitSha": "02010b1a2d610dcd0f6a5323207e13371b36c877",
-  "generatedAt": "2026-09-10T09:33:24.263Z",
+  "commitSha": "59b9185596cd5f5d3fdeb78e45df925b7827700a",
+  "generatedAt": "2026-09-10T13:21:42.126Z",
   "warps": [
     {
       "key": "arbitrum:omniset-deposit-arbitrum",
@@ -79524,8 +79524,8 @@
       "identifier": "@joai-contact-message-send",
       "alias": "joai-contact-message-send",
       "chain": "none",
-      "hash": "52627e63115859c2c947fd28292fcd79e3e2485aa04a3a293352539e9bfa043c",
-      "checksum": "52627e63115859c2c947fd28292fcd79e3e2485aa04a3a293352539e9bfa043c",
+      "hash": "b5930ba5a1480272bd73e5cecbd151f1b35c103abbc0a96d61dbd1101fc17b46",
+      "checksum": "b5930ba5a1480272bd73e5cecbd151f1b35c103abbc0a96d61dbd1101fc17b46",
       "name": "JoAi: Send Contact Message",
       "title": {
         "en": "Send message to contact",
@@ -79536,12 +79536,12 @@
         "it": "Send message to contact"
       },
       "description": {
-        "en": "Fetches a contact by ID, then sends them a message via the specified integration (defaults to email).",
-        "de": "Holt einen Kontakt anhand der ID und sendet ihm eine Nachricht über die angegebene Integration (Standard: E-Mail).",
-        "es": "Fetches a contact by ID, then sends them a message via the specified integration (defaults to email).",
-        "fr": "Fetches a contact by ID, then sends them a message via the specified integration (defaults to email).",
-        "ro": "Fetches a contact by ID, then sends them a message via the specified integration (defaults to email).",
-        "it": "Fetches a contact by ID, then sends them a message via the specified integration (defaults to email)."
+        "en": "Fetches a contact by ID, lets you review subject and body, then sends the message on the chosen channel (email, SMS, WhatsApp, …).",
+        "de": "Holt einen Kontakt anhand der ID, lässt Betreff und Text prüfen und sendet die Nachricht über den gewählten Kanal (E-Mail, SMS, WhatsApp, …).",
+        "es": "Fetches a contact by ID, lets you review subject and body, then sends the message on the chosen channel (email, SMS, WhatsApp, …).",
+        "fr": "Fetches a contact by ID, lets you review subject and body, then sends the message on the chosen channel (email, SMS, WhatsApp, …).",
+        "ro": "Fetches a contact by ID, lets you review subject and body, then sends the message on the chosen channel (email, SMS, WhatsApp, …).",
+        "it": "Fetches a contact by ID, lets you review subject and body, then sends the message on the chosen channel (email, SMS, WhatsApp, …)."
       },
       "preview": null,
       "creator": "github:JoAiHQ/warps",
@@ -79586,23 +79586,28 @@
           "it": "Send message to contact"
         },
         "description": {
-          "en": "Fetches a contact by ID, then sends them a message via the specified integration (defaults to email).",
-          "de": "Holt einen Kontakt anhand der ID und sendet ihm eine Nachricht über die angegebene Integration (Standard: E-Mail).",
-          "es": "Fetches a contact by ID, then sends them a message via the specified integration (defaults to email).",
-          "fr": "Fetches a contact by ID, then sends them a message via the specified integration (defaults to email).",
-          "ro": "Fetches a contact by ID, then sends them a message via the specified integration (defaults to email).",
-          "it": "Fetches a contact by ID, then sends them a message via the specified integration (defaults to email)."
+          "en": "Fetches a contact by ID, lets you review subject and body, then sends the message on the chosen channel (email, SMS, WhatsApp, …).",
+          "de": "Holt einen Kontakt anhand der ID, lässt Betreff und Text prüfen und sendet die Nachricht über den gewählten Kanal (E-Mail, SMS, WhatsApp, …).",
+          "es": "Fetches a contact by ID, lets you review subject and body, then sends the message on the chosen channel (email, SMS, WhatsApp, …).",
+          "fr": "Fetches a contact by ID, lets you review subject and body, then sends the message on the chosen channel (email, SMS, WhatsApp, …).",
+          "ro": "Fetches a contact by ID, lets you review subject and body, then sends the message on the chosen channel (email, SMS, WhatsApp, …).",
+          "it": "Fetches a contact by ID, lets you review subject and body, then sends the message on the chosen channel (email, SMS, WhatsApp, …)."
         },
-        "bot": "Use this to send a direct message to a contact by their ID. Provide the contact ID, the message text, and optionally the integration type (e.g. email, telegram).",
+        "bot": "Use to send a message to a contact by ID. Provide contactId and message (or pass subject/message as batch inputs). Optionally set integration, recipientId, recipientName, and subject.",
         "vars": {
           "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
           "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+          "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG",
           "CONTACT_ID": "query:contactId",
           "INTEGRATION": "query:integration",
+          "RECIPIENT_ID": "query:recipientId",
+          "RECIPIENT_NAME": "query:recipientName",
+          "SUBJECT": "query:subject",
           "MESSAGE": "query:message",
           "CONTACT_EMAIL": "env:contactEmail",
           "CONTACT_NAME": "env:contactName",
-          "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+          "TO_ID": "transform:() => results.RECIPIENT_ID || results.CONTACT_EMAIL || ''",
+          "TO_NAME": "transform:() => results.RECIPIENT_NAME || results.CONTACT_NAME || ''"
         },
         "actions": [
           {
@@ -79610,11 +79615,7 @@
             "auto": true,
             "label": {
               "en": "Fetch contact",
-              "de": "Kontakt abrufen",
-              "es": "Fetch contact",
-              "fr": "Fetch contact",
-              "ro": "Fetch contact",
-              "it": "Fetch contact"
+              "de": "Kontakt abrufen"
             },
             "destination": {
               "url": "https://devnet-api.joai.ai/v1/contacts/{{CONTACT_ID}}",
@@ -79628,11 +79629,6 @@
               {
                 "name": "Team",
                 "as": "team",
-                "description": {
-                  "en": "Team slug for this action. Defaults to the current team.",
-                  "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team."
-                },
-                "bot": "The slug of the team to operate on. Omit to use the current team.",
                 "type": "string",
                 "source": "field",
                 "required": false,
@@ -79642,14 +79638,54 @@
           },
           {
             "type": "collect",
+            "label": {
+              "en": "Review message",
+              "de": "Nachricht prüfen"
+            },
+            "inputs": [
+              {
+                "name": "Subject",
+                "as": "subject",
+                "description": {
+                  "en": "Email subject (optional for other channels)",
+                  "de": "E-Mail-Betreff (optional für andere Kanäle)"
+                },
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "default": "{{SUBJECT}}",
+                "position": "local"
+              },
+              {
+                "name": "Message",
+                "as": "message",
+                "description": {
+                  "en": "Message body to send",
+                  "de": "Nachrichtentext"
+                },
+                "type": "string",
+                "source": "field",
+                "required": true,
+                "default": "{{MESSAGE}}",
+                "position": "local"
+              },
+              {
+                "name": "Team",
+                "as": "team",
+                "type": "string",
+                "source": "hidden",
+                "required": false,
+                "default": "{{JOAI_TEAM_SLUG}}",
+                "position": "local"
+              }
+            ]
+          },
+          {
+            "type": "collect",
             "auto": true,
             "label": {
               "en": "Send message",
-              "de": "Nachricht senden",
-              "es": "Send message",
-              "fr": "Send message",
-              "ro": "Send message",
-              "it": "Send message"
+              "de": "Nachricht senden"
             },
             "destination": {
               "url": "https://devnet-api.joai.ai/v1/agents/{{JOAI_AGENT_UUID}}/room/message",
@@ -79674,7 +79710,7 @@
                 "type": "string",
                 "position": "payload:recipientId",
                 "source": "hidden",
-                "default": "{{CONTACT_EMAIL}}"
+                "default": "{{TO_ID}}"
               },
               {
                 "name": "RecipientName",
@@ -79682,7 +79718,23 @@
                 "type": "string",
                 "position": "payload:recipientName",
                 "source": "hidden",
-                "default": "{{CONTACT_NAME}}"
+                "default": "{{TO_NAME}}"
+              },
+              {
+                "name": "ContactId",
+                "as": "contactId",
+                "type": "string",
+                "position": "payload:contactId",
+                "source": "hidden",
+                "default": "{{CONTACT_ID}}"
+              },
+              {
+                "name": "Subject",
+                "as": "subject",
+                "type": "string",
+                "position": "payload:subject",
+                "source": "hidden",
+                "default": "{{subject}}"
               },
               {
                 "name": "Message",
@@ -79690,20 +79742,14 @@
                 "type": "string",
                 "position": "payload:message",
                 "source": "hidden",
-                "default": "{{MESSAGE}}"
+                "default": "{{message}}"
               },
               {
                 "name": "Team",
                 "as": "team",
-                "description": {
-                  "en": "Team slug for this action. Defaults to the current team.",
-                  "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team."
-                },
-                "bot": "The slug of the team to operate on. Omit to use the current team.",
                 "type": "string",
-                "source": "field",
-                "required": false,
-                "default": "{{JOAI_TEAM_SLUG}}"
+                "source": "hidden",
+                "default": "{{team}}"
               }
             ]
           }
@@ -79720,6 +79766,10 @@
             "fr": "Message sent.",
             "ro": "Message sent.",
             "it": "Message sent."
+          },
+          "error": {
+            "en": "Failed to send message: {{MESSAGE}}",
+            "de": "Nachricht konnte nicht gesendet werden: {{MESSAGE}}"
           }
         }
       },
