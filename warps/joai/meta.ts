@@ -1,6 +1,18 @@
 import type { WarpExtras } from '../types'
 
 export const meta: Record<string, WarpExtras> = {
+  'content-get': {
+    keywords: { en: ['view website content', 'JoAi content record', 'website content version'], de: ['Website-Inhalt ansehen', 'JoAi Inhaltsbereich', 'Website Inhaltsversion'] },
+    useCases: { en: ['Check a content record before editing it', 'Find the current version for a safe update', 'Inspect editable fields for a website section'], de: ['Einen Inhaltsbereich vor der Bearbeitung prüfen', 'Die aktuelle Version für eine sichere Änderung abrufen', 'Bearbeitbare Felder eines Website-Bereichs ansehen'] },
+    category: 'productivity',
+    faq: { en: [{ question: 'How do I check a website section before editing it?', answer: 'Open the content record to review its editable fields and current version.' }, { question: 'Why do I need the current version?', answer: 'It prevents an edit from overwriting another recent change.' }], de: [{ question: 'Wie prüfe ich einen Website-Bereich vor der Bearbeitung?', answer: 'Öffne den Inhaltsbereich, um bearbeitbare Felder und die aktuelle Version zu prüfen.' }, { question: 'Warum brauche ich die aktuelle Version?', answer: 'Sie verhindert, dass eine Änderung eine andere aktuelle Bearbeitung überschreibt.' }] },
+  },
+  'content-preview': {
+    keywords: { en: ['preview website draft', 'review website content', 'JoAi content preview'], de: ['Website Entwurf prüfen', 'Website-Inhalt kontrollieren', 'JoAi Inhaltsvorschau'] },
+    useCases: { en: ['Review a changed headline before publishing', 'Check draft image references before a site update', 'Show a client the current website-content draft'], de: ['Eine geänderte Überschrift vor der Veröffentlichung prüfen', 'Bildreferenzen vor einem Website-Update kontrollieren', 'Einen aktuellen Website-Inhaltsentwurf mit einem Kunden durchgehen'] },
+    category: 'productivity',
+    faq: { en: [{ question: 'Does previewing content change the live site?', answer: 'No. Preview only reads the draft; publication remains a separate action.' }, { question: 'Can I preview changed images and text?', answer: 'Yes. The draft includes every changed field in the current version.' }], de: [{ question: 'Ändert die Vorschau die Live-Website?', answer: 'Nein. Die Vorschau liest nur den Entwurf; die Veröffentlichung bleibt eine eigene Aktion.' }, { question: 'Kann ich geänderte Bilder und Texte prüfen?', answer: 'Ja. Der Entwurf enthält alle geänderten Felder der aktuellen Version.' }] },
+  },
   'content-create': {
     keywords: { en: ['JoAi website content', 'create editable website page', 'versioned website content'], de: ['JoAi Website-Inhalt', 'bearbeitbare Website-Seite anlegen', 'versionierter Website-Inhalt'] },
     useCases: { en: ['Set up editable content for a new client website', 'Define text and image fields for a landing page', 'Create a reusable content section for several pages'], de: ['Bearbeitbare Inhalte für eine neue Kundenwebsite einrichten', 'Text- und Bildfelder für eine Landingpage definieren', 'Einen wiederverwendbaren Inhaltsbereich für mehrere Seiten anlegen'] },
