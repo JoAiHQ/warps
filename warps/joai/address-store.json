@@ -5,9 +5,9 @@
     "en": "Store address"
   },
   "description": {
-    "en": "Create or update a billing or shipping address. For the upgrade flow, pass type=billing and team with personalTeamSlug from user-create."
+    "en": "Create or update a billing or shipping address. Pass contact for a CRM contact billing address, team for team billing (upgrade flow), or neither for the authenticated user's own address."
   },
-  "bot": "Use when saving a billing or shipping address. For user-create → upgrade-link flow, pass type=billing, team=personalTeamSlug, and optional vatId for business accounts.",
+  "bot": "Use when saving a billing or shipping address. For a CRM contact invoice/billing address, pass contact (hashid from contact-find-or-create / contact-list) plus name, country, and optional addressOne/city/zipCode/vatId — the address is stored as billing on that contact. For user-create → upgrade-link flow, pass type=billing, team=personalTeamSlug, and optional vatId. Do not pass contact and team together.",
   "vars": {
     "JOAI_API_TOKEN": "env:JOAI_API_TOKEN|Admin Sanctum API token"
   },
@@ -54,6 +54,7 @@
           "description": {
             "en": "Address type: billing or shipping"
           },
+          "bot": "Ignored when contact or team is set (those always store a billing/invoice address). Otherwise defaults to shipping.",
           "type": "string",
           "source": "field",
           "required": false,
@@ -101,12 +102,23 @@
           "required": false
         },
         {
+          "name": "Contact",
+          "as": "contact",
+          "description": {
+            "en": "Contact hashid when storing a CRM contact billing address"
+          },
+          "bot": "Pass the contact hashid to upsert that contact's invoice/billing address (used on orders and invoices). Resolve via contact-find-or-create or contact-list first.",
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
           "name": "Team",
           "as": "team",
           "description": {
             "en": "Team slug when storing a team billing address"
           },
-          "bot": "Required for team billing in the user-create → address-store → upgrade-link flow. Use personalTeamSlug from user-create.",
+          "bot": "Required for team billing in the user-create → address-store → upgrade-link flow. Use personalTeamSlug from user-create. Do not use together with contact.",
           "type": "string",
           "source": "field",
           "required": false
