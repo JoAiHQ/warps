@@ -1119,33 +1119,6 @@ export const meta: Record<string, WarpExtras> = {
       ],
     },
   },
-  'campaign-message-send': {
-    keywords: {
-      en: ['personalized campaign message', 'AI campaign send', 'approve campaign message', 'campaign batch send'],
-      de: ['personalisierte Kampagnennachricht', 'KI-Kampagne senden', 'Kampagnennachricht freigeben', 'Kampagnen-Batch senden'],
-    },
-    useCases: {
-      en: [
-        'Review and send one AI-personalized campaign email from an approval batch',
-        'Deliver a filled campaign SMS to a single contact after placeholders were generated',
-      ],
-      de: [
-        'Eine KI-personalisierte Kampagnen-E-Mail aus einem Freigabe-Batch prüfen und senden',
-        'Eine befüllte Kampagnen-SMS an einen einzelnen Kontakt senden, nachdem Platzhalter erzeugt wurden',
-      ],
-    },
-    category: 'communication',
-    faq: {
-      en: [
-        { question: 'When is this action used?', answer: 'During AI campaign sends that require per-contact approval. Each batch item runs this action for one recipient.' },
-        { question: 'Does Auto Mode still use this action?', answer: 'The batch is still created, but Auto Mode sends on the server without waiting for manual approval.' },
-      ],
-      de: [
-        { question: 'Wann wird diese Aktion genutzt?', answer: 'Bei KI-Kampagnen mit Freigabe pro Kontakt. Jeder Batch-Eintrag führt diese Aktion für eine Empfängerin oder einen Empfänger aus.' },
-        { question: 'Nutzt der Auto-Modus diese Aktion trotzdem?', answer: 'Der Batch wird weiterhin erstellt, aber im Auto-Modus sendet der Server ohne manuelle Freigabe.' },
-      ],
-    },
-  },
   'campaign-send-contact': {
     keywords: {
       en: ['send campaign to contact', 'send email to contact', 'form follow-up email', 'send one email'],
