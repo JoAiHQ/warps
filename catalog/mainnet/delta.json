@@ -4,10 +4,336 @@
   "repo": "JoAiHQ/warps",
   "branch": "main",
   "network": "mainnet",
-  "commitSha": "03db28ea18be71f031500b80d2ff11ce58b6beee",
-  "committedAt": "2026-09-02T16:23:46.962Z",
-  "generatedAt": "2026-09-02T16:23:50.218Z",
+  "commitSha": "4e6354848e3b54ba802f85fb2f1a1e18ba49466b",
+  "committedAt": "2026-09-10T08:51:34.765Z",
+  "generatedAt": "2026-09-10T08:51:36.948Z",
   "upserts": [
+    {
+      "key": "none:joai-address-list",
+      "identifier": "@joai-address-list",
+      "alias": "joai-address-list",
+      "chain": "none",
+      "hash": "351dea0780f469bd2a58ca10c7a3f6a2fcad9bab77f5f9aab507233a95af2256",
+      "checksum": "351dea0780f469bd2a58ca10c7a3f6a2fcad9bab77f5f9aab507233a95af2256",
+      "name": "JoAi: List Addresses",
+      "title": {
+        "en": "List addresses"
+      },
+      "description": {
+        "en": "List saved addresses. Without contact/team, lists the authenticated user's addresses. Pass contact or team to load that billable's billing address. Optionally filter by type."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: List Addresses",
+        "title": {
+          "en": "List addresses"
+        },
+        "description": {
+          "en": "List saved addresses. Without contact/team, lists the authenticated user's addresses. Pass contact or team to load that billable's billing address. Optionally filter by type."
+        },
+        "bot": "Use when the user wants to see saved billing or shipping addresses. Pass contact (hashid) to load a CRM contact's billing address, or team (slug) for a team billing address. Without either, lists the authenticated user's own addresses.",
+        "vars": {
+          "JOAI_API_TOKEN": "env:JOAI_API_TOKEN|Admin Sanctum API token"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "auto": true,
+            "label": {
+              "en": "List addresses"
+            },
+            "destination": {
+              "url": "https://api.joai.ai/v1/addresses",
+              "method": "GET",
+              "headers": {
+                "Authorization": "Bearer {{JOAI_API_TOKEN}}",
+                "Accept": "application/json"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Type",
+                "as": "type",
+                "description": {
+                  "en": "Filter by address type: billing or shipping"
+                },
+                "bot": "Optional. Pass billing or shipping to filter results.",
+                "type": "string",
+                "source": "field",
+                "position": "query",
+                "required": false,
+                "options": [
+                  "billing",
+                  "shipping"
+                ]
+              },
+              {
+                "name": "Contact",
+                "as": "contact",
+                "description": {
+                  "en": "Contact hashid to load that contact's billing address"
+                },
+                "bot": "Pass the contact hashid to return that CRM contact's invoice/billing address.",
+                "type": "string",
+                "source": "field",
+                "position": "query",
+                "required": false
+              },
+              {
+                "name": "Team",
+                "as": "team",
+                "description": {
+                  "en": "Team slug to load that team's billing address"
+                },
+                "bot": "Pass the team slug to return that team's billing address. Do not use together with contact.",
+                "type": "string",
+                "source": "field",
+                "position": "query",
+                "required": false
+              }
+            ]
+          }
+        ],
+        "output": {
+          "addresses": "out.data"
+        },
+        "messages": {
+          "success": {
+            "en": "Addresses loaded."
+          },
+          "error": {
+            "en": "Failed to list addresses: {{MESSAGE}}"
+          }
+        }
+      },
+      "extras": null
+    },
+    {
+      "key": "none:joai-address-store",
+      "identifier": "@joai-address-store",
+      "alias": "joai-address-store",
+      "chain": "none",
+      "hash": "4937416d2498cec54c581b695156977d722904e9a94d5562419c9bacff41b999",
+      "checksum": "4937416d2498cec54c581b695156977d722904e9a94d5562419c9bacff41b999",
+      "name": "JoAi: Store Address",
+      "title": {
+        "en": "Store address"
+      },
+      "description": {
+        "en": "Create or update a billing or shipping address. Pass contact for a CRM contact billing address, team for team billing (upgrade flow), or neither for the authenticated user's own address."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: Store Address",
+        "title": {
+          "en": "Store address"
+        },
+        "description": {
+          "en": "Create or update a billing or shipping address. Pass contact for a CRM contact billing address, team for team billing (upgrade flow), or neither for the authenticated user's own address."
+        },
+        "bot": "Use when saving a billing or shipping address. For a CRM contact invoice/billing address, pass contact (hashid from contact-find-or-create / contact-list) plus name, country, and optional addressOne/city/zipCode/vatId — the address is stored as billing on that contact. For user-create → upgrade-link flow, pass type=billing, team=personalTeamSlug, and optional vatId. Do not pass contact and team together.",
+        "vars": {
+          "JOAI_API_TOKEN": "env:JOAI_API_TOKEN|Admin Sanctum API token"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Store address"
+            },
+            "destination": {
+              "url": "https://api.joai.ai/v1/addresses",
+              "method": "POST",
+              "headers": {
+                "Authorization": "Bearer {{JOAI_API_TOKEN}}",
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Name",
+                "as": "name",
+                "description": {
+                  "en": "Full name or company name"
+                },
+                "type": "string",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Country",
+                "as": "country",
+                "description": {
+                  "en": "Two-letter ISO country code"
+                },
+                "bot": "Convert the country to the two-letter ISO 3166-1 alpha-2 code before submitting.",
+                "type": "string",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Type",
+                "as": "type",
+                "description": {
+                  "en": "Address type: billing or shipping"
+                },
+                "bot": "Ignored when contact or team is set (those always store a billing/invoice address). Otherwise defaults to shipping.",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "default": "shipping",
+                "options": [
+                  "billing",
+                  "shipping"
+                ]
+              },
+              {
+                "name": "Address",
+                "as": "addressOne",
+                "description": {
+                  "en": "Street address line 1"
+                },
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "City",
+                "as": "city",
+                "description": {
+                  "en": "City"
+                },
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Zip Code",
+                "as": "zipCode",
+                "description": {
+                  "en": "Postal or ZIP code"
+                },
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "VAT ID",
+                "as": "vatId",
+                "description": {
+                  "en": "VAT ID for business addresses"
+                },
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Contact",
+                "as": "contact",
+                "description": {
+                  "en": "Contact hashid when storing a CRM contact billing address"
+                },
+                "bot": "Pass the contact hashid to upsert that contact's invoice/billing address (used on orders and invoices). Resolve via contact-find-or-create or contact-list first.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Team",
+                "as": "team",
+                "description": {
+                  "en": "Team slug when storing a team billing address"
+                },
+                "bot": "Required for team billing in the user-create → address-store → upgrade-link flow. Use personalTeamSlug from user-create. Do not use together with contact.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              }
+            ],
+            "output": {
+              "id": "out.data.id",
+              "name": "out.data.name"
+            }
+          }
+        ],
+        "output": {
+          "ADDRESS_ID": "out.1.id",
+          "ADDRESS_NAME": "out.1.name"
+        },
+        "messages": {
+          "success": {
+            "en": "Address saved: {{ADDRESS_NAME}}."
+          },
+          "error": {
+            "en": "Failed to save address: {{MESSAGE}}"
+          }
+        }
+      },
+      "extras": null
+    },
     {
       "key": "none:poll-results",
       "identifier": "@poll-results",
