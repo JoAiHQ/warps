@@ -1093,22 +1093,24 @@ export const meta: Record<string, WarpExtras> = {
   },
   'campaign-create': {
     keywords: {
-      en: ['create campaign', 'marketing campaign', 'email blast', 'sms blast', 'newsletter', 'audience messaging'],
-      de: ['Kampagne erstellen', 'Marketing-Kampagne', 'Newsletter', 'SMS-Versand', 'Zielgruppen-Messaging'],
+      en: ['create campaign', 'marketing campaign', 'email blast', 'sms blast', 'newsletter', 'audience messaging', 'placeholders', 'personalization'],
+      de: ['Kampagne erstellen', 'Marketing-Kampagne', 'Newsletter', 'SMS-Versand', 'Zielgruppen-Messaging', 'Platzhalter', 'Personalisierung'],
     },
     useCases: {
-      en: ['Create an email campaign for a saved segment of contacts', 'Send a WhatsApp promo to customers tagged as loyal', 'Draft a campaign before scheduling the send'],
-      de: ['Eine E-Mail-Kampagne für ein gespeichertes Segment erstellen', 'WhatsApp-Aktion an treue Kunden senden', 'Eine Kampagne vor dem Versand als Entwurf anlegen'],
+      en: ['Create an email campaign for a saved segment of contacts', 'Send a WhatsApp promo to customers tagged as loyal', 'Draft a campaign with {{name}} mapped to contact.name', 'Use AI prompts for personalized offer slots'],
+      de: ['Eine E-Mail-Kampagne für ein gespeichertes Segment erstellen', 'WhatsApp-Aktion an treue Kunden senden', 'Eine Kampagne mit {{name}} → contact.name anlegen', 'KI-Prompts für personalisierte Angebots-Slots nutzen'],
     },
     category: 'communication',
     faq: {
       en: [
         { question: 'Can I target specific contacts?', answer: 'Yes. Use a saved segment, tags, or explicit contact IDs to define the audience.' },
         { question: 'Is the campaign sent immediately?', answer: 'No. The campaign is created as a draft — use Send Campaign to start delivery.' },
+        { question: 'How do placeholders work?', answer: 'Pass templateParams for static or contact.* values (e.g. {"name":"contact.name"}), and aiParams for AI-filled prompts (requires agentId; not on WhatsApp). Map every {{placeholder}} or it stays empty on send.' },
       ],
       de: [
         { question: 'Kann ich bestimmte Kontakte ansprechen?', answer: 'Ja. Nutze ein gespeichertes Segment, Tags oder konkrete Kontakt-IDs für die Zielgruppe.' },
         { question: 'Wird die Kampagne sofort versendet?', answer: 'Nein. Die Kampagne wird als Entwurf angelegt – zum Versand nutze Kampagne senden.' },
+        { question: 'Wie funktionieren Platzhalter?', answer: 'Setze templateParams für statische oder contact.*-Werte (z. B. {"name":"contact.name"}) und aiParams für KI-Prompts (braucht agentId; nicht bei WhatsApp). Jeder {{Platzhalter}} muss gemappt sein, sonst bleibt er beim Versand leer.' },
       ],
     },
   },
