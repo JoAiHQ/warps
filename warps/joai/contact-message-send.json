@@ -17,22 +17,11 @@
     "ro": "Fetches a contact by ID, lets you review subject and body, then sends the message on the chosen channel (email, SMS, WhatsApp, …).",
     "it": "Fetches a contact by ID, lets you review subject and body, then sends the message on the chosen channel (email, SMS, WhatsApp, …)."
   },
-  "bot": "Use to send a message to a contact by ID. Provide contactId and message (or pass subject/message as batch inputs). Optionally set integration, recipientId, recipientName, subject, and campaignId for campaign sends.",
+  "bot": "Use to send a message to a contact by ID. Pass contactId (and optional integration, recipientId, recipientName, campaignId) on the warp URL/query. Pass subject and message as inputs (or batch inputs). recipientId defaults to the contact email or phone from fetch.",
   "vars": {
     "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
     "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
-    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG",
-    "CONTACT_ID": "query:contactId",
-    "INTEGRATION": "query:integration",
-    "RECIPIENT_ID": "query:recipientId",
-    "RECIPIENT_NAME": "query:recipientName",
-    "CAMPAIGN_ID": "query:campaignId",
-    "SUBJECT": "query:subject",
-    "MESSAGE": "query:message",
-    "CONTACT_EMAIL": "env:contactEmail",
-    "CONTACT_NAME": "env:contactName",
-    "TO_ID": "transform:() => results.RECIPIENT_ID || results.CONTACT_EMAIL || ''",
-    "TO_NAME": "transform:() => results.RECIPIENT_NAME || results.CONTACT_NAME || ''"
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
   },
   "actions": [
     {
@@ -43,7 +32,7 @@
         "de": "Kontakt abrufen"
       },
       "destination": {
-        "url": "INJECT:API_BASE/v1/contacts/{{CONTACT_ID}}",
+        "url": "INJECT:API_BASE/v1/contacts/{{contactId}}",
         "method": "GET",
         "headers": {
           "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
@@ -52,14 +41,65 @@
       },
       "inputs": [
         {
+          "name": "Contact ID",
+          "as": "contactId",
+          "description": {
+            "en": "Contact to message",
+            "de": "Kontakt für die Nachricht"
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:contactId"
+        },
+        {
+          "name": "Integration",
+          "as": "integration",
+          "type": "string",
+          "source": "hidden",
+          "required": false
+        },
+        {
+          "name": "Recipient ID",
+          "as": "recipientId",
+          "description": {
+            "en": "Email or phone override. Defaults to the contact channel address.",
+            "de": "E-Mail- oder Telefon-Override. Standard ist die Kanaladresse des Kontakts."
+          },
+          "type": "string",
+          "source": "hidden",
+          "required": false
+        },
+        {
+          "name": "Recipient Name",
+          "as": "recipientName",
+          "type": "string",
+          "source": "hidden",
+          "required": false
+        },
+        {
+          "name": "Campaign ID",
+          "as": "campaignId",
+          "type": "string",
+          "source": "hidden",
+          "required": false
+        },
+        {
           "name": "Team",
           "as": "team",
           "type": "string",
-          "source": "field",
+          "source": "hidden",
           "required": false,
           "default": "{{JOAI_TEAM_SLUG}}"
         }
-      ]
+      ],
+      "output": {
+        "CONTACT_EMAIL": "out.data.email",
+        "CONTACT_NAME": "out.data.name",
+        "CONTACT_PHONE": "out.data.phone",
+        "TO_ID": "transform:() => inputs.recipientId || results.CONTACT_EMAIL || results.CONTACT_PHONE || ''",
+        "TO_NAME": "transform:() => inputs.recipientName || results.CONTACT_NAME || ''"
+      }
     },
     {
       "type": "collect",
@@ -78,7 +118,6 @@
           "type": "string",
           "source": "field",
           "required": false,
-          "default": "{{SUBJECT}}",
           "position": "local"
         },
         {
@@ -91,7 +130,6 @@
           "type": "string",
           "source": "field",
           "required": true,
-          "default": "{{MESSAGE}}",
           "position": "local"
         },
         {
@@ -127,7 +165,7 @@
           "type": "string",
           "position": "payload:integration",
           "source": "hidden",
-          "default": "{{INTEGRATION}}"
+          "default": "{{integration}}"
         },
         {
           "name": "RecipientId",
@@ -151,7 +189,7 @@
           "type": "string",
           "position": "payload:contactId",
           "source": "hidden",
-          "default": "{{CONTACT_ID}}"
+          "default": "{{contactId}}"
         },
         {
           "name": "CampaignId",
@@ -159,7 +197,7 @@
           "type": "string",
           "position": "payload:campaignId",
           "source": "hidden",
-          "default": "{{CAMPAIGN_ID}}"
+          "default": "{{campaignId}}"
         },
         {
           "name": "Subject",
@@ -187,10 +225,6 @@
       ]
     }
   ],
-  "output": {
-    "contactEmail": "out.data.email",
-    "contactName": "out.data.name"
-  },
   "messages": {
     "success": {
       "en": "Message sent.",
