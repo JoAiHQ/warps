@@ -4,8 +4,8 @@
   "repo": "JoAiHQ/warps",
   "branch": "dev",
   "network": "devnet",
-  "commitSha": "7e044c7a0adc0e447c549029a678a8d1b7b07760",
-  "generatedAt": "2026-09-11T15:00:04.701Z",
+  "commitSha": "624b9465238dad3a68c0c99142b2705dda24457a",
+  "generatedAt": "2026-09-11T20:55:16.753Z",
   "warps": [
     {
       "key": "arbitrum:omniset-deposit-arbitrum",
@@ -75880,8 +75880,8 @@
       "identifier": "@joai-campaign-create",
       "alias": "joai-campaign-create",
       "chain": "none",
-      "hash": "b2c4444378cd8918bc97b9ad999836ce5a7a052facee2df7a0df0f4d04c7e0f6",
-      "checksum": "b2c4444378cd8918bc97b9ad999836ce5a7a052facee2df7a0df0f4d04c7e0f6",
+      "hash": "3937b8ef7d9c5d5ec3a038d3a27f886460147b18938319a802ead1f985d23da2",
+      "checksum": "3937b8ef7d9c5d5ec3a038d3a27f886460147b18938319a802ead1f985d23da2",
       "name": "JoAi: Create Campaign",
       "title": {
         "en": "Create a campaign",
@@ -75949,7 +75949,7 @@
           "it": "Crea una campagna di marketing per inviare messaggi ai tuoi contatti via email, WhatsApp o SMS. Scegli come destinatario un segmento salvato, contatti con tag specifici o contatti specifici per ID. La campagna viene creata come bozza — usa Invia campagna per avviare l'invio.",
           "ro": "Creează o campanie de marketing pentru a trimite mesaje contactelor tale prin email, WhatsApp sau SMS. Țintește un segment salvat, contacte cu anumite taguri sau contacte specifice după ID. Campania este creată ca schiță — folosește Trimite campanie pentru a începe livrarea."
         },
-        "bot": "Use when the user wants to create a campaign to reach a group of contacts. Collect the message channel, content, and audience (segment, tags, or specific contacts). If they name a saved segment, pass its ID.",
+        "bot": "Use when the user wants to create a campaign to reach a group of contacts. Collect the message channel, content, and audience (segment, tags, or specific contacts). If content uses {{placeholders}}, always set templateParams and/or aiParams for each one — otherwise those slots stay empty on send. Prefer contact.* paths for personalization (e.g. {\"name\":\"contact.name\"}). For AI-filled slots use aiParams prompts plus agentId (not supported on WhatsApp). For WhatsApp also set language and category.",
         "vars": {
           "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
           "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
@@ -76087,6 +76087,91 @@
                 "required": false
               },
               {
+                "name": "Template params",
+                "as": "templateParams",
+                "description": {
+                  "en": "Static placeholder values as JSON object. Keys match {{placeholders}} in content/subject. Values are literals or contact.* paths (e.g. {\"name\":\"contact.name\"}).",
+                  "de": "Statische Platzhalter-Werte als JSON-Objekt. Schlüssel entsprechen {{Platzhaltern}} in Inhalt/Betreff. Werte sind Literale oder contact.*-Pfade (z. B. {\"name\":\"contact.name\"}).",
+                  "fr": "Valeurs de placeholders statiques en objet JSON. Les clés correspondent aux {{placeholders}} du contenu/objet. Valeurs littérales ou chemins contact.* (ex. {\"name\":\"contact.name\"}).",
+                  "es": "Valores estáticos de placeholders como objeto JSON. Las claves coinciden con {{placeholders}} en contenido/asunto. Valores literales o rutas contact.* (p. ej. {\"name\":\"contact.name\"}).",
+                  "it": "Valori statici dei placeholder come oggetto JSON. Le chiavi corrispondono ai {{placeholders}} in contenuto/oggetto. Valori letterali o percorsi contact.* (es. {\"name\":\"contact.name\"}).",
+                  "ro": "Valori statice pentru placeholder ca obiect JSON. Cheile corespund {{placeholders}} din conținut/subiect. Valori literale sau căi contact.* (ex. {\"name\":\"contact.name\"})."
+                },
+                "bot": "Required whenever content/subject contains {{placeholders}} that should not be AI-filled. Pass a JSON object like {\"name\":\"contact.name\",\"city\":\"Vienna\"}. Supported contact paths: contact.name, contact.email, contact.phone, contact.company, contact.title, contact.location. Do not leave placeholders unmapped.",
+                "type": "json",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "AI params",
+                "as": "aiParams",
+                "description": {
+                  "en": "AI placeholder prompts as JSON object. Keys match {{placeholders}}; values are prompts the sending agent fills per contact. Requires agentId. Not supported for WhatsApp.",
+                  "de": "KI-Platzhalter-Prompts als JSON-Objekt. Schlüssel entsprechen {{Platzhaltern}}; Werte sind Prompts, die der sendende Agent pro Kontakt füllt. Erfordert agentId. Nicht für WhatsApp.",
+                  "fr": "Prompts IA pour placeholders en objet JSON. Les clés correspondent aux {{placeholders}} ; les valeurs sont des prompts remplis par agent et contact. Nécessite agentId. Non pris en charge pour WhatsApp.",
+                  "es": "Prompts de IA para placeholders como objeto JSON. Las claves coinciden con {{placeholders}}; los valores son prompts que el agente rellena por contacto. Requiere agentId. No compatible con WhatsApp.",
+                  "it": "Prompt IA per placeholder come oggetto JSON. Le chiavi corrispondono ai {{placeholders}}; i valori sono prompt che l'agente riempie per contatto. Richiede agentId. Non supportato per WhatsApp.",
+                  "ro": "Prompturi AI pentru placeholder ca obiect JSON. Cheile corespund {{placeholders}}; valorile sunt prompturi pe care agentul le completează per contact. Necesită agentId. Nu e suportat pentru WhatsApp."
+                },
+                "bot": "Use for personalized AI-written slots, e.g. {\"offer\":\"Mention a short local offer\"}. Each key must appear as {{key}} in content/subject. Requires agentId. Do not use on WhatsApp. A placeholder must be in either templateParams or aiParams, not both.",
+                "type": "json",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Agent ID",
+                "as": "agentId",
+                "description": {
+                  "en": "Agent UUID used to fill AI placeholders (required when aiParams is set)",
+                  "de": "Agent-UUID zum Füllen der KI-Platzhalter (erforderlich bei aiParams)",
+                  "fr": "UUID de l'agent pour remplir les placeholders IA (requis si aiParams est défini)",
+                  "es": "UUID del agente para rellenar placeholders de IA (obligatorio si hay aiParams)",
+                  "it": "UUID dell'agente per riempire i placeholder IA (obbligatorio con aiParams)",
+                  "ro": "UUID-ul agentului pentru completarea placeholder-elor AI (obligatoriu când există aiParams)"
+                },
+                "bot": "Pass the sending agent's UUID when aiParams is set. The agent must have an active integration for the campaign channel.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Language",
+                "as": "language",
+                "description": {
+                  "en": "Template language code for WhatsApp approval (e.g. de, en)",
+                  "de": "Vorlagen-Sprachcode für WhatsApp-Freigabe (z. B. de, en)",
+                  "fr": "Code langue du modèle pour l'approbation WhatsApp (ex. de, en)",
+                  "es": "Código de idioma de la plantilla para aprobación de WhatsApp (p. ej. de, en)",
+                  "it": "Codice lingua del template per l'approvazione WhatsApp (es. de, en)",
+                  "ro": "Codul de limbă al șablonului pentru aprobarea WhatsApp (ex. de, en)"
+                },
+                "bot": "Required for WhatsApp template campaigns before submit-for-approval. Use a short locale like de or en.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Category",
+                "as": "category",
+                "description": {
+                  "en": "WhatsApp template category: MARKETING, UTILITY, or AUTHENTICATION",
+                  "de": "WhatsApp-Vorlagenkategorie: MARKETING, UTILITY oder AUTHENTICATION",
+                  "fr": "Catégorie de modèle WhatsApp : MARKETING, UTILITY ou AUTHENTICATION",
+                  "es": "Categoría de plantilla de WhatsApp: MARKETING, UTILITY o AUTHENTICATION",
+                  "it": "Categoria template WhatsApp: MARKETING, UTILITY o AUTHENTICATION",
+                  "ro": "Categoria șablonului WhatsApp: MARKETING, UTILITY sau AUTHENTICATION"
+                },
+                "bot": "Required for WhatsApp template campaigns. Usually MARKETING for promo messages.",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "options": {
+                  "MARKETING": "Marketing",
+                  "UTILITY": "Utility",
+                  "AUTHENTICATION": "Authentication"
+                }
+              },
+              {
                 "name": "Team",
                 "as": "team",
                 "description": {
@@ -76145,26 +76230,32 @@
             "email blast",
             "sms blast",
             "newsletter",
-            "audience messaging"
+            "audience messaging",
+            "placeholders",
+            "personalization"
           ],
           "de": [
             "Kampagne erstellen",
             "Marketing-Kampagne",
             "Newsletter",
             "SMS-Versand",
-            "Zielgruppen-Messaging"
+            "Zielgruppen-Messaging",
+            "Platzhalter",
+            "Personalisierung"
           ]
         },
         "useCases": {
           "en": [
             "Create an email campaign for a saved segment of contacts",
             "Send a WhatsApp promo to customers tagged as loyal",
-            "Draft a campaign before scheduling the send"
+            "Draft a campaign with {{name}} mapped to contact.name",
+            "Use AI prompts for personalized offer slots"
           ],
           "de": [
             "Eine E-Mail-Kampagne für ein gespeichertes Segment erstellen",
             "WhatsApp-Aktion an treue Kunden senden",
-            "Eine Kampagne vor dem Versand als Entwurf anlegen"
+            "Eine Kampagne mit {{name}} → contact.name anlegen",
+            "KI-Prompts für personalisierte Angebots-Slots nutzen"
           ]
         },
         "category": "communication",
@@ -76177,6 +76268,10 @@
             {
               "question": "Is the campaign sent immediately?",
               "answer": "No. The campaign is created as a draft — use Send Campaign to start delivery."
+            },
+            {
+              "question": "How do placeholders work?",
+              "answer": "Pass templateParams for static or contact.* values (e.g. {\"name\":\"contact.name\"}), and aiParams for AI-filled prompts (requires agentId; not on WhatsApp). Map every {{placeholder}} or it stays empty on send."
             }
           ],
           "de": [
@@ -76187,6 +76282,10 @@
             {
               "question": "Wird die Kampagne sofort versendet?",
               "answer": "Nein. Die Kampagne wird als Entwurf angelegt – zum Versand nutze Kampagne senden."
+            },
+            {
+              "question": "Wie funktionieren Platzhalter?",
+              "answer": "Setze templateParams für statische oder contact.*-Werte (z. B. {\"name\":\"contact.name\"}) und aiParams für KI-Prompts (braucht agentId; nicht bei WhatsApp). Jeder {{Platzhalter}} muss gemappt sein, sonst bleibt er beim Versand leer."
             }
           ]
         }
