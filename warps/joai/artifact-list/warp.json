@@ -1,0 +1,120 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: List Artifacts",
+  "title": {
+    "en": "View delivery artifacts",
+    "de": "Liefer-Artefakte anzeigen"
+  },
+  "description": {
+    "en": "List client delivery artifacts for your team. Filter by type, status, contact, or order.",
+    "de": "Liste Client-Lieferartefakte für dein Team. Filtere nach Typ, Status, Kontakt oder Order."
+  },
+  "bot": "Use this to see what deliverables exist and their delivery status (draft, ready, sent, archived).",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "output": {
+    "artifacts": "out",
+    "artifactsList": "out.data"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "View artifacts",
+        "de": "Artefakte anzeigen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/artifacts?type={{type}}&status={{status}}&contactId={{contactId}}&orderId={{orderId}}&ids={{ids}}",
+        "method": "GET",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "IDs",
+          "as": "ids",
+          "type": "string",
+          "position": "url:ids",
+          "source": "field",
+          "required": false,
+          "description": {
+            "en": "Optional comma-separated artifact IDs to load",
+            "de": "Optionale kommagetrennte Artefakt-IDs zum Laden"
+          }
+        },
+        {
+          "name": "Type",
+          "as": "type",
+          "type": "string",
+          "position": "url:type",
+          "source": "field",
+          "required": false,
+          "options": {
+            "agreement": "Agreement",
+            "offer": "Offer",
+            "concept": "Concept",
+            "update": "Update",
+            "demo": "Demo",
+            "file": "File",
+            "other": "Other"
+          }
+        },
+        {
+          "name": "Status",
+          "as": "status",
+          "type": "string",
+          "position": "url:status",
+          "source": "field",
+          "required": false,
+          "options": {
+            "draft": "Draft",
+            "ready": "Ready",
+            "sent": "Sent",
+            "archived": "Archived"
+          }
+        },
+        {
+          "name": "Contact ID",
+          "as": "contactId",
+          "type": "string",
+          "position": "url:contactId",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Order ID",
+          "as": "orderId",
+          "type": "string",
+          "position": "url:orderId",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}",
+          "description": {
+            "en": "Team slug for this action. Defaults to the current team.",
+            "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team."
+          },
+          "bot": "The slug of the team to operate on. Omit to use the current team."
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Artifacts loaded.",
+      "de": "Artefakte geladen."
+    }
+  },
+  "ui": "https://raw.githubusercontent.com/JoAiHQ/warps/main/warps/joai/artifact-list/chatapp.cdc39e90.dist.html"
+}

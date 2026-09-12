@@ -1,0 +1,92 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Get Artifact",
+  "title": {
+    "en": "Get a delivery artifact",
+    "de": "Liefer-Artefakt abrufen"
+  },
+  "description": {
+    "en": "Fetch one delivery artifact by ID, including links, contact, and delivery status.",
+    "de": "Ein Lieferartefakt per ID abrufen, inkl. Links, Kontakt und Lieferstatus."
+  },
+  "bot": "Use this before drafting or delivering to load title, summary, urls/links, and contactId.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Get artifact",
+        "de": "Artefakt abrufen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/artifacts/{{artifactId}}",
+        "method": "GET",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Artifact ID",
+          "as": "artifactId",
+          "type": "string",
+          "position": "url:artifactId",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}",
+          "description": {
+            "en": "Team slug for this action. Defaults to the current team.",
+            "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team."
+          },
+          "bot": "The slug of the team to operate on. Omit to use the current team."
+        }
+      ],
+      "output": {
+        "id": "out.data.id",
+        "title": "out.data.title",
+        "type": "out.data.type",
+        "status": "out.data.status",
+        "summary": "out.data.summary",
+        "url": "out.data.url",
+        "password": "out.data.password",
+        "links": "out.data.links",
+        "contactId": "out.data.contactId",
+        "contactEmail": "out.data.contact.email",
+        "contactName": "out.data.contact.name"
+      }
+    }
+  ],
+  "output": {
+    "ARTIFACT_ID": "out.1.id",
+    "ARTIFACT_TITLE": "out.1.title",
+    "CONTACT_ID": "out.1.contactId",
+    "title": "out.1.title",
+    "type": "out.1.type",
+    "status": "out.1.status",
+    "summary": "out.1.summary",
+    "url": "out.1.url",
+    "password": "out.1.password",
+    "links": "out.1.links",
+    "contactId": "out.1.contactId",
+    "contactEmail": "out.1.contactEmail",
+    "contactName": "out.1.contactName"
+  },
+  "messages": {
+    "success": {
+      "en": "Artifact '{{ARTIFACT_TITLE}}' loaded.",
+      "de": "Artefakt '{{ARTIFACT_TITLE}}' geladen."
+    }
+  }
+}

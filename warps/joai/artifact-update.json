@@ -1,0 +1,144 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Update Artifact",
+  "title": {
+    "en": "Update a delivery artifact",
+    "de": "Liefer-Artefakt aktualisieren"
+  },
+  "description": {
+    "en": "Edit an existing delivery artifact — title, summary, URLs, status, contact, or order attachment.",
+    "de": "Ein bestehendes Lieferartefakt bearbeiten — Titel, Summary, URLs, Status, Kontakt oder Order."
+  },
+  "bot": "Use this to change artifact fields or mark status ready/archived. To send to the client, use artifact-deliver instead.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Update artifact",
+        "de": "Artefakt aktualisieren"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/artifacts/{{artifactId}}",
+        "method": "PATCH",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Artifact ID",
+          "as": "artifactId",
+          "type": "string",
+          "position": "url:artifactId",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Title",
+          "as": "title",
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Type",
+          "as": "type",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "options": {
+            "agreement": "Agreement",
+            "offer": "Offer",
+            "concept": "Concept",
+            "update": "Update",
+            "demo": "Demo",
+            "file": "File",
+            "other": "Other"
+          }
+        },
+        {
+          "name": "Status",
+          "as": "status",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "options": {
+            "draft": "Draft",
+            "ready": "Ready",
+            "sent": "Sent",
+            "archived": "Archived"
+          }
+        },
+        {
+          "name": "Summary",
+          "as": "summary",
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "URL",
+          "as": "url",
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Password",
+          "as": "password",
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Contact ID",
+          "as": "contactId",
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Order ID",
+          "as": "orderId",
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}",
+          "description": {
+            "en": "Team slug for this action. Defaults to the current team.",
+            "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team."
+          },
+          "bot": "The slug of the team to operate on. Omit to use the current team."
+        }
+      ],
+      "output": {
+        "id": "out.data.id",
+        "title": "out.data.title",
+        "status": "out.data.status"
+      }
+    }
+  ],
+  "output": {
+    "ARTIFACT_ID": "out.1.id",
+    "ARTIFACT_TITLE": "out.1.title"
+  },
+  "messages": {
+    "success": {
+      "en": "Artifact '{{ARTIFACT_TITLE}}' updated.",
+      "de": "Artefakt '{{ARTIFACT_TITLE}}' aktualisiert."
+    }
+  }
+}
