@@ -1,0 +1,179 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Create Artifact",
+  "title": {
+    "en": "Create a delivery artifact",
+    "de": "Liefer-Artefakt erstellen"
+  },
+  "description": {
+    "en": "Create a client delivery artifact (agreement, offer document, concept, project update, demo, file, or other) with optional URLs, password, contact, and order link. Use this before sending a delivery message.",
+    "de": "Erstelle ein Client-Lieferartefakt (Vereinbarung, Angebotsdokument, Konzept, Projekt-Update, Demo, Datei oder sonstiges) mit optionalen URLs, Passwort, Kontakt und Order-Verknüpfung. Vor dem Versand einer Liefernachricht verwenden."
+  },
+  "bot": "Use this to register something that will be delivered to a contact (slides, demo link, agreement URL, project update). Prefer status ready when it is ready to send. Attach contactId when known.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Create artifact",
+        "de": "Artefakt erstellen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/artifacts",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Title",
+          "as": "title",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "description": {
+            "en": "Short client-facing title",
+            "de": "Kurzer kundenseitiger Titel"
+          }
+        },
+        {
+          "name": "Type",
+          "as": "type",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "options": {
+            "agreement": "Agreement",
+            "offer": "Offer",
+            "concept": "Concept",
+            "update": "Update",
+            "demo": "Demo",
+            "file": "File",
+            "other": "Other"
+          }
+        },
+        {
+          "name": "Status",
+          "as": "status",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "ready",
+          "options": {
+            "draft": "Draft",
+            "ready": "Ready",
+            "sent": "Sent",
+            "archived": "Archived"
+          }
+        },
+        {
+          "name": "Summary",
+          "as": "summary",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "description": {
+            "en": "Short summary of what was delivered",
+            "de": "Kurze Zusammenfassung der Lieferung"
+          }
+        },
+        {
+          "name": "URL",
+          "as": "url",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "description": {
+            "en": "Primary URL (document, demo, file)",
+            "de": "Primäre URL (Dokument, Demo, Datei)"
+          }
+        },
+        {
+          "name": "Password",
+          "as": "password",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "description": {
+            "en": "Optional access password for the primary URL",
+            "de": "Optionales Zugangspasswort für die primäre URL"
+          }
+        },
+        {
+          "name": "Extra Link URL",
+          "as": "extraLinkUrl",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "description": {
+            "en": "Optional second URL (e.g. a demo next to slides)",
+            "de": "Optionale zweite URL (z. B. Demo neben Folien)"
+          }
+        },
+        {
+          "name": "Extra Link Label",
+          "as": "extraLinkLabel",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "description": {
+            "en": "Label for the extra link",
+            "de": "Bezeichnung für den Extra-Link"
+          }
+        },
+        {
+          "name": "Contact ID",
+          "as": "contactId",
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Order ID",
+          "as": "orderId",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "bot": "Optional quote/order hash ID when this artifact belongs to a commercial deal."
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}",
+          "description": {
+            "en": "Team slug for this action. Defaults to the current team.",
+            "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team."
+          },
+          "bot": "The slug of the team to operate on. Omit to use the current team."
+        }
+      ],
+      "output": {
+        "id": "out.data.id",
+        "title": "out.data.title",
+        "type": "out.data.type",
+        "status": "out.data.status",
+        "url": "out.data.url",
+        "contactId": "out.data.contactId"
+      }
+    }
+  ],
+  "output": {
+    "ARTIFACT_ID": "out.1.id",
+    "ARTIFACT_TITLE": "out.1.title"
+  },
+  "messages": {
+    "success": {
+      "en": "Artifact '{{ARTIFACT_TITLE}}' created ({{ARTIFACT_ID}}).",
+      "de": "Artefakt '{{ARTIFACT_TITLE}}' erstellt ({{ARTIFACT_ID}})."
+    }
+  }
+}

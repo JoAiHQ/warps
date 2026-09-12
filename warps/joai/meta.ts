@@ -1365,4 +1365,142 @@ export const meta: Record<string, WarpExtras> = {
       de: [{ question: 'Kann ich das Löschen rückgängig machen?', answer: 'Nein. Das Löschen eines privaten Warps ist endgültig und entfernt auch seinen verknüpften Smart-Link.' }],
     },
   },
+  'artifact-create': {
+    keywords: {
+      en: ['create artifact', 'delivery artifact', 'client delivery', 'project update', 'demo link'],
+      de: ['Artefakt erstellen', 'Lieferung', 'Client-Lieferung', 'Projekt-Update', 'Demo-Link'],
+    },
+    useCases: {
+      en: ['Register a finished demo or document URL for a client', 'Attach an agreement or project update to a contact before sending'],
+      de: ['Eine fertige Demo- oder Dokument-URL für einen Kunden registrieren', 'Eine Vereinbarung oder ein Projekt-Update vor dem Versand an einen Kontakt hängen'],
+    },
+    category: 'communication',
+    faq: {
+      en: [
+        { question: 'Is this the same as an Update?', answer: 'No. Updates are public feed posts. Artifacts are client deliverables meant to be sent to a contact.' },
+        { question: 'Can I attach an order?', answer: 'Yes. Pass orderId when the artifact belongs to a quote or order.' },
+        { question: 'How do I add a second URL?', answer: 'Use url for the primary link and optional extraLinkUrl / extraLinkLabel for one more link.' },
+      ],
+      de: [
+        { question: 'Ist das dasselbe wie ein Update?', answer: 'Nein. Updates sind öffentliche Feed-Beiträge. Artefakte sind Client-Lieferungen an einen Kontakt.' },
+        { question: 'Kann ich eine Order anhängen?', answer: 'Ja. Übergib orderId, wenn das Artefakt zu einem Quote oder einer Order gehört.' },
+        { question: 'Wie füge ich eine zweite URL hinzu?', answer: 'Nutze url für den Hauptlink und optional extraLinkUrl / extraLinkLabel für einen weiteren Link.' },
+      ],
+    },
+  },
+  'artifact-list': {
+    keywords: {
+      en: ['list artifacts', 'delivery status', 'sent deliverables'],
+      de: ['Artefakte anzeigen', 'Lieferstatus', 'gesendete Lieferungen'],
+    },
+    useCases: {
+      en: ['See which deliverables are ready or already sent', 'Filter artifacts by contact or type'],
+      de: ['Sehen, welche Lieferungen ready oder bereits gesendet sind', 'Artefakte nach Kontakt oder Typ filtern'],
+    },
+    category: 'communication',
+    faq: {
+      en: [
+        { question: 'Can I filter by status?', answer: 'Yes. Filter by draft, ready, sent, or archived.' },
+        { question: 'Can I filter by contact?', answer: 'Yes. Pass contactId to see only that contact’s artifacts.' },
+      ],
+      de: [
+        { question: 'Kann ich nach Status filtern?', answer: 'Ja. Filtere nach draft, ready, sent oder archived.' },
+        { question: 'Kann ich nach Kontakt filtern?', answer: 'Ja. Übergib contactId, um nur Artefakte dieses Kontakts zu sehen.' },
+      ],
+    },
+  },
+  'artifact-get': {
+    keywords: {
+      en: ['get artifact', 'show deliverable', 'load delivery'],
+      de: ['Artefakt abrufen', 'Lieferung anzeigen'],
+    },
+    useCases: {
+      en: ['Load artifact details before drafting a delivery message'],
+      de: ['Artefakt-Details laden, bevor eine Liefernachricht entworfen wird'],
+    },
+    category: 'communication',
+    faq: {
+      en: [
+        { question: 'What does this return?', answer: 'Title, type, status, summary, urls, password, links, and attached contact details.' },
+        { question: 'When should I use get vs list?', answer: 'Use get when you already know the artifact ID; use list to discover IDs.' },
+      ],
+      de: [
+        { question: 'Was wird zurückgegeben?', answer: 'Titel, Typ, Status, Summary, URLs, Passwort, Links und Kontakt-Details.' },
+        { question: 'Wann get und wann list?', answer: 'get, wenn die Artefakt-ID bekannt ist; list, um IDs zu finden.' },
+      ],
+    },
+  },
+  'artifact-update': {
+    keywords: {
+      en: ['update artifact', 'edit deliverable', 'mark ready'],
+      de: ['Artefakt aktualisieren', 'Lieferung bearbeiten', 'ready setzen'],
+    },
+    useCases: {
+      en: ['Change artifact URLs or mark an artifact ready before delivery'],
+      de: ['Artefakt-URLs ändern oder vor der Lieferung auf ready setzen'],
+    },
+    category: 'communication',
+    faq: {
+      en: [
+        { question: 'Can I mark an artifact ready without sending?', answer: 'Yes. Set status to ready, then use artifact-deliver when you want to send.' },
+        { question: 'Does update send a message?', answer: 'No. Use artifact-deliver to draft and send.' },
+      ],
+      de: [
+        { question: 'Kann ich ready setzen ohne zu senden?', answer: 'Ja. Setze status auf ready und nutze danach artifact-deliver zum Senden.' },
+        { question: 'Sendet update eine Nachricht?', answer: 'Nein. Zum Entwerfen und Senden nutze artifact-deliver.' },
+      ],
+    },
+  },
+  'artifact-delete': {
+    keywords: {
+      en: ['delete artifact', 'remove deliverable'],
+      de: ['Artefakt löschen', 'Lieferung entfernen'],
+    },
+    useCases: {
+      en: ['Remove an artifact created by mistake'],
+      de: ['Ein versehentlich erstelltes Artefakt entfernen'],
+    },
+    category: 'communication',
+    faq: {
+      en: [
+        { question: 'Does delete unsend a message?', answer: 'No. It only removes the artifact record. Prefer status archived for soft retirement.' },
+        { question: 'Can I undo delete?', answer: 'No. Deletion is permanent.' },
+      ],
+      de: [
+        { question: 'Macht delete eine Nachricht rückgängig?', answer: 'Nein. Es entfernt nur den Artefakt-Eintrag. Für weiches Ablegen status archived nutzen.' },
+        { question: 'Kann ich Löschen rückgängig machen?', answer: 'Nein. Das Löschen ist endgültig.' },
+      ],
+    },
+  },
+  'artifact-deliver': {
+    keywords: {
+      en: ['deliver artifact', 'send delivery', 'send project update', 'send demo link', 'deliver multiple'],
+      de: ['Artefakt liefern', 'Lieferung senden', 'Projekt-Update senden', 'Demo-Link senden', 'mehrere liefern'],
+    },
+    useCases: {
+      en: [
+        'Draft and send one email for several finished artifacts',
+        'Deliver slides and a demo link to a client in a single editable message',
+      ],
+      de: [
+        'Eine E-Mail für mehrere fertige Artefakte entwerfen und senden',
+        'Folien und Demo-Link in einer editierbaren Nachricht an einen Kunden liefern',
+      ],
+    },
+    category: 'communication',
+    faq: {
+      en: [
+        { question: 'Can I deliver multiple artifacts at once?', answer: 'Yes. Pass several artifact IDs (comma-separated). One message is drafted and sent; all included artifacts become sent.' },
+        { question: 'Does it send automatically?', answer: 'No. A draft is generated first; the final message must be approved before send.' },
+        { question: 'What happens after send?', answer: 'A delivery record is created, all included artifacts become sent with deliveredAt set, and messaging logs a contact activity.' },
+        { question: 'Who receives the message?', answer: 'The chosen contact. If artifacts share one contact it is used; otherwise pass contactId. Email/SMS/WhatsApp uses that contact’s email or phone.' },
+      ],
+      de: [
+        { question: 'Kann ich mehrere Artefakte auf einmal liefern?', answer: 'Ja. Übergib mehrere Artefakt-IDs (kommagetrennt). Es wird eine Nachricht entworfen und gesendet; alle enthaltenen Artefakte werden sent.' },
+        { question: 'Wird automatisch gesendet?', answer: 'Nein. Zuerst entsteht ein Entwurf; die finale Nachricht muss vor dem Versand freigegeben werden.' },
+        { question: 'Was passiert nach dem Versand?', answer: 'Es entsteht ein Delivery-Eintrag, alle enthaltenen Artefakte werden sent mit deliveredAt, und Messaging loggt eine Kontakt-Aktivität.' },
+        { question: 'Wer empfängt die Nachricht?', answer: 'Der gewählte Kontakt. Teilen sich die Artefakte einen Kontakt, wird er genutzt; sonst contactId übergeben. E-Mail/SMS/WhatsApp nutzt E-Mail oder Telefon des Kontakts.' },
+      ],
+    },
+  },
 }

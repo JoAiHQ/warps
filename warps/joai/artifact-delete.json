@@ -1,0 +1,64 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Delete Artifact",
+  "title": {
+    "en": "Delete a delivery artifact",
+    "de": "Liefer-Artefakt löschen"
+  },
+  "description": {
+    "en": "Permanently delete a delivery artifact record. Does not revoke already-sent messages.",
+    "de": "Löscht einen Lieferartefakt-Eintrag dauerhaft. Bereits gesendete Nachrichten werden nicht zurückgenommen."
+  },
+  "bot": "Use only when an artifact was created by mistake. Prefer status archived for soft retirement.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Delete artifact",
+        "de": "Artefakt löschen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/artifacts/{{artifactId}}",
+        "method": "DELETE",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Artifact ID",
+          "as": "artifactId",
+          "type": "string",
+          "position": "url:artifactId",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}",
+          "description": {
+            "en": "Team slug for this action. Defaults to the current team.",
+            "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team."
+          },
+          "bot": "The slug of the team to operate on. Omit to use the current team."
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Artifact deleted.",
+      "de": "Artefakt gelöscht."
+    }
+  }
+}

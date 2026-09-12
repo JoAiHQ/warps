@@ -1,0 +1,184 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Deliver Artifacts",
+  "title": {
+    "en": "Deliver artifacts to a contact",
+    "de": "Artefakte an Kontakt liefern"
+  },
+  "description": {
+    "en": "Draft one personalized delivery message for one or more artifacts, let you edit it, then send it on the chosen channel and mark all included artifacts as sent. Never sends without approval of the final message.",
+    "de": "Entwirft eine persönliche Liefernachricht für ein oder mehrere Artefakte, lässt dich sie bearbeiten, sendet sie über den gewählten Kanal und markiert alle enthaltenen Artefakte als gesendet. Sendet nie ohne Freigabe der finalen Nachricht."
+  },
+  "bot": "Use this to deliver one or more ready artifacts in a single message. Pass artifactIds as a comma-separated list. Prefer integration=email unless the contact wants another channel. The send path uses the contact's email or phone for that channel. If artifacts have different contacts, pass contactId explicitly.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Choose artifacts",
+        "de": "Artefakte wählen"
+      },
+      "inputs": [
+        {
+          "name": "Artifact IDs",
+          "as": "artifactIds",
+          "type": "string",
+          "source": "field",
+          "position": "local",
+          "required": true,
+          "description": {
+            "en": "One or more artifact IDs, comma-separated",
+            "de": "Eine oder mehrere Artefakt-IDs, kommagetrennt"
+          },
+          "bot": "Comma-separated hash IDs, e.g. abc123,def456"
+        },
+        {
+          "name": "Contact ID",
+          "as": "contactId",
+          "type": "string",
+          "source": "field",
+          "position": "local",
+          "required": false,
+          "bot": "Optional. Required when artifacts have different contacts or none attached."
+        },
+        {
+          "name": "Integration",
+          "as": "integration",
+          "type": "string",
+          "source": "field",
+          "position": "local",
+          "required": true,
+          "default": "email",
+          "options": {
+            "email": "Email",
+            "sms": "SMS",
+            "whatsapp": "WhatsApp"
+          }
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "type": "string",
+          "source": "field",
+          "position": "local",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ]
+    },
+    {
+      "type": "inline",
+      "warp": "@joai-artifact-list?ids={{artifactIds}}&team={{team}}",
+      "silent": true,
+      "label": {
+        "en": "Load artifacts",
+        "de": "Artefakte laden"
+      }
+    },
+    {
+      "type": "prompt",
+      "as": "DRAFT",
+      "label": {
+        "en": "Draft delivery message",
+        "de": "Liefernachricht entwerfen"
+      },
+      "expect": {
+        "type": "string"
+      },
+      "prompt": "Write a short client delivery email body in the language that fits the contact and artifacts. Explain what is ready in 2-6 natural sentences. Include every concrete URL from every artifact (url and links). If a password exists on any artifact, mention it clearly with the matching item. Do not invent links. No signature, no quotation marks, no meta-commentary.\n\nArtifacts JSON: {{artifactsList}}\n\nReturn only the message body."
+    },
+    {
+      "type": "collect",
+      "label": {
+        "en": "Review & send",
+        "de": "Prüfen & senden"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/artifacts/deliver",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Artifact IDs",
+          "as": "artifactIds",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "default": "{{artifactIds}}",
+          "bot": "Comma-separated artifact hash IDs included in this delivery."
+        },
+        {
+          "name": "Subject",
+          "as": "subject",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "description": {
+            "en": "Email subject (editable)",
+            "de": "E-Mail-Betreff (editierbar)"
+          }
+        },
+        {
+          "name": "Message",
+          "as": "message",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "default": "{{DRAFT}}",
+          "description": {
+            "en": "Final message body — edit before approving",
+            "de": "Finaler Nachrichtentext — vor dem Freigeben bearbeiten"
+          },
+          "bot": "Pass the drafted message. The user may edit this before approval."
+        },
+        {
+          "name": "Integration",
+          "as": "integration",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "default": "{{integration}}"
+        },
+        {
+          "name": "Contact ID",
+          "as": "contactId",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{contactId}}"
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "type": "string",
+          "source": "hidden",
+          "required": false,
+          "default": "{{team}}"
+        }
+      ],
+      "output": {
+        "id": "out.data.id",
+        "artifactIds": "out.data.artifactIds",
+        "deliveredAt": "out.data.deliveredAt"
+      }
+    }
+  ],
+  "output": {
+    "DELIVERY_ID": "out.4.id",
+    "ARTIFACT_IDS": "out.4.artifactIds"
+  },
+  "messages": {
+    "success": {
+      "en": "Delivery sent ({{DELIVERY_ID}}).",
+      "de": "Lieferung gesendet ({{DELIVERY_ID}})."
+    }
+  }
+}

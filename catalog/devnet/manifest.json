@@ -4,8 +4,8 @@
   "repo": "JoAiHQ/warps",
   "branch": "dev",
   "network": "devnet",
-  "commitSha": "11093b480185c5714c65218c7b067326f5f1b1fe",
-  "generatedAt": "2026-09-12T09:35:02.681Z",
+  "commitSha": "a9126a6979fe45dab0e1aeabafb63f11bf95ed14",
+  "generatedAt": "2026-09-12T13:50:41.927Z",
   "warps": [
     {
       "key": "arbitrum:omniset-deposit-arbitrum",
@@ -61725,8 +61725,8 @@
       "identifier": "@form-create",
       "alias": "form-create",
       "chain": "none",
-      "hash": "1cc7d15cbc6909c0c2665a59e89faa3a5e3f1b5b070269897bece13dcbee1dcc",
-      "checksum": "1cc7d15cbc6909c0c2665a59e89faa3a5e3f1b5b070269897bece13dcbee1dcc",
+      "hash": "b328479628fe8093474579567a692917ddfe99a38ed9dc7a5101b58728ebcb48",
+      "checksum": "b328479628fe8093474579567a692917ddfe99a38ed9dc7a5101b58728ebcb48",
       "name": "Form: Create",
       "title": {
         "en": "Create a form",
@@ -61792,8 +61792,8 @@
         },
         "bot": "Use this for every form creation request. Build the complete warp:3.0.0 collect definition before execution and never assign a brand. Set optIn to true to enable CRM email consent (double opt-in) on the form.",
         "vars": {
-          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
-          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+          "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
         },
         "actions": [
           {
@@ -61810,7 +61810,8 @@
               "url": "https://devnet-api.joai.ai/v1/warps",
               "method": "POST",
               "headers": {
-                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+                "X-Team": "{{team}}"
               }
             },
             "inputs": [
@@ -61850,12 +61851,17 @@
                 "default": false
               },
               {
-                "name": "Agent",
-                "as": "agent",
+                "name": "Team",
+                "as": "team",
+                "description": {
+                  "en": "Team slug that will own this form. Defaults to the current team.",
+                  "de": "Team-Slug, dem dieses Formular gehören soll. Standardmäßig wird das aktuelle Team verwendet."
+                },
+                "bot": "The slug of the team that should own this form. Omit it to use the current team.",
                 "type": "string",
-                "source": "hidden",
-                "required": true,
-                "default": "{{JOAI_AGENT_UUID}}"
+                "source": "field",
+                "required": false,
+                "default": "{{JOAI_TEAM_SLUG}}"
               },
               {
                 "name": "Public",
@@ -62941,8 +62947,8 @@
       "identifier": "@form-list",
       "alias": "form-list",
       "chain": "none",
-      "hash": "c8c7d51fd82ba23f358d1514db3a46dd1540c37fb709c6e8cf6528d3f08c8c38",
-      "checksum": "c8c7d51fd82ba23f358d1514db3a46dd1540c37fb709c6e8cf6528d3f08c8c38",
+      "hash": "9c08d01d050ed75786110f669e1122faf13713b43d50c26d3fb80deebba78d69",
+      "checksum": "9c08d01d050ed75786110f669e1122faf13713b43d50c26d3fb80deebba78d69",
       "name": "Form: List",
       "title": {
         "en": "List forms",
@@ -63007,6 +63013,10 @@
           "it": "List all forms owned by the current team, including brandless forms."
         },
         "bot": "Use this to see all forms created by the team. Returns IDs and titles.",
+        "vars": {
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+          "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+        },
         "actions": [
           {
             "type": "collect",
@@ -63022,10 +63032,24 @@
               "url": "https://devnet-api.joai.ai/v1/warps?form=true&perPage=100",
               "method": "GET",
               "headers": {
-                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+                "X-Team": "{{team}}"
               }
             },
-            "inputs": []
+            "inputs": [
+              {
+                "name": "Team",
+                "as": "team",
+                "description": {
+                  "en": "Team slug whose forms should be listed. Defaults to the current team.",
+                  "de": "Team-Slug, dessen Formulare aufgelistet werden sollen. Standardmäßig wird das aktuelle Team verwendet."
+                },
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "default": "{{JOAI_TEAM_SLUG}}"
+              }
+            ]
           }
         ],
         "output": {
@@ -75070,6 +75094,1382 @@
         }
       },
       "extras": null
+    },
+    {
+      "key": "none:joai-artifact-create",
+      "identifier": "@joai-artifact-create",
+      "alias": "joai-artifact-create",
+      "chain": "none",
+      "hash": "d26236d7f3ae9f00e54a0a6216f6250efb04407ec7988798f5f2584bd20b4b0e",
+      "checksum": "d26236d7f3ae9f00e54a0a6216f6250efb04407ec7988798f5f2584bd20b4b0e",
+      "name": "JoAi: Create Artifact",
+      "title": {
+        "en": "Create a delivery artifact",
+        "de": "Liefer-Artefakt erstellen"
+      },
+      "description": {
+        "en": "Create a client delivery artifact (agreement, offer document, concept, project update, demo, file, or other) with optional URLs, password, contact, and order link. Use this before sending a delivery message.",
+        "de": "Erstelle ein Client-Lieferartefakt (Vereinbarung, Angebotsdokument, Konzept, Projekt-Update, Demo, Datei oder sonstiges) mit optionalen URLs, Passwort, Kontakt und Order-Verknüpfung. Vor dem Versand einer Liefernachricht verwenden."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: Create Artifact",
+        "title": {
+          "en": "Create a delivery artifact",
+          "de": "Liefer-Artefakt erstellen"
+        },
+        "description": {
+          "en": "Create a client delivery artifact (agreement, offer document, concept, project update, demo, file, or other) with optional URLs, password, contact, and order link. Use this before sending a delivery message.",
+          "de": "Erstelle ein Client-Lieferartefakt (Vereinbarung, Angebotsdokument, Konzept, Projekt-Update, Demo, Datei oder sonstiges) mit optionalen URLs, Passwort, Kontakt und Order-Verknüpfung. Vor dem Versand einer Liefernachricht verwenden."
+        },
+        "bot": "Use this to register something that will be delivered to a contact (slides, demo link, agreement URL, project update). Prefer status ready when it is ready to send. Attach contactId when known.",
+        "vars": {
+          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+          "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Create artifact",
+              "de": "Artefakt erstellen"
+            },
+            "destination": {
+              "url": "https://devnet-api.joai.ai/v1/artifacts",
+              "method": "POST",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+                "X-Team": "{{team}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Title",
+                "as": "title",
+                "type": "string",
+                "source": "field",
+                "required": true,
+                "description": {
+                  "en": "Short client-facing title",
+                  "de": "Kurzer kundenseitiger Titel"
+                }
+              },
+              {
+                "name": "Type",
+                "as": "type",
+                "type": "string",
+                "source": "field",
+                "required": true,
+                "options": {
+                  "agreement": "Agreement",
+                  "offer": "Offer",
+                  "concept": "Concept",
+                  "update": "Update",
+                  "demo": "Demo",
+                  "file": "File",
+                  "other": "Other"
+                }
+              },
+              {
+                "name": "Status",
+                "as": "status",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "default": "ready",
+                "options": {
+                  "draft": "Draft",
+                  "ready": "Ready",
+                  "sent": "Sent",
+                  "archived": "Archived"
+                }
+              },
+              {
+                "name": "Summary",
+                "as": "summary",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "description": {
+                  "en": "Short summary of what was delivered",
+                  "de": "Kurze Zusammenfassung der Lieferung"
+                }
+              },
+              {
+                "name": "URL",
+                "as": "url",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "description": {
+                  "en": "Primary URL (document, demo, file)",
+                  "de": "Primäre URL (Dokument, Demo, Datei)"
+                }
+              },
+              {
+                "name": "Password",
+                "as": "password",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "description": {
+                  "en": "Optional access password for the primary URL",
+                  "de": "Optionales Zugangspasswort für die primäre URL"
+                }
+              },
+              {
+                "name": "Extra Link URL",
+                "as": "extraLinkUrl",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "description": {
+                  "en": "Optional second URL (e.g. a demo next to slides)",
+                  "de": "Optionale zweite URL (z. B. Demo neben Folien)"
+                }
+              },
+              {
+                "name": "Extra Link Label",
+                "as": "extraLinkLabel",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "description": {
+                  "en": "Label for the extra link",
+                  "de": "Bezeichnung für den Extra-Link"
+                }
+              },
+              {
+                "name": "Contact ID",
+                "as": "contactId",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Order ID",
+                "as": "orderId",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "bot": "Optional quote/order hash ID when this artifact belongs to a commercial deal."
+              },
+              {
+                "name": "Team",
+                "as": "team",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "default": "{{JOAI_TEAM_SLUG}}",
+                "description": {
+                  "en": "Team slug for this action. Defaults to the current team.",
+                  "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team."
+                },
+                "bot": "The slug of the team to operate on. Omit to use the current team."
+              }
+            ],
+            "output": {
+              "id": "out.data.id",
+              "title": "out.data.title",
+              "type": "out.data.type",
+              "status": "out.data.status",
+              "url": "out.data.url",
+              "contactId": "out.data.contactId"
+            }
+          }
+        ],
+        "output": {
+          "ARTIFACT_ID": "out.1.id",
+          "ARTIFACT_TITLE": "out.1.title"
+        },
+        "messages": {
+          "success": {
+            "en": "Artifact '{{ARTIFACT_TITLE}}' created ({{ARTIFACT_ID}}).",
+            "de": "Artefakt '{{ARTIFACT_TITLE}}' erstellt ({{ARTIFACT_ID}})."
+          }
+        }
+      },
+      "extras": {
+        "keywords": {
+          "en": [
+            "create artifact",
+            "delivery artifact",
+            "client delivery",
+            "project update",
+            "demo link"
+          ],
+          "de": [
+            "Artefakt erstellen",
+            "Lieferung",
+            "Client-Lieferung",
+            "Projekt-Update",
+            "Demo-Link"
+          ]
+        },
+        "useCases": {
+          "en": [
+            "Register a finished demo or document URL for a client",
+            "Attach an agreement or project update to a contact before sending"
+          ],
+          "de": [
+            "Eine fertige Demo- oder Dokument-URL für einen Kunden registrieren",
+            "Eine Vereinbarung oder ein Projekt-Update vor dem Versand an einen Kontakt hängen"
+          ]
+        },
+        "category": "communication",
+        "faq": {
+          "en": [
+            {
+              "question": "Is this the same as an Update?",
+              "answer": "No. Updates are public feed posts. Artifacts are client deliverables meant to be sent to a contact."
+            },
+            {
+              "question": "Can I attach an order?",
+              "answer": "Yes. Pass orderId when the artifact belongs to a quote or order."
+            },
+            {
+              "question": "How do I add a second URL?",
+              "answer": "Use url for the primary link and optional extraLinkUrl / extraLinkLabel for one more link."
+            }
+          ],
+          "de": [
+            {
+              "question": "Ist das dasselbe wie ein Update?",
+              "answer": "Nein. Updates sind öffentliche Feed-Beiträge. Artefakte sind Client-Lieferungen an einen Kontakt."
+            },
+            {
+              "question": "Kann ich eine Order anhängen?",
+              "answer": "Ja. Übergib orderId, wenn das Artefakt zu einem Quote oder einer Order gehört."
+            },
+            {
+              "question": "Wie füge ich eine zweite URL hinzu?",
+              "answer": "Nutze url für den Hauptlink und optional extraLinkUrl / extraLinkLabel für einen weiteren Link."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "key": "none:joai-artifact-delete",
+      "identifier": "@joai-artifact-delete",
+      "alias": "joai-artifact-delete",
+      "chain": "none",
+      "hash": "a91d550123051d299eddd10866689962042e7f46c5b98316c42bb45c47d6ab68",
+      "checksum": "a91d550123051d299eddd10866689962042e7f46c5b98316c42bb45c47d6ab68",
+      "name": "JoAi: Delete Artifact",
+      "title": {
+        "en": "Delete a delivery artifact",
+        "de": "Liefer-Artefakt löschen"
+      },
+      "description": {
+        "en": "Permanently delete a delivery artifact record. Does not revoke already-sent messages.",
+        "de": "Löscht einen Lieferartefakt-Eintrag dauerhaft. Bereits gesendete Nachrichten werden nicht zurückgenommen."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: Delete Artifact",
+        "title": {
+          "en": "Delete a delivery artifact",
+          "de": "Liefer-Artefakt löschen"
+        },
+        "description": {
+          "en": "Permanently delete a delivery artifact record. Does not revoke already-sent messages.",
+          "de": "Löscht einen Lieferartefakt-Eintrag dauerhaft. Bereits gesendete Nachrichten werden nicht zurückgenommen."
+        },
+        "bot": "Use only when an artifact was created by mistake. Prefer status archived for soft retirement.",
+        "vars": {
+          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+          "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Delete artifact",
+              "de": "Artefakt löschen"
+            },
+            "destination": {
+              "url": "https://devnet-api.joai.ai/v1/artifacts/{{artifactId}}",
+              "method": "DELETE",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+                "X-Team": "{{team}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Artifact ID",
+                "as": "artifactId",
+                "type": "string",
+                "position": "url:artifactId",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Team",
+                "as": "team",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "default": "{{JOAI_TEAM_SLUG}}",
+                "description": {
+                  "en": "Team slug for this action. Defaults to the current team.",
+                  "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team."
+                },
+                "bot": "The slug of the team to operate on. Omit to use the current team."
+              }
+            ]
+          }
+        ],
+        "messages": {
+          "success": {
+            "en": "Artifact deleted.",
+            "de": "Artefakt gelöscht."
+          }
+        }
+      },
+      "extras": {
+        "keywords": {
+          "en": [
+            "delete artifact",
+            "remove deliverable"
+          ],
+          "de": [
+            "Artefakt löschen",
+            "Lieferung entfernen"
+          ]
+        },
+        "useCases": {
+          "en": [
+            "Remove an artifact created by mistake"
+          ],
+          "de": [
+            "Ein versehentlich erstelltes Artefakt entfernen"
+          ]
+        },
+        "category": "communication",
+        "faq": {
+          "en": [
+            {
+              "question": "Does delete unsend a message?",
+              "answer": "No. It only removes the artifact record. Prefer status archived for soft retirement."
+            },
+            {
+              "question": "Can I undo delete?",
+              "answer": "No. Deletion is permanent."
+            }
+          ],
+          "de": [
+            {
+              "question": "Macht delete eine Nachricht rückgängig?",
+              "answer": "Nein. Es entfernt nur den Artefakt-Eintrag. Für weiches Ablegen status archived nutzen."
+            },
+            {
+              "question": "Kann ich Löschen rückgängig machen?",
+              "answer": "Nein. Das Löschen ist endgültig."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "key": "none:joai-artifact-deliver",
+      "identifier": "@joai-artifact-deliver",
+      "alias": "joai-artifact-deliver",
+      "chain": "none",
+      "hash": "966c3cb6bcf1e949b89fcf5501b8b2adfc52a0f91afdc7ddf30e7e37ab0827e9",
+      "checksum": "966c3cb6bcf1e949b89fcf5501b8b2adfc52a0f91afdc7ddf30e7e37ab0827e9",
+      "name": "JoAi: Deliver Artifacts",
+      "title": {
+        "en": "Deliver artifacts to a contact",
+        "de": "Artefakte an Kontakt liefern"
+      },
+      "description": {
+        "en": "Draft one personalized delivery message for one or more artifacts, let you edit it, then send it on the chosen channel and mark all included artifacts as sent. Never sends without approval of the final message.",
+        "de": "Entwirft eine persönliche Liefernachricht für ein oder mehrere Artefakte, lässt dich sie bearbeiten, sendet sie über den gewählten Kanal und markiert alle enthaltenen Artefakte als gesendet. Sendet nie ohne Freigabe der finalen Nachricht."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: Deliver Artifacts",
+        "title": {
+          "en": "Deliver artifacts to a contact",
+          "de": "Artefakte an Kontakt liefern"
+        },
+        "description": {
+          "en": "Draft one personalized delivery message for one or more artifacts, let you edit it, then send it on the chosen channel and mark all included artifacts as sent. Never sends without approval of the final message.",
+          "de": "Entwirft eine persönliche Liefernachricht für ein oder mehrere Artefakte, lässt dich sie bearbeiten, sendet sie über den gewählten Kanal und markiert alle enthaltenen Artefakte als gesendet. Sendet nie ohne Freigabe der finalen Nachricht."
+        },
+        "bot": "Use this to deliver one or more ready artifacts in a single message. Pass artifactIds as a comma-separated list. Prefer integration=email unless the contact wants another channel. The send path uses the contact's email or phone for that channel. If artifacts have different contacts, pass contactId explicitly.",
+        "vars": {
+          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+          "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Choose artifacts",
+              "de": "Artefakte wählen"
+            },
+            "inputs": [
+              {
+                "name": "Artifact IDs",
+                "as": "artifactIds",
+                "type": "string",
+                "source": "field",
+                "position": "local",
+                "required": true,
+                "description": {
+                  "en": "One or more artifact IDs, comma-separated",
+                  "de": "Eine oder mehrere Artefakt-IDs, kommagetrennt"
+                },
+                "bot": "Comma-separated hash IDs, e.g. abc123,def456"
+              },
+              {
+                "name": "Contact ID",
+                "as": "contactId",
+                "type": "string",
+                "source": "field",
+                "position": "local",
+                "required": false,
+                "bot": "Optional. Required when artifacts have different contacts or none attached."
+              },
+              {
+                "name": "Integration",
+                "as": "integration",
+                "type": "string",
+                "source": "field",
+                "position": "local",
+                "required": true,
+                "default": "email",
+                "options": {
+                  "email": "Email",
+                  "sms": "SMS",
+                  "whatsapp": "WhatsApp"
+                }
+              },
+              {
+                "name": "Team",
+                "as": "team",
+                "type": "string",
+                "source": "field",
+                "position": "local",
+                "required": false,
+                "default": "{{JOAI_TEAM_SLUG}}"
+              }
+            ]
+          },
+          {
+            "type": "inline",
+            "warp": "@joai-artifact-list?ids={{artifactIds}}&team={{team}}",
+            "silent": true,
+            "label": {
+              "en": "Load artifacts",
+              "de": "Artefakte laden"
+            }
+          },
+          {
+            "type": "prompt",
+            "as": "DRAFT",
+            "label": {
+              "en": "Draft delivery message",
+              "de": "Liefernachricht entwerfen"
+            },
+            "expect": {
+              "type": "string"
+            },
+            "prompt": "Write a short client delivery email body in the language that fits the contact and artifacts. Explain what is ready in 2-6 natural sentences. Include every concrete URL from every artifact (url and links). If a password exists on any artifact, mention it clearly with the matching item. Do not invent links. No signature, no quotation marks, no meta-commentary.\n\nArtifacts JSON: {{artifactsList}}\n\nReturn only the message body."
+          },
+          {
+            "type": "collect",
+            "label": {
+              "en": "Review & send",
+              "de": "Prüfen & senden"
+            },
+            "destination": {
+              "url": "https://devnet-api.joai.ai/v1/artifacts/deliver",
+              "method": "POST",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+                "X-Team": "{{team}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Artifact IDs",
+                "as": "artifactIds",
+                "type": "string",
+                "source": "field",
+                "required": true,
+                "default": "{{artifactIds}}",
+                "bot": "Comma-separated artifact hash IDs included in this delivery."
+              },
+              {
+                "name": "Subject",
+                "as": "subject",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "description": {
+                  "en": "Email subject (editable)",
+                  "de": "E-Mail-Betreff (editierbar)"
+                }
+              },
+              {
+                "name": "Message",
+                "as": "message",
+                "type": "string",
+                "source": "field",
+                "required": true,
+                "default": "{{DRAFT}}",
+                "description": {
+                  "en": "Final message body — edit before approving",
+                  "de": "Finaler Nachrichtentext — vor dem Freigeben bearbeiten"
+                },
+                "bot": "Pass the drafted message. The user may edit this before approval."
+              },
+              {
+                "name": "Integration",
+                "as": "integration",
+                "type": "string",
+                "source": "field",
+                "required": true,
+                "default": "{{integration}}"
+              },
+              {
+                "name": "Contact ID",
+                "as": "contactId",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "default": "{{contactId}}"
+              },
+              {
+                "name": "Team",
+                "as": "team",
+                "type": "string",
+                "source": "hidden",
+                "required": false,
+                "default": "{{team}}"
+              }
+            ],
+            "output": {
+              "id": "out.data.id",
+              "artifactIds": "out.data.artifactIds",
+              "deliveredAt": "out.data.deliveredAt"
+            }
+          }
+        ],
+        "output": {
+          "DELIVERY_ID": "out.4.id",
+          "ARTIFACT_IDS": "out.4.artifactIds"
+        },
+        "messages": {
+          "success": {
+            "en": "Delivery sent ({{DELIVERY_ID}}).",
+            "de": "Lieferung gesendet ({{DELIVERY_ID}})."
+          }
+        }
+      },
+      "extras": {
+        "keywords": {
+          "en": [
+            "deliver artifact",
+            "send delivery",
+            "send project update",
+            "send demo link",
+            "deliver multiple"
+          ],
+          "de": [
+            "Artefakt liefern",
+            "Lieferung senden",
+            "Projekt-Update senden",
+            "Demo-Link senden",
+            "mehrere liefern"
+          ]
+        },
+        "useCases": {
+          "en": [
+            "Draft and send one email for several finished artifacts",
+            "Deliver slides and a demo link to a client in a single editable message"
+          ],
+          "de": [
+            "Eine E-Mail für mehrere fertige Artefakte entwerfen und senden",
+            "Folien und Demo-Link in einer editierbaren Nachricht an einen Kunden liefern"
+          ]
+        },
+        "category": "communication",
+        "faq": {
+          "en": [
+            {
+              "question": "Can I deliver multiple artifacts at once?",
+              "answer": "Yes. Pass several artifact IDs (comma-separated). One message is drafted and sent; all included artifacts become sent."
+            },
+            {
+              "question": "Does it send automatically?",
+              "answer": "No. A draft is generated first; the final message must be approved before send."
+            },
+            {
+              "question": "What happens after send?",
+              "answer": "A delivery record is created, all included artifacts become sent with deliveredAt set, and messaging logs a contact activity."
+            },
+            {
+              "question": "Who receives the message?",
+              "answer": "The chosen contact. If artifacts share one contact it is used; otherwise pass contactId. Email/SMS/WhatsApp uses that contact’s email or phone."
+            }
+          ],
+          "de": [
+            {
+              "question": "Kann ich mehrere Artefakte auf einmal liefern?",
+              "answer": "Ja. Übergib mehrere Artefakt-IDs (kommagetrennt). Es wird eine Nachricht entworfen und gesendet; alle enthaltenen Artefakte werden sent."
+            },
+            {
+              "question": "Wird automatisch gesendet?",
+              "answer": "Nein. Zuerst entsteht ein Entwurf; die finale Nachricht muss vor dem Versand freigegeben werden."
+            },
+            {
+              "question": "Was passiert nach dem Versand?",
+              "answer": "Es entsteht ein Delivery-Eintrag, alle enthaltenen Artefakte werden sent mit deliveredAt, und Messaging loggt eine Kontakt-Aktivität."
+            },
+            {
+              "question": "Wer empfängt die Nachricht?",
+              "answer": "Der gewählte Kontakt. Teilen sich die Artefakte einen Kontakt, wird er genutzt; sonst contactId übergeben. E-Mail/SMS/WhatsApp nutzt E-Mail oder Telefon des Kontakts."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "key": "none:joai-artifact-get",
+      "identifier": "@joai-artifact-get",
+      "alias": "joai-artifact-get",
+      "chain": "none",
+      "hash": "531a3c5f14069383a7146979194167f24f1b2f3aa16973d8be0e0bcfacefede8",
+      "checksum": "531a3c5f14069383a7146979194167f24f1b2f3aa16973d8be0e0bcfacefede8",
+      "name": "JoAi: Get Artifact",
+      "title": {
+        "en": "Get a delivery artifact",
+        "de": "Liefer-Artefakt abrufen"
+      },
+      "description": {
+        "en": "Fetch one delivery artifact by ID, including links, contact, and delivery status.",
+        "de": "Ein Lieferartefakt per ID abrufen, inkl. Links, Kontakt und Lieferstatus."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: Get Artifact",
+        "title": {
+          "en": "Get a delivery artifact",
+          "de": "Liefer-Artefakt abrufen"
+        },
+        "description": {
+          "en": "Fetch one delivery artifact by ID, including links, contact, and delivery status.",
+          "de": "Ein Lieferartefakt per ID abrufen, inkl. Links, Kontakt und Lieferstatus."
+        },
+        "bot": "Use this before drafting or delivering to load title, summary, urls/links, and contactId.",
+        "vars": {
+          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+          "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Get artifact",
+              "de": "Artefakt abrufen"
+            },
+            "destination": {
+              "url": "https://devnet-api.joai.ai/v1/artifacts/{{artifactId}}",
+              "method": "GET",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+                "X-Team": "{{team}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Artifact ID",
+                "as": "artifactId",
+                "type": "string",
+                "position": "url:artifactId",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Team",
+                "as": "team",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "default": "{{JOAI_TEAM_SLUG}}",
+                "description": {
+                  "en": "Team slug for this action. Defaults to the current team.",
+                  "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team."
+                },
+                "bot": "The slug of the team to operate on. Omit to use the current team."
+              }
+            ],
+            "output": {
+              "id": "out.data.id",
+              "title": "out.data.title",
+              "type": "out.data.type",
+              "status": "out.data.status",
+              "summary": "out.data.summary",
+              "url": "out.data.url",
+              "password": "out.data.password",
+              "links": "out.data.links",
+              "contactId": "out.data.contactId",
+              "contactEmail": "out.data.contact.email",
+              "contactName": "out.data.contact.name"
+            }
+          }
+        ],
+        "output": {
+          "ARTIFACT_ID": "out.1.id",
+          "ARTIFACT_TITLE": "out.1.title",
+          "CONTACT_ID": "out.1.contactId",
+          "title": "out.1.title",
+          "type": "out.1.type",
+          "status": "out.1.status",
+          "summary": "out.1.summary",
+          "url": "out.1.url",
+          "password": "out.1.password",
+          "links": "out.1.links",
+          "contactId": "out.1.contactId",
+          "contactEmail": "out.1.contactEmail",
+          "contactName": "out.1.contactName"
+        },
+        "messages": {
+          "success": {
+            "en": "Artifact '{{ARTIFACT_TITLE}}' loaded.",
+            "de": "Artefakt '{{ARTIFACT_TITLE}}' geladen."
+          }
+        }
+      },
+      "extras": {
+        "keywords": {
+          "en": [
+            "get artifact",
+            "show deliverable",
+            "load delivery"
+          ],
+          "de": [
+            "Artefakt abrufen",
+            "Lieferung anzeigen"
+          ]
+        },
+        "useCases": {
+          "en": [
+            "Load artifact details before drafting a delivery message"
+          ],
+          "de": [
+            "Artefakt-Details laden, bevor eine Liefernachricht entworfen wird"
+          ]
+        },
+        "category": "communication",
+        "faq": {
+          "en": [
+            {
+              "question": "What does this return?",
+              "answer": "Title, type, status, summary, urls, password, links, and attached contact details."
+            },
+            {
+              "question": "When should I use get vs list?",
+              "answer": "Use get when you already know the artifact ID; use list to discover IDs."
+            }
+          ],
+          "de": [
+            {
+              "question": "Was wird zurückgegeben?",
+              "answer": "Titel, Typ, Status, Summary, URLs, Passwort, Links und Kontakt-Details."
+            },
+            {
+              "question": "Wann get und wann list?",
+              "answer": "get, wenn die Artefakt-ID bekannt ist; list, um IDs zu finden."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "key": "none:joai-artifact-list",
+      "identifier": "@joai-artifact-list",
+      "alias": "joai-artifact-list",
+      "chain": "none",
+      "hash": "95fdfdff6bae7bbe18fabe867a121c8003348c38543aa07eee8c12b9c6f1d4be",
+      "checksum": "95fdfdff6bae7bbe18fabe867a121c8003348c38543aa07eee8c12b9c6f1d4be",
+      "name": "JoAi: List Artifacts",
+      "title": {
+        "en": "View delivery artifacts",
+        "de": "Liefer-Artefakte anzeigen"
+      },
+      "description": {
+        "en": "List client delivery artifacts for your team. Filter by type, status, contact, or order.",
+        "de": "Liste Client-Lieferartefakte für dein Team. Filtere nach Typ, Status, Kontakt oder Order."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: List Artifacts",
+        "title": {
+          "en": "View delivery artifacts",
+          "de": "Liefer-Artefakte anzeigen"
+        },
+        "description": {
+          "en": "List client delivery artifacts for your team. Filter by type, status, contact, or order.",
+          "de": "Liste Client-Lieferartefakte für dein Team. Filtere nach Typ, Status, Kontakt oder Order."
+        },
+        "bot": "Use this to see what deliverables exist and their delivery status (draft, ready, sent, archived).",
+        "vars": {
+          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+          "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+        },
+        "output": {
+          "artifacts": "out",
+          "artifactsList": "out.data"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "View artifacts",
+              "de": "Artefakte anzeigen"
+            },
+            "destination": {
+              "url": "https://devnet-api.joai.ai/v1/artifacts?type={{type}}&status={{status}}&contactId={{contactId}}&orderId={{orderId}}&ids={{ids}}",
+              "method": "GET",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+                "X-Team": "{{team}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "IDs",
+                "as": "ids",
+                "type": "string",
+                "position": "url:ids",
+                "source": "field",
+                "required": false,
+                "description": {
+                  "en": "Optional comma-separated artifact IDs to load",
+                  "de": "Optionale kommagetrennte Artefakt-IDs zum Laden"
+                }
+              },
+              {
+                "name": "Type",
+                "as": "type",
+                "type": "string",
+                "position": "url:type",
+                "source": "field",
+                "required": false,
+                "options": {
+                  "agreement": "Agreement",
+                  "offer": "Offer",
+                  "concept": "Concept",
+                  "update": "Update",
+                  "demo": "Demo",
+                  "file": "File",
+                  "other": "Other"
+                }
+              },
+              {
+                "name": "Status",
+                "as": "status",
+                "type": "string",
+                "position": "url:status",
+                "source": "field",
+                "required": false,
+                "options": {
+                  "draft": "Draft",
+                  "ready": "Ready",
+                  "sent": "Sent",
+                  "archived": "Archived"
+                }
+              },
+              {
+                "name": "Contact ID",
+                "as": "contactId",
+                "type": "string",
+                "position": "url:contactId",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Order ID",
+                "as": "orderId",
+                "type": "string",
+                "position": "url:orderId",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Team",
+                "as": "team",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "default": "{{JOAI_TEAM_SLUG}}",
+                "description": {
+                  "en": "Team slug for this action. Defaults to the current team.",
+                  "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team."
+                },
+                "bot": "The slug of the team to operate on. Omit to use the current team."
+              }
+            ]
+          }
+        ],
+        "messages": {
+          "success": {
+            "en": "Artifacts loaded.",
+            "de": "Artefakte geladen."
+          }
+        },
+        "ui": "https://raw.githubusercontent.com/JoAiHQ/warps/main/warps/joai/artifact-list/chatapp.cdc39e90.dist.html"
+      },
+      "extras": {
+        "keywords": {
+          "en": [
+            "list artifacts",
+            "delivery status",
+            "sent deliverables"
+          ],
+          "de": [
+            "Artefakte anzeigen",
+            "Lieferstatus",
+            "gesendete Lieferungen"
+          ]
+        },
+        "useCases": {
+          "en": [
+            "See which deliverables are ready or already sent",
+            "Filter artifacts by contact or type"
+          ],
+          "de": [
+            "Sehen, welche Lieferungen ready oder bereits gesendet sind",
+            "Artefakte nach Kontakt oder Typ filtern"
+          ]
+        },
+        "category": "communication",
+        "faq": {
+          "en": [
+            {
+              "question": "Can I filter by status?",
+              "answer": "Yes. Filter by draft, ready, sent, or archived."
+            },
+            {
+              "question": "Can I filter by contact?",
+              "answer": "Yes. Pass contactId to see only that contact’s artifacts."
+            }
+          ],
+          "de": [
+            {
+              "question": "Kann ich nach Status filtern?",
+              "answer": "Ja. Filtere nach draft, ready, sent oder archived."
+            },
+            {
+              "question": "Kann ich nach Kontakt filtern?",
+              "answer": "Ja. Übergib contactId, um nur Artefakte dieses Kontakts zu sehen."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "key": "none:joai-artifact-update",
+      "identifier": "@joai-artifact-update",
+      "alias": "joai-artifact-update",
+      "chain": "none",
+      "hash": "b5cea0bfa4c15deb69c28fc88030f23e4d41e4808a72ac77a6dcf7a4953b5281",
+      "checksum": "b5cea0bfa4c15deb69c28fc88030f23e4d41e4808a72ac77a6dcf7a4953b5281",
+      "name": "JoAi: Update Artifact",
+      "title": {
+        "en": "Update a delivery artifact",
+        "de": "Liefer-Artefakt aktualisieren"
+      },
+      "description": {
+        "en": "Edit an existing delivery artifact — title, summary, URLs, status, contact, or order attachment.",
+        "de": "Ein bestehendes Lieferartefakt bearbeiten — Titel, Summary, URLs, Status, Kontakt oder Order."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: Update Artifact",
+        "title": {
+          "en": "Update a delivery artifact",
+          "de": "Liefer-Artefakt aktualisieren"
+        },
+        "description": {
+          "en": "Edit an existing delivery artifact — title, summary, URLs, status, contact, or order attachment.",
+          "de": "Ein bestehendes Lieferartefakt bearbeiten — Titel, Summary, URLs, Status, Kontakt oder Order."
+        },
+        "bot": "Use this to change artifact fields or mark status ready/archived. To send to the client, use artifact-deliver instead.",
+        "vars": {
+          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+          "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Update artifact",
+              "de": "Artefakt aktualisieren"
+            },
+            "destination": {
+              "url": "https://devnet-api.joai.ai/v1/artifacts/{{artifactId}}",
+              "method": "PATCH",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+                "X-Team": "{{team}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Artifact ID",
+                "as": "artifactId",
+                "type": "string",
+                "position": "url:artifactId",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Title",
+                "as": "title",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Type",
+                "as": "type",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "options": {
+                  "agreement": "Agreement",
+                  "offer": "Offer",
+                  "concept": "Concept",
+                  "update": "Update",
+                  "demo": "Demo",
+                  "file": "File",
+                  "other": "Other"
+                }
+              },
+              {
+                "name": "Status",
+                "as": "status",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "options": {
+                  "draft": "Draft",
+                  "ready": "Ready",
+                  "sent": "Sent",
+                  "archived": "Archived"
+                }
+              },
+              {
+                "name": "Summary",
+                "as": "summary",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "URL",
+                "as": "url",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Password",
+                "as": "password",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Contact ID",
+                "as": "contactId",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Order ID",
+                "as": "orderId",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Team",
+                "as": "team",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "default": "{{JOAI_TEAM_SLUG}}",
+                "description": {
+                  "en": "Team slug for this action. Defaults to the current team.",
+                  "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team."
+                },
+                "bot": "The slug of the team to operate on. Omit to use the current team."
+              }
+            ],
+            "output": {
+              "id": "out.data.id",
+              "title": "out.data.title",
+              "status": "out.data.status"
+            }
+          }
+        ],
+        "output": {
+          "ARTIFACT_ID": "out.1.id",
+          "ARTIFACT_TITLE": "out.1.title"
+        },
+        "messages": {
+          "success": {
+            "en": "Artifact '{{ARTIFACT_TITLE}}' updated.",
+            "de": "Artefakt '{{ARTIFACT_TITLE}}' aktualisiert."
+          }
+        }
+      },
+      "extras": {
+        "keywords": {
+          "en": [
+            "update artifact",
+            "edit deliverable",
+            "mark ready"
+          ],
+          "de": [
+            "Artefakt aktualisieren",
+            "Lieferung bearbeiten",
+            "ready setzen"
+          ]
+        },
+        "useCases": {
+          "en": [
+            "Change artifact URLs or mark an artifact ready before delivery"
+          ],
+          "de": [
+            "Artefakt-URLs ändern oder vor der Lieferung auf ready setzen"
+          ]
+        },
+        "category": "communication",
+        "faq": {
+          "en": [
+            {
+              "question": "Can I mark an artifact ready without sending?",
+              "answer": "Yes. Set status to ready, then use artifact-deliver when you want to send."
+            },
+            {
+              "question": "Does update send a message?",
+              "answer": "No. Use artifact-deliver to draft and send."
+            }
+          ],
+          "de": [
+            {
+              "question": "Kann ich ready setzen ohne zu senden?",
+              "answer": "Ja. Setze status auf ready und nutze danach artifact-deliver zum Senden."
+            },
+            {
+              "question": "Sendet update eine Nachricht?",
+              "answer": "Nein. Zum Entwerfen und Senden nutze artifact-deliver."
+            }
+          ]
+        }
+      }
     },
     {
       "key": "none:joai-blueprint-create",
@@ -94521,8 +95921,8 @@
       "identifier": "@joai-order-create",
       "alias": "joai-order-create",
       "chain": "none",
-      "hash": "b2880744586bf2fa43a3338a1bbbc968e31c767f08419edad1cd958bf0859176",
-      "checksum": "b2880744586bf2fa43a3338a1bbbc968e31c767f08419edad1cd958bf0859176",
+      "hash": "5dbb9faab09e55bea92ea46e6c5b005de3701e220dd087ebc59fe96b993338c0",
+      "checksum": "5dbb9faab09e55bea92ea46e6c5b005de3701e220dd087ebc59fe96b993338c0",
       "name": "JoAi: Create Order",
       "title": {
         "en": "Create order",
@@ -94533,12 +95933,12 @@
         "ro": "Creează comandă"
       },
       "description": {
-        "en": "Create a billing order or quote (Angebot) from team products. Takes customer name and what to bill, looks up the contact and service catalog automatically, generates an order with invoice and payment URL. Supports both regular orders and quotes.",
-        "de": "Erstelle eine Bestellung oder ein Angebot aus Team-Produkten. Nimmt Kundenname und Leistung, findet Kontakt und Service-Katalog automatisch, erstellt eine Bestellung mit Rechnung und Zahlungslink. Unterstützt sowohl Bestellungen als auch Angebote.",
-        "fr": "Crée une commande de facturation ou un devis à partir des produits de l'équipe. Prend le nom du client et ce qui est à facturer, trouve le contact et le catalogue automatiquement, génère une commande avec facture et lien de paiement. Prend en charge les commandes et les devis.",
-        "es": "Crea un pedido de facturación o una oferta desde los productos del equipo. Toma el nombre del cliente y qué facturar, busca el contacto y el catálogo automáticamente, genera un pedido con factura y enlace de pago. Soporta tanto pedidos como ofertas.",
-        "it": "Crea un ordine di fatturazione o un'offerta dai prodotti del team. Prende il nome del cliente e cosa fatturare, trova il contatto e il catalogo automaticamente, genera un ordine con fattura e link di pagamento. Supporta sia ordini che offerte.",
-        "ro": "Creează o comandă de facturare sau o ofertă din produsele echipei. Preia numele clientului și ce se facturează, găsește contactul și catalogul automat, generează o comandă cu factură și link de plată. Suportă atât comenzi cât și oferte."
+        "en": "Create a billing order or quote (Angebot) for a customer. Supports catalog services (by name) or custom line items with free-text description, quantity, and unit price in cents. Generates an invoice and payment URL.",
+        "de": "Erstelle eine Bestellung oder ein Angebot für einen Kunden. Unterstützt Katalog-Services (nach Name) oder individuelle Positionen mit freier Beschreibung, Menge und Stückpreis in Cent. Erzeugt Rechnung und Zahlungslink.",
+        "fr": "Crée une commande ou un devis pour un client. Prend en charge les services catalogue (par nom) ou des lignes personnalisées avec description libre, quantité et prix unitaire en centimes. Génère une facture et un lien de paiement.",
+        "es": "Crea un pedido o una oferta para un cliente. Admite servicios del catálogo (por nombre) o líneas personalizadas con descripción libre, cantidad y precio unitario en céntimos. Genera factura y enlace de pago.",
+        "it": "Crea un ordine o un'offerta per un cliente. Supporta servizi di catalogo (per nome) o righe personalizzate con descrizione libera, quantità e prezzo unitario in centesimi. Genera fattura e link di pagamento.",
+        "ro": "Creează o comandă sau o ofertă pentru un client. Suportă servicii din catalog (după nume) sau linii personalizate cu descriere liberă, cantitate și preț unitar în cenți. Generează factură și link de plată."
       },
       "preview": null,
       "creator": "github:JoAiHQ/warps",
@@ -94583,14 +95983,14 @@
           "ro": "Creează comandă"
         },
         "description": {
-          "en": "Create a billing order or quote (Angebot) from team products. Takes customer name and what to bill, looks up the contact and service catalog automatically, generates an order with invoice and payment URL. Supports both regular orders and quotes.",
-          "de": "Erstelle eine Bestellung oder ein Angebot aus Team-Produkten. Nimmt Kundenname und Leistung, findet Kontakt und Service-Katalog automatisch, erstellt eine Bestellung mit Rechnung und Zahlungslink. Unterstützt sowohl Bestellungen als auch Angebote.",
-          "fr": "Crée une commande de facturation ou un devis à partir des produits de l'équipe. Prend le nom du client et ce qui est à facturer, trouve le contact et le catalogue automatiquement, génère une commande avec facture et lien de paiement. Prend en charge les commandes et les devis.",
-          "es": "Crea un pedido de facturación o una oferta desde los productos del equipo. Toma el nombre del cliente y qué facturar, busca el contacto y el catálogo automáticamente, genera un pedido con factura y enlace de pago. Soporta tanto pedidos como ofertas.",
-          "it": "Crea un ordine di fatturazione o un'offerta dai prodotti del team. Prende il nome del cliente e cosa fatturare, trova il contatto e il catalogo automaticamente, genera un ordine con fattura e link di pagamento. Supporta sia ordini che offerte.",
-          "ro": "Creează o comandă de facturare sau o ofertă din produsele echipei. Preia numele clientului și ce se facturează, găsește contactul și catalogul automat, generează o comandă cu factură și link de plată. Suportă atât comenzi cât și oferte."
+          "en": "Create a billing order or quote (Angebot) for a customer. Supports catalog services (by name) or custom line items with free-text description, quantity, and unit price in cents. Generates an invoice and payment URL.",
+          "de": "Erstelle eine Bestellung oder ein Angebot für einen Kunden. Unterstützt Katalog-Services (nach Name) oder individuelle Positionen mit freier Beschreibung, Menge und Stückpreis in Cent. Erzeugt Rechnung und Zahlungslink.",
+          "fr": "Crée une commande ou un devis pour un client. Prend en charge les services catalogue (par nom) ou des lignes personnalisées avec description libre, quantité et prix unitaire en centimes. Génère une facture et un lien de paiement.",
+          "es": "Crea un pedido o una oferta para un cliente. Admite servicios del catálogo (por nombre) o líneas personalizadas con descripción libre, cantidad y precio unitario en céntimos. Genera factura y enlace de pago.",
+          "it": "Crea un ordine o un'offerta per un cliente. Supporta servizi di catalogo (per nome) o righe personalizzate con descrizione libera, quantità e prezzo unitario in centesimi. Genera fattura e link di pagamento.",
+          "ro": "Creează o comandă sau o ofertă pentru un client. Suportă servicii din catalog (după nume) sau linii personalizate cu descriere liberă, cantitate și preț unitar în cenți. Generează factură și link de plată."
         },
-        "bot": "Use when the user wants to create a billing order, invoice, or quote (Angebot) for a customer. Supports type \"order\" (default) or \"quote\". The warp looks up the contact and service catalog automatically.",
+        "bot": "Use when the user wants to create a billing order, invoice, or quote (Angebot). Prefer items JSON for custom work (name + unitPrice in cents + quantity). Use billItem only when matching a catalog service by name. Supports type \"order\" (default) or \"quote\".",
         "vars": {
           "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
           "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
@@ -94631,14 +96031,30 @@
                 "type": "string",
                 "source": "field",
                 "position": "local",
-                "required": true,
+                "required": false,
                 "description": {
-                  "en": "What to bill (service or product name)",
-                  "de": "Was berechnet werden soll (Service- oder Produktname)",
-                  "fr": "Ce qui doit être facturé (nom du service ou produit)",
-                  "es": "Qué facturar (nombre del servicio o producto)",
-                  "it": "Cosa fatturare (nome del servizio o prodotto)",
-                  "ro": "Ce se facturează (numele serviciului sau produsului)"
+                  "en": "Catalog service/product name to bill. Skip when using items for custom lines.",
+                  "de": "Katalog-Service-/Produktname. Weglassen, wenn items für individuelle Positionen verwendet wird.",
+                  "fr": "Nom du service/produit catalogue à facturer. À ignorer si vous utilisez items pour des lignes personnalisées.",
+                  "es": "Nombre del servicio/producto del catálogo a facturar. Omítelo si usas items para líneas personalizadas.",
+                  "it": "Nome del servizio/prodotto di catalogo da fatturare. Salta se usi items per righe personalizzate.",
+                  "ro": "Numele serviciului/produsului din catalog de facturat. Omite dacă folosești items pentru linii personalizate."
+                }
+              },
+              {
+                "name": "Items",
+                "as": "items",
+                "type": "string",
+                "source": "field",
+                "position": "local",
+                "required": false,
+                "description": {
+                  "en": "JSON array of line items. Custom: {\"type\":\"custom\",\"name\":\"On-site repair\",\"quantity\":1,\"unitPrice\":8500}. Catalog: {\"type\":\"service|product\",\"id\":\"hashid\",\"quantity\":1}. unitPrice is cents.",
+                  "de": "JSON-Array von Positionen. Individuell: {\"type\":\"custom\",\"name\":\"Vor-Ort-Reparatur\",\"quantity\":1,\"unitPrice\":8500}. Katalog: {\"type\":\"service|product\",\"id\":\"hashid\",\"quantity\":1}. unitPrice in Cent.",
+                  "fr": "Tableau JSON de lignes. Personnalisé : {\"type\":\"custom\",\"name\":\"Réparation sur site\",\"quantity\":1,\"unitPrice\":8500}. Catalogue : {\"type\":\"service|product\",\"id\":\"hashid\",\"quantity\":1}. unitPrice en centimes.",
+                  "es": "Array JSON de líneas. Personalizado: {\"type\":\"custom\",\"name\":\"Reparación in situ\",\"quantity\":1,\"unitPrice\":8500}. Catálogo: {\"type\":\"service|product\",\"id\":\"hashid\",\"quantity\":1}. unitPrice en céntimos.",
+                  "it": "Array JSON di righe. Personalizzato: {\"type\":\"custom\",\"name\":\"Riparazione in loco\",\"quantity\":1,\"unitPrice\":8500}. Catalogo: {\"type\":\"service|product\",\"id\":\"hashid\",\"quantity\":1}. unitPrice in centesimi.",
+                  "ro": "Array JSON de linii. Personalizat: {\"type\":\"custom\",\"name\":\"Reparație la fața locului\",\"quantity\":1,\"unitPrice\":8500}. Catalog: {\"type\":\"service|product\",\"id\":\"hashid\",\"quantity\":1}. unitPrice în cenți."
                 }
               },
               {
@@ -94687,12 +96103,14 @@
           {
             "type": "inline",
             "warp": "@joai-service-list",
-            "silent": true
+            "silent": true,
+            "condition": "{{items}} == ''"
           },
           {
             "type": "prompt",
             "silent": true,
             "as": "serviceIds",
+            "condition": "{{items}} == ''",
             "prompt": "The user wants to bill: {{billItem}}. Available services: {{servicesList}}. Find the matching service and return only its hash ID as a plain string. If no match, return an empty string.",
             "expect": {
               "type": "string"
@@ -94718,6 +96136,11 @@
                 "as": "contactId",
                 "source": "hidden",
                 "value": "{{contactId}}"
+              },
+              {
+                "as": "items",
+                "source": "hidden",
+                "value": "{{items}}"
               },
               {
                 "as": "serviceIds",
@@ -145555,8 +146978,8 @@
       "identifier": "@work-order-create-bill",
       "alias": "work-order-create-bill",
       "chain": "none",
-      "hash": "d0147fae9942a780320f9b3cd6737cfeec54d11bc5c96409ff469637fcae7df1",
-      "checksum": "d0147fae9942a780320f9b3cd6737cfeec54d11bc5c96409ff469637fcae7df1",
+      "hash": "b939cb8e275fcde766b57ff8c8644c8a64e7485edb977290e2ce3a9d5ca0c9a4",
+      "checksum": "b939cb8e275fcde766b57ff8c8644c8a64e7485edb977290e2ce3a9d5ca0c9a4",
       "name": "Work Order: Create Bill",
       "title": {
         "en": "Create Bill",
@@ -145667,12 +147090,12 @@
                 "source": "field",
                 "required": true,
                 "description": {
-                  "en": "JSON array of items with id, type (product/service), and quantity",
-                  "de": "JSON-Array von Artikeln mit id, Typ (product/service) und quantity",
-                  "es": "Array JSON de artículos con id, tipo (product/service) y cantidad",
-                  "fr": "Tableau JSON d'articles avec id, type (product/service) et quantité",
-                  "it": "Array JSON di articoli con id, tipo (product/service) e quantità",
-                  "ro": "Array JSON de articole cu id, tip (product/service) și cantitate"
+                  "en": "JSON array of items. Catalog: {id, type: product|service, quantity}. Custom: {type: custom, name, quantity, unitPrice} with unitPrice in cents.",
+                  "de": "JSON-Array von Artikeln. Katalog: {id, type: product|service, quantity}. Individuell: {type: custom, name, quantity, unitPrice} mit unitPrice in Cent.",
+                  "es": "Array JSON de artículos. Catálogo: {id, type: product|service, quantity}. Personalizado: {type: custom, name, quantity, unitPrice} con unitPrice en céntimos.",
+                  "fr": "Tableau JSON d'articles. Catalogue : {id, type: product|service, quantity}. Personnalisé : {type: custom, name, quantity, unitPrice} avec unitPrice en centimes.",
+                  "it": "Array JSON di articoli. Catalogo: {id, type: product|service, quantity}. Personalizzato: {type: custom, name, quantity, unitPrice} con unitPrice in centesimi.",
+                  "ro": "Array JSON de articole. Catalog: {id, type: product|service, quantity}. Personalizat: {type: custom, name, quantity, unitPrice} cu unitPrice în cenți."
                 }
               },
               {
