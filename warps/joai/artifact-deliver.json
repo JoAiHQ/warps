@@ -2,14 +2,14 @@
   "protocol": "warp:3.0.0",
   "name": "JoAi: Deliver Artifacts",
   "title": {
-    "en": "Deliver artifacts to a contact",
-    "de": "Artefakte an Kontakt liefern"
+    "en": "Deliver artifacts to contacts",
+    "de": "Artefakte an Kontakte liefern"
   },
   "description": {
-    "en": "Draft one personalized delivery message for one or more artifacts, let you edit it, then send it on the chosen channel and mark all included artifacts as sent. Never sends without approval of the final message.",
-    "de": "Entwirft eine persönliche Liefernachricht für ein oder mehrere Artefakte, lässt dich sie bearbeiten, sendet sie über den gewählten Kanal und markiert alle enthaltenen Artefakte als gesendet. Sendet nie ohne Freigabe der finalen Nachricht."
+    "en": "Draft one personalized delivery message for one or more artifacts, let you edit it, then send it to one or more contacts on the chosen channel and mark all included artifacts as sent. Never sends without approval of the final message.",
+    "de": "Entwirft eine persönliche Liefernachricht für ein oder mehrere Artefakte, lässt dich sie bearbeiten, sendet sie an einen oder mehrere Kontakte über den gewählten Kanal und markiert alle enthaltenen Artefakte als gesendet. Sendet nie ohne Freigabe der finalen Nachricht."
   },
-  "bot": "Use this to deliver one or more ready artifacts in a single message. Pass artifactIds as a comma-separated list. Prefer integration=email unless the contact wants another channel. The send path uses the contact's email or phone for that channel. If artifacts have different contacts, pass contactId explicitly.",
+  "bot": "Use this to deliver one or more ready artifacts in a single message to one or more contacts. Pass artifactIds as a comma-separated list. Prefer integration=email unless the contact wants another channel. Pass contactIds (comma-separated) for recipients; if omitted, unique contacts attached to the artifacts are used. The send path uses each contact's email or phone for that channel.",
   "vars": {
     "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
     "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
@@ -37,13 +37,13 @@
           "bot": "Comma-separated hash IDs, e.g. abc123,def456"
         },
         {
-          "name": "Contact ID",
-          "as": "contactId",
+          "name": "Contact IDs",
+          "as": "contactIds",
           "type": "string",
           "source": "field",
           "position": "local",
           "required": false,
-          "bot": "Optional. Required when artifacts have different contacts or none attached."
+          "bot": "Recipient hash IDs, comma-separated. One recipient = one id. If omitted, unique contacts on the artifacts are used. Required when no artifact has a contact."
         },
         {
           "name": "Integration",
@@ -148,12 +148,13 @@
           "default": "{{integration}}"
         },
         {
-          "name": "Contact ID",
-          "as": "contactId",
+          "name": "Contact IDs",
+          "as": "contactIds",
           "type": "string",
           "source": "field",
           "required": false,
-          "default": "{{contactId}}"
+          "default": "{{contactIds}}",
+          "bot": "Recipient hash IDs, comma-separated. One recipient = one id."
         },
         {
           "name": "Team",
@@ -165,9 +166,9 @@
         }
       ],
       "output": {
-        "id": "out.data.id",
-        "artifactIds": "out.data.artifactIds",
-        "deliveredAt": "out.data.deliveredAt"
+        "id": "out.data.0.id",
+        "artifactIds": "out.data.0.artifactIds",
+        "deliveredAt": "out.data.0.deliveredAt"
       }
     }
   ],

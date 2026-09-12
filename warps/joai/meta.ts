@@ -1472,6 +1472,31 @@ export const meta: Record<string, WarpExtras> = {
       ],
     },
   },
+  'artifact-deliver-send': {
+    keywords: {
+      en: ['send artifact delivery', 'post delivery message', 'mcp deliver artifacts'],
+      de: ['Artefakt-Lieferung senden', 'Liefernachricht senden'],
+    },
+    useCases: {
+      en: ['Send a pre-written delivery message from an agent or MCP tool'],
+      de: ['Eine fertige Liefernachricht von Agent oder MCP senden'],
+    },
+    category: 'communication',
+    faq: {
+      en: [
+        {
+          question: 'How is this different from artifact-deliver?',
+          answer: 'artifact-deliver drafts and asks for approval in chat. This warp only POSTs the message you already wrote.',
+        },
+      ],
+      de: [
+        {
+          question: 'Worin unterscheidet sich das von artifact-deliver?',
+          answer: 'artifact-deliver entwirft im Chat und fragt nach Freigabe. Dieser Warp sendet nur die bereits geschriebene Nachricht.',
+        },
+      ],
+    },
+  },
   'artifact-deliver': {
     keywords: {
       en: ['deliver artifact', 'send delivery', 'send project update', 'send demo link', 'deliver multiple'],
@@ -1492,14 +1517,14 @@ export const meta: Record<string, WarpExtras> = {
       en: [
         { question: 'Can I deliver multiple artifacts at once?', answer: 'Yes. Pass several artifact IDs (comma-separated). One message is drafted and sent; all included artifacts become sent.' },
         { question: 'Does it send automatically?', answer: 'No. A draft is generated first; the final message must be approved before send.' },
-        { question: 'What happens after send?', answer: 'A delivery record is created, all included artifacts become sent with deliveredAt set, and messaging logs a contact activity.' },
-        { question: 'Who receives the message?', answer: 'The chosen contact. If artifacts share one contact it is used; otherwise pass contactId. Email/SMS/WhatsApp uses that contact’s email or phone.' },
+        { question: 'What happens after send?', answer: 'One delivery record is created per recipient, all included artifacts become sent with deliveredAt set, and messaging logs a contact activity per recipient.' },
+        { question: 'Who receives the message?', answer: 'Pass contactIds (comma-separated; one id is fine). If omitted, unique contacts attached to the artifacts are used. Email/SMS/WhatsApp uses each contact’s email or phone.' },
       ],
       de: [
         { question: 'Kann ich mehrere Artefakte auf einmal liefern?', answer: 'Ja. Übergib mehrere Artefakt-IDs (kommagetrennt). Es wird eine Nachricht entworfen und gesendet; alle enthaltenen Artefakte werden sent.' },
         { question: 'Wird automatisch gesendet?', answer: 'Nein. Zuerst entsteht ein Entwurf; die finale Nachricht muss vor dem Versand freigegeben werden.' },
-        { question: 'Was passiert nach dem Versand?', answer: 'Es entsteht ein Delivery-Eintrag, alle enthaltenen Artefakte werden sent mit deliveredAt, und Messaging loggt eine Kontakt-Aktivität.' },
-        { question: 'Wer empfängt die Nachricht?', answer: 'Der gewählte Kontakt. Teilen sich die Artefakte einen Kontakt, wird er genutzt; sonst contactId übergeben. E-Mail/SMS/WhatsApp nutzt E-Mail oder Telefon des Kontakts.' },
+        { question: 'Was passiert nach dem Versand?', answer: 'Pro Empfänger entsteht ein Delivery-Eintrag, alle enthaltenen Artefakte werden sent mit deliveredAt, und Messaging loggt pro Empfänger eine Kontakt-Aktivität.' },
+        { question: 'Wer empfängt die Nachricht?', answer: 'Übergib contactIds (kommagetrennt; eine ID reicht). Fehlt das, werden die eindeutigen Kontakte an den Artefakten genutzt. E-Mail/SMS/WhatsApp nutzt E-Mail oder Telefon jedes Kontakts.' },
       ],
     },
   },
