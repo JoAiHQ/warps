@@ -1472,6 +1472,31 @@ export const meta: Record<string, WarpExtras> = {
       ],
     },
   },
+  'artifact-deliver-send': {
+    keywords: {
+      en: ['send artifact delivery', 'post delivery message', 'mcp deliver artifacts'],
+      de: ['Artefakt-Lieferung senden', 'Liefernachricht senden'],
+    },
+    useCases: {
+      en: ['Send a pre-written delivery message from an agent or MCP tool'],
+      de: ['Eine fertige Liefernachricht von Agent oder MCP senden'],
+    },
+    category: 'communication',
+    faq: {
+      en: [
+        {
+          question: 'How is this different from artifact-deliver?',
+          answer: 'artifact-deliver drafts and asks for approval in chat. This warp only POSTs the message you already wrote.',
+        },
+      ],
+      de: [
+        {
+          question: 'Worin unterscheidet sich das von artifact-deliver?',
+          answer: 'artifact-deliver entwirft im Chat und fragt nach Freigabe. Dieser Warp sendet nur die bereits geschriebene Nachricht.',
+        },
+      ],
+    },
+  },
   'artifact-deliver': {
     keywords: {
       en: ['deliver artifact', 'send delivery', 'send project update', 'send demo link', 'deliver multiple'],
