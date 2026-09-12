@@ -18,6 +18,10 @@
     "it": "List all forms owned by the current team, including brandless forms."
   },
   "bot": "Use this to see all forms created by the team. Returns IDs and titles.",
+  "vars": {
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
   "actions": [
     {
       "type": "collect",
@@ -33,10 +37,24 @@
         "url": "INJECT:API_BASE/v1/warps?form=true&perPage=100",
         "method": "GET",
         "headers": {
-          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
         }
       },
-      "inputs": []
+      "inputs": [
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug whose forms should be listed. Defaults to the current team.",
+            "de": "Team-Slug, dessen Formulare aufgelistet werden sollen. Standardmäßig wird das aktuelle Team verwendet."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ]
     }
   ],
   "output": {

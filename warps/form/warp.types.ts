@@ -4,6 +4,7 @@ export type FormCreateInputs = {
   definition: string;
   store: boolean;
   optIn: boolean;
+  team: string;
   agent: string;
   public: boolean;
   extras: string;
@@ -63,6 +64,7 @@ export type FormInstallData = {
 };
 
 export type FormListInputs = {
+  team: string;
 };
 
 export type FormListData = {
