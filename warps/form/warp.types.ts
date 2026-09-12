@@ -5,7 +5,6 @@ export type FormCreateInputs = {
   store: boolean;
   optIn: boolean;
   team: string;
-  agent: string;
   public: boolean;
   extras: string;
   form: boolean;
