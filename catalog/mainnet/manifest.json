@@ -4,8 +4,8 @@
   "repo": "JoAiHQ/warps",
   "branch": "main",
   "network": "mainnet",
-  "commitSha": "ec694ddc0bd1de12429439e2f06ce8e06288c65d",
-  "generatedAt": "2026-09-11T21:00:00.146Z",
+  "commitSha": "430d638d6017a3b0b95efdbbf0909bfbd1e41c7d",
+  "generatedAt": "2026-09-12T09:36:13.820Z",
   "warps": [
     {
       "key": "arbitrum:omniset-deposit-arbitrum",
@@ -78499,8 +78499,8 @@
       "identifier": "@joai-contact-create",
       "alias": "joai-contact-create",
       "chain": "none",
-      "hash": "2e2ea8885ea7900a27ce578648d0b2fc2f155913ff5eecda97adf655fc10dc50",
-      "checksum": "2e2ea8885ea7900a27ce578648d0b2fc2f155913ff5eecda97adf655fc10dc50",
+      "hash": "f08ae8a300b020d4f53a706de89ca0c0096eae0c1dc3e6746f61c12fe79519e3",
+      "checksum": "f08ae8a300b020d4f53a706de89ca0c0096eae0c1dc3e6746f61c12fe79519e3",
       "name": "JoAi: Create Contact",
       "title": {
         "en": "Add a contact",
@@ -78568,7 +78568,7 @@
           "ro": "Adaugă pe cineva în agenda ta cu nume, e-mail, telefon, firmă și etichete. Dacă persoana există deja (același nume, e-mail sau telefon), se folosește contactul existent — fără duplicate.",
           "it": "Aggiungi qualcuno alla rubrica con nome, e-mail, telefono, azienda e tag. Se la persona esiste già (stesso nome, e-mail o telefono), viene riusato il contatto esistente — senza duplicati."
         },
-        "bot": "Find-or-create a contact by name, email, or phone. Extract whatever info is available — at least a name; prefer email and phone when known. If a match is returned, do not create another contact — use contact update for non-empty field changes.",
+        "bot": "Find-or-create a contact by name, email, or phone. Extract whatever info is available — at least a name; prefer email and phone when known. If a match is returned, do not create another contact — use contact update for non-empty field changes. To set a profile image, upload media first (media_upload) then pass the media ID in avatar as a JSON array. On an existing match, avatar is only set if the contact has none yet.",
         "vars": {
           "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
           "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
@@ -78767,6 +78767,22 @@
                   "it": "Profili social (JSON per piattaforma)"
                 },
                 "bot": "Pass a platform-to-URL object, e.g. {\"linkedin\":\"https://linkedin.com/in/name\",\"instagram\":\"https://instagram.com/name\"}. Do not pass an array of platform/url objects.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Avatar",
+                "as": "avatar",
+                "description": {
+                  "en": "Profile image media IDs as a JSON array (upload media first)",
+                  "de": "Profilbild-Media-IDs als JSON-Array (Media zuerst hochladen)",
+                  "es": "IDs de media de imagen de perfil como array JSON (sube el media primero)",
+                  "fr": "IDs média de la photo de profil en tableau JSON (uploader le média d’abord)",
+                  "ro": "ID-uri media pentru imaginea de profil ca array JSON (încarcă media mai întâi)",
+                  "it": "ID media dell'immagine profilo come array JSON (carica prima il media)"
+                },
+                "bot": "JSON array of team media hash IDs for the contact avatar, e.g. [\"abc123\"]. Upload with media_upload first, then pass the returned media ID here. On an existing contact match, only applied if they have no avatar yet.",
                 "type": "string",
                 "source": "field",
                 "required": false
@@ -80135,8 +80151,8 @@
       "identifier": "@joai-contact-update",
       "alias": "joai-contact-update",
       "chain": "none",
-      "hash": "3c30142c5d18fbe2c75daaa682ec140ab3cba9c71861e00623a073b3b3c696f4",
-      "checksum": "3c30142c5d18fbe2c75daaa682ec140ab3cba9c71861e00623a073b3b3c696f4",
+      "hash": "6bef4222e2758768c91f7a84143a87971de51ec2a823901eab50c65badf222a5",
+      "checksum": "6bef4222e2758768c91f7a84143a87971de51ec2a823901eab50c65badf222a5",
       "name": "JoAi: Update Contact",
       "title": {
         "en": "Update a contact",
@@ -80204,7 +80220,7 @@
           "ro": "Edit an existing contact's details such as name, email, phone, company, or tags. Also set a follow-up: note what you are waiting for from them and when to chase them if they don't respond. Keep your address book up to date so your AI agent always has the latest information for personalized communication.",
           "it": "Edit an existing contact's details such as name, email, phone, company, or tags. Also set a follow-up: note what you are waiting for from them and when to chase them if they don't respond. Keep your address book up to date so your AI agent always has the latest information for personalized communication."
         },
-        "bot": "Help the user update a contact's details. If the user refers to a contact by name, list contacts first to find the matching ID. If the user mentions waiting on something from the contact (a response, document, or decision), set nextFollowUpAt to the date they should be chased by and followUpNote to what is awaited. Use null to clear an existing follow-up.",
+        "bot": "Help the user update a contact's details. If the user refers to a contact by name, list contacts first to find the matching ID. If the user mentions waiting on something from the contact (a response, document, or decision), set nextFollowUpAt to the date they should be chased by and followUpNote to what is awaited. Use null to clear an existing follow-up. To set a profile image, upload media first (media_upload) then pass the media ID in avatar as a JSON array (e.g. [\"mediaId\"]). Pass [] to clear the avatar.",
         "vars": {
           "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
           "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
@@ -80452,6 +80468,18 @@
                   "de": "Worauf du von diesem Kontakt wartest (z. B. unterschriebener Vertrag, Rechnungsfreigabe)"
                 },
                 "bot": "A short note describing what the user is waiting for from this contact. Set to null to clear it.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Avatar",
+                "as": "avatar",
+                "description": {
+                  "en": "Profile image media IDs as a JSON array (upload media first)",
+                  "de": "Profilbild-Media-IDs als JSON-Array (Media zuerst hochladen)"
+                },
+                "bot": "JSON array of team media hash IDs for the contact avatar, e.g. [\"abc123\"]. Upload with media_upload first, then pass the returned media ID here. Pass [] to clear the avatar.",
                 "type": "string",
                 "source": "field",
                 "required": false
