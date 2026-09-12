@@ -4,8 +4,8 @@
   "repo": "JoAiHQ/warps",
   "branch": "main",
   "network": "mainnet",
-  "commitSha": "430d638d6017a3b0b95efdbbf0909bfbd1e41c7d",
-  "generatedAt": "2026-09-12T09:36:13.820Z",
+  "commitSha": "1c8e082b63f7da1ed498feb013bc5e204cfa010f",
+  "generatedAt": "2026-09-12T12:15:58.109Z",
   "warps": [
     {
       "key": "arbitrum:omniset-deposit-arbitrum",
@@ -61725,8 +61725,8 @@
       "identifier": "@form-create",
       "alias": "form-create",
       "chain": "none",
-      "hash": "1bb00679c2b9d3cbde49a2ea8ce185621b087be0ea58beef6df246d3919afe42",
-      "checksum": "1bb00679c2b9d3cbde49a2ea8ce185621b087be0ea58beef6df246d3919afe42",
+      "hash": "7028fdf55642571a730fdfacaa757fbaefc1f2abe92e381fc363ed2ca1d7bcb4",
+      "checksum": "7028fdf55642571a730fdfacaa757fbaefc1f2abe92e381fc363ed2ca1d7bcb4",
       "name": "Form: Create",
       "title": {
         "en": "Create a form",
@@ -61793,7 +61793,8 @@
         "bot": "Use this for every form creation request. Build the complete warp:3.0.0 collect definition before execution and never assign a brand. Set optIn to true to enable CRM email consent (double opt-in) on the form.",
         "vars": {
           "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
-          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+          "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
         },
         "actions": [
           {
@@ -61810,7 +61811,8 @@
               "url": "https://api.joai.ai/v1/warps",
               "method": "POST",
               "headers": {
-                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+                "X-Team": "{{team}}"
               }
             },
             "inputs": [
@@ -61848,6 +61850,19 @@
                 "source": "field",
                 "required": false,
                 "default": false
+              },
+              {
+                "name": "Team",
+                "as": "team",
+                "description": {
+                  "en": "Team slug that will own this form. Defaults to the current team.",
+                  "de": "Team-Slug, dem dieses Formular gehören soll. Standardmäßig wird das aktuelle Team verwendet."
+                },
+                "bot": "The slug of the team that should own this form. Omit it to use the current team.",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "default": "{{JOAI_TEAM_SLUG}}"
               },
               {
                 "name": "Agent",
@@ -62941,8 +62956,8 @@
       "identifier": "@form-list",
       "alias": "form-list",
       "chain": "none",
-      "hash": "f99a0c6b2ae5dd270d4a7262681c5aa23e6f465a608a11aa67b91060fd6db680",
-      "checksum": "f99a0c6b2ae5dd270d4a7262681c5aa23e6f465a608a11aa67b91060fd6db680",
+      "hash": "e21aeed86e1d86e48b1e01d8c6c275115ce3c93faa4a99031280a4236cbaad56",
+      "checksum": "e21aeed86e1d86e48b1e01d8c6c275115ce3c93faa4a99031280a4236cbaad56",
       "name": "Form: List",
       "title": {
         "en": "List forms",
@@ -63007,6 +63022,10 @@
           "it": "List all forms owned by the current team, including brandless forms."
         },
         "bot": "Use this to see all forms created by the team. Returns IDs and titles.",
+        "vars": {
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+          "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+        },
         "actions": [
           {
             "type": "collect",
@@ -63022,10 +63041,24 @@
               "url": "https://api.joai.ai/v1/warps?form=true&perPage=100",
               "method": "GET",
               "headers": {
-                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+                "X-Team": "{{team}}"
               }
             },
-            "inputs": []
+            "inputs": [
+              {
+                "name": "Team",
+                "as": "team",
+                "description": {
+                  "en": "Team slug whose forms should be listed. Defaults to the current team.",
+                  "de": "Team-Slug, dessen Formulare aufgelistet werden sollen. Standardmäßig wird das aktuelle Team verwendet."
+                },
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "default": "{{JOAI_TEAM_SLUG}}"
+              }
+            ]
           }
         ],
         "output": {
