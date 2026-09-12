@@ -4,17 +4,303 @@
   "repo": "JoAiHQ/warps",
   "branch": "dev",
   "network": "devnet",
-  "commitSha": "a5b046ee30b946e4ce795c5ccd8155babe49f48e",
-  "committedAt": "2026-09-12T14:41:52.066Z",
-  "generatedAt": "2026-09-12T14:41:54.657Z",
+  "commitSha": "28c6b33bf2871afc3a013df8a23325dc3c182286",
+  "committedAt": "2026-09-12T18:56:50.434Z",
+  "generatedAt": "2026-09-12T18:56:52.981Z",
   "upserts": [
+    {
+      "key": "none:joai-artifact-create",
+      "identifier": "@joai-artifact-create",
+      "alias": "joai-artifact-create",
+      "chain": "none",
+      "hash": "d4fe2816c15422800e2de31c401f1c514cae2f34a352067227b809f0cea275d9",
+      "checksum": "d4fe2816c15422800e2de31c401f1c514cae2f34a352067227b809f0cea275d9",
+      "name": "JoAi: Create Artifact",
+      "title": {
+        "en": "Create a delivery artifact",
+        "de": "Liefer-Artefakt erstellen"
+      },
+      "description": {
+        "en": "Create a client delivery artifact (agreement, offer document, concept, project update, demo, file, or other) with optional URLs, password, contact, and order link. Use this before sending a delivery message.",
+        "de": "Erstelle ein Client-Lieferartefakt (Vereinbarung, Angebotsdokument, Konzept, Projekt-Update, Demo, Datei oder sonstiges) mit optionalen URLs, Passwort, Kontakt und Order-Verknüpfung. Vor dem Versand einer Liefernachricht verwenden."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: Create Artifact",
+        "title": {
+          "en": "Create a delivery artifact",
+          "de": "Liefer-Artefakt erstellen"
+        },
+        "description": {
+          "en": "Create a client delivery artifact (agreement, offer document, concept, project update, demo, file, or other) with optional URLs, password, contact, and order link. Use this before sending a delivery message.",
+          "de": "Erstelle ein Client-Lieferartefakt (Vereinbarung, Angebotsdokument, Konzept, Projekt-Update, Demo, Datei oder sonstiges) mit optionalen URLs, Passwort, Kontakt und Order-Verknüpfung. Vor dem Versand einer Liefernachricht verwenden."
+        },
+        "bot": "Use this to register something that will be delivered to a contact (slides, demo link, agreement URL, project update). Prefer status ready when it is ready to send. Attach contactId when known.",
+        "vars": {
+          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+          "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Create artifact",
+              "de": "Artefakt erstellen"
+            },
+            "destination": {
+              "url": "https://devnet-api.joai.ai/v1/artifacts",
+              "method": "POST",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+                "X-Team": "{{team}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Title",
+                "as": "title",
+                "type": "string",
+                "source": "field",
+                "required": true,
+                "description": {
+                  "en": "Short client-facing title",
+                  "de": "Kurzer kundenseitiger Titel"
+                }
+              },
+              {
+                "name": "Type",
+                "as": "type",
+                "type": "string",
+                "source": "field",
+                "required": true,
+                "options": {
+                  "agreement": "Agreement",
+                  "offer": "Offer",
+                  "concept": "Concept",
+                  "update": "Update",
+                  "demo": "Demo",
+                  "file": "File",
+                  "other": "Other"
+                }
+              },
+              {
+                "name": "Status",
+                "as": "status",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "default": "ready",
+                "options": {
+                  "draft": "Draft",
+                  "ready": "Ready",
+                  "sent": "Sent",
+                  "archived": "Archived"
+                }
+              },
+              {
+                "name": "Summary",
+                "as": "summary",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "description": {
+                  "en": "Short summary of what was delivered",
+                  "de": "Kurze Zusammenfassung der Lieferung"
+                }
+              },
+              {
+                "name": "URL",
+                "as": "url",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "description": {
+                  "en": "Primary URL (document, demo, file)",
+                  "de": "Primäre URL (Dokument, Demo, Datei)"
+                }
+              },
+              {
+                "name": "Password",
+                "as": "password",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "description": {
+                  "en": "Optional access password for the primary URL",
+                  "de": "Optionales Zugangspasswort für die primäre URL"
+                }
+              },
+              {
+                "name": "Extra Link URL",
+                "as": "extraLinkUrl",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "description": {
+                  "en": "Optional second URL (e.g. a demo next to slides)",
+                  "de": "Optionale zweite URL (z. B. Demo neben Folien)"
+                }
+              },
+              {
+                "name": "Extra Link Label",
+                "as": "extraLinkLabel",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "description": {
+                  "en": "Label for the extra link",
+                  "de": "Bezeichnung für den Extra-Link"
+                }
+              },
+              {
+                "name": "Contact",
+                "as": "contactId",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Order ID",
+                "as": "orderId",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "bot": "Optional quote/order hash ID when this artifact belongs to a commercial deal."
+              },
+              {
+                "name": "Team",
+                "as": "team",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "default": "{{JOAI_TEAM_SLUG}}",
+                "description": {
+                  "en": "Team slug for this action. Defaults to the current team.",
+                  "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team."
+                },
+                "bot": "The slug of the team to operate on. Omit to use the current team."
+              }
+            ],
+            "output": {
+              "id": "out.data.id",
+              "title": "out.data.title",
+              "type": "out.data.type",
+              "status": "out.data.status",
+              "url": "out.data.url",
+              "contactId": "out.data.contactId"
+            }
+          }
+        ],
+        "output": {
+          "ARTIFACT_ID": "out.1.id",
+          "ARTIFACT_TITLE": "out.1.title"
+        },
+        "messages": {
+          "success": {
+            "en": "Artifact '{{ARTIFACT_TITLE}}' created ({{ARTIFACT_ID}}).",
+            "de": "Artefakt '{{ARTIFACT_TITLE}}' erstellt ({{ARTIFACT_ID}})."
+          }
+        }
+      },
+      "extras": {
+        "keywords": {
+          "en": [
+            "create artifact",
+            "delivery artifact",
+            "client delivery",
+            "project update",
+            "demo link"
+          ],
+          "de": [
+            "Artefakt erstellen",
+            "Lieferung",
+            "Client-Lieferung",
+            "Projekt-Update",
+            "Demo-Link"
+          ]
+        },
+        "useCases": {
+          "en": [
+            "Register a finished demo or document URL for a client",
+            "Attach an agreement or project update to a contact before sending"
+          ],
+          "de": [
+            "Eine fertige Demo- oder Dokument-URL für einen Kunden registrieren",
+            "Eine Vereinbarung oder ein Projekt-Update vor dem Versand an einen Kontakt hängen"
+          ]
+        },
+        "category": "communication",
+        "faq": {
+          "en": [
+            {
+              "question": "Is this the same as an Update?",
+              "answer": "No. Updates are public feed posts. Artifacts are client deliverables meant to be sent to a contact."
+            },
+            {
+              "question": "Can I attach an order?",
+              "answer": "Yes. Pass orderId when the artifact belongs to a quote or order."
+            },
+            {
+              "question": "How do I add a second URL?",
+              "answer": "Use url for the primary link and optional extraLinkUrl / extraLinkLabel for one more link."
+            }
+          ],
+          "de": [
+            {
+              "question": "Ist das dasselbe wie ein Update?",
+              "answer": "Nein. Updates sind öffentliche Feed-Beiträge. Artefakte sind Client-Lieferungen an einen Kontakt."
+            },
+            {
+              "question": "Kann ich eine Order anhängen?",
+              "answer": "Ja. Übergib orderId, wenn das Artefakt zu einem Quote oder einer Order gehört."
+            },
+            {
+              "question": "Wie füge ich eine zweite URL hinzu?",
+              "answer": "Nutze url für den Hauptlink und optional extraLinkUrl / extraLinkLabel für einen weiteren Link."
+            }
+          ]
+        }
+      }
+    },
     {
       "key": "none:joai-artifact-deliver",
       "identifier": "@joai-artifact-deliver",
       "alias": "joai-artifact-deliver",
       "chain": "none",
-      "hash": "4ce9b14836e9be40dc5851e0465e5f6f88fbf0c8b541050e22b5d9cb263242e5",
-      "checksum": "4ce9b14836e9be40dc5851e0465e5f6f88fbf0c8b541050e22b5d9cb263242e5",
+      "hash": "9c0bd21ecabac83d44e9f19f58214034c55cd0daef45305dc81dc350d0327f92",
+      "checksum": "9c0bd21ecabac83d44e9f19f58214034c55cd0daef45305dc81dc350d0327f92",
       "name": "JoAi: Deliver Artifacts",
       "title": {
         "en": "Deliver artifacts to contacts",
@@ -94,12 +380,16 @@
                 "bot": "Comma-separated hash IDs, e.g. abc123,def456"
               },
               {
-                "name": "Contact IDs",
+                "name": "Recipients",
                 "as": "contactIds",
                 "type": "string",
                 "source": "field",
                 "position": "local",
                 "required": false,
+                "description": {
+                  "en": "Who should receive this delivery — pick one or more contacts",
+                  "de": "Wer diese Lieferung erhalten soll — einen oder mehrere Kontakte wählen"
+                },
                 "bot": "Recipient hash IDs, comma-separated. One recipient = one id. If omitted, unique contacts on the artifacts are used. Required when no artifact has a contact."
               },
               {
@@ -205,12 +495,16 @@
                 "default": "{{integration}}"
               },
               {
-                "name": "Contact IDs",
+                "name": "Recipients",
                 "as": "contactIds",
                 "type": "string",
                 "source": "field",
                 "required": false,
                 "default": "{{contactIds}}",
+                "description": {
+                  "en": "Recipients for this delivery",
+                  "de": "Empfänger dieser Lieferung"
+                },
                 "bot": "Recipient hash IDs, comma-separated. One recipient = one id."
               },
               {
@@ -313,8 +607,8 @@
       "identifier": "@joai-artifact-deliver-send",
       "alias": "joai-artifact-deliver-send",
       "chain": "none",
-      "hash": "1bcad96a355c953f483edd1ee14f9d503c1e8e56357968ec2f991e1d61f9c3d9",
-      "checksum": "1bcad96a355c953f483edd1ee14f9d503c1e8e56357968ec2f991e1d61f9c3d9",
+      "hash": "4c3582abf31174e4bf1f1ca8b59181eb208762800bdc9b4acbd423ccc18f6402",
+      "checksum": "4c3582abf31174e4bf1f1ca8b59181eb208762800bdc9b4acbd423ccc18f6402",
       "name": "JoAi: Send Artifact Delivery",
       "title": {
         "en": "Send artifact delivery message",
@@ -437,11 +731,15 @@
                 }
               },
               {
-                "name": "Contact IDs",
+                "name": "Recipients",
                 "as": "contactIds",
                 "type": "string",
                 "source": "field",
                 "required": false,
+                "description": {
+                  "en": "Who should receive this delivery — pick one or more contacts",
+                  "de": "Wer diese Lieferung erhalten soll — einen oder mehrere Kontakte wählen"
+                },
                 "bot": "Recipient hash IDs, comma-separated. One recipient = one id. If omitted, unique contacts on the artifacts are used."
               },
               {
@@ -509,20 +807,20 @@
       }
     },
     {
-      "key": "none:joai-artifact-list",
-      "identifier": "@joai-artifact-list",
-      "alias": "joai-artifact-list",
+      "key": "none:joai-artifact-update",
+      "identifier": "@joai-artifact-update",
+      "alias": "joai-artifact-update",
       "chain": "none",
-      "hash": "6fa823ebd2eab8fd8d02ad2c3c353473220873af34cff550cbc0352809987993",
-      "checksum": "6fa823ebd2eab8fd8d02ad2c3c353473220873af34cff550cbc0352809987993",
-      "name": "JoAi: List Artifacts",
+      "hash": "6432d37c736538eb54fb1dd8a82cbece385a721035a59c1dca75e166cd351116",
+      "checksum": "6432d37c736538eb54fb1dd8a82cbece385a721035a59c1dca75e166cd351116",
+      "name": "JoAi: Update Artifact",
       "title": {
-        "en": "View delivery artifacts",
-        "de": "Liefer-Artefakte anzeigen"
+        "en": "Update a delivery artifact",
+        "de": "Liefer-Artefakt aktualisieren"
       },
       "description": {
-        "en": "List client delivery artifacts for your team. Filter by type, status, contact, or order.",
-        "de": "Liste Client-Lieferartefakte für dein Team. Filtere nach Typ, Status, Kontakt oder Order."
+        "en": "Edit an existing delivery artifact — title, summary, URLs, status, contact, or order attachment.",
+        "de": "Ein bestehendes Lieferartefakt bearbeiten — Titel, Summary, URLs, Status, Kontakt oder Order."
       },
       "preview": null,
       "creator": "github:JoAiHQ/warps",
@@ -557,35 +855,31 @@
       },
       "warp": {
         "protocol": "warp:3.0.0",
-        "name": "JoAi: List Artifacts",
+        "name": "JoAi: Update Artifact",
         "title": {
-          "en": "View delivery artifacts",
-          "de": "Liefer-Artefakte anzeigen"
+          "en": "Update a delivery artifact",
+          "de": "Liefer-Artefakt aktualisieren"
         },
         "description": {
-          "en": "List client delivery artifacts for your team. Filter by type, status, contact, or order.",
-          "de": "Liste Client-Lieferartefakte für dein Team. Filtere nach Typ, Status, Kontakt oder Order."
+          "en": "Edit an existing delivery artifact — title, summary, URLs, status, contact, or order attachment.",
+          "de": "Ein bestehendes Lieferartefakt bearbeiten — Titel, Summary, URLs, Status, Kontakt oder Order."
         },
-        "bot": "Use this to see what deliverables exist and their delivery status (draft, ready, sent, archived).",
+        "bot": "Use this to change artifact fields or mark status ready/archived. To send to the client, use artifact-deliver instead.",
         "vars": {
           "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
           "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
           "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
         },
-        "output": {
-          "artifacts": "out",
-          "artifactsList": "out.data"
-        },
         "actions": [
           {
             "type": "collect",
             "label": {
-              "en": "View artifacts",
-              "de": "Artefakte anzeigen"
+              "en": "Update artifact",
+              "de": "Artefakt aktualisieren"
             },
             "destination": {
-              "url": "https://devnet-api.joai.ai/v1/artifacts?type={{type}}&status={{status}}&contactId={{contactId}}&orderId={{orderId}}&ids={{ids}}",
-              "method": "GET",
+              "url": "https://devnet-api.joai.ai/v1/artifacts/{{artifactId}}",
+              "method": "PATCH",
               "headers": {
                 "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
                 "X-Team": "{{team}}"
@@ -593,22 +887,24 @@
             },
             "inputs": [
               {
-                "name": "IDs",
-                "as": "ids",
+                "name": "Artifact ID",
+                "as": "artifactId",
                 "type": "string",
-                "position": "url:ids",
+                "position": "url:artifactId",
                 "source": "field",
-                "required": false,
-                "description": {
-                  "en": "Optional comma-separated artifact IDs to load",
-                  "de": "Optionale kommagetrennte Artefakt-IDs zum Laden"
-                }
+                "required": true
+              },
+              {
+                "name": "Title",
+                "as": "title",
+                "type": "string",
+                "source": "field",
+                "required": false
               },
               {
                 "name": "Type",
                 "as": "type",
                 "type": "string",
-                "position": "url:type",
                 "source": "field",
                 "required": false,
                 "options": {
@@ -625,7 +921,6 @@
                 "name": "Status",
                 "as": "status",
                 "type": "string",
-                "position": "url:status",
                 "source": "field",
                 "required": false,
                 "options": {
@@ -636,10 +931,30 @@
                 }
               },
               {
-                "name": "Contact ID",
+                "name": "Summary",
+                "as": "summary",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "URL",
+                "as": "url",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Password",
+                "as": "password",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Contact",
                 "as": "contactId",
                 "type": "string",
-                "position": "url:contactId",
                 "source": "field",
                 "required": false
               },
@@ -647,7 +962,6 @@
                 "name": "Order ID",
                 "as": "orderId",
                 "type": "string",
-                "position": "url:orderId",
                 "source": "field",
                 "required": false
               },
@@ -664,60 +978,679 @@
                 },
                 "bot": "The slug of the team to operate on. Omit to use the current team."
               }
-            ]
+            ],
+            "output": {
+              "id": "out.data.id",
+              "title": "out.data.title",
+              "status": "out.data.status"
+            }
           }
         ],
+        "output": {
+          "ARTIFACT_ID": "out.1.id",
+          "ARTIFACT_TITLE": "out.1.title"
+        },
         "messages": {
           "success": {
-            "en": "Artifacts loaded.",
-            "de": "Artefakte geladen."
+            "en": "Artifact '{{ARTIFACT_TITLE}}' updated.",
+            "de": "Artefakt '{{ARTIFACT_TITLE}}' aktualisiert."
           }
-        },
-        "ui": "https://raw.githubusercontent.com/JoAiHQ/warps/main/warps/joai/artifact-list/chatapp.7d6c540c.dist.html"
+        }
       },
       "extras": {
         "keywords": {
           "en": [
-            "list artifacts",
-            "delivery status",
-            "sent deliverables"
+            "update artifact",
+            "edit deliverable",
+            "mark ready"
           ],
           "de": [
-            "Artefakte anzeigen",
-            "Lieferstatus",
-            "gesendete Lieferungen"
+            "Artefakt aktualisieren",
+            "Lieferung bearbeiten",
+            "ready setzen"
           ]
         },
         "useCases": {
           "en": [
-            "See which deliverables are ready or already sent",
-            "Filter artifacts by contact or type"
+            "Change artifact URLs or mark an artifact ready before delivery"
           ],
           "de": [
-            "Sehen, welche Lieferungen ready oder bereits gesendet sind",
-            "Artefakte nach Kontakt oder Typ filtern"
+            "Artefakt-URLs ändern oder vor der Lieferung auf ready setzen"
           ]
         },
         "category": "communication",
         "faq": {
           "en": [
             {
-              "question": "Can I filter by status?",
-              "answer": "Yes. Filter by draft, ready, sent, or archived."
+              "question": "Can I mark an artifact ready without sending?",
+              "answer": "Yes. Set status to ready, then use artifact-deliver when you want to send."
             },
             {
-              "question": "Can I filter by contact?",
-              "answer": "Yes. Pass contactId to see only that contact’s artifacts."
+              "question": "Does update send a message?",
+              "answer": "No. Use artifact-deliver to draft and send."
             }
           ],
           "de": [
             {
-              "question": "Kann ich nach Status filtern?",
-              "answer": "Ja. Filtere nach draft, ready, sent oder archived."
+              "question": "Kann ich ready setzen ohne zu senden?",
+              "answer": "Ja. Setze status auf ready und nutze danach artifact-deliver zum Senden."
             },
             {
-              "question": "Kann ich nach Kontakt filtern?",
-              "answer": "Ja. Übergib contactId, um nur Artefakte dieses Kontakts zu sehen."
+              "question": "Sendet update eine Nachricht?",
+              "answer": "Nein. Zum Entwerfen und Senden nutze artifact-deliver."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "key": "none:joai-contact-message-draft",
+      "identifier": "@joai-contact-message-draft",
+      "alias": "joai-contact-message-draft",
+      "chain": "none",
+      "hash": "540a1c1097044bbfa1cbceced7f7ffa552bbaac40e37c3dd08497481fc445788",
+      "checksum": "540a1c1097044bbfa1cbceced7f7ffa552bbaac40e37c3dd08497481fc445788",
+      "name": "JoAi: Draft Contact Message",
+      "title": {
+        "en": "Draft a message for a contact",
+        "de": "Nachricht für einen Kontakt entwerfen",
+        "es": "Draft a message for a contact",
+        "fr": "Draft a message for a contact",
+        "ro": "Draft a message for a contact",
+        "it": "Draft a message for a contact"
+      },
+      "description": {
+        "en": "Draft a personalized CRM message using a contact's unified timeline, including activities and conversation history. The result is returned for review and is never sent automatically.",
+        "de": "Entwirf anhand der einheitlichen Kontakt-Zeitachse mit Aktivitäten und Gesprächsverlauf eine persönliche CRM-Nachricht. Der Entwurf wird nur zur Prüfung zurückgegeben und niemals automatisch gesendet.",
+        "es": "Draft a personalized CRM message using a contact's unified timeline, including activities and conversation history. The result is returned for review and is never sent automatically.",
+        "fr": "Draft a personalized CRM message using a contact's unified timeline, including activities and conversation history. The result is returned for review and is never sent automatically.",
+        "ro": "Draft a personalized CRM message using a contact's unified timeline, including activities and conversation history. The result is returned for review and is never sent automatically.",
+        "it": "Draft a personalized CRM message using a contact's unified timeline, including activities and conversation history. The result is returned for review and is never sent automatically."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: Draft Contact Message",
+        "title": {
+          "en": "Draft a message for a contact",
+          "de": "Nachricht für einen Kontakt entwerfen",
+          "es": "Draft a message for a contact",
+          "fr": "Draft a message for a contact",
+          "ro": "Draft a message for a contact",
+          "it": "Draft a message for a contact"
+        },
+        "description": {
+          "en": "Draft a personalized CRM message using a contact's unified timeline, including activities and conversation history. The result is returned for review and is never sent automatically.",
+          "de": "Entwirf anhand der einheitlichen Kontakt-Zeitachse mit Aktivitäten und Gesprächsverlauf eine persönliche CRM-Nachricht. Der Entwurf wird nur zur Prüfung zurückgegeben und niemals automatisch gesendet.",
+          "es": "Draft a personalized CRM message using a contact's unified timeline, including activities and conversation history. The result is returned for review and is never sent automatically.",
+          "fr": "Draft a personalized CRM message using a contact's unified timeline, including activities and conversation history. The result is returned for review and is never sent automatically.",
+          "ro": "Draft a personalized CRM message using a contact's unified timeline, including activities and conversation history. The result is returned for review and is never sent automatically.",
+          "it": "Draft a personalized CRM message using a contact's unified timeline, including activities and conversation history. The result is returned for review and is never sent automatically."
+        },
+        "bot": "Use when the user wants a personalized draft for a CRM contact. Provide the contact ID, the reason for writing, and optional verified context; return the draft for review without sending it.",
+        "vars": {
+          "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+        },
+        "output": {
+          "DRAFT": "out.DRAFT"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Set draft context",
+              "de": "Kontext festlegen",
+              "es": "Set draft context",
+              "fr": "Set draft context",
+              "ro": "Set draft context",
+              "it": "Set draft context"
+            },
+            "inputs": [
+              {
+                "name": "Contact",
+                "as": "contactId",
+                "description": {
+                  "en": "CRM contact to draft the message for",
+                  "de": "CRM-Kontakt, für den die Nachricht entworfen wird"
+                },
+                "bot": "The hash ID of the CRM contact.",
+                "type": "string",
+                "source": "field",
+                "position": "local",
+                "required": true
+              },
+              {
+                "name": "Reason",
+                "as": "reason",
+                "description": {
+                  "en": "Why the message should be sent now",
+                  "de": "Warum die Nachricht jetzt sinnvoll ist"
+                },
+                "bot": "Examples include following up on an inquiry, checking in after a purchase, thanking the contact, or reconnecting.",
+                "type": "string",
+                "source": "field",
+                "position": "local",
+                "required": true
+              },
+              {
+                "name": "Context",
+                "as": "context",
+                "description": {
+                  "en": "Optional verified context not yet recorded in the timeline",
+                  "de": "Optionaler geprüfter Kontext, der noch nicht in der Zeitachse steht"
+                },
+                "bot": "Only provide facts known to be true, such as a recent event or a specific topic to mention.",
+                "type": "string",
+                "source": "field",
+                "position": "local",
+                "required": false
+              },
+              {
+                "name": "Team",
+                "as": "team",
+                "description": {
+                  "en": "Team slug for this action. Defaults to the current team.",
+                  "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team."
+                },
+                "bot": "The slug of the team to operate on. Omit to use the current team.",
+                "type": "string",
+                "source": "field",
+                "position": "local",
+                "required": false,
+                "default": "{{JOAI_TEAM_SLUG}}"
+              }
+            ]
+          },
+          {
+            "type": "inline",
+            "warp": "@joai-contact-timeline-list?contactId={{contactId}}&team={{team}}",
+            "silent": true,
+            "label": {
+              "en": "Load contact timeline",
+              "de": "Kontakt-Zeitachse laden",
+              "es": "Load contact timeline",
+              "fr": "Load contact timeline",
+              "ro": "Load contact timeline",
+              "it": "Load contact timeline"
+            }
+          },
+          {
+            "type": "prompt",
+            "as": "DRAFT",
+            "label": {
+              "en": "Draft message",
+              "de": "Nachricht entwerfen",
+              "es": "Draft message",
+              "fr": "Draft message",
+              "ro": "Draft message",
+              "it": "Draft message"
+            },
+            "expect": {
+              "type": "string"
+            },
+            "prompt": "Write a personalized message for the CRM contact using only verified facts from the timeline and optional context below. Include one concrete historical anchor when available, explain the reason for writing within the first sentence, and end with one specific low-effort next step when a response is needed. If the timeline has no useful history, write an honest first-touch message without pretending there is an existing relationship. Use 3-5 natural sentences, match the tone of prior interactions, and avoid corporate filler, generic pleasantries, a signature, quotation marks, and meta-commentary.\n\nReason: {{reason}}\nOptional verified context: {{context}}\nContact timeline: {{timeline}}\n\nReturn only the message body."
+          }
+        ],
+        "messages": {
+          "success": "{{DRAFT}}"
+        }
+      },
+      "extras": {
+        "keywords": {
+          "en": [
+            "draft contact message",
+            "personalized CRM message",
+            "follow-up draft",
+            "customer message",
+            "AI message draft"
+          ],
+          "de": [
+            "Kontaktnachricht entwerfen",
+            "persönliche CRM-Nachricht",
+            "Follow-up-Entwurf",
+            "Kundennachricht",
+            "KI-Nachrichtenentwurf"
+          ]
+        },
+        "useCases": {
+          "en": [
+            "Draft a personalized follow-up based on a contact's actual conversation history",
+            "Prepare a customer check-in for review without sending it automatically",
+            "Write an honest first-touch message when no previous interaction exists"
+          ],
+          "de": [
+            "Ein persönliches Follow-up anhand des tatsächlichen Gesprächsverlaufs entwerfen",
+            "Eine Nachricht zur Kundenpflege vorbereiten, ohne sie automatisch zu senden",
+            "Eine ehrliche Erstkontakt-Nachricht verfassen, wenn noch kein Austausch stattgefunden hat"
+          ]
+        },
+        "category": "communication",
+        "faq": {
+          "en": [
+            {
+              "question": "Does this action send the message?",
+              "answer": "No. It only returns a draft for review; use a campaign action for approved delivery."
+            },
+            {
+              "question": "What information does the draft use?",
+              "answer": "It uses the contact timeline and any optional verified context you provide."
+            }
+          ],
+          "de": [
+            {
+              "question": "Wird die Nachricht direkt gesendet?",
+              "answer": "Nein. Du erhältst nur einen Entwurf zur Prüfung; für den freigegebenen Versand nutzt du eine Kampagnen-Aktion."
+            },
+            {
+              "question": "Welche Informationen verwendet der Entwurf?",
+              "answer": "Verwendet werden die Kontakt-Zeitachse und optionaler geprüfter Kontext von dir."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "key": "none:joai-contact-message-send",
+      "identifier": "@joai-contact-message-send",
+      "alias": "joai-contact-message-send",
+      "chain": "none",
+      "hash": "132421c962a065d6a12586803725d64b82996495b887b7f44f004b994503d7f5",
+      "checksum": "132421c962a065d6a12586803725d64b82996495b887b7f44f004b994503d7f5",
+      "name": "JoAi: Send Contact Message",
+      "title": {
+        "en": "Send message to contact",
+        "de": "Nachricht an Kontakt senden",
+        "es": "Send message to contact",
+        "fr": "Send message to contact",
+        "ro": "Send message to contact",
+        "it": "Send message to contact"
+      },
+      "description": {
+        "en": "Send a message to a contact on the chosen channel (email, SMS, WhatsApp, …).",
+        "de": "Nachricht an einen Kontakt über den gewählten Kanal senden (E-Mail, SMS, WhatsApp, …).",
+        "es": "Send a message to a contact on the chosen channel (email, SMS, WhatsApp, …).",
+        "fr": "Send a message to a contact on the chosen channel (email, SMS, WhatsApp, …).",
+        "ro": "Send a message to a contact on the chosen channel (email, SMS, WhatsApp, …).",
+        "it": "Send a message to a contact on the chosen channel (email, SMS, WhatsApp, …)."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: Send Contact Message",
+        "title": {
+          "en": "Send message to contact",
+          "de": "Nachricht an Kontakt senden",
+          "es": "Send message to contact",
+          "fr": "Send message to contact",
+          "ro": "Send message to contact",
+          "it": "Send message to contact"
+        },
+        "description": {
+          "en": "Send a message to a contact on the chosen channel (email, SMS, WhatsApp, …).",
+          "de": "Nachricht an einen Kontakt über den gewählten Kanal senden (E-Mail, SMS, WhatsApp, …).",
+          "es": "Send a message to a contact on the chosen channel (email, SMS, WhatsApp, …).",
+          "fr": "Send a message to a contact on the chosen channel (email, SMS, WhatsApp, …).",
+          "ro": "Send a message to a contact on the chosen channel (email, SMS, WhatsApp, …).",
+          "it": "Send a message to a contact on the chosen channel (email, SMS, WhatsApp, …)."
+        },
+        "bot": "Send a message to a contact. Provide contactId, recipientId, message; optionally subject, integration, campaignId, and team.",
+        "vars": {
+          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+          "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Send message",
+              "de": "Nachricht senden"
+            },
+            "destination": {
+              "url": "https://devnet-api.joai.ai/v1/agents/{{JOAI_AGENT_UUID}}/room/message",
+              "method": "POST",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+                "X-Team": "{{team}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Subject",
+                "as": "subject",
+                "description": {
+                  "en": "Email subject (optional for other channels)",
+                  "de": "E-Mail-Betreff (optional für andere Kanäle)"
+                },
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "position": "payload:subject"
+              },
+              {
+                "name": "Message",
+                "as": "message",
+                "description": {
+                  "en": "Message body to send",
+                  "de": "Nachrichtentext"
+                },
+                "type": "string",
+                "source": "field",
+                "required": true,
+                "position": "payload:message"
+              },
+              {
+                "name": "Contact",
+                "as": "contactId",
+                "description": {
+                  "en": "Contact to message",
+                  "de": "Kontakt für die Nachricht"
+                },
+                "type": "string",
+                "source": "field",
+                "required": true,
+                "position": "payload:contactId"
+              },
+              {
+                "name": "Recipient ID",
+                "as": "recipientId",
+                "description": {
+                  "en": "Email or phone to send to",
+                  "de": "E-Mail oder Telefon für den Versand"
+                },
+                "type": "string",
+                "source": "field",
+                "required": true,
+                "position": "payload:recipientId"
+              },
+              {
+                "name": "Integration",
+                "as": "integration",
+                "description": {
+                  "en": "Channel to send on (email, sms, whatsapp, …)",
+                  "de": "Kanal für den Versand (email, sms, whatsapp, …)"
+                },
+                "type": "string",
+                "source": "field",
+                "required": true,
+                "position": "payload:integration"
+              },
+              {
+                "name": "Campaign ID",
+                "as": "campaignId",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "position": "payload:campaignId"
+              },
+              {
+                "name": "Team",
+                "as": "team",
+                "type": "string",
+                "source": "hidden",
+                "required": false,
+                "default": "{{JOAI_TEAM_SLUG}}"
+              }
+            ]
+          }
+        ],
+        "messages": {
+          "success": {
+            "en": "Message sent.",
+            "de": "Nachricht gesendet.",
+            "es": "Message sent.",
+            "fr": "Message sent.",
+            "ro": "Message sent.",
+            "it": "Message sent."
+          },
+          "error": {
+            "en": "Failed to send message: {{MESSAGE}}",
+            "de": "Nachricht konnte nicht gesendet werden: {{MESSAGE}}"
+          }
+        }
+      },
+      "extras": null
+    },
+    {
+      "key": "none:joai-loyalty-enroll",
+      "identifier": "@joai-loyalty-enroll",
+      "alias": "joai-loyalty-enroll",
+      "chain": "none",
+      "hash": "feab7ebdd9256b3a8832aa9873cfdb19978bc1ce996cc82698350faf03804808",
+      "checksum": "feab7ebdd9256b3a8832aa9873cfdb19978bc1ce996cc82698350faf03804808",
+      "name": "JoAi: Enroll in Loyalty Program",
+      "title": {
+        "en": "Enroll in loyalty program",
+        "de": "Im Treueprogramm anmelden"
+      },
+      "description": {
+        "en": "Enroll an existing contact in the team's loyalty program. The contact receives their digital loyalty card and can start collecting points immediately. Use after finding or creating the contact.",
+        "de": "Melde einen vorhandenen Kontakt im Treueprogramm des Teams an. Der Kontakt erhält seine digitale Treuekarte und kann sofort Punkte sammeln. Nach dem Anlegen oder Suchen des Kontakts verwenden."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: Enroll in Loyalty Program",
+        "title": {
+          "en": "Enroll in loyalty program",
+          "de": "Im Treueprogramm anmelden"
+        },
+        "description": {
+          "en": "Enroll an existing contact in the team's loyalty program. The contact receives their digital loyalty card and can start collecting points immediately. Use after finding or creating the contact.",
+          "de": "Melde einen vorhandenen Kontakt im Treueprogramm des Teams an. Der Kontakt erhält seine digitale Treuekarte und kann sofort Punkte sammeln. Nach dem Anlegen oder Suchen des Kontakts verwenden."
+        },
+        "bot": "Use this after finding or creating a contact to enroll them in the loyalty program. The contact will receive their pass link automatically.",
+        "vars": {
+          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+          "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Enroll",
+              "de": "Anmelden"
+            },
+            "destination": {
+              "url": "https://devnet-api.joai.ai/v1/loyalty/enroll",
+              "method": "POST",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+                "X-Team": "{{team}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Contact",
+                "as": "contactId",
+                "description": {
+                  "en": "Contact hash ID from find-or-create",
+                  "de": "Kontakt-Hash-ID aus Suchen oder Erstellen"
+                },
+                "bot": "The hash ID returned by find-or-create contact.",
+                "type": "string",
+                "source": "field",
+                "required": true,
+                "min": 1,
+                "label": {
+                  "en": "Contact ID",
+                  "de": "Kontakt-ID"
+                }
+              },
+              {
+                "name": "Team",
+                "as": "team",
+                "description": {
+                  "en": "Team slug for this action. Defaults to the current team.",
+                  "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team."
+                },
+                "bot": "The slug of the team to operate on. Omit to use the current team.",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "default": "{{JOAI_TEAM_SLUG}}"
+              }
+            ]
+          }
+        ],
+        "output": {
+          "contactId": "out.data.contact.id",
+          "points": "out.data.points"
+        },
+        "messages": {
+          "success": {
+            "en": "Enrolled in loyalty program.",
+            "de": "Im Treueprogramm angemeldet."
+          }
+        }
+      },
+      "extras": {
+        "keywords": {
+          "en": [
+            "enroll loyalty program",
+            "register loyalty card",
+            "sign up rewards",
+            "start collecting points",
+            "loyalty membership"
+          ],
+          "de": [
+            "Treueprogramm anmelden",
+            "Treuekarte registrieren",
+            "Punkte sammeln beginnen",
+            "Kundenkarte ausstellen"
+          ]
+        },
+        "useCases": {
+          "en": [
+            "Enroll a walk-in customer in the loyalty program during checkout",
+            "Register an online customer after their first purchase",
+            "Add a regular guest to the rewards program automatically"
+          ],
+          "de": [
+            "Einen Laufkunden an der Kasse im Treueprogramm anmelden",
+            "Einen Online-Kunden nach dem ersten Einkauf registrieren",
+            "Einen Stammgast automatisch ins Prämienprogramm aufnehmen"
+          ]
+        },
+        "category": "commerce",
+        "faq": {
+          "en": [
+            {
+              "question": "Does the customer need to have a contact record first?",
+              "answer": "Yes, use Find or Create Contact first to get the contact ID, then chain this action."
+            },
+            {
+              "question": "What happens after enrollment?",
+              "answer": "The customer is enrolled and automatically receives their digital pass link via their preferred channel."
+            },
+            {
+              "question": "Can I enroll the same customer twice?",
+              "answer": "No, a contact can only be enrolled once. The action returns the existing account if already enrolled."
+            }
+          ],
+          "de": [
+            {
+              "question": "Muss der Kunde bereits als Kontakt existieren?",
+              "answer": "Ja, nutze zuerst Kontakt suchen oder erstellen, um die Kontakt-ID zu erhalten, und verketten dann diese Aktion."
+            },
+            {
+              "question": "Was passiert nach der Anmeldung?",
+              "answer": "Der Kunde wird angemeldet und erhält automatisch seinen digitalen Kartenlink über den bevorzugten Kanal."
+            },
+            {
+              "question": "Kann ich denselben Kunden zweimal anmelden?",
+              "answer": "Nein, ein Kontakt kann nur einmal angemeldet werden. Die Aktion gibt das bestehende Konto zurück, falls bereits angemeldet."
             }
           ]
         }
