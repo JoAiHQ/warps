@@ -4,25 +4,25 @@
   "repo": "JoAiHQ/warps",
   "branch": "main",
   "network": "mainnet",
-  "commitSha": "a36cddbfac39a22e42f03b98319aacd714ad2892",
-  "committedAt": "2026-09-13T13:19:27.848Z",
-  "generatedAt": "2026-09-13T13:19:29.696Z",
+  "commitSha": "98bed9dfbf258a37b4975ab3cfad0c93e00f3cda",
+  "committedAt": "2026-09-13T15:29:48.060Z",
+  "generatedAt": "2026-09-13T15:29:50.373Z",
   "upserts": [
     {
-      "key": "none:joai-artifact-create",
-      "identifier": "@joai-artifact-create",
-      "alias": "joai-artifact-create",
+      "key": "none:joai-campaign-audience-preview",
+      "identifier": "@joai-campaign-audience-preview",
+      "alias": "joai-campaign-audience-preview",
       "chain": "none",
-      "hash": "8bf30ff127ff2505445dd8ba773a01d07fc0203a1f28e86e7c3000dbcb756b2f",
-      "checksum": "8bf30ff127ff2505445dd8ba773a01d07fc0203a1f28e86e7c3000dbcb756b2f",
-      "name": "JoAi: Create Artifact",
+      "hash": "10c5f804d8205aeffe874f82d7eec36e12c98c4caad59579e6bd83336c229e56",
+      "checksum": "10c5f804d8205aeffe874f82d7eec36e12c98c4caad59579e6bd83336c229e56",
+      "name": "JoAi: Campaign Audience Preview",
       "title": {
-        "en": "Create a delivery artifact",
-        "de": "Liefer-Artefakt erstellen"
+        "en": "Preview campaign audience",
+        "de": "Kampagnen-Zielgruppe prüfen"
       },
       "description": {
-        "en": "Create a client delivery artifact (agreement, offer document, concept, project update, demo, file, or other) with optional URLs, password, contact, and order link. Use this before sending a delivery message.",
-        "de": "Erstelle ein Client-Lieferartefakt (Vereinbarung, Angebotsdokument, Konzept, Projekt-Update, Demo, Datei oder sonstiges) mit optionalen URLs, Passwort, Kontakt und Order-Verknüpfung. Vor dem Versand einer Liefernachricht verwenden."
+        "en": "Preview how many contacts are sendable vs skipped for a campaign or audience (pending consent, opted out, missing channel, approval skipped).",
+        "de": "Prüfe, wie viele Kontakte für eine Kampagne oder Zielgruppe sendbar vs. übersprungen sind (Einwilligung ausstehend, Opt-out, fehlender Kanal, Freigabe übersprungen)."
       },
       "preview": null,
       "creator": "github:JoAiHQ/warps",
@@ -57,16 +57,16 @@
       },
       "warp": {
         "protocol": "warp:3.0.0",
-        "name": "JoAi: Create Artifact",
+        "name": "JoAi: Campaign Audience Preview",
         "title": {
-          "en": "Create a delivery artifact",
-          "de": "Liefer-Artefakt erstellen"
+          "en": "Preview campaign audience",
+          "de": "Kampagnen-Zielgruppe prüfen"
         },
         "description": {
-          "en": "Create a client delivery artifact (agreement, offer document, concept, project update, demo, file, or other) with optional URLs, password, contact, and order link. Use this before sending a delivery message.",
-          "de": "Erstelle ein Client-Lieferartefakt (Vereinbarung, Angebotsdokument, Konzept, Projekt-Update, Demo, Datei oder sonstiges) mit optionalen URLs, Passwort, Kontakt und Order-Verknüpfung. Vor dem Versand einer Liefernachricht verwenden."
+          "en": "Preview how many contacts are sendable vs skipped for a campaign or audience (pending consent, opted out, missing channel, approval skipped).",
+          "de": "Prüfe, wie viele Kontakte für eine Kampagne oder Zielgruppe sendbar vs. übersprungen sind (Einwilligung ausstehend, Opt-out, fehlender Kanal, Freigabe übersprungen)."
         },
-        "bot": "Use this to register something that will be delivered to a contact (slides, demo link, agreement URL, project update). Prefer status ready when it is ready to send. Attach contactId when known.",
+        "bot": "Call this BEFORE send_campaign. Pass campaignId for an existing draft, or channel plus segmentId/tags/contactIds to preview an audience before creating. Use the counts to confirm sendable recipients and explain skips.",
         "vars": {
           "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
           "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
@@ -76,577 +76,11 @@
           {
             "type": "collect",
             "label": {
-              "en": "Create artifact",
-              "de": "Artefakt erstellen"
+              "en": "Preview audience",
+              "de": "Zielgruppe prüfen"
             },
             "destination": {
-              "url": "https://api.joai.ai/v1/artifacts",
-              "method": "POST",
-              "headers": {
-                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
-                "X-Team": "{{team}}"
-              }
-            },
-            "inputs": [
-              {
-                "name": "Title",
-                "as": "title",
-                "type": "string",
-                "source": "field",
-                "required": true,
-                "description": {
-                  "en": "Short client-facing title",
-                  "de": "Kurzer kundenseitiger Titel"
-                }
-              },
-              {
-                "name": "Type",
-                "as": "type",
-                "type": "string",
-                "source": "field",
-                "required": true,
-                "options": {
-                  "agreement": "Agreement",
-                  "offer": "Offer",
-                  "concept": "Concept",
-                  "update": "Update",
-                  "demo": "Demo",
-                  "file": "File",
-                  "other": "Other"
-                }
-              },
-              {
-                "name": "Status",
-                "as": "status",
-                "type": "string",
-                "source": "field",
-                "required": false,
-                "default": "ready",
-                "options": {
-                  "draft": "Draft",
-                  "ready": "Ready",
-                  "sent": "Sent",
-                  "archived": "Archived"
-                }
-              },
-              {
-                "name": "Summary",
-                "as": "summary",
-                "type": "string",
-                "source": "field",
-                "required": false,
-                "description": {
-                  "en": "Short summary of what was delivered",
-                  "de": "Kurze Zusammenfassung der Lieferung"
-                }
-              },
-              {
-                "name": "Blocks",
-                "as": "blocks",
-                "type": "string",
-                "source": "field",
-                "required": false,
-                "description": {
-                  "en": "JSON array of ordered document blocks: id, type, data.",
-                  "de": "JSON-Array geordneter Dokumentblöcke: id, type, data."
-                },
-                "bot": "Use structured blocks for a longer artifact. Supported types: heading, richText, metrics, table, callout, actions, media, divider."
-              },
-              {
-                "name": "URL",
-                "as": "url",
-                "type": "string",
-                "source": "field",
-                "required": false,
-                "description": {
-                  "en": "Primary URL (document, demo, file)",
-                  "de": "Primäre URL (Dokument, Demo, Datei)"
-                }
-              },
-              {
-                "name": "Password",
-                "as": "password",
-                "type": "string",
-                "source": "field",
-                "required": false,
-                "description": {
-                  "en": "Optional access password for the primary URL",
-                  "de": "Optionales Zugangspasswort für die primäre URL"
-                }
-              },
-              {
-                "name": "Extra Link URL",
-                "as": "extraLinkUrl",
-                "type": "string",
-                "source": "field",
-                "required": false,
-                "description": {
-                  "en": "Optional second URL (e.g. a demo next to slides)",
-                  "de": "Optionale zweite URL (z. B. Demo neben Folien)"
-                }
-              },
-              {
-                "name": "Extra Link Label",
-                "as": "extraLinkLabel",
-                "type": "string",
-                "source": "field",
-                "required": false,
-                "description": {
-                  "en": "Label for the extra link",
-                  "de": "Bezeichnung für den Extra-Link"
-                }
-              },
-              {
-                "name": "Contact",
-                "as": "contactId",
-                "type": "string",
-                "source": "field",
-                "required": false
-              },
-              {
-                "name": "Order ID",
-                "as": "orderId",
-                "type": "string",
-                "source": "field",
-                "required": false,
-                "bot": "Optional quote/order hash ID when this artifact belongs to a commercial deal."
-              },
-              {
-                "name": "Team",
-                "as": "team",
-                "type": "string",
-                "source": "field",
-                "required": false,
-                "default": "{{JOAI_TEAM_SLUG}}",
-                "description": {
-                  "en": "Team slug for this action. Defaults to the current team.",
-                  "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team."
-                },
-                "bot": "The slug of the team to operate on. Omit to use the current team."
-              }
-            ],
-            "output": {
-              "id": "out.data.id",
-              "title": "out.data.title",
-              "type": "out.data.type",
-              "status": "out.data.status",
-              "url": "out.data.url",
-              "contactId": "out.data.contactId"
-            }
-          }
-        ],
-        "output": {
-          "ARTIFACT_ID": "out.1.id",
-          "ARTIFACT_TITLE": "out.1.title"
-        },
-        "messages": {
-          "success": {
-            "en": "Artifact '{{ARTIFACT_TITLE}}' created ({{ARTIFACT_ID}}).",
-            "de": "Artefakt '{{ARTIFACT_TITLE}}' erstellt ({{ARTIFACT_ID}})."
-          }
-        }
-      },
-      "extras": {
-        "keywords": {
-          "en": [
-            "create artifact",
-            "delivery artifact",
-            "client delivery",
-            "project update",
-            "demo link"
-          ],
-          "de": [
-            "Artefakt erstellen",
-            "Lieferung",
-            "Client-Lieferung",
-            "Projekt-Update",
-            "Demo-Link"
-          ]
-        },
-        "useCases": {
-          "en": [
-            "Register a finished demo or document URL for a client",
-            "Attach an agreement or project update to a contact before sending"
-          ],
-          "de": [
-            "Eine fertige Demo- oder Dokument-URL für einen Kunden registrieren",
-            "Eine Vereinbarung oder ein Projekt-Update vor dem Versand an einen Kontakt hängen"
-          ]
-        },
-        "category": "communication",
-        "faq": {
-          "en": [
-            {
-              "question": "Is this the same as an Update?",
-              "answer": "No. Updates are public feed posts. Artifacts are client deliverables meant to be sent to a contact."
-            },
-            {
-              "question": "Can I attach an order?",
-              "answer": "Yes. Pass orderId when the artifact belongs to a quote or order."
-            },
-            {
-              "question": "How do I add a second URL?",
-              "answer": "Use url for the primary link and optional extraLinkUrl / extraLinkLabel for one more link."
-            }
-          ],
-          "de": [
-            {
-              "question": "Ist das dasselbe wie ein Update?",
-              "answer": "Nein. Updates sind öffentliche Feed-Beiträge. Artefakte sind Client-Lieferungen an einen Kontakt."
-            },
-            {
-              "question": "Kann ich eine Order anhängen?",
-              "answer": "Ja. Übergib orderId, wenn das Artefakt zu einem Quote oder einer Order gehört."
-            },
-            {
-              "question": "Wie füge ich eine zweite URL hinzu?",
-              "answer": "Nutze url für den Hauptlink und optional extraLinkUrl / extraLinkLabel für einen weiteren Link."
-            }
-          ]
-        }
-      }
-    },
-    {
-      "key": "none:joai-artifact-update",
-      "identifier": "@joai-artifact-update",
-      "alias": "joai-artifact-update",
-      "chain": "none",
-      "hash": "39e86a36c9827a5ad3afae313175cc03fe6ebb39e279498d378e360889bbf39d",
-      "checksum": "39e86a36c9827a5ad3afae313175cc03fe6ebb39e279498d378e360889bbf39d",
-      "name": "JoAi: Update Artifact",
-      "title": {
-        "en": "Update a delivery artifact",
-        "de": "Liefer-Artefakt aktualisieren"
-      },
-      "description": {
-        "en": "Edit an existing delivery artifact — title, summary, URLs, status, contact, or order attachment.",
-        "de": "Ein bestehendes Lieferartefakt bearbeiten — Titel, Summary, URLs, Status, Kontakt oder Order."
-      },
-      "preview": null,
-      "creator": "github:JoAiHQ/warps",
-      "privileges": [],
-      "listed": true,
-      "visibility": "public",
-      "primaryAddress": null,
-      "primaryFunc": null,
-      "brand": {
-        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
-        "slug": "joai",
-        "active": true,
-        "protocol": "brand:0.2.0",
-        "name": "JoAi",
-        "description": {
-          "en": "JoAi is a platform for creating and managing your own AI agents.",
-          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
-          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
-          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
-          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
-        },
-        "logo": {
-          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
-        },
-        "urls": {
-          "web": "https://joai.ai"
-        },
-        "colors": {
-          "primary": "#98FF98",
-          "secondary": "#FFFF66"
-        }
-      },
-      "warp": {
-        "protocol": "warp:3.0.0",
-        "name": "JoAi: Update Artifact",
-        "title": {
-          "en": "Update a delivery artifact",
-          "de": "Liefer-Artefakt aktualisieren"
-        },
-        "description": {
-          "en": "Edit an existing delivery artifact — title, summary, URLs, status, contact, or order attachment.",
-          "de": "Ein bestehendes Lieferartefakt bearbeiten — Titel, Summary, URLs, Status, Kontakt oder Order."
-        },
-        "bot": "Use this to change artifact fields or mark status ready/archived. To send to the client, use artifact-deliver instead.",
-        "vars": {
-          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
-          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
-          "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
-        },
-        "actions": [
-          {
-            "type": "collect",
-            "label": {
-              "en": "Update artifact",
-              "de": "Artefakt aktualisieren"
-            },
-            "destination": {
-              "url": "https://api.joai.ai/v1/artifacts/{{artifactId}}",
-              "method": "PATCH",
-              "headers": {
-                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
-                "X-Team": "{{team}}"
-              }
-            },
-            "inputs": [
-              {
-                "name": "Artifact ID",
-                "as": "artifactId",
-                "type": "string",
-                "position": "url:artifactId",
-                "source": "field",
-                "required": true
-              },
-              {
-                "name": "Title",
-                "as": "title",
-                "type": "string",
-                "source": "field",
-                "required": false
-              },
-              {
-                "name": "Type",
-                "as": "type",
-                "type": "string",
-                "source": "field",
-                "required": false,
-                "options": {
-                  "agreement": "Agreement",
-                  "offer": "Offer",
-                  "concept": "Concept",
-                  "update": "Update",
-                  "demo": "Demo",
-                  "file": "File",
-                  "other": "Other"
-                }
-              },
-              {
-                "name": "Status",
-                "as": "status",
-                "type": "string",
-                "source": "field",
-                "required": false,
-                "options": {
-                  "draft": "Draft",
-                  "ready": "Ready",
-                  "sent": "Sent",
-                  "archived": "Archived"
-                }
-              },
-              {
-                "name": "Summary",
-                "as": "summary",
-                "type": "string",
-                "source": "field",
-                "required": false
-              },
-              {
-                "name": "Blocks",
-                "as": "blocks",
-                "type": "string",
-                "source": "field",
-                "required": false,
-                "description": {
-                  "en": "Replacement JSON array of ordered document blocks: id, type, data.",
-                  "de": "Ersetzendes JSON-Array geordneter Dokumentblöcke: id, type, data."
-                },
-                "bot": "When supplied, this replaces the full structured document. Supported types: heading, richText, metrics, table, callout, actions, media, divider."
-              },
-              {
-                "name": "URL",
-                "as": "url",
-                "type": "string",
-                "source": "field",
-                "required": false
-              },
-              {
-                "name": "Password",
-                "as": "password",
-                "type": "string",
-                "source": "field",
-                "required": false
-              },
-              {
-                "name": "Contact",
-                "as": "contactId",
-                "type": "string",
-                "source": "field",
-                "required": false
-              },
-              {
-                "name": "Order ID",
-                "as": "orderId",
-                "type": "string",
-                "source": "field",
-                "required": false
-              },
-              {
-                "name": "Team",
-                "as": "team",
-                "type": "string",
-                "source": "field",
-                "required": false,
-                "default": "{{JOAI_TEAM_SLUG}}",
-                "description": {
-                  "en": "Team slug for this action. Defaults to the current team.",
-                  "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team."
-                },
-                "bot": "The slug of the team to operate on. Omit to use the current team."
-              }
-            ],
-            "output": {
-              "id": "out.data.id",
-              "title": "out.data.title",
-              "status": "out.data.status"
-            }
-          }
-        ],
-        "output": {
-          "ARTIFACT_ID": "out.1.id",
-          "ARTIFACT_TITLE": "out.1.title"
-        },
-        "messages": {
-          "success": {
-            "en": "Artifact '{{ARTIFACT_TITLE}}' updated.",
-            "de": "Artefakt '{{ARTIFACT_TITLE}}' aktualisiert."
-          }
-        }
-      },
-      "extras": {
-        "keywords": {
-          "en": [
-            "update artifact",
-            "edit deliverable",
-            "mark ready"
-          ],
-          "de": [
-            "Artefakt aktualisieren",
-            "Lieferung bearbeiten",
-            "ready setzen"
-          ]
-        },
-        "useCases": {
-          "en": [
-            "Change artifact URLs or mark an artifact ready before delivery"
-          ],
-          "de": [
-            "Artefakt-URLs ändern oder vor der Lieferung auf ready setzen"
-          ]
-        },
-        "category": "communication",
-        "faq": {
-          "en": [
-            {
-              "question": "Can I mark an artifact ready without sending?",
-              "answer": "Yes. Set status to ready, then use artifact-deliver when you want to send."
-            },
-            {
-              "question": "Does update send a message?",
-              "answer": "No. Use artifact-deliver to draft and send."
-            }
-          ],
-          "de": [
-            {
-              "question": "Kann ich ready setzen ohne zu senden?",
-              "answer": "Ja. Setze status auf ready und nutze danach artifact-deliver zum Senden."
-            },
-            {
-              "question": "Sendet update eine Nachricht?",
-              "answer": "Nein. Zum Entwerfen und Senden nutze artifact-deliver."
-            }
-          ]
-        }
-      }
-    },
-    {
-      "key": "none:joai-metrics-query",
-      "identifier": "@joai-metrics-query",
-      "alias": "joai-metrics-query",
-      "chain": "none",
-      "hash": "64239a88a3e26f56bab89adfce394604c40806b41738a14fec5129827dfa7a19",
-      "checksum": "64239a88a3e26f56bab89adfce394604c40806b41738a14fec5129827dfa7a19",
-      "name": "JoAi: Query Metrics",
-      "title": {
-        "en": "Query metrics",
-        "de": "Metriken abfragen",
-        "es": "Consultar métricas",
-        "fr": "Consulter les métriques",
-        "ro": "Interoghează metrici",
-        "it": "Consulta metriche"
-      },
-      "description": {
-        "en": "Read normalized metrics for an explicit source, resource, and period. Cloudflare is the initial provider.",
-        "de": "Lies normalisierte Metriken für eine explizite Quelle, Ressource und einen Zeitraum. Cloudflare ist der erste Provider.",
-        "es": "Consulta métricas normalizadas para una fuente, un recurso y un período explícitos. Cloudflare es el proveedor inicial.",
-        "fr": "Consulte des métriques normalisées pour une source, une ressource et une période explicites. Cloudflare est le premier fournisseur.",
-        "ro": "Citește metrici normalizate pentru o sursă, o resursă și o perioadă explicite. Cloudflare este primul furnizor.",
-        "it": "Leggi metriche normalizzate per una fonte, una risorsa e un periodo espliciti. Cloudflare è il primo provider."
-      },
-      "preview": null,
-      "creator": "github:JoAiHQ/warps",
-      "privileges": [],
-      "listed": true,
-      "visibility": "public",
-      "primaryAddress": null,
-      "primaryFunc": null,
-      "brand": {
-        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
-        "slug": "joai",
-        "active": true,
-        "protocol": "brand:0.2.0",
-        "name": "JoAi",
-        "description": {
-          "en": "JoAi is a platform for creating and managing your own AI agents.",
-          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
-          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
-          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
-          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
-        },
-        "logo": {
-          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
-        },
-        "urls": {
-          "web": "https://joai.ai"
-        },
-        "colors": {
-          "primary": "#98FF98",
-          "secondary": "#FFFF66"
-        }
-      },
-      "warp": {
-        "protocol": "warp:3.0.0",
-        "name": "JoAi: Query Metrics",
-        "title": {
-          "en": "Query metrics",
-          "de": "Metriken abfragen",
-          "es": "Consultar métricas",
-          "fr": "Consulter les métriques",
-          "ro": "Interoghează metrici",
-          "it": "Consulta metriche"
-        },
-        "description": {
-          "en": "Read normalized metrics for an explicit source, resource, and period. Cloudflare is the initial provider.",
-          "de": "Lies normalisierte Metriken für eine explizite Quelle, Ressource und einen Zeitraum. Cloudflare ist der erste Provider.",
-          "es": "Consulta métricas normalizadas para una fuente, un recurso y un período explícitos. Cloudflare es el proveedor inicial.",
-          "fr": "Consulte des métriques normalisées pour une source, une ressource et une période explicites. Cloudflare est le premier fournisseur.",
-          "ro": "Citește metrici normalizate pentru o sursă, o resursă și o perioadă explicite. Cloudflare este primul furnizor.",
-          "it": "Leggi metriche normalizzate per una fonte, una risorsa e un periodo espliciti. Cloudflare è il primo provider."
-        },
-        "bot": "Use this to obtain source-backed facts before creating a client update. Report requests and page views exactly as returned; do not call them visitors.",
-        "vars": {
-          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
-          "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
-        },
-        "actions": [
-          {
-            "type": "collect",
-            "label": {
-              "en": "Query metrics",
-              "de": "Metriken abfragen",
-              "es": "Consultar métricas",
-              "fr": "Consulter les métriques",
-              "ro": "Interoghează metricile",
-              "it": "Consulta metriche"
-            },
-            "destination": {
-              "url": "https://api.joai.ai/v1/metrics",
+              "url": "https://api.joai.ai/v1/campaigns/audience-preview?campaignId={{campaignId}}&channel={{channel}}&segmentId={{segmentId}}&tags={{tags}}&contactIds={{contactIds}}",
               "method": "GET",
               "headers": {
                 "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
@@ -655,47 +89,70 @@
             },
             "inputs": [
               {
-                "name": "Source",
-                "as": "source",
+                "name": "Campaign ID",
+                "as": "campaignId",
                 "type": "string",
+                "position": "query",
                 "source": "field",
-                "required": true,
-                "default": "cloudflare",
+                "required": false,
+                "description": {
+                  "en": "Existing campaign hashid — uses that campaign's channel and audience",
+                  "de": "Hashid einer bestehenden Kampagne — nutzt deren Kanal und Zielgruppe"
+                },
+                "bot": "Prefer this when previewing before send_campaign. Omit when previewing by channel + audience fields."
+              },
+              {
+                "name": "Channel",
+                "as": "channel",
+                "type": "string",
+                "position": "query",
+                "source": "field",
+                "required": false,
                 "options": {
-                  "cloudflare": "Cloudflare"
+                  "email": "Email",
+                  "whatsapp": "WhatsApp",
+                  "sms": "SMS",
+                  "push": "Push"
+                },
+                "description": {
+                  "en": "Delivery channel (required when campaignId is omitted)",
+                  "de": "Versandkanal (erforderlich ohne campaignId)"
                 }
               },
               {
-                "name": "Resource",
-                "as": "resource",
+                "name": "Segment ID",
+                "as": "segmentId",
                 "type": "string",
+                "position": "query",
                 "source": "field",
-                "required": true,
+                "required": false,
                 "description": {
-                  "en": "Provider resource identifier. For Cloudflare, use the zone tag.",
-                  "de": "Ressourcenkennung des Providers. Für Cloudflare den Zone-Tag verwenden."
+                  "en": "Saved segment hashid to preview",
+                  "de": "Hashid eines gespeicherten Segments"
                 }
               },
               {
-                "name": "From",
-                "as": "from",
+                "name": "Tags",
+                "as": "tags",
                 "type": "string",
+                "position": "query",
                 "source": "field",
-                "required": true,
+                "required": false,
                 "description": {
-                  "en": "Inclusive start date, YYYY-MM-DD",
-                  "de": "Inklusives Startdatum, JJJJ-MM-TT"
+                  "en": "Comma-separated tags — contacts with any of these",
+                  "de": "Kommagetrennte Tags — Kontakte mit einem dieser Tags"
                 }
               },
               {
-                "name": "To",
-                "as": "to",
+                "name": "Contact IDs",
+                "as": "contactIds",
                 "type": "string",
+                "position": "query",
                 "source": "field",
-                "required": true,
+                "required": false,
                 "description": {
-                  "en": "Inclusive end date, YYYY-MM-DD",
-                  "de": "Inklusives Enddatum, JJJJ-MM-TT"
+                  "en": "Comma-separated contact hashids to preview",
+                  "de": "Kommagetrennte Kontakt-Hashids"
                 }
               },
               {
@@ -706,70 +163,516 @@
                 "required": false,
                 "default": "{{JOAI_TEAM_SLUG}}",
                 "description": {
-                  "en": "Team slug. Uses the current team by default.",
-                  "de": "Team-Slug. Standardmäßig wird das aktuelle Team verwendet."
-                }
+                  "en": "Team slug for this action. Defaults to the current team.",
+                  "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team."
+                },
+                "bot": "The slug of the team to operate on. Omit to use the current team."
               }
-            ]
+            ],
+            "output": {
+              "total": "out.data.total",
+              "sendable": "out.data.sendable",
+              "willSkip": "out.data.willSkip",
+              "reasons": "out.data.reasons"
+            }
           }
         ],
         "output": {
-          "METRICS": "out.data.metrics",
-          "FROM": "out.data.from",
-          "TO": "out.data.to"
+          "TOTAL": "out.1.total",
+          "SENDABLE": "out.1.sendable",
+          "WILL_SKIP": "out.1.willSkip",
+          "REASONS": "out.1.reasons"
         },
         "messages": {
           "success": {
-            "en": "Metrics loaded.",
-            "de": "Metriken geladen.",
-            "es": "Métricas cargadas.",
-            "fr": "Métriques chargées.",
-            "ro": "Metrici încărcate.",
-            "it": "Metriche caricate."
+            "en": "Audience: {{SENDABLE}} sendable of {{TOTAL}} ({{WILL_SKIP}} will skip).",
+            "de": "Zielgruppe: {{SENDABLE}} sendbar von {{TOTAL}} ({{WILL_SKIP}} werden übersprungen)."
           }
         }
       },
       "extras": {
         "keywords": {
           "en": [
-            "metrics",
-            "Cloudflare analytics",
-            "page views",
-            "reporting"
+            "preview audience",
+            "campaign recipients",
+            "who will receive",
+            "sendable contacts",
+            "skip reasons"
           ],
           "de": [
-            "Metriken",
-            "Cloudflare Analytics",
-            "Seitenaufrufe",
-            "Reporting"
+            "Zielgruppe prüfen",
+            "Kampagnen-Empfänger",
+            "wer erhält",
+            "sendbare Kontakte",
+            "Übersprungen"
           ]
         },
         "useCases": {
           "en": [
-            "Collect source-backed facts for a client update",
-            "Compare normalized metrics for a chosen period"
+            "Check how many contacts will receive a draft campaign before sending",
+            "Preview sendable vs skipped for a segment or tag audience"
           ],
           "de": [
-            "Quellenbasierte Fakten für ein Kunden-Update sammeln",
-            "Normalisierte Metriken für einen gewählten Zeitraum vergleichen"
+            "Vor dem Versand prüfen, wie viele Kontakte eine Entwurfs-Kampagne erhalten",
+            "Sendbar vs. übersprungen für ein Segment oder Tag-Zielgruppe prüfen"
           ]
         },
-        "category": "analytics",
+        "category": "communication",
         "faq": {
           "en": [
             {
-              "question": "Does this estimate visitors?",
-              "answer": "No. It reports the normalized requests and page views returned by Cloudflare."
+              "question": "When should I use this?",
+              "answer": "Call it before send_campaign (or before create) to see total, sendable, and skip reasons such as pending consent or missing channel."
+            },
+            {
+              "question": "Campaign or raw audience?",
+              "answer": "Pass campaignId for an existing campaign, or channel plus segmentId, tags, or contactIds."
             }
           ],
           "de": [
             {
-              "question": "Schätzt dies Besucher?",
-              "answer": "Nein. Es liefert die von Cloudflare zurückgegebenen normalisierten Anfragen und Seitenaufrufe."
+              "question": "Wann nutze ich das?",
+              "answer": "Vor send_campaign (oder vor dem Erstellen), um total, sendable und Skip-Gründe wie ausstehende Einwilligung oder fehlenden Kanal zu sehen."
+            },
+            {
+              "question": "Kampagne oder Roh-Zielgruppe?",
+              "answer": "campaignId für eine bestehende Kampagne, oder channel plus segmentId, tags oder contactIds."
             }
           ]
         }
       }
+    },
+    {
+      "key": "none:joai-campaign-send",
+      "identifier": "@joai-campaign-send",
+      "alias": "joai-campaign-send",
+      "chain": "none",
+      "hash": "d8829f0f355bd75c17798366c555e1ed98dd8d2ace19ec7407b6faac72517912",
+      "checksum": "d8829f0f355bd75c17798366c555e1ed98dd8d2ace19ec7407b6faac72517912",
+      "name": "JoAi: Send Campaign",
+      "title": {
+        "en": "Send a campaign",
+        "de": "Kampagne senden",
+        "fr": "Envoyer une campagne",
+        "es": "Enviar una campaña",
+        "it": "Invia una campagna",
+        "ro": "Trimite o campanie"
+      },
+      "description": {
+        "en": "Start sending a draft campaign to its audience. The campaign must exist and be in draft status.",
+        "de": "Starte den Versand einer Entwurfs-Kampagne an die Zielgruppe. Die Kampagne muss existieren und den Status Entwurf haben.",
+        "fr": "Lancez l'envoi d'une campagne brouillon à son audience. La campagne doit exister et être en statut brouillon.",
+        "es": "Inicia el envío de una campaña borrador a su audiencia. La campaña debe existir y estar en estado borrador.",
+        "it": "Avvia l'invio di una campagna bozza al suo pubblico. La campagna deve esistere e essere in stato bozza.",
+        "ro": "Începe trimiterea unei campanii schiță către audiența sa. Campania trebuie să existe și să fie în stadiul de schiță."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: Send Campaign",
+        "title": {
+          "en": "Send a campaign",
+          "de": "Kampagne senden",
+          "fr": "Envoyer une campagne",
+          "es": "Enviar una campaña",
+          "it": "Invia una campagna",
+          "ro": "Trimite o campanie"
+        },
+        "description": {
+          "en": "Start sending a draft campaign to its audience. The campaign must exist and be in draft status.",
+          "de": "Starte den Versand einer Entwurfs-Kampagne an die Zielgruppe. Die Kampagne muss existieren und den Status Entwurf haben.",
+          "fr": "Lancez l'envoi d'une campagne brouillon à son audience. La campagne doit exister et être en statut brouillon.",
+          "es": "Inicia el envío de una campaña borrador a su audiencia. La campaña debe existir y estar en estado borrador.",
+          "it": "Avvia l'invio di una campagna bozza al suo pubblico. La campagna deve esistere e essere in stato bozza.",
+          "ro": "Începe trimiterea unei campanii schiță către audiența sa. Campania trebuie să existe și să fie în stadiul de schiță."
+        },
+        "bot": "Use when the user wants to send or start a campaign that was created as a draft. Ask for the campaign ID if not provided.",
+        "vars": {
+          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+          "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Send campaign",
+              "de": "Kampagne senden",
+              "fr": "Envoyer la campagne",
+              "es": "Enviar la campaña",
+              "it": "Invia la campagna",
+              "ro": "Trimite campania"
+            },
+            "destination": {
+              "url": "https://api.joai.ai/v1/campaigns/{{campaign_id}}/send",
+              "method": "POST",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+                "X-Team": "{{team}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Campaign ID",
+                "as": "campaign_id",
+                "description": {
+                  "en": "The hashid of the campaign to send",
+                  "de": "Die Hashid der zu sendenden Kampagne",
+                  "fr": "Le hashid de la campagne à envoyer",
+                  "es": "El hashid de la campaña a enviar",
+                  "it": "L'hashid della campagna da inviare",
+                  "ro": "Hashid-ul campaniei de trimis"
+                },
+                "bot": "The campaign hash ID. If the user refers to a campaign by name, list campaigns first to find the matching ID.",
+                "type": "string",
+                "position": "url:campaign_id",
+                "source": "field",
+                "required": true,
+                "min": 1
+              },
+              {
+                "name": "Scheduled at",
+                "as": "scheduledAt",
+                "description": {
+                  "en": "Optional ISO datetime to schedule the send (must be in the future). Omit to send immediately.",
+                  "de": "Optionales ISO-Datum/Uhrzeit für geplanten Versand (muss in der Zukunft liegen). Weglassen für sofortigen Versand."
+                },
+                "bot": "Use only when the user wants to schedule the campaign for later. Pass an ISO 8601 datetime in the future.",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "position": "payload:scheduledAt"
+              },
+              {
+                "name": "Team",
+                "as": "team",
+                "description": {
+                  "en": "Team slug of the campaign. Defaults to the current team.",
+                  "de": "Team-Slug der Kampagne. Standardmäßig das aktuelle Team.",
+                  "fr": "Slug d'équipe de la campagne. Par défaut l'équipe actuelle.",
+                  "es": "Slug del equipo de la campaña. Por defecto el equipo actual.",
+                  "it": "Slug del team della campagna. Predefinito: team attuale.",
+                  "ro": "Slug-ul echipei campaniei. Implicit echipa curentă."
+                },
+                "bot": "The slug of the team the campaign belongs to. Omit to use the current team.",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "default": "{{JOAI_TEAM_SLUG}}"
+              }
+            ],
+            "output": {
+              "id": "out.data.id",
+              "name": "out.data.name",
+              "status": "out.data.status",
+              "totalCount": "out.data.totalCount"
+            }
+          }
+        ],
+        "output": {
+          "CAMPAIGN_ID": "out.1.id",
+          "CAMPAIGN_NAME": "out.1.name",
+          "CAMPAIGN_STATUS": "out.1.status"
+        },
+        "messages": {
+          "success": {
+            "en": "Campaign '{{CAMPAIGN_NAME}}' is now {{CAMPAIGN_STATUS}}.",
+            "de": "Kampagne '{{CAMPAIGN_NAME}}' ist jetzt {{CAMPAIGN_STATUS}}.",
+            "fr": "La campagne « {{CAMPAIGN_NAME}} » est maintenant {{CAMPAIGN_STATUS}}.",
+            "es": "La campaña « {{CAMPAIGN_NAME}} » ahora está {{CAMPAIGN_STATUS}}.",
+            "it": "La campagna « {{CAMPAIGN_NAME}} » è ora {{CAMPAIGN_STATUS}}.",
+            "ro": "Campania „{{CAMPAIGN_NAME}}” este acum {{CAMPAIGN_STATUS}}."
+          },
+          "error": {
+            "en": "Failed to send campaign: {{MESSAGE}}",
+            "de": "Kampagne konnte nicht gesendet werden: {{MESSAGE}}"
+          }
+        }
+      },
+      "extras": {
+        "keywords": {
+          "en": [
+            "send campaign",
+            "start campaign",
+            "launch email",
+            "deliver messages",
+            "send newsletter"
+          ],
+          "de": [
+            "Kampagne senden",
+            "Kampagne starten",
+            "Newsletter versenden",
+            "Nachrichten zustellen"
+          ]
+        },
+        "useCases": {
+          "en": [
+            "Start sending a drafted email campaign to its audience",
+            "Launch a WhatsApp promo campaign you just created"
+          ],
+          "de": [
+            "Den Versand einer entworfenen E-Mail-Kampagne starten",
+            "Eine gerade erstellte WhatsApp-Aktion starten"
+          ]
+        },
+        "category": "communication",
+        "faq": {
+          "en": [
+            {
+              "question": "What happens after I send?",
+              "answer": "Messages are delivered to the campaign audience over time. Only draft (or approved WhatsApp) campaigns can be sent. Optional scheduledAt queues a future send."
+            },
+            {
+              "question": "Can I schedule a send?",
+              "answer": "Yes — pass scheduledAt as an ISO 8601 datetime in the future. Omit it to send immediately."
+            }
+          ],
+          "de": [
+            {
+              "question": "Was passiert nach dem Senden?",
+              "answer": "Die Nachrichten werden nach und nach an die Zielgruppe zugestellt. Nur Entwurfs-Kampagnen (oder freigegebene WhatsApp-Kampagnen) können gesendet werden. Optionales scheduledAt plant einen späteren Versand."
+            },
+            {
+              "question": "Kann ich den Versand planen?",
+              "answer": "Ja — scheduledAt als ISO-8601-Datum in der Zukunft. Weglassen für sofortigen Versand."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "key": "none:joai-contact-message-send",
+      "identifier": "@joai-contact-message-send",
+      "alias": "joai-contact-message-send",
+      "chain": "none",
+      "hash": "41f2e06a4eee1f9cb9443c83ffd2db0ffda4c19a8fa30cabe881824a294d04f8",
+      "checksum": "41f2e06a4eee1f9cb9443c83ffd2db0ffda4c19a8fa30cabe881824a294d04f8",
+      "name": "JoAi: Send Contact Message",
+      "title": {
+        "en": "Send message to contact",
+        "de": "Nachricht an Kontakt senden",
+        "es": "Send message to contact",
+        "fr": "Send message to contact",
+        "ro": "Send message to contact",
+        "it": "Send message to contact"
+      },
+      "description": {
+        "en": "Send a message to a contact on the chosen channel (email, SMS, WhatsApp, …).",
+        "de": "Nachricht an einen Kontakt über den gewählten Kanal senden (E-Mail, SMS, WhatsApp, …).",
+        "es": "Send a message to a contact on the chosen channel (email, SMS, WhatsApp, …).",
+        "fr": "Send a message to a contact on the chosen channel (email, SMS, WhatsApp, …).",
+        "ro": "Send a message to a contact on the chosen channel (email, SMS, WhatsApp, …).",
+        "it": "Send a message to a contact on the chosen channel (email, SMS, WhatsApp, …)."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: Send Contact Message",
+        "title": {
+          "en": "Send message to contact",
+          "de": "Nachricht an Kontakt senden",
+          "es": "Send message to contact",
+          "fr": "Send message to contact",
+          "ro": "Send message to contact",
+          "it": "Send message to contact"
+        },
+        "description": {
+          "en": "Send a message to a contact on the chosen channel (email, SMS, WhatsApp, …).",
+          "de": "Nachricht an einen Kontakt über den gewählten Kanal senden (E-Mail, SMS, WhatsApp, …).",
+          "es": "Send a message to a contact on the chosen channel (email, SMS, WhatsApp, …).",
+          "fr": "Send a message to a contact on the chosen channel (email, SMS, WhatsApp, …).",
+          "ro": "Send a message to a contact on the chosen channel (email, SMS, WhatsApp, …).",
+          "it": "Send a message to a contact on the chosen channel (email, SMS, WhatsApp, …)."
+        },
+        "bot": "Send a message to a contact. Provide contactId, recipientId, message; optionally subject, integration, campaignId, and team.",
+        "vars": {
+          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+          "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Send message",
+              "de": "Nachricht senden"
+            },
+            "destination": {
+              "url": "https://api.joai.ai/v1/agents/{{JOAI_AGENT_UUID}}/room/message",
+              "method": "POST",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+                "X-Team": "{{team}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Subject",
+                "as": "subject",
+                "description": {
+                  "en": "Email subject (optional for other channels)",
+                  "de": "E-Mail-Betreff (optional für andere Kanäle)"
+                },
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "position": "payload:subject"
+              },
+              {
+                "name": "Message",
+                "as": "message",
+                "description": {
+                  "en": "Message body to send",
+                  "de": "Nachrichtentext"
+                },
+                "type": "string",
+                "source": "field",
+                "required": true,
+                "position": "payload:message"
+              },
+              {
+                "name": "Contact",
+                "as": "contactId",
+                "description": {
+                  "en": "Contact to message",
+                  "de": "Kontakt für die Nachricht"
+                },
+                "type": "string",
+                "source": "field",
+                "required": true,
+                "position": "payload:contactId"
+              },
+              {
+                "name": "Recipient ID",
+                "as": "recipientId",
+                "description": {
+                  "en": "Email or phone to send to",
+                  "de": "E-Mail oder Telefon für den Versand"
+                },
+                "type": "string",
+                "source": "field",
+                "required": true,
+                "position": "payload:recipientId"
+              },
+              {
+                "name": "Integration",
+                "as": "integration",
+                "description": {
+                  "en": "Channel to send on (email, sms, whatsapp, …)",
+                  "de": "Kanal für den Versand (email, sms, whatsapp, …)"
+                },
+                "type": "string",
+                "source": "field",
+                "required": true,
+                "position": "payload:integration"
+              },
+              {
+                "name": "Campaign ID",
+                "as": "campaignId",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "position": "payload:campaignId"
+              },
+              {
+                "name": "Team",
+                "as": "team",
+                "type": "string",
+                "source": "hidden",
+                "required": false,
+                "default": "{{JOAI_TEAM_SLUG}}"
+              },
+              {
+                "name": "HTML",
+                "as": "html",
+                "description": {
+                  "en": "Send email body as HTML (use for campaign HTML mode)",
+                  "de": "E-Mail-Body als HTML senden (für Kampagnen-HTML-Modus)"
+                },
+                "type": "boolean",
+                "source": "field",
+                "required": false,
+                "position": "payload:html"
+              }
+            ]
+          }
+        ],
+        "messages": {
+          "success": {
+            "en": "Message sent.",
+            "de": "Nachricht gesendet.",
+            "es": "Message sent.",
+            "fr": "Message sent.",
+            "ro": "Message sent.",
+            "it": "Message sent."
+          },
+          "error": {
+            "en": "Failed to send message: {{MESSAGE}}",
+            "de": "Nachricht konnte nicht gesendet werden: {{MESSAGE}}"
+          }
+        }
+      },
+      "extras": null
     },
     {
       "key": "none:poll-results",
