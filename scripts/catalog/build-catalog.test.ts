@@ -2,12 +2,29 @@
 import { describe, it, expect } from 'vitest'
 import path from 'path'
 import { fileURLToPath } from 'url'
-import { isDraftFile, isPrivateFile, getAliasFromFileName, ensureNoInjectPlaceholders } from './build-catalog.js'
+import { isDraftFile, isPrivateFile, getAliasFromFileName, ensureNoInjectPlaceholders, stripNonWarpFields } from './build-catalog.js'
 import { buildDistributionCatalog, validateDistributionCatalog } from './distribution.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 const REPO_ROOT = path.resolve(__dirname, '../../')
+
+describe('stripNonWarpFields', () => {
+  it('preserves hook and cli fields used by WhatsApp Personal sync', () => {
+    const stripped = stripNonWarpFields({
+      protocol: 'warp:3.0.0',
+      name: 'WhatsApp: Sync Personal',
+      hook: { source: 'wacli' },
+      cli: { mode: 'session' },
+      actions: [],
+      notAWarpField: true,
+    })
+
+    expect(stripped.hook).toEqual({ source: 'wacli' })
+    expect(stripped.cli).toEqual({ mode: 'session' })
+    expect(stripped).not.toHaveProperty('notAWarpField')
+  })
+})
 
 describe('isPrivateFile', () => {
   it('returns true for #-prefixed filenames', () => {
