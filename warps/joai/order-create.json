@@ -17,7 +17,7 @@
     "it": "Crea un ordine o un'offerta per un cliente. Supporta servizi di catalogo (per nome) o righe personalizzate con descrizione libera, quantità e prezzo unitario in centesimi. Genera fattura e link di pagamento.",
     "ro": "Creează o comandă sau o ofertă pentru un client. Suportă servicii din catalog (după nume) sau linii personalizate cu descriere liberă, cantitate și preț unitar în cenți. Generează factură și link de plată."
   },
-  "bot": "Use when the user wants to create a billing order, invoice, or quote (Angebot). Prefer items JSON for custom work (name + unitPrice in cents + quantity). Use billItem only when matching a catalog service by name. Supports type \"order\" (default) or \"quote\".",
+  "bot": "Use when the user wants to create a billing order, invoice, or quote (Angebot). Prefer items JSON for custom work (name + unitPrice in cents + quantity). Use billItem only when matching a catalog service by name. Supports type \"order\" (default) or \"quote\". Optional invoiceDate and serviceDate (YYYY-MM-DD); serviceDate is Leistungsdatum and defaults to invoice date.",
   "vars": {
     "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
     "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
@@ -119,6 +119,30 @@
             "en": "Price mode — \"net\" for prices excl. VAT, \"gross\" (default) for prices incl. VAT",
             "de": "Preismodus — \"net\" für Preise zzgl. MwSt., \"gross\" (Standard) für Preise inkl. MwSt."
           }
+        },
+        {
+          "name": "InvoiceDate",
+          "as": "invoiceDate",
+          "type": "string",
+          "source": "field",
+          "position": "local",
+          "required": false,
+          "description": {
+            "en": "Invoice date (YYYY-MM-DD). Defaults to creation date.",
+            "de": "Rechnungsdatum (YYYY-MM-DD). Standardmäßig das Erstellungsdatum."
+          }
+        },
+        {
+          "name": "ServiceDate",
+          "as": "serviceDate",
+          "type": "string",
+          "source": "field",
+          "position": "local",
+          "required": false,
+          "description": {
+            "en": "Service/supply date (YYYY-MM-DD, Leistungsdatum). Defaults to invoice date when omitted.",
+            "de": "Leistungsdatum (YYYY-MM-DD). Standardmäßig das Rechnungsdatum."
+          }
         }
       ]
     },
@@ -194,6 +218,18 @@
           "type": "string",
           "source": "hidden",
           "default": "{{priceMode}}"
+        },
+        {
+          "as": "invoiceDate",
+          "type": "string",
+          "source": "hidden",
+          "default": "{{invoiceDate}}"
+        },
+        {
+          "as": "serviceDate",
+          "type": "string",
+          "source": "hidden",
+          "default": "{{serviceDate}}"
         },
         {
           "name": "Team",
