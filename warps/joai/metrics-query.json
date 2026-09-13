@@ -1,0 +1,22 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Query Metrics",
+  "title": { "en": "Query metrics", "de": "Metriken abfragen", "es": "Consultar métricas", "fr": "Consulter les métriques", "ro": "Interoghează metrici", "it": "Consulta metriche" },
+  "description": { "en": "Read normalized metrics for an explicit source, resource, and period. Cloudflare is the initial provider.", "de": "Lies normalisierte Metriken für eine explizite Quelle, Ressource und einen Zeitraum. Cloudflare ist der erste Provider.", "es": "Consulta métricas normalizadas para una fuente, un recurso y un período explícitos. Cloudflare es el proveedor inicial.", "fr": "Consulte des métriques normalisées pour une source, une ressource et une période explicites. Cloudflare est le premier fournisseur.", "ro": "Citește metrici normalizate pentru o sursă, o resursă și o perioadă explicite. Cloudflare este primul furnizor.", "it": "Leggi metriche normalizzate per una fonte, una risorsa e un periodo espliciti. Cloudflare è il primo provider." },
+  "bot": "Use this to obtain source-backed facts before creating a client update. Report requests and page views exactly as returned; do not call them visitors.",
+  "vars": { "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY", "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG" },
+  "actions": [{
+    "type": "collect",
+    "label": { "en": "Query metrics", "de": "Metriken abfragen", "es": "Consultar métricas", "fr": "Consulter les métriques", "ro": "Interoghează metricile", "it": "Consulta metriche" },
+    "destination": { "url": "INJECT:API_BASE/v1/metrics", "method": "GET", "headers": { "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}", "X-Team": "{{team}}" } },
+    "inputs": [
+      { "name": "Source", "as": "source", "type": "string", "source": "field", "required": true, "default": "cloudflare", "options": { "cloudflare": "Cloudflare" } },
+      { "name": "Resource", "as": "resource", "type": "string", "source": "field", "required": true, "description": { "en": "Provider resource identifier. For Cloudflare, use the zone tag.", "de": "Ressourcenkennung des Providers. Für Cloudflare den Zone-Tag verwenden." } },
+      { "name": "From", "as": "from", "type": "string", "source": "field", "required": true, "description": { "en": "Inclusive start date, YYYY-MM-DD", "de": "Inklusives Startdatum, JJJJ-MM-TT" } },
+      { "name": "To", "as": "to", "type": "string", "source": "field", "required": true, "description": { "en": "Inclusive end date, YYYY-MM-DD", "de": "Inklusives Enddatum, JJJJ-MM-TT" } },
+      { "name": "Team", "as": "team", "type": "string", "source": "field", "required": false, "default": "{{JOAI_TEAM_SLUG}}", "description": { "en": "Team slug. Uses the current team by default.", "de": "Team-Slug. Standardmäßig wird das aktuelle Team verwendet." } }
+    ]
+  }],
+  "output": { "METRICS": "out.data.metrics", "FROM": "out.data.from", "TO": "out.data.to" },
+  "messages": { "success": { "en": "Metrics loaded.", "de": "Metriken geladen.", "es": "Métricas cargadas.", "fr": "Métriques chargées.", "ro": "Metrici încărcate.", "it": "Metriche caricate." } }
+}

@@ -1,6 +1,12 @@
 import type { WarpExtras } from '../types'
 
 export const meta: Record<string, WarpExtras> = {
+  'metrics-query': {
+    keywords: { en: ['metrics', 'Cloudflare analytics', 'page views', 'reporting'], de: ['Metriken', 'Cloudflare Analytics', 'Seitenaufrufe', 'Reporting'] },
+    useCases: { en: ['Collect source-backed facts for a client update', 'Compare normalized metrics for a chosen period'], de: ['Quellenbasierte Fakten für ein Kunden-Update sammeln', 'Normalisierte Metriken für einen gewählten Zeitraum vergleichen'] },
+    category: 'analytics',
+    faq: { en: [{ question: 'Does this estimate visitors?', answer: 'No. It reports the normalized requests and page views returned by Cloudflare.' }], de: [{ question: 'Schätzt dies Besucher?', answer: 'Nein. Es liefert die von Cloudflare zurückgegebenen normalisierten Anfragen und Seitenaufrufe.' }] },
+  },
   'content-get': {
     keywords: { en: ['view website content', 'JoAi content record', 'website content version'], de: ['Website-Inhalt ansehen', 'JoAi Inhaltsbereich', 'Website Inhaltsversion'] },
     useCases: { en: ['Check a content record before editing it', 'Find the current version for a safe update', 'Inspect editable fields for a website section'], de: ['Einen Inhaltsbereich vor der Bearbeitung prüfen', 'Die aktuelle Version für eine sichere Änderung abrufen', 'Bearbeitbare Felder eines Website-Bereichs ansehen'] },
