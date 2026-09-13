@@ -1132,13 +1132,37 @@ export const meta: Record<string, WarpExtras> = {
     category: 'communication',
     faq: {
       en: [
-        { question: 'What happens after I send?', answer: 'Messages are delivered to the campaign audience over time. Only draft campaigns can be sent.' },
+        { question: 'What happens after I send?', answer: 'Messages are delivered to the campaign audience over time. Only draft (or approved WhatsApp) campaigns can be sent. Optional scheduledAt queues a future send.' },
+        { question: 'Can I schedule a send?', answer: 'Yes — pass scheduledAt as an ISO 8601 datetime in the future. Omit it to send immediately.' },
       ],
       de: [
-        { question: 'Was passiert nach dem Senden?', answer: 'Die Nachrichten werden nach und nach an die Zielgruppe zugestellt. Nur Entwurfs-Kampagnen können gesendet werden.' },
+        { question: 'Was passiert nach dem Senden?', answer: 'Die Nachrichten werden nach und nach an die Zielgruppe zugestellt. Nur Entwurfs-Kampagnen (oder freigegebene WhatsApp-Kampagnen) können gesendet werden. Optionales scheduledAt plant einen späteren Versand.' },
+        { question: 'Kann ich den Versand planen?', answer: 'Ja — scheduledAt als ISO-8601-Datum in der Zukunft. Weglassen für sofortigen Versand.' },
       ],
     },
   },
+  'campaign-audience-preview': {
+    keywords: {
+      en: ['preview audience', 'campaign recipients', 'who will receive', 'sendable contacts', 'skip reasons'],
+      de: ['Zielgruppe prüfen', 'Kampagnen-Empfänger', 'wer erhält', 'sendbare Kontakte', 'Übersprungen'],
+    },
+    useCases: {
+      en: ['Check how many contacts will receive a draft campaign before sending', 'Preview sendable vs skipped for a segment or tag audience'],
+      de: ['Vor dem Versand prüfen, wie viele Kontakte eine Entwurfs-Kampagne erhalten', 'Sendbar vs. übersprungen für ein Segment oder Tag-Zielgruppe prüfen'],
+    },
+    category: 'communication',
+    faq: {
+      en: [
+        { question: 'When should I use this?', answer: 'Call it before send_campaign (or before create) to see total, sendable, and skip reasons such as pending consent or missing channel.' },
+        { question: 'Campaign or raw audience?', answer: 'Pass campaignId for an existing campaign, or channel plus segmentId, tags, or contactIds.' },
+      ],
+      de: [
+        { question: 'Wann nutze ich das?', answer: 'Vor send_campaign (oder vor dem Erstellen), um total, sendable und Skip-Gründe wie ausstehende Einwilligung oder fehlenden Kanal zu sehen.' },
+        { question: 'Kampagne oder Roh-Zielgruppe?', answer: 'campaignId für eine bestehende Kampagne, oder channel plus segmentId, tags oder contactIds.' },
+      ],
+    },
+  },
+
   'campaign-send-contact': {
     keywords: {
       en: ['send campaign to contact', 'send email to contact', 'form follow-up email', 'send one email'],

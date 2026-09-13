@@ -4,8 +4,8 @@
   "repo": "JoAiHQ/warps",
   "branch": "dev",
   "network": "devnet",
-  "commitSha": "4cd1af80a1a4a4dc725c4d3ed0b22b8d59819a46",
-  "generatedAt": "2026-09-13T13:12:15.437Z",
+  "commitSha": "52487ca8586d13620050cab447fe9fe2d0c4e108",
+  "generatedAt": "2026-09-13T15:27:16.554Z",
   "warps": [
     {
       "key": "arbitrum:omniset-deposit-arbitrum",
@@ -77513,6 +77513,240 @@
       "extras": null
     },
     {
+      "key": "none:joai-campaign-audience-preview",
+      "identifier": "@joai-campaign-audience-preview",
+      "alias": "joai-campaign-audience-preview",
+      "chain": "none",
+      "hash": "ddee6d4c703a829aa78d49f8a1c354fc3135670fa114baed76e046339749bc2f",
+      "checksum": "ddee6d4c703a829aa78d49f8a1c354fc3135670fa114baed76e046339749bc2f",
+      "name": "JoAi: Campaign Audience Preview",
+      "title": {
+        "en": "Preview campaign audience",
+        "de": "Kampagnen-Zielgruppe prüfen"
+      },
+      "description": {
+        "en": "Preview how many contacts are sendable vs skipped for a campaign or audience (pending consent, opted out, missing channel, approval skipped).",
+        "de": "Prüfe, wie viele Kontakte für eine Kampagne oder Zielgruppe sendbar vs. übersprungen sind (Einwilligung ausstehend, Opt-out, fehlender Kanal, Freigabe übersprungen)."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: Campaign Audience Preview",
+        "title": {
+          "en": "Preview campaign audience",
+          "de": "Kampagnen-Zielgruppe prüfen"
+        },
+        "description": {
+          "en": "Preview how many contacts are sendable vs skipped for a campaign or audience (pending consent, opted out, missing channel, approval skipped).",
+          "de": "Prüfe, wie viele Kontakte für eine Kampagne oder Zielgruppe sendbar vs. übersprungen sind (Einwilligung ausstehend, Opt-out, fehlender Kanal, Freigabe übersprungen)."
+        },
+        "bot": "Call this BEFORE send_campaign. Pass campaignId for an existing draft, or channel plus segmentId/tags/contactIds to preview an audience before creating. Use the counts to confirm sendable recipients and explain skips.",
+        "vars": {
+          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+          "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Preview audience",
+              "de": "Zielgruppe prüfen"
+            },
+            "destination": {
+              "url": "https://devnet-api.joai.ai/v1/campaigns/audience-preview?campaignId={{campaignId}}&channel={{channel}}&segmentId={{segmentId}}&tags={{tags}}&contactIds={{contactIds}}",
+              "method": "GET",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+                "X-Team": "{{team}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Campaign ID",
+                "as": "campaignId",
+                "type": "string",
+                "position": "query",
+                "source": "field",
+                "required": false,
+                "description": {
+                  "en": "Existing campaign hashid — uses that campaign's channel and audience",
+                  "de": "Hashid einer bestehenden Kampagne — nutzt deren Kanal und Zielgruppe"
+                },
+                "bot": "Prefer this when previewing before send_campaign. Omit when previewing by channel + audience fields."
+              },
+              {
+                "name": "Channel",
+                "as": "channel",
+                "type": "string",
+                "position": "query",
+                "source": "field",
+                "required": false,
+                "options": {
+                  "email": "Email",
+                  "whatsapp": "WhatsApp",
+                  "sms": "SMS",
+                  "push": "Push"
+                },
+                "description": {
+                  "en": "Delivery channel (required when campaignId is omitted)",
+                  "de": "Versandkanal (erforderlich ohne campaignId)"
+                }
+              },
+              {
+                "name": "Segment ID",
+                "as": "segmentId",
+                "type": "string",
+                "position": "query",
+                "source": "field",
+                "required": false,
+                "description": {
+                  "en": "Saved segment hashid to preview",
+                  "de": "Hashid eines gespeicherten Segments"
+                }
+              },
+              {
+                "name": "Tags",
+                "as": "tags",
+                "type": "string",
+                "position": "query",
+                "source": "field",
+                "required": false,
+                "description": {
+                  "en": "Comma-separated tags — contacts with any of these",
+                  "de": "Kommagetrennte Tags — Kontakte mit einem dieser Tags"
+                }
+              },
+              {
+                "name": "Contact IDs",
+                "as": "contactIds",
+                "type": "string",
+                "position": "query",
+                "source": "field",
+                "required": false,
+                "description": {
+                  "en": "Comma-separated contact hashids to preview",
+                  "de": "Kommagetrennte Kontakt-Hashids"
+                }
+              },
+              {
+                "name": "Team",
+                "as": "team",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "default": "{{JOAI_TEAM_SLUG}}",
+                "description": {
+                  "en": "Team slug for this action. Defaults to the current team.",
+                  "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team."
+                },
+                "bot": "The slug of the team to operate on. Omit to use the current team."
+              }
+            ],
+            "output": {
+              "total": "out.data.total",
+              "sendable": "out.data.sendable",
+              "willSkip": "out.data.willSkip",
+              "reasons": "out.data.reasons"
+            }
+          }
+        ],
+        "output": {
+          "TOTAL": "out.1.total",
+          "SENDABLE": "out.1.sendable",
+          "WILL_SKIP": "out.1.willSkip",
+          "REASONS": "out.1.reasons"
+        },
+        "messages": {
+          "success": {
+            "en": "Audience: {{SENDABLE}} sendable of {{TOTAL}} ({{WILL_SKIP}} will skip).",
+            "de": "Zielgruppe: {{SENDABLE}} sendbar von {{TOTAL}} ({{WILL_SKIP}} werden übersprungen)."
+          }
+        }
+      },
+      "extras": {
+        "keywords": {
+          "en": [
+            "preview audience",
+            "campaign recipients",
+            "who will receive",
+            "sendable contacts",
+            "skip reasons"
+          ],
+          "de": [
+            "Zielgruppe prüfen",
+            "Kampagnen-Empfänger",
+            "wer erhält",
+            "sendbare Kontakte",
+            "Übersprungen"
+          ]
+        },
+        "useCases": {
+          "en": [
+            "Check how many contacts will receive a draft campaign before sending",
+            "Preview sendable vs skipped for a segment or tag audience"
+          ],
+          "de": [
+            "Vor dem Versand prüfen, wie viele Kontakte eine Entwurfs-Kampagne erhalten",
+            "Sendbar vs. übersprungen für ein Segment oder Tag-Zielgruppe prüfen"
+          ]
+        },
+        "category": "communication",
+        "faq": {
+          "en": [
+            {
+              "question": "When should I use this?",
+              "answer": "Call it before send_campaign (or before create) to see total, sendable, and skip reasons such as pending consent or missing channel."
+            },
+            {
+              "question": "Campaign or raw audience?",
+              "answer": "Pass campaignId for an existing campaign, or channel plus segmentId, tags, or contactIds."
+            }
+          ],
+          "de": [
+            {
+              "question": "Wann nutze ich das?",
+              "answer": "Vor send_campaign (oder vor dem Erstellen), um total, sendable und Skip-Gründe wie ausstehende Einwilligung oder fehlenden Kanal zu sehen."
+            },
+            {
+              "question": "Kampagne oder Roh-Zielgruppe?",
+              "answer": "campaignId für eine bestehende Kampagne, oder channel plus segmentId, tags oder contactIds."
+            }
+          ]
+        }
+      }
+    },
+    {
       "key": "none:joai-campaign-create",
       "identifier": "@joai-campaign-create",
       "alias": "joai-campaign-create",
@@ -78247,8 +78481,8 @@
       "identifier": "@joai-campaign-send",
       "alias": "joai-campaign-send",
       "chain": "none",
-      "hash": "acb4af992e16deb5c9db6b6716e39fe605e163a651cb7afbcf6239939d167ef8",
-      "checksum": "acb4af992e16deb5c9db6b6716e39fe605e163a651cb7afbcf6239939d167ef8",
+      "hash": "cfabfae1fb3f7ceaea1fe87f0df0216268bd96169a8fd0526834ba13eb795640",
+      "checksum": "cfabfae1fb3f7ceaea1fe87f0df0216268bd96169a8fd0526834ba13eb795640",
       "name": "JoAi: Send Campaign",
       "title": {
         "en": "Send a campaign",
@@ -78361,6 +78595,19 @@
                 "min": 1
               },
               {
+                "name": "Scheduled at",
+                "as": "scheduledAt",
+                "description": {
+                  "en": "Optional ISO datetime to schedule the send (must be in the future). Omit to send immediately.",
+                  "de": "Optionales ISO-Datum/Uhrzeit für geplanten Versand (muss in der Zukunft liegen). Weglassen für sofortigen Versand."
+                },
+                "bot": "Use only when the user wants to schedule the campaign for later. Pass an ISO 8601 datetime in the future.",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "position": "payload:scheduledAt"
+              },
+              {
                 "name": "Team",
                 "as": "team",
                 "description": {
@@ -78437,13 +78684,21 @@
           "en": [
             {
               "question": "What happens after I send?",
-              "answer": "Messages are delivered to the campaign audience over time. Only draft campaigns can be sent."
+              "answer": "Messages are delivered to the campaign audience over time. Only draft (or approved WhatsApp) campaigns can be sent. Optional scheduledAt queues a future send."
+            },
+            {
+              "question": "Can I schedule a send?",
+              "answer": "Yes — pass scheduledAt as an ISO 8601 datetime in the future. Omit it to send immediately."
             }
           ],
           "de": [
             {
               "question": "Was passiert nach dem Senden?",
-              "answer": "Die Nachrichten werden nach und nach an die Zielgruppe zugestellt. Nur Entwurfs-Kampagnen können gesendet werden."
+              "answer": "Die Nachrichten werden nach und nach an die Zielgruppe zugestellt. Nur Entwurfs-Kampagnen (oder freigegebene WhatsApp-Kampagnen) können gesendet werden. Optionales scheduledAt plant einen späteren Versand."
+            },
+            {
+              "question": "Kann ich den Versand planen?",
+              "answer": "Ja — scheduledAt als ISO-8601-Datum in der Zukunft. Weglassen für sofortigen Versand."
             }
           ]
         }
@@ -81276,8 +81531,8 @@
       "identifier": "@joai-contact-message-send",
       "alias": "joai-contact-message-send",
       "chain": "none",
-      "hash": "132421c962a065d6a12586803725d64b82996495b887b7f44f004b994503d7f5",
-      "checksum": "132421c962a065d6a12586803725d64b82996495b887b7f44f004b994503d7f5",
+      "hash": "a045aa5886a21106711b7e4d3fc95cf39832a0a12347ec06b1b7f16dc7c2d818",
+      "checksum": "a045aa5886a21106711b7e4d3fc95cf39832a0a12347ec06b1b7f16dc7c2d818",
       "name": "JoAi: Send Contact Message",
       "title": {
         "en": "Send message to contact",
@@ -81442,6 +81697,18 @@
                 "source": "hidden",
                 "required": false,
                 "default": "{{JOAI_TEAM_SLUG}}"
+              },
+              {
+                "name": "HTML",
+                "as": "html",
+                "description": {
+                  "en": "Send email body as HTML (use for campaign HTML mode)",
+                  "de": "E-Mail-Body als HTML senden (für Kampagnen-HTML-Modus)"
+                },
+                "type": "boolean",
+                "source": "field",
+                "required": false,
+                "position": "payload:html"
               }
             ]
           }
