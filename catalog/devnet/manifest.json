@@ -4,8 +4,8 @@
   "repo": "JoAiHQ/warps",
   "branch": "dev",
   "network": "devnet",
-  "commitSha": "52487ca8586d13620050cab447fe9fe2d0c4e108",
-  "generatedAt": "2026-09-13T15:27:16.554Z",
+  "commitSha": "f51031a307e39290255da3ef12a47c820a6768e0",
+  "generatedAt": "2026-09-13T16:29:44.800Z",
   "warps": [
     {
       "key": "arbitrum:omniset-deposit-arbitrum",
@@ -96641,8 +96641,8 @@
       "identifier": "@joai-order-create",
       "alias": "joai-order-create",
       "chain": "none",
-      "hash": "c458d96ac465a2289daff0bc2d4e120ffd8b1906ca6d47ae5fe80e525b4065a7",
-      "checksum": "c458d96ac465a2289daff0bc2d4e120ffd8b1906ca6d47ae5fe80e525b4065a7",
+      "hash": "89ad04edd875c9240a63633bc0649cfb1aa1a28797b922921b75d3687e78a372",
+      "checksum": "89ad04edd875c9240a63633bc0649cfb1aa1a28797b922921b75d3687e78a372",
       "name": "JoAi: Create Order",
       "title": {
         "en": "Create order",
@@ -96710,7 +96710,7 @@
           "it": "Crea un ordine o un'offerta per un cliente. Supporta servizi di catalogo (per nome) o righe personalizzate con descrizione libera, quantità e prezzo unitario in centesimi. Genera fattura e link di pagamento.",
           "ro": "Creează o comandă sau o ofertă pentru un client. Suportă servicii din catalog (după nume) sau linii personalizate cu descriere liberă, cantitate și preț unitar în cenți. Generează factură și link de plată."
         },
-        "bot": "Use when the user wants to create a billing order, invoice, or quote (Angebot). Prefer items JSON for custom work (name + unitPrice in cents + quantity). Use billItem only when matching a catalog service by name. Supports type \"order\" (default) or \"quote\".",
+        "bot": "Use when the user wants to create a billing order, invoice, or quote (Angebot). Prefer items JSON for custom work (name + unitPrice in cents + quantity). Use billItem only when matching a catalog service by name. Supports type \"order\" (default) or \"quote\". Optional invoiceDate and serviceDate (YYYY-MM-DD); serviceDate is Leistungsdatum and defaults to invoice date.",
         "vars": {
           "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
           "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
@@ -96812,6 +96812,30 @@
                   "en": "Price mode — \"net\" for prices excl. VAT, \"gross\" (default) for prices incl. VAT",
                   "de": "Preismodus — \"net\" für Preise zzgl. MwSt., \"gross\" (Standard) für Preise inkl. MwSt."
                 }
+              },
+              {
+                "name": "InvoiceDate",
+                "as": "invoiceDate",
+                "type": "string",
+                "source": "field",
+                "position": "local",
+                "required": false,
+                "description": {
+                  "en": "Invoice date (YYYY-MM-DD). Defaults to creation date.",
+                  "de": "Rechnungsdatum (YYYY-MM-DD). Standardmäßig das Erstellungsdatum."
+                }
+              },
+              {
+                "name": "ServiceDate",
+                "as": "serviceDate",
+                "type": "string",
+                "source": "field",
+                "position": "local",
+                "required": false,
+                "description": {
+                  "en": "Service/supply date (YYYY-MM-DD, Leistungsdatum). Defaults to invoice date when omitted.",
+                  "de": "Leistungsdatum (YYYY-MM-DD). Standardmäßig das Rechnungsdatum."
+                }
               }
             ]
           },
@@ -96889,6 +96913,18 @@
                 "default": "{{priceMode}}"
               },
               {
+                "as": "invoiceDate",
+                "type": "string",
+                "source": "hidden",
+                "default": "{{invoiceDate}}"
+              },
+              {
+                "as": "serviceDate",
+                "type": "string",
+                "source": "hidden",
+                "default": "{{serviceDate}}"
+              },
+              {
                 "name": "Team",
                 "as": "team",
                 "description": {
@@ -96930,13 +96966,16 @@
             "billing order",
             "generate invoice",
             "bill customer",
-            "order from products"
+            "order from products",
+            "service date",
+            "Leistungsdatum"
           ],
           "de": [
             "Bestellung erstellen",
             "Rechnung erstellen",
             "Kunde abrechnen",
-            "Produktbestellung"
+            "Produktbestellung",
+            "Leistungsdatum"
           ]
         },
         "useCases": {
@@ -97175,8 +97214,8 @@
       "identifier": "@joai-order-get",
       "alias": "joai-order-get",
       "chain": "none",
-      "hash": "e3418e642b0ba717f3b5729fc0e6a8b8aae043a7d091b10fbe58bbab7787e456",
-      "checksum": "e3418e642b0ba717f3b5729fc0e6a8b8aae043a7d091b10fbe58bbab7787e456",
+      "hash": "312eb58461aba50f8d8e35eb7f6fd23c9ca8a13a505a8e75005bcde801be7956",
+      "checksum": "312eb58461aba50f8d8e35eb7f6fd23c9ca8a13a505a8e75005bcde801be7956",
       "name": "JoAi: Get Order",
       "title": {
         "en": "Get order"
@@ -97287,7 +97326,9 @@
               "id": "out.data.id",
               "status": "out.data.status",
               "total": "out.data.total",
-              "paymentUrl": "out.data.paymentUrl"
+              "paymentUrl": "out.data.paymentUrl",
+              "invoiceDate": "out.data.invoiceDate",
+              "serviceDate": "out.data.serviceDate"
             }
           }
         ],
@@ -97295,7 +97336,9 @@
           "ORDER_ID": "out.1.id",
           "ORDER_STATUS": "out.1.status",
           "ORDER_TOTAL": "out.1.total",
-          "PAYMENT_URL": "out.1.paymentUrl"
+          "PAYMENT_URL": "out.1.paymentUrl",
+          "INVOICE_DATE": "out.1.invoiceDate",
+          "SERVICE_DATE": "out.1.serviceDate"
         },
         "messages": {
           "success": {
