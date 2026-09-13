@@ -94,7 +94,7 @@ const NON_INSCRIBED_FIELDS = new Set(['meta'])
 const VALID_WARP_FIELDS = new Set([
   'protocol', 'chain', 'name', 'title', 'description', 'bot', 'preview',
   'vars', 'actions', 'next', 'output', 'messages', 'ui', 'alerts',
-  'related', 'schedule', 'trigger', 'meta', 'sections',
+  'related', 'schedule', 'trigger', 'meta', 'sections', 'hook', 'cli',
 ])
 const CREATOR = 'github:JoAiHQ/warps'
 
@@ -384,7 +384,7 @@ export function ensureNoInjectPlaceholders(input: unknown): void {
   }
 }
 
-function stripNonWarpFields(raw: Dict): Dict {
+export function stripNonWarpFields(raw: Dict): Dict {
   const stripped: Dict = {}
   for (const key of Object.keys(raw)) {
     if (VALID_WARP_FIELDS.has(key)) {
