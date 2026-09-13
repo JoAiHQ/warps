@@ -749,8 +749,8 @@ export const meta: Record<string, WarpExtras> = {
   },
   'order-create': {
     keywords: {
-      en: ['create order', 'billing order', 'generate invoice', 'bill customer', 'order from products'],
-      de: ['Bestellung erstellen', 'Rechnung erstellen', 'Kunde abrechnen', 'Produktbestellung'],
+      en: ['create order', 'billing order', 'generate invoice', 'bill customer', 'order from products', 'service date', 'Leistungsdatum'],
+      de: ['Bestellung erstellen', 'Rechnung erstellen', 'Kunde abrechnen', 'Produktbestellung', 'Leistungsdatum'],
     },
     useCases: {
       en: ['Bill a customer for products used during a service call', 'Generate an order with invoice from team products'],
