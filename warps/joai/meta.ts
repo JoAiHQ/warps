@@ -1,6 +1,17 @@
 import type { WarpExtras } from '../types'
 
 export const meta: Record<string, WarpExtras> = {
+  'site-create': {
+    keywords: { en: ['create site', 'brandless site', 'portfolio website record'], de: ['Website anlegen', 'Website ohne Marke', 'Portfolio Website-Eintrag'] },
+    useCases: { en: ['Create a site record without provisioning a brand', 'Track an external client website in Sites'], de: ['Einen Website-Eintrag ohne Marke anlegen', 'Eine externe Kundenwebsite in Sites führen'] },
+    category: 'productivity',
+    faq: { en: [{ question: 'Does this publish a live sites.joai.ai app?', answer: 'No. Brandless create only stores a site record. Use site-provision for a live brand site.' }], de: [{ question: 'Veröffentlicht dies eine Live-App auf sites.joai.ai?', answer: 'Nein. Ohne Marke wird nur ein Eintrag gespeichert. Für eine Live-Markenseite site-provision verwenden.' }] },
+  },
+  'site-update': {
+    keywords: { en: ['update site', 'site metrics', 'monthly site report'], de: ['Website aktualisieren', 'Website-Metriken', 'monatlicher Website-Bericht'] },
+    useCases: { en: ['Attach a contact and metrics source/resource to a site', 'Enable or disable the monthly site report'], de: ['Kontakt und Metrik-Quelle/-Ressource an eine Website hängen', 'Monatsbericht aktivieren oder deaktivieren'] },
+    category: 'productivity',
+  },
   'metrics-query': {
     keywords: { en: ['metrics', 'Cloudflare analytics', 'page views', 'reporting'], de: ['Metriken', 'Cloudflare Analytics', 'Seitenaufrufe', 'Reporting'] },
     useCases: { en: ['Collect source-backed facts for a client update', 'Compare normalized metrics for a chosen period'], de: ['Quellenbasierte Fakten für ein Kunden-Update sammeln', 'Normalisierte Metriken für einen gewählten Zeitraum vergleichen'] },

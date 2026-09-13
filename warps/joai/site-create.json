@@ -1,0 +1,95 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Create Site",
+  "title": {
+    "en": "Create site",
+    "de": "Website anlegen",
+    "es": "Create site",
+    "fr": "Create site",
+    "ro": "Create site",
+    "it": "Create site"
+  },
+  "description": {
+    "en": "Create a site record for the team without linking a brand (portfolio / external websites).",
+    "de": "Legt einen Website-Eintrag für das Team ohne Marke an (Portfolio / externe Websites)."
+  },
+  "bot": "Create a brandless site with team + slug. Use site-provision when the site should be live on a Warp brand.",
+  "vars": {
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Create",
+        "de": "Anlegen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/sites",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Team",
+          "as": "team",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "default": "{{JOAI_TEAM_SLUG}}",
+          "position": "payload:team"
+        },
+        {
+          "name": "Slug",
+          "as": "slug",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:slug"
+        },
+        {
+          "name": "Contact",
+          "as": "contactId",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:contactId"
+        },
+        {
+          "name": "Metrics source",
+          "as": "metricsSource",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:metricsSource",
+          "description": {
+            "en": "Metrics provider key (same as metrics-query source)",
+            "de": "Metrik-Provider-Schlüssel (wie bei metrics-query source)"
+          }
+        },
+        {
+          "name": "Metrics resource",
+          "as": "metricsResource",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:metricsResource",
+          "description": {
+            "en": "Provider resource identifier for the site",
+            "de": "Ressourcenkennung des Providers für die Website"
+          }
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Site created.",
+      "de": "Website angelegt."
+    }
+  }
+}
