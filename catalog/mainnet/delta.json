@@ -4,10 +4,215 @@
   "repo": "JoAiHQ/warps",
   "branch": "main",
   "network": "mainnet",
-  "commitSha": "58439202dbad363b6959cf8d3700896e2066b5bb",
-  "committedAt": "2026-09-14T09:05:42.297Z",
-  "generatedAt": "2026-09-14T09:05:45.342Z",
+  "commitSha": "f684256958e1a68579fb0fe8727314497378b691",
+  "committedAt": "2026-09-14T12:48:14.370Z",
+  "generatedAt": "2026-09-14T12:48:16.295Z",
   "upserts": [
+    {
+      "key": "none:joai-contact-message-send",
+      "identifier": "@joai-contact-message-send",
+      "alias": "joai-contact-message-send",
+      "chain": "none",
+      "hash": "df6df0a1c6277301d37dbcbedb88b49aaa0de2a98f50582eae1c984a22426152",
+      "checksum": "df6df0a1c6277301d37dbcbedb88b49aaa0de2a98f50582eae1c984a22426152",
+      "name": "JoAi: Send Contact Message",
+      "title": {
+        "en": "Send message to contact",
+        "de": "Nachricht an Kontakt senden",
+        "es": "Send message to contact",
+        "fr": "Send message to contact",
+        "ro": "Send message to contact",
+        "it": "Send message to contact"
+      },
+      "description": {
+        "en": "Send a message to a contact on the chosen channel (email, SMS, WhatsApp, …).",
+        "de": "Nachricht an einen Kontakt über den gewählten Kanal senden (E-Mail, SMS, WhatsApp, …).",
+        "es": "Send a message to a contact on the chosen channel (email, SMS, WhatsApp, …).",
+        "fr": "Send a message to a contact on the chosen channel (email, SMS, WhatsApp, …).",
+        "ro": "Send a message to a contact on the chosen channel (email, SMS, WhatsApp, …).",
+        "it": "Send a message to a contact on the chosen channel (email, SMS, WhatsApp, …)."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: Send Contact Message",
+        "title": {
+          "en": "Send message to contact",
+          "de": "Nachricht an Kontakt senden",
+          "es": "Send message to contact",
+          "fr": "Send message to contact",
+          "ro": "Send message to contact",
+          "it": "Send message to contact"
+        },
+        "description": {
+          "en": "Send a message to a contact on the chosen channel (email, SMS, WhatsApp, …).",
+          "de": "Nachricht an einen Kontakt über den gewählten Kanal senden (E-Mail, SMS, WhatsApp, …).",
+          "es": "Send a message to a contact on the chosen channel (email, SMS, WhatsApp, …).",
+          "fr": "Send a message to a contact on the chosen channel (email, SMS, WhatsApp, …).",
+          "ro": "Send a message to a contact on the chosen channel (email, SMS, WhatsApp, …).",
+          "it": "Send a message to a contact on the chosen channel (email, SMS, WhatsApp, …)."
+        },
+        "bot": "Send a message to a contact. Provide contactId, recipientId, message; optionally subject, integration, campaignId, and team.",
+        "vars": {
+          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+          "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Send message",
+              "de": "Nachricht senden"
+            },
+            "destination": {
+              "url": "https://api.joai.ai/v1/agents/{{JOAI_AGENT_UUID}}/room/message",
+              "method": "POST",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+                "X-Team": "{{team}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Subject",
+                "as": "subject",
+                "description": {
+                  "en": "Email subject (optional for other channels)",
+                  "de": "E-Mail-Betreff (optional für andere Kanäle)"
+                },
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "position": "payload:subject"
+              },
+              {
+                "name": "Message",
+                "as": "message",
+                "description": {
+                  "en": "Message body to send",
+                  "de": "Nachrichtentext"
+                },
+                "type": "string",
+                "source": "field",
+                "required": true,
+                "position": "payload:message"
+              },
+              {
+                "name": "Contact",
+                "as": "contactId",
+                "description": {
+                  "en": "Contact to message",
+                  "de": "Kontakt für die Nachricht"
+                },
+                "type": "string",
+                "source": "field",
+                "required": true,
+                "position": "payload:contactId"
+              },
+              {
+                "name": "Recipient ID",
+                "as": "recipientId",
+                "description": {
+                  "en": "Email or phone to send to",
+                  "de": "E-Mail oder Telefon für den Versand"
+                },
+                "type": "string",
+                "source": "field",
+                "required": true,
+                "position": "payload:recipientId"
+              },
+              {
+                "name": "Integration",
+                "as": "integration",
+                "description": {
+                  "en": "Channel to send on (email, sms, whatsapp, …)",
+                  "de": "Kanal für den Versand (email, sms, whatsapp, …)"
+                },
+                "type": "string",
+                "source": "field",
+                "required": true,
+                "position": "payload:integration"
+              },
+              {
+                "name": "Campaign ID",
+                "as": "campaignId",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "position": "payload:campaignId"
+              },
+              {
+                "name": "HTML",
+                "as": "html",
+                "description": {
+                  "en": "Send email body as HTML (use for campaign HTML mode)",
+                  "de": "E-Mail-Body als HTML senden (für Kampagnen-HTML-Modus)"
+                },
+                "type": "bool",
+                "source": "field",
+                "required": false,
+                "default": false,
+                "position": "payload:html"
+              },
+              {
+                "name": "Team",
+                "as": "team",
+                "type": "string",
+                "source": "hidden",
+                "required": false,
+                "default": "{{JOAI_TEAM_SLUG}}"
+              }
+            ]
+          }
+        ],
+        "messages": {
+          "success": {
+            "en": "Message sent.",
+            "de": "Nachricht gesendet.",
+            "es": "Message sent.",
+            "fr": "Message sent.",
+            "ro": "Message sent.",
+            "it": "Message sent."
+          },
+          "error": {
+            "en": "Failed to send message: {{MESSAGE}}",
+            "de": "Nachricht konnte nicht gesendet werden: {{MESSAGE}}"
+          }
+        }
+      },
+      "extras": null
+    },
     {
       "key": "none:poll-results",
       "identifier": "@poll-results",
@@ -118,263 +323,6 @@
             "abi": "hash:6305d23fc0759ecaddbc37107385954f77f0b2df97eaf5ef4dc0d56c4c7c7337"
           }
         ]
-      },
-      "extras": null
-    },
-    {
-      "key": "none:whatsapp-auth",
-      "identifier": "@whatsapp-auth",
-      "alias": "whatsapp-auth",
-      "chain": "none",
-      "hash": "6955f895e67288a13025f7025fa191503693bf120098af54de32578d5719c815",
-      "checksum": "6955f895e67288a13025f7025fa191503693bf120098af54de32578d5719c815",
-      "name": "WhatsApp: Pair Personal",
-      "title": {
-        "en": "Pair Personal WhatsApp",
-        "de": "Persönliches WhatsApp koppeln",
-        "es": "Pair Personal WhatsApp",
-        "fr": "Pair Personal WhatsApp",
-        "ro": "Pair Personal WhatsApp",
-        "it": "Pair Personal WhatsApp"
-      },
-      "description": {
-        "en": "Open the WhatsApp pairing QR in a live terminal so you can scan it with your phone.",
-        "de": "Öffnet den WhatsApp-Kopplungs-QR im Live-Terminal zum Scannen mit dem Handy.",
-        "es": "Open the WhatsApp pairing QR in a live terminal so you can scan it with your phone.",
-        "fr": "Open the WhatsApp pairing QR in a live terminal so you can scan it with your phone.",
-        "ro": "Open the WhatsApp pairing QR in a live terminal so you can scan it with your phone.",
-        "it": "Open the WhatsApp pairing QR in a live terminal so you can scan it with your phone."
-      },
-      "preview": null,
-      "creator": "github:JoAiHQ/warps",
-      "privileges": [],
-      "listed": true,
-      "visibility": "public",
-      "primaryAddress": null,
-      "primaryFunc": null,
-      "brand": {
-        "hash": "b88bb15e93ef3b240c329dd25fd70fae0e02c7cc89f0384a281a90d4853e42f3",
-        "slug": "whatsapp",
-        "active": true,
-        "protocol": "brand:0.2.0",
-        "name": "WhatsApp",
-        "description": {
-          "en": "Pair personal WhatsApp and forward inbound messages to agent hooks.",
-          "de": "Persönliches WhatsApp koppeln und eingehende Nachrichten an Agent-Hooks weiterleiten."
-        },
-        "logo": {
-          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/whatsapp.png"
-        },
-        "urls": {
-          "web": "https://whatsapp.com"
-        },
-        "colors": {
-          "primary": "#25D366"
-        }
-      },
-      "warp": {
-        "protocol": "warp:3.0.0",
-        "name": "WhatsApp: Pair Personal",
-        "title": {
-          "en": "Pair Personal WhatsApp",
-          "de": "Persönliches WhatsApp koppeln",
-          "es": "Pair Personal WhatsApp",
-          "fr": "Pair Personal WhatsApp",
-          "ro": "Pair Personal WhatsApp",
-          "it": "Pair Personal WhatsApp"
-        },
-        "description": {
-          "en": "Open the WhatsApp pairing QR in a live terminal so you can scan it with your phone.",
-          "de": "Öffnet den WhatsApp-Kopplungs-QR im Live-Terminal zum Scannen mit dem Handy.",
-          "es": "Open the WhatsApp pairing QR in a live terminal so you can scan it with your phone.",
-          "fr": "Open the WhatsApp pairing QR in a live terminal so you can scan it with your phone.",
-          "ro": "Open the WhatsApp pairing QR in a live terminal so you can scan it with your phone.",
-          "it": "Open the WhatsApp pairing QR in a live terminal so you can scan it with your phone."
-        },
-        "cli": {
-          "mode": "session"
-        },
-        "actions": [
-          {
-            "type": "prompt",
-            "label": {
-              "en": "Pair",
-              "de": "Koppeln",
-              "es": "Pair",
-              "fr": "Pair",
-              "ro": "Pair",
-              "it": "Pair"
-            },
-            "prompt": "/wacli auth",
-            "cli": {
-              "mode": "session"
-            }
-          }
-        ],
-        "messages": {
-          "success": {
-            "en": "WhatsApp paired.",
-            "de": "WhatsApp gekoppelt.",
-            "es": "WhatsApp paired.",
-            "fr": "WhatsApp paired.",
-            "ro": "WhatsApp paired.",
-            "it": "WhatsApp paired."
-          },
-          "error": {
-            "en": "WhatsApp pairing failed.",
-            "de": "WhatsApp-Kopplung fehlgeschlagen.",
-            "es": "WhatsApp pairing failed.",
-            "fr": "WhatsApp pairing failed.",
-            "ro": "WhatsApp pairing failed.",
-            "it": "WhatsApp pairing failed."
-          }
-        }
-      },
-      "extras": null
-    },
-    {
-      "key": "none:whatsapp-sync",
-      "identifier": "@whatsapp-sync",
-      "alias": "whatsapp-sync",
-      "chain": "none",
-      "hash": "d081aee3a423cb6ef4d02dfa55c18f4c8a09863a0ce8427967cf44035ead8cfa",
-      "checksum": "d081aee3a423cb6ef4d02dfa55c18f4c8a09863a0ce8427967cf44035ead8cfa",
-      "name": "WhatsApp: Sync Personal",
-      "title": {
-        "en": "Sync Personal WhatsApp",
-        "de": "Persönliches WhatsApp synchronisieren",
-        "es": "Sync Personal WhatsApp",
-        "fr": "Sync Personal WhatsApp",
-        "ro": "Sync Personal WhatsApp",
-        "it": "Sync Personal WhatsApp"
-      },
-      "description": {
-        "en": "Keep personal WhatsApp in sync and forward new messages to your agent webhook while this laptop is online.",
-        "de": "Hält persönliches WhatsApp synchron und leitet neue Nachrichten an den Agent-Webhook weiter, solange dieses Laptop online ist.",
-        "es": "Keep personal WhatsApp in sync and forward new messages to your agent webhook while this laptop is online.",
-        "fr": "Keep personal WhatsApp in sync and forward new messages to your agent webhook while this laptop is online.",
-        "ro": "Keep personal WhatsApp in sync and forward new messages to your agent webhook while this laptop is online.",
-        "it": "Keep personal WhatsApp in sync and forward new messages to your agent webhook while this laptop is online."
-      },
-      "preview": null,
-      "creator": "github:JoAiHQ/warps",
-      "privileges": [],
-      "listed": true,
-      "visibility": "public",
-      "primaryAddress": null,
-      "primaryFunc": null,
-      "brand": {
-        "hash": "b88bb15e93ef3b240c329dd25fd70fae0e02c7cc89f0384a281a90d4853e42f3",
-        "slug": "whatsapp",
-        "active": true,
-        "protocol": "brand:0.2.0",
-        "name": "WhatsApp",
-        "description": {
-          "en": "Pair personal WhatsApp and forward inbound messages to agent hooks.",
-          "de": "Persönliches WhatsApp koppeln und eingehende Nachrichten an Agent-Hooks weiterleiten."
-        },
-        "logo": {
-          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/whatsapp.png"
-        },
-        "urls": {
-          "web": "https://whatsapp.com"
-        },
-        "colors": {
-          "primary": "#25D366"
-        }
-      },
-      "warp": {
-        "protocol": "warp:3.0.0",
-        "name": "WhatsApp: Sync Personal",
-        "title": {
-          "en": "Sync Personal WhatsApp",
-          "de": "Persönliches WhatsApp synchronisieren",
-          "es": "Sync Personal WhatsApp",
-          "fr": "Sync Personal WhatsApp",
-          "ro": "Sync Personal WhatsApp",
-          "it": "Sync Personal WhatsApp"
-        },
-        "description": {
-          "en": "Keep personal WhatsApp in sync and forward new messages to your agent webhook while this laptop is online.",
-          "de": "Hält persönliches WhatsApp synchron und leitet neue Nachrichten an den Agent-Webhook weiter, solange dieses Laptop online ist.",
-          "es": "Keep personal WhatsApp in sync and forward new messages to your agent webhook while this laptop is online.",
-          "fr": "Keep personal WhatsApp in sync and forward new messages to your agent webhook while this laptop is online.",
-          "ro": "Keep personal WhatsApp in sync and forward new messages to your agent webhook while this laptop is online.",
-          "it": "Keep personal WhatsApp in sync and forward new messages to your agent webhook while this laptop is online."
-        },
-        "cli": {
-          "mode": "session"
-        },
-        "hook": {
-          "source": "wacli"
-        },
-        "actions": [
-          {
-            "type": "prompt",
-            "label": {
-              "en": "Start sync",
-              "de": "Sync starten",
-              "es": "Start sync",
-              "fr": "Start sync",
-              "ro": "Start sync",
-              "it": "Start sync"
-            },
-            "prompt": "/wacli sync --follow --presence-mode quiet --max-reconnect 0 --webhook \"{{WEBHOOK_URL}}\" --webhook-secret \"{{WEBHOOK_SECRET}}\"",
-            "cli": {
-              "mode": "session"
-            },
-            "inputs": [
-              {
-                "name": "Webhook URL",
-                "as": "WEBHOOK_URL",
-                "description": {
-                  "en": "Agent inbound hooks URL",
-                  "de": "Agent-Inbound-Hooks-URL",
-                  "es": "Agent inbound hooks URL",
-                  "fr": "Agent inbound hooks URL",
-                  "ro": "Agent inbound hooks URL",
-                  "it": "Agent inbound hooks URL"
-                },
-                "type": "string",
-                "source": "field",
-                "required": true
-              },
-              {
-                "name": "Webhook secret",
-                "as": "WEBHOOK_SECRET",
-                "description": {
-                  "en": "HMAC secret for the inbound webhook signature",
-                  "de": "HMAC-Geheimnis für die Inbound-Webhook-Signatur",
-                  "es": "HMAC secret for the inbound webhook signature",
-                  "fr": "HMAC secret for the inbound webhook signature",
-                  "ro": "HMAC secret for the inbound webhook signature",
-                  "it": "HMAC secret for the inbound webhook signature"
-                },
-                "type": "string",
-                "source": "field",
-                "required": true
-              }
-            ]
-          }
-        ],
-        "messages": {
-          "success": {
-            "en": "WhatsApp sync started.",
-            "de": "WhatsApp-Sync gestartet.",
-            "es": "WhatsApp sync started.",
-            "fr": "WhatsApp sync started.",
-            "ro": "WhatsApp sync started.",
-            "it": "WhatsApp sync started."
-          },
-          "error": {
-            "en": "WhatsApp sync failed.",
-            "de": "WhatsApp-Sync fehlgeschlagen.",
-            "es": "WhatsApp sync failed.",
-            "fr": "WhatsApp sync failed.",
-            "ro": "WhatsApp sync failed.",
-            "it": "WhatsApp sync failed."
-          }
-        }
       },
       "extras": null
     }
