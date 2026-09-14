@@ -2,5 +2,11 @@
 
 export type JoAiListContactsInputs = {
   search: string;
+  followup_overdue: string;
+  waiting_on: string;
+  prop: string;
+  tags: string;
+  has_phone: string;
+  page: string;
   team: string;
 };

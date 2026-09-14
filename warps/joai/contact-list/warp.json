@@ -10,18 +10,23 @@
     "ro": "List contacts"
   },
   "description": {
-    "en": "View all CRM contacts for your team, with their contact details.",
-    "de": "Zeige alle CRM-Kontakte deines Teams mit ihren Kontaktdaten an.",
-    "es": "View all CRM contacts for your team, with their contact details.",
-    "fr": "View all CRM contacts for your team, with their contact details.",
-    "it": "View all CRM contacts for your team, with their contact details.",
-    "ro": "View all CRM contacts for your team, with their contact details."
+    "en": "View CRM contacts for your team with optional filters for search, follow-ups, tags, custom properties, and pagination.",
+    "de": "Zeige CRM-Kontakte deines Teams mit optionalen Filtern für Suche, Follow-ups, Tags, Custom Properties und Pagination.",
+    "es": "View CRM contacts for your team with optional filters for search, follow-ups, tags, custom properties, and pagination.",
+    "fr": "View CRM contacts for your team with optional filters for search, follow-ups, tags, custom properties, and pagination.",
+    "it": "View CRM contacts for your team with optional filters for search, follow-ups, tags, custom properties, and pagination.",
+    "ro": "View CRM contacts for your team with optional filters for search, follow-ups, tags, custom properties, and pagination."
   },
-  "bot": "Use this when the user wants to see, list, or check their contacts or CRM.",
+  "bot": "Use this when the user wants to see, list, or check their contacts or CRM. Prefer filters for follow-up queues: followup_overdue=true for overdue chases, waiting_on=true for open follow-ups, prop as key:value (e.g. onboarding-stage:new).",
   "vars": {
     "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
     "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
     "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "output": {
+    "contacts": "out",
+    "contactsList": "out.data",
+    "contactsCount": "out.data.length"
   },
   "actions": [
     {
@@ -36,7 +41,7 @@
         "ro": "List contacts"
       },
       "destination": {
-        "url": "INJECT:API_BASE/v1/contacts?filter[search]={{search}}",
+        "url": "INJECT:API_BASE/v1/contacts?filter[search]={{search}}&filter[followup_overdue]={{followup_overdue}}&filter[waiting_on]={{waiting_on}}&filter[prop]={{prop}}&filter[tags]={{tags}}&filter[has_phone]={{has_phone}}&page={{page}}",
         "method": "GET",
         "headers": {
           "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
@@ -51,14 +56,86 @@
           "position": "query",
           "required": false,
           "description": {
-            "en": "Search contacts by name, email, or company",
-            "de": "Kontakte nach Name, E-Mail oder Firma durchsuchen",
-            "es": "Search contacts by name, email, or company",
-            "fr": "Search contacts by name, email, or company",
-            "ro": "Search contacts by name, email, or company",
-            "it": "Search contacts by name, email, or company"
+            "en": "Search contacts by name, email, phone, or company",
+            "de": "Kontakte nach Name, E-Mail, Telefon oder Firma durchsuchen",
+            "es": "Search contacts by name, email, phone, or company",
+            "fr": "Search contacts by name, email, phone, or company",
+            "ro": "Search contacts by name, email, phone, or company",
+            "it": "Search contacts by name, email, phone, or company"
           },
-          "bot": "Search term for contacts. Omit to return all."
+          "bot": "Search term for contacts. Omit to return all matching other filters."
+        },
+        {
+          "name": "Follow-up overdue",
+          "as": "followup_overdue",
+          "type": "string",
+          "position": "query",
+          "required": false,
+          "description": {
+            "en": "When true, only contacts whose follow-up date has passed with no activity since",
+            "de": "Wenn true, nur Kontakte deren Follow-up-Datum überschritten ist und seitdem keine Aktivität hatten"
+          },
+          "bot": "Pass true/1 to list overdue follow-ups only. Omit otherwise."
+        },
+        {
+          "name": "Waiting on",
+          "as": "waiting_on",
+          "type": "string",
+          "position": "query",
+          "required": false,
+          "description": {
+            "en": "When true, only contacts with a nextFollowUpAt set; when false, only without one",
+            "de": "Wenn true, nur Kontakte mit gesetztem nextFollowUpAt; wenn false, nur ohne"
+          },
+          "bot": "Pass true/1 for open follow-ups, false/0 for contacts without a follow-up. Omit otherwise."
+        },
+        {
+          "name": "Property",
+          "as": "prop",
+          "type": "string",
+          "position": "query",
+          "required": false,
+          "description": {
+            "en": "Custom property filter as key:value (e.g. onboarding-stage:new)",
+            "de": "Custom-Property-Filter als key:value (z. B. onboarding-stage:new)"
+          },
+          "bot": "Filter by a contact custom property using key:value, e.g. onboarding-stage:new or business-team-slug:atsv."
+        },
+        {
+          "name": "Tags",
+          "as": "tags",
+          "type": "string",
+          "position": "query",
+          "required": false,
+          "description": {
+            "en": "Filter by tag(s), comma-separated",
+            "de": "Nach Tag(s) filtern, kommagetrennt"
+          },
+          "bot": "One tag or comma-separated tags to match (any)."
+        },
+        {
+          "name": "Has phone",
+          "as": "has_phone",
+          "type": "string",
+          "position": "query",
+          "required": false,
+          "description": {
+            "en": "When true, only contacts with a phone number; when false, only without",
+            "de": "Wenn true, nur Kontakte mit Telefonnummer; wenn false, nur ohne"
+          },
+          "bot": "Pass true/1 or false/0. Omit otherwise."
+        },
+        {
+          "name": "Page",
+          "as": "page",
+          "type": "string",
+          "position": "query",
+          "required": false,
+          "description": {
+            "en": "Page number for pagination (default 1)",
+            "de": "Seitennummer für Pagination (Standard 1)"
+          },
+          "bot": "1-based page number. Omit for the first page."
         },
         {
           "name": "Team",
@@ -80,5 +157,11 @@
       ]
     }
   ],
+  "messages": {
+    "success": {
+      "en": "Contacts listed.",
+      "de": "Kontakte aufgelistet."
+    }
+  },
   "ui": "https://raw.githubusercontent.com/JoAiHQ/warps/main/warps/joai/contact-list/chatapp.23f1e217.dist.html"
 }
