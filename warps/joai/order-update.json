@@ -1,0 +1,141 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Update Order",
+  "title": {
+    "en": "Update order",
+    "de": "Bestellung aktualisieren",
+    "fr": "Mettre à jour la commande",
+    "es": "Actualizar pedido",
+    "it": "Aggiorna ordine",
+    "ro": "Actualizează comanda"
+  },
+  "description": {
+    "en": "Update an order's status, invoice date, service date, or invoice recipient. The invoice recipient receives invoice emails while the customer remains the buyer on the invoice. Clear the invoice contact ID to return delivery to the customer contact.",
+    "de": "Aktualisiere Status, Rechnungsdatum, Leistungsdatum oder Rechnungsempfänger einer Bestellung. Der Rechnungsempfänger erhält Rechnungs-E-Mails, während der Kunde weiterhin als Käufer auf der Rechnung steht. Leere die Kontakt-ID des Rechnungsempfängers, um wieder den Kundenkontakt zu verwenden.",
+    "fr": "Met à jour le statut, les dates ou le destinataire de la facture d'une commande. Le destinataire reçoit les e-mails de facture tandis que le client reste l'acheteur indiqué. Effacez son ID pour revenir au contact client.",
+    "es": "Actualiza el estado, las fechas o el destinatario de la factura de un pedido. El destinatario recibe los correos de factura mientras el cliente sigue figurando como comprador. Borra su ID para volver al contacto del cliente.",
+    "it": "Aggiorna stato, date o destinatario della fattura di un ordine. Il destinatario riceve le e-mail della fattura mentre il cliente rimane l'acquirente indicato. Cancella il suo ID per tornare al contatto cliente.",
+    "ro": "Actualizează statusul, datele sau destinatarul facturii unei comenzi. Destinatarul primește e-mailurile facturii, iar clientul rămâne cumpărătorul indicat. Golește ID-ul pentru a reveni la contactul clientului."
+  },
+  "bot": "Use when the user wants to change an existing order, including who receives invoice emails. List orders first to resolve orderId and list contacts first to resolve invoiceContactId. Send an empty invoiceContactId to fall back to the customer contact; omit fields that should remain unchanged.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Update order",
+        "de": "Bestellung aktualisieren",
+        "fr": "Mettre à jour la commande",
+        "es": "Actualizar pedido",
+        "it": "Aggiorna ordine",
+        "ro": "Actualizează comanda"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/orders/{{orderId}}",
+        "method": "PUT",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Order ID",
+          "as": "orderId",
+          "description": {
+            "en": "Hash ID of the order to update",
+            "de": "Hash-ID der zu aktualisierenden Bestellung"
+          },
+          "bot": "The order hash ID. List orders first if needed.",
+          "type": "string",
+          "position": "url:orderId",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Status",
+          "as": "status",
+          "description": {
+            "en": "Optional status: pending, confirmed, processing, shipped, delivered, canceled, or returned",
+            "de": "Optionaler Status: pending, confirmed, processing, shipped, delivered, canceled oder returned"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Invoice date",
+          "as": "date",
+          "description": {
+            "en": "Optional invoice date (YYYY-MM-DD)",
+            "de": "Optionales Rechnungsdatum (YYYY-MM-DD)"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Service date",
+          "as": "serviceDate",
+          "description": {
+            "en": "Optional service/supply date (YYYY-MM-DD, Leistungsdatum)",
+            "de": "Optionales Leistungsdatum (YYYY-MM-DD)"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Invoice contact ID",
+          "as": "invoiceContactId",
+          "description": {
+            "en": "Contact hash ID that receives invoice emails. Empty uses the customer contact.",
+            "de": "Kontakt-Hash-ID für den Rechnungsempfang. Leer verwendet den Kundenkontakt."
+          },
+          "bot": "List contacts first to resolve the hash ID. Send an empty value to remove a separate invoice recipient.",
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug for this action. Defaults to the current team.",
+            "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team."
+          },
+          "bot": "The slug of the team to operate on. Omit to use the current team.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "id": "out.data.id",
+    "status": "out.data.status",
+    "invoiceDate": "out.data.invoiceDate",
+    "serviceDate": "out.data.serviceDate",
+    "invoiceContactId": "out.data.invoiceContactId"
+  },
+  "messages": {
+    "success": {
+      "en": "Order {{id}} updated.",
+      "de": "Bestellung {{id}} aktualisiert.",
+      "fr": "Commande {{id}} mise à jour.",
+      "es": "Pedido {{id}} actualizado.",
+      "it": "Ordine {{id}} aggiornato.",
+      "ro": "Comanda {{id}} a fost actualizată."
+    },
+    "error": {
+      "en": "Failed to update order: {{MESSAGE}}",
+      "de": "Bestellung konnte nicht aktualisiert werden: {{MESSAGE}}"
+    }
+  }
+}
