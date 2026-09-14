@@ -17,7 +17,7 @@
     "it": "Crea un ordine o un'offerta per un cliente. Supporta servizi di catalogo (per nome) o righe personalizzate con descrizione libera, quantità e prezzo unitario in centesimi. Genera fattura e link di pagamento.",
     "ro": "Creează o comandă sau o ofertă pentru un client. Suportă servicii din catalog (după nume) sau linii personalizate cu descriere liberă, cantitate și preț unitar în cenți. Generează factură și link de plată."
   },
-  "bot": "Use when the user wants to create a billing order, invoice, or quote (Angebot). Prefer items JSON for custom work (name + unitPrice in cents + quantity). Use billItem only when matching a catalog service by name. Supports type \"order\" (default) or \"quote\". Optional invoiceDate and serviceDate (YYYY-MM-DD); serviceDate is Leistungsdatum and defaults to invoice date.",
+  "bot": "Use when the user wants to create a billing order, invoice, or quote (Angebot). Prefer items JSON for custom work (name + unitPrice in cents + quantity). Use billItem only when matching a catalog service by name. Supports type \"order\" (default) or \"quote\". Optional invoiceDate and serviceDate (YYYY-MM-DD); serviceDate is Leistungsdatum and defaults to invoice date. Set invoiceContactId when invoices should be emailed to a different contact; list contacts first to resolve its hash ID, and omit it to use the customer contact.",
   "vars": {
     "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
     "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
@@ -143,6 +143,22 @@
             "en": "Service/supply date (YYYY-MM-DD, Leistungsdatum). Defaults to invoice date when omitted.",
             "de": "Leistungsdatum (YYYY-MM-DD). Standardmäßig das Rechnungsdatum."
           }
+        },
+        {
+          "name": "Invoice contact ID",
+          "as": "invoiceContactId",
+          "type": "string",
+          "source": "field",
+          "position": "local",
+          "required": false,
+          "description": {
+            "en": "Contact hash ID that receives invoice emails. Defaults to the customer contact.",
+            "de": "Kontakt-Hash-ID für den Rechnungsempfang. Standardmäßig wird der Kundenkontakt verwendet.",
+            "fr": "Hash ID du contact qui reçoit les factures. Par défaut, le contact client est utilisé.",
+            "es": "Hash ID del contacto que recibe las facturas. De forma predeterminada se usa el contacto del cliente.",
+            "it": "Hash ID del contatto che riceve le fatture. Per impostazione predefinita viene usato il contatto cliente.",
+            "ro": "Hash ID-ul contactului care primește facturile. Implicit este folosit contactul clientului."
+          }
         }
       ]
     },
@@ -232,6 +248,12 @@
           "default": "{{serviceDate}}"
         },
         {
+          "as": "invoiceContactId",
+          "type": "string",
+          "source": "hidden",
+          "default": "{{invoiceContactId}}"
+        },
+        {
           "name": "Team",
           "as": "team",
           "description": {
@@ -253,6 +275,7 @@
     "totalDisplay": "transform:() => (Number(out.data?.total || 0) / 100).toFixed(2)",
     "invoiceUrl": "out.data.invoiceUrl",
     "paymentUrl": "out.data.paymentUrl",
+    "invoiceContactId": "out.data.invoiceContactId",
     "status": "out.data.status"
   },
   "messages": {

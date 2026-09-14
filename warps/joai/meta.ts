@@ -760,22 +760,45 @@ export const meta: Record<string, WarpExtras> = {
   },
   'order-create': {
     keywords: {
-      en: ['create order', 'billing order', 'generate invoice', 'bill customer', 'order from products', 'service date', 'Leistungsdatum'],
-      de: ['Bestellung erstellen', 'Rechnung erstellen', 'Kunde abrechnen', 'Produktbestellung', 'Leistungsdatum'],
+      en: ['create order', 'billing order', 'generate invoice', 'bill customer', 'order from products', 'service date', 'Leistungsdatum', 'invoice recipient'],
+      de: ['Bestellung erstellen', 'Rechnung erstellen', 'Kunde abrechnen', 'Produktbestellung', 'Leistungsdatum', 'Rechnungsempfänger'],
     },
     useCases: {
-      en: ['Bill a customer for products used during a service call', 'Generate an order with invoice from team products'],
-      de: ['Kunden für verbaute Materialien abrechnen', 'Bestellung mit Rechnung aus Team-Produkten erstellen'],
+      en: ['Bill a customer for products used during a service call', 'Generate an order with invoice from team products', 'Send invoice emails to a different contact'],
+      de: ['Kunden für verbaute Materialien abrechnen', 'Bestellung mit Rechnung aus Team-Produkten erstellen', 'Rechnungs-E-Mails an einen anderen Kontakt senden'],
     },
     category: 'commerce',
     faq: {
       en: [
         { question: 'What is the difference between an order and an invoice?', answer: 'An order is created through the billing system and automatically generates an invoice with a payment URL.' },
         { question: 'Can I use products not in my catalog?', answer: 'Products must exist in your team catalog. Create missing products first via Product Create.' },
+        { question: 'Can another contact receive the invoice?', answer: 'Yes. Set invoiceContactId to that contact while the customer remains the buyer on the invoice.' },
       ],
       de: [
         { question: 'Was ist der Unterschied zwischen Bestellung und Rechnung?', answer: 'Eine Bestellung wird im Abrechnungssystem erstellt und erzeugt automatisch eine Rechnung mit Zahlungslink.' },
         { question: 'Kann ich Produkte verwenden, die nicht in meinem Katalog sind?', answer: 'Produkte müssen im Team-Katalog existieren. Fehlende Produkte zuerst via Produkt erstellen anlegen.' },
+        { question: 'Kann ein anderer Kontakt die Rechnung erhalten?', answer: 'Ja. Setze invoiceContactId auf diesen Kontakt; der Kunde bleibt der Käufer auf der Rechnung.' },
+      ],
+    },
+  },
+  'order-update': {
+    keywords: {
+      en: ['update order', 'change order status', 'change invoice date', 'change service date', 'invoice recipient'],
+      de: ['Bestellung aktualisieren', 'Bestellstatus ändern', 'Rechnungsdatum ändern', 'Leistungsdatum ändern', 'Rechnungsempfänger'],
+    },
+    useCases: {
+      en: ['Change order dates or status', 'Assign or clear a separate invoice recipient'],
+      de: ['Datumsangaben oder Status einer Bestellung ändern', 'Separaten Rechnungsempfänger zuweisen oder entfernen'],
+    },
+    category: 'commerce',
+    faq: {
+      en: [
+        { question: 'Does changing the invoice recipient change the buyer?', answer: 'No. It only controls which contact receives invoice emails.' },
+        { question: 'How do I use the customer again?', answer: 'Send an empty invoiceContactId to clear the separate recipient.' },
+      ],
+      de: [
+        { question: 'Ändert der Rechnungsempfänger den Käufer?', answer: 'Nein. Er legt nur fest, welcher Kontakt Rechnungs-E-Mails erhält.' },
+        { question: 'Wie verwende ich wieder den Kundenkontakt?', answer: 'Sende invoiceContactId leer, um den separaten Empfänger zu entfernen.' },
       ],
     },
   },
