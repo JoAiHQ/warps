@@ -1569,4 +1569,116 @@ export const meta: Record<string, WarpExtras> = {
       ],
     },
   },
+  'secret-list': {
+    keywords: {
+      en: ['list secrets', 'agent secret keys', 'credentials configured', 'API keys set'],
+      de: ['Secrets auflisten', 'Agent Secret-Keys', 'Credentials prüfen', 'API-Keys gesetzt'],
+    },
+    useCases: {
+      en: [
+        'See which secret keys are configured on an agent',
+        'Check before wiring an integration that needs credentials',
+        'Audit credential coverage without exposing values',
+      ],
+      de: [
+        'Sehen, welche Secret-Keys auf einem Agenten gesetzt sind',
+        'Vor einer Integration prüfen, ob Credentials fehlen',
+        'Credential-Abdeckung prüfen, ohne Werte preiszugeben',
+      ],
+    },
+    category: 'security',
+    faq: {
+      en: [
+        { question: 'Does listing secrets return the values?', answer: 'No. Only key names are returned — never secret values.' },
+        { question: 'How do I check a specific key?', answer: 'Use the secret status action with the key names you care about.' },
+      ],
+      de: [
+        { question: 'Gibt das Auflisten die Secret-Werte zurück?', answer: 'Nein. Es werden nur Key-Namen zurückgegeben — niemals Secret-Werte.' },
+        { question: 'Wie prüfe ich einen bestimmten Key?', answer: 'Nutze die Secret-Status-Aktion mit den gewünschten Key-Namen.' },
+      ],
+    },
+  },
+  'secret-status': {
+    keywords: {
+      en: ['secret status', 'is API key set', 'credential check', 'env key present'],
+      de: ['Secret-Status', 'ist API-Key gesetzt', 'Credential-Check', 'Env-Key vorhanden'],
+    },
+    useCases: {
+      en: [
+        'Verify required secrets before running an integration',
+        'Confirm a rotated key is stored',
+        'Gate workflows on missing credentials',
+      ],
+      de: [
+        'Benötigte Secrets vor einer Integration prüfen',
+        'Bestätigen, dass ein rotierter Key gespeichert ist',
+        'Workflows an fehlenden Credentials ausrichten',
+      ],
+    },
+    category: 'security',
+    faq: {
+      en: [
+        { question: 'What does status return?', answer: 'True/false per key for whether it is set — never the secret value.' },
+      ],
+      de: [
+        { question: 'Was liefert der Status?', answer: 'Pro Key true/false, ob er gesetzt ist — niemals den Secret-Wert.' },
+      ],
+    },
+  },
+  'secret-set': {
+    keywords: {
+      en: ['set secret', 'store API key', 'save agent credential', 'encrypted secret'],
+      de: ['Secret setzen', 'API-Key speichern', 'Agent-Credential speichern', 'verschlüsseltes Secret'],
+    },
+    useCases: {
+      en: [
+        'Store an integration API token on the agent',
+        'Replace a rotated credential',
+        'Provide a missing env key for a warp',
+      ],
+      de: [
+        'Einen Integrations-API-Token am Agenten speichern',
+        'Ein rotiertes Credential ersetzen',
+        'Einen fehlenden Env-Key für eine Aktion hinterlegen',
+      ],
+    },
+    category: 'security',
+    faq: {
+      en: [
+        { question: 'Can I read the value back later?', answer: 'No. List and status never return values. Only warp approvals can temporarily unlock a value for execution.' },
+        { question: 'What format must the key use?', answer: 'UPPER_SNAKE_CASE using A–Z, 0–9, and underscore only.' },
+      ],
+      de: [
+        { question: 'Kann ich den Wert später wieder lesen?', answer: 'Nein. Listen und Status geben nie Werte zurück. Nur Warp-Freigaben können einen Wert vorübergehend für die Ausführung freischalten.' },
+        { question: 'Welches Format braucht der Key?', answer: 'UPPER_SNAKE_CASE nur mit A–Z, 0–9 und Unterstrich.' },
+      ],
+    },
+  },
+  'secret-clear': {
+    keywords: {
+      en: ['clear secret', 'delete API key', 'remove credential', 'revoke agent secret'],
+      de: ['Secret löschen', 'API-Key entfernen', 'Credential entfernen', 'Agent-Secret widerrufen'],
+    },
+    useCases: {
+      en: [
+        'Remove a credential the agent no longer needs',
+        'Clear a key before rotating to a new value',
+        'Revoke access after an integration is disconnected',
+      ],
+      de: [
+        'Ein Credential entfernen, das der Agent nicht mehr braucht',
+        'Einen Key vor der Rotation löschen',
+        'Zugang nach dem Trennen einer Integration widerrufen',
+      ],
+    },
+    category: 'security',
+    faq: {
+      en: [
+        { question: 'Is clearing permanent?', answer: 'Yes. The encrypted value is deleted. You must set the secret again to restore it.' },
+      ],
+      de: [
+        { question: 'Ist das Löschen endgültig?', answer: 'Ja. Der verschlüsselte Wert wird gelöscht. Du musst das Secret erneut setzen, um es wiederherzustellen.' },
+      ],
+    },
+  },
 }
