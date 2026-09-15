@@ -4,25 +4,25 @@
   "repo": "JoAiHQ/warps",
   "branch": "main",
   "network": "mainnet",
-  "commitSha": "f86d74ba9e1e6a314f6fee3c20eee96ddb69da0a",
-  "committedAt": "2026-09-15T12:24:15.635Z",
-  "generatedAt": "2026-09-15T12:24:18.302Z",
+  "commitSha": "1ba84bd029dabe8da53ce6f903015f52a5a811db",
+  "committedAt": "2026-09-15T12:55:54.815Z",
+  "generatedAt": "2026-09-15T12:55:58.455Z",
   "upserts": [
     {
-      "key": "none:joai-service-create",
-      "identifier": "@joai-service-create",
-      "alias": "joai-service-create",
+      "key": "none:joai-service-list",
+      "identifier": "@joai-service-list",
+      "alias": "joai-service-list",
       "chain": "none",
-      "hash": "b7231ebcf9cb25df6f32f8eaa48235788f717e61e431abfea503de1bc2bb4b9e",
-      "checksum": "b7231ebcf9cb25df6f32f8eaa48235788f717e61e431abfea503de1bc2bb4b9e",
-      "name": "JoAi: Create Service",
+      "hash": "27133926f0db9efca274c6a6b4f413a4eb9573a7d9f7ab1dd23dac75cb1eaf19",
+      "checksum": "27133926f0db9efca274c6a6b4f413a4eb9573a7d9f7ab1dd23dac75cb1eaf19",
+      "name": "JoAi: List Services",
       "title": {
-        "en": "Create a service",
-        "de": "Dienstleistung erstellen"
+        "en": "List team services",
+        "de": "Team-Dienstleistungen anzeigen"
       },
       "description": {
-        "en": "Create a new billable service with name, price, and pricing model for your team catalog. Services can be one-time or monthly subscription. Monthly services use Stripe for recurring billing.",
-        "de": "Erstelle eine neue abrechenbare Dienstleistung mit Name, Preis und Abrechnungsmodell für deinen Team-Katalog. Dienstleistungen können einmalig oder monatlich als Abo sein. Monatliche Services nutzen Stripe für wiederkehrende Zahlungen."
+        "en": "View team catalog services with names, prices and durations. Includes private services when the caller has team-member access; otherwise public-only.",
+        "de": "Team-Dienstleistungen mit Namen, Preisen und Dauern anzeigen. Private Dienstleistungen werden einbezogen, wenn der Aufrufer Team-Mitgliedszugriff hat; sonst nur öffentliche."
       },
       "preview": null,
       "creator": "github:JoAiHQ/warps",
@@ -57,46 +57,37 @@
       },
       "warp": {
         "protocol": "warp:3.0.0",
-        "name": "JoAi: Create Service",
+        "name": "JoAi: List Services",
         "title": {
-          "en": "Create a service",
-          "de": "Dienstleistung erstellen"
+          "en": "List team services",
+          "de": "Team-Dienstleistungen anzeigen"
         },
         "description": {
-          "en": "Create a new billable service with name, price, and pricing model for your team catalog. Services can be one-time or monthly subscription. Monthly services use Stripe for recurring billing.",
-          "de": "Erstelle eine neue abrechenbare Dienstleistung mit Name, Preis und Abrechnungsmodell für deinen Team-Katalog. Dienstleistungen können einmalig oder monatlich als Abo sein. Monatliche Services nutzen Stripe für wiederkehrende Zahlungen."
+          "en": "View team catalog services with names, prices and durations. Includes private services when the caller has team-member access; otherwise public-only.",
+          "de": "Team-Dienstleistungen mit Namen, Preisen und Dauern anzeigen. Private Dienstleistungen werden einbezogen, wenn der Aufrufer Team-Mitgliedszugriff hat; sonst nur öffentliche."
         },
-        "bot": "Use when the user wants to create a new service, billable offering, or subscription plan. Extract name, price, and pricing model from their description. If they say 'monthly' or 'subscription', set pricingModel to 'monthly'. The price modifier automatically converts euros to cents. Use public for store visibility and bookable for appointment booking — a service can be public without being bookable.",
+        "bot": "Use this when the user wants to see their available services, hourly rates, or billable services. Private services are included for team members; outsiders only see public ones.",
         "vars": {
           "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
           "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
-          "JOAI_TEAM_CURRENCY": "env:JOAI_TEAM_CURRENCY|USD",
           "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
         },
-        "messages": {
-          "success": {
-            "en": "Service created: {{name}} ({{priceDisplay}} {{JOAI_TEAM_CURRENCY}})",
-            "de": "Dienstleistung erstellt: {{name}} ({{priceDisplay}} {{JOAI_TEAM_CURRENCY}})",
-            "fr": "Service créé : {{name}} ({{priceDisplay}} {{JOAI_TEAM_CURRENCY}})",
-            "es": "Servicio creado: {{name}} ({{priceDisplay}} {{JOAI_TEAM_CURRENCY}})",
-            "it": "Servizio creato: {{name}} ({{priceDisplay}} {{JOAI_TEAM_CURRENCY}})",
-            "ro": "Serviciu creat: {{name}} ({{priceDisplay}} {{JOAI_TEAM_CURRENCY}})"
-          },
-          "error": {
-            "en": "Failed to create service: {{MESSAGE}}",
-            "de": "Dienstleistung konnte nicht erstellt werden: {{MESSAGE}}"
-          }
+        "output": {
+          "services": "out",
+          "servicesList": "out.data",
+          "servicesCount": "out.data.length"
         },
         "actions": [
           {
             "type": "collect",
+            "silent": true,
             "label": {
-              "en": "Create service",
-              "de": "Dienstleistung erstellen"
+              "en": "List services",
+              "de": "Dienstleistungen anzeigen"
             },
             "destination": {
               "url": "https://api.joai.ai/v1/services",
-              "method": "POST",
+              "method": "GET",
               "headers": {
                 "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
                 "X-Team": "{{team}}"
@@ -104,122 +95,45 @@
             },
             "inputs": [
               {
-                "name": "Name",
-                "as": "name",
-                "description": {
-                  "en": "Service name",
-                  "de": "Name der Dienstleistung"
-                },
-                "type": "string",
-                "source": "field",
-                "required": true
-              },
-              {
-                "name": "Price",
-                "as": "price",
-                "description": {
-                  "en": "Price in euros (e.g. 49 for €49). For subscriptions this is the monthly price.",
-                  "de": "Preis in Euro (z.B. 49 für 49€). Bei Abos ist das der monatliche Preis."
-                },
-                "bot": "Ask for the price naturally. For subscriptions, ask if monthly or one-time.",
-                "modifier": "transform:(value) => Number(value) * 100",
-                "type": "number",
-                "source": "field",
-                "required": true
-              },
-              {
-                "name": "Pricing model",
-                "as": "pricingModel",
-                "description": {
-                  "en": "One-time payment or monthly subscription",
-                  "de": "Einmalzahlung oder monatliches Abo"
-                },
-                "type": "string",
-                "source": "field",
+                "name": "includePrivate",
+                "type": "boolean",
                 "required": false,
-                "options": [
-                  "one-time",
-                  "monthly"
-                ]
+                "position": "query",
+                "default": true,
+                "description": {
+                  "en": "Include private services when the caller has team-member access. Without team access the API still returns public-only.",
+                  "de": "Private Dienstleistungen einbeziehen, wenn der Aufrufer Team-Mitgliedszugriff hat. Ohne Team-Zugriff liefert die API weiterhin nur öffentliche."
+                },
+                "bot": "Defaults to true for team catalog listing. Private rows are only returned when the authenticated caller is a team member."
               },
               {
-                "name": "Duration (minutes)",
-                "as": "durationMinutes",
-                "description": {
-                  "en": "Duration in minutes (number, or empty for digital services)",
-                  "de": "Dauer in Minuten (Zahl, oder leer bei digitalen Leistungen)"
-                },
+                "name": "bookable",
                 "type": "string",
-                "source": "field",
-                "required": false
+                "required": false,
+                "position": "query",
+                "description": {
+                  "en": "Filter by bookable status (\"1\" or \"0\")",
+                  "de": "Nach Buchbarkeit filtern (\"1\" oder \"0\")"
+                }
               },
               {
-                "name": "Description",
-                "as": "description",
-                "description": {
-                  "en": "Service description as translatable JSON, e.g. {\"en\":\"...\"}",
-                  "de": "Service-Beschreibung als übersetzbares JSON, z.B. {\"en\":\"...\"}",
-                  "fr": "Description du service en JSON traduisible, ex. {\"en\":\"...\"}",
-                  "es": "Descripción del servicio como JSON traducible, p. ej. {\"en\":\"...\"}",
-                  "it": "Descrizione del servizio come JSON traducibile, es. {\"en\":\"...\"}",
-                  "ro": "Descrierea serviciului ca JSON traductibil, ex. {\"en\":\"...\"}"
-                },
-                "type": "json",
-                "source": "field",
-                "required": false
-              },
-              {
-                "name": "Tags",
-                "as": "tags",
-                "description": {
-                  "en": "Tags (e.g. hourly, consultation, maintenance, repair)",
-                  "de": "Tags (z.B. stundensatz, beratung, wartung, reparatur)"
-                },
+                "name": "tags",
                 "type": "string",
-                "source": "field",
-                "required": false
-              },
-              {
-                "name": "Digital",
-                "as": "digital",
+                "required": false,
+                "position": "query",
                 "description": {
-                  "en": "Whether the service is digital (\"true\"/\"false\")",
-                  "de": "Ob die Dienstleistung digital ist (\"true\"/\"false\")"
-                },
-                "type": "bool",
-                "source": "field",
-                "required": false
-              },
-              {
-                "name": "Public",
-                "as": "public",
-                "description": {
-                  "en": "Whether the service is publicly visible in the store (\"true\"/\"false\")",
-                  "de": "Ob die Dienstleistung öffentlich im Store sichtbar ist (\"true\"/\"false\")"
-                },
-                "type": "bool",
-                "source": "field",
-                "required": false
-              },
-              {
-                "name": "Bookable",
-                "as": "bookable",
-                "description": {
-                  "en": "Whether customers can book this service via the booking page (\"true\"/\"false\"). Requires duration when true. Defaults to true when duration is set.",
-                  "de": "Ob Kund:innen diese Dienstleistung über die Buchungsseite buchen können (\"true\"/\"false\"). Bei true ist eine Dauer erforderlich. Standard: true, wenn eine Dauer gesetzt ist."
-                },
-                "type": "bool",
-                "source": "field",
-                "required": false
+                  "en": "Filter by tags (e.g. hourly, consultation, maintenance, repair)",
+                  "de": "Nach Tags filtern (z.B. stundensatz, beratung, wartung, reparatur)"
+                }
               },
               {
                 "name": "Team",
                 "as": "team",
                 "description": {
-                  "en": "Team slug to create the service for. Defaults to the current team.",
-                  "de": "Team-Slug, für das die Dienstleistung erstellt wird. Standardmäßig das aktuelle Team."
+                  "en": "Team slug for this action. Defaults to the current team.",
+                  "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team."
                 },
-                "bot": "The slug of the team the service belongs to. Omit to use the current team.",
+                "bot": "The slug of the team to operate on. Omit to use the current team.",
                 "type": "string",
                 "source": "field",
                 "required": false,
@@ -228,385 +142,34 @@
             ]
           }
         ],
-        "output": {
-          "id": "out.data.id",
-          "name": "out.data.name",
-          "price": "out.data.price",
-          "priceDisplay": "transform:() => (Number(out.data.price || 0) / 100).toFixed(2)"
-        }
+        "ui": "https://raw.githubusercontent.com/JoAiHQ/warps/main/warps/joai/service-list/chatapp.e9fc5b1f.dist.html"
       },
       "extras": {
         "keywords": {
           "en": [
-            "create service",
-            "add service",
-            "new billable service",
-            "appointment type",
+            "list services",
+            "view services",
             "service catalog",
-            "bookable service",
-            "public service"
+            "billable services",
+            "appointment services"
           ],
           "de": [
-            "Dienstleistung erstellen",
-            "Service hinzufügen",
-            "neue abrechenbare Leistung",
-            "Terminart",
+            "Dienstleistungen anzeigen",
             "Service-Katalog",
-            "buchbare Dienstleistung"
+            "abrechenbare Leistungen",
+            "Termin-Dienstleistungen"
           ]
         },
         "useCases": {
           "en": [
-            "Add a new service type for appointment booking",
-            "Create a billable service with a set price and duration",
-            "Set up consultation, maintenance, or repair service offerings",
-            "List a service in the store without enabling appointment booking"
+            "View all services and hourly rates in your team catalog",
+            "Find a service ID to use in appointment settings",
+            "Check which services are available for invoicing"
           ],
           "de": [
-            "Einen neuen Dienstleistungstyp für Terminbuchungen hinzufügen",
-            "Eine abrechenbare Dienstleistung mit festem Preis und Dauer erstellen",
-            "Beratungs-, Wartungs- oder Reparaturleistungen anlegen",
-            "Eine Dienstleistung im Store listen, ohne Terminbuchung zu aktivieren"
-          ]
-        },
-        "category": "productivity"
-      }
-    },
-    {
-      "key": "none:joai-service-update",
-      "identifier": "@joai-service-update",
-      "alias": "joai-service-update",
-      "chain": "none",
-      "hash": "0d1a546e1406d0af33ec5112163f67eadb28aa19455f348cdf7dc49076b04064",
-      "checksum": "0d1a546e1406d0af33ec5112163f67eadb28aa19455f348cdf7dc49076b04064",
-      "name": "JoAi: Update Service",
-      "title": {
-        "en": "Update a service",
-        "de": "Dienstleistung aktualisieren",
-        "fr": "Mettre à jour un service",
-        "es": "Actualizar un servicio",
-        "it": "Aggiorna un servizio",
-        "ro": "Actualizează un serviciu"
-      },
-      "description": {
-        "en": "Update an existing service in your team catalog — name, price, duration, tags, description, or active state. Only the fields you provide are changed, so bookings and invoices keep working.",
-        "de": "Eine bestehende Dienstleistung in deinem Team-Katalog aktualisieren — Name, Preis, Dauer, Tags, Beschreibung oder Aktiv-Status. Nur die angegebenen Felder werden geändert, Buchungen und Rechnungen funktionieren weiter.",
-        "fr": "Mettez à jour un service existant de votre catalogue — nom, prix, durée, tags, description ou état actif. Seuls les champs fournis sont modifiés, les réservations et factures continuent de fonctionner.",
-        "es": "Actualiza un servicio existente de tu catálogo — nombre, precio, duración, etiquetas, descripción o estado activo. Solo cambian los campos proporcionados; reservas y facturas siguen funcionando.",
-        "it": "Aggiorna un servizio esistente del tuo catalogo — nome, prezzo, durata, tag, descrizione o stato attivo. Vengono modificati solo i campi forniti; prenotazioni e fatture continuano a funzionare.",
-        "ro": "Actualizează un serviciu existent din catalogul echipei tale — nume, preț, durată, taguri, descriere sau stare activă. Se schimbă doar câmpurile furnizate; rezervările și facturile continuă să funcționeze."
-      },
-      "preview": null,
-      "creator": "github:JoAiHQ/warps",
-      "privileges": [],
-      "listed": true,
-      "visibility": "public",
-      "primaryAddress": null,
-      "primaryFunc": null,
-      "brand": {
-        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
-        "slug": "joai",
-        "active": true,
-        "protocol": "brand:0.2.0",
-        "name": "JoAi",
-        "description": {
-          "en": "JoAi is a platform for creating and managing your own AI agents.",
-          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
-          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
-          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
-          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
-        },
-        "logo": {
-          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
-        },
-        "urls": {
-          "web": "https://joai.ai"
-        },
-        "colors": {
-          "primary": "#98FF98",
-          "secondary": "#FFFF66"
-        }
-      },
-      "warp": {
-        "protocol": "warp:3.0.0",
-        "name": "JoAi: Update Service",
-        "title": {
-          "en": "Update a service",
-          "de": "Dienstleistung aktualisieren",
-          "fr": "Mettre à jour un service",
-          "es": "Actualizar un servicio",
-          "it": "Aggiorna un servizio",
-          "ro": "Actualizează un serviciu"
-        },
-        "description": {
-          "en": "Update an existing service in your team catalog — name, price, duration, tags, description, or active state. Only the fields you provide are changed, so bookings and invoices keep working.",
-          "de": "Eine bestehende Dienstleistung in deinem Team-Katalog aktualisieren — Name, Preis, Dauer, Tags, Beschreibung oder Aktiv-Status. Nur die angegebenen Felder werden geändert, Buchungen und Rechnungen funktionieren weiter.",
-          "fr": "Mettez à jour un service existant de votre catalogue — nom, prix, durée, tags, description ou état actif. Seuls les champs fournis sont modifiés, les réservations et factures continuent de fonctionner.",
-          "es": "Actualiza un servicio existente de tu catálogo — nombre, precio, duración, etiquetas, descripción o estado activo. Solo cambian los campos proporcionados; reservas y facturas siguen funcionando.",
-          "it": "Aggiorna un servizio esistente del tuo catalogo — nome, prezzo, durata, tag, descrizione o stato attivo. Vengono modificati solo i campi forniti; prenotazioni e fatture continuano a funzionare.",
-          "ro": "Actualizează un serviciu existent din catalogul echipei tale — nume, preț, durată, taguri, descriere sau stare activă. Se schimbă doar câmpurile furnizate; rezervările și facturile continuă să funcționeze."
-        },
-        "bot": "Use when the user wants to modify an existing service. If the user refers to a service by name, list services first to find the matching ID. Only include fields that changed. Use bookable to control appointment booking separately from public store visibility and active.",
-        "vars": {
-          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
-          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
-          "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
-        },
-        "actions": [
-          {
-            "type": "collect",
-            "label": {
-              "en": "Update service",
-              "de": "Dienstleistung aktualisieren",
-              "fr": "Mettre à jour le service",
-              "es": "Actualizar el servicio",
-              "it": "Aggiorna il servizio",
-              "ro": "Actualizează serviciul"
-            },
-            "destination": {
-              "url": "https://api.joai.ai/v1/services/{{service_id}}",
-              "method": "PUT",
-              "headers": {
-                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
-                "X-Team": "{{team}}"
-              }
-            },
-            "inputs": [
-              {
-                "name": "Service ID",
-                "as": "service_id",
-                "description": {
-                  "en": "The hashid of the service to update",
-                  "de": "Die Hashid der zu aktualisierenden Dienstleistung",
-                  "fr": "Le hashid du service à mettre à jour",
-                  "es": "El hashid del servicio a actualizar",
-                  "it": "L'hashid del servizio da aggiornare",
-                  "ro": "Hashid-ul serviciului de actualizat"
-                },
-                "bot": "The service hash ID. If the user refers to a service by name, list services first to find the matching ID.",
-                "type": "string",
-                "position": "url:service_id",
-                "source": "field",
-                "required": true,
-                "min": 1
-              },
-              {
-                "name": "Name",
-                "as": "name",
-                "description": {
-                  "en": "Service name",
-                  "de": "Name der Dienstleistung",
-                  "fr": "Nom du service",
-                  "es": "Nombre del servicio",
-                  "it": "Nome del servizio",
-                  "ro": "Numele serviciului"
-                },
-                "type": "string",
-                "source": "field",
-                "required": false
-              },
-              {
-                "name": "Price",
-                "as": "price",
-                "description": {
-                  "en": "Price in cents (number)",
-                  "de": "Preis in Cent (Zahl)",
-                  "fr": "Prix en centimes (nombre)",
-                  "es": "Precio en céntimos (número)",
-                  "it": "Prezzo in centesimi (numero)",
-                  "ro": "Preț în cenți (număr)"
-                },
-                "type": "string",
-                "source": "field",
-                "required": false
-              },
-              {
-                "name": "Duration (minutes)",
-                "as": "durationMinutes",
-                "description": {
-                  "en": "Duration in minutes (number, or empty for digital services)",
-                  "de": "Dauer in Minuten (Zahl, oder leer bei digitalen Leistungen)",
-                  "fr": "Durée en minutes (nombre, ou vide pour les services numériques)",
-                  "es": "Duración en minutos (número, o vacío para servicios digitales)",
-                  "it": "Durata in minuti (numero, o vuoto per servizi digitali)",
-                  "ro": "Durată în minute (număr, sau gol pentru servicii digitale)"
-                },
-                "type": "string",
-                "source": "field",
-                "required": false
-              },
-              {
-                "name": "Tags",
-                "as": "tags",
-                "description": {
-                  "en": "Replacement tags, e.g. [\"hourly\",\"consultation\"]",
-                  "de": "Ersatz-Tags, z.B. [\"stundensatz\",\"beratung\"]",
-                  "fr": "Tags de remplacement, ex. [\"horaire\",\"consultation\"]",
-                  "es": "Etiquetas de reemplazo, p. ej. [\"por hora\",\"consulta\"]",
-                  "it": "Tag sostitutivi, es. [\"orario\",\"consulenza\"]",
-                  "ro": "Taguri de înlocuire, ex. [\"orar\",\"consultare\"]"
-                },
-                "type": "json",
-                "source": "field",
-                "required": false
-              },
-              {
-                "name": "Description",
-                "as": "description",
-                "description": {
-                  "en": "Service description as translatable JSON, e.g. {\"en\":\"...\"}",
-                  "de": "Service-Beschreibung als übersetzbares JSON, z.B. {\"en\":\"...\"}",
-                  "fr": "Description du service en JSON traduisible, ex. {\"en\":\"...\"}",
-                  "es": "Descripción del servicio como JSON traducible, p. ej. {\"en\":\"...\"}",
-                  "it": "Descrizione del servizio come JSON traducibile, es. {\"en\":\"...\"}",
-                  "ro": "Descrierea serviciului ca JSON traductibil, ex. {\"en\":\"...\"}"
-                },
-                "type": "json",
-                "source": "field",
-                "required": false
-              },
-              {
-                "name": "Active",
-                "as": "active",
-                "description": {
-                  "en": "Whether the service is active (\"true\"/\"false\")",
-                  "de": "Ob die Dienstleistung aktiv ist (\"true\"/\"false\")",
-                  "fr": "Si le service est actif (\"true\"/\"false\")",
-                  "es": "Si el servicio está activo (\"true\"/\"false\")",
-                  "it": "Se il servizio è attivo (\"true\"/\"false\")",
-                  "ro": "Dacă serviciul este activ (\"true\"/\"false\")"
-                },
-                "type": "string",
-                "source": "field",
-                "required": false
-              },
-              {
-                "name": "Digital",
-                "as": "digital",
-                "description": {
-                  "en": "Whether the service is digital (\"true\"/\"false\")",
-                  "de": "Ob die Dienstleistung digital ist (\"true\"/\"false\")",
-                  "fr": "Si le service est numérique (\"true\"/\"false\")",
-                  "es": "Si el servicio es digital (\"true\"/\"false\")",
-                  "it": "Se il servizio è digitale (\"true\"/\"false\")",
-                  "ro": "Dacă serviciul este digital (\"true\"/\"false\")"
-                },
-                "type": "bool",
-                "source": "field",
-                "required": false
-              },
-              {
-                "name": "Public",
-                "as": "public",
-                "description": {
-                  "en": "Whether the service is publicly visible in the store (\"true\"/\"false\")",
-                  "de": "Ob die Dienstleistung öffentlich im Store sichtbar ist (\"true\"/\"false\")",
-                  "fr": "Si le service est visible publiquement dans le Store (\"true\"/\"false\")",
-                  "es": "Si el servicio es visible públicamente en el Store (\"true\"/\"false\")",
-                  "it": "Se il servizio è visibile pubblicamente nello Store (\"true\"/\"false\")",
-                  "ro": "Dacă serviciul este vizibil public în Store (\"true\"/\"false\")"
-                },
-                "type": "bool",
-                "source": "field",
-                "required": false
-              },
-              {
-                "name": "Bookable",
-                "as": "bookable",
-                "description": {
-                  "en": "Whether customers can book this service via the booking page (\"true\"/\"false\"). Requires duration when true.",
-                  "de": "Ob Kund:innen diese Dienstleistung über die Buchungsseite buchen können (\"true\"/\"false\"). Bei true ist eine Dauer erforderlich.",
-                  "fr": "Si les clients peuvent réserver ce service via la page de réservation (\"true\"/\"false\"). Une durée est requise si true.",
-                  "es": "Si los clientes pueden reservar este servicio en la página de reservas (\"true\"/\"false\"). Requiere duración si es true.",
-                  "it": "Se i clienti possono prenotare questo servizio dalla pagina prenotazioni (\"true\"/\"false\"). Richiede durata se true.",
-                  "ro": "Dacă clienții pot rezerva acest serviciu din pagina de programări (\"true\"/\"false\"). Necesită durată când e true."
-                },
-                "type": "bool",
-                "source": "field",
-                "required": false
-              },
-              {
-                "name": "Team",
-                "as": "team",
-                "description": {
-                  "en": "Team slug of the service. Defaults to the current team.",
-                  "de": "Team-Slug der Dienstleistung. Standardmäßig das aktuelle Team.",
-                  "fr": "Slug d'équipe du service. Par défaut l'équipe actuelle.",
-                  "es": "Slug del equipo del servicio. Por defecto el equipo actual.",
-                  "it": "Slug del team del servizio. Predefinito: team attuale.",
-                  "ro": "Slug-ul echipei serviciului. Implicit echipa curentă."
-                },
-                "bot": "The slug of the team the service belongs to. Omit to use the current team.",
-                "type": "string",
-                "source": "field",
-                "required": false,
-                "default": "{{JOAI_TEAM_SLUG}}"
-              }
-            ],
-            "output": {
-              "id": "out.data.id",
-              "name": "out.data.name"
-            }
-          }
-        ],
-        "output": {
-          "SERVICE_ID": "out.1.id",
-          "SERVICE_NAME": "out.1.name"
-        },
-        "messages": {
-          "success": {
-            "en": "Service '{{SERVICE_NAME}}' updated.",
-            "de": "Dienstleistung '{{SERVICE_NAME}}' aktualisiert.",
-            "fr": "Service « {{SERVICE_NAME}} » mis à jour.",
-            "es": "Servicio « {{SERVICE_NAME}} » actualizado.",
-            "it": "Servizio « {{SERVICE_NAME}} » aggiornato.",
-            "ro": "Serviciul „{{SERVICE_NAME}}” a fost actualizat."
-          },
-          "error": {
-            "en": "Failed to update service: {{MESSAGE}}",
-            "de": "Dienstleistung konnte nicht aktualisiert werden: {{MESSAGE}}",
-            "fr": "Échec de la mise à jour du service : {{MESSAGE}}",
-            "es": "Error al actualizar el servicio: {{MESSAGE}}",
-            "it": "Impossibile aggiornare il servizio: {{MESSAGE}}",
-            "ro": "Nu s-a putut actualiza serviciul: {{MESSAGE}}"
-          }
-        }
-      },
-      "extras": {
-        "keywords": {
-          "en": [
-            "update service",
-            "edit service",
-            "change service price",
-            "modify service duration",
-            "service settings",
-            "enable booking",
-            "disable booking"
-          ],
-          "de": [
-            "Dienstleistung aktualisieren",
-            "Service bearbeiten",
-            "Preis ändern",
-            "Dauer anpassen",
-            "Service-Einstellungen",
-            "Buchung aktivieren",
-            "Buchung deaktivieren"
-          ]
-        },
-        "useCases": {
-          "en": [
-            "Change the price of an existing service",
-            "Update the duration of a service for appointment booking",
-            "Activate or deactivate a service in your catalog",
-            "Make a service public in the store but not bookable",
-            "Enable or disable appointment booking for a service"
-          ],
-          "de": [
-            "Den Preis einer bestehenden Dienstleistung ändern",
-            "Die Dauer einer Dienstleistung für Terminbuchungen anpassen",
-            "Eine Dienstleistung im Katalog aktivieren oder deaktivieren",
-            "Eine Dienstleistung im Store listen, aber nicht buchbar machen",
-            "Terminbuchung für eine Dienstleistung aktivieren oder deaktivieren"
+            "Alle Dienstleistungen und Stundensätze im Team-Katalog anzeigen",
+            "Eine Service-ID für die Termineinstellungen finden",
+            "Prüfen, welche Dienstleistungen für Rechnungen verfügbar sind"
           ]
         },
         "category": "productivity"
@@ -724,134 +287,160 @@
         ]
       },
       "extras": null
+    },
+    {
+      "key": "none:whatsapp-update-cli",
+      "identifier": "@whatsapp-update-cli",
+      "alias": "whatsapp-update-cli",
+      "chain": "none",
+      "hash": "19b0075a4f38846aae5c359b6c6b3923ab9fce189305d7d8fd0162ea014b8ed9",
+      "checksum": "19b0075a4f38846aae5c359b6c6b3923ab9fce189305d7d8fd0162ea014b8ed9",
+      "name": "WhatsApp: Update Personal CLI",
+      "title": {
+        "en": "Update WhatsApp CLI",
+        "de": "WhatsApp CLI aktualisieren",
+        "es": "Actualizar WhatsApp CLI",
+        "fr": "Mettre à jour WhatsApp CLI",
+        "ro": "Actualizează WhatsApp CLI",
+        "it": "Aggiorna WhatsApp CLI"
+      },
+      "description": {
+        "en": "Update wacli to the latest verified release for reliable personal WhatsApp messaging and sync. JoAi checks the downloaded release before installing it in the desktop app's managed tools directory.",
+        "de": "Aktualisiere wacli auf die neueste geprüfte Version, damit persönliche WhatsApp-Nachrichten und der Sync zuverlässig funktionieren. JoAi prüft den Download und installiert ihn im verwalteten Werkzeugordner der Desktop-App.",
+        "es": "Actualiza wacli a la última versión verificada para mantener fiables los mensajes y la sincronización de WhatsApp Personal. JoAi verifica la descarga antes de instalarla en el directorio de herramientas administrado por la aplicación de escritorio.",
+        "fr": "Mettez wacli à jour vers la dernière version vérifiée pour assurer la fiabilité des messages et de la synchronisation WhatsApp personnelle. JoAi vérifie le téléchargement avant de l’installer dans le dossier d’outils géré par l’application de bureau.",
+        "ro": "Actualizează wacli la cea mai nouă versiune verificată pentru mesaje și sincronizare WhatsApp Personal fiabile. JoAi verifică descărcarea înainte de instalarea în directorul de instrumente administrat de aplicația desktop.",
+        "it": "Aggiorna wacli all’ultima versione verificata per mantenere affidabili i messaggi e la sincronizzazione di WhatsApp personale. JoAi verifica il download prima di installarlo nella cartella degli strumenti gestita dall’app desktop."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b88bb15e93ef3b240c329dd25fd70fae0e02c7cc89f0384a281a90d4853e42f3",
+        "slug": "whatsapp",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "WhatsApp",
+        "description": {
+          "en": "Pair personal WhatsApp and forward inbound messages to agent hooks.",
+          "de": "Persönliches WhatsApp koppeln und eingehende Nachrichten an Agent-Hooks weiterleiten."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/whatsapp.png"
+        },
+        "urls": {
+          "web": "https://whatsapp.com"
+        },
+        "colors": {
+          "primary": "#25D366"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "WhatsApp: Update Personal CLI",
+        "title": {
+          "en": "Update WhatsApp CLI",
+          "de": "WhatsApp CLI aktualisieren",
+          "es": "Actualizar WhatsApp CLI",
+          "fr": "Mettre à jour WhatsApp CLI",
+          "ro": "Actualizează WhatsApp CLI",
+          "it": "Aggiorna WhatsApp CLI"
+        },
+        "description": {
+          "en": "Update wacli to the latest verified release for reliable personal WhatsApp messaging and sync. JoAi checks the downloaded release before installing it in the desktop app's managed tools directory.",
+          "de": "Aktualisiere wacli auf die neueste geprüfte Version, damit persönliche WhatsApp-Nachrichten und der Sync zuverlässig funktionieren. JoAi prüft den Download und installiert ihn im verwalteten Werkzeugordner der Desktop-App.",
+          "es": "Actualiza wacli a la última versión verificada para mantener fiables los mensajes y la sincronización de WhatsApp Personal. JoAi verifica la descarga antes de instalarla en el directorio de herramientas administrado por la aplicación de escritorio.",
+          "fr": "Mettez wacli à jour vers la dernière version vérifiée pour assurer la fiabilité des messages et de la synchronisation WhatsApp personnelle. JoAi vérifie le téléchargement avant de l’installer dans le dossier d’outils géré par l’application de bureau.",
+          "ro": "Actualizează wacli la cea mai nouă versiune verificată pentru mesaje și sincronizare WhatsApp Personal fiabile. JoAi verifică descărcarea înainte de instalarea în directorul de instrumente administrat de aplicația desktop.",
+          "it": "Aggiorna wacli all’ultima versione verificata per mantenere affidabili i messaggi e la sincronizzazione di WhatsApp personale. JoAi verifica il download prima di installarlo nella cartella degli strumenti gestita dall’app desktop."
+        },
+        "actions": [
+          {
+            "type": "prompt",
+            "label": {
+              "en": "Update",
+              "de": "Aktualisieren",
+              "es": "Actualizar",
+              "fr": "Mettre à jour",
+              "ro": "Actualizează",
+              "it": "Aggiorna"
+            },
+            "prompt": "/joai whatsapp update"
+          }
+        ],
+        "messages": {
+          "success": {
+            "en": "WhatsApp CLI is up to date.",
+            "de": "WhatsApp CLI ist aktuell.",
+            "es": "WhatsApp CLI está actualizado.",
+            "fr": "WhatsApp CLI est à jour.",
+            "ro": "WhatsApp CLI este actualizat.",
+            "it": "WhatsApp CLI è aggiornato."
+          },
+          "error": {
+            "en": "WhatsApp CLI could not be updated.",
+            "de": "WhatsApp CLI konnte nicht aktualisiert werden.",
+            "es": "No se pudo actualizar WhatsApp CLI.",
+            "fr": "WhatsApp CLI n’a pas pu être mis à jour.",
+            "ro": "WhatsApp CLI nu a putut fi actualizat.",
+            "it": "Non è stato possibile aggiornare WhatsApp CLI."
+          }
+        }
+      },
+      "extras": {
+        "keywords": {
+          "en": [
+            "update wacli",
+            "latest WhatsApp CLI",
+            "fix WhatsApp sync"
+          ],
+          "de": [
+            "wacli aktualisieren",
+            "neueste WhatsApp CLI",
+            "WhatsApp Sync reparieren"
+          ]
+        },
+        "useCases": {
+          "en": [
+            "Install the latest compatible wacli release",
+            "Fix sync failures caused by an outdated WhatsApp protocol",
+            "Keep personal WhatsApp sending reliable"
+          ],
+          "de": [
+            "Die neueste kompatible wacli-Version installieren",
+            "Sync-Fehler durch ein veraltetes WhatsApp-Protokoll beheben",
+            "Persönliche WhatsApp-Nachrichten zuverlässig senden"
+          ]
+        },
+        "category": "communication",
+        "faq": {
+          "en": [
+            {
+              "question": "How do I update wacli?",
+              "answer": "Run this action in the JoAi desktop app to download and verify the latest supported release."
+            },
+            {
+              "question": "Will updating remove my WhatsApp pairing?",
+              "answer": "No. The update replaces only the executable and keeps your local WhatsApp account data."
+            }
+          ],
+          "de": [
+            {
+              "question": "Wie aktualisiere ich wacli?",
+              "answer": "Führe diese Aktion in der JoAi Desktop-App aus, um die neueste unterstützte Version herunterzuladen und zu prüfen."
+            },
+            {
+              "question": "Geht meine WhatsApp-Kopplung beim Update verloren?",
+              "answer": "Nein. Das Update ersetzt nur das Programm und behält deine lokalen WhatsApp-Kontodaten."
+            }
+          ]
+        }
+      }
     }
   ],
-  "deletes": [
-    {
-      "key": "none:followups-birthday",
-      "alias": "followups-birthday",
-      "chain": "none",
-      "hash": "e850792ffa8fc6b70dc6dcd21a131940ef1eccf3c53d78e1f74c94b7acb99e75"
-    },
-    {
-      "key": "none:followups-birthday-scan",
-      "alias": "followups-birthday-scan",
-      "chain": "none",
-      "hash": "c6a539092c6cc5d0d5eec14ca9c3edca11aa72fff90d9be033eca64b89b38034"
-    },
-    {
-      "key": "none:followups-check-in",
-      "alias": "followups-check-in",
-      "chain": "none",
-      "hash": "00825c62b81cdaa3faeb73d0c6aa56b65220adc8804801fe8a5c994d11712a81"
-    },
-    {
-      "key": "none:followups-dashboard",
-      "alias": "followups-dashboard",
-      "chain": "none",
-      "hash": "6c0a7ebf6e6c6657493e9028c0fe5f86b73ceb1aa2e7686ee716c03e5ac402e6"
-    },
-    {
-      "key": "none:followups-enroll",
-      "alias": "followups-enroll",
-      "chain": "none",
-      "hash": "2f21e5b9aad1e38f39f0a9f4c54e60b4a3efe4015324aa94fd6464d02b0aba1a"
-    },
-    {
-      "key": "none:followups-execute-step",
-      "alias": "followups-execute-step",
-      "chain": "none",
-      "hash": "ecc18b03a470a59b2def2e086cde29bf81eef2fe4ae0ea4f0b064051e9405d59"
-    },
-    {
-      "key": "none:followups-handle-reply",
-      "alias": "followups-handle-reply",
-      "chain": "none",
-      "hash": "5e27c951b28351e84d5056b71fb840715f19e968cb2d3b184c3eeb3fe3a28a72"
-    },
-    {
-      "key": "none:followups-inactive-scan",
-      "alias": "followups-inactive-scan",
-      "chain": "none",
-      "hash": "239f0c50cc0e2b0490256e7c7371baf5a6dc53b2ee83a1f7da3cbd4e54d3e8e8"
-    },
-    {
-      "key": "none:followups-post-treatment",
-      "alias": "followups-post-treatment",
-      "chain": "none",
-      "hash": "7bb2e12abbde7ceeba76a12d2d0f2e7534ac077c079ede10642c79cce6bdcb21"
-    },
-    {
-      "key": "none:followups-reorder-reminder",
-      "alias": "followups-reorder-reminder",
-      "chain": "none",
-      "hash": "24c460ed1eed240a49d01469e5c29461ef69d87c63119f288a31b43c3e1aaee8"
-    },
-    {
-      "key": "none:followups-sequence-remove",
-      "alias": "followups-sequence-remove",
-      "chain": "none",
-      "hash": "7b59e7ea5375c1b1f821091895e880065ebe2d6a0b9f7bad67a733a1edcd8382"
-    },
-    {
-      "key": "none:followups-template-create",
-      "alias": "followups-template-create",
-      "chain": "none",
-      "hash": "71f4b98641b7f3803890bb68dda2ba50aa426233a3797fdc190890429a67b959"
-    },
-    {
-      "key": "none:followups-template-delete",
-      "alias": "followups-template-delete",
-      "chain": "none",
-      "hash": "47cb7d7ad5059f170b78a40ac189a6bbef01ac311f6294d4faf85951a1843794"
-    },
-    {
-      "key": "none:followups-template-list",
-      "alias": "followups-template-list",
-      "chain": "none",
-      "hash": "d8742e2ea5df5b6a629c4005dbecf8014dc55ff0fc889b86c1ee0ae8fd3db695"
-    },
-    {
-      "key": "none:followups-template-update",
-      "alias": "followups-template-update",
-      "chain": "none",
-      "hash": "56e042c2abc88e3c0f7214283ecb26a710e4d594ce29431fc61663f52bdd7829"
-    },
-    {
-      "key": "none:followups-win-back",
-      "alias": "followups-win-back",
-      "chain": "none",
-      "hash": "7fb1bf088c0e805939f726bdddd817b073ff84b38bb7fde89bff9dc5fe2ee043"
-    },
-    {
-      "key": "none:upsells-after-visit",
-      "alias": "upsells-after-visit",
-      "chain": "none",
-      "hash": "c351796b5ffad23f47260131885eea28998314c510eb16395fd8da858f06ee46"
-    },
-    {
-      "key": "none:upsells-bundle-suggest",
-      "alias": "upsells-bundle-suggest",
-      "chain": "none",
-      "hash": "7703b6745c0f71b165d11bf79c89b45d959e109f0e7d4c0333ddf35904409e0b"
-    },
-    {
-      "key": "none:upsells-product-alert",
-      "alias": "upsells-product-alert",
-      "chain": "none",
-      "hash": "789fba9de00661ab697fe64e30b0d8c2dd66270ebae36a7aec4db1686ec3fcc1"
-    },
-    {
-      "key": "none:upsells-recommend",
-      "alias": "upsells-recommend",
-      "chain": "none",
-      "hash": "f1d7b742d2d62af806760d6f5854fd538783fef47bfaf93c7b3f01f97f6417a5"
-    },
-    {
-      "key": "none:upsells-weekly-opportunities",
-      "alias": "upsells-weekly-opportunities",
-      "chain": "none",
-      "hash": "4ce6139efcae68a079566d30decfdfe4fdb77910634566b0857edb864cfd371a"
-    }
-  ]
+  "deletes": []
 }
