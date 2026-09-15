@@ -4,25 +4,160 @@
   "repo": "JoAiHQ/warps",
   "branch": "dev",
   "network": "devnet",
-  "commitSha": "784cdfcc04c679744828840697c1914fc92d0f4c",
-  "committedAt": "2026-09-15T12:52:20.995Z",
-  "generatedAt": "2026-09-15T12:52:22.810Z",
+  "commitSha": "6efbd96e98ae8ddcdd1569c91292c020f1a4ae59",
+  "committedAt": "2026-09-15T13:53:41.981Z",
+  "generatedAt": "2026-09-15T13:53:45.507Z",
   "upserts": [
+    {
+      "key": "none:joai-product-list",
+      "identifier": "@joai-product-list",
+      "alias": "joai-product-list",
+      "chain": "none",
+      "hash": "3e1660c3c61d369988d395688c47f3313444c82202c7d284b14bc5e725c03e9b",
+      "checksum": "3e1660c3c61d369988d395688c47f3313444c82202c7d284b14bc5e725c03e9b",
+      "name": "JoAi: List Products",
+      "title": {
+        "en": "List team products",
+        "de": "Team-Produkte anzeigen"
+      },
+      "description": {
+        "en": "List JoAi team catalog products with names, prices, and visibility. Team members and agents with team access see the full manage catalog, including private and inactive rows, so obsolete duplicates can be found and deleted. Callers without team access still receive public, active products only.",
+        "de": "JoAi Team-Produkte mit Namen, Preisen und Sichtbarkeit anzeigen. Team-Mitglieder und Agents mit Team-Zugriff sehen den gesamten Verwaltungskatalog, inklusive privater und inaktiver Einträge, damit veraltete Duplikate gefunden und gelöscht werden können. Ohne Team-Zugriff siehst du weiterhin nur öffentliche, aktive Produkte."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: List Products",
+        "title": {
+          "en": "List team products",
+          "de": "Team-Produkte anzeigen"
+        },
+        "description": {
+          "en": "List JoAi team catalog products with names, prices, and visibility. Team members and agents with team access see the full manage catalog, including private and inactive rows, so obsolete duplicates can be found and deleted. Callers without team access still receive public, active products only.",
+          "de": "JoAi Team-Produkte mit Namen, Preisen und Sichtbarkeit anzeigen. Team-Mitglieder und Agents mit Team-Zugriff sehen den gesamten Verwaltungskatalog, inklusive privater und inaktiver Einträge, damit veraltete Duplikate gefunden und gelöscht werden können. Ohne Team-Zugriff siehst du weiterhin nur öffentliche, aktive Produkte."
+        },
+        "bot": "Use this when the user wants to see their available products, materials, billable items, or manage the catalog including private and inactive rows. Pass team as the team slug. Team members get the full catalog without extra flags; outsiders only see public active products.",
+        "vars": {
+          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+          "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+        },
+        "output": {
+          "products": "out",
+          "productsList": "out.data"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "List products",
+              "de": "Produkte anzeigen"
+            },
+            "destination": {
+              "url": "https://devnet-api.joai.ai/v1/products",
+              "method": "GET",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+                "X-Team": "{{team}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Team",
+                "as": "team",
+                "description": {
+                  "en": "Team slug to list products for. Defaults to the current team.",
+                  "de": "Team-Slug, für das Produkte angezeigt werden. Standardmäßig das aktuelle Team."
+                },
+                "bot": "The slug of the team whose products to list. Omit to use the current team.",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "default": "{{JOAI_TEAM_SLUG}}"
+              }
+            ]
+          }
+        ],
+        "ui": "https://raw.githubusercontent.com/JoAiHQ/warps/main/warps/joai/product-list/chatapp.4be16035.dist.html"
+      },
+      "extras": {
+        "keywords": {
+          "en": [
+            "list products",
+            "view products",
+            "product catalog",
+            "shop catalog",
+            "inactive products",
+            "private products"
+          ],
+          "de": [
+            "Produkte anzeigen",
+            "Produktkatalog",
+            "Shop-Katalog",
+            "inaktive Produkte",
+            "private Produkte"
+          ]
+        },
+        "useCases": {
+          "en": [
+            "View all products in your team catalog, including private and inactive",
+            "Find a product ID or slug to use in orders and invoices",
+            "Find obsolete duplicate products to delete"
+          ],
+          "de": [
+            "Alle Produkte im Team-Katalog anzeigen, inklusive privat und inaktiv",
+            "Eine Produkt-ID oder einen Slug für Bestellungen und Rechnungen finden",
+            "Veraltete doppelte Produkte zum Löschen finden"
+          ]
+        },
+        "category": "commerce"
+      }
+    },
     {
       "key": "none:joai-service-list",
       "identifier": "@joai-service-list",
       "alias": "joai-service-list",
       "chain": "none",
-      "hash": "c91c663d1f528dbb78cfbda87847bd51c82fb1b941b8c82408e7fad5c144b1b8",
-      "checksum": "c91c663d1f528dbb78cfbda87847bd51c82fb1b941b8c82408e7fad5c144b1b8",
+      "hash": "6dd60ef5f1eca8e254ecf7f35c862601043cb289aefecb8189622265cf24cdb0",
+      "checksum": "6dd60ef5f1eca8e254ecf7f35c862601043cb289aefecb8189622265cf24cdb0",
       "name": "JoAi: List Services",
       "title": {
         "en": "List team services",
         "de": "Team-Dienstleistungen anzeigen"
       },
       "description": {
-        "en": "View team catalog services with names, prices and durations. Includes private services when the caller has team-member access; otherwise public-only.",
-        "de": "Team-Dienstleistungen mit Namen, Preisen und Dauern anzeigen. Private Dienstleistungen werden einbezogen, wenn der Aufrufer Team-Mitgliedszugriff hat; sonst nur öffentliche."
+        "en": "List JoAi team catalog services with names, prices, durations, and visibility. Team members and agents with team access see the full manage catalog, including private and inactive rows, so obsolete duplicates can be found and deleted. Callers without team access still receive public, active services only.",
+        "de": "JoAi Team-Dienstleistungen mit Namen, Preisen, Dauern und Sichtbarkeit anzeigen. Team-Mitglieder und Agents mit Team-Zugriff sehen den gesamten Verwaltungskatalog, inklusive privater und inaktiver Einträge, damit veraltete Duplikate gefunden und gelöscht werden können. Ohne Team-Zugriff siehst du weiterhin nur öffentliche, aktive Dienstleistungen."
       },
       "preview": null,
       "creator": "github:JoAiHQ/warps",
@@ -63,10 +198,10 @@
           "de": "Team-Dienstleistungen anzeigen"
         },
         "description": {
-          "en": "View team catalog services with names, prices and durations. Includes private services when the caller has team-member access; otherwise public-only.",
-          "de": "Team-Dienstleistungen mit Namen, Preisen und Dauern anzeigen. Private Dienstleistungen werden einbezogen, wenn der Aufrufer Team-Mitgliedszugriff hat; sonst nur öffentliche."
+          "en": "List JoAi team catalog services with names, prices, durations, and visibility. Team members and agents with team access see the full manage catalog, including private and inactive rows, so obsolete duplicates can be found and deleted. Callers without team access still receive public, active services only.",
+          "de": "JoAi Team-Dienstleistungen mit Namen, Preisen, Dauern und Sichtbarkeit anzeigen. Team-Mitglieder und Agents mit Team-Zugriff sehen den gesamten Verwaltungskatalog, inklusive privater und inaktiver Einträge, damit veraltete Duplikate gefunden und gelöscht werden können. Ohne Team-Zugriff siehst du weiterhin nur öffentliche, aktive Dienstleistungen."
         },
-        "bot": "Use this when the user wants to see their available services, hourly rates, or billable services. Private services are included for team members; outsiders only see public ones.",
+        "bot": "Use this when the user wants to see their available services, hourly rates, billable services, or manage the catalog including private and inactive rows. Pass team as the team slug. Team members get the full catalog without extra flags; outsiders only see public active services.",
         "vars": {
           "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
           "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
@@ -101,10 +236,10 @@
                 "position": "query",
                 "default": true,
                 "description": {
-                  "en": "Include private services when the caller has team-member access. Without team access the API still returns public-only.",
-                  "de": "Private Dienstleistungen einbeziehen, wenn der Aufrufer Team-Mitgliedszugriff hat. Ohne Team-Zugriff liefert die API weiterhin nur öffentliche."
+                  "en": "Legacy flag kept for compatibility. Team members already receive the full catalog (private and inactive included). Callers without team access still get public, active services only.",
+                  "de": "Legacy-Flag für Kompatibilität. Team-Mitglieder erhalten den gesamten Katalog bereits ohne dieses Flag (inkl. privat und inaktiv). Ohne Team-Zugriff liefert die API weiterhin nur öffentliche, aktive Dienstleistungen."
                 },
-                "bot": "Defaults to true for team catalog listing. Private rows are only returned when the authenticated caller is a team member."
+                "bot": "Optional. Defaults to true. Team members already get the full manage catalog without this flag."
               },
               {
                 "name": "bookable",
@@ -151,25 +286,29 @@
             "view services",
             "service catalog",
             "billable services",
-            "appointment services"
+            "appointment services",
+            "inactive services",
+            "private services"
           ],
           "de": [
             "Dienstleistungen anzeigen",
             "Service-Katalog",
             "abrechenbare Leistungen",
-            "Termin-Dienstleistungen"
+            "Termin-Dienstleistungen",
+            "inaktive Dienstleistungen",
+            "private Dienstleistungen"
           ]
         },
         "useCases": {
           "en": [
-            "View all services and hourly rates in your team catalog",
+            "View all services and hourly rates in your team catalog, including private and inactive",
             "Find a service ID to use in appointment settings",
-            "Check which services are available for invoicing"
+            "Find obsolete duplicate services to delete"
           ],
           "de": [
-            "Alle Dienstleistungen und Stundensätze im Team-Katalog anzeigen",
+            "Alle Dienstleistungen und Stundensätze im Team-Katalog anzeigen, inklusive privat und inaktiv",
             "Eine Service-ID für die Termineinstellungen finden",
-            "Prüfen, welche Dienstleistungen für Rechnungen verfügbar sind"
+            "Veraltete doppelte Dienstleistungen zum Löschen finden"
           ]
         },
         "category": "productivity"
@@ -289,9 +428,9 @@
       "extras": null
     },
     {
-      "key": "none:whatsapp-update-cli",
-      "identifier": "@whatsapp-update-cli",
-      "alias": "whatsapp-update-cli",
+      "key": "none:whatsapp-cli-update",
+      "identifier": "@whatsapp-cli-update",
+      "alias": "whatsapp-cli-update",
       "chain": "none",
       "hash": "19b0075a4f38846aae5c359b6c6b3923ab9fce189305d7d8fd0162ea014b8ed9",
       "checksum": "19b0075a4f38846aae5c359b6c6b3923ab9fce189305d7d8fd0162ea014b8ed9",
@@ -442,5 +581,12 @@
       }
     }
   ],
-  "deletes": []
+  "deletes": [
+    {
+      "key": "none:whatsapp-update-cli",
+      "alias": "whatsapp-update-cli",
+      "chain": "none",
+      "hash": "19b0075a4f38846aae5c359b6c6b3923ab9fce189305d7d8fd0162ea014b8ed9"
+    }
+  ]
 }
