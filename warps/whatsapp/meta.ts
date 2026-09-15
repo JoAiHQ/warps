@@ -1,7 +1,7 @@
 import type { WarpExtras } from '../types'
 
 export const meta: Record<string, WarpExtras> = {
-  'update-cli': {
+  'cli-update': {
     keywords: {
       en: ['update wacli', 'latest WhatsApp CLI', 'fix WhatsApp sync'],
       de: ['wacli aktualisieren', 'neueste WhatsApp CLI', 'WhatsApp Sync reparieren'],
