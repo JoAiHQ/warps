@@ -837,19 +837,19 @@ export const meta: Record<string, WarpExtras> = {
   },
   'service-list': {
     keywords: {
-      en: ['list services', 'view services', 'service catalog', 'billable services', 'appointment services'],
-      de: ['Dienstleistungen anzeigen', 'Service-Katalog', 'abrechenbare Leistungen', 'Termin-Dienstleistungen'],
+      en: ['list services', 'view services', 'service catalog', 'billable services', 'appointment services', 'inactive services', 'private services'],
+      de: ['Dienstleistungen anzeigen', 'Service-Katalog', 'abrechenbare Leistungen', 'Termin-Dienstleistungen', 'inaktive Dienstleistungen', 'private Dienstleistungen'],
     },
     useCases: {
       en: [
-        'View all services and hourly rates in your team catalog',
+        'View all services and hourly rates in your team catalog, including private and inactive',
         'Find a service ID to use in appointment settings',
-        'Check which services are available for invoicing',
+        'Find obsolete duplicate services to delete',
       ],
       de: [
-        'Alle Dienstleistungen und Stundensätze im Team-Katalog anzeigen',
+        'Alle Dienstleistungen und Stundensätze im Team-Katalog anzeigen, inklusive privat und inaktiv',
         'Eine Service-ID für die Termineinstellungen finden',
-        'Prüfen, welche Dienstleistungen für Rechnungen verfügbar sind',
+        'Veraltete doppelte Dienstleistungen zum Löschen finden',
       ],
     },
     category: 'productivity',
@@ -1004,6 +1004,25 @@ export const meta: Record<string, WarpExtras> = {
         { question: 'Was ist eine Mengenvariante?', answer: 'Eine Mengenvariante setzt einen anderen Preis pro Einheit basierend auf der bestellten Menge. Zum Beispiel €8/Karte für 1-9 Karten und €4/Karte für 10-49 Karten.' },
       ],
     },
+  },
+  'product-list': {
+    keywords: {
+      en: ['list products', 'view products', 'product catalog', 'shop catalog', 'inactive products', 'private products'],
+      de: ['Produkte anzeigen', 'Produktkatalog', 'Shop-Katalog', 'inaktive Produkte', 'private Produkte'],
+    },
+    useCases: {
+      en: [
+        'View all products in your team catalog, including private and inactive',
+        'Find a product ID or slug to use in orders and invoices',
+        'Find obsolete duplicate products to delete',
+      ],
+      de: [
+        'Alle Produkte im Team-Katalog anzeigen, inklusive privat und inaktiv',
+        'Eine Produkt-ID oder einen Slug für Bestellungen und Rechnungen finden',
+        'Veraltete doppelte Produkte zum Löschen finden',
+      ],
+    },
+    category: 'commerce',
   },
   'product-create': {
     keywords: {
