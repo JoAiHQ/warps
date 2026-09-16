@@ -1,0 +1,165 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Update Contact Relation",
+  "title": {
+    "en": "Update a relation between contacts",
+    "de": "Beziehung zwischen Kontakten aktualisieren",
+    "es": "Update a relation between contacts",
+    "fr": "Update a relation between contacts",
+    "ro": "Update a relation between contacts",
+    "it": "Update a relation between contacts"
+  },
+  "description": {
+    "en": "Update an existing relation between two CRM contacts — change its type, edit its note, or replace its structured metadata. Changing the type re-points the relation correctly (for example from parent_of to manages) and is rejected if that relation already exists. The linked contacts are preserved. List the contact's relations first to find the relation ID.",
+    "de": "Aktualisiere eine bestehende Beziehung zwischen zwei CRM-Kontakten — ändere den Typ, bearbeite die Notiz oder ersetze die strukturierten Metadaten. Beim Ändern des Typs wird die Beziehung korrekt neu ausgerichtet (z. B. von parent_of zu manages) und abgelehnt, wenn diese Beziehung bereits existiert. Die verknüpften Kontakte bleiben erhalten. Liste zuerst die Beziehungen des Kontakts auf, um die Beziehungs-ID zu finden.",
+    "es": "Update an existing relation between two CRM contacts — change its type, edit its note, or replace its structured metadata. Changing the type re-points the relation correctly (for example from parent_of to manages) and is rejected if that relation already exists. The linked contacts are preserved. List the contact's relations first to find the relation ID.",
+    "fr": "Update an existing relation between two CRM contacts — change its type, edit its note, or replace its structured metadata. Changing the type re-points the relation correctly (for example from parent_of to manages) and is rejected if that relation already exists. The linked contacts are preserved. List the contact's relations first to find the relation ID.",
+    "ro": "Update an existing relation between two CRM contacts — change its type, edit its note, or replace its structured metadata. Changing the type re-points the relation correctly (for example from parent_of to manages) and is rejected if that relation already exists. The linked contacts are preserved. List the contact's relations first to find the relation ID.",
+    "it": "Update an existing relation between two CRM contacts — change its type, edit its note, or replace its structured metadata. Changing the type re-points the relation correctly (for example from parent_of to manages) and is rejected if that relation already exists. The linked contacts are preserved. List the contact's relations first to find the relation ID."
+  },
+  "bot": "Use this to change the type of an existing relation, add or change its note, or replace its structured metadata. The relation type is read from this contact's point of view; changing it may reverse which contact is the subject. If the relation ID is unknown, list the contact's relations first.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Update relation",
+        "de": "Beziehung aktualisieren",
+        "es": "Update relation",
+        "fr": "Update relation",
+        "ro": "Update relation",
+        "it": "Update relation"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/contacts/{{contactId}}/relations/{{relationId}}",
+        "method": "PUT",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Contact ID",
+          "as": "contactId",
+          "description": {
+            "en": "The ID of a contact involved in the relation.",
+            "de": "Die ID eines an der Beziehung beteiligten Kontakts.",
+            "es": "The ID of a contact involved in the relation.",
+            "fr": "The ID of a contact involved in the relation.",
+            "ro": "The ID of a contact involved in the relation.",
+            "it": "The ID of a contact involved in the relation."
+          },
+          "bot": "The contact hash ID. Either contact of the relation works.",
+          "type": "string",
+          "position": "url:contactId",
+          "source": "field",
+          "required": true,
+          "min": 1
+        },
+        {
+          "name": "Relation ID",
+          "as": "relationId",
+          "description": {
+            "en": "The ID of the relation to update.",
+            "de": "Die ID der zu aktualisierenden Beziehung.",
+            "es": "The ID of the relation to update.",
+            "fr": "The ID of the relation to update.",
+            "ro": "The ID of the relation to update.",
+            "it": "The ID of the relation to update."
+          },
+          "bot": "The relation hash ID. If unknown, list the contact's relations first to find it.",
+          "type": "string",
+          "position": "url:relationId",
+          "source": "field",
+          "required": true,
+          "min": 1
+        },
+        {
+          "name": "Relation type",
+          "as": "type",
+          "description": {
+            "en": "The new relation type, read from this contact's point of view: parent_of, child_of, spouse_of, sibling_of, manages, reports_to, colleague_of, partner_of, client_of, supplier_of, referred_by, or referred. Omit to keep the current type.",
+            "de": "Der neue Beziehungstyp, gelesen aus Sicht dieses Kontakts: parent_of, child_of, spouse_of, sibling_of, manages, reports_to, colleague_of, partner_of, client_of, supplier_of, referred_by oder referred. Weglassen, um den aktuellen Typ beizubehalten.",
+            "es": "The new relation type, read from this contact's point of view: parent_of, child_of, spouse_of, sibling_of, manages, reports_to, colleague_of, partner_of, client_of, supplier_of, referred_by, or referred. Omit to keep the current type.",
+            "fr": "The new relation type, read from this contact's point of view: parent_of, child_of, spouse_of, sibling_of, manages, reports_to, colleague_of, partner_of, client_of, supplier_of, referred_by, or referred. Omit to keep the current type.",
+            "ro": "The new relation type, read from this contact's point of view: parent_of, child_of, spouse_of, sibling_of, manages, reports_to, colleague_of, partner_of, client_of, supplier_of, referred_by, or referred. Omit to keep the current type.",
+            "it": "The new relation type, read from this contact's point of view: parent_of, child_of, spouse_of, sibling_of, manages, reports_to, colleague_of, partner_of, client_of, supplier_of, referred_by, or referred. Omit to keep the current type."
+          },
+          "bot": "Optional new relation type from this contact's point of view. Omit to keep the current type. Changing to a relation that already exists is rejected.",
+          "type": "string",
+          "position": "payload:type",
+          "source": "field",
+          "required": false,
+          "min": 1
+        },
+        {
+          "name": "Notes",
+          "as": "notes",
+          "description": {
+            "en": "The new note for this relation. Send an empty string to clear it. Omit to leave it unchanged.",
+            "de": "Die neue Notiz für diese Beziehung. Sende einen leeren String, um sie zu löschen. Weglassen, um sie unverändert zu lassen.",
+            "es": "The new note for this relation. Send an empty string to clear it. Omit to leave it unchanged.",
+            "fr": "The new note for this relation. Send an empty string to clear it. Omit to leave it unchanged.",
+            "ro": "The new note for this relation. Send an empty string to clear it. Omit to leave it unchanged.",
+            "it": "The new note for this relation. Send an empty string to clear it. Omit to leave it unchanged."
+          },
+          "bot": "Optional short note stored on the relation. Omit to keep the existing note.",
+          "type": "string",
+          "position": "payload:notes",
+          "source": "field",
+          "required": false,
+          "max": 1000
+        },
+        {
+          "name": "Meta",
+          "as": "meta",
+          "description": {
+            "en": "Optional structured metadata as a JSON object — replaces the existing metadata.",
+            "de": "Optionale strukturierte Metadaten als JSON-Objekt — ersetzt die bestehenden Metadaten.",
+            "es": "Optional structured metadata as a JSON object — replaces the existing metadata.",
+            "fr": "Optional structured metadata as a JSON object — replaces the existing metadata.",
+            "ro": "Optional structured metadata as a JSON object — replaces the existing metadata.",
+            "it": "Optional structured metadata as a JSON object — replaces the existing metadata."
+          },
+          "bot": "Optional JSON object with extra context about the relation.",
+          "type": "json",
+          "position": "payload:meta",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug for this action. Defaults to the current team.",
+            "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team."
+          },
+          "bot": "The slug of the team to operate on. Omit to use the current team.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "relationId": "out.data.id",
+    "relationNotes": "out.data.notes"
+  },
+  "messages": {
+    "success": {
+      "en": "Relation updated.",
+      "de": "Beziehung aktualisiert.",
+      "es": "Relation updated.",
+      "fr": "Relation updated.",
+      "ro": "Relation updated.",
+      "it": "Relation updated."
+    }
+  }
+}

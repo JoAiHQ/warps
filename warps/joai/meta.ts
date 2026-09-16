@@ -665,6 +665,128 @@ export const meta: Record<string, WarpExtras> = {
       ],
     },
   },
+  'contact-relation-create': {
+    keywords: {
+      en: ['contact relation', 'link contacts', 'family tree', 'org chart', 'referral tracking', 'relationship CRM'],
+      de: ['Kontaktbeziehung', 'Kontakte verknüpfen', 'Stammbaum', 'Organigramm', 'Empfehlungen verfolgen', 'Beziehungen CRM'],
+    },
+    useCases: {
+      en: [
+        'Record that one contact is the parent, child, or spouse of another for a family tree',
+        'Model a company structure by linking managers to their direct reports',
+        'Track business partners, clients, and suppliers between contacts',
+        'Capture referral chains so you can see who brought in whom',
+      ],
+      de: [
+        'Festhalten, dass ein Kontakt Elternteil, Kind oder Ehepartner eines anderen ist, für einen Stammbaum',
+        'Eine Unternehmensstruktur abbilden, indem du Vorgesetzte mit ihren Mitarbeitenden verknüpfst',
+        'Geschäftspartner:innen, Kund:innen und Lieferant:innen zwischen Kontakten erfassen',
+        'Empfehlungsketten festhalten, um zu sehen, wer wen gebracht hat',
+      ],
+    },
+    category: 'productivity',
+    faq: {
+      en: [
+        { question: 'What relation types are supported?', answer: 'Family (parent_of, child_of, spouse_of, sibling_of), organization (manages, reports_to, colleague_of), business (partner_of, client_of, supplier_of), and referral (referred_by, referred).' },
+        { question: 'Can I add both directions of a relationship?', answer: 'You only need to add it once. Adding the inverse of an existing relation reuses the same link instead of creating a duplicate.' },
+        { question: 'Can I link contacts from different teams?', answer: 'No. Both contacts must belong to the same team.' },
+      ],
+      de: [
+        { question: 'Welche Beziehungstypen werden unterstützt?', answer: 'Familie (parent_of, child_of, spouse_of, sibling_of), Organisation (manages, reports_to, colleague_of), Geschäft (partner_of, client_of, supplier_of) und Empfehlung (referred_by, referred).' },
+        { question: 'Muss ich beide Richtungen einer Beziehung erfassen?', answer: 'Nein, einmal genügt. Die Gegenrichtung einer bestehenden Beziehung verwendet dieselbe Verknüpfung statt ein Duplikat anzulegen.' },
+        { question: 'Kann ich Kontakte aus verschiedenen Teams verknüpfen?', answer: 'Nein. Beide Kontakte müssen zum selben Team gehören.' },
+      ],
+    },
+  },
+  'contact-relation-update': {
+    keywords: {
+      en: ['edit contact relation', 'add relationship note', 'update relation', 'annotate relationship', 'referral note'],
+      de: ['Kontaktbeziehung bearbeiten', 'Beziehungsnotiz hinzufügen', 'Beziehung aktualisieren', 'Beziehung kommentieren', 'Empfehlungsnotiz'],
+    },
+    useCases: {
+      en: [
+        'Correct a relation that was recorded with the wrong type',
+        'Add a short note explaining how two contacts met',
+        'Record what a referral was about after the intro happened',
+      ],
+      de: [
+        'Eine Beziehung korrigieren, die mit dem falschen Typ erfasst wurde',
+        'Eine kurze Notiz ergänzen, wie sich zwei Kontakte kennengelernt haben',
+        'Festhalten, worum es bei einer Empfehlung ging, nachdem das Intro erfolgt ist',
+      ],
+    },
+    category: 'productivity',
+    faq: {
+      en: [
+        { question: 'Can I change the relation type?', answer: 'Yes. Pass a new type and the relation is re-pointed automatically; it is rejected if that relation already exists.' },
+        { question: 'Can I remove a note?', answer: 'Yes. Send an empty string as the note to clear it.' },
+      ],
+      de: [
+        { question: 'Kann ich den Beziehungstyp ändern?', answer: 'Ja. Übergib einen neuen Typ, und die Beziehung wird automatisch neu ausgerichtet; sie wird abgelehnt, wenn diese Beziehung bereits existiert.' },
+        { question: 'Kann ich eine Notiz entfernen?', answer: 'Ja. Sende einen leeren String als Notiz, um sie zu löschen.' },
+      ],
+    },
+  },
+  'contact-relations-list': {
+    keywords: {
+      en: ['list contact relations', 'contact network', 'who referred whom', 'team structure', 'contact connections'],
+      de: ['Kontaktbeziehungen auflisten', 'Kontaktnetzwerk', 'wer wen empfohlen hat', 'Teamstruktur', 'Kontaktverbindungen'],
+    },
+    useCases: {
+      en: [
+        'Review all family members linked to a contact',
+        'See who reports to a manager before planning a team change',
+        'Check how a customer originally found the business',
+        'Browse partners, clients, and suppliers around a contact',
+      ],
+      de: [
+        'Alle mit einem Kontakt verknüpften Familienmitglieder durchsehen',
+        'Sehen, wer einer Führungskraft unterstellt ist, bevor du eine Teamänderung planst',
+        'Nachvollziehen, wie eine Kundin ursprünglich zum Unternehmen gefunden hat',
+        'Partner:innen, Kund:innen und Lieferant:innen rund um einen Kontakt durchsehen',
+      ],
+    },
+    category: 'productivity',
+    faq: {
+      en: [
+        { question: 'Does the list show both directions?', answer: 'Yes. Relations are returned from the contact\'s point of view, so an incoming relation appears with its inverse type and an incoming direction.' },
+        { question: 'What does each entry include?', answer: 'The relation type, its category, the direction, and the linked contact\'s ID, name, avatar, company, and title.' },
+      ],
+      de: [
+        { question: 'Zeigt die Liste beide Richtungen?', answer: 'Ja. Beziehungen werden aus Sicht des Kontakts zurückgegeben, daher erscheint eine eingehende Beziehung mit ihrem Gegenrichtungstyp und der Richtung "incoming".' },
+        { question: 'Was enthält jeder Eintrag?', answer: 'Beziehungstyp, Kategorie, Richtung sowie ID, Name, Profilbild, Firma und Position des verknüpften Kontakts.' },
+      ],
+    },
+  },
+  'contact-relation-delete': {
+    keywords: {
+      en: ['delete contact relation', 'unlink contacts', 'remove relation', 'remove family link', 'fix CRM relation'],
+      de: ['Kontaktbeziehung löschen', 'Kontakte entknüpfen', 'Beziehung entfernen', 'Familienverknüpfung entfernen', 'CRM-Beziehung korrigieren'],
+    },
+    useCases: {
+      en: [
+        'Remove a relation that was recorded by mistake',
+        'Unlink two contacts after a business partnership ends',
+        'Clean up an outdated manager or report link',
+      ],
+      de: [
+        'Eine versehentlich erfasste Beziehung entfernen',
+        'Zwei Kontakte entknüpfen, nachdem eine Geschäftspartnerschaft endet',
+        'Eine veraltete Vorgesetzten- oder Mitarbeiterverknüpfung bereinigen',
+      ],
+    },
+    category: 'productivity',
+    faq: {
+      en: [
+        { question: 'Does deleting a relation delete the contacts?', answer: 'No. Only the link between them is removed; both contacts stay untouched.' },
+        { question: 'Can I delete a relation from either contact?', answer: 'Yes. The relation can be removed from either side of the link.' },
+      ],
+      de: [
+        { question: 'Löscht das Löschen einer Beziehung auch die Kontakte?', answer: 'Nein. Nur die Verknüpfung wird entfernt; beide Kontakte bleiben unverändert.' },
+        { question: 'Kann ich eine Beziehung von beiden Kontakten aus löschen?', answer: 'Ja. Die Beziehung lässt sich von beiden Seiten der Verknüpfung entfernen.' },
+      ],
+    },
+  },
   'loyalty-enroll': {
     keywords: {
       en: ['enroll loyalty program', 'register loyalty card', 'sign up rewards', 'start collecting points', 'loyalty membership'],
