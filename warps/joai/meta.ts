@@ -1100,19 +1100,21 @@ export const meta: Record<string, WarpExtras> = {
 
   'product-variation-create': {
     keywords: {
-      en: ['add variation', 'volume pricing', 'price tier', 'bulk discount', 'product SKU', 'pricing tier'],
-      de: ['Variante hinzufügen', 'Mengenrabatt', 'Preisstaffel', 'Staffelpreis', 'Produkt-SKU', 'Preisstufe'],
+      en: ['add variation', 'volume pricing', 'price tier', 'bulk discount', 'product SKU', 'pricing tier', 'variation stock'],
+      de: ['Variante hinzufügen', 'Mengenrabatt', 'Preisstaffel', 'Staffelpreis', 'Produkt-SKU', 'Preisstufe', 'Variantenbestand'],
     },
     useCases: {
       en: [
         'Add a "10-49 cards" volume pricing tier to a business card product',
         'Set up bulk discount tiers: €8 for 1-9, €4 for 10-49, €3 for 50-99',
         'Create a wholesale tier with custom pricing for orders above 100 units',
+        'Add a variation with its own stock level so it can be ordered online',
       ],
       de: [
         'Eine "10-49 Karten" Mengenrabatt-Stufe zu einem Visitenkartenprodukt hinzufügen',
         'Staffelpreise einrichten: €8 für 1-9, €4 für 10-49, €3 für 50-99',
         'Eine Großhandelsstufe mit individuellem Preis für Bestellungen über 100 Stück erstellen',
+        'Eine Variante mit eigenem Lagerbestand hinzufügen, damit sie online bestellbar ist',
       ],
     },
     category: 'commerce',
@@ -1120,10 +1122,41 @@ export const meta: Record<string, WarpExtras> = {
       en: [
         { question: 'Can I add multiple variations at once?', answer: 'This warp adds one variation at a time. For multiple tiers, call it once per variation.' },
         { question: 'What is a volume variation?', answer: 'A volume variation sets a different price per unit based on the quantity ordered. For example, €8/card for 1-9 cards and €4/card for 10-49 cards.' },
+        { question: 'Can a variation have its own stock level?', answer: 'Yes. Pass stock when creating the variation to set how many units are available for ordering.' },
       ],
       de: [
         { question: 'Kann ich mehrere Varianten auf einmal hinzufügen?', answer: 'Dieser Warp fügt eine Variante auf einmal hinzu. Für mehrere Stufen rufe ihn pro Variante auf.' },
         { question: 'Was ist eine Mengenvariante?', answer: 'Eine Mengenvariante setzt einen anderen Preis pro Einheit basierend auf der bestellten Menge. Zum Beispiel €8/Karte für 1-9 Karten und €4/Karte für 10-49 Karten.' },
+        { question: 'Kann eine Variante einen eigenen Lagerbestand haben?', answer: 'Ja. Übergib stock beim Erstellen der Variante, um festzulegen, wie viele Stück bestellbar sind.' },
+      ],
+    },
+  },
+  'product-variation-update': {
+    keywords: {
+      en: ['update variation', 'change price', 'variation stock', 'restock variation', 'hide variation', 'variation visibility'],
+      de: ['Variante aktualisieren', 'Preis ändern', 'Variantenbestand', 'Variante nachfüllen', 'Variante ausblenden', 'Varianten-Sichtbarkeit'],
+    },
+    useCases: {
+      en: [
+        'Change the price of an existing product variation',
+        'Restock a variation by setting a new stock level',
+        'Deactivate or hide a variation that is temporarily unavailable',
+      ],
+      de: [
+        'Den Preis einer bestehenden Produktvariante ändern',
+        'Eine Variante nachfüllen, indem ein neuer Lagerbestand gesetzt wird',
+        'Eine vorübergehend nicht verfügbare Variante deaktivieren oder ausblenden',
+      ],
+    },
+    category: 'commerce',
+    faq: {
+      en: [
+        { question: 'Does this change fields I do not pass?', answer: 'No. Only the fields you provide are changed, so you can update just the price or just the stock.' },
+        { question: 'How is the price formatted?', answer: 'Price is in cents, so 100 means €1.' },
+      ],
+      de: [
+        { question: 'Werden Felder geändert, die ich nicht übergebe?', answer: 'Nein. Nur die angegebenen Felder werden geändert, du kannst also nur den Preis oder nur den Bestand aktualisieren.' },
+        { question: 'Wie wird der Preis angegeben?', answer: 'Der Preis ist in Cent, 100 bedeutet also 1 €.' },
       ],
     },
   },
@@ -1148,22 +1181,24 @@ export const meta: Record<string, WarpExtras> = {
   },
   'product-create': {
     keywords: {
-      en: ['create product', 'add product', 'new item', 'shop product', 'sell online', 'product catalog'],
-      de: ['Produkt erstellen', 'Produkt hinzufügen', 'neuer Artikel', 'Shop-Produkt', 'online verkaufen', 'Produktkatalog'],
+      en: ['create product', 'add product', 'new item', 'shop product', 'sell online', 'product catalog', 'product stock'],
+      de: ['Produkt erstellen', 'Produkt hinzufügen', 'neuer Artikel', 'Shop-Produkt', 'online verkaufen', 'Produktkatalog', 'Lagerbestand'],
     },
     useCases: {
-      en: ['Add a new product with a price to your shop catalog', 'Create a product with variations and volume pricing tiers', 'Set up a digital product that is publicly visible'],
-      de: ['Ein neues Produkt mit Preis zum Shop-Katalog hinzufügen', 'Ein Produkt mit Varianten und Mengenrabatt-Stufen erstellen', 'Ein digitales, öffentlich sichtbares Produkt anlegen'],
+      en: ['Add a new product with a price to your shop catalog', 'Create a product with variations and volume pricing tiers', 'Create a product with an initial stock level so it can be ordered right away'],
+      de: ['Ein neues Produkt mit Preis zum Shop-Katalog hinzufügen', 'Ein Produkt mit Varianten und Mengenrabatt-Stufen erstellen', 'Ein Produkt mit anfänglichem Lagerbestand anlegen, damit es sofort bestellbar ist'],
     },
     category: 'commerce',
     faq: {
       en: [
         { question: 'What do I need to create a product?', answer: 'A name and a price in cents. Unit, tags, and description are optional.' },
         { question: 'Can I add volume pricing?', answer: 'Yes. Add variations with different SKUs and prices for bulk or volume tiers.' },
+        { question: 'How do I make a product orderable?', answer: 'Set stock on the default variation so the shop shows it as available; without stock it stays inactive in the store.' },
       ],
       de: [
         { question: 'Was brauche ich, um ein Produkt zu erstellen?', answer: 'Einen Namen und einen Preis in Cent. Einheit, Tags und Beschreibung sind optional.' },
         { question: 'Kann ich Mengenrabatte anlegen?', answer: 'Ja. Füge Varianten mit unterschiedlichen SKUs und Preisen für Mengenstufen hinzu.' },
+        { question: 'Wie mache ich ein Produkt bestellbar?', answer: 'Setze stock bei der Standardvariante, damit der Shop es als verfügbar zeigt; ohne Bestand bleibt es im Shop inaktiv.' },
       ],
     },
   },
