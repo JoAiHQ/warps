@@ -3,9 +3,12 @@
 export type WhatsAppPairPersonalInputs = {
 };
 
+export type WhatsAppUpdatePersonalCLIInputs = {
+};
+
 export type WhatsAppSendTextInputs = {
-  PHONE: string;
-  MESSAGE: string;
+  phone: string;
+  message: string;
 };
 
 export type WhatsAppSyncPersonalInputs = {
