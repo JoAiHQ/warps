@@ -2,20 +2,27 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { App, useAppContext } from '../../../ui/lib/components'
 import { EmptyMessageSkeleton } from '../../../ui/lib/skeletons'
-import { ListResult, extractList } from '../../../ui/shared/joai'
+import { ListResult, formatDateShort, mapListItems } from '../../../ui/shared/joai'
 
 function Main() {
   const { data } = useAppContext()
   if (!data) return <EmptyMessageSkeleton />
-  const items = extractList(data)
+  const items = mapListItems(data, (item) => ({
+    warp: item.warp,
+    schedule: item.cronExpression,
+    active: item.active,
+    runs: item.runs,
+    lastRunAt: formatDateShort(item.lastRunAt),
+  }))
   return (
     <ListResult
       title="Tasks"
       emptyText="No tasks found."
       items={items}
-      primaryKey={'warp'}
-      secondaryKey={'cronExpression'}
-      detailKeys={["active","runs"]}
+      primaryKey="warp"
+      secondaryKey="schedule"
+      detailKeys={["active", "runs", "lastRunAt"]}
+      detailLabels={{ lastRunAt: 'Last run', schedule: 'Schedule' }}
     />
   )
 }
