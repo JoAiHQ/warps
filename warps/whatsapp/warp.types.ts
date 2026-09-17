@@ -12,6 +12,6 @@ export type WhatsAppSendTextInputs = {
 };
 
 export type WhatsAppSyncPersonalInputs = {
-  WEBHOOK_URL: string;
-  WEBHOOK_SECRET: string;
+  webhookUrl: string;
+  webhookSecret: string;
 };
