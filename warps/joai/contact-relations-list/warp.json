@@ -1,0 +1,95 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: List Contact Relations",
+  "title": {
+    "en": "List a contact's relations",
+    "de": "Beziehungen eines Kontakts auflisten",
+    "es": "List a contact's relations",
+    "fr": "List a contact's relations",
+    "ro": "List a contact's relations",
+    "it": "List a contact's relations"
+  },
+  "description": {
+    "en": "List every relation a CRM contact has — family, organization, business, and referral links — with the other contact and the relation type as seen from this contact. Use it to review family members, direct reports, business partners, or who referred whom. Each entry includes the relation type, its category, the direction, and the linked contact.",
+    "de": "Liste alle Beziehungen eines CRM-Kontakts auf – Familie, Organisation, Geschäft und Empfehlungen – inklusive des anderen Kontakts und des Beziehungstyps aus Sicht dieses Kontakts. Damit verschaffst du dir einen Überblick über Familienmitglieder, direkt unterstellte Personen, Geschäftspartner:innen oder wer wen empfohlen hat. Jeder Eintrag enthält Beziehungstyp, Kategorie, Richtung und den verknüpften Kontakt.",
+    "es": "List every relation a CRM contact has — family, organization, business, and referral links — with the other contact and the relation type as seen from this contact. Use it to review family members, direct reports, business partners, or who referred whom. Each entry includes the relation type, its category, the direction, and the linked contact.",
+    "fr": "List every relation a CRM contact has — family, organization, business, and referral links — with the other contact and the relation type as seen from this contact. Use it to review family members, direct reports, business partners, or who referred whom. Each entry includes the relation type, its category, the direction, and the linked contact.",
+    "ro": "List every relation a CRM contact has — family, organization, business, and referral links — with the other contact and the relation type as seen from this contact. Use it to review family members, direct reports, business partners, or who referred whom. Each entry includes the relation type, its category, the direction, and the linked contact.",
+    "it": "List every relation a CRM contact has — family, organization, business, and referral links — with the other contact and the relation type as seen from this contact. Use it to review family members, direct reports, business partners, or who referred whom. Each entry includes the relation type, its category, the direction, and the linked contact."
+  },
+  "bot": "Use this when the user asks who is connected to a contact — family, manager, colleagues, partners, clients, suppliers, or referral history. If the user refers to a contact by name, list contacts first to find the matching ID.",
+  "vars": {
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "List relations",
+        "de": "Beziehungen auflisten",
+        "es": "List relations",
+        "fr": "List relations",
+        "ro": "List relations",
+        "it": "List relations"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/contacts/{{contactId}}/relations",
+        "method": "GET",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Contact ID",
+          "as": "contactId",
+          "description": {
+            "en": "The ID of the contact whose relations to list.",
+            "de": "Die ID des Kontakts, dessen Beziehungen aufgelistet werden sollen.",
+            "es": "The ID of the contact whose relations to list.",
+            "fr": "The ID of the contact whose relations to list.",
+            "ro": "The ID of the contact whose relations to list.",
+            "it": "The ID of the contact whose relations to list."
+          },
+          "bot": "The contact hash ID. If the user refers to a contact by name, list contacts first to find the matching ID.",
+          "type": "string",
+          "position": "url:contactId",
+          "source": "field",
+          "required": true,
+          "min": 1
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug for this action. Defaults to the current team.",
+            "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team."
+          },
+          "bot": "The slug of the team to operate on. Omit to use the current team.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "relations": "out",
+    "relationsList": "out.data",
+    "relationsCount": "out.data.length"
+  },
+  "messages": {
+    "success": {
+      "en": "Found {{relationsCount}} relation(s).",
+      "de": "{{relationsCount}} Beziehung(en) gefunden.",
+      "es": "Found {{relationsCount}} relation(s).",
+      "fr": "Found {{relationsCount}} relation(s).",
+      "ro": "Found {{relationsCount}} relation(s).",
+      "it": "Found {{relationsCount}} relation(s)."
+    }
+  },
+  "ui": "https://raw.githubusercontent.com/JoAiHQ/warps/main/warps/joai/contact-relations-list/chatapp.e259ee13.dist.html"
+}

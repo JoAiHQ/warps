@@ -2,20 +2,25 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { App, useAppContext } from '../../../ui/lib/components'
 import { EmptyMessageSkeleton } from '../../../ui/lib/skeletons'
-import { ListResult, extractList } from '../../../ui/shared/joai'
+import { ListResult, mapListItems } from '../../../ui/shared/joai'
 
 function Main() {
   const { data } = useAppContext()
   if (!data) return <EmptyMessageSkeleton />
-  const items = extractList(data)
+  const items = mapListItems(data, (item) => ({
+    title: item.title,
+    status: item.status,
+    progress: item.progress != null ? `${item.progress}%` : null,
+    priority: item.priority,
+  }))
   return (
     <ListResult
       title="Goals"
       emptyText="No goals found."
       items={items}
-      primaryKey={'title'}
-      secondaryKey={'status'}
-      detailKeys={["progress","priority"]}
+      primaryKey="title"
+      secondaryKey="status"
+      detailKeys={["progress", "priority"]}
     />
   )
 }

@@ -1,0 +1,165 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Create Contact Relation",
+  "title": {
+    "en": "Link two contacts with a relation",
+    "de": "Zwei Kontakte mit einer Beziehung verknüpfen",
+    "es": "Link two contacts with a relation",
+    "fr": "Link two contacts with a relation",
+    "ro": "Link two contacts with a relation",
+    "it": "Link two contacts with a relation"
+  },
+  "description": {
+    "en": "Link two CRM contacts with a typed relation such as parent, child, spouse, sibling, manager, report, colleague, partner, client, supplier, referrer, or referral. Use it to build family trees, company org charts, business relationships, and referral chains. Adding the inverse of an existing relation reuses the same link instead of creating a duplicate.",
+    "de": "Verknüpfe zwei CRM-Kontakte mit einer typisierten Beziehung wie Elternteil, Kind, Ehepartner, Geschwister, Vorgesetzte:r, Mitarbeiter:in, Kolleg:in, Partner:in, Kund:in, Lieferant:in, Empfehlungsgeber:in oder Empfehlung. Damit baust du Familienstammbäume, Organigramme, Geschäftsbeziehungen und Empfehlungsketten auf. Die Gegenrichtung einer bestehenden Beziehung verwendet dieselbe Verknüpfung statt ein Duplikat zu erzeugen.",
+    "es": "Link two CRM contacts with a typed relation such as parent, child, spouse, sibling, manager, report, colleague, partner, client, supplier, referrer, or referral. Use it to build family trees, company org charts, business relationships, and referral chains. Adding the inverse of an existing relation reuses the same link instead of creating a duplicate.",
+    "fr": "Link two CRM contacts with a typed relation such as parent, child, spouse, sibling, manager, report, colleague, partner, client, supplier, referrer, or referral. Use it to build family trees, company org charts, business relationships, and referral chains. Adding the inverse of an existing relation reuses the same link instead of creating a duplicate.",
+    "ro": "Link two CRM contacts with a typed relation such as parent, child, spouse, sibling, manager, report, colleague, partner, client, supplier, referrer, or referral. Use it to build family trees, company org charts, business relationships, and referral chains. Adding the inverse of an existing relation reuses the same link instead of creating a duplicate.",
+    "it": "Link two CRM contacts with a typed relation such as parent, child, spouse, sibling, manager, report, colleague, partner, client, supplier, referrer, or referral. Use it to build family trees, company org charts, business relationships, and referral chains. Adding the inverse of an existing relation reuses the same link instead of creating a duplicate."
+  },
+  "bot": "Use this to record how a contact is connected to another contact. Pass the contact's ID as contactId and the other person's ID as relatedContactId. The relation is read from the first contact's point of view: 'parent_of' means contactId is the parent of relatedContactId, 'referred_by' means relatedContactId referred contactId. If the user refers to a person by name, list contacts first to find the matching ID.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Create relation",
+        "de": "Beziehung erstellen",
+        "es": "Create relation",
+        "fr": "Create relation",
+        "ro": "Create relation",
+        "it": "Create relation"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/contacts/{{contactId}}/relations",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Contact ID",
+          "as": "contactId",
+          "description": {
+            "en": "The ID of the contact the relation is recorded on.",
+            "de": "Die ID des Kontakts, bei dem die Beziehung erfasst wird.",
+            "es": "The ID of the contact the relation is recorded on.",
+            "fr": "The ID of the contact the relation is recorded on.",
+            "ro": "The ID of the contact the relation is recorded on.",
+            "it": "The ID of the contact the relation is recorded on."
+          },
+          "bot": "The contact hash ID. The relation is read from this contact's point of view.",
+          "type": "string",
+          "position": "url:contactId",
+          "source": "field",
+          "required": true,
+          "min": 1
+        },
+        {
+          "name": "Related Contact ID",
+          "as": "relatedContactId",
+          "description": {
+            "en": "The ID of the other contact to link.",
+            "de": "Die ID des anderen Kontakts, der verknüpft werden soll.",
+            "es": "The ID of the other contact to link.",
+            "fr": "The ID of the other contact to link.",
+            "ro": "The ID of the other contact to link.",
+            "it": "The ID of the other contact to link."
+          },
+          "bot": "The other person's contact hash ID. Must be in the same team as the first contact.",
+          "type": "string",
+          "position": "payload:relatedContactId",
+          "source": "field",
+          "required": true,
+          "min": 1
+        },
+        {
+          "name": "Relation type",
+          "as": "type",
+          "description": {
+            "en": "The relation type: parent_of, child_of, spouse_of, sibling_of, aunt_of, nibling_of, manages, reports_to, colleague_of, partner_of, client_of, supplier_of, referred_by, or referred.",
+            "de": "Der Beziehungstyp: parent_of, child_of, spouse_of, sibling_of, aunt_of, nibling_of, manages, reports_to, colleague_of, partner_of, client_of, supplier_of, referred_by oder referred.",
+            "es": "The relation type: parent_of, child_of, spouse_of, sibling_of, aunt_of, nibling_of, manages, reports_to, colleague_of, partner_of, client_of, supplier_of, referred_by, or referred.",
+            "fr": "The relation type: parent_of, child_of, spouse_of, sibling_of, aunt_of, nibling_of, manages, reports_to, colleague_of, partner_of, client_of, supplier_of, referred_by, or referred.",
+            "ro": "The relation type: parent_of, child_of, spouse_of, sibling_of, aunt_of, nibling_of, manages, reports_to, colleague_of, partner_of, client_of, supplier_of, referred_by, or referred.",
+            "it": "The relation type: parent_of, child_of, spouse_of, sibling_of, aunt_of, nibling_of, manages, reports_to, colleague_of, partner_of, client_of, supplier_of, referred_by, or referred."
+          },
+          "bot": "Family: parent_of, child_of, spouse_of, sibling_of, aunt_of (this contact is the aunt/uncle), nibling_of (this contact is the niece/nephew). Organization: manages, reports_to, colleague_of. Business: partner_of, client_of, supplier_of. Referral: referred_by (the other contact referred this one), referred (this contact referred the other). Symmetric types (spouse_of, sibling_of, colleague_of, partner_of) only need to be recorded once.",
+          "type": "string",
+          "position": "payload:type",
+          "source": "field",
+          "required": true,
+          "min": 1
+        },
+        {
+          "name": "Notes",
+          "as": "notes",
+          "description": {
+            "en": "Optional free-text note about this relationship — for example how the two people met or what the referral was about.",
+            "de": "Optionale Freitext-Notiz zu dieser Beziehung — z. B. wie sich die beiden kennengelernt haben oder worum es bei der Empfehlung ging.",
+            "es": "Optional free-text note about this relationship — for example how the two people met or what the referral was about.",
+            "fr": "Optional free-text note about this relationship — for example how the two people met or what the referral was about.",
+            "ro": "Optional free-text note about this relationship — for example how the two people met or what the referral was about.",
+            "it": "Optional free-text note about this relationship — for example how the two people met or what the referral was about."
+          },
+          "bot": "Optional short note stored on the relation. Keep it brief and factual.",
+          "type": "string",
+          "position": "payload:notes",
+          "source": "field",
+          "required": false,
+          "max": 1000
+        },
+        {
+          "name": "Meta",
+          "as": "meta",
+          "description": {
+            "en": "Optional structured metadata as a JSON object — for example the referral date, source campaign, or relationship notes.",
+            "de": "Optionale strukturierte Metadaten als JSON-Objekt — z. B. Empfehlungsdatum, Kampagnenquelle oder Notizen zur Beziehung.",
+            "es": "Optional structured metadata as a JSON object — for example the referral date, source campaign, or relationship notes.",
+            "fr": "Optional structured metadata as a JSON object — for example the referral date, source campaign, or relationship notes.",
+            "ro": "Optional structured metadata as a JSON object — for example the referral date, source campaign, or relationship notes.",
+            "it": "Optional structured metadata as a JSON object — for example the referral date, source campaign, or relationship notes."
+          },
+          "bot": "Optional JSON object with extra context about the relation.",
+          "type": "json",
+          "position": "payload:meta",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug for this action. Defaults to the current team.",
+            "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team."
+          },
+          "bot": "The slug of the team to operate on. Omit to use the current team.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "relationId": "out.data.id",
+    "relationType": "out.data.type"
+  },
+  "messages": {
+    "success": {
+      "en": "Relation created ({{relationType}}).",
+      "de": "Beziehung erstellt ({{relationType}}).",
+      "es": "Relation created ({{relationType}}).",
+      "fr": "Relation created ({{relationType}}).",
+      "ro": "Relation created ({{relationType}}).",
+      "it": "Relation created ({{relationType}})."
+    }
+  }
+}

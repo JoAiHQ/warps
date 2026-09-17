@@ -1,0 +1,108 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Delete Contact Relation",
+  "title": {
+    "en": "Delete a contact relation",
+    "de": "Beziehung zwischen Kontakten löschen",
+    "es": "Delete a contact relation",
+    "fr": "Delete a contact relation",
+    "ro": "Delete a contact relation",
+    "it": "Delete a contact relation"
+  },
+  "description": {
+    "en": "Remove a single relation between two CRM contacts — useful when a family, organization, business, or referral link was recorded by mistake or is no longer valid. Deleting works from either contact's side and never removes the contacts themselves. List the contact's relations first to find the relation ID.",
+    "de": "Entferne eine einzelne Beziehung zwischen zwei CRM-Kontakten – hilfreich, wenn eine Familien-, Organisations-, Geschäfts- oder Empfehlungsverknüpfung versehentlich erfasst wurde oder nicht mehr gilt. Das Löschen funktioniert von beiden Seiten der Kontakte und entfernt niemals die Kontakte selbst. Liste zuerst die Beziehungen des Kontakts auf, um die Beziehungs-ID zu finden.",
+    "es": "Remove a single relation between two CRM contacts — useful when a family, organization, business, or referral link was recorded by mistake or is no longer valid. Deleting works from either contact's side and never removes the contacts themselves. List the contact's relations first to find the relation ID.",
+    "fr": "Remove a single relation between two CRM contacts — useful when a family, organization, business, or referral link was recorded by mistake or is no longer valid. Deleting works from either contact's side and never removes the contacts themselves. List the contact's relations first to find the relation ID.",
+    "ro": "Remove a single relation between two CRM contacts — useful when a family, organization, business, or referral link was recorded by mistake or is no longer valid. Deleting works from either contact's side and never removes the contacts themselves. List the contact's relations first to find the relation ID.",
+    "it": "Remove a single relation between two CRM contacts — useful when a family, organization, business, or referral link was recorded by mistake or is no longer valid. Deleting works from either contact's side and never removes the contacts themselves. List the contact's relations first to find the relation ID."
+  },
+  "bot": "Use this to remove a relation between two contacts. If the user does not know the relation ID, list the contact's relations first to find it. Deleting a relation does not delete the contacts.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Delete relation",
+        "de": "Beziehung löschen",
+        "es": "Delete relation",
+        "fr": "Delete relation",
+        "ro": "Delete relation",
+        "it": "Delete relation"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/contacts/{{contactId}}/relations/{{relationId}}",
+        "method": "DELETE",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Contact ID",
+          "as": "contactId",
+          "description": {
+            "en": "The ID of a contact involved in the relation.",
+            "de": "Die ID eines an der Beziehung beteiligten Kontakts.",
+            "es": "The ID of a contact involved in the relation.",
+            "fr": "The ID of a contact involved in the relation.",
+            "ro": "The ID of a contact involved in the relation.",
+            "it": "The ID of a contact involved in the relation."
+          },
+          "bot": "The contact hash ID. Either contact of the relation works.",
+          "type": "string",
+          "position": "url:contactId",
+          "source": "field",
+          "required": true,
+          "min": 1
+        },
+        {
+          "name": "Relation ID",
+          "as": "relationId",
+          "description": {
+            "en": "The ID of the relation to remove.",
+            "de": "Die ID der zu entfernenden Beziehung.",
+            "es": "The ID of the relation to remove.",
+            "fr": "The ID of the relation to remove.",
+            "ro": "The ID of the relation to remove.",
+            "it": "The ID of the relation to remove."
+          },
+          "bot": "The relation hash ID. If unknown, list the contact's relations first to find it.",
+          "type": "string",
+          "position": "url:relationId",
+          "source": "field",
+          "required": true,
+          "min": 1
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug for this action. Defaults to the current team.",
+            "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team."
+          },
+          "bot": "The slug of the team to operate on. Omit to use the current team.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Relation deleted.",
+      "de": "Beziehung gelöscht.",
+      "es": "Relation deleted.",
+      "fr": "Relation deleted.",
+      "ro": "Relation deleted.",
+      "it": "Relation deleted."
+    }
+  }
+}

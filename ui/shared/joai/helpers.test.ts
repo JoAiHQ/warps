@@ -1,5 +1,18 @@
 import { describe, expect, it } from 'vitest'
-import { extractList } from './helpers'
+import {
+  extractList,
+  extractRecord,
+  formatCents,
+  formatDateShort,
+  humanizeKey,
+  pickValue,
+  priceFromVariations,
+  primaryImageUrl,
+  resolveLocalized,
+  truncateText,
+  truncateMiddle,
+  valueToDisplay,
+} from './helpers'
 
 describe('extractList', () => {
   it('returns a bare array unchanged', () => {
@@ -34,9 +47,7 @@ describe('extractList', () => {
 
   it('descends into the executor _DATA wrapper', () => {
     const items = [{ name: 'A' }]
-    // Real shape: `{ data: [...] }` envelope wrapped in _DATA.
     expect(extractList({ _DATA: { data: items } })).toEqual(items)
-    // Defensive: nested `{ data: { data: [...] } }` wraps also resolve.
     expect(extractList({ _DATA: { data: { data: items } } })).toEqual(items)
   })
 
@@ -48,5 +59,65 @@ describe('extractList', () => {
   it('prefers a top-level data array over nested values', () => {
     const items = [{ name: 'A' }]
     expect(extractList({ data: items, _DATA: { data: { data: [{ name: 'WRONG' }] } } })).toEqual(items)
+  })
+})
+
+describe('extractRecord', () => {
+  it('returns a bare resource object', () => {
+    expect(extractRecord({ name: 'Alpha', status: 'ready' })).toEqual({ name: 'Alpha', status: 'ready' })
+  })
+
+  it('unwraps data and _DATA envelopes', () => {
+    const resource = { name: 'Alpha', status: 'ready' }
+    expect(extractRecord({ data: resource })).toEqual(resource)
+    expect(extractRecord({ _DATA: { data: resource } })).toEqual(resource)
+    expect(extractRecord({ data: { data: resource } })).toEqual(resource)
+  })
+
+  it('keeps flat mapped stats outputs', () => {
+    expect(extractRecord({ TOTAL_CAMPAIGNS: 3, DRAFT_CAMPAIGNS: 1 })).toEqual({
+      TOTAL_CAMPAIGNS: 3,
+      DRAFT_CAMPAIGNS: 1,
+    })
+  })
+
+  it('returns null for non-objects', () => {
+    expect(extractRecord(null)).toBeNull()
+    expect(extractRecord([{ name: 'A' }])).toBeNull()
+  })
+})
+
+describe('display helpers', () => {
+  it('picks the first present key', () => {
+    expect(pickValue({ TOTAL_CAMPAIGNS: 4, totalCampaigns: 9 }, ['totalCampaigns', 'TOTAL_CAMPAIGNS'])).toBe(9)
+    expect(pickValue({ TOTAL_CAMPAIGNS: 4 }, ['totalCampaigns', 'TOTAL_CAMPAIGNS'])).toBe(4)
+    expect(pickValue({}, ['missing'])).toBeUndefined()
+  })
+
+  it('humanizes keys', () => {
+    expect(humanizeKey('TOTAL_CAMPAIGNS')).toBe('Total campaigns')
+    expect(humanizeKey('outputPreset')).toBe('Output preset')
+  })
+
+  it('formats display values and localized names', () => {
+    expect(valueToDisplay(true)).toBe('Yes')
+    expect(valueToDisplay(false)).toBe('No')
+    expect(valueToDisplay(['a', 'b'])).toBe('a, b')
+    expect(valueToDisplay([{ id: 1 }])).toBe('1 items')
+    expect(valueToDisplay(null)).toBe('—')
+    expect(resolveLocalized({ en: 'Haircut', de: 'Haarschnitt' })).toBe('Haircut')
+    expect(resolveLocalized({ de: 'Haarschnitt' })).toBe('Haarschnitt')
+    expect(valueToDisplay({ en: 'Haircut', de: 'Haarschnitt' })).toBe('Haircut')
+    expect(valueToDisplay('2026-04-18T10:00:00Z')).toBe(formatDateShort('2026-04-18T10:00:00Z'))
+  })
+
+  it('formats money, dates, truncates, prices and images', () => {
+    expect(formatCents(1999, 'EUR')).toMatch(/19/)
+    expect(formatDateShort('2026-04-18T10:00:00Z')).toBeTruthy()
+    expect(truncateText('abcdefghij', 8)).toBe('abcdefg…')
+    expect(truncateMiddle('erd1abcdefghijklmnop', 6, 4)).toBe('erd1ab…mnop')
+    expect(priceFromVariations({ variations: [{ price: 500 }, { price: 300 }] })).toBe(300)
+    expect(primaryImageUrl({ primaryImage: { url: 'https://x/a.jpg' } })).toBe('https://x/a.jpg')
+    expect(primaryImageUrl({ images: [{ url: 'https://x/b.jpg' }] })).toBe('https://x/b.jpg')
   })
 })

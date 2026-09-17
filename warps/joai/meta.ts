@@ -1,6 +1,23 @@
 import type { WarpExtras } from '../types'
 
 export const meta: Record<string, WarpExtras> = {
+  'site-create': {
+    keywords: { en: ['create site', 'brandless site', 'portfolio website record'], de: ['Website anlegen', 'Website ohne Marke', 'Portfolio Website-Eintrag'] },
+    useCases: { en: ['Create a site record without provisioning a brand', 'Track an external client website in Sites'], de: ['Einen Website-Eintrag ohne Marke anlegen', 'Eine externe Kundenwebsite in Sites führen'] },
+    category: 'productivity',
+    faq: { en: [{ question: 'Does this publish a live sites.joai.ai app?', answer: 'No. Brandless create only stores a site record. Use site-provision for a live brand site.' }], de: [{ question: 'Veröffentlicht dies eine Live-App auf sites.joai.ai?', answer: 'Nein. Ohne Marke wird nur ein Eintrag gespeichert. Für eine Live-Markenseite site-provision verwenden.' }] },
+  },
+  'site-update': {
+    keywords: { en: ['update site', 'site metrics', 'monthly site report'], de: ['Website aktualisieren', 'Website-Metriken', 'monatlicher Website-Bericht'] },
+    useCases: { en: ['Attach a contact and metrics source/resource to a site', 'Enable or disable the monthly site report'], de: ['Kontakt und Metrik-Quelle/-Ressource an eine Website hängen', 'Monatsbericht aktivieren oder deaktivieren'] },
+    category: 'productivity',
+  },
+  'metrics-query': {
+    keywords: { en: ['metrics', 'Cloudflare analytics', 'page views', 'reporting'], de: ['Metriken', 'Cloudflare Analytics', 'Seitenaufrufe', 'Reporting'] },
+    useCases: { en: ['Collect source-backed facts for a client update', 'Compare normalized metrics for a chosen period'], de: ['Quellenbasierte Fakten für ein Kunden-Update sammeln', 'Normalisierte Metriken für einen gewählten Zeitraum vergleichen'] },
+    category: 'analytics',
+    faq: { en: [{ question: 'Does this estimate visitors?', answer: 'No. It reports the normalized requests and page views returned by Cloudflare.' }], de: [{ question: 'Schätzt dies Besucher?', answer: 'Nein. Es liefert die von Cloudflare zurückgegebenen normalisierten Anfragen und Seitenaufrufe.' }] },
+  },
   'content-get': {
     keywords: { en: ['view website content', 'JoAi content record', 'website content version'], de: ['Website-Inhalt ansehen', 'JoAi Inhaltsbereich', 'Website Inhaltsversion'] },
     useCases: { en: ['Check a content record before editing it', 'Find the current version for a safe update', 'Inspect editable fields for a website section'], de: ['Einen Inhaltsbereich vor der Bearbeitung prüfen', 'Die aktuelle Version für eine sichere Änderung abrufen', 'Bearbeitbare Felder eines Website-Bereichs ansehen'] },
@@ -648,6 +665,128 @@ export const meta: Record<string, WarpExtras> = {
       ],
     },
   },
+  'contact-relation-create': {
+    keywords: {
+      en: ['contact relation', 'link contacts', 'family tree', 'org chart', 'referral tracking', 'relationship CRM'],
+      de: ['Kontaktbeziehung', 'Kontakte verknüpfen', 'Stammbaum', 'Organigramm', 'Empfehlungen verfolgen', 'Beziehungen CRM'],
+    },
+    useCases: {
+      en: [
+        'Record that one contact is the parent, child, or spouse of another for a family tree',
+        'Model a company structure by linking managers to their direct reports',
+        'Track business partners, clients, and suppliers between contacts',
+        'Capture referral chains so you can see who brought in whom',
+      ],
+      de: [
+        'Festhalten, dass ein Kontakt Elternteil, Kind oder Ehepartner eines anderen ist, für einen Stammbaum',
+        'Eine Unternehmensstruktur abbilden, indem du Vorgesetzte mit ihren Mitarbeitenden verknüpfst',
+        'Geschäftspartner:innen, Kund:innen und Lieferant:innen zwischen Kontakten erfassen',
+        'Empfehlungsketten festhalten, um zu sehen, wer wen gebracht hat',
+      ],
+    },
+    category: 'productivity',
+    faq: {
+      en: [
+        { question: 'What relation types are supported?', answer: 'Family (parent_of, child_of, spouse_of, sibling_of, aunt_of, nibling_of), organization (manages, reports_to, colleague_of), business (partner_of, client_of, supplier_of), and referral (referred_by, referred).' },
+        { question: 'Can I add both directions of a relationship?', answer: 'You only need to add it once. Adding the inverse of an existing relation reuses the same link instead of creating a duplicate.' },
+        { question: 'Can I link contacts from different teams?', answer: 'No. Both contacts must belong to the same team.' },
+      ],
+      de: [
+        { question: 'Welche Beziehungstypen werden unterstützt?', answer: 'Familie (parent_of, child_of, spouse_of, sibling_of, aunt_of, nibling_of), Organisation (manages, reports_to, colleague_of), Geschäft (partner_of, client_of, supplier_of) und Empfehlung (referred_by, referred).' },
+        { question: 'Muss ich beide Richtungen einer Beziehung erfassen?', answer: 'Nein, einmal genügt. Die Gegenrichtung einer bestehenden Beziehung verwendet dieselbe Verknüpfung statt ein Duplikat anzulegen.' },
+        { question: 'Kann ich Kontakte aus verschiedenen Teams verknüpfen?', answer: 'Nein. Beide Kontakte müssen zum selben Team gehören.' },
+      ],
+    },
+  },
+  'contact-relation-update': {
+    keywords: {
+      en: ['edit contact relation', 'add relationship note', 'update relation', 'annotate relationship', 'referral note'],
+      de: ['Kontaktbeziehung bearbeiten', 'Beziehungsnotiz hinzufügen', 'Beziehung aktualisieren', 'Beziehung kommentieren', 'Empfehlungsnotiz'],
+    },
+    useCases: {
+      en: [
+        'Correct a relation that was recorded with the wrong type',
+        'Add a short note explaining how two contacts met',
+        'Record what a referral was about after the intro happened',
+      ],
+      de: [
+        'Eine Beziehung korrigieren, die mit dem falschen Typ erfasst wurde',
+        'Eine kurze Notiz ergänzen, wie sich zwei Kontakte kennengelernt haben',
+        'Festhalten, worum es bei einer Empfehlung ging, nachdem das Intro erfolgt ist',
+      ],
+    },
+    category: 'productivity',
+    faq: {
+      en: [
+        { question: 'Can I change the relation type?', answer: 'Yes. Pass a new type and the relation is re-pointed automatically; it is rejected if that relation already exists.' },
+        { question: 'Can I remove a note?', answer: 'Yes. Send an empty string as the note to clear it.' },
+      ],
+      de: [
+        { question: 'Kann ich den Beziehungstyp ändern?', answer: 'Ja. Übergib einen neuen Typ, und die Beziehung wird automatisch neu ausgerichtet; sie wird abgelehnt, wenn diese Beziehung bereits existiert.' },
+        { question: 'Kann ich eine Notiz entfernen?', answer: 'Ja. Sende einen leeren String als Notiz, um sie zu löschen.' },
+      ],
+    },
+  },
+  'contact-relations-list': {
+    keywords: {
+      en: ['list contact relations', 'contact network', 'who referred whom', 'team structure', 'contact connections'],
+      de: ['Kontaktbeziehungen auflisten', 'Kontaktnetzwerk', 'wer wen empfohlen hat', 'Teamstruktur', 'Kontaktverbindungen'],
+    },
+    useCases: {
+      en: [
+        'Review all family members linked to a contact',
+        'See who reports to a manager before planning a team change',
+        'Check how a customer originally found the business',
+        'Browse partners, clients, and suppliers around a contact',
+      ],
+      de: [
+        'Alle mit einem Kontakt verknüpften Familienmitglieder durchsehen',
+        'Sehen, wer einer Führungskraft unterstellt ist, bevor du eine Teamänderung planst',
+        'Nachvollziehen, wie eine Kundin ursprünglich zum Unternehmen gefunden hat',
+        'Partner:innen, Kund:innen und Lieferant:innen rund um einen Kontakt durchsehen',
+      ],
+    },
+    category: 'productivity',
+    faq: {
+      en: [
+        { question: 'Does the list show both directions?', answer: 'Yes. Relations are returned from the contact\'s point of view, so an incoming relation appears with its inverse type and an incoming direction.' },
+        { question: 'What does each entry include?', answer: 'The relation type, its category, the direction, and the linked contact\'s ID, name, avatar, company, and title.' },
+      ],
+      de: [
+        { question: 'Zeigt die Liste beide Richtungen?', answer: 'Ja. Beziehungen werden aus Sicht des Kontakts zurückgegeben, daher erscheint eine eingehende Beziehung mit ihrem Gegenrichtungstyp und der Richtung "incoming".' },
+        { question: 'Was enthält jeder Eintrag?', answer: 'Beziehungstyp, Kategorie, Richtung sowie ID, Name, Profilbild, Firma und Position des verknüpften Kontakts.' },
+      ],
+    },
+  },
+  'contact-relation-delete': {
+    keywords: {
+      en: ['delete contact relation', 'unlink contacts', 'remove relation', 'remove family link', 'fix CRM relation'],
+      de: ['Kontaktbeziehung löschen', 'Kontakte entknüpfen', 'Beziehung entfernen', 'Familienverknüpfung entfernen', 'CRM-Beziehung korrigieren'],
+    },
+    useCases: {
+      en: [
+        'Remove a relation that was recorded by mistake',
+        'Unlink two contacts after a business partnership ends',
+        'Clean up an outdated manager or report link',
+      ],
+      de: [
+        'Eine versehentlich erfasste Beziehung entfernen',
+        'Zwei Kontakte entknüpfen, nachdem eine Geschäftspartnerschaft endet',
+        'Eine veraltete Vorgesetzten- oder Mitarbeiterverknüpfung bereinigen',
+      ],
+    },
+    category: 'productivity',
+    faq: {
+      en: [
+        { question: 'Does deleting a relation delete the contacts?', answer: 'No. Only the link between them is removed; both contacts stay untouched.' },
+        { question: 'Can I delete a relation from either contact?', answer: 'Yes. The relation can be removed from either side of the link.' },
+      ],
+      de: [
+        { question: 'Löscht das Löschen einer Beziehung auch die Kontakte?', answer: 'Nein. Nur die Verknüpfung wird entfernt; beide Kontakte bleiben unverändert.' },
+        { question: 'Kann ich eine Beziehung von beiden Kontakten aus löschen?', answer: 'Ja. Die Beziehung lässt sich von beiden Seiten der Verknüpfung entfernen.' },
+      ],
+    },
+  },
   'loyalty-enroll': {
     keywords: {
       en: ['enroll loyalty program', 'register loyalty card', 'sign up rewards', 'start collecting points', 'loyalty membership'],
@@ -743,22 +882,45 @@ export const meta: Record<string, WarpExtras> = {
   },
   'order-create': {
     keywords: {
-      en: ['create order', 'billing order', 'generate invoice', 'bill customer', 'order from products'],
-      de: ['Bestellung erstellen', 'Rechnung erstellen', 'Kunde abrechnen', 'Produktbestellung'],
+      en: ['create order', 'billing order', 'generate invoice', 'bill customer', 'order from products', 'service date', 'Leistungsdatum', 'invoice recipient'],
+      de: ['Bestellung erstellen', 'Rechnung erstellen', 'Kunde abrechnen', 'Produktbestellung', 'Leistungsdatum', 'Rechnungsempfänger'],
     },
     useCases: {
-      en: ['Bill a customer for products used during a service call', 'Generate an order with invoice from team products'],
-      de: ['Kunden für verbaute Materialien abrechnen', 'Bestellung mit Rechnung aus Team-Produkten erstellen'],
+      en: ['Bill a customer for products used during a service call', 'Generate an order with invoice from team products', 'Send invoice emails to a different contact'],
+      de: ['Kunden für verbaute Materialien abrechnen', 'Bestellung mit Rechnung aus Team-Produkten erstellen', 'Rechnungs-E-Mails an einen anderen Kontakt senden'],
     },
     category: 'commerce',
     faq: {
       en: [
         { question: 'What is the difference between an order and an invoice?', answer: 'An order is created through the billing system and automatically generates an invoice with a payment URL.' },
         { question: 'Can I use products not in my catalog?', answer: 'Products must exist in your team catalog. Create missing products first via Product Create.' },
+        { question: 'Can another contact receive the invoice?', answer: 'Yes. Set invoiceContactId to that contact while the customer remains the buyer on the invoice.' },
       ],
       de: [
         { question: 'Was ist der Unterschied zwischen Bestellung und Rechnung?', answer: 'Eine Bestellung wird im Abrechnungssystem erstellt und erzeugt automatisch eine Rechnung mit Zahlungslink.' },
         { question: 'Kann ich Produkte verwenden, die nicht in meinem Katalog sind?', answer: 'Produkte müssen im Team-Katalog existieren. Fehlende Produkte zuerst via Produkt erstellen anlegen.' },
+        { question: 'Kann ein anderer Kontakt die Rechnung erhalten?', answer: 'Ja. Setze invoiceContactId auf diesen Kontakt; der Kunde bleibt der Käufer auf der Rechnung.' },
+      ],
+    },
+  },
+  'order-update': {
+    keywords: {
+      en: ['update order', 'change order status', 'change invoice date', 'change service date', 'invoice recipient'],
+      de: ['Bestellung aktualisieren', 'Bestellstatus ändern', 'Rechnungsdatum ändern', 'Leistungsdatum ändern', 'Rechnungsempfänger'],
+    },
+    useCases: {
+      en: ['Change order dates or status', 'Assign or clear a separate invoice recipient'],
+      de: ['Datumsangaben oder Status einer Bestellung ändern', 'Separaten Rechnungsempfänger zuweisen oder entfernen'],
+    },
+    category: 'commerce',
+    faq: {
+      en: [
+        { question: 'Does changing the invoice recipient change the buyer?', answer: 'No. It only controls which contact receives invoice emails.' },
+        { question: 'How do I use the customer again?', answer: 'Send an empty invoiceContactId to clear the separate recipient.' },
+      ],
+      de: [
+        { question: 'Ändert der Rechnungsempfänger den Käufer?', answer: 'Nein. Er legt nur fest, welcher Kontakt Rechnungs-E-Mails erhält.' },
+        { question: 'Wie verwende ich wieder den Kundenkontakt?', answer: 'Sende invoiceContactId leer, um den separaten Empfänger zu entfernen.' },
       ],
     },
   },
@@ -797,19 +959,19 @@ export const meta: Record<string, WarpExtras> = {
   },
   'service-list': {
     keywords: {
-      en: ['list services', 'view services', 'service catalog', 'billable services', 'appointment services'],
-      de: ['Dienstleistungen anzeigen', 'Service-Katalog', 'abrechenbare Leistungen', 'Termin-Dienstleistungen'],
+      en: ['list services', 'view services', 'service catalog', 'billable services', 'appointment services', 'inactive services', 'private services'],
+      de: ['Dienstleistungen anzeigen', 'Service-Katalog', 'abrechenbare Leistungen', 'Termin-Dienstleistungen', 'inaktive Dienstleistungen', 'private Dienstleistungen'],
     },
     useCases: {
       en: [
-        'View all services and hourly rates in your team catalog',
+        'View all services and hourly rates in your team catalog, including private and inactive',
         'Find a service ID to use in appointment settings',
-        'Check which services are available for invoicing',
+        'Find obsolete duplicate services to delete',
       ],
       de: [
-        'Alle Dienstleistungen und Stundensätze im Team-Katalog anzeigen',
+        'Alle Dienstleistungen und Stundensätze im Team-Katalog anzeigen, inklusive privat und inaktiv',
         'Eine Service-ID für die Termineinstellungen finden',
-        'Prüfen, welche Dienstleistungen für Rechnungen verfügbar sind',
+        'Veraltete doppelte Dienstleistungen zum Löschen finden',
       ],
     },
     category: 'productivity',
@@ -938,19 +1100,21 @@ export const meta: Record<string, WarpExtras> = {
 
   'product-variation-create': {
     keywords: {
-      en: ['add variation', 'volume pricing', 'price tier', 'bulk discount', 'product SKU', 'pricing tier'],
-      de: ['Variante hinzufügen', 'Mengenrabatt', 'Preisstaffel', 'Staffelpreis', 'Produkt-SKU', 'Preisstufe'],
+      en: ['add variation', 'volume pricing', 'price tier', 'bulk discount', 'product SKU', 'pricing tier', 'variation stock'],
+      de: ['Variante hinzufügen', 'Mengenrabatt', 'Preisstaffel', 'Staffelpreis', 'Produkt-SKU', 'Preisstufe', 'Variantenbestand'],
     },
     useCases: {
       en: [
         'Add a "10-49 cards" volume pricing tier to a business card product',
         'Set up bulk discount tiers: €8 for 1-9, €4 for 10-49, €3 for 50-99',
         'Create a wholesale tier with custom pricing for orders above 100 units',
+        'Add a variation with its own stock level so it can be ordered online',
       ],
       de: [
         'Eine "10-49 Karten" Mengenrabatt-Stufe zu einem Visitenkartenprodukt hinzufügen',
         'Staffelpreise einrichten: €8 für 1-9, €4 für 10-49, €3 für 50-99',
         'Eine Großhandelsstufe mit individuellem Preis für Bestellungen über 100 Stück erstellen',
+        'Eine Variante mit eigenem Lagerbestand hinzufügen, damit sie online bestellbar ist',
       ],
     },
     category: 'commerce',
@@ -958,31 +1122,83 @@ export const meta: Record<string, WarpExtras> = {
       en: [
         { question: 'Can I add multiple variations at once?', answer: 'This warp adds one variation at a time. For multiple tiers, call it once per variation.' },
         { question: 'What is a volume variation?', answer: 'A volume variation sets a different price per unit based on the quantity ordered. For example, €8/card for 1-9 cards and €4/card for 10-49 cards.' },
+        { question: 'Can a variation have its own stock level?', answer: 'Yes. Pass stock when creating the variation to set how many units are available for ordering.' },
       ],
       de: [
         { question: 'Kann ich mehrere Varianten auf einmal hinzufügen?', answer: 'Dieser Warp fügt eine Variante auf einmal hinzu. Für mehrere Stufen rufe ihn pro Variante auf.' },
         { question: 'Was ist eine Mengenvariante?', answer: 'Eine Mengenvariante setzt einen anderen Preis pro Einheit basierend auf der bestellten Menge. Zum Beispiel €8/Karte für 1-9 Karten und €4/Karte für 10-49 Karten.' },
+        { question: 'Kann eine Variante einen eigenen Lagerbestand haben?', answer: 'Ja. Übergib stock beim Erstellen der Variante, um festzulegen, wie viele Stück bestellbar sind.' },
       ],
     },
   },
-  'product-create': {
+  'product-variation-update': {
     keywords: {
-      en: ['create product', 'add product', 'new item', 'shop product', 'sell online', 'product catalog'],
-      de: ['Produkt erstellen', 'Produkt hinzufügen', 'neuer Artikel', 'Shop-Produkt', 'online verkaufen', 'Produktkatalog'],
+      en: ['update variation', 'change price', 'variation stock', 'restock variation', 'hide variation', 'variation visibility'],
+      de: ['Variante aktualisieren', 'Preis ändern', 'Variantenbestand', 'Variante nachfüllen', 'Variante ausblenden', 'Varianten-Sichtbarkeit'],
     },
     useCases: {
-      en: ['Add a new product with a price to your shop catalog', 'Create a product with variations and volume pricing tiers', 'Set up a digital product that is publicly visible'],
-      de: ['Ein neues Produkt mit Preis zum Shop-Katalog hinzufügen', 'Ein Produkt mit Varianten und Mengenrabatt-Stufen erstellen', 'Ein digitales, öffentlich sichtbares Produkt anlegen'],
+      en: [
+        'Change the price of an existing product variation',
+        'Restock a variation by setting a new stock level',
+        'Deactivate or hide a variation that is temporarily unavailable',
+      ],
+      de: [
+        'Den Preis einer bestehenden Produktvariante ändern',
+        'Eine Variante nachfüllen, indem ein neuer Lagerbestand gesetzt wird',
+        'Eine vorübergehend nicht verfügbare Variante deaktivieren oder ausblenden',
+      ],
+    },
+    category: 'commerce',
+    faq: {
+      en: [
+        { question: 'Does this change fields I do not pass?', answer: 'No. Only the fields you provide are changed, so you can update just the price or just the stock.' },
+        { question: 'How is the price formatted?', answer: 'Price is in cents, so 100 means €1.' },
+      ],
+      de: [
+        { question: 'Werden Felder geändert, die ich nicht übergebe?', answer: 'Nein. Nur die angegebenen Felder werden geändert, du kannst also nur den Preis oder nur den Bestand aktualisieren.' },
+        { question: 'Wie wird der Preis angegeben?', answer: 'Der Preis ist in Cent, 100 bedeutet also 1 €.' },
+      ],
+    },
+  },
+  'product-list': {
+    keywords: {
+      en: ['list products', 'view products', 'product catalog', 'shop catalog', 'inactive products', 'private products'],
+      de: ['Produkte anzeigen', 'Produktkatalog', 'Shop-Katalog', 'inaktive Produkte', 'private Produkte'],
+    },
+    useCases: {
+      en: [
+        'View all products in your team catalog, including private and inactive',
+        'Find a product ID or slug to use in orders and invoices',
+        'Find obsolete duplicate products to delete',
+      ],
+      de: [
+        'Alle Produkte im Team-Katalog anzeigen, inklusive privat und inaktiv',
+        'Eine Produkt-ID oder einen Slug für Bestellungen und Rechnungen finden',
+        'Veraltete doppelte Produkte zum Löschen finden',
+      ],
+    },
+    category: 'commerce',
+  },
+  'product-create': {
+    keywords: {
+      en: ['create product', 'add product', 'new item', 'shop product', 'sell online', 'product catalog', 'product stock'],
+      de: ['Produkt erstellen', 'Produkt hinzufügen', 'neuer Artikel', 'Shop-Produkt', 'online verkaufen', 'Produktkatalog', 'Lagerbestand'],
+    },
+    useCases: {
+      en: ['Add a new product with a price to your shop catalog', 'Create a product with variations and volume pricing tiers', 'Create a product with an initial stock level so it can be ordered right away'],
+      de: ['Ein neues Produkt mit Preis zum Shop-Katalog hinzufügen', 'Ein Produkt mit Varianten und Mengenrabatt-Stufen erstellen', 'Ein Produkt mit anfänglichem Lagerbestand anlegen, damit es sofort bestellbar ist'],
     },
     category: 'commerce',
     faq: {
       en: [
         { question: 'What do I need to create a product?', answer: 'A name and a price in cents. Unit, tags, and description are optional.' },
         { question: 'Can I add volume pricing?', answer: 'Yes. Add variations with different SKUs and prices for bulk or volume tiers.' },
+        { question: 'How do I make a product orderable?', answer: 'Set stock on the default variation so the shop shows it as available; without stock it stays inactive in the store.' },
       ],
       de: [
         { question: 'Was brauche ich, um ein Produkt zu erstellen?', answer: 'Einen Namen und einen Preis in Cent. Einheit, Tags und Beschreibung sind optional.' },
         { question: 'Kann ich Mengenrabatte anlegen?', answer: 'Ja. Füge Varianten mit unterschiedlichen SKUs und Preisen für Mengenstufen hinzu.' },
+        { question: 'Wie mache ich ein Produkt bestellbar?', answer: 'Setze stock bei der Standardvariante, damit der Shop es als verfügbar zeigt; ohne Bestand bleibt es im Shop inaktiv.' },
       ],
     },
   },
@@ -1126,13 +1342,37 @@ export const meta: Record<string, WarpExtras> = {
     category: 'communication',
     faq: {
       en: [
-        { question: 'What happens after I send?', answer: 'Messages are delivered to the campaign audience over time. Only draft campaigns can be sent.' },
+        { question: 'What happens after I send?', answer: 'Messages are delivered to the campaign audience over time. Only draft (or approved WhatsApp) campaigns can be sent. Optional scheduledAt queues a future send.' },
+        { question: 'Can I schedule a send?', answer: 'Yes — pass scheduledAt as an ISO 8601 datetime in the future. Omit it to send immediately.' },
       ],
       de: [
-        { question: 'Was passiert nach dem Senden?', answer: 'Die Nachrichten werden nach und nach an die Zielgruppe zugestellt. Nur Entwurfs-Kampagnen können gesendet werden.' },
+        { question: 'Was passiert nach dem Senden?', answer: 'Die Nachrichten werden nach und nach an die Zielgruppe zugestellt. Nur Entwurfs-Kampagnen (oder freigegebene WhatsApp-Kampagnen) können gesendet werden. Optionales scheduledAt plant einen späteren Versand.' },
+        { question: 'Kann ich den Versand planen?', answer: 'Ja — scheduledAt als ISO-8601-Datum in der Zukunft. Weglassen für sofortigen Versand.' },
       ],
     },
   },
+  'campaign-audience-preview': {
+    keywords: {
+      en: ['preview audience', 'campaign recipients', 'who will receive', 'sendable contacts', 'skip reasons'],
+      de: ['Zielgruppe prüfen', 'Kampagnen-Empfänger', 'wer erhält', 'sendbare Kontakte', 'Übersprungen'],
+    },
+    useCases: {
+      en: ['Check how many contacts will receive a draft campaign before sending', 'Preview sendable vs skipped for a segment or tag audience'],
+      de: ['Vor dem Versand prüfen, wie viele Kontakte eine Entwurfs-Kampagne erhalten', 'Sendbar vs. übersprungen für ein Segment oder Tag-Zielgruppe prüfen'],
+    },
+    category: 'communication',
+    faq: {
+      en: [
+        { question: 'When should I use this?', answer: 'Call it before send_campaign (or before create) to see total, sendable, and skip reasons such as pending consent or missing channel.' },
+        { question: 'Campaign or raw audience?', answer: 'Pass campaignId for an existing campaign, or channel plus segmentId, tags, or contactIds.' },
+      ],
+      de: [
+        { question: 'Wann nutze ich das?', answer: 'Vor send_campaign (oder vor dem Erstellen), um total, sendable und Skip-Gründe wie ausstehende Einwilligung oder fehlenden Kanal zu sehen.' },
+        { question: 'Kampagne oder Roh-Zielgruppe?', answer: 'campaignId für eine bestehende Kampagne, oder channel plus segmentId, tags oder contactIds.' },
+      ],
+    },
+  },
+
   'campaign-send-contact': {
     keywords: {
       en: ['send campaign to contact', 'send email to contact', 'form follow-up email', 'send one email'],
@@ -1525,6 +1765,118 @@ export const meta: Record<string, WarpExtras> = {
         { question: 'Wird automatisch gesendet?', answer: 'Nein. Zuerst entsteht ein Entwurf; die finale Nachricht muss vor dem Versand freigegeben werden.' },
         { question: 'Was passiert nach dem Versand?', answer: 'Pro Empfänger entsteht ein Delivery-Eintrag, alle enthaltenen Artefakte werden sent mit deliveredAt, und Messaging loggt pro Empfänger eine Kontakt-Aktivität.' },
         { question: 'Wer empfängt die Nachricht?', answer: 'Übergib contactIds (kommagetrennt; eine ID reicht). Fehlt das, werden die eindeutigen Kontakte an den Artefakten genutzt. E-Mail/SMS/WhatsApp nutzt E-Mail oder Telefon jedes Kontakts.' },
+      ],
+    },
+  },
+  'secret-list': {
+    keywords: {
+      en: ['list secrets', 'agent secret keys', 'credentials configured', 'API keys set'],
+      de: ['Secrets auflisten', 'Agent Secret-Keys', 'Credentials prüfen', 'API-Keys gesetzt'],
+    },
+    useCases: {
+      en: [
+        'See which secret keys are configured on an agent',
+        'Check before wiring an integration that needs credentials',
+        'Audit credential coverage without exposing values',
+      ],
+      de: [
+        'Sehen, welche Secret-Keys auf einem Agenten gesetzt sind',
+        'Vor einer Integration prüfen, ob Credentials fehlen',
+        'Credential-Abdeckung prüfen, ohne Werte preiszugeben',
+      ],
+    },
+    category: 'security',
+    faq: {
+      en: [
+        { question: 'Does listing secrets return the values?', answer: 'No. Only key names are returned — never secret values.' },
+        { question: 'How do I check a specific key?', answer: 'Use the secret status action with the key names you care about.' },
+      ],
+      de: [
+        { question: 'Gibt das Auflisten die Secret-Werte zurück?', answer: 'Nein. Es werden nur Key-Namen zurückgegeben — niemals Secret-Werte.' },
+        { question: 'Wie prüfe ich einen bestimmten Key?', answer: 'Nutze die Secret-Status-Aktion mit den gewünschten Key-Namen.' },
+      ],
+    },
+  },
+  'secret-status': {
+    keywords: {
+      en: ['secret status', 'is API key set', 'credential check', 'env key present'],
+      de: ['Secret-Status', 'ist API-Key gesetzt', 'Credential-Check', 'Env-Key vorhanden'],
+    },
+    useCases: {
+      en: [
+        'Verify required secrets before running an integration',
+        'Confirm a rotated key is stored',
+        'Gate workflows on missing credentials',
+      ],
+      de: [
+        'Benötigte Secrets vor einer Integration prüfen',
+        'Bestätigen, dass ein rotierter Key gespeichert ist',
+        'Workflows an fehlenden Credentials ausrichten',
+      ],
+    },
+    category: 'security',
+    faq: {
+      en: [
+        { question: 'What does status return?', answer: 'True/false per key for whether it is set — never the secret value.' },
+      ],
+      de: [
+        { question: 'Was liefert der Status?', answer: 'Pro Key true/false, ob er gesetzt ist — niemals den Secret-Wert.' },
+      ],
+    },
+  },
+  'secret-set': {
+    keywords: {
+      en: ['set secret', 'store API key', 'save agent credential', 'encrypted secret'],
+      de: ['Secret setzen', 'API-Key speichern', 'Agent-Credential speichern', 'verschlüsseltes Secret'],
+    },
+    useCases: {
+      en: [
+        'Store an integration API token on the agent',
+        'Replace a rotated credential',
+        'Provide a missing env key for a warp',
+      ],
+      de: [
+        'Einen Integrations-API-Token am Agenten speichern',
+        'Ein rotiertes Credential ersetzen',
+        'Einen fehlenden Env-Key für eine Aktion hinterlegen',
+      ],
+    },
+    category: 'security',
+    faq: {
+      en: [
+        { question: 'Can I read the value back later?', answer: 'No. List and status never return values. Only warp approvals can temporarily unlock a value for execution.' },
+        { question: 'What format must the key use?', answer: 'UPPER_SNAKE_CASE using A–Z, 0–9, and underscore only.' },
+      ],
+      de: [
+        { question: 'Kann ich den Wert später wieder lesen?', answer: 'Nein. Listen und Status geben nie Werte zurück. Nur Warp-Freigaben können einen Wert vorübergehend für die Ausführung freischalten.' },
+        { question: 'Welches Format braucht der Key?', answer: 'UPPER_SNAKE_CASE nur mit A–Z, 0–9 und Unterstrich.' },
+      ],
+    },
+  },
+  'secret-clear': {
+    keywords: {
+      en: ['clear secret', 'delete API key', 'remove credential', 'revoke agent secret'],
+      de: ['Secret löschen', 'API-Key entfernen', 'Credential entfernen', 'Agent-Secret widerrufen'],
+    },
+    useCases: {
+      en: [
+        'Remove a credential the agent no longer needs',
+        'Clear a key before rotating to a new value',
+        'Revoke access after an integration is disconnected',
+      ],
+      de: [
+        'Ein Credential entfernen, das der Agent nicht mehr braucht',
+        'Einen Key vor der Rotation löschen',
+        'Zugang nach dem Trennen einer Integration widerrufen',
+      ],
+    },
+    category: 'security',
+    faq: {
+      en: [
+        { question: 'Is clearing permanent?', answer: 'Yes. The encrypted value is deleted. You must set the secret again to restore it.' },
+      ],
+      de: [
+        { question: 'Ist das Löschen endgültig?', answer: 'Ja. Der verschlüsselte Wert wird gelöscht. Du musst das Secret erneut setzen, um es wiederherzustellen.' },
       ],
     },
   },

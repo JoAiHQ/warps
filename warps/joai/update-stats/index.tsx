@@ -2,12 +2,24 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { App, useAppContext } from '../../../ui/lib/components'
 import { EmptyMessageSkeleton } from '../../../ui/lib/skeletons'
-import { JsonResult } from '../../../ui/shared/joai'
+import { StatsResult, extractRecord, pickValue } from '../../../ui/shared/joai'
 
 function Main() {
   const { data } = useAppContext()
   if (!data) return <EmptyMessageSkeleton />
-  return <JsonResult data={data} />
+
+  const record = extractRecord(data)
+  return (
+    <StatsResult
+      title="Update stats"
+      emptyText="No update stats available."
+      metrics={[
+        { label: 'Deals', value: pickValue(record, ['DEALS_COUNT', 'dealsCount']) },
+        { label: 'Events', value: pickValue(record, ['EVENTS_COUNT', 'eventsCount']) },
+        { label: 'News', value: pickValue(record, ['NEWS_COUNT', 'newsCount']) },
+      ]}
+    />
+  )
 }
 
 const rootElement = document.getElementById('root')

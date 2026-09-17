@@ -1,0 +1,136 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Campaign Audience Preview",
+  "title": {
+    "en": "Preview campaign audience",
+    "de": "Kampagnen-Zielgruppe prüfen"
+  },
+  "description": {
+    "en": "Preview how many contacts are sendable vs skipped for a campaign or audience (pending consent, opted out, missing channel, approval skipped).",
+    "de": "Prüfe, wie viele Kontakte für eine Kampagne oder Zielgruppe sendbar vs. übersprungen sind (Einwilligung ausstehend, Opt-out, fehlender Kanal, Freigabe übersprungen)."
+  },
+  "bot": "Call this BEFORE send_campaign. Pass campaignId for an existing draft, or channel plus segmentId/tags/contactIds to preview an audience before creating. Use the counts to confirm sendable recipients and explain skips.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Preview audience",
+        "de": "Zielgruppe prüfen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/campaigns/audience-preview?campaignId={{campaignId}}&channel={{channel}}&segmentId={{segmentId}}&tags={{tags}}&contactIds={{contactIds}}",
+        "method": "GET",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Campaign ID",
+          "as": "campaignId",
+          "type": "string",
+          "position": "query",
+          "source": "field",
+          "required": false,
+          "description": {
+            "en": "Existing campaign hashid — uses that campaign's channel and audience",
+            "de": "Hashid einer bestehenden Kampagne — nutzt deren Kanal und Zielgruppe"
+          },
+          "bot": "Prefer this when previewing before send_campaign. Omit when previewing by channel + audience fields."
+        },
+        {
+          "name": "Channel",
+          "as": "channel",
+          "type": "string",
+          "position": "query",
+          "source": "field",
+          "required": false,
+          "options": {
+            "email": "Email",
+            "whatsapp": "WhatsApp",
+            "sms": "SMS",
+            "push": "Push"
+          },
+          "description": {
+            "en": "Delivery channel (required when campaignId is omitted)",
+            "de": "Versandkanal (erforderlich ohne campaignId)"
+          }
+        },
+        {
+          "name": "Segment ID",
+          "as": "segmentId",
+          "type": "string",
+          "position": "query",
+          "source": "field",
+          "required": false,
+          "description": {
+            "en": "Saved segment hashid to preview",
+            "de": "Hashid eines gespeicherten Segments"
+          }
+        },
+        {
+          "name": "Tags",
+          "as": "tags",
+          "type": "string",
+          "position": "query",
+          "source": "field",
+          "required": false,
+          "description": {
+            "en": "Comma-separated tags — contacts with any of these",
+            "de": "Kommagetrennte Tags — Kontakte mit einem dieser Tags"
+          }
+        },
+        {
+          "name": "Contact IDs",
+          "as": "contactIds",
+          "type": "string",
+          "position": "query",
+          "source": "field",
+          "required": false,
+          "description": {
+            "en": "Comma-separated contact hashids to preview",
+            "de": "Kommagetrennte Kontakt-Hashids"
+          }
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}",
+          "description": {
+            "en": "Team slug for this action. Defaults to the current team.",
+            "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team."
+          },
+          "bot": "The slug of the team to operate on. Omit to use the current team."
+        }
+      ],
+      "output": {
+        "total": "out.data.total",
+        "sendable": "out.data.sendable",
+        "willSkip": "out.data.willSkip",
+        "reasons": "out.data.reasons"
+      }
+    }
+  ],
+  "output": {
+    "TOTAL": "out.1.total",
+    "SENDABLE": "out.1.sendable",
+    "WILL_SKIP": "out.1.willSkip",
+    "REASONS": "out.1.reasons"
+  },
+  "messages": {
+    "success": {
+      "en": "Audience: {{SENDABLE}} sendable of {{TOTAL}} ({{WILL_SKIP}} will skip).",
+      "de": "Zielgruppe: {{SENDABLE}} sendbar von {{TOTAL}} ({{WILL_SKIP}} werden übersprungen)."
+    }
+  },
+  "ui": "https://raw.githubusercontent.com/JoAiHQ/warps/main/warps/joai/campaign-audience-preview/chatapp.5f236ab5.dist.html"
+}

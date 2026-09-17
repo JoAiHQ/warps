@@ -1,0 +1,102 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Update Site",
+  "title": {
+    "en": "Update site",
+    "de": "Website aktualisieren",
+    "es": "Update site",
+    "fr": "Update site",
+    "ro": "Update site",
+    "it": "Update site"
+  },
+  "description": {
+    "en": "Update a site’s enabled state, contact, metrics source/resource, or monthly report schedule.",
+    "de": "Aktualisiert Aktivierung, Kontakt, Metrik-Quelle/-Ressource oder Monatsbericht einer Website."
+  },
+  "bot": "Update site reporting fields. Pass metricsSource and metricsResource together. monthlyReport true opts the site into the platform monthly report job when contact and metrics are set.",
+  "vars": {
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Update",
+        "de": "Aktualisieren"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/sites/{{siteId}}",
+        "method": "PUT",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Site ID",
+          "as": "siteId",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:siteId"
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        },
+        {
+          "name": "Enabled",
+          "as": "enabled",
+          "type": "boolean",
+          "source": "field",
+          "required": false,
+          "position": "payload:enabled"
+        },
+        {
+          "name": "Contact",
+          "as": "contactId",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:contactId"
+        },
+        {
+          "name": "Metrics source",
+          "as": "metricsSource",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:metricsSource"
+        },
+        {
+          "name": "Metrics resource",
+          "as": "metricsResource",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:metricsResource"
+        },
+        {
+          "name": "Monthly report",
+          "as": "monthlyReport",
+          "type": "boolean",
+          "source": "field",
+          "required": false,
+          "position": "payload:monthlyReport"
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Site updated.",
+      "de": "Website aktualisiert."
+    }
+  }
+}
