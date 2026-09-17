@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 import { AppContext } from '../../lib/components'
 import { UseAppResult } from '../../lib/hooks/useApp'
-import { ListResult, valueToString } from './ListResult'
+import { ListResult } from './ListResult'
 
 function appValue(): UseAppResult<any, any> {
   return {
@@ -69,14 +69,18 @@ describe('ListResult', () => {
     )
     expect(screen.queryByText('No agents found.')).not.toBeInTheDocument()
   })
-})
 
-describe('valueToString', () => {
-  it('formats primitives, objects and undefined', () => {
-    expect(valueToString('x')).toBe('x')
-    expect(valueToString(0)).toBe('0')
-    expect(valueToString({ a: 1 })).toBe('{"a":1}')
-    expect(valueToString(null)).toBe('—')
-    expect(valueToString(undefined)).toBe('—')
+  it('renders image thumbnails when imageKey is set', () => {
+    const { container } = renderWithApp(
+      <ListResult
+        title="Variations"
+        emptyText="None"
+        items={[{ label: 'Hero', imageUrl: 'https://example.com/hero.jpg' }]}
+        primaryKey="label"
+        imageKey="imageUrl"
+        detailKeys={[]}
+      />,
+    )
+    expect(container.querySelector('img')?.getAttribute('src')).toBe('https://example.com/hero.jpg')
   })
 })

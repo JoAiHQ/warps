@@ -3,6 +3,8 @@ import { Badge } from '@openai/apps-sdk-ui/components/Badge'
 import { EmptyMessage } from '@openai/apps-sdk-ui/components/EmptyMessage'
 import { useAppContext } from '../../lib/components'
 
+import { formatCents } from './helpers'
+
 export type TimelineEntry = Record<string, unknown>
 
 function formatDate(value: unknown): string | null {
@@ -16,6 +18,16 @@ function formatDate(value: unknown): string | null {
     hour: '2-digit',
     minute: '2-digit',
   })
+}
+
+function displayAuthor(value: unknown): string | null {
+  if (!value) return null
+  if (typeof value === 'string' && value.trim()) return value
+  if (typeof value === 'object') {
+    const record = value as Record<string, unknown>
+    if (typeof record.name === 'string' && record.name.trim()) return record.name
+  }
+  return null
 }
 
 const SOURCE_COLORS: Record<string, 'secondary' | 'success' | 'danger' | 'warning' | 'info' | 'discovery'> = {
@@ -95,9 +107,16 @@ function EntryBody({ entry }: { entry: TimelineEntry }) {
   const source = String(entry.source ?? '')
   switch (source) {
     case 'activity':
-      return entry.description ? (
-        <p className="text-sm text-warp-fg-secondary">{String(entry.description)}</p>
-      ) : null
+      return (
+        <div className="flex flex-col gap-1">
+          {entry.description ? (
+            <p className="text-sm text-warp-fg-secondary">{String(entry.description)}</p>
+          ) : null}
+          {displayAuthor(entry.author) ? (
+            <span className="text-xs text-warp-fg-muted">{displayAuthor(entry.author)}</span>
+          ) : null}
+        </div>
+      )
     case 'message':
       return entry.content ? (
         <p className="whitespace-pre-wrap text-sm text-warp-fg-secondary">{String(entry.content)}</p>
@@ -107,7 +126,7 @@ function EntryBody({ entry }: { entry: TimelineEntry }) {
         <div className="flex flex-wrap gap-2 text-xs text-warp-fg-muted">
           {entry.status ? <span>{String(entry.status)}</span> : null}
           {entry.priority && entry.priority !== 'normal' ? <span>{String(entry.priority)}</span> : null}
-          {entry.dueDate ? <span>due {String(entry.dueDate)}</span> : null}
+          {entry.dueDate ? <span>due {formatDate(entry.dueDate)}</span> : null}
           {Array.isArray(entry.tags) && entry.tags.length > 0 ? <span>#{String(entry.tags).replace(/,/g, ' #')}</span> : null}
         </div>
       )
@@ -131,7 +150,7 @@ function EntryBody({ entry }: { entry: TimelineEntry }) {
       return (
         <div className="flex flex-wrap gap-2 text-xs text-warp-fg-muted">
           {entry.status ? <span>{String(entry.status)}</span> : null}
-          {entry.total != null ? <span>{String(entry.total)} €</span> : null}
+          {entry.total != null ? <span>{formatCents(entry.total) ?? String(entry.total)}</span> : null}
           {entry.itemCount != null ? <span>{String(entry.itemCount)} item(s)</span> : null}
         </div>
       )
@@ -140,7 +159,15 @@ function EntryBody({ entry }: { entry: TimelineEntry }) {
   }
 }
 
-export function TimelineResult({ items, emptyText }: { items: TimelineEntry[]; emptyText: string }) {
+export function TimelineResult({
+  items,
+  emptyText,
+  title = 'Timeline',
+}: {
+  items: TimelineEntry[]
+  emptyText: string
+  title?: string
+}) {
   const { copyToClipboard } = useAppContext()
 
   if (!items || items.length === 0) {
@@ -156,7 +183,9 @@ export function TimelineResult({ items, emptyText }: { items: TimelineEntry[]; e
   return (
     <div className="flex flex-col gap-3">
       <div className="flex items-center justify-between">
-        <h3 className="text-sm font-semibold text-warp-fg">Timeline ({items.length})</h3>
+        <h3 className="text-sm font-semibold text-warp-fg">
+          {title} ({items.length})
+        </h3>
         <button
           type="button"
           onClick={() => copyToClipboard(JSON.stringify(items, null, 2))}
