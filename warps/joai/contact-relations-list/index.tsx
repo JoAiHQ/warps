@@ -2,23 +2,20 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { App, useAppContext } from '../../../ui/lib/components'
 import { EmptyMessageSkeleton } from '../../../ui/lib/skeletons'
-import { ListResult, extractList } from '../../../ui/shared/joai'
-
-type RelationEntry = {
-  type?: string
-  notes?: string | null
-  contact?: { name?: string; company?: string | null } | null
-}
+import { ListResult, mapListItems, truncateText } from '../../../ui/shared/joai'
 
 function Main() {
   const { data } = useAppContext()
   if (!data) return <EmptyMessageSkeleton />
-  const items = extractList<RelationEntry>(data).map((entry) => ({
-    name: entry.contact?.name ?? '—',
-    type: entry.type,
-    company: entry.contact?.company ?? undefined,
-    notes: entry.notes ?? undefined,
-  }))
+  const items = mapListItems(data, (item) => {
+    const contact = item.contact && typeof item.contact === 'object' ? (item.contact as Record<string, unknown>) : null
+    return {
+      name: contact?.name ?? '—',
+      type: item.type,
+      company: contact?.company,
+      notes: truncateText(item.notes, 120),
+    }
+  })
   return (
     <ListResult
       title="Contact Relations"
@@ -26,7 +23,8 @@ function Main() {
       items={items}
       primaryKey="name"
       secondaryKey="type"
-      detailKeys={["company", "notes"]}
+      detailKeys={['company', 'notes']}
+      detailLabels={{ company: 'Company', notes: 'Notes' }}
     />
   )
 }
