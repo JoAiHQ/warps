@@ -2,20 +2,25 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { App, useAppContext } from '../../../ui/lib/components'
 import { EmptyMessageSkeleton } from '../../../ui/lib/skeletons'
-import { ListResult, extractList } from '../../../ui/shared/joai'
+import { ListResult, mapListItems, nestedName, truncateText } from '../../../ui/shared/joai'
 
 function Main() {
   const { data } = useAppContext()
   if (!data) return <EmptyMessageSkeleton />
-  const items = extractList(data)
+  const items = mapListItems(data, (item) => ({
+    name: item.name,
+    visibility: item.public ? 'Public' : 'Private',
+    description: truncateText(item.description, 100),
+    blueprint: nestedName(item.blueprint) ?? (typeof item.blueprint === 'string' ? item.blueprint : null),
+  }))
   return (
     <ListResult
       title="Agents"
       emptyText="No agents found."
       items={items}
-      primaryKey={'name'}
-      secondaryKey={'uuid'}
-      detailKeys={[]}
+      primaryKey="name"
+      secondaryKey="visibility"
+      detailKeys={['description', 'blueprint']}
     />
   )
 }
