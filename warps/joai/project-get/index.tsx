@@ -2,20 +2,27 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { App, useAppContext } from '../../../ui/lib/components'
 import { EmptyMessageSkeleton } from '../../../ui/lib/skeletons'
-import { ListResult, extractList } from '../../../ui/shared/joai'
+import { DetailResult, extractRecord, truncateText } from '../../../ui/shared/joai'
 
 function Main() {
   const { data } = useAppContext()
   if (!data) return <EmptyMessageSkeleton />
-  const items = extractList(data)
+  const record = extractRecord(data)
+  const mapped = record
+    ? {
+        ...record,
+        brief: truncateText(record.brief, 160) ?? record.brief,
+      }
+    : null
+
   return (
-    <ListResult
+    <DetailResult
       title="Project"
       emptyText="No project found."
-      items={items}
-      primaryKey={'name'}
-      secondaryKey={'status'}
-      detailKeys={["outputPreset"]}
+      record={mapped}
+      primaryKey="name"
+      secondaryKey="status"
+      detailKeys={['outputPreset', 'outputType', 'brief', 'targetPlatforms', 'createdAt', 'updatedAt']}
     />
   )
 }
