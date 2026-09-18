@@ -75,11 +75,11 @@ export type InstagramReplytoCommentData = {
 };
 
 export type InstagramSendMessageInputs = {
-  IG_USER_ID: string;
-  RECIPIENT_ID: string;
-  TEXT: string;
-  recipient: string;
+  igUserId: string;
+  recipientId: string;
   message: string;
+  recipient: string;
+  messagePayload: string;
 };
 
 export type InstagramSendMessageData = {
@@ -88,11 +88,11 @@ export type InstagramSendMessageData = {
 };
 
 export type InstagramSendPrivateReplyInputs = {
-  PAGE_ID: string;
-  COMMENT_ID: string;
-  MESSAGE_TEXT: string;
-  recipient: string;
+  pageId: string;
+  commentId: string;
   message: string;
+  recipient: string;
+  messagePayload: string;
 };
 
 export type InstagramSendPrivateReplyData = {
