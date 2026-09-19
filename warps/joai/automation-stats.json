@@ -1,0 +1,84 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Automation Stats",
+  "title": {
+    "en": "View automation stats",
+    "de": "Automations-Statistik anzeigen",
+    "es": "Ver estadísticas de automatización",
+    "fr": "Voir les stats d'automatisation",
+    "ro": "Vezi statisticile automatizărilor",
+    "it": "Visualizza stats automazioni"
+  },
+  "description": {
+    "en": "View summary statistics for team lifecycle automations: total, enabled, and emails sent.",
+    "de": "Zeige zusammenfassende Statistiken für Lifecycle-Automationen: Gesamtzahl, aktiviert und gesendete E-Mails.",
+    "es": "Ver estadísticas resumidas de automatizaciones: total, activadas y emails enviados.",
+    "fr": "Voir les statistiques des automatisations : total, activées et emails envoyés.",
+    "ro": "Vezi statisticile automatizărilor pe ciclu de viață: total, activate și emailuri trimise.",
+    "it": "Visualizza le statistiche delle automazioni: totale, attive e email inviate."
+  },
+  "bot": "Use when the user asks how many automations the team has, how many are enabled, or how many drip emails were sent.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "auto": true,
+      "label": {
+        "en": "View stats",
+        "de": "Statistik anzeigen",
+        "es": "Ver estadísticas",
+        "fr": "Voir les stats",
+        "ro": "Vezi statisticile",
+        "it": "Visualizza stats"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/automations/stats",
+        "method": "GET",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Team",
+          "as": "team",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}",
+          "description": {
+            "en": "Team slug for this action. Defaults to the current team.",
+            "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team."
+          }
+        }
+      ],
+      "output": {
+        "totalAutomations": "out.data.totalAutomations",
+        "enabledAutomations": "out.data.enabledAutomations",
+        "activeEnrollments": "out.data.activeEnrollments",
+        "emailsSent": "out.data.emailsSent",
+        "completedEnrollments": "out.data.completedEnrollments",
+        "erroredEnrollments": "out.data.erroredEnrollments"
+      }
+    }
+  ],
+  "output": {
+    "TOTAL_AUTOMATIONS": "out.1.totalAutomations",
+    "ENABLED_AUTOMATIONS": "out.1.enabledAutomations",
+    "ACTIVE_ENROLLMENTS": "out.1.activeEnrollments",
+    "EMAILS_SENT": "out.1.emailsSent",
+    "COMPLETED_ENROLLMENTS": "out.1.completedEnrollments",
+    "ERRORED_ENROLLMENTS": "out.1.erroredEnrollments"
+  },
+  "messages": {
+    "success": {
+      "en": "Automations: {{TOTAL_AUTOMATIONS}} total, {{ENABLED_AUTOMATIONS}} enabled, {{EMAILS_SENT}} emails sent ({{ACTIVE_ENROLLMENTS}} active enrollments).",
+      "de": "Automationen: {{TOTAL_AUTOMATIONS}} gesamt, {{ENABLED_AUTOMATIONS}} aktiviert, {{EMAILS_SENT}} E-Mails gesendet ({{ACTIVE_ENROLLMENTS}} aktive Einschreibungen)."
+    }
+  }
+}
