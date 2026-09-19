@@ -1,0 +1,54 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: List Automation Enrollments",
+  "title": {
+    "en": "List automation enrollments",
+    "de": "Automation-Enrollments auflisten",
+    "fr": "Lister les enrollments d'automatisation",
+    "es": "Listar enrollments de automatización",
+    "it": "Elenca enrollment automazione",
+    "ro": "Listează enrollment-urile automatizării"
+  },
+  "description": {
+    "en": "List per-contact enrollments for an automation (status, errors, sent_at).",
+    "de": "Listet Enrollments einer Automation (Status, Fehler, sent_at).",
+    "fr": "Liste les enrollments par contact (statut, erreurs, sent_at).",
+    "es": "Lista enrollments por contacto (estado, errores, sent_at).",
+    "it": "Elenca gli enrollment per contatto (stato, errori, sent_at).",
+    "ro": "Listează enrollment-urile pe contact (status, erori, sent_at)."
+  },
+  "bot": "Pass automationId hashid. Optional page/perPage for pagination. Use retry_automation_enrollment when error is set.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "auto": true,
+      "label": {
+        "en": "List enrollments",
+        "de": "Enrollments auflisten",
+        "fr": "Lister les enrollments",
+        "es": "Listar enrollments",
+        "it": "Elenca enrollment",
+        "ro": "Listează enrollment-urile"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/automations/{{automationId}}/enrollments",
+        "method": "GET",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        { "name": "Automation ID", "as": "automationId", "type": "string", "source": "field", "required": true, "position": "url:automationId" },
+        { "name": "Page", "as": "page", "type": "string", "source": "field", "required": false, "position": "query" },
+        { "name": "Per page", "as": "perPage", "type": "string", "source": "field", "required": false, "position": "query" },
+        { "name": "Team", "as": "team", "type": "string", "source": "field", "required": false, "default": "{{JOAI_TEAM_SLUG}}" }
+      ]
+    }
+  ]
+}

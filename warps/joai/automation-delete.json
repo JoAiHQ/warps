@@ -1,0 +1,84 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Delete Automation",
+  "title": {
+    "en": "Delete an automation",
+    "de": "Automation löschen",
+    "fr": "Supprimer une automatisation",
+    "es": "Eliminar una automatización",
+    "it": "Elimina un'automazione",
+    "ro": "Șterge o automatizare"
+  },
+  "description": {
+    "en": "Permanently delete a lifecycle automation that has no active enrollments. Use with care — this cannot be undone.",
+    "de": "Löscht eine Lifecycle-Automation ohne aktive Enrollments dauerhaft. Vorsicht — nicht rückgängig zu machen.",
+    "fr": "Supprime définitivement une automatisation sans enrollments actifs. À utiliser avec précaution — irréversible.",
+    "es": "Elimina permanentemente una automatización sin enrollments activos. Úsalo con cuidado: no se puede deshacer.",
+    "it": "Elimina definitivamente un'automazione senza enrollment attivi. Da usare con cautela — non reversibile.",
+    "ro": "Șterge definitiv o automatizare fără enrollment-uri active. Folosește cu atenție — nu poate fi anulată."
+  },
+  "bot": "Use when the user wants to remove an automation. Blocked while enrollments are active — disable or wait first. Prefer list_automations to find the ID.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Delete automation",
+        "de": "Automation löschen",
+        "fr": "Supprimer l'automatisation",
+        "es": "Eliminar automatización",
+        "it": "Elimina automazione",
+        "ro": "Șterge automatizarea"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/automations/{{automationId}}",
+        "method": "DELETE",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Automation ID",
+          "as": "automationId",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:automationId",
+          "bot": "Automation hashid. List automations first if the user only has a name."
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Automation deleted.",
+      "de": "Automation gelöscht.",
+      "fr": "Automatisation supprimée.",
+      "es": "Automatización eliminada.",
+      "it": "Automazione eliminata.",
+      "ro": "Automatizare ștearsă."
+    },
+    "error": {
+      "en": "Failed to delete automation: {{MESSAGE}}",
+      "de": "Automation konnte nicht gelöscht werden: {{MESSAGE}}",
+      "fr": "Échec de la suppression de l'automatisation : {{MESSAGE}}",
+      "es": "No se pudo eliminar la automatización: {{MESSAGE}}",
+      "it": "Eliminazione automazione non riuscita: {{MESSAGE}}",
+      "ro": "Ștergerea automatizării a eșuat: {{MESSAGE}}"
+    }
+  }
+}

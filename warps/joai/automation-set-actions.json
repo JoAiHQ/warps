@@ -1,0 +1,77 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Set Automation Actions",
+  "title": {
+    "en": "Set automation actions",
+    "de": "Automation-Aktionen setzen",
+    "fr": "Définir les actions d'automatisation",
+    "es": "Definir acciones de automatización",
+    "it": "Imposta azioni automazione",
+    "ro": "Setează acțiunile automatizării"
+  },
+  "description": {
+    "en": "Replace the ordered action list (wait, send_email, halt) for an automation. Blocked while enrollments are active. At most one send_email in v1.",
+    "de": "Ersetzt die Aktionsliste (wait, send_email, halt). Blockiert, solange Enrollments aktiv sind. Maximal eine send_email in v1.",
+    "fr": "Remplace la liste ordonnée d'actions (wait, send_email, halt). Bloqué tant que des enrollments sont actifs. Au plus un send_email en v1.",
+    "es": "Sustituye la lista ordenada de acciones (wait, send_email, halt). Bloqueado mientras haya enrollments activos. Como máximo un send_email en v1.",
+    "it": "Sostituisce l'elenco ordinato di azioni (wait, send_email, halt). Bloccato con enrollment attivi. Al massimo un send_email in v1.",
+    "ro": "Înlocuiește lista ordonată de acțiuni (wait, send_email, halt). Blocat cât timp există enrollment-uri active. Cel mult un send_email în v1."
+  },
+  "bot": "Pass automationId and actions JSON array in order. Example: wait → send_email → halt. Fails if any enrollment is still active.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Set actions",
+        "de": "Aktionen setzen",
+        "fr": "Définir les actions",
+        "es": "Definir acciones",
+        "it": "Imposta azioni",
+        "ro": "Setează acțiunile"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/automations/{{automationId}}/actions",
+        "method": "PUT",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        { "name": "Automation ID", "as": "automationId", "type": "string", "source": "field", "required": true, "position": "url:automationId" },
+        {
+          "name": "Actions",
+          "as": "actions",
+          "type": "json",
+          "source": "field",
+          "required": true,
+          "bot": "Ordered JSON: [{\"type\":\"wait\",\"config\":{\"delayMinutes\":60}},{\"type\":\"send_email\",\"config\":{\"sendMode\":\"direct\",\"subject\":\"…\",\"body\":\"…\"}},{\"type\":\"halt\",\"config\":{}}]. Or track via campaign: {\"type\":\"send_email\",\"config\":{\"sendMode\":\"campaign\",\"campaignId\":\"…\"}}."
+        },
+        { "name": "Team", "as": "team", "type": "string", "source": "field", "required": false, "default": "{{JOAI_TEAM_SLUG}}" }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Automation actions updated.",
+      "de": "Automation-Aktionen aktualisiert.",
+      "fr": "Actions d'automatisation mises à jour.",
+      "es": "Acciones de automatización actualizadas.",
+      "it": "Azioni automazione aggiornate.",
+      "ro": "Acțiunile automatizării au fost actualizate."
+    },
+    "error": {
+      "en": "Failed to set automation actions: {{MESSAGE}}",
+      "de": "Automation-Aktionen konnten nicht gesetzt werden: {{MESSAGE}}",
+      "fr": "Échec de la définition des actions : {{MESSAGE}}",
+      "es": "No se pudieron definir las acciones: {{MESSAGE}}",
+      "it": "Impostazione azioni non riuscita: {{MESSAGE}}",
+      "ro": "Setarea acțiunilor a eșuat: {{MESSAGE}}"
+    }
+  }
+}

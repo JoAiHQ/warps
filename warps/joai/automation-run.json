@@ -1,0 +1,70 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Run Automation",
+  "title": {
+    "en": "Run automation for a contact",
+    "de": "Automation für Kontakt starten",
+    "fr": "Lancer l'automatisation pour un contact",
+    "es": "Ejecutar automatización para un contacto",
+    "it": "Avvia automazione per un contatto",
+    "ro": "Rulează automatizarea pentru un contact"
+  },
+  "description": {
+    "en": "Manually enroll a contact into an automation (testing / exceptions). Prefer prop or segment triggers for normal enrollment.",
+    "de": "Schreibt einen Kontakt manuell in eine Automation ein (Tests / Ausnahmen). Normalerweise Prop- oder Segment-Trigger nutzen.",
+    "fr": "Inscrit manuellement un contact (tests / exceptions). Préférez les déclencheurs prop ou segment au quotidien.",
+    "es": "Inscribe manualmente un contacto (pruebas / excepciones). Prefiere triggers prop o segmento en normalidad.",
+    "it": "Iscrive manualmente un contatto (test / eccezioni). In normale uso preferisci trigger prop o segmento.",
+    "ro": "Înscrie manual un contact (teste / excepții). În uz normal preferă trigger prop sau segment."
+  },
+  "bot": "Use for DevNet testing or rare exceptions. Pass automationId and contactId hashids. Does not replace prop/segment auto-enrollment.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Run automation",
+        "de": "Automation starten",
+        "fr": "Lancer l'automatisation",
+        "es": "Ejecutar automatización",
+        "it": "Avvia automazione",
+        "ro": "Rulează automatizarea"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/automations/{{automationId}}/run",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        { "name": "Automation ID", "as": "automationId", "type": "string", "source": "field", "required": true, "position": "url:automationId" },
+        { "name": "Contact ID", "as": "contactId", "type": "string", "source": "field", "required": true },
+        { "name": "Team", "as": "team", "type": "string", "source": "field", "required": false, "default": "{{JOAI_TEAM_SLUG}}" }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Contact enrolled in automation.",
+      "de": "Kontakt in Automation eingeschrieben.",
+      "fr": "Contact inscrit à l'automatisation.",
+      "es": "Contacto inscrito en la automatización.",
+      "it": "Contatto iscritto all'automazione.",
+      "ro": "Contact înscris în automatizare."
+    },
+    "error": {
+      "en": "Failed to run automation: {{MESSAGE}}",
+      "de": "Automation konnte nicht gestartet werden: {{MESSAGE}}",
+      "fr": "Échec du lancement de l'automatisation : {{MESSAGE}}",
+      "es": "No se pudo ejecutar la automatización: {{MESSAGE}}",
+      "it": "Avvio automazione non riuscito: {{MESSAGE}}",
+      "ro": "Rularea automatizării a eșuat: {{MESSAGE}}"
+    }
+  }
+}
