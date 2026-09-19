@@ -4,25 +4,33 @@
   "repo": "JoAiHQ/warps",
   "branch": "dev",
   "network": "devnet",
-  "commitSha": "d13415271760f2d8a7a447dcf74a2276ba2b8b75",
-  "committedAt": "2026-09-19T12:43:34.032Z",
-  "generatedAt": "2026-09-19T12:43:36.242Z",
+  "commitSha": "5eed02caf102575697089842cf3562a6cd4e1f21",
+  "committedAt": "2026-09-19T15:07:46.747Z",
+  "generatedAt": "2026-09-19T15:07:49.332Z",
   "upserts": [
     {
-      "key": "none:joai-artifact-create",
-      "identifier": "@joai-artifact-create",
-      "alias": "joai-artifact-create",
+      "key": "none:joai-automation-stats",
+      "identifier": "@joai-automation-stats",
+      "alias": "joai-automation-stats",
       "chain": "none",
-      "hash": "763e560d20629eba1d4e0dcb6beb817908ed7c29bae42cc4b048681c6337456d",
-      "checksum": "763e560d20629eba1d4e0dcb6beb817908ed7c29bae42cc4b048681c6337456d",
-      "name": "JoAi: Create Artifact",
+      "hash": "6f6309bba9eda08eb14e4b3a5ef177628d8bdbb79e8a4dfbb775dfa90c92497e",
+      "checksum": "6f6309bba9eda08eb14e4b3a5ef177628d8bdbb79e8a4dfbb775dfa90c92497e",
+      "name": "JoAi: Automation Stats",
       "title": {
-        "en": "Create a delivery artifact",
-        "de": "Liefer-Artefakt erstellen"
+        "en": "View automation stats",
+        "de": "Automations-Statistik anzeigen",
+        "es": "Ver estadísticas de automatización",
+        "fr": "Voir les stats d'automatisation",
+        "ro": "Vezi statisticile automatizărilor",
+        "it": "Visualizza stats automazioni"
       },
       "description": {
-        "en": "Create a client delivery artifact (agreement, offer document, concept, project update, demo, file, or other) with optional URL, attached media, password, contact, and order link. Use this before sending a delivery message.",
-        "de": "Erstelle ein Client-Lieferartefakt (Vereinbarung, Angebotsdokument, Konzept, Projekt-Update, Demo, Datei oder sonstiges) mit optionaler URL, angehängten Medien, Passwort, Kontakt und Order-Verknüpfung. Vor dem Versand einer Liefernachricht verwenden."
+        "en": "View summary statistics for team lifecycle automations: total, enabled, and emails sent.",
+        "de": "Zeige zusammenfassende Statistiken für Lifecycle-Automationen: Gesamtzahl, aktiviert und gesendete E-Mails.",
+        "es": "Ver estadísticas resumidas de automatizaciones: total, activadas y emails enviados.",
+        "fr": "Voir les statistiques des automatisations : total, activées et emails envoyés.",
+        "ro": "Vezi statisticile automatizărilor pe ciclu de viață: total, activate și emailuri trimise.",
+        "it": "Visualizza le statistiche delle automazioni: totale, attive e email inviate."
       },
       "preview": null,
       "creator": "github:JoAiHQ/warps",
@@ -57,16 +65,24 @@
       },
       "warp": {
         "protocol": "warp:3.0.0",
-        "name": "JoAi: Create Artifact",
+        "name": "JoAi: Automation Stats",
         "title": {
-          "en": "Create a delivery artifact",
-          "de": "Liefer-Artefakt erstellen"
+          "en": "View automation stats",
+          "de": "Automations-Statistik anzeigen",
+          "es": "Ver estadísticas de automatización",
+          "fr": "Voir les stats d'automatisation",
+          "ro": "Vezi statisticile automatizărilor",
+          "it": "Visualizza stats automazioni"
         },
         "description": {
-          "en": "Create a client delivery artifact (agreement, offer document, concept, project update, demo, file, or other) with optional URL, attached media, password, contact, and order link. Use this before sending a delivery message.",
-          "de": "Erstelle ein Client-Lieferartefakt (Vereinbarung, Angebotsdokument, Konzept, Projekt-Update, Demo, Datei oder sonstiges) mit optionaler URL, angehängten Medien, Passwort, Kontakt und Order-Verknüpfung. Vor dem Versand einer Liefernachricht verwenden."
+          "en": "View summary statistics for team lifecycle automations: total, enabled, and emails sent.",
+          "de": "Zeige zusammenfassende Statistiken für Lifecycle-Automationen: Gesamtzahl, aktiviert und gesendete E-Mails.",
+          "es": "Ver estadísticas resumidas de automatizaciones: total, activadas y emails enviados.",
+          "fr": "Voir les statistiques des automatisations : total, activées et emails envoyés.",
+          "ro": "Vezi statisticile automatizărilor pe ciclu de viață: total, activate și emailuri trimise.",
+          "it": "Visualizza le statistiche delle automazioni: totale, attive e email inviate."
         },
-        "bot": "Use this to register something that will be delivered to a contact (slides, PDF, demo link, agreement URL, project update). Prefer status ready when it is ready to send. Attach contactId when known. For a local file: media_upload first, then pass the media ID in media (JSON array). url and media are both optional.",
+        "bot": "Use when the user asks how many automations the team has, how many are enabled, or how many drip emails were sent.",
         "vars": {
           "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
           "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
@@ -75,155 +91,24 @@
         "actions": [
           {
             "type": "collect",
+            "auto": true,
             "label": {
-              "en": "Create artifact",
-              "de": "Artefakt erstellen"
+              "en": "View stats",
+              "de": "Statistik anzeigen",
+              "es": "Ver estadísticas",
+              "fr": "Voir les stats",
+              "ro": "Vezi statisticile",
+              "it": "Visualizza stats"
             },
             "destination": {
-              "url": "https://devnet-api.joai.ai/v1/artifacts",
-              "method": "POST",
+              "url": "https://devnet-api.joai.ai/v1/automations/stats",
+              "method": "GET",
               "headers": {
                 "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
                 "X-Team": "{{team}}"
               }
             },
             "inputs": [
-              {
-                "name": "Title",
-                "as": "title",
-                "type": "string",
-                "source": "field",
-                "required": true,
-                "description": {
-                  "en": "Short client-facing title",
-                  "de": "Kurzer kundenseitiger Titel"
-                }
-              },
-              {
-                "name": "Type",
-                "as": "type",
-                "type": "string",
-                "source": "field",
-                "required": true,
-                "options": {
-                  "agreement": "Agreement",
-                  "offer": "Offer",
-                  "concept": "Concept",
-                  "update": "Update",
-                  "demo": "Demo",
-                  "file": "File",
-                  "other": "Other"
-                }
-              },
-              {
-                "name": "Status",
-                "as": "status",
-                "type": "string",
-                "source": "field",
-                "required": false,
-                "default": "ready",
-                "options": {
-                  "draft": "Draft",
-                  "ready": "Ready",
-                  "sent": "Sent",
-                  "archived": "Archived"
-                }
-              },
-              {
-                "name": "Summary",
-                "as": "summary",
-                "type": "string",
-                "source": "field",
-                "required": false,
-                "description": {
-                  "en": "Short summary of what was delivered",
-                  "de": "Kurze Zusammenfassung der Lieferung"
-                }
-              },
-              {
-                "name": "Blocks",
-                "as": "blocks",
-                "type": "string",
-                "source": "field",
-                "required": false,
-                "description": {
-                  "en": "JSON array of ordered document blocks: id, type, data.",
-                  "de": "JSON-Array geordneter Dokumentblöcke: id, type, data."
-                },
-                "bot": "Use structured blocks for a longer artifact. Supported types: heading, richText, metrics, table, callout, actions, media, divider."
-              },
-              {
-                "name": "URL",
-                "as": "url",
-                "type": "string",
-                "source": "field",
-                "required": false,
-                "description": {
-                  "en": "Primary URL (document, demo, file). Optional when attaching media IDs instead.",
-                  "de": "Primäre URL (Dokument, Demo, Datei). Optional, wenn stattdessen Medien-IDs angehängt werden."
-                },
-                "bot": "Optional. Use for an external link. Prefer media (media IDs from media_upload) when the file lives in the team library."
-              },
-              {
-                "name": "Password",
-                "as": "password",
-                "type": "string",
-                "source": "field",
-                "required": false,
-                "description": {
-                  "en": "Optional access password for the primary URL",
-                  "de": "Optionales Zugangspasswort für die primäre URL"
-                }
-              },
-              {
-                "name": "Extra Link URL",
-                "as": "extraLinkUrl",
-                "type": "string",
-                "source": "field",
-                "required": false,
-                "description": {
-                  "en": "Optional second URL (e.g. a demo next to slides)",
-                  "de": "Optionale zweite URL (z. B. Demo neben Folien)"
-                }
-              },
-              {
-                "name": "Extra Link Label",
-                "as": "extraLinkLabel",
-                "type": "string",
-                "source": "field",
-                "required": false,
-                "description": {
-                  "en": "Label for the extra link",
-                  "de": "Bezeichnung für den Extra-Link"
-                }
-              },
-              {
-                "name": "Media",
-                "as": "media",
-                "type": "json",
-                "source": "field",
-                "required": false,
-                "description": {
-                  "en": "Team media IDs to attach, e.g. [\"abc123\"]. Upload with media_upload first.",
-                  "de": "Team-Medien-IDs zum Anhängen, z.B. [\"abc123\"]. Zuerst mit media_upload hochladen."
-                },
-                "bot": "Optional. After media_upload, pass the returned media ID(s) as a JSON array. URL and media are both optional; use either, both, or neither."
-              },
-              {
-                "name": "Contact",
-                "as": "contactId",
-                "type": "string",
-                "source": "field",
-                "required": false
-              },
-              {
-                "name": "Order ID",
-                "as": "orderId",
-                "type": "string",
-                "source": "field",
-                "required": false,
-                "bot": "Optional quote/order hash ID when this artifact belongs to a commercial deal."
-              },
               {
                 "name": "Team",
                 "as": "team",
@@ -234,659 +119,35 @@
                 "description": {
                   "en": "Team slug for this action. Defaults to the current team.",
                   "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team."
-                },
-                "bot": "The slug of the team to operate on. Omit to use the current team."
+                }
               }
             ],
             "output": {
-              "id": "out.data.id",
-              "title": "out.data.title",
-              "type": "out.data.type",
-              "status": "out.data.status",
-              "url": "out.data.url",
-              "contactId": "out.data.contactId"
+              "totalAutomations": "out.data.totalAutomations",
+              "enabledAutomations": "out.data.enabledAutomations",
+              "activeEnrollments": "out.data.activeEnrollments",
+              "emailsSent": "out.data.emailsSent",
+              "completedEnrollments": "out.data.completedEnrollments",
+              "erroredEnrollments": "out.data.erroredEnrollments"
             }
           }
         ],
         "output": {
-          "ARTIFACT_ID": "out.1.id",
-          "ARTIFACT_TITLE": "out.1.title"
+          "TOTAL_AUTOMATIONS": "out.1.totalAutomations",
+          "ENABLED_AUTOMATIONS": "out.1.enabledAutomations",
+          "ACTIVE_ENROLLMENTS": "out.1.activeEnrollments",
+          "EMAILS_SENT": "out.1.emailsSent",
+          "COMPLETED_ENROLLMENTS": "out.1.completedEnrollments",
+          "ERRORED_ENROLLMENTS": "out.1.erroredEnrollments"
         },
         "messages": {
           "success": {
-            "en": "Artifact '{{ARTIFACT_TITLE}}' created ({{ARTIFACT_ID}}).",
-            "de": "Artefakt '{{ARTIFACT_TITLE}}' erstellt ({{ARTIFACT_ID}})."
+            "en": "Automations: {{TOTAL_AUTOMATIONS}} total, {{ENABLED_AUTOMATIONS}} enabled, {{EMAILS_SENT}} emails sent ({{ACTIVE_ENROLLMENTS}} active enrollments).",
+            "de": "Automationen: {{TOTAL_AUTOMATIONS}} gesamt, {{ENABLED_AUTOMATIONS}} aktiviert, {{EMAILS_SENT}} E-Mails gesendet ({{ACTIVE_ENROLLMENTS}} aktive Einschreibungen)."
           }
         }
       },
-      "extras": {
-        "keywords": {
-          "en": [
-            "create artifact",
-            "delivery artifact",
-            "client delivery",
-            "project update",
-            "demo link"
-          ],
-          "de": [
-            "Artefakt erstellen",
-            "Lieferung",
-            "Client-Lieferung",
-            "Projekt-Update",
-            "Demo-Link"
-          ]
-        },
-        "useCases": {
-          "en": [
-            "Register a finished demo or document URL for a client",
-            "Attach an agreement or project update to a contact before sending"
-          ],
-          "de": [
-            "Eine fertige Demo- oder Dokument-URL für einen Kunden registrieren",
-            "Eine Vereinbarung oder ein Projekt-Update vor dem Versand an einen Kontakt hängen"
-          ]
-        },
-        "category": "communication",
-        "faq": {
-          "en": [
-            {
-              "question": "Is this the same as an Update?",
-              "answer": "No. Updates are public feed posts. Artifacts are client deliverables meant to be sent to a contact."
-            },
-            {
-              "question": "Can I attach an order?",
-              "answer": "Yes. Pass orderId when the artifact belongs to a quote or order."
-            },
-            {
-              "question": "How do I add a second URL?",
-              "answer": "Use url for the primary link and optional extraLinkUrl / extraLinkLabel for one more link."
-            }
-          ],
-          "de": [
-            {
-              "question": "Ist das dasselbe wie ein Update?",
-              "answer": "Nein. Updates sind öffentliche Feed-Beiträge. Artefakte sind Client-Lieferungen an einen Kontakt."
-            },
-            {
-              "question": "Kann ich eine Order anhängen?",
-              "answer": "Ja. Übergib orderId, wenn das Artefakt zu einem Quote oder einer Order gehört."
-            },
-            {
-              "question": "Wie füge ich eine zweite URL hinzu?",
-              "answer": "Nutze url für den Hauptlink und optional extraLinkUrl / extraLinkLabel für einen weiteren Link."
-            }
-          ]
-        }
-      }
-    },
-    {
-      "key": "none:joai-artifact-deliver",
-      "identifier": "@joai-artifact-deliver",
-      "alias": "joai-artifact-deliver",
-      "chain": "none",
-      "hash": "514e980925416e6b0f4bc48eeb2e51162b9852ec416f752f0408770e3812bd29",
-      "checksum": "514e980925416e6b0f4bc48eeb2e51162b9852ec416f752f0408770e3812bd29",
-      "name": "JoAi: Deliver Artifacts",
-      "title": {
-        "en": "Deliver artifacts to contacts",
-        "de": "Artefakte an Kontakte liefern"
-      },
-      "description": {
-        "en": "Draft one personalized delivery message for one or more artifacts, let you edit it, then send it to one or more contacts on the chosen channel and mark all included artifacts as sent. Never sends without approval of the final message.",
-        "de": "Entwirft eine persönliche Liefernachricht für ein oder mehrere Artefakte, lässt dich sie bearbeiten, sendet sie an einen oder mehrere Kontakte über den gewählten Kanal und markiert alle enthaltenen Artefakte als gesendet. Sendet nie ohne Freigabe der finalen Nachricht."
-      },
-      "preview": null,
-      "creator": "github:JoAiHQ/warps",
-      "privileges": [],
-      "listed": true,
-      "visibility": "public",
-      "primaryAddress": null,
-      "primaryFunc": null,
-      "brand": {
-        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
-        "slug": "joai",
-        "active": true,
-        "protocol": "brand:0.2.0",
-        "name": "JoAi",
-        "description": {
-          "en": "JoAi is a platform for creating and managing your own AI agents.",
-          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
-          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
-          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
-          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
-        },
-        "logo": {
-          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
-        },
-        "urls": {
-          "web": "https://joai.ai"
-        },
-        "colors": {
-          "primary": "#98FF98",
-          "secondary": "#FFFF66"
-        }
-      },
-      "warp": {
-        "protocol": "warp:3.0.0",
-        "name": "JoAi: Deliver Artifacts",
-        "title": {
-          "en": "Deliver artifacts to contacts",
-          "de": "Artefakte an Kontakte liefern"
-        },
-        "description": {
-          "en": "Draft one personalized delivery message for one or more artifacts, let you edit it, then send it to one or more contacts on the chosen channel and mark all included artifacts as sent. Never sends without approval of the final message.",
-          "de": "Entwirft eine persönliche Liefernachricht für ein oder mehrere Artefakte, lässt dich sie bearbeiten, sendet sie an einen oder mehrere Kontakte über den gewählten Kanal und markiert alle enthaltenen Artefakte als gesendet. Sendet nie ohne Freigabe der finalen Nachricht."
-        },
-        "bot": "Use this to deliver one or more ready artifacts in a single message to one or more contacts. Pass artifactIds as a comma-separated list. Prefer integration=email unless the contact wants another channel. Pass contactIds (comma-separated) for recipients; if omitted, unique contacts attached to the artifacts are used. Drafts a message, then a single approve step (editable); auto mode continues without waiting. Same approval model as campaigns.",
-        "vars": {
-          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
-          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
-          "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
-        },
-        "actions": [
-          {
-            "type": "collect",
-            "label": {
-              "en": "Choose artifacts",
-              "de": "Artefakte wählen"
-            },
-            "inputs": [
-              {
-                "name": "Artifact IDs",
-                "as": "artifactIds",
-                "type": "string",
-                "source": "field",
-                "position": "local",
-                "required": true,
-                "description": {
-                  "en": "One or more artifact IDs, comma-separated",
-                  "de": "Eine oder mehrere Artefakt-IDs, kommagetrennt"
-                },
-                "bot": "Comma-separated hash IDs, e.g. abc123,def456"
-              },
-              {
-                "name": "Recipients",
-                "as": "contactIds",
-                "type": "string",
-                "source": "field",
-                "position": "local",
-                "required": false,
-                "description": {
-                  "en": "Who should receive this delivery — pick one or more contacts",
-                  "de": "Wer diese Lieferung erhalten soll — einen oder mehrere Kontakte wählen"
-                },
-                "bot": "Recipient hash IDs, comma-separated. One recipient = one id. If omitted, unique contacts on the artifacts are used. Required when no artifact has a contact."
-              },
-              {
-                "name": "Integration",
-                "as": "integration",
-                "type": "string",
-                "source": "field",
-                "position": "local",
-                "required": true,
-                "default": "email",
-                "options": {
-                  "email": "Email",
-                  "sms": "SMS",
-                  "whatsapp": "WhatsApp"
-                }
-              },
-              {
-                "name": "Team",
-                "as": "team",
-                "type": "string",
-                "source": "field",
-                "position": "local",
-                "required": false,
-                "default": "{{JOAI_TEAM_SLUG}}"
-              }
-            ]
-          },
-          {
-            "type": "inline",
-            "warp": "@joai-artifact-list?ids={{artifactIds}}&team={{team}}",
-            "silent": true,
-            "label": {
-              "en": "Load artifacts",
-              "de": "Artefakte laden"
-            }
-          },
-          {
-            "type": "prompt",
-            "as": "DRAFT",
-            "label": {
-              "en": "Draft delivery message",
-              "de": "Liefernachricht entwerfen"
-            },
-            "expect": {
-              "type": "string"
-            },
-            "prompt": "Write a short client delivery email body in the language that fits the contact and artifacts. Explain what is ready in 2-6 natural sentences. Include every concrete URL from every artifact: url, links[].url, and media[].url (file downloads/attachments). If a password exists on any artifact, mention it clearly with the matching item. Do not invent links. No signature, no quotation marks, no meta-commentary.\n\nArtifacts JSON: {{artifactsList}}\n\nReturn only the message body."
-          },
-          {
-            "type": "collect",
-            "label": {
-              "en": "Review & send",
-              "de": "Prüfen & senden"
-            },
-            "destination": {
-              "url": "https://devnet-api.joai.ai/v1/artifacts/deliver",
-              "method": "POST",
-              "headers": {
-                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
-                "X-Team": "{{team}}"
-              }
-            },
-            "inputs": [
-              {
-                "name": "Artifact IDs",
-                "as": "artifactIds",
-                "type": "string",
-                "source": "field",
-                "required": true,
-                "default": "{{artifactIds}}",
-                "bot": "Comma-separated artifact hash IDs included in this delivery."
-              },
-              {
-                "name": "Subject",
-                "as": "subject",
-                "type": "string",
-                "source": "field",
-                "required": false,
-                "description": {
-                  "en": "Email subject (editable)",
-                  "de": "E-Mail-Betreff (editierbar)"
-                }
-              },
-              {
-                "name": "Message",
-                "as": "message",
-                "type": "string",
-                "source": "field",
-                "required": true,
-                "default": "{{DRAFT}}",
-                "description": {
-                  "en": "Final message body — edit before approving",
-                  "de": "Finaler Nachrichtentext — vor dem Freigeben bearbeiten"
-                },
-                "bot": "Pass the drafted message. The user may edit this before approval."
-              },
-              {
-                "name": "Integration",
-                "as": "integration",
-                "type": "string",
-                "source": "field",
-                "required": true,
-                "default": "{{integration}}"
-              },
-              {
-                "name": "Recipients",
-                "as": "contactIds",
-                "type": "string",
-                "source": "field",
-                "required": false,
-                "default": "{{contactIds}}",
-                "description": {
-                  "en": "Recipients for this delivery",
-                  "de": "Empfänger dieser Lieferung"
-                },
-                "bot": "Recipient hash IDs, comma-separated. One recipient = one id."
-              },
-              {
-                "name": "Team",
-                "as": "team",
-                "type": "string",
-                "source": "hidden",
-                "required": false,
-                "default": "{{team}}"
-              }
-            ],
-            "output": {
-              "id": "out.data.0.id",
-              "artifactIds": "out.data.0.artifactIds",
-              "deliveredAt": "out.data.0.deliveredAt"
-            }
-          }
-        ],
-        "output": {
-          "DELIVERY_ID": "out.4.id",
-          "ARTIFACT_IDS": "out.4.artifactIds"
-        },
-        "messages": {
-          "success": {
-            "en": "Delivery sent ({{DELIVERY_ID}}).",
-            "de": "Lieferung gesendet ({{DELIVERY_ID}})."
-          }
-        }
-      },
-      "extras": {
-        "keywords": {
-          "en": [
-            "deliver artifact",
-            "send delivery",
-            "send project update",
-            "send demo link",
-            "deliver multiple"
-          ],
-          "de": [
-            "Artefakt liefern",
-            "Lieferung senden",
-            "Projekt-Update senden",
-            "Demo-Link senden",
-            "mehrere liefern"
-          ]
-        },
-        "useCases": {
-          "en": [
-            "Draft and send one email for several finished artifacts",
-            "Deliver slides and a demo link to a client in a single editable message"
-          ],
-          "de": [
-            "Eine E-Mail für mehrere fertige Artefakte entwerfen und senden",
-            "Folien und Demo-Link in einer editierbaren Nachricht an einen Kunden liefern"
-          ]
-        },
-        "category": "communication",
-        "faq": {
-          "en": [
-            {
-              "question": "Can I deliver multiple artifacts at once?",
-              "answer": "Yes. Pass several artifact IDs (comma-separated). One message is drafted and sent; all included artifacts become sent."
-            },
-            {
-              "question": "Does it send automatically?",
-              "answer": "No. A draft is generated first; the final message must be approved before send."
-            },
-            {
-              "question": "What happens after send?",
-              "answer": "One delivery record is created per recipient, all included artifacts become sent with deliveredAt set, and messaging logs a contact activity per recipient."
-            },
-            {
-              "question": "Who receives the message?",
-              "answer": "Pass contactIds (comma-separated; one id is fine). If omitted, unique contacts attached to the artifacts are used. Email/SMS/WhatsApp uses each contact’s email or phone."
-            }
-          ],
-          "de": [
-            {
-              "question": "Kann ich mehrere Artefakte auf einmal liefern?",
-              "answer": "Ja. Übergib mehrere Artefakt-IDs (kommagetrennt). Es wird eine Nachricht entworfen und gesendet; alle enthaltenen Artefakte werden sent."
-            },
-            {
-              "question": "Wird automatisch gesendet?",
-              "answer": "Nein. Zuerst entsteht ein Entwurf; die finale Nachricht muss vor dem Versand freigegeben werden."
-            },
-            {
-              "question": "Was passiert nach dem Versand?",
-              "answer": "Pro Empfänger entsteht ein Delivery-Eintrag, alle enthaltenen Artefakte werden sent mit deliveredAt, und Messaging loggt pro Empfänger eine Kontakt-Aktivität."
-            },
-            {
-              "question": "Wer empfängt die Nachricht?",
-              "answer": "Übergib contactIds (kommagetrennt; eine ID reicht). Fehlt das, werden die eindeutigen Kontakte an den Artefakten genutzt. E-Mail/SMS/WhatsApp nutzt E-Mail oder Telefon jedes Kontakts."
-            }
-          ]
-        }
-      }
-    },
-    {
-      "key": "none:joai-artifact-update",
-      "identifier": "@joai-artifact-update",
-      "alias": "joai-artifact-update",
-      "chain": "none",
-      "hash": "afbd3725309038a55e9dca66de3b3a082273df83606186ee8d42e28619871215",
-      "checksum": "afbd3725309038a55e9dca66de3b3a082273df83606186ee8d42e28619871215",
-      "name": "JoAi: Update Artifact",
-      "title": {
-        "en": "Update a delivery artifact",
-        "de": "Liefer-Artefakt aktualisieren"
-      },
-      "description": {
-        "en": "Edit an existing delivery artifact — title, summary, URLs, status, contact, or order attachment.",
-        "de": "Ein bestehendes Lieferartefakt bearbeiten — Titel, Summary, URLs, Status, Kontakt oder Order."
-      },
-      "preview": null,
-      "creator": "github:JoAiHQ/warps",
-      "privileges": [],
-      "listed": true,
-      "visibility": "public",
-      "primaryAddress": null,
-      "primaryFunc": null,
-      "brand": {
-        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
-        "slug": "joai",
-        "active": true,
-        "protocol": "brand:0.2.0",
-        "name": "JoAi",
-        "description": {
-          "en": "JoAi is a platform for creating and managing your own AI agents.",
-          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
-          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
-          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
-          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
-        },
-        "logo": {
-          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
-        },
-        "urls": {
-          "web": "https://joai.ai"
-        },
-        "colors": {
-          "primary": "#98FF98",
-          "secondary": "#FFFF66"
-        }
-      },
-      "warp": {
-        "protocol": "warp:3.0.0",
-        "name": "JoAi: Update Artifact",
-        "title": {
-          "en": "Update a delivery artifact",
-          "de": "Liefer-Artefakt aktualisieren"
-        },
-        "description": {
-          "en": "Edit an existing delivery artifact — title, summary, URLs, status, contact, or order attachment.",
-          "de": "Ein bestehendes Lieferartefakt bearbeiten — Titel, Summary, URLs, Status, Kontakt oder Order."
-        },
-        "bot": "Use this to change artifact fields or mark status ready/archived. To send to the client, use artifact-deliver instead.",
-        "vars": {
-          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
-          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
-          "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
-        },
-        "actions": [
-          {
-            "type": "collect",
-            "label": {
-              "en": "Update artifact",
-              "de": "Artefakt aktualisieren"
-            },
-            "destination": {
-              "url": "https://devnet-api.joai.ai/v1/artifacts/{{artifactId}}",
-              "method": "PATCH",
-              "headers": {
-                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
-                "X-Team": "{{team}}"
-              }
-            },
-            "inputs": [
-              {
-                "name": "Artifact ID",
-                "as": "artifactId",
-                "type": "string",
-                "position": "url:artifactId",
-                "source": "field",
-                "required": true
-              },
-              {
-                "name": "Title",
-                "as": "title",
-                "type": "string",
-                "source": "field",
-                "required": false
-              },
-              {
-                "name": "Type",
-                "as": "type",
-                "type": "string",
-                "source": "field",
-                "required": false,
-                "options": {
-                  "agreement": "Agreement",
-                  "offer": "Offer",
-                  "concept": "Concept",
-                  "update": "Update",
-                  "demo": "Demo",
-                  "file": "File",
-                  "other": "Other"
-                }
-              },
-              {
-                "name": "Status",
-                "as": "status",
-                "type": "string",
-                "source": "field",
-                "required": false,
-                "options": {
-                  "draft": "Draft",
-                  "ready": "Ready",
-                  "sent": "Sent",
-                  "archived": "Archived"
-                }
-              },
-              {
-                "name": "Summary",
-                "as": "summary",
-                "type": "string",
-                "source": "field",
-                "required": false
-              },
-              {
-                "name": "Blocks",
-                "as": "blocks",
-                "type": "string",
-                "source": "field",
-                "required": false,
-                "description": {
-                  "en": "Replacement JSON array of ordered document blocks: id, type, data.",
-                  "de": "Ersetzendes JSON-Array geordneter Dokumentblöcke: id, type, data."
-                },
-                "bot": "When supplied, this replaces the full structured document. Supported types: heading, richText, metrics, table, callout, actions, media, divider."
-              },
-              {
-                "name": "URL",
-                "as": "url",
-                "type": "string",
-                "source": "field",
-                "required": false
-              },
-              {
-                "name": "Password",
-                "as": "password",
-                "type": "string",
-                "source": "field",
-                "required": false
-              },
-              {
-                "name": "Media",
-                "as": "media",
-                "type": "json",
-                "source": "field",
-                "required": false,
-                "description": {
-                  "en": "Replacement team media IDs, e.g. [\"abc123\"]. Pass [] to clear. Upload with media_upload first.",
-                  "de": "Ersetzende Team-Medien-IDs, z.B. [\"abc123\"]. [] zum Leeren. Zuerst mit media_upload hochladen."
-                },
-                "bot": "Optional. Replaces attached files. Upload with media_upload, then pass media IDs as a JSON array. Pass [] to clear attachments."
-              },
-              {
-                "name": "Contact",
-                "as": "contactId",
-                "type": "string",
-                "source": "field",
-                "required": false
-              },
-              {
-                "name": "Order ID",
-                "as": "orderId",
-                "type": "string",
-                "source": "field",
-                "required": false
-              },
-              {
-                "name": "Team",
-                "as": "team",
-                "type": "string",
-                "source": "field",
-                "required": false,
-                "default": "{{JOAI_TEAM_SLUG}}",
-                "description": {
-                  "en": "Team slug for this action. Defaults to the current team.",
-                  "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team."
-                },
-                "bot": "The slug of the team to operate on. Omit to use the current team."
-              }
-            ],
-            "output": {
-              "id": "out.data.id",
-              "title": "out.data.title",
-              "status": "out.data.status"
-            }
-          }
-        ],
-        "output": {
-          "ARTIFACT_ID": "out.1.id",
-          "ARTIFACT_TITLE": "out.1.title"
-        },
-        "messages": {
-          "success": {
-            "en": "Artifact '{{ARTIFACT_TITLE}}' updated.",
-            "de": "Artefakt '{{ARTIFACT_TITLE}}' aktualisiert."
-          }
-        }
-      },
-      "extras": {
-        "keywords": {
-          "en": [
-            "update artifact",
-            "edit deliverable",
-            "mark ready"
-          ],
-          "de": [
-            "Artefakt aktualisieren",
-            "Lieferung bearbeiten",
-            "ready setzen"
-          ]
-        },
-        "useCases": {
-          "en": [
-            "Change artifact URLs or mark an artifact ready before delivery"
-          ],
-          "de": [
-            "Artefakt-URLs ändern oder vor der Lieferung auf ready setzen"
-          ]
-        },
-        "category": "communication",
-        "faq": {
-          "en": [
-            {
-              "question": "Can I mark an artifact ready without sending?",
-              "answer": "Yes. Set status to ready, then use artifact-deliver when you want to send."
-            },
-            {
-              "question": "Does update send a message?",
-              "answer": "No. Use artifact-deliver to draft and send."
-            }
-          ],
-          "de": [
-            {
-              "question": "Kann ich ready setzen ohne zu senden?",
-              "answer": "Ja. Setze status auf ready und nutze danach artifact-deliver zum Senden."
-            },
-            {
-              "question": "Sendet update eine Nachricht?",
-              "answer": "Nein. Zum Entwerfen und Senden nutze artifact-deliver."
-            }
-          ]
-        }
-      }
+      "extras": null
     },
     {
       "key": "none:poll-results",
@@ -1002,12 +263,5 @@
       "extras": null
     }
   ],
-  "deletes": [
-    {
-      "key": "none:joai-artifact-deliver-send",
-      "alias": "joai-artifact-deliver-send",
-      "chain": "none",
-      "hash": "4c3582abf31174e4bf1f1ca8b59181eb208762800bdc9b4acbd423ccc18f6402"
-    }
-  ]
+  "deletes": []
 }
