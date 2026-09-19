@@ -12,8 +12,8 @@ describe('WhatsApp personal CLI warps', () => {
   it('builds sync command from webhook inputs', () => {
     expect(sync.cli.mode).toBe('session')
     expect(sync.hook.source).toBe('wacli')
-    expect(sync.actions[0].prompt).toContain('{{WEBHOOK_URL}}')
-    expect(sync.actions[0].prompt).toContain('{{WEBHOOK_SECRET}}')
-    expect(sync.actions[0].inputs.map((input) => input.as)).toEqual(['WEBHOOK_URL', 'WEBHOOK_SECRET'])
+    expect(sync.actions[0].prompt).toContain('{{webhookUrl}}')
+    expect(sync.actions[0].prompt).toContain('{{webhookSecret}}')
+    expect(sync.actions[0].inputs.map((input) => input.as)).toEqual(['webhookUrl', 'webhookSecret'])
   })
 })

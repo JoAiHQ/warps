@@ -1,0 +1,70 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Retry Automation Enrollment",
+  "title": {
+    "en": "Retry automation enrollment",
+    "de": "Automation-Enrollment erneut versuchen",
+    "fr": "Réessayer un enrollment d'automatisation",
+    "es": "Reintentar enrollment de automatización",
+    "it": "Riprova enrollment automazione",
+    "ro": "Reîncearcă enrollment-ul automatizării"
+  },
+  "description": {
+    "en": "Clear a failed enrollment error and resume processing (e.g. after fixing a missing email agent).",
+    "de": "Löscht den Enrollment-Fehler und setzt die Verarbeitung fort (z. B. nach fehlendem E-Mail-Agent).",
+    "fr": "Efface l'erreur d'enrollment et reprend le traitement (p. ex. après correction de l'agent e-mail).",
+    "es": "Borra el error del enrollment y reanuda el proceso (p. ej. tras arreglar el agente de email).",
+    "it": "Cancella l'errore dell'enrollment e riprende l'elaborazione (es. dopo aver sistemato l'agente email).",
+    "ro": "Șterge eroarea enrollment-ului și reia procesarea (ex. după corectarea agentului de email)."
+  },
+  "bot": "Use when an enrollment has error set (e.g. missing email agent). Pass automationId and enrollmentId hashids from list_automation_enrollments.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Retry enrollment",
+        "de": "Enrollment erneut versuchen",
+        "fr": "Réessayer l'enrollment",
+        "es": "Reintentar enrollment",
+        "it": "Riprova enrollment",
+        "ro": "Reîncearcă enrollment-ul"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/automations/{{automationId}}/enrollments/{{enrollmentId}}/retry",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        { "name": "Automation ID", "as": "automationId", "type": "string", "source": "field", "required": true, "position": "url:automationId" },
+        { "name": "Enrollment ID", "as": "enrollmentId", "type": "string", "source": "field", "required": true, "position": "url:enrollmentId" },
+        { "name": "Team", "as": "team", "type": "string", "source": "field", "required": false, "default": "{{JOAI_TEAM_SLUG}}" }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Enrollment retry queued.",
+      "de": "Enrollment-Retry eingereiht.",
+      "fr": "Nouvelle tentative d'enrollment planifiée.",
+      "es": "Reintento de enrollment en cola.",
+      "it": "Nuovo tentativo enrollment in coda.",
+      "ro": "Reîncercarea enrollment-ului a fost pusă în coadă."
+    },
+    "error": {
+      "en": "Failed to retry enrollment: {{MESSAGE}}",
+      "de": "Enrollment-Retry fehlgeschlagen: {{MESSAGE}}",
+      "fr": "Échec de la nouvelle tentative : {{MESSAGE}}",
+      "es": "No se pudo reintentar el enrollment: {{MESSAGE}}",
+      "it": "Riprova enrollment non riuscita: {{MESSAGE}}",
+      "ro": "Reîncercarea enrollment-ului a eșuat: {{MESSAGE}}"
+    }
+  }
+}

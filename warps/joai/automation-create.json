@@ -1,0 +1,111 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Create Automation",
+  "title": {
+    "en": "Create an automation",
+    "de": "Automation erstellen",
+    "fr": "Créer une automatisation",
+    "es": "Crear una automatización",
+    "it": "Crea un'automazione",
+    "ro": "Creează o automatizare"
+  },
+  "description": {
+    "en": "Create a lifecycle automation (wait → send email → halt). Triggers on contact prop or segment — not tags. Separate from oneshot campaigns.",
+    "de": "Erstellt eine Lifecycle-Automation (wait → E-Mail → halt). Trigger über Kontakt-Prop oder Segment — keine Tags. Getrennt von einmaligen Kampagnen.",
+    "fr": "Crée une automatisation de cycle de vie (wait → e-mail → halt). Déclenchée par une prop contact ou un segment — pas de tags. Distincte des campagnes ponctuelles.",
+    "es": "Crea una automatización de ciclo de vida (wait → email → halt). Se dispara por prop de contacto o segmento — no por tags. Separada de las campañas puntuales.",
+    "it": "Crea un'automazione di ciclo di vita (wait → email → halt). Si attiva su prop contatto o segmento — non su tag. Separata dalle campagne one-shot.",
+    "ro": "Creează o automatizare pe ciclu de viață (wait → email → halt). Declanșată de o prop de contact sau segment — nu de tag-uri. Separată de campaniile one-shot."
+  },
+  "bot": "Use for delayed welcome/drip emails. Prefer prop onboarding-stage=done. Pass actions as JSON array: wait → send_email → halt. Campaigns remain for newsletters/backfill. enabled: pass 1 or 0.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Create automation",
+        "de": "Automation erstellen",
+        "fr": "Créer l'automatisation",
+        "es": "Crear automatización",
+        "it": "Crea automazione",
+        "ro": "Creează automatizarea"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/automations",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        { "name": "Name", "as": "name", "type": "string", "source": "field", "required": true },
+        {
+          "name": "Trigger type",
+          "as": "triggerType",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "options": { "prop": "Prop", "segment": "Segment", "manual": "Manual" },
+          "bot": "prop (contact property), segment, or manual (run_automation only)."
+        },
+        {
+          "name": "Trigger config",
+          "as": "triggerConfig",
+          "type": "json",
+          "source": "field",
+          "required": false,
+          "bot": "For prop: {\"propKey\":\"onboarding-stage\",\"propValue\":\"done\"}. For segment: {\"segmentId\":\"…\"}."
+        },
+        {
+          "name": "Actions",
+          "as": "actions",
+          "type": "json",
+          "source": "field",
+          "required": true,
+          "bot": "Ordered JSON array. Example direct: [{\"type\":\"wait\",\"config\":{\"delayMinutes\":4320}},{\"type\":\"send_email\",\"config\":{\"sendMode\":\"direct\",\"subject\":\"…\",\"body\":\"Hallo {{name}}\",\"sentPropKey\":\"b2b-welcome-sent-at\"}},{\"type\":\"halt\",\"config\":{}}]. Or campaign-tracked: sendMode=campaign + campaignId. At most one send_email."
+        },
+        {
+          "name": "Enabled",
+          "as": "enabled",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "1",
+          "bot": "Pass 1 or 0 (or true/false)."
+        },
+        {
+          "name": "Agent ID",
+          "as": "agentId",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "bot": "Optional sending agent UUID (email channel). Falls back to the team's email channel agent."
+        },
+        { "name": "Team", "as": "team", "type": "string", "source": "field", "required": false, "default": "{{JOAI_TEAM_SLUG}}" }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Automation created.",
+      "de": "Automation erstellt.",
+      "fr": "Automatisation créée.",
+      "es": "Automatización creada.",
+      "it": "Automazione creata.",
+      "ro": "Automatizare creată."
+    },
+    "error": {
+      "en": "Failed to create automation: {{MESSAGE}}",
+      "de": "Automation konnte nicht erstellt werden: {{MESSAGE}}",
+      "fr": "Échec de la création de l'automatisation : {{MESSAGE}}",
+      "es": "No se pudo crear la automatización: {{MESSAGE}}",
+      "it": "Creazione automazione non riuscita: {{MESSAGE}}",
+      "ro": "Crearea automatizării a eșuat: {{MESSAGE}}"
+    }
+  }
+}

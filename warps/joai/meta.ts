@@ -1204,71 +1204,71 @@ export const meta: Record<string, WarpExtras> = {
   },
   'update-create': {
     keywords: {
-      en: ['post update', 'create deal', 'publish event', 'business news', 'local announcement'],
-      de: ['Update veröffentlichen', 'Angebot erstellen', 'Event veröffentlichen', 'Betriebsnews', 'lokale Ankündigung'],
+      en: ['post update', 'create deal', 'publish event', 'business news', 'article', 'local announcement'],
+      de: ['Update veröffentlichen', 'Angebot erstellen', 'Event veröffentlichen', 'Betriebsnews', 'Artikel', 'lokale Ankündigung'],
     },
     useCases: {
-      en: ['Publish a limited-time offer for customers', 'Announce an upcoming event on a business profile', 'Post local business news to connected directories'],
-      de: ['Ein zeitlich begrenztes Angebot für Kunden veröffentlichen', 'Ein bevorstehendes Event im Betriebsprofil ankündigen', 'Lokale Betriebsnews in verbundenen Verzeichnissen posten'],
+      en: ['Publish a limited-time offer for customers', 'Announce an upcoming event on a business profile', 'Post a longer article or local news to connected directories'],
+      de: ['Ein zeitlich begrenztes Angebot für Kunden veröffentlichen', 'Ein bevorstehendes Event im Betriebsprofil ankündigen', 'Einen längeren Artikel oder lokale News in verbundenen Verzeichnissen posten'],
     },
     category: 'communication',
     faq: {
       en: [
-        { question: 'Can I publish deals, events, and news?', answer: 'Yes. Use deal for offers, event for appointments or happenings, and news for announcements.' },
+        { question: 'Can I publish deals, events, news, and articles?', answer: 'Yes. Use deal for offers, event for happenings, news for short announcements, and article for longer posts.' },
         { question: 'Can an update be scheduled?', answer: 'Yes. Add startsAt and endsAt to control when the update is active.' },
       ],
       de: [
-        { question: 'Kann ich Angebote, Events und News veröffentlichen?', answer: 'Ja. Nutze deal für Angebote, event für Veranstaltungen und update für News oder allgemeine Ankündigungen.' },
+        { question: 'Kann ich Angebote, Events, News und Artikel veröffentlichen?', answer: 'Ja. Nutze deal für Angebote, event für Veranstaltungen, news für kurze Ankündigungen und article für längere Beiträge.' },
         { question: 'Kann ein Update geplant werden?', answer: 'Ja. Mit startsAt und endsAt steuerst du, wann das Update aktiv ist.' },
       ],
     },
   },
   'update-list': {
     keywords: {
-      en: ['list updates', 'view deals', 'view events', 'business announcements', 'active updates'],
-      de: ['Updates anzeigen', 'Angebote anzeigen', 'Events anzeigen', 'Betriebsankündigungen', 'aktive Updates'],
+      en: ['list updates', 'view deals', 'view events', 'business announcements', 'active updates', 'articles'],
+      de: ['Updates anzeigen', 'Angebote anzeigen', 'Events anzeigen', 'Betriebsankündigungen', 'aktive Updates', 'Artikel'],
     },
     useCases: {
-      en: ['Check currently active customer announcements', 'Filter updates by deal, event, or news type', 'Review published content before editing it'],
-      de: ['Aktive Kundenankündigungen prüfen', 'Updates nach Angebot, Event oder News filtern', 'Veröffentlichte Inhalte vor dem Bearbeiten prüfen'],
+      en: ['Check currently active customer announcements', 'Filter updates by deal, event, news, or article type', 'Review published content before editing it'],
+      de: ['Aktive Kundenankündigungen prüfen', 'Updates nach Angebot, Event, News oder Artikel filtern', 'Veröffentlichte Inhalte vor dem Bearbeiten prüfen'],
     },
     category: 'communication',
     faq: {
       en: [
-        { question: 'Can I filter updates by type?', answer: 'Yes. Filter by deal, event, or news.' },
+        { question: 'Can I filter updates by type?', answer: 'Yes. Filter by deal, event, news, or article.' },
         { question: 'Does this show only visible updates?', answer: 'By default active updates are shown, but you can adjust the active and status filters.' },
       ],
       de: [
-        { question: 'Kann ich Updates nach Typ filtern?', answer: 'Ja. Filtere nach deal, event oder update. Für News verwendest du update.' },
+        { question: 'Kann ich Updates nach Typ filtern?', answer: 'Ja. Filtere nach deal, event, news oder article.' },
         { question: 'Zeigt diese Aktion nur sichtbare Updates?', answer: 'Standardmäßig werden aktive Updates angezeigt, du kannst active und status aber anpassen.' },
       ],
     },
   },
   'update-update': {
     keywords: {
-      en: ['edit update', 'update deal', 'edit event', 'change business news', 'announcement status'],
-      de: ['Update bearbeiten', 'Angebot bearbeiten', 'Event bearbeiten', 'Betriebsnews ändern', 'Ankündigungsstatus'],
+      en: ['edit update', 'update deal', 'edit event', 'change business news', 'edit article', 'announcement status'],
+      de: ['Update bearbeiten', 'Angebot bearbeiten', 'Event bearbeiten', 'Betriebsnews ändern', 'Artikel bearbeiten', 'Ankündigungsstatus'],
     },
     useCases: {
-      en: ['Change the dates of an event announcement', 'Archive an expired deal', 'Correct the title or link of a news post'],
-      de: ['Den Zeitraum einer Event-Ankündigung ändern', 'Ein abgelaufenes Angebot archivieren', 'Titel oder Link einer News korrigieren'],
+      en: ['Change the dates of an event announcement', 'Archive an expired deal', 'Correct the title or link of a news or article post'],
+      de: ['Den Zeitraum einer Event-Ankündigung ändern', 'Ein abgelaufenes Angebot archivieren', 'Titel oder Link einer News oder eines Artikels korrigieren'],
     },
     category: 'communication',
     faq: {
       en: [
-        { question: 'Can I change the type of an update?', answer: 'Yes. Existing posts can be changed between deal, event, and update when needed.' },
+        { question: 'Can I change the type of an update?', answer: 'Yes. Existing posts can be changed between deal, event, news, and article when needed.' },
         { question: 'Can I unpublish an update?', answer: 'Yes. Set its status to draft or archived depending on whether it should be hidden or retired.' },
       ],
       de: [
-        { question: 'Kann ich den Typ eines Updates ändern?', answer: 'Ja. Bestehende Beiträge können bei Bedarf zwischen deal, event und update wechseln.' },
+        { question: 'Kann ich den Typ eines Updates ändern?', answer: 'Ja. Bestehende Beiträge können bei Bedarf zwischen deal, event, news und article wechseln.' },
         { question: 'Kann ich ein Update ausblenden?', answer: 'Ja. Setze den Status auf draft oder archived, je nachdem ob es versteckt oder endgültig erledigt ist.' },
       ],
     },
   },
   'update-delete': {
     keywords: {
-      en: ['delete update', 'remove deal', 'delete event', 'remove announcement', 'delete business news'],
-      de: ['Update löschen', 'Angebot entfernen', 'Event löschen', 'Ankündigung entfernen', 'Betriebsnews löschen'],
+      en: ['delete update', 'remove deal', 'delete event', 'remove announcement', 'delete business news', 'delete article'],
+      de: ['Update löschen', 'Angebot entfernen', 'Event löschen', 'Ankündigung entfernen', 'Betriebsnews löschen', 'Artikel löschen'],
     },
     useCases: {
       en: ['Remove an outdated announcement from public feeds', 'Delete a duplicate deal', 'Clean up a canceled event'],
@@ -1288,21 +1288,21 @@ export const meta: Record<string, WarpExtras> = {
   },
   'update-stats': {
     keywords: {
-      en: ['update statistics', 'deal count', 'event count', 'news count', 'announcement analytics'],
-      de: ['Update Statistik', 'Anzahl Angebote', 'Anzahl Events', 'Anzahl News', 'Ankündigungsanalyse'],
+      en: ['update statistics', 'deal count', 'event count', 'news count', 'article count', 'announcement analytics'],
+      de: ['Update Statistik', 'Anzahl Angebote', 'Anzahl Events', 'Anzahl News', 'Anzahl Artikel', 'Ankündigungsanalyse'],
     },
     useCases: {
-      en: ['Check how many deals are currently managed', 'See event and news post counts for a business profile', 'Audit customer-facing content coverage'],
-      de: ['Prüfen, wie viele Angebote verwaltet werden', 'Event- und News-Zahlen für ein Betriebsprofil ansehen', 'Kundenrelevante Inhalte auf Vollständigkeit prüfen'],
+      en: ['Check how many deals are currently managed', 'See event, news, and article counts for a business profile', 'Audit customer-facing content coverage'],
+      de: ['Prüfen, wie viele Angebote verwaltet werden', 'Event-, News- und Artikel-Zahlen für ein Betriebsprofil ansehen', 'Kundenrelevante Inhalte auf Vollständigkeit prüfen'],
     },
     category: 'analytics',
     faq: {
       en: [
-        { question: 'What counts are included?', answer: 'The stats include deals, events, and news-style updates for the team.' },
+        { question: 'What counts are included?', answer: 'The stats include deals, events, news, and article updates for the team.' },
         { question: 'Can this help audit a business profile?', answer: 'Yes. Use it to see whether a profile has enough current customer-facing content.' },
       ],
       de: [
-        { question: 'Welche Zahlen sind enthalten?', answer: 'Die Statistik enthält Angebote, Events und News-Updates des Teams.' },
+        { question: 'Welche Zahlen sind enthalten?', answer: 'Die Statistik enthält Angebote, Events, News und Artikel des Teams.' },
         { question: 'Hilft das beim Prüfen eines Betriebsprofils?', answer: 'Ja. Damit siehst du, ob ein Profil genug aktuelle kundenrelevante Inhalte hat.' },
       ],
     },
@@ -1709,31 +1709,6 @@ export const meta: Record<string, WarpExtras> = {
       de: [
         { question: 'Macht delete eine Nachricht rückgängig?', answer: 'Nein. Es entfernt nur den Artefakt-Eintrag. Für weiches Ablegen status archived nutzen.' },
         { question: 'Kann ich Löschen rückgängig machen?', answer: 'Nein. Das Löschen ist endgültig.' },
-      ],
-    },
-  },
-  'artifact-deliver-send': {
-    keywords: {
-      en: ['send artifact delivery', 'post delivery message', 'mcp deliver artifacts'],
-      de: ['Artefakt-Lieferung senden', 'Liefernachricht senden'],
-    },
-    useCases: {
-      en: ['Send a pre-written delivery message from an agent or MCP tool'],
-      de: ['Eine fertige Liefernachricht von Agent oder MCP senden'],
-    },
-    category: 'communication',
-    faq: {
-      en: [
-        {
-          question: 'How is this different from artifact-deliver?',
-          answer: 'artifact-deliver drafts and asks for approval in chat. This warp only POSTs the message you already wrote.',
-        },
-      ],
-      de: [
-        {
-          question: 'Worin unterscheidet sich das von artifact-deliver?',
-          answer: 'artifact-deliver entwirft im Chat und fragt nach Freigabe. Dieser Warp sendet nur die bereits geschriebene Nachricht.',
-        },
       ],
     },
   },

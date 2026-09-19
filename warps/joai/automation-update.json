@@ -1,0 +1,102 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Update Automation",
+  "title": {
+    "en": "Update an automation",
+    "de": "Automation aktualisieren",
+    "fr": "Mettre à jour une automatisation",
+    "es": "Actualizar una automatización",
+    "it": "Aggiorna un'automazione",
+    "ro": "Actualizează o automatizare"
+  },
+  "description": {
+    "en": "Update name, enabled flag, trigger, or sending agent of a lifecycle automation. To replace actions use set_automation_actions. There is no delete — set enabled to 0.",
+    "de": "Aktualisiert Name, enabled, Trigger oder Sende-Agent einer Automation. Aktionen ersetzen über set_automation_actions. Kein Löschen — enabled auf 0 setzen.",
+    "fr": "Met à jour le nom, enabled, le déclencheur ou l'agent d'envoi. Pour remplacer les actions, utilisez set_automation_actions. Pas de suppression — mettez enabled à 0.",
+    "es": "Actualiza nombre, enabled, trigger o agente de envío. Para sustituir acciones usa set_automation_actions. No hay borrado — pon enabled en 0.",
+    "it": "Aggiorna nome, enabled, trigger o agente di invio. Per sostituire le azioni usa set_automation_actions. Nessuna eliminazione — imposta enabled a 0.",
+    "ro": "Actualizează numele, enabled, triggerul sau agentul de trimitere. Pentru acțiuni folosește set_automation_actions. Nu există ștergere — setează enabled pe 0."
+  },
+  "bot": "Pass automationId hashid. To replace actions use set_automation_actions. To disable: enabled=0. To permanently remove with no active enrollments: delete_automation. enabled: pass 1 or 0.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Update automation",
+        "de": "Automation aktualisieren",
+        "fr": "Mettre à jour l'automatisation",
+        "es": "Actualizar automatización",
+        "it": "Aggiorna automazione",
+        "ro": "Actualizează automatizarea"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/automations/{{automationId}}",
+        "method": "PATCH",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        { "name": "Automation ID", "as": "automationId", "type": "string", "source": "field", "required": true, "position": "url:automationId" },
+        { "name": "Name", "as": "name", "type": "string", "source": "field", "required": false },
+        {
+          "name": "Enabled",
+          "as": "enabled",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "bot": "Pass 1 or 0 (or true/false). Use 0 to disable (no delete in v1)."
+        },
+        {
+          "name": "Trigger type",
+          "as": "triggerType",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "options": { "prop": "Prop", "segment": "Segment", "manual": "Manual" }
+        },
+        {
+          "name": "Trigger config",
+          "as": "triggerConfig",
+          "type": "json",
+          "source": "field",
+          "required": false,
+          "bot": "For prop: {\"propKey\":\"…\",\"propValue\":\"…\"}. For segment: {\"segmentId\":\"…\"}."
+        },
+        {
+          "name": "Agent ID",
+          "as": "agentId",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "bot": "Optional sending agent UUID. Pass empty string to clear."
+        },
+        { "name": "Team", "as": "team", "type": "string", "source": "field", "required": false, "default": "{{JOAI_TEAM_SLUG}}" }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Automation updated.",
+      "de": "Automation aktualisiert.",
+      "fr": "Automatisation mise à jour.",
+      "es": "Automatización actualizada.",
+      "it": "Automazione aggiornata.",
+      "ro": "Automatizare actualizată."
+    },
+    "error": {
+      "en": "Failed to update automation: {{MESSAGE}}",
+      "de": "Automation konnte nicht aktualisiert werden: {{MESSAGE}}",
+      "fr": "Échec de la mise à jour de l'automatisation : {{MESSAGE}}",
+      "es": "No se pudo actualizar la automatización: {{MESSAGE}}",
+      "it": "Aggiornamento automazione non riuscito: {{MESSAGE}}",
+      "ro": "Actualizarea automatizării a eșuat: {{MESSAGE}}"
+    }
+  }
+}

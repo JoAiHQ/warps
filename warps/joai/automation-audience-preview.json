@@ -1,0 +1,52 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Preview Automation Audience",
+  "title": {
+    "en": "Preview automation audience",
+    "de": "Automation-Zielgruppe Vorschau",
+    "fr": "Aperçu de l'audience d'automatisation",
+    "es": "Vista previa de audiencia de automatización",
+    "it": "Anteprima audience automazione",
+    "ro": "Previzualizare audiență automatizare"
+  },
+  "description": {
+    "en": "Count contacts that currently match an automation trigger (prop or segment).",
+    "de": "Zählt Kontakte, die aktuell zum Automation-Trigger passen (Prop oder Segment).",
+    "fr": "Compte les contacts qui correspondent actuellement au déclencheur (prop ou segment).",
+    "es": "Cuenta contactos que actualmente cumplen el trigger (prop o segmento).",
+    "it": "Conta i contatti che al momento soddisfano il trigger (prop o segmento).",
+    "ro": "Numără contactele care potrivesc acum triggerul (prop sau segment)."
+  },
+  "bot": "Pass automationId. Returns count + sample contact IDs for the current trigger match — not a send.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "auto": true,
+      "label": {
+        "en": "Preview audience",
+        "de": "Zielgruppe Vorschau",
+        "fr": "Aperçu de l'audience",
+        "es": "Vista previa de audiencia",
+        "it": "Anteprima audience",
+        "ro": "Previzualizare audiență"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/automations/{{automationId}}/audience-preview",
+        "method": "GET",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        { "name": "Automation ID", "as": "automationId", "type": "string", "source": "field", "required": true, "position": "url:automationId" },
+        { "name": "Team", "as": "team", "type": "string", "source": "field", "required": false, "default": "{{JOAI_TEAM_SLUG}}" }
+      ]
+    }
+  ]
+}
