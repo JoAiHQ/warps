@@ -6,10 +6,10 @@
     "de": "Liefer-Artefakt erstellen"
   },
   "description": {
-    "en": "Create a client delivery artifact (agreement, offer document, concept, project update, demo, file, or other) with optional URLs, password, contact, and order link. Use this before sending a delivery message.",
-    "de": "Erstelle ein Client-Lieferartefakt (Vereinbarung, Angebotsdokument, Konzept, Projekt-Update, Demo, Datei oder sonstiges) mit optionalen URLs, Passwort, Kontakt und Order-Verknüpfung. Vor dem Versand einer Liefernachricht verwenden."
+    "en": "Create a client delivery artifact (agreement, offer document, concept, project update, demo, file, or other) with optional URL, attached media, password, contact, and order link. Use this before sending a delivery message.",
+    "de": "Erstelle ein Client-Lieferartefakt (Vereinbarung, Angebotsdokument, Konzept, Projekt-Update, Demo, Datei oder sonstiges) mit optionaler URL, angehängten Medien, Passwort, Kontakt und Order-Verknüpfung. Vor dem Versand einer Liefernachricht verwenden."
   },
-  "bot": "Use this to register something that will be delivered to a contact (slides, demo link, agreement URL, project update). Prefer status ready when it is ready to send. Attach contactId when known.",
+  "bot": "Use this to register something that will be delivered to a contact (slides, PDF, demo link, agreement URL, project update). Prefer status ready when it is ready to send. Attach contactId when known. For a local file: media_upload first, then pass the media ID in media (JSON array). url and media are both optional.",
   "vars": {
     "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
     "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
@@ -102,9 +102,10 @@
           "source": "field",
           "required": false,
           "description": {
-            "en": "Primary URL (document, demo, file)",
-            "de": "Primäre URL (Dokument, Demo, Datei)"
-          }
+            "en": "Primary URL (document, demo, file). Optional when attaching media IDs instead.",
+            "de": "Primäre URL (Dokument, Demo, Datei). Optional, wenn stattdessen Medien-IDs angehängt werden."
+          },
+          "bot": "Optional. Use for an external link. Prefer media (media IDs from media_upload) when the file lives in the team library."
         },
         {
           "name": "Password",
@@ -138,6 +139,18 @@
             "en": "Label for the extra link",
             "de": "Bezeichnung für den Extra-Link"
           }
+        },
+        {
+          "name": "Media",
+          "as": "media",
+          "type": "json",
+          "source": "field",
+          "required": false,
+          "description": {
+            "en": "Team media IDs to attach, e.g. [\"abc123\"]. Upload with media_upload first.",
+            "de": "Team-Medien-IDs zum Anhängen, z.B. [\"abc123\"]. Zuerst mit media_upload hochladen."
+          },
+          "bot": "Optional. After media_upload, pass the returned media ID(s) as a JSON array. URL and media are both optional; use either, both, or neither."
         },
         {
           "name": "Contact",
