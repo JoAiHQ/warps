@@ -1,0 +1,67 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: List Sites",
+  "title": {
+    "en": "List sites",
+    "de": "Websites auflisten"
+  },
+  "description": {
+    "en": "List sites for a team, including contact, metrics source/resource, and monthly report status.",
+    "de": "Listet Websites eines Teams inkl. Kontakt, Metrik-Quelle/-Ressource und Monatsbericht-Status."
+  },
+  "bot": "Use to find site IDs and reporting config before site-update. Optional monthlyReport=true returns only sites opted into the 1st-of-month report job.",
+  "vars": {
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "output": {
+    "sites": "out",
+    "sitesList": "out.data"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "List sites",
+        "de": "Websites auflisten"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/sites/mine?team={{team}}&monthlyReport={{monthlyReport}}",
+        "method": "GET",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Team",
+          "as": "team",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "default": "{{JOAI_TEAM_SLUG}}",
+          "position": "url:team"
+        },
+        {
+          "name": "Monthly report only",
+          "as": "monthlyReport",
+          "type": "boolean",
+          "source": "field",
+          "required": false,
+          "position": "url:monthlyReport",
+          "description": {
+            "en": "When true, only sites with monthly report enabled",
+            "de": "Wenn true, nur Websites mit aktivem Monatsbericht"
+          }
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Sites loaded.",
+      "de": "Websites geladen."
+    }
+  }
+}
