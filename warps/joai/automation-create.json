@@ -10,14 +10,14 @@
     "ro": "Creează o automatizare"
   },
   "description": {
-    "en": "Create a lifecycle automation (wait → send email → halt). Triggers on contact prop or segment — not tags. Separate from oneshot campaigns.",
-    "de": "Erstellt eine Lifecycle-Automation (wait → E-Mail → halt). Trigger über Kontakt-Prop oder Segment — keine Tags. Getrennt von einmaligen Kampagnen.",
-    "fr": "Crée une automatisation de cycle de vie (wait → e-mail → halt). Déclenchée par une prop contact ou un segment — pas de tags. Distincte des campagnes ponctuelles.",
-    "es": "Crea una automatización de ciclo de vida (wait → email → halt). Se dispara por prop de contacto o segmento — no por tags. Separada de las campañas puntuales.",
-    "it": "Crea un'automazione di ciclo di vita (wait → email → halt). Si attiva su prop contatto o segmento — non su tag. Separata dalle campagne one-shot.",
-    "ro": "Creează o automatizare pe ciclu de viață (wait → email → halt). Declanșată de o prop de contact sau segment — nu de tag-uri. Separată de campaniile one-shot."
+    "en": "Create a contact journey (wait → warp → branch → halt). Triggers on prop, segment, webhook, or manual — not tags. Requires the Automations native app. Separate from oneshot campaigns.",
+    "de": "Erstellt eine Kontakt-Journey (wait → warp → branch → halt). Trigger über Prop, Segment, Webhook oder manuell — keine Tags. Benötigt die Automations-App. Getrennt von einmaligen Kampagnen.",
+    "fr": "Crée un parcours contact (wait → warp → branch → halt). Déclenché par prop, segment, webhook ou manuel — pas de tags. Nécessite l'app Automations. Distincte des campagnes ponctuelles.",
+    "es": "Crea un recorrido de contacto (wait → warp → branch → halt). Se dispara por prop, segmento, webhook o manual — no por tags. Requiere la app Automations. Separada de las campañas puntuales.",
+    "it": "Crea un percorso contatto (wait → warp → branch → halt). Si attiva su prop, segmento, webhook o manuale — non su tag. Richiede l'app Automations. Separata dalle campagne one-shot.",
+    "ro": "Creează o călătorie de contact (wait → warp → branch → halt). Declanșată de prop, segment, webhook sau manual — nu de tag-uri. Necesită app-ul Automations. Separată de campaniile one-shot."
   },
-  "bot": "Use for delayed welcome/drip emails. Prefer prop onboarding-stage=done. Pass actions as JSON array: wait → send_email → halt. Campaigns remain for newsletters/backfill. enabled: pass 1 or 0.",
+  "bot": "Use for delayed welcome/drip journeys. Prefer prop onboarding-stage=done. Actions: wait | warp | branch | halt. Contact messages: warpId joai-contact-message-send with Hook-style inputs. Campaigns remain for newsletters/backfill. Requires Automations native app. enabled: pass 1 or 0.",
   "vars": {
     "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
     "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
@@ -50,8 +50,8 @@
           "type": "string",
           "source": "field",
           "required": true,
-          "options": { "prop": "Prop", "segment": "Segment", "manual": "Manual" },
-          "bot": "prop (contact property), segment, or manual (run_automation only)."
+          "options": { "prop": "Prop", "segment": "Segment", "manual": "Manual", "webhook": "Webhook" },
+          "bot": "prop (contact property), segment, manual (run_automation only), or webhook (inbound Hook enroll)."
         },
         {
           "name": "Trigger config",
@@ -59,7 +59,7 @@
           "type": "json",
           "source": "field",
           "required": false,
-          "bot": "For prop: {\"propKey\":\"onboarding-stage\",\"propValue\":\"done\"}. For segment: {\"segmentId\":\"…\"}."
+          "bot": "For prop: {\"propKey\":\"onboarding-stage\",\"propValue\":\"done\"}. For segment: {\"segmentId\":\"…\"}. For webhook: {\"source\":\"stripe\"} (inbound Hook source query param)."
         },
         {
           "name": "Actions",
@@ -67,7 +67,7 @@
           "type": "json",
           "source": "field",
           "required": true,
-          "bot": "Ordered JSON array. Example: [{\"type\":\"wait\",\"config\":{\"delayMinutes\":4320}},{\"type\":\"send_email\",\"config\":{\"subject\":\"…\",\"body\":\"Hallo {{name}}\"}},{\"type\":\"halt\",\"config\":{}}]. Wait config is only delayMinutes, a whole number of minutes (0 = immediate). At most one send_email. Send config is subject, body, and optional contentHtml."
+          "bot": "Ordered JSON. Types: wait {delayMinutes}, warp {warpId, inputs}, branch {when[], thenPosition, elsePosition}, halt {}. Example contact message: {\"type\":\"warp\",\"config\":{\"warpId\":\"joai-contact-message-send\",\"inputs\":{\"contactId\":{\"source\":\"contact\",\"path\":\"contact.id\"},\"message\":{\"source\":\"literal\",\"value\":\"Hallo {{name}}\"},\"subject\":{\"source\":\"literal\",\"value\":\"Hi\"},\"integration\":{\"source\":\"literal\",\"value\":\"email\"},\"recipientId\":{\"source\":\"contact\",\"path\":\"contact.email\"}}}}. Wait uses delayMinutes only (0 = immediate). Multiple warps allowed."
         },
         {
           "name": "Enabled",
@@ -84,7 +84,7 @@
           "type": "string",
           "source": "field",
           "required": false,
-          "bot": "Sending agent UUID. Required when actions include send_email. The agent must have email configured. There is no team-wide fallback."
+          "bot": "Agent UUID. Required for webhook triggers and when warps need a sending agent (e.g. joai-contact-message-send). The agent must have the channel configured. There is no team-wide fallback."
         },
         { "name": "Team", "as": "team", "type": "string", "source": "field", "required": false, "default": "{{JOAI_TEAM_SLUG}}" }
       ]

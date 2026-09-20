@@ -10,14 +10,14 @@
     "ro": "Setează acțiunile automatizării"
   },
   "description": {
-    "en": "Replace the ordered action list (wait, send_email, halt) for an automation. Blocked while enrollments are active. At most one send_email in v1.",
-    "de": "Ersetzt die Aktionsliste (wait, send_email, halt). Blockiert, solange Enrollments aktiv sind. Maximal eine send_email in v1.",
-    "fr": "Remplace la liste ordonnée d'actions (wait, send_email, halt). Bloqué tant que des enrollments sont actifs. Au plus un send_email en v1.",
-    "es": "Sustituye la lista ordenada de acciones (wait, send_email, halt). Bloqueado mientras haya enrollments activos. Como máximo un send_email en v1.",
-    "it": "Sostituisce l'elenco ordinato di azioni (wait, send_email, halt). Bloccato con enrollment attivi. Al massimo un send_email in v1.",
-    "ro": "Înlocuiește lista ordonată de acțiuni (wait, send_email, halt). Blocat cât timp există enrollment-uri active. Cel mult un send_email în v1."
+    "en": "Replace the ordered action list (wait, warp, branch, halt) for an automation. Blocked while enrollments are active. Requires the Automations native app.",
+    "de": "Ersetzt die Aktionsliste (wait, warp, branch, halt). Blockiert, solange Enrollments aktiv sind. Benötigt die Automations-App.",
+    "fr": "Remplace la liste ordonnée d'actions (wait, warp, branch, halt). Bloqué tant que des enrollments sont actifs. Nécessite l'app Automations.",
+    "es": "Sustituye la lista ordenada de acciones (wait, warp, branch, halt). Bloqueado mientras haya enrollments activos. Requiere la app Automations.",
+    "it": "Sostituisce l'elenco ordinato di azioni (wait, warp, branch, halt). Bloccato con enrollment attivi. Richiede l'app Automations.",
+    "ro": "Înlocuiește lista ordonată de acțiuni (wait, warp, branch, halt). Blocat cât timp există enrollment-uri active. Necesită app-ul Automations."
   },
-  "bot": "Pass automationId and actions JSON array in order. Example: wait → send_email → halt. Fails if any enrollment is still active.",
+  "bot": "Pass automationId and actions JSON array in order. Types: wait | warp | branch | halt. Contact messages use warpId joai-contact-message-send. Fails if any enrollment is still active.",
   "vars": {
     "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
     "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
@@ -50,7 +50,7 @@
           "type": "json",
           "source": "field",
           "required": true,
-          "bot": "Ordered JSON: [{\"type\":\"wait\",\"config\":{\"delayMinutes\":60}},{\"type\":\"send_email\",\"config\":{\"subject\":\"…\",\"body\":\"…\"}},{\"type\":\"halt\",\"config\":{}}]. Wait config is only delayMinutes, a whole number of minutes (0 = immediate)."
+          "bot": "Ordered JSON: [{\"type\":\"wait\",\"config\":{\"delayMinutes\":60}},{\"type\":\"warp\",\"config\":{\"warpId\":\"joai-contact-message-send\",\"inputs\":{\"contactId\":{\"source\":\"contact\",\"path\":\"contact.id\"},\"message\":{\"source\":\"literal\",\"value\":\"Hallo\"},\"subject\":{\"source\":\"literal\",\"value\":\"Hi\"},\"integration\":{\"source\":\"literal\",\"value\":\"email\"},\"recipientId\":{\"source\":\"contact\",\"path\":\"contact.email\"}}}},{\"type\":\"halt\",\"config\":{}}]. Wait config is only delayMinutes (0 = immediate). branch: {when[], thenPosition, elsePosition}."
         },
         { "name": "Team", "as": "team", "type": "string", "source": "field", "required": false, "default": "{{JOAI_TEAM_SLUG}}" }
       ]
