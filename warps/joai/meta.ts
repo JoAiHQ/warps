@@ -7,6 +7,11 @@ export const meta: Record<string, WarpExtras> = {
     category: 'productivity',
     faq: { en: [{ question: 'Does this publish a live sites.joai.ai app?', answer: 'No. Brandless create only stores a site record. Use site-provision for a live brand site.' }], de: [{ question: 'Veröffentlicht dies eine Live-App auf sites.joai.ai?', answer: 'Nein. Ohne Marke wird nur ein Eintrag gespeichert. Für eine Live-Markenseite site-provision verwenden.' }] },
   },
+  'site-list': {
+    keywords: { en: ['list sites', 'site portfolio', 'monthly report sites'], de: ['Websites auflisten', 'Website-Portfolio', 'Monatsbericht Websites'] },
+    useCases: { en: ['Find site IDs and metrics config', 'See which sites have monthly report enabled'], de: ['Website-IDs und Metrik-Konfiguration finden', 'Sehen welche Websites den Monatsbericht aktiviert haben'] },
+    category: 'productivity',
+  },
   'site-update': {
     keywords: { en: ['update site', 'site metrics', 'monthly site report'], de: ['Website aktualisieren', 'Website-Metriken', 'monatlicher Website-Bericht'] },
     useCases: { en: ['Attach a contact and metrics source/resource to a site', 'Enable or disable the monthly site report'], de: ['Kontakt und Metrik-Quelle/-Ressource an eine Website hängen', 'Monatsbericht aktivieren oder deaktivieren'] },
