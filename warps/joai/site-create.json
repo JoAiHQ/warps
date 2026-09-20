@@ -2,18 +2,18 @@
   "protocol": "warp:3.0.0",
   "name": "JoAi: Create Site",
   "title": {
-    "en": "Create site",
-    "de": "Website anlegen",
-    "es": "Create site",
-    "fr": "Create site",
-    "ro": "Create site",
-    "it": "Create site"
+    "en": "Add website",
+    "de": "Website hinzufügen",
+    "es": "Add website",
+    "fr": "Add website",
+    "ro": "Add website",
+    "it": "Add website"
   },
   "description": {
-    "en": "Create a site record for the team without linking a brand (portfolio / external websites).",
-    "de": "Legt einen Website-Eintrag für das Team ohne Marke an (Portfolio / externe Websites)."
+    "en": "Add a website record for the team. Pass a name; URL is optional. Slug is generated automatically.",
+    "de": "Fügt einen Website-Eintrag für das Team hinzu. Name angeben; URL optional. Der Slug wird automatisch erzeugt."
   },
-  "bot": "Create a brandless site with team + slug. Optionally pass contactId, metricsSource, metricsResource, and monthlyReport=true to opt into the 1st-of-month report job (does not send now). If enabling monthlyReport returns channel_not_configured for cloudflare, call settings-integration-open with integration=cloudflare, then retry. Use site-provision when the site should be live on a Warp brand.",
+  "bot": "Add a website with team + name. Optional url. Do not pass slug — it is generated from the name. Optionally pass contactId, metricsSource, metricsResource, and monthlyReport=true to opt into the 1st-of-month report job (does not send now). If enabling monthlyReport returns channel_not_configured for cloudflare, call settings-integration-open with integration=cloudflare, then retry. Use site-provision when the site should be live on a Warp brand.",
   "vars": {
     "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
     "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
@@ -22,8 +22,8 @@
     {
       "type": "collect",
       "label": {
-        "en": "Create",
-        "de": "Anlegen"
+        "en": "Add",
+        "de": "Hinzufügen"
       },
       "destination": {
         "url": "INJECT:API_BASE/v1/sites",
@@ -44,12 +44,28 @@
           "position": "payload:team"
         },
         {
-          "name": "Slug",
-          "as": "slug",
+          "name": "Name",
+          "as": "name",
           "type": "string",
           "source": "field",
           "required": true,
-          "position": "payload:slug"
+          "position": "payload:name",
+          "description": {
+            "en": "Display name for the website. Slug is generated automatically.",
+            "de": "Anzeigename der Website. Der Slug wird automatisch erzeugt."
+          }
+        },
+        {
+          "name": "Website URL",
+          "as": "url",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:url",
+          "description": {
+            "en": "Optional public website address",
+            "de": "Optionale öffentliche Website-Adresse"
+          }
         },
         {
           "name": "Contact",
@@ -100,8 +116,8 @@
   ],
   "messages": {
     "success": {
-      "en": "Site created.",
-      "de": "Website angelegt."
+      "en": "Website added.",
+      "de": "Website hinzugefügt."
     }
   }
 }
