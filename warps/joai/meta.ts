@@ -2,10 +2,10 @@ import type { WarpExtras } from '../types'
 
 export const meta: Record<string, WarpExtras> = {
   'site-create': {
-    keywords: { en: ['create site', 'brandless site', 'portfolio website record'], de: ['Website anlegen', 'Website ohne Marke', 'Portfolio Website-Eintrag'] },
-    useCases: { en: ['Create a site record without provisioning a brand', 'Track an external client website in Sites'], de: ['Einen Website-Eintrag ohne Marke anlegen', 'Eine externe Kundenwebsite in Sites führen'] },
+    keywords: { en: ['add website', 'website record', 'site reporting'], de: ['Website hinzufügen', 'Website-Eintrag', 'Website-Reporting'] },
+    useCases: { en: ['Add a website by name', 'Optionally store the public URL for a site you manage'], de: ['Eine Website per Name hinzufügen', 'Optional die öffentliche URL einer Website speichern'] },
     category: 'productivity',
-    faq: { en: [{ question: 'Does this publish a live sites.joai.ai app?', answer: 'No. Brandless create only stores a site record. Use site-provision for a live brand site.' }], de: [{ question: 'Veröffentlicht dies eine Live-App auf sites.joai.ai?', answer: 'Nein. Ohne Marke wird nur ein Eintrag gespeichert. Für eine Live-Markenseite site-provision verwenden.' }] },
+    faq: { en: [{ question: 'Does this publish a live sites.joai.ai app?', answer: 'No. It stores a website record you can report on. Use site-provision for a live brand site.' }], de: [{ question: 'Veröffentlicht dies eine Live-App auf sites.joai.ai?', answer: 'Nein. Es speichert einen Website-Eintrag für Reporting. Für eine Live-Markenseite site-provision verwenden.' }] },
   },
   'site-list': {
     keywords: { en: ['list sites', 'site portfolio', 'monthly report sites'], de: ['Websites auflisten', 'Website-Portfolio', 'Monatsbericht Websites'] },
