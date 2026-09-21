@@ -4,8 +4,8 @@
   "repo": "JoAiHQ/warps",
   "branch": "dev",
   "network": "devnet",
-  "commitSha": "235384aa6d4fe60012ca4669525419323ef17248",
-  "generatedAt": "2026-09-21T21:00:07.922Z",
+  "commitSha": "c0240bd9c311c47660aeed98655fbd0b106e0c83",
+  "generatedAt": "2026-09-21T21:31:19.030Z",
   "warps": [
     {
       "key": "arbitrum:omniset-deposit-arbitrum",
@@ -104134,8 +104134,8 @@
       "identifier": "@joai-site-create",
       "alias": "joai-site-create",
       "chain": "none",
-      "hash": "93e5f85b01c5c1b11a040dded5e05f52bb3491a0a94ccadb790f0d9f3a800435",
-      "checksum": "93e5f85b01c5c1b11a040dded5e05f52bb3491a0a94ccadb790f0d9f3a800435",
+      "hash": "ca56af8ff316deff72186e82d1e08bddc89f80d8d4f12a70904f4849f99d3f3d",
+      "checksum": "ca56af8ff316deff72186e82d1e08bddc89f80d8d4f12a70904f4849f99d3f3d",
       "name": "JoAi: Create Site",
       "title": {
         "en": "Add website",
@@ -104146,8 +104146,8 @@
         "it": "Add website"
       },
       "description": {
-        "en": "Add a website record for the team. Pass a name; URL is optional. Slug is generated automatically.",
-        "de": "Fügt einen Website-Eintrag für das Team hinzu. Name angeben; URL optional. Der Slug wird automatisch erzeugt."
+        "en": "Add a website record for the team. Pass a name; optional URL and type (shop). Slug is generated automatically.",
+        "de": "Fügt einen Website-Eintrag für das Team hinzu. Name angeben; optional URL und Typ (shop). Der Slug wird automatisch erzeugt."
       },
       "preview": null,
       "creator": "github:JoAiHQ/warps",
@@ -104192,10 +104192,10 @@
           "it": "Add website"
         },
         "description": {
-          "en": "Add a website record for the team. Pass a name; URL is optional. Slug is generated automatically.",
-          "de": "Fügt einen Website-Eintrag für das Team hinzu. Name angeben; URL optional. Der Slug wird automatisch erzeugt."
+          "en": "Add a website record for the team. Pass a name; optional URL and type (shop). Slug is generated automatically.",
+          "de": "Fügt einen Website-Eintrag für das Team hinzu. Name angeben; optional URL und Typ (shop). Der Slug wird automatisch erzeugt."
         },
-        "bot": "Add a website with team + name. Optional url. Do not pass slug — it is generated from the name. Optionally pass contactId, metricsSource, metricsResource, and monthlyReport=true to opt into the 1st-of-month report job (does not send now). If enabling monthlyReport returns channel_not_configured for cloudflare, call settings-integration-open with integration=cloudflare, then retry. Use site-provision when the site should be live on a Warp brand.",
+        "bot": "Add a website with team + name. Optional url and type. type=shop requires url and marks this site as the post-checkout storefront return URL (one shop per team; brandless records only). Omit type for a normal website/portfolio record. Do not pass slug — it is generated from the name. Optionally pass contactId, metricsSource, metricsResource, and monthlyReport=true to opt into the 1st-of-month report job (does not send now). If enabling monthlyReport returns channel_not_configured for cloudflare, call settings-integration-open with integration=cloudflare, then retry. Use site-provision when the site should be live on a Warp brand.",
         "vars": {
           "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
           "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
@@ -104245,8 +104245,23 @@
                 "required": false,
                 "position": "payload:url",
                 "description": {
-                  "en": "Optional public website address",
-                  "de": "Optionale öffentliche Website-Adresse"
+                  "en": "Optional public website address. Required when type is shop.",
+                  "de": "Optionale öffentliche Website-Adresse. Pflicht bei Typ shop."
+                }
+              },
+              {
+                "name": "Type",
+                "as": "type",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "position": "payload:type",
+                "options": {
+                  "shop": "Shop"
+                },
+                "description": {
+                  "en": "shop = storefront return URL after checkout (for brandless website records). Leave empty / omit for a normal website.",
+                  "de": "shop = Shop-URL nach Checkout (für Website-Einträge ohne Brand). Leer lassen / weglassen für normale Website."
                 }
               },
               {
@@ -104308,22 +104323,26 @@
           "en": [
             "add website",
             "website record",
-            "site reporting"
+            "site reporting",
+            "shop site"
           ],
           "de": [
             "Website hinzufügen",
             "Website-Eintrag",
-            "Website-Reporting"
+            "Website-Reporting",
+            "Shop-Website"
           ]
         },
         "useCases": {
           "en": [
             "Add a website by name",
-            "Optionally store the public URL for a site you manage"
+            "Optionally store the public URL for a site you manage",
+            "Mark a site as shop for post-checkout return"
           ],
           "de": [
             "Eine Website per Name hinzufügen",
-            "Optional die öffentliche URL einer Website speichern"
+            "Optional die öffentliche URL einer Website speichern",
+            "Website als Shop markieren für Rückkehr nach Checkout"
           ]
         },
         "category": "productivity",
@@ -104332,12 +104351,20 @@
             {
               "question": "Does this publish a live sites.joai.ai app?",
               "answer": "No. It stores a website record you can report on. Use site-provision for a live brand site."
+            },
+            {
+              "question": "What does type shop do?",
+              "answer": "After payment, the JoAi thank-you page redirects buyers to that site URL."
             }
           ],
           "de": [
             {
               "question": "Veröffentlicht dies eine Live-App auf sites.joai.ai?",
               "answer": "Nein. Es speichert einen Website-Eintrag für Reporting. Für eine Live-Markenseite site-provision verwenden."
+            },
+            {
+              "question": "Wofür ist Typ shop?",
+              "answer": "Nach der Zahlung leitet die JoAi-Danke-Seite Käufer zu dieser Website-URL zurück."
             }
           ]
         }
@@ -104653,8 +104680,8 @@
       "identifier": "@joai-site-update",
       "alias": "joai-site-update",
       "chain": "none",
-      "hash": "6c239f7e4330702af41187e1782e15a2cfd7522ef3805a0abb67ae4bbc337a42",
-      "checksum": "6c239f7e4330702af41187e1782e15a2cfd7522ef3805a0abb67ae4bbc337a42",
+      "hash": "af187d697629860dce633ece20e38674230c6e923499a6e31024ebb4cdebc564",
+      "checksum": "af187d697629860dce633ece20e38674230c6e923499a6e31024ebb4cdebc564",
       "name": "JoAi: Update Site",
       "title": {
         "en": "Update site",
@@ -104665,8 +104692,8 @@
         "it": "Update site"
       },
       "description": {
-        "en": "Update a site’s enabled state, contact, metrics source/resource, or monthly report schedule.",
-        "de": "Aktualisiert Aktivierung, Kontakt, Metrik-Quelle/-Ressource oder Monatsbericht einer Website."
+        "en": "Update a site’s enabled state, name, URL, type (shop), contact, metrics source/resource, or monthly report schedule.",
+        "de": "Aktualisiert Aktivierung, Name, URL, Typ (shop), Kontakt, Metrik-Quelle/-Ressource oder Monatsbericht einer Website."
       },
       "preview": null,
       "creator": "github:JoAiHQ/warps",
@@ -104711,10 +104738,10 @@
           "it": "Update site"
         },
         "description": {
-          "en": "Update a site’s enabled state, contact, metrics source/resource, or monthly report schedule.",
-          "de": "Aktualisiert Aktivierung, Kontakt, Metrik-Quelle/-Ressource oder Monatsbericht einer Website."
+          "en": "Update a site’s enabled state, name, URL, type (shop), contact, metrics source/resource, or monthly report schedule.",
+          "de": "Aktualisiert Aktivierung, Name, URL, Typ (shop), Kontakt, Metrik-Quelle/-Ressource oder Monatsbericht einer Website."
         },
-        "bot": "Update site reporting fields. Pass metricsSource and metricsResource together. monthlyReport=true opts into the 1st-of-month job when contact and metrics are set — it does not send immediately. If enabling monthlyReport returns channel_not_configured for cloudflare, call settings-integration-open with integration=cloudflare, then retry.",
+        "bot": "Update site fields including optional type. type=shop requires url, only works on brandless sites, and marks this site as the post-checkout storefront return URL (one shop per team). Pass type empty/null to clear shop. Pass metricsSource and metricsResource together. monthlyReport=true opts into the 1st-of-month job when contact and metrics are set — it does not send immediately. If enabling monthlyReport returns channel_not_configured for cloudflare, call settings-integration-open with integration=cloudflare, then retry.",
         "vars": {
           "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
           "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
@@ -104774,6 +104801,21 @@
                 "source": "field",
                 "required": false,
                 "position": "payload:url"
+              },
+              {
+                "name": "Type",
+                "as": "type",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "position": "payload:type",
+                "options": {
+                  "shop": "Shop"
+                },
+                "description": {
+                  "en": "shop = storefront return URL after checkout (brandless sites only). Pass empty string to clear.",
+                  "de": "shop = Shop-URL nach Checkout (nur ohne Brand). Leerer String zum Zurücksetzen."
+                }
               },
               {
                 "name": "Contact",
