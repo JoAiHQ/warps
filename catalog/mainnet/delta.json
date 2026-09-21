@@ -4,25 +4,25 @@
   "repo": "JoAiHQ/warps",
   "branch": "main",
   "network": "mainnet",
-  "commitSha": "bb8ab372a463536603cd31bc383a554c268ecd02",
-  "committedAt": "2026-09-21T17:12:02.170Z",
-  "generatedAt": "2026-09-21T17:12:04.773Z",
+  "commitSha": "4d2eda2404c065dfd36eba33d198b01b2714ba13",
+  "committedAt": "2026-09-21T17:57:11.335Z",
+  "generatedAt": "2026-09-21T17:57:14.365Z",
   "upserts": [
     {
-      "key": "none:joai-social-post-create",
-      "identifier": "@joai-social-post-create",
-      "alias": "joai-social-post-create",
+      "key": "none:joai-social-post-list",
+      "identifier": "@joai-social-post-list",
+      "alias": "joai-social-post-list",
       "chain": "none",
-      "hash": "f2f7e84ffe6858068157d0938b5b3a5861628fccd2a9ce7b06400e6c628d2441",
-      "checksum": "f2f7e84ffe6858068157d0938b5b3a5861628fccd2a9ce7b06400e6c628d2441",
-      "name": "JoAi: Create Social Post",
+      "hash": "df728b7fa54b786ab203a288a85ea34fb8f51f237d1eb080663acb5135cc868f",
+      "checksum": "df728b7fa54b786ab203a288a85ea34fb8f51f237d1eb080663acb5135cc868f",
+      "name": "JoAi: List Social Posts",
       "title": {
-        "en": "Schedule a social post",
-        "de": "Social-Post planen"
+        "en": "View social posts",
+        "de": "Social-Posts anzeigen"
       },
       "description": {
-        "en": "Create an Instagram, X, Facebook, or LinkedIn draft. Leave the time empty for a draft, or set a time to schedule it into JoAi's queue (the publish job posts later).",
-        "de": "Erstelle einen Instagram-, X-, Facebook- oder LinkedIn-Entwurf. Ohne Zeit bleibt es ein Entwurf; mit Zeit wird er in JoAis Warteschlange geplant (der Publish-Job postet später)."
+        "en": "List scheduled, published, and failed social posts for the team.",
+        "de": "Liste geplante, veröffentlichte und fehlgeschlagene Social-Posts des Teams."
       },
       "preview": null,
       "creator": "github:JoAiHQ/warps",
@@ -57,16 +57,16 @@
       },
       "warp": {
         "protocol": "warp:3.0.0",
-        "name": "JoAi: Create Social Post",
+        "name": "JoAi: List Social Posts",
         "title": {
-          "en": "Schedule a social post",
-          "de": "Social-Post planen"
+          "en": "View social posts",
+          "de": "Social-Posts anzeigen"
         },
         "description": {
-          "en": "Create an Instagram, X, Facebook, or LinkedIn draft. Leave the time empty for a draft, or set a time to schedule it into JoAi's queue (the publish job posts later).",
-          "de": "Erstelle einen Instagram-, X-, Facebook- oder LinkedIn-Entwurf. Ohne Zeit bleibt es ein Entwurf; mit Zeit wird er in JoAis Warteschlange geplant (der Publish-Job postet später)."
+          "en": "List scheduled, published, and failed social posts for the team.",
+          "de": "Liste geplante, veröffentlichte und fehlgeschlagene Social-Posts des Teams."
         },
-        "bot": "Use this to draft or schedule an Instagram, X, Facebook, or LinkedIn post. Upload images with media_upload first when needed, then pass their IDs in order as a JSON array in media. Set scheduledAt in the team timezone when the user names a time - that only queues the post; JoAi's publish job posts to the network later. Omit scheduledAt to keep a draft. Platforms: instagram, x, facebook, linkedin.",
+        "bot": "Use this to see the social queue. Filter with status when the user asks for scheduled or failed posts.",
         "vars": {
           "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
           "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
@@ -76,12 +76,12 @@
           {
             "type": "collect",
             "label": {
-              "en": "Schedule post",
-              "de": "Post planen"
+              "en": "View posts",
+              "de": "Posts anzeigen"
             },
             "destination": {
-              "url": "https://api.joai.ai/v1/social-posts",
-              "method": "POST",
+              "url": "https://api.joai.ai/v1/social-posts?status={{status}}&platform={{platform}}",
+              "method": "GET",
               "headers": {
                 "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
                 "X-Team": "{{team}}"
@@ -89,177 +89,42 @@
             },
             "inputs": [
               {
+                "name": "Status",
+                "as": "status",
+                "description": {
+                  "en": "Filter by status",
+                  "de": "Nach Status filtern"
+                },
+                "type": "string",
+                "position": "url:status",
+                "source": "field",
+                "required": false,
+                "options": {
+                  "draft": "Draft",
+                  "scheduled": "Scheduled",
+                  "publishing": "Publishing",
+                  "published": "Published",
+                  "failed": "Failed",
+                  "cancelled": "Cancelled"
+                }
+              },
+              {
                 "name": "Network",
                 "as": "platform",
                 "description": {
-                  "en": "Network to post on",
-                  "de": "Netzwerk für den Post"
+                  "en": "Filter by network",
+                  "de": "Nach Netzwerk filtern"
                 },
                 "type": "string",
+                "position": "url:platform",
                 "source": "field",
-                "required": true,
+                "required": false,
                 "options": {
                   "instagram": "Instagram",
                   "x": "X",
                   "facebook": "Facebook",
                   "linkedin": "LinkedIn"
-                },
-                "default": "instagram"
-              },
-              {
-                "name": "Caption",
-                "as": "body",
-                "description": {
-                  "en": "Post caption or tweet text",
-                  "de": "Bildunterschrift oder Tweet-Text"
-                },
-                "type": "string",
-                "source": "field",
-                "required": false
-              },
-              {
-                "name": "Images",
-                "as": "media",
-                "description": {
-                  "en": "Ordered team media IDs, e.g. [\"abc\",\"def\"]. Instagram: JPEG 1–10. X: JPEG/PNG/WEBP/GIF 0–4. Facebook: JPEG/PNG/WEBP/GIF 0–10. LinkedIn: JPEG/PNG/GIF 0–9. Upload with media_upload first.",
-                  "de": "Team-Medien-IDs in Reihenfolge, z.B. [\"abc\",\"def\"]. Instagram: JPEG 1–10. X: JPEG/PNG/WEBP/GIF 0–4. Facebook: JPEG/PNG/WEBP/GIF 0–10. LinkedIn: JPEG/PNG/GIF 0–9. Zuerst mit media_upload hochladen."
-                },
-                "bot": "JSON array of media IDs from media_upload, in order. Optional for X, Facebook, and LinkedIn text-only posts.",
-                "type": "string",
-                "source": "field",
-                "required": false
-              },
-              {
-                "name": "Schedule for",
-                "as": "scheduledAt",
-                "description": {
-                  "en": "When JoAi should publish. ISO time. Without a timezone, the team timezone is used. Omit to save a draft. Scheduling queues the post; the publish job posts later.",
-                  "de": "Wann JoAi veröffentlichen soll. ISO-Zeit. Ohne Zeitzone gilt die Team-Zeitzone. Weglassen speichert einen Entwurf. Planen reiht ein; der Publish-Job postet später."
-                },
-                "type": "string",
-                "source": "field",
-                "required": false
-              },
-              {
-                "name": "Team",
-                "as": "team",
-                "description": {
-                  "en": "Team slug. Defaults to the current team.",
-                  "de": "Team-Slug. Standardmäßig das aktuelle Team."
-                },
-                "type": "string",
-                "source": "field",
-                "required": false,
-                "default": "{{JOAI_TEAM_SLUG}}"
-              }
-            ],
-            "output": {
-              "id": "out.data.id",
-              "status": "out.data.status",
-              "scheduledAt": "out.data.scheduledAt"
-            }
-          }
-        ],
-        "messages": {
-          "success": {
-            "en": "Social post {{status}}. If scheduled, JoAi will publish when due.",
-            "de": "Social-Post {{status}}. Wenn geplant, veröffentlicht JoAi zum Termin."
-          }
-        }
-      },
-      "extras": null
-    },
-    {
-      "key": "none:joai-social-post-retry",
-      "identifier": "@joai-social-post-retry",
-      "alias": "joai-social-post-retry",
-      "chain": "none",
-      "hash": "0c9ac035478fd8d06f09fa7c6a38f117e6c335cce3f4b84d2c8cce964a248108",
-      "checksum": "0c9ac035478fd8d06f09fa7c6a38f117e6c335cce3f4b84d2c8cce964a248108",
-      "name": "JoAi: Retry Social Post",
-      "title": {
-        "en": "Retry a failed social post",
-        "de": "Fehlgeschlagenen Social-Post erneut senden"
-      },
-      "description": {
-        "en": "Queue a failed social post to publish again. Approval only re-schedules; the publish job posts to the network.",
-        "de": "Plane einen fehlgeschlagenen Social-Post erneut. Die Freigabe plant nur; der Publish-Job postet ins Netzwerk."
-      },
-      "preview": null,
-      "creator": "github:JoAiHQ/warps",
-      "privileges": [],
-      "listed": true,
-      "visibility": "public",
-      "primaryAddress": null,
-      "primaryFunc": null,
-      "brand": {
-        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
-        "slug": "joai",
-        "active": true,
-        "protocol": "brand:0.2.0",
-        "name": "JoAi",
-        "description": {
-          "en": "JoAi is a platform for creating and managing your own AI agents.",
-          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
-          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
-          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
-          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
-        },
-        "logo": {
-          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
-        },
-        "urls": {
-          "web": "https://joai.ai"
-        },
-        "colors": {
-          "primary": "#98FF98",
-          "secondary": "#FFFF66"
-        }
-      },
-      "warp": {
-        "protocol": "warp:3.0.0",
-        "name": "JoAi: Retry Social Post",
-        "title": {
-          "en": "Retry a failed social post",
-          "de": "Fehlgeschlagenen Social-Post erneut senden"
-        },
-        "description": {
-          "en": "Queue a failed social post to publish again. Approval only re-schedules; the publish job posts to the network.",
-          "de": "Plane einen fehlgeschlagenen Social-Post erneut. Die Freigabe plant nur; der Publish-Job postet ins Netzwerk."
-        },
-        "bot": "Use when a social post status is failed and the user wants another attempt. This re-queues via the publish job; it does not post inside the warp.",
-        "vars": {
-          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
-          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
-          "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
-        },
-        "actions": [
-          {
-            "type": "collect",
-            "label": {
-              "en": "Retry post",
-              "de": "Post erneut senden"
-            },
-            "destination": {
-              "url": "https://api.joai.ai/v1/social-posts/{{socialPostId}}/retry",
-              "method": "POST",
-              "headers": {
-                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
-                "X-Team": "{{team}}"
-              }
-            },
-            "inputs": [
-              {
-                "name": "Post",
-                "as": "socialPostId",
-                "description": {
-                  "en": "Social post ID",
-                  "de": "Social-Post-ID"
-                },
-                "type": "string",
-                "source": "field",
-                "required": true,
-                "position": "url:socialPostId"
+                }
               },
               {
                 "name": "Team",
@@ -271,136 +136,7 @@
               }
             ]
           }
-        ],
-        "messages": {
-          "success": {
-            "en": "Social post queued again.",
-            "de": "Social-Post erneut eingeplant."
-          }
-        }
-      },
-      "extras": null
-    },
-    {
-      "key": "none:joai-social-post-schedule",
-      "identifier": "@joai-social-post-schedule",
-      "alias": "joai-social-post-schedule",
-      "chain": "none",
-      "hash": "57903cebf9683ba4d31d95646cfe0d88393191e6278d3b8ce6471b75d36f04ac",
-      "checksum": "57903cebf9683ba4d31d95646cfe0d88393191e6278d3b8ce6471b75d36f04ac",
-      "name": "JoAi: Schedule Social Post",
-      "title": {
-        "en": "Schedule a social post",
-        "de": "Social-Post planen"
-      },
-      "description": {
-        "en": "Queue a draft to publish. Set a time, or leave it empty to queue it for the next job run. The network post happens later via JoAi's publish job - this warp only schedules.",
-        "de": "Plane einen Entwurf zur Veröffentlichung. Mit Zeit oder leer für den nächsten Job-Lauf. Der Netzwerk-Post kommt später über JoAis Publish-Job - dieser Warp plant nur."
-      },
-      "preview": null,
-      "creator": "github:JoAiHQ/warps",
-      "privileges": [],
-      "listed": true,
-      "visibility": "public",
-      "primaryAddress": null,
-      "primaryFunc": null,
-      "brand": {
-        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
-        "slug": "joai",
-        "active": true,
-        "protocol": "brand:0.2.0",
-        "name": "JoAi",
-        "description": {
-          "en": "JoAi is a platform for creating and managing your own AI agents.",
-          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
-          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
-          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
-          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
-        },
-        "logo": {
-          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
-        },
-        "urls": {
-          "web": "https://joai.ai"
-        },
-        "colors": {
-          "primary": "#98FF98",
-          "secondary": "#FFFF66"
-        }
-      },
-      "warp": {
-        "protocol": "warp:3.0.0",
-        "name": "JoAi: Schedule Social Post",
-        "title": {
-          "en": "Schedule a social post",
-          "de": "Social-Post planen"
-        },
-        "description": {
-          "en": "Queue a draft to publish. Set a time, or leave it empty to queue it for the next job run. The network post happens later via JoAi's publish job - this warp only schedules.",
-          "de": "Plane einen Entwurf zur Veröffentlichung. Mit Zeit oder leer für den nächsten Job-Lauf. Der Netzwerk-Post kommt später über JoAis Publish-Job - dieser Warp plant nur."
-        },
-        "bot": "Use after a draft exists. This warp only schedules into JoAi's queue; PublishSocialPostJob posts to the network later. scheduledAt is optional - omit it to queue for immediate publish (still via the job, not in this warp). Interpret unnamed times in the team timezone.",
-        "vars": {
-          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
-          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
-          "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
-        },
-        "actions": [
-          {
-            "type": "collect",
-            "label": {
-              "en": "Schedule",
-              "de": "Planen"
-            },
-            "destination": {
-              "url": "https://api.joai.ai/v1/social-posts/{{socialPostId}}/schedule",
-              "method": "POST",
-              "headers": {
-                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
-                "X-Team": "{{team}}"
-              }
-            },
-            "inputs": [
-              {
-                "name": "Post",
-                "as": "socialPostId",
-                "description": {
-                  "en": "Social post ID",
-                  "de": "Social-Post-ID"
-                },
-                "type": "string",
-                "source": "field",
-                "required": true,
-                "position": "url:socialPostId"
-              },
-              {
-                "name": "Schedule for",
-                "as": "scheduledAt",
-                "description": {
-                  "en": "When JoAi should publish. Omit to queue for immediate publish via the job.",
-                  "de": "Wann JoAi veröffentlichen soll. Weglassen reiht es für sofortigen Publish über den Job ein."
-                },
-                "type": "string",
-                "source": "field",
-                "required": false
-              },
-              {
-                "name": "Team",
-                "as": "team",
-                "type": "string",
-                "source": "field",
-                "required": false,
-                "default": "{{JOAI_TEAM_SLUG}}"
-              }
-            ]
-          }
-        ],
-        "messages": {
-          "success": {
-            "en": "Social post scheduled. JoAi will publish it when due.",
-            "de": "Social-Post geplant. JoAi veröffentlicht ihn zum Termin."
-          }
-        }
+        ]
       },
       "extras": null
     },
