@@ -6,10 +6,10 @@
     "de": "Social-Post planen"
   },
   "description": {
-    "en": "Create an Instagram feed post or carousel from team media. Leave the time empty to save a draft, or set a time to schedule it. Images must be JPEG, in the order they should appear.",
-    "de": "Erstelle einen Instagram-Feed-Post oder ein Karussell aus Team-Medien. Ohne Zeit bleibt es ein Entwurf, mit Zeit wird es geplant. Bilder müssen JPEG sein, in der gewünschten Reihenfolge."
+    "en": "Create an Instagram, X, Facebook, or LinkedIn draft. Leave the time empty for a draft, or set a time to schedule it into JoAi's queue (the publish job posts later).",
+    "de": "Erstelle einen Instagram-, X-, Facebook- oder LinkedIn-Entwurf. Ohne Zeit bleibt es ein Entwurf; mit Zeit wird er in JoAis Warteschlange geplant (der Publish-Job postet später)."
   },
-  "bot": "Use this to draft or schedule an Instagram feed post. Upload images with media_upload first, then pass their IDs in order as a JSON array in media. Set scheduledAt in the team timezone when the user names a time. Omit scheduledAt to keep a draft. Only platform instagram is supported.",
+  "bot": "Use this to draft or schedule an Instagram, X, Facebook, or LinkedIn post. Upload images with media_upload first when needed, then pass their IDs in order as a JSON array in media. Set scheduledAt in the team timezone when the user names a time - that only queues the post; JoAi's publish job posts to the network later. Omit scheduledAt to keep a draft. Platforms: instagram, x, facebook, linkedin.",
   "vars": {
     "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
     "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
@@ -32,17 +32,20 @@
       },
       "inputs": [
         {
-          "name": "Platform",
+          "name": "Network",
           "as": "platform",
           "description": {
-            "en": "Network to publish on",
-            "de": "Netzwerk für die Veröffentlichung"
+            "en": "Network to post on",
+            "de": "Netzwerk für den Post"
           },
           "type": "string",
           "source": "field",
           "required": true,
           "options": {
-            "instagram": "Instagram"
+            "instagram": "Instagram",
+            "x": "X",
+            "facebook": "Facebook",
+            "linkedin": "LinkedIn"
           },
           "default": "instagram"
         },
@@ -50,8 +53,8 @@
           "name": "Caption",
           "as": "body",
           "description": {
-            "en": "Post caption",
-            "de": "Bildunterschrift"
+            "en": "Post caption or tweet text",
+            "de": "Bildunterschrift oder Tweet-Text"
           },
           "type": "string",
           "source": "field",
@@ -61,20 +64,20 @@
           "name": "Images",
           "as": "media",
           "description": {
-            "en": "Ordered team media IDs, e.g. [\"abc\",\"def\"]. JPEG only. Upload with media_upload first.",
-            "de": "Team-Medien-IDs in Reihenfolge, z.B. [\"abc\",\"def\"]. Nur JPEG. Zuerst mit media_upload hochladen."
+            "en": "Ordered team media IDs, e.g. [\"abc\",\"def\"]. Instagram: JPEG 1–10. X: JPEG/PNG/WEBP/GIF 0–4. Facebook: JPEG/PNG/WEBP/GIF 0–10. LinkedIn: JPEG/PNG/GIF 0–9. Upload with media_upload first.",
+            "de": "Team-Medien-IDs in Reihenfolge, z.B. [\"abc\",\"def\"]. Instagram: JPEG 1–10. X: JPEG/PNG/WEBP/GIF 0–4. Facebook: JPEG/PNG/WEBP/GIF 0–10. LinkedIn: JPEG/PNG/GIF 0–9. Zuerst mit media_upload hochladen."
           },
-          "bot": "JSON array of media IDs from media_upload, in carousel order.",
+          "bot": "JSON array of media IDs from media_upload, in order. Optional for X, Facebook, and LinkedIn text-only posts.",
           "type": "string",
           "source": "field",
-          "required": true
+          "required": false
         },
         {
-          "name": "Publish at",
+          "name": "Schedule for",
           "as": "scheduledAt",
           "description": {
-            "en": "When to publish. ISO time. Without a timezone, the team timezone is used. Omit to save a draft.",
-            "de": "Wann veröffentlicht wird. ISO-Zeit. Ohne Zeitzone gilt die Team-Zeitzone. Weglassen speichert einen Entwurf."
+            "en": "When JoAi should publish. ISO time. Without a timezone, the team timezone is used. Omit to save a draft. Scheduling queues the post; the publish job posts later.",
+            "de": "Wann JoAi veröffentlichen soll. ISO-Zeit. Ohne Zeitzone gilt die Team-Zeitzone. Weglassen speichert einen Entwurf. Planen reiht ein; der Publish-Job postet später."
           },
           "type": "string",
           "source": "field",
@@ -102,8 +105,8 @@
   ],
   "messages": {
     "success": {
-      "en": "Social post saved ({{status}}).",
-      "de": "Social-Post gespeichert ({{status}})."
+      "en": "Social post {{status}}. If scheduled, JoAi will publish when due.",
+      "de": "Social-Post {{status}}. Wenn geplant, veröffentlicht JoAi zum Termin."
     }
   }
 }
