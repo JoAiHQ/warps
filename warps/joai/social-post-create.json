@@ -1,0 +1,109 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Create Social Post",
+  "title": {
+    "en": "Schedule a social post",
+    "de": "Social-Post planen"
+  },
+  "description": {
+    "en": "Create an Instagram feed post or carousel from team media. Leave the time empty to save a draft, or set a time to schedule it. Images must be JPEG, in the order they should appear.",
+    "de": "Erstelle einen Instagram-Feed-Post oder ein Karussell aus Team-Medien. Ohne Zeit bleibt es ein Entwurf, mit Zeit wird es geplant. Bilder müssen JPEG sein, in der gewünschten Reihenfolge."
+  },
+  "bot": "Use this to draft or schedule an Instagram feed post. Upload images with media_upload first, then pass their IDs in order as a JSON array in media. Set scheduledAt in the team timezone when the user names a time. Omit scheduledAt to keep a draft. Only platform instagram is supported.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Schedule post",
+        "de": "Post planen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/social-posts",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Platform",
+          "as": "platform",
+          "description": {
+            "en": "Network to publish on",
+            "de": "Netzwerk für die Veröffentlichung"
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "options": {
+            "instagram": "Instagram"
+          },
+          "default": "instagram"
+        },
+        {
+          "name": "Caption",
+          "as": "body",
+          "description": {
+            "en": "Post caption",
+            "de": "Bildunterschrift"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Images",
+          "as": "media",
+          "description": {
+            "en": "Ordered team media IDs, e.g. [\"abc\",\"def\"]. JPEG only. Upload with media_upload first.",
+            "de": "Team-Medien-IDs in Reihenfolge, z.B. [\"abc\",\"def\"]. Nur JPEG. Zuerst mit media_upload hochladen."
+          },
+          "bot": "JSON array of media IDs from media_upload, in carousel order.",
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Publish at",
+          "as": "scheduledAt",
+          "description": {
+            "en": "When to publish. ISO time. Without a timezone, the team timezone is used. Omit to save a draft.",
+            "de": "Wann veröffentlicht wird. ISO-Zeit. Ohne Zeitzone gilt die Team-Zeitzone. Weglassen speichert einen Entwurf."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug. Defaults to the current team.",
+            "de": "Team-Slug. Standardmäßig das aktuelle Team."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ],
+      "output": {
+        "id": "out.data.id",
+        "status": "out.data.status",
+        "scheduledAt": "out.data.scheduledAt"
+      }
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Social post saved ({{status}}).",
+      "de": "Social-Post gespeichert ({{status}})."
+    }
+  }
+}

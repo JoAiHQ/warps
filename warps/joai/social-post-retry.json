@@ -1,0 +1,63 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Retry Social Post",
+  "title": {
+    "en": "Retry a failed social post",
+    "de": "Fehlgeschlagenen Social-Post erneut senden"
+  },
+  "description": {
+    "en": "Publish a failed social post again.",
+    "de": "Veröffentliche einen fehlgeschlagenen Social-Post erneut."
+  },
+  "bot": "Use when a social post status is failed and the user wants another attempt.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Retry post",
+        "de": "Post erneut senden"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/social-posts/{{socialPostId}}/retry",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Post",
+          "as": "socialPostId",
+          "description": {
+            "en": "Social post ID",
+            "de": "Social-Post-ID"
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:socialPostId"
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Social post queued again.",
+      "de": "Social-Post erneut eingeplant."
+    }
+  }
+}
