@@ -17,9 +17,11 @@
     "ro": "Create a new AI assistant agent in your team that can chat, manage tasks, and automate workflows on your behalf. Give it a name and start customizing its skills, knowledge, and personality to fit your needs.",
     "it": "Create a new AI assistant agent in your team that can chat, manage tasks, and automate workflows on your behalf. Give it a name and start customizing its skills, knowledge, and personality to fit your needs."
   },
+  "bot": "Always pass team when creating an agent for a specific business/team (e.g. Hollabrunn Digital setups). Omit team only to create on the connected agent's current team.",
   "vars": {
     "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
-    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
   },
   "actions": [
     {
@@ -36,7 +38,8 @@
         "url": "INJECT:API_BASE/v1/agents",
         "method": "POST",
         "headers": {
-          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
         }
       },
       "inputs": [
@@ -55,6 +58,23 @@
           "source": "field",
           "required": true,
           "min": 3
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug that will own this agent. Defaults to the current team.",
+            "de": "Team-Slug, dem dieser Agent gehören soll. Standardmäßig das aktuelle Team.",
+            "es": "Team slug that will own this agent. Defaults to the current team.",
+            "fr": "Team slug that will own this agent. Defaults to the current team.",
+            "ro": "Team slug that will own this agent. Defaults to the current team.",
+            "it": "Team slug that will own this agent. Defaults to the current team."
+          },
+          "bot": "The slug of the team that should own this agent. Omit to use the current team.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
         }
       ]
     }
