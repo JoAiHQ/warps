@@ -4,8 +4,8 @@
   "repo": "JoAiHQ/warps",
   "branch": "main",
   "network": "mainnet",
-  "commitSha": "3cbde4335dac0deb552b6af14c26a2bf1713680d",
-  "generatedAt": "2026-09-21T16:35:55.120Z",
+  "commitSha": "bb8ab372a463536603cd31bc383a554c268ecd02",
+  "generatedAt": "2026-09-21T17:12:04.773Z",
   "warps": [
     {
       "key": "arbitrum:omniset-deposit-arbitrum",
@@ -105581,16 +105581,16 @@
       "identifier": "@joai-social-post-create",
       "alias": "joai-social-post-create",
       "chain": "none",
-      "hash": "4bf0b648de940d6743d20b46986fb3736d029d8494ceadb1451f5f350a2af23d",
-      "checksum": "4bf0b648de940d6743d20b46986fb3736d029d8494ceadb1451f5f350a2af23d",
+      "hash": "f2f7e84ffe6858068157d0938b5b3a5861628fccd2a9ce7b06400e6c628d2441",
+      "checksum": "f2f7e84ffe6858068157d0938b5b3a5861628fccd2a9ce7b06400e6c628d2441",
       "name": "JoAi: Create Social Post",
       "title": {
         "en": "Schedule a social post",
         "de": "Social-Post planen"
       },
       "description": {
-        "en": "Create an Instagram feed post or carousel from team media. Leave the time empty to save a draft, or set a time to schedule it. Images must be JPEG, in the order they should appear.",
-        "de": "Erstelle einen Instagram-Feed-Post oder ein Karussell aus Team-Medien. Ohne Zeit bleibt es ein Entwurf, mit Zeit wird es geplant. Bilder müssen JPEG sein, in der gewünschten Reihenfolge."
+        "en": "Create an Instagram, X, Facebook, or LinkedIn draft. Leave the time empty for a draft, or set a time to schedule it into JoAi's queue (the publish job posts later).",
+        "de": "Erstelle einen Instagram-, X-, Facebook- oder LinkedIn-Entwurf. Ohne Zeit bleibt es ein Entwurf; mit Zeit wird er in JoAis Warteschlange geplant (der Publish-Job postet später)."
       },
       "preview": null,
       "creator": "github:JoAiHQ/warps",
@@ -105631,10 +105631,10 @@
           "de": "Social-Post planen"
         },
         "description": {
-          "en": "Create an Instagram feed post or carousel from team media. Leave the time empty to save a draft, or set a time to schedule it. Images must be JPEG, in the order they should appear.",
-          "de": "Erstelle einen Instagram-Feed-Post oder ein Karussell aus Team-Medien. Ohne Zeit bleibt es ein Entwurf, mit Zeit wird es geplant. Bilder müssen JPEG sein, in der gewünschten Reihenfolge."
+          "en": "Create an Instagram, X, Facebook, or LinkedIn draft. Leave the time empty for a draft, or set a time to schedule it into JoAi's queue (the publish job posts later).",
+          "de": "Erstelle einen Instagram-, X-, Facebook- oder LinkedIn-Entwurf. Ohne Zeit bleibt es ein Entwurf; mit Zeit wird er in JoAis Warteschlange geplant (der Publish-Job postet später)."
         },
-        "bot": "Use this to draft or schedule an Instagram feed post. Upload images with media_upload first, then pass their IDs in order as a JSON array in media. Set scheduledAt in the team timezone when the user names a time. Omit scheduledAt to keep a draft. Only platform instagram is supported.",
+        "bot": "Use this to draft or schedule an Instagram, X, Facebook, or LinkedIn post. Upload images with media_upload first when needed, then pass their IDs in order as a JSON array in media. Set scheduledAt in the team timezone when the user names a time - that only queues the post; JoAi's publish job posts to the network later. Omit scheduledAt to keep a draft. Platforms: instagram, x, facebook, linkedin.",
         "vars": {
           "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
           "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
@@ -105657,17 +105657,20 @@
             },
             "inputs": [
               {
-                "name": "Platform",
+                "name": "Network",
                 "as": "platform",
                 "description": {
-                  "en": "Network to publish on",
-                  "de": "Netzwerk für die Veröffentlichung"
+                  "en": "Network to post on",
+                  "de": "Netzwerk für den Post"
                 },
                 "type": "string",
                 "source": "field",
                 "required": true,
                 "options": {
-                  "instagram": "Instagram"
+                  "instagram": "Instagram",
+                  "x": "X",
+                  "facebook": "Facebook",
+                  "linkedin": "LinkedIn"
                 },
                 "default": "instagram"
               },
@@ -105675,8 +105678,8 @@
                 "name": "Caption",
                 "as": "body",
                 "description": {
-                  "en": "Post caption",
-                  "de": "Bildunterschrift"
+                  "en": "Post caption or tweet text",
+                  "de": "Bildunterschrift oder Tweet-Text"
                 },
                 "type": "string",
                 "source": "field",
@@ -105686,20 +105689,20 @@
                 "name": "Images",
                 "as": "media",
                 "description": {
-                  "en": "Ordered team media IDs, e.g. [\"abc\",\"def\"]. JPEG only. Upload with media_upload first.",
-                  "de": "Team-Medien-IDs in Reihenfolge, z.B. [\"abc\",\"def\"]. Nur JPEG. Zuerst mit media_upload hochladen."
+                  "en": "Ordered team media IDs, e.g. [\"abc\",\"def\"]. Instagram: JPEG 1–10. X: JPEG/PNG/WEBP/GIF 0–4. Facebook: JPEG/PNG/WEBP/GIF 0–10. LinkedIn: JPEG/PNG/GIF 0–9. Upload with media_upload first.",
+                  "de": "Team-Medien-IDs in Reihenfolge, z.B. [\"abc\",\"def\"]. Instagram: JPEG 1–10. X: JPEG/PNG/WEBP/GIF 0–4. Facebook: JPEG/PNG/WEBP/GIF 0–10. LinkedIn: JPEG/PNG/GIF 0–9. Zuerst mit media_upload hochladen."
                 },
-                "bot": "JSON array of media IDs from media_upload, in carousel order.",
+                "bot": "JSON array of media IDs from media_upload, in order. Optional for X, Facebook, and LinkedIn text-only posts.",
                 "type": "string",
                 "source": "field",
-                "required": true
+                "required": false
               },
               {
-                "name": "Publish at",
+                "name": "Schedule for",
                 "as": "scheduledAt",
                 "description": {
-                  "en": "When to publish. ISO time. Without a timezone, the team timezone is used. Omit to save a draft.",
-                  "de": "Wann veröffentlicht wird. ISO-Zeit. Ohne Zeitzone gilt die Team-Zeitzone. Weglassen speichert einen Entwurf."
+                  "en": "When JoAi should publish. ISO time. Without a timezone, the team timezone is used. Omit to save a draft. Scheduling queues the post; the publish job posts later.",
+                  "de": "Wann JoAi veröffentlichen soll. ISO-Zeit. Ohne Zeitzone gilt die Team-Zeitzone. Weglassen speichert einen Entwurf. Planen reiht ein; der Publish-Job postet später."
                 },
                 "type": "string",
                 "source": "field",
@@ -105727,8 +105730,8 @@
         ],
         "messages": {
           "success": {
-            "en": "Social post saved ({{status}}).",
-            "de": "Social-Post gespeichert ({{status}})."
+            "en": "Social post {{status}}. If scheduled, JoAi will publish when due.",
+            "de": "Social-Post {{status}}. Wenn geplant, veröffentlicht JoAi zum Termin."
           }
         }
       },
@@ -105965,16 +105968,16 @@
       "identifier": "@joai-social-post-retry",
       "alias": "joai-social-post-retry",
       "chain": "none",
-      "hash": "1f0c865bd462e0e8e32497d0fbe82f6e2a9ba76041b18cf15177e3f1d92fa511",
-      "checksum": "1f0c865bd462e0e8e32497d0fbe82f6e2a9ba76041b18cf15177e3f1d92fa511",
+      "hash": "0c9ac035478fd8d06f09fa7c6a38f117e6c335cce3f4b84d2c8cce964a248108",
+      "checksum": "0c9ac035478fd8d06f09fa7c6a38f117e6c335cce3f4b84d2c8cce964a248108",
       "name": "JoAi: Retry Social Post",
       "title": {
         "en": "Retry a failed social post",
         "de": "Fehlgeschlagenen Social-Post erneut senden"
       },
       "description": {
-        "en": "Publish a failed social post again.",
-        "de": "Veröffentliche einen fehlgeschlagenen Social-Post erneut."
+        "en": "Queue a failed social post to publish again. Approval only re-schedules; the publish job posts to the network.",
+        "de": "Plane einen fehlgeschlagenen Social-Post erneut. Die Freigabe plant nur; der Publish-Job postet ins Netzwerk."
       },
       "preview": null,
       "creator": "github:JoAiHQ/warps",
@@ -106015,10 +106018,10 @@
           "de": "Fehlgeschlagenen Social-Post erneut senden"
         },
         "description": {
-          "en": "Publish a failed social post again.",
-          "de": "Veröffentliche einen fehlgeschlagenen Social-Post erneut."
+          "en": "Queue a failed social post to publish again. Approval only re-schedules; the publish job posts to the network.",
+          "de": "Plane einen fehlgeschlagenen Social-Post erneut. Die Freigabe plant nur; der Publish-Job postet ins Netzwerk."
         },
-        "bot": "Use when a social post status is failed and the user wants another attempt.",
+        "bot": "Use when a social post status is failed and the user wants another attempt. This re-queues via the publish job; it does not post inside the warp.",
         "vars": {
           "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
           "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
@@ -106077,16 +106080,16 @@
       "identifier": "@joai-social-post-schedule",
       "alias": "joai-social-post-schedule",
       "chain": "none",
-      "hash": "a67a890efa35f6fe8265f44a8bf545294af8b46ae1c23b2aaf25948b7892dafd",
-      "checksum": "a67a890efa35f6fe8265f44a8bf545294af8b46ae1c23b2aaf25948b7892dafd",
+      "hash": "57903cebf9683ba4d31d95646cfe0d88393191e6278d3b8ce6471b75d36f04ac",
+      "checksum": "57903cebf9683ba4d31d95646cfe0d88393191e6278d3b8ce6471b75d36f04ac",
       "name": "JoAi: Schedule Social Post",
       "title": {
-        "en": "Set when a social post publishes",
-        "de": "Veröffentlichungszeit setzen"
+        "en": "Schedule a social post",
+        "de": "Social-Post planen"
       },
       "description": {
-        "en": "Schedule a draft social post, or publish it now when no time is set. Instagram containers are created at publish time.",
-        "de": "Plane einen Entwurf, oder veröffentliche ihn sofort ohne Zeit. Instagram-Container werden erst zum Veröffentlichungszeitpunkt erstellt."
+        "en": "Queue a draft to publish. Set a time, or leave it empty to queue it for the next job run. The network post happens later via JoAi's publish job - this warp only schedules.",
+        "de": "Plane einen Entwurf zur Veröffentlichung. Mit Zeit oder leer für den nächsten Job-Lauf. Der Netzwerk-Post kommt später über JoAis Publish-Job - dieser Warp plant nur."
       },
       "preview": null,
       "creator": "github:JoAiHQ/warps",
@@ -106123,14 +106126,14 @@
         "protocol": "warp:3.0.0",
         "name": "JoAi: Schedule Social Post",
         "title": {
-          "en": "Set when a social post publishes",
-          "de": "Veröffentlichungszeit setzen"
+          "en": "Schedule a social post",
+          "de": "Social-Post planen"
         },
         "description": {
-          "en": "Schedule a draft social post, or publish it now when no time is set. Instagram containers are created at publish time.",
-          "de": "Plane einen Entwurf, oder veröffentliche ihn sofort ohne Zeit. Instagram-Container werden erst zum Veröffentlichungszeitpunkt erstellt."
+          "en": "Queue a draft to publish. Set a time, or leave it empty to queue it for the next job run. The network post happens later via JoAi's publish job - this warp only schedules.",
+          "de": "Plane einen Entwurf zur Veröffentlichung. Mit Zeit oder leer für den nächsten Job-Lauf. Der Netzwerk-Post kommt später über JoAis Publish-Job - dieser Warp plant nur."
         },
-        "bot": "Use after a draft exists. scheduledAt is optional. Omit it to publish as soon as this is approved. Interpret unnamed times in the team timezone.",
+        "bot": "Use after a draft exists. This warp only schedules into JoAi's queue; PublishSocialPostJob posts to the network later. scheduledAt is optional - omit it to queue for immediate publish (still via the job, not in this warp). Interpret unnamed times in the team timezone.",
         "vars": {
           "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
           "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
@@ -106165,11 +106168,11 @@
                 "position": "url:socialPostId"
               },
               {
-                "name": "Publish at",
+                "name": "Schedule for",
                 "as": "scheduledAt",
                 "description": {
-                  "en": "When to publish. Omit to publish now.",
-                  "de": "Wann veröffentlicht wird. Weglassen veröffentlicht sofort."
+                  "en": "When JoAi should publish. Omit to queue for immediate publish via the job.",
+                  "de": "Wann JoAi veröffentlichen soll. Weglassen reiht es für sofortigen Publish über den Job ein."
                 },
                 "type": "string",
                 "source": "field",
@@ -106188,8 +106191,8 @@
         ],
         "messages": {
           "success": {
-            "en": "Social post scheduled.",
-            "de": "Social-Post geplant."
+            "en": "Social post scheduled. JoAi will publish it when due.",
+            "de": "Social-Post geplant. JoAi veröffentlicht ihn zum Termin."
           }
         }
       },
