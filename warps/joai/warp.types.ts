@@ -763,6 +763,25 @@ export type JoAiDeleteOrderInputs = {
   team: string;
 };
 
+export type JoAiUpdateOrderInputs = {
+  orderId: string;
+  status: string;
+  date: string;
+  serviceDate: string;
+  invoiceContactId: string;
+  priceMode: string;
+  team: string;
+};
+
+export type JoAiUpdateOrderData = {
+  id: any;
+  status: any;
+  invoiceDate: any;
+  serviceDate: any;
+  invoiceContactId: any;
+  priceMode: any;
+};
+
 export type JoAiGetOrderInputs = {
   orderId: string;
   orderAccessToken: string;

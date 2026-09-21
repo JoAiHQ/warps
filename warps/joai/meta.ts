@@ -910,22 +910,24 @@ export const meta: Record<string, WarpExtras> = {
   },
   'order-update': {
     keywords: {
-      en: ['update order', 'change order status', 'change invoice date', 'change service date', 'invoice recipient'],
-      de: ['Bestellung aktualisieren', 'Bestellstatus ändern', 'Rechnungsdatum ändern', 'Leistungsdatum ändern', 'Rechnungsempfänger'],
+      en: ['update order', 'change order status', 'change invoice date', 'change service date', 'invoice recipient', 'price mode', 'net price', 'excl VAT'],
+      de: ['Bestellung aktualisieren', 'Bestellstatus ändern', 'Rechnungsdatum ändern', 'Leistungsdatum ändern', 'Rechnungsempfänger', 'Preismodus', 'Nettopreis', 'zzgl MwSt'],
     },
     useCases: {
-      en: ['Change order dates or status', 'Assign or clear a separate invoice recipient'],
-      de: ['Datumsangaben oder Status einer Bestellung ändern', 'Separaten Rechnungsempfänger zuweisen oder entfernen'],
+      en: ['Change order dates, status, or price mode', 'Assign or clear a separate invoice recipient', 'Switch an invoice between net and gross prices'],
+      de: ['Datumsangaben, Status oder Preismodus einer Bestellung ändern', 'Separaten Rechnungsempfänger zuweisen oder entfernen', 'Rechnung zwischen Netto- und Bruttopreisen umschalten'],
     },
     category: 'commerce',
     faq: {
       en: [
         { question: 'Does changing the invoice recipient change the buyer?', answer: 'No. It only controls which contact receives invoice emails.' },
         { question: 'How do I use the customer again?', answer: 'Send an empty invoiceContactId to clear the separate recipient.' },
+        { question: 'What does priceMode do?', answer: 'Set "net" for prices excl. VAT or "gross" for incl. VAT. Tax is recalculated and the invoice PDF is regenerated.' },
       ],
       de: [
         { question: 'Ändert der Rechnungsempfänger den Käufer?', answer: 'Nein. Er legt nur fest, welcher Kontakt Rechnungs-E-Mails erhält.' },
         { question: 'Wie verwende ich wieder den Kundenkontakt?', answer: 'Sende invoiceContactId leer, um den separaten Empfänger zu entfernen.' },
+        { question: 'Was bewirkt priceMode?', answer: 'Setze "net" für Preise zzgl. MwSt. oder "gross" für inkl. MwSt. Die Steuer wird neu berechnet und die Rechnungs-PDF neu erzeugt.' },
       ],
     },
   },
