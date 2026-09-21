@@ -2,10 +2,10 @@ import type { WarpExtras } from '../types'
 
 export const meta: Record<string, WarpExtras> = {
   'site-create': {
-    keywords: { en: ['add website', 'website record', 'site reporting'], de: ['Website hinzufügen', 'Website-Eintrag', 'Website-Reporting'] },
-    useCases: { en: ['Add a website by name', 'Optionally store the public URL for a site you manage'], de: ['Eine Website per Name hinzufügen', 'Optional die öffentliche URL einer Website speichern'] },
+    keywords: { en: ['add website', 'website record', 'site reporting', 'shop site'], de: ['Website hinzufügen', 'Website-Eintrag', 'Website-Reporting', 'Shop-Website'] },
+    useCases: { en: ['Add a website by name', 'Optionally store the public URL for a site you manage', 'Mark a site as shop for post-checkout return'], de: ['Eine Website per Name hinzufügen', 'Optional die öffentliche URL einer Website speichern', 'Website als Shop markieren für Rückkehr nach Checkout'] },
     category: 'productivity',
-    faq: { en: [{ question: 'Does this publish a live sites.joai.ai app?', answer: 'No. It stores a website record you can report on. Use site-provision for a live brand site.' }], de: [{ question: 'Veröffentlicht dies eine Live-App auf sites.joai.ai?', answer: 'Nein. Es speichert einen Website-Eintrag für Reporting. Für eine Live-Markenseite site-provision verwenden.' }] },
+    faq: { en: [{ question: 'Does this publish a live sites.joai.ai app?', answer: 'No. It stores a website record you can report on. Use site-provision for a live brand site.' }, { question: 'What does type shop do?', answer: 'After payment, the JoAi thank-you page redirects buyers to that site URL.' }], de: [{ question: 'Veröffentlicht dies eine Live-App auf sites.joai.ai?', answer: 'Nein. Es speichert einen Website-Eintrag für Reporting. Für eine Live-Markenseite site-provision verwenden.' }, { question: 'Wofür ist Typ shop?', answer: 'Nach der Zahlung leitet die JoAi-Danke-Seite Käufer zu dieser Website-URL zurück.' }] },
   },
   'site-list': {
     keywords: { en: ['list sites', 'site portfolio', 'monthly report sites'], de: ['Websites auflisten', 'Website-Portfolio', 'Monatsbericht Websites'] },

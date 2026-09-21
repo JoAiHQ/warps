@@ -10,10 +10,10 @@
     "it": "Update site"
   },
   "description": {
-    "en": "Update a site’s enabled state, contact, metrics source/resource, or monthly report schedule.",
-    "de": "Aktualisiert Aktivierung, Kontakt, Metrik-Quelle/-Ressource oder Monatsbericht einer Website."
+    "en": "Update a site’s enabled state, name, URL, type (shop), contact, metrics source/resource, or monthly report schedule.",
+    "de": "Aktualisiert Aktivierung, Name, URL, Typ (shop), Kontakt, Metrik-Quelle/-Ressource oder Monatsbericht einer Website."
   },
-  "bot": "Update site reporting fields. Pass metricsSource and metricsResource together. monthlyReport=true opts into the 1st-of-month job when contact and metrics are set — it does not send immediately. If enabling monthlyReport returns channel_not_configured for cloudflare, call settings-integration-open with integration=cloudflare, then retry.",
+  "bot": "Update site fields including optional type. type=shop requires url, only works on brandless sites, and marks this site as the post-checkout storefront return URL (one shop per team). Pass type empty/null to clear shop. Pass metricsSource and metricsResource together. monthlyReport=true opts into the 1st-of-month job when contact and metrics are set — it does not send immediately. If enabling monthlyReport returns channel_not_configured for cloudflare, call settings-integration-open with integration=cloudflare, then retry.",
   "vars": {
     "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
     "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
@@ -73,6 +73,21 @@
           "source": "field",
           "required": false,
           "position": "payload:url"
+        },
+        {
+          "name": "Type",
+          "as": "type",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:type",
+          "options": {
+            "shop": "Shop"
+          },
+          "description": {
+            "en": "shop = storefront return URL after checkout (brandless sites only). Pass empty string to clear.",
+            "de": "shop = Shop-URL nach Checkout (nur ohne Brand). Leerer String zum Zurücksetzen."
+          }
         },
         {
           "name": "Contact",
