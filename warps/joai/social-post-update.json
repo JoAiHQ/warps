@@ -1,0 +1,85 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Update Social Post",
+  "title": {
+    "en": "Edit a social post",
+    "de": "Social-Post bearbeiten"
+  },
+  "description": {
+    "en": "Edit the caption or images of a draft, failed, or cancelled social post.",
+    "de": "Bearbeite Bildunterschrift oder Bilder eines Entwurfs, fehlgeschlagenen oder abgebrochenen Social-Posts."
+  },
+  "bot": "Use this to change a social post that is still a draft, failed, or cancelled. Pass media as a JSON array of media IDs to replace the images in order.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Save post",
+        "de": "Post speichern"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/social-posts/{{socialPostId}}",
+        "method": "PATCH",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Post",
+          "as": "socialPostId",
+          "description": {
+            "en": "Social post ID",
+            "de": "Social-Post-ID"
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:socialPostId"
+        },
+        {
+          "name": "Caption",
+          "as": "body",
+          "description": {
+            "en": "New caption. Send empty to clear.",
+            "de": "Neue Bildunterschrift. Leer zum Löschen."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Images",
+          "as": "media",
+          "description": {
+            "en": "Replacement media IDs in order, as a JSON array.",
+            "de": "Ersatz-Medien-IDs in Reihenfolge, als JSON-Array."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Social post updated.",
+      "de": "Social-Post aktualisiert."
+    }
+  }
+}

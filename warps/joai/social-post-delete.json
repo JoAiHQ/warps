@@ -1,0 +1,63 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Delete Social Post",
+  "title": {
+    "en": "Delete a social post",
+    "de": "Social-Post löschen"
+  },
+  "description": {
+    "en": "Delete a social post that is not currently publishing.",
+    "de": "Lösche einen Social-Post, der gerade nicht veröffentlicht wird."
+  },
+  "bot": "Use when the user wants a social post removed. Refuses a post that is mid-publish.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Delete post",
+        "de": "Post löschen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/social-posts/{{socialPostId}}",
+        "method": "DELETE",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Post",
+          "as": "socialPostId",
+          "description": {
+            "en": "Social post ID",
+            "de": "Social-Post-ID"
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:socialPostId"
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Social post deleted.",
+      "de": "Social-Post gelöscht."
+    }
+  }
+}

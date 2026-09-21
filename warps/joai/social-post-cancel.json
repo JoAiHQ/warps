@@ -1,0 +1,63 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Cancel Social Post",
+  "title": {
+    "en": "Cancel a scheduled social post",
+    "de": "Geplanten Social-Post absagen"
+  },
+  "description": {
+    "en": "Stop a scheduled social post before it publishes.",
+    "de": "Stoppe einen geplanten Social-Post, bevor er veröffentlicht wird."
+  },
+  "bot": "Use when the user wants to cancel a post that is still scheduled.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Cancel post",
+        "de": "Post absagen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/social-posts/{{socialPostId}}/cancel",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Post",
+          "as": "socialPostId",
+          "description": {
+            "en": "Social post ID",
+            "de": "Social-Post-ID"
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:socialPostId"
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Scheduled post cancelled.",
+      "de": "Geplanter Post abgesagt."
+    }
+  }
+}

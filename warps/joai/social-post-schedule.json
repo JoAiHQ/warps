@@ -1,0 +1,74 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Schedule Social Post",
+  "title": {
+    "en": "Set when a social post publishes",
+    "de": "Veröffentlichungszeit setzen"
+  },
+  "description": {
+    "en": "Schedule a draft social post, or publish it now when no time is set. Instagram containers are created at publish time.",
+    "de": "Plane einen Entwurf, oder veröffentliche ihn sofort ohne Zeit. Instagram-Container werden erst zum Veröffentlichungszeitpunkt erstellt."
+  },
+  "bot": "Use after a draft exists. scheduledAt is optional. Omit it to publish as soon as this is approved. Interpret unnamed times in the team timezone.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Schedule",
+        "de": "Planen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/social-posts/{{socialPostId}}/schedule",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Post",
+          "as": "socialPostId",
+          "description": {
+            "en": "Social post ID",
+            "de": "Social-Post-ID"
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:socialPostId"
+        },
+        {
+          "name": "Publish at",
+          "as": "scheduledAt",
+          "description": {
+            "en": "When to publish. Omit to publish now.",
+            "de": "Wann veröffentlicht wird. Weglassen veröffentlicht sofort."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Social post scheduled.",
+      "de": "Social-Post geplant."
+    }
+  }
+}
