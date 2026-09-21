@@ -2,14 +2,14 @@
   "protocol": "warp:3.0.0",
   "name": "JoAi: Schedule Social Post",
   "title": {
-    "en": "Set when a social post publishes",
-    "de": "Veröffentlichungszeit setzen"
+    "en": "Schedule a social post",
+    "de": "Social-Post planen"
   },
   "description": {
-    "en": "Schedule a draft social post, or publish it now when no time is set. Instagram containers are created at publish time.",
-    "de": "Plane einen Entwurf, oder veröffentliche ihn sofort ohne Zeit. Instagram-Container werden erst zum Veröffentlichungszeitpunkt erstellt."
+    "en": "Queue a draft to publish. Set a time, or leave it empty to queue it for the next job run. The network post happens later via JoAi's publish job - this warp only schedules.",
+    "de": "Plane einen Entwurf zur Veröffentlichung. Mit Zeit oder leer für den nächsten Job-Lauf. Der Netzwerk-Post kommt später über JoAis Publish-Job - dieser Warp plant nur."
   },
-  "bot": "Use after a draft exists. scheduledAt is optional. Omit it to publish as soon as this is approved. Interpret unnamed times in the team timezone.",
+  "bot": "Use after a draft exists. This warp only schedules into JoAi's queue; PublishSocialPostJob posts to the network later. scheduledAt is optional - omit it to queue for immediate publish (still via the job, not in this warp). Interpret unnamed times in the team timezone.",
   "vars": {
     "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
     "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
@@ -44,11 +44,11 @@
           "position": "url:socialPostId"
         },
         {
-          "name": "Publish at",
+          "name": "Schedule for",
           "as": "scheduledAt",
           "description": {
-            "en": "When to publish. Omit to publish now.",
-            "de": "Wann veröffentlicht wird. Weglassen veröffentlicht sofort."
+            "en": "When JoAi should publish. Omit to queue for immediate publish via the job.",
+            "de": "Wann JoAi veröffentlichen soll. Weglassen reiht es für sofortigen Publish über den Job ein."
           },
           "type": "string",
           "source": "field",
@@ -67,8 +67,8 @@
   ],
   "messages": {
     "success": {
-      "en": "Social post scheduled.",
-      "de": "Social-Post geplant."
+      "en": "Social post scheduled. JoAi will publish it when due.",
+      "de": "Social-Post geplant. JoAi veröffentlicht ihn zum Termin."
     }
   }
 }
