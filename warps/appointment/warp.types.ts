@@ -5,6 +5,7 @@ export type AppointmentsAvailabilityInputs = {
   windowStart: string;
   windowEnd: string;
   durationMinutes: number;
+  contactId: string;
   attendeeName: string;
   attendeeEmail: string;
   description: string;
@@ -26,6 +27,7 @@ export type AppointmentsBookInputs = {
   serviceSlug: string;
   routedAgentUuid: string;
   appointmentRequestId: string;
+  contactId: string;
   attendeeName: string;
   attendeeEmail: string;
   description: string;

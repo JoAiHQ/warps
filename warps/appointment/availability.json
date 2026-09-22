@@ -17,7 +17,7 @@
     "ro": "Colecteaza detaliile rezervarii si intoarce disponibilitatea din calendarul agentului curent.",
     "it": "Collect booking details and return appointment availability from the current agent calendar."
   },
-  "bot": "REQUIRED first step for any appointment booking. Before invoking, ask the user what time window works for them — never assume a time. Do not create calendar events directly; that bypasses availability checks, policy rules, and attendee tracking. Collect the purpose, their preferred time window, name, and timezone. Convert relative dates to exact ISO datetimes before submitting.",
+  "bot": "REQUIRED first step for any appointment booking. Do not create calendar events directly; that bypasses availability checks, policy rules, and attendee tracking. Collect purpose, preferred time, timezone, and the attendee contact. Convert relative dates to exact ISO datetimes with an explicit year (use the current year/next occurrence — never a past year). If the user agrees on a specific time (e.g. 'Wednesday Oct 7 at 11:00'), set windowStart to that exact datetime and windowEnd to start + durationMinutes — do NOT expand to a full day or next-day midnight. Only use a broad day/range window when the user is still flexible. Prefer contactId from CRM (find-or-create / list contacts first); use attendeeName only as a fallback when no contact exists yet.",
   "vars": {
     "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
     "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
@@ -69,7 +69,7 @@
             "ro": "Cea mai devreme ora acceptata de inceput in format ISO",
             "it": "The earliest acceptable start time in ISO format"
           },
-          "bot": "Earliest acceptable appointment start in ISO 8601 format, for example 2026-04-03T09:00:00Z.",
+          "bot": "Earliest acceptable appointment start in ISO 8601 with time of day (never date-only / midnight unless the user said 'anytime that day'). For an agreed slot like 11:00, use that exact time, e.g. 2026-10-07T11:00:00+02:00. Verify the weekday matches the date.",
           "type": "datetime",
           "source": "field",
           "required": true
@@ -85,7 +85,7 @@
             "ro": "Cel mai tarziu sfarsit acceptat al intervalului in format ISO",
             "it": "The latest acceptable end of the scheduling window in ISO format"
           },
-          "bot": "End of the acceptable scheduling window in ISO 8601 format, for example 2026-04-03T17:00:00Z.",
+          "bot": "End of the acceptable scheduling window in ISO 8601 with time of day. For an agreed slot, set this to windowStart + durationMinutes (e.g. 11:00 start / 30 min → 11:30 same day). Do not push end to the next calendar day unless the user asked for a multi-day search window.",
           "type": "datetime",
           "source": "field",
           "required": true
@@ -108,6 +108,22 @@
           "default": 30
         },
         {
+          "name": "Contact ID",
+          "as": "contactId",
+          "description": {
+            "en": "CRM contact ID for the attendee",
+            "de": "CRM-Kontakt-ID des Teilnehmers",
+            "fr": "ID du contact CRM du participant",
+            "es": "ID del contacto CRM del asistente",
+            "ro": "ID-ul contactului CRM al participantului",
+            "it": "CRM contact ID for the attendee"
+          },
+          "bot": "Preferred. Pass the existing CRM contact hashid for the attendee. Resolve via contact find-or-create / list before inventing a free-text name. Never create a duplicate contact.",
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
           "name": "Attendee Name",
           "as": "attendeeName",
           "description": {
@@ -118,7 +134,7 @@
             "ro": "Numele participantului sau al solicitantului",
             "it": "The attendee or requester name"
           },
-          "bot": "The name of the person requesting or attending the appointment.",
+          "bot": "Fallback only when contactId is unavailable. Prefer contactId.",
           "type": "string",
           "source": "field",
           "required": false
@@ -134,7 +150,7 @@
             "ro": "E-mailul participantului sau al solicitantului",
             "it": "The attendee or requester email"
           },
-          "bot": "The email address of the attendee if known.",
+          "bot": "Optional if contactId is set (email comes from the contact). Otherwise pass when known.",
           "type": "string",
           "source": "field",
           "required": false
@@ -227,6 +243,7 @@
         "it": "So we know who to expect."
       },
       "inputs": [
+        "contactId",
         "attendeeName",
         "attendeeEmail",
         "description"
