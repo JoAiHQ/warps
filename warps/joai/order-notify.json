@@ -1,0 +1,113 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Notify Order Contact",
+  "title": {
+    "en": "Notify order contact",
+    "de": "Bestellkontakt benachrichtigen",
+    "fr": "Notifier le contact de la commande",
+    "es": "Notificar al contacto del pedido",
+    "it": "Notifica il contatto dell'ordine",
+    "ro": "Notifică contactul comenzii"
+  },
+  "description": {
+    "en": "Send the branded order confirmation email (with invoice when available) to the customer contact for a pending order. Runs as the executing agent.",
+    "de": "Sendet die gebrandete Bestellbestätigung (mit Rechnung, falls vorhanden) an den Kundenkontakt einer ausstehenden Bestellung. Läuft als ausführender Agent.",
+    "fr": "Envoie l'e-mail de confirmation de commande (avec facture si disponible) au contact client d'une commande en attente. S'exécute via l'agent.",
+    "es": "Envía el correo de confirmación del pedido (con factura si está disponible) al contacto del cliente de un pedido pendiente. Se ejecuta como el agente.",
+    "it": "Invia l'email di conferma ordine (con fattura se disponibile) al contatto cliente di un ordine in sospeso. Eseguito come agente.",
+    "ro": "Trimite emailul de confirmare a comenzii (cu factură dacă există) către contactul client al unei comenzi în așteptare. Rulează ca agentul executant."
+  },
+  "bot": "Use when the merchant wants to email the customer a branded order confirmation for a pending order. List orders first to resolve orderId. Prefer this over drafting a freeform contact message so the invoice PDF and shop branding stay intact. The executing agent is used as the sender.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Notify contact",
+        "de": "Kontakt benachrichtigen",
+        "fr": "Notifier le contact",
+        "es": "Notificar al contacto",
+        "it": "Notifica contatto",
+        "ro": "Notifică contactul"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/orders/{{orderId}}/send-confirmation",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Order ID",
+          "as": "orderId",
+          "description": {
+            "en": "Hash ID of the order to notify about",
+            "de": "Hash-ID der Bestellung"
+          },
+          "bot": "The order hash ID. List orders first if needed.",
+          "type": "string",
+          "position": "url:orderId",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Type",
+          "as": "type",
+          "description": {
+            "en": "Notification type (currently only confirmation)",
+            "de": "Benachrichtigungstyp (derzeit nur confirmation)"
+          },
+          "bot": "Use confirmation.",
+          "type": "string",
+          "source": "field",
+          "position": "payload:type",
+          "required": false,
+          "default": "confirmation"
+        },
+        {
+          "name": "Agent ID",
+          "as": "agentId",
+          "description": {
+            "en": "Agent UUID used as the email sender",
+            "de": "Agent-UUID als Absender der E-Mail"
+          },
+          "bot": "Defaults to the executing agent.",
+          "type": "string",
+          "source": "field",
+          "position": "payload:agentId",
+          "required": false,
+          "default": "{{JOAI_AGENT_UUID}}"
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug for this action. Defaults to the current team.",
+            "de": "Team-Slug. Standard: aktuelles Team."
+          },
+          "bot": "The slug of the team to operate on. Omit to use the current team.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Order confirmation sent.",
+      "de": "Bestellbestätigung gesendet."
+    },
+    "error": {
+      "en": "Failed to send order confirmation: {{MESSAGE}}",
+      "de": "Bestellbestätigung fehlgeschlagen: {{MESSAGE}}"
+    }
+  }
+}
