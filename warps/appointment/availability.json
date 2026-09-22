@@ -17,7 +17,7 @@
     "ro": "Colecteaza detaliile rezervarii si intoarce disponibilitatea din calendarul agentului curent.",
     "it": "Collect booking details and return appointment availability from the current agent calendar."
   },
-  "bot": "REQUIRED first step for any appointment booking. Do not create calendar events directly; that bypasses availability checks, policy rules, and attendee tracking. Collect purpose, preferred time, timezone, and the attendee contact. Convert relative dates to exact ISO datetimes with an explicit year (use the current year/next occurrence — never a past year). If the user agrees on a specific time (e.g. 'Wednesday Oct 7 at 11:00'), set windowStart to that exact datetime and windowEnd to start + durationMinutes — do NOT expand to a full day or next-day midnight. Only use a broad day/range window when the user is still flexible. Prefer contactId from CRM (find-or-create / list contacts first); use attendeeName only as a fallback when no contact exists yet.",
+  "bot": "REQUIRED first step for any appointment booking. Do not create calendar events directly; that bypasses availability checks, policy rules, and attendee tracking. Collect purpose, preferred time, timezone, and attendee contacts. Convert relative dates to exact ISO datetimes with an explicit year (use the current year/next occurrence — never a past year). If the user agrees on a specific time (e.g. 'Wednesday Oct 7 at 11:00'), set windowStart to that exact datetime and windowEnd to start + durationMinutes — do NOT expand to a full day or next-day midnight. Only use a broad day/range window when the user is still flexible. Prefer contactIds from CRM (find-or-create / list contacts first); use attendeeName only as a fallback when no contacts exist yet.",
   "vars": {
     "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
     "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
@@ -108,18 +108,18 @@
           "default": 30
         },
         {
-          "name": "Contact ID",
-          "as": "contactId",
+          "name": "Contact IDs",
+          "as": "contactIds",
           "description": {
-            "en": "CRM contact ID for the attendee",
-            "de": "CRM-Kontakt-ID des Teilnehmers",
-            "fr": "ID du contact CRM du participant",
-            "es": "ID del contacto CRM del asistente",
-            "ro": "ID-ul contactului CRM al participantului",
-            "it": "CRM contact ID for the attendee"
+            "en": "CRM contact IDs for the attendees",
+            "de": "CRM-Kontakt-IDs der Teilnehmer",
+            "fr": "IDs des contacts CRM des participants",
+            "es": "IDs de los contactos CRM de los asistentes",
+            "ro": "ID-urile contactelor CRM ale participantilor",
+            "it": "CRM contact IDs for the attendees"
           },
-          "bot": "Preferred. Pass the existing CRM contact hashid for the attendee. Resolve via contact find-or-create / list before inventing a free-text name. Never create a duplicate contact.",
-          "type": "string",
+          "bot": "Preferred. Pass CRM contact hashids as a JSON array. Resolve via find-or-create / list first; never invent duplicates.",
+          "type": "json",
           "source": "field",
           "required": false
         },
@@ -134,7 +134,7 @@
             "ro": "Numele participantului sau al solicitantului",
             "it": "The attendee or requester name"
           },
-          "bot": "Fallback only when contactId is unavailable. Prefer contactId.",
+          "bot": "Fallback only when contactIds is unavailable. Prefer contactIds.",
           "type": "string",
           "source": "field",
           "required": false
@@ -150,7 +150,7 @@
             "ro": "E-mailul participantului sau al solicitantului",
             "it": "The attendee or requester email"
           },
-          "bot": "Optional if contactId is set (email comes from the contact). Otherwise pass when known.",
+          "bot": "Optional if contactIds is set (emails come from the contacts). Otherwise pass when known.",
           "type": "string",
           "source": "field",
           "required": false
@@ -243,7 +243,7 @@
         "it": "So we know who to expect."
       },
       "inputs": [
-        "contactId",
+        "contactIds",
         "attendeeName",
         "attendeeEmail",
         "description"

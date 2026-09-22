@@ -17,7 +17,7 @@
     "ro": "Rezerva un interval confirmat pentru agentul curent.",
     "it": "Book a confirmed appointment slot for the current agent."
   },
-  "bot": "Use this only after running appointment-availability and the user has explicitly chosen a slot from the results. Never substitute this with direct calendar event creation — that skips booking policy, overlap checks, and attendee tracking. Always refer to bookings as 'appointments', never 'meetings'. Prefer contactId for the attendee (resolve via CRM find-or-create / list — never invent a duplicate). Fall back to attendeeName/email only when no contact exists. Build a descriptive title combining purpose and name (e.g. 'Consultation with Anna Schmidt'). Pass exact start time from the chosen slot as scheduledAt.",
+  "bot": "Use this only after running appointment-availability and the user has explicitly chosen a slot from the results. Never substitute this with direct calendar event creation — that skips booking policy, overlap checks, and attendee tracking. Always refer to bookings as 'appointments', never 'meetings'. Prefer contactIds for attendees (resolve via CRM find-or-create / list — never invent duplicates). Fall back to attendeeName/email only when no contacts exist. Build a descriptive title combining purpose and name (e.g. 'Consultation with Anna Schmidt'). Pass exact start time from the chosen slot as scheduledAt.",
   "vars": {
     "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
     "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
@@ -139,18 +139,18 @@
           "required": false
         },
         {
-          "name": "Contact ID",
-          "as": "contactId",
+          "name": "Contact IDs",
+          "as": "contactIds",
           "description": {
-            "en": "CRM contact ID for the attendee",
-            "de": "CRM-Kontakt-ID des Teilnehmers",
-            "fr": "ID du contact CRM du participant",
-            "es": "ID del contacto CRM del asistente",
-            "ro": "ID-ul contactului CRM al participantului",
-            "it": "CRM contact ID for the attendee"
+            "en": "CRM contact IDs for the attendees",
+            "de": "CRM-Kontakt-IDs der Teilnehmer",
+            "fr": "IDs des contacts CRM des participants",
+            "es": "IDs de los contactos CRM de los asistentes",
+            "ro": "ID-urile contactelor CRM ale participantilor",
+            "it": "CRM contact IDs for the attendees"
           },
-          "bot": "Preferred. Pass the CRM contact hashid for the attendee. Resolve via find-or-create / list first; never create a duplicate contact for the same person.",
-          "type": "string",
+          "bot": "Preferred. Pass CRM contact hashids as a JSON array. Resolve via find-or-create / list first; never invent duplicates.",
+          "type": "json",
           "source": "field",
           "required": false
         },
@@ -165,7 +165,7 @@
             "ro": "Numele complet al persoanei pentru care este programarea",
             "it": "Full name of the person the appointment is for"
           },
-          "bot": "Required when contactId is missing. Prefer contactId. When contactId is set, name is optional (taken from the contact).",
+          "bot": "Required when contactIds is missing. Prefer contactIds. When contactIds is set, name is optional (taken from the contacts).",
           "type": "string",
           "source": "field",
           "required": false,
@@ -183,7 +183,7 @@
             "ro": "E-mailul participantului",
             "it": "The attendee email"
           },
-          "bot": "Optional when contactId is set. Otherwise pass when known for calendar invites.",
+          "bot": "Optional when contactIds is set. Otherwise pass when known for calendar invites.",
           "type": "string",
           "source": "field",
           "required": false
@@ -254,7 +254,7 @@
         "it": "We'll send your confirmation here."
       },
       "inputs": [
-        "contactId",
+        "contactIds",
         "attendeeName",
         "attendeeEmail"
       ]
