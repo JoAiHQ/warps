@@ -908,6 +908,27 @@ export const meta: Record<string, WarpExtras> = {
       ],
     },
   },
+  'order-notify': {
+    keywords: {
+      en: ['notify contact', 'order confirmation email', 'send confirmation', 'pending order email', 'invoice email'],
+      de: ['Kontakt benachrichtigen', 'Bestellbestätigung', 'Bestätigung senden', 'ausstehende Bestellung', 'Rechnungs-E-Mail'],
+    },
+    useCases: {
+      en: ['Email a pending order confirmation to the customer', 'Resend branded order confirmation with invoice'],
+      de: ['Bestellbestätigung an den Kunden senden', 'Gebrandete Bestellbestätigung mit Rechnung erneut senden'],
+    },
+    category: 'commerce',
+    faq: {
+      en: [
+        { question: 'Who receives the email?', answer: 'The customer contact on the order (not a separate invoice recipient).' },
+        { question: 'Which agent sends it?', answer: 'The executing agent is used as the sender.' },
+      ],
+      de: [
+        { question: 'Wer erhält die E-Mail?', answer: 'Der Kundenkontakt der Bestellung (nicht ein separater Rechnungsempfänger).' },
+        { question: 'Welcher Agent sendet?', answer: 'Der ausführende Agent wird als Absender verwendet.' },
+      ],
+    },
+  },
   'order-update': {
     keywords: {
       en: ['update order', 'change order status', 'change invoice date', 'change service date', 'invoice recipient', 'price mode', 'net price', 'excl VAT'],
