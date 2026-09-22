@@ -4,29 +4,790 @@
   "repo": "JoAiHQ/warps",
   "branch": "main",
   "network": "mainnet",
-  "commitSha": "c47c1a44233b70d4ee46f06fbc1e989a749ee03f",
-  "committedAt": "2026-09-21T22:11:46.703Z",
-  "generatedAt": "2026-09-21T22:11:49.137Z",
+  "commitSha": "7696614daa0683562b2f5133a964e8e285795dd8",
+  "committedAt": "2026-09-22T20:02:15.227Z",
+  "generatedAt": "2026-09-22T20:02:17.605Z",
   "upserts": [
     {
-      "key": "none:joai-site-create",
-      "identifier": "@joai-site-create",
-      "alias": "joai-site-create",
+      "key": "none:appointment-availability",
+      "identifier": "@appointment-availability",
+      "alias": "appointment-availability",
       "chain": "none",
-      "hash": "6213e6c2720ff7ec47b52c6ffe8f8b726a50e1eeea0efe3b4f1ddf1446c13a3d",
-      "checksum": "6213e6c2720ff7ec47b52c6ffe8f8b726a50e1eeea0efe3b4f1ddf1446c13a3d",
-      "name": "JoAi: Create Site",
+      "hash": "3f4da0cf2416d5a56901fa774c2fcdeaaa5017988ba5e8a5b4a0b9181e80fa72",
+      "checksum": "3f4da0cf2416d5a56901fa774c2fcdeaaa5017988ba5e8a5b4a0b9181e80fa72",
+      "name": "Appointments: Availability",
       "title": {
-        "en": "Add website",
-        "de": "Website hinzufügen",
-        "es": "Add website",
-        "fr": "Add website",
-        "ro": "Add website",
-        "it": "Add website"
+        "en": "Appointment availability",
+        "de": "Terminverfuegbarkeit",
+        "fr": "Disponibilite des rendez-vous",
+        "es": "Disponibilidad de citas",
+        "ro": "Disponibilitatea programarilor",
+        "it": "Appointment availability"
       },
       "description": {
-        "en": "Add a website record for the team. Pass a name; optional URL and type (undefined|shop). Slug is generated automatically.",
-        "de": "Fügt einen Website-Eintrag für das Team hinzu. Name angeben; optional URL und Typ (undefined|shop). Der Slug wird automatisch erzeugt."
+        "en": "Collect booking details and return appointment availability from the current agent calendar.",
+        "de": "Sammelt Buchungsdetails und liefert Terminverfuegbarkeit aus dem Kalender des aktuellen Agenten.",
+        "fr": "Collectez les details de reservation et recuperez les disponibilites depuis le calendrier de l agent actuel.",
+        "es": "Recoge los datos de la reserva y devuelve la disponibilidad desde el calendario del agente actual.",
+        "ro": "Colecteaza detaliile rezervarii si intoarce disponibilitatea din calendarul agentului curent.",
+        "it": "Collect booking details and return appointment availability from the current agent calendar."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "873defa13190da1a0124161ec46673a00290697aaea9851a2b8fc027482adac9",
+        "slug": "appointment",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "Appointment",
+        "description": {
+          "en": "Appointment booking and intake flows for service businesses.",
+          "de": "Terminbuchung und Intake-Abläufe für Dienstleistungsunternehmen.",
+          "fr": "Prise de rendez-vous et parcours de reservation pour les entreprises de services.",
+          "es": "Reservas de citas y flujos de atencion para negocios de servicios.",
+          "ro": "Programari si fluxuri de preluare pentru afaceri de servicii."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "Appointments: Availability",
+        "title": {
+          "en": "Appointment availability",
+          "de": "Terminverfuegbarkeit",
+          "fr": "Disponibilite des rendez-vous",
+          "es": "Disponibilidad de citas",
+          "ro": "Disponibilitatea programarilor",
+          "it": "Appointment availability"
+        },
+        "description": {
+          "en": "Collect booking details and return appointment availability from the current agent calendar.",
+          "de": "Sammelt Buchungsdetails und liefert Terminverfuegbarkeit aus dem Kalender des aktuellen Agenten.",
+          "fr": "Collectez les details de reservation et recuperez les disponibilites depuis le calendrier de l agent actuel.",
+          "es": "Recoge los datos de la reserva y devuelve la disponibilidad desde el calendario del agente actual.",
+          "ro": "Colecteaza detaliile rezervarii si intoarce disponibilitatea din calendarul agentului curent.",
+          "it": "Collect booking details and return appointment availability from the current agent calendar."
+        },
+        "bot": "REQUIRED first step for any appointment booking. Do not create calendar events directly; that bypasses availability checks, policy rules, and attendee tracking. Collect purpose, preferred time, timezone, and attendee contacts. Convert relative dates to exact ISO datetimes with an explicit year (use the current year/next occurrence — never a past year). If the user agrees on a specific time (e.g. 'Wednesday Oct 7 at 11:00'), set windowStart to that exact datetime and windowEnd to start + durationMinutes — do NOT expand to a full day or next-day midnight. Only use a broad day/range window when the user is still flexible. Prefer contactIds from CRM (find-or-create / list contacts first); use attendeeName only as a fallback when no contacts exist yet.",
+        "vars": {
+          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Check availability",
+              "de": "Verfuegbarkeit pruefen",
+              "fr": "Verifier les disponibilites",
+              "es": "Ver disponibilidad",
+              "ro": "Verifica disponibilitatea",
+              "it": "Check availability"
+            },
+            "destination": {
+              "url": "https://api.joai.ai/v1/agents/{{JOAI_AGENT_UUID}}/appointments/availability",
+              "method": "POST",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Appointment Title",
+                "as": "title",
+                "description": {
+                  "en": "The purpose of the appointment",
+                  "de": "Der Zweck des Termins",
+                  "fr": "Objet du rendez-vous",
+                  "es": "Motivo de la cita",
+                  "ro": "Scopul programarii",
+                  "it": "The purpose of the appointment"
+                },
+                "bot": "Short title describing the appointment, such as 'Intro Call', 'Product Demo', or 'Support Session'.",
+                "type": "string",
+                "source": "field",
+                "required": true,
+                "min": 3
+              },
+              {
+                "name": "Window Start",
+                "as": "windowStart",
+                "description": {
+                  "en": "The earliest acceptable start time in ISO format",
+                  "de": "Die frueheste moegliche Startzeit im ISO-Format",
+                  "fr": "Heure de debut la plus tot acceptable au format ISO",
+                  "es": "Hora mas temprana aceptable en formato ISO",
+                  "ro": "Cea mai devreme ora acceptata de inceput in format ISO",
+                  "it": "The earliest acceptable start time in ISO format"
+                },
+                "bot": "Earliest acceptable appointment start in ISO 8601 with time of day (never date-only / midnight unless the user said 'anytime that day'). For an agreed slot like 11:00, use that exact time, e.g. 2026-10-07T11:00:00+02:00. Verify the weekday matches the date.",
+                "type": "datetime",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Window End",
+                "as": "windowEnd",
+                "description": {
+                  "en": "The latest acceptable end of the scheduling window in ISO format",
+                  "de": "Das spaeteste Ende des Zeitfensters im ISO-Format",
+                  "fr": "Heure de fin la plus tardive acceptable pour le creneau au format ISO",
+                  "es": "Fin mas tardio aceptable de la franja horaria en formato ISO",
+                  "ro": "Cel mai tarziu sfarsit acceptat al intervalului in format ISO",
+                  "it": "The latest acceptable end of the scheduling window in ISO format"
+                },
+                "bot": "End of the acceptable scheduling window in ISO 8601 with time of day. For an agreed slot, set this to windowStart + durationMinutes (e.g. 11:00 start / 30 min → 11:30 same day). Do not push end to the next calendar day unless the user asked for a multi-day search window.",
+                "type": "datetime",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Duration Minutes",
+                "as": "durationMinutes",
+                "description": {
+                  "en": "Appointment length in minutes",
+                  "de": "Terminlaenge in Minuten",
+                  "fr": "Duree du rendez-vous en minutes",
+                  "es": "Duracion de la cita en minutos",
+                  "ro": "Durata programarii in minute",
+                  "it": "Appointment length in minutes"
+                },
+                "bot": "Meeting duration in minutes. Use 30 unless the user asks for a different length.",
+                "type": "number",
+                "source": "var",
+                "required": true,
+                "default": 30
+              },
+              {
+                "name": "Contact IDs",
+                "as": "contactIds",
+                "description": {
+                  "en": "CRM contact IDs for the attendees",
+                  "de": "CRM-Kontakt-IDs der Teilnehmer",
+                  "fr": "IDs des contacts CRM des participants",
+                  "es": "IDs de los contactos CRM de los asistentes",
+                  "ro": "ID-urile contactelor CRM ale participantilor",
+                  "it": "CRM contact IDs for the attendees"
+                },
+                "bot": "Preferred. Pass CRM contact hashids as a JSON array. Resolve via find-or-create / list first; never invent duplicates.",
+                "type": "json",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Attendee Name",
+                "as": "attendeeName",
+                "description": {
+                  "en": "The attendee or requester name",
+                  "de": "Name des Teilnehmers oder Anfragenden",
+                  "fr": "Nom du participant ou du demandeur",
+                  "es": "Nombre de la persona asistente o solicitante",
+                  "ro": "Numele participantului sau al solicitantului",
+                  "it": "The attendee or requester name"
+                },
+                "bot": "Fallback only when contactIds is unavailable. Prefer contactIds.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Attendee Email",
+                "as": "attendeeEmail",
+                "description": {
+                  "en": "The attendee or requester email",
+                  "de": "E-Mail des Teilnehmers oder Anfragenden",
+                  "fr": "E-mail du participant ou du demandeur",
+                  "es": "Correo de la persona asistente o solicitante",
+                  "ro": "E-mailul participantului sau al solicitantului",
+                  "it": "The attendee or requester email"
+                },
+                "bot": "Optional if contactIds is set (emails come from the contacts). Otherwise pass when known.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Notes",
+                "as": "description",
+                "description": {
+                  "en": "Optional notes or agenda",
+                  "de": "Optionale Notizen oder Agenda",
+                  "fr": "Notes ou ordre du jour facultatifs",
+                  "es": "Notas o agenda opcionales",
+                  "ro": "Note sau agenda optionale",
+                  "it": "Optional notes or agenda"
+                },
+                "bot": "Optional notes, context, or agenda for the appointment.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Timezone",
+                "as": "timezone",
+                "type": "string",
+                "source": "field",
+                "required": false
+              }
+            ]
+          }
+        ],
+        "sections": [
+          {
+            "title": {
+              "en": "What's it about?",
+              "de": "Worum geht es?",
+              "fr": "De quoi s agit-il ?",
+              "es": "De que se trata?",
+              "ro": "Despre ce este vorba?",
+              "it": "What's it about?"
+            },
+            "description": {
+              "en": "Give us a quick idea of the purpose.",
+              "de": "Gib uns eine kurze Idee des Zwecks.",
+              "fr": "Donnez-nous rapidement le contexte du rendez-vous.",
+              "es": "Cuentanos brevemente el motivo.",
+              "ro": "Spune-ne pe scurt care este scopul.",
+              "it": "Give us a quick idea of the purpose."
+            },
+            "inputs": [
+              "title"
+            ]
+          },
+          {
+            "title": {
+              "en": "When are you free?",
+              "de": "Wann hast du Zeit?",
+              "fr": "Quand etes-vous disponible ?",
+              "es": "Cuando te viene bien?",
+              "ro": "Cand esti disponibil?",
+              "it": "When are you free?"
+            },
+            "description": {
+              "en": "Pick a window and we'll find the best slot.",
+              "de": "Wähle ein Zeitfenster und wir finden den besten Slot.",
+              "fr": "Choisissez un creneau et nous trouverons le meilleur horaire.",
+              "es": "Elige una franja y encontraremos el mejor hueco.",
+              "ro": "Alege un interval si gasim cel mai bun slot.",
+              "it": "Pick a window and we'll find the best slot."
+            },
+            "inputs": [
+              "windowStart",
+              "windowEnd"
+            ]
+          },
+          {
+            "title": {
+              "en": "About you",
+              "de": "Über dich",
+              "fr": "A votre sujet",
+              "es": "Sobre ti",
+              "ro": "Despre tine",
+              "it": "About you"
+            },
+            "description": {
+              "en": "So we know who to expect.",
+              "de": "Damit wir wissen, wen wir erwarten.",
+              "fr": "Pour savoir qui nous allons recevoir.",
+              "es": "Asi sabremos a quien esperar.",
+              "ro": "Ca sa stim pe cine asteptam.",
+              "it": "So we know who to expect."
+            },
+            "inputs": [
+              "contactIds",
+              "attendeeName",
+              "attendeeEmail",
+              "description"
+            ]
+          }
+        ],
+        "output": {
+          "CONNECTED": "out.data.connected",
+          "TIMEZONE": "out.data.timezone",
+          "SERVICE": "out.data.service",
+          "SLOTS": "out.data.slots",
+          "SLOT_COUNT": "out.data.slots.length"
+        },
+        "messages": {
+          "error": {
+            "en": "Failed to check appointment availability: {{MESSAGE}}"
+          },
+          "success": {
+            "en": "Found {{SLOT_COUNT}} appointment slot(s).",
+            "de": "{{SLOT_COUNT}} Terminvorschlaege gefunden.",
+            "fr": "{{SLOT_COUNT}} creneau(x) de rendez-vous trouve(s).",
+            "es": "Se han encontrado {{SLOT_COUNT}} horario(s) disponible(s).",
+            "ro": "Am gasit {{SLOT_COUNT}} interval(e) disponibile pentru programare.",
+            "it": "Found {{SLOT_COUNT}} appointment slot(s)."
+          }
+        }
+      },
+      "extras": {
+        "keywords": {
+          "en": [
+            "check availability",
+            "available time slots",
+            "open appointments",
+            "free schedule slots"
+          ],
+          "de": [
+            "Verfügbarkeit prüfen",
+            "verfügbare Zeitslots",
+            "offene Termine",
+            "freie Terminslots"
+          ]
+        },
+        "useCases": {
+          "en": [
+            "Browse available slots for next week before booking",
+            "Check if a specific date and time is still open",
+            "Find the earliest available appointment slot"
+          ],
+          "de": [
+            "Verfügbare Slots für nächste Woche vor der Buchung durchsuchen",
+            "Prüfen, ob ein bestimmtes Datum und eine bestimmte Uhrzeit noch frei ist",
+            "Den frühesten verfügbaren Terminslot finden"
+          ]
+        },
+        "category": "productivity",
+        "faq": {
+          "en": [
+            {
+              "question": "How are available appointment slots determined?",
+              "answer": "Available slots are based on the provider's configured working hours, existing bookings, and buffer times between appointments. Only genuinely open slots are shown."
+            },
+            {
+              "question": "Can I check availability for a specific date?",
+              "answer": "Yes, specify a date to see all open time slots for that day. You can also browse multiple days to find the most convenient option."
+            }
+          ],
+          "de": [
+            {
+              "question": "Wie werden verfügbare Terminslots ermittelt?",
+              "answer": "Verfügbare Slots basieren auf den konfigurierten Arbeitszeiten des Anbieters, bestehenden Buchungen und Pufferzeiten zwischen Terminen. Es werden nur tatsächlich freie Slots angezeigt."
+            },
+            {
+              "question": "Kann ich die Verfügbarkeit für ein bestimmtes Datum prüfen?",
+              "answer": "Ja, gib ein Datum an, um alle offenen Zeitslots für diesen Tag zu sehen. Du kannst auch mehrere Tage durchsuchen, um die passendste Option zu finden."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "key": "none:appointment-book-confirm",
+      "identifier": "@appointment-book-confirm",
+      "alias": "appointment-book-confirm",
+      "chain": "none",
+      "hash": "95dce34ecd7db38a5e2acfd3cb96823198f805fd628893a707ebd4e450ee25a3",
+      "checksum": "95dce34ecd7db38a5e2acfd3cb96823198f805fd628893a707ebd4e450ee25a3",
+      "name": "Appointments: Book",
+      "title": {
+        "en": "Book appointment",
+        "de": "Termin buchen",
+        "fr": "Confirmer le rendez-vous",
+        "es": "Reservar cita",
+        "ro": "Confirma programarea",
+        "it": "Book appointment"
+      },
+      "description": {
+        "en": "Book a confirmed appointment slot for the current agent.",
+        "de": "Bucht einen bestaetigten Termin fuer den aktuellen Agenten.",
+        "fr": "Confirmez un creneau de rendez-vous pour l agent actuel.",
+        "es": "Reserva un horario ya confirmado para el agente actual.",
+        "ro": "Rezerva un interval confirmat pentru agentul curent.",
+        "it": "Book a confirmed appointment slot for the current agent."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "873defa13190da1a0124161ec46673a00290697aaea9851a2b8fc027482adac9",
+        "slug": "appointment",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "Appointment",
+        "description": {
+          "en": "Appointment booking and intake flows for service businesses.",
+          "de": "Terminbuchung und Intake-Abläufe für Dienstleistungsunternehmen.",
+          "fr": "Prise de rendez-vous et parcours de reservation pour les entreprises de services.",
+          "es": "Reservas de citas y flujos de atencion para negocios de servicios.",
+          "ro": "Programari si fluxuri de preluare pentru afaceri de servicii."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "Appointments: Book",
+        "title": {
+          "en": "Book appointment",
+          "de": "Termin buchen",
+          "fr": "Confirmer le rendez-vous",
+          "es": "Reservar cita",
+          "ro": "Confirma programarea",
+          "it": "Book appointment"
+        },
+        "description": {
+          "en": "Book a confirmed appointment slot for the current agent.",
+          "de": "Bucht einen bestaetigten Termin fuer den aktuellen Agenten.",
+          "fr": "Confirmez un creneau de rendez-vous pour l agent actuel.",
+          "es": "Reserva un horario ya confirmado para el agente actual.",
+          "ro": "Rezerva un interval confirmat pentru agentul curent.",
+          "it": "Book a confirmed appointment slot for the current agent."
+        },
+        "bot": "Use this only after running appointment-availability and the user has explicitly chosen a slot from the results. Never substitute this with direct calendar event creation — that skips booking policy, overlap checks, and attendee tracking. Always refer to bookings as 'appointments', never 'meetings'. Prefer contactIds for attendees (resolve via CRM find-or-create / list — never invent duplicates). Fall back to attendeeName/email only when no contacts exist. Build a descriptive title combining purpose and name (e.g. 'Consultation with Anna Schmidt'). Pass exact start time from the chosen slot as scheduledAt.",
+        "vars": {
+          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Book now",
+              "de": "Jetzt buchen",
+              "fr": "Confirmer maintenant",
+              "es": "Reservar ahora",
+              "ro": "Rezerva acum",
+              "it": "Book now"
+            },
+            "destination": {
+              "url": "https://api.joai.ai/v1/agents/{{JOAI_AGENT_UUID}}/appointments/book",
+              "method": "POST",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Appointment Title",
+                "as": "title",
+                "description": {
+                  "en": "Descriptive title shown on the calendar event",
+                  "de": "Aussagekräftiger Titel für den Kalendereintrag",
+                  "fr": "Titre descriptif affiche dans l evenement du calendrier",
+                  "es": "Titulo descriptivo que aparecera en el calendario",
+                  "ro": "Titlu descriptiv afisat in evenimentul din calendar",
+                  "it": "Descriptive title shown on the calendar event"
+                },
+                "bot": "Required. A descriptive title that identifies the appointment at a glance. Always combine the meeting purpose AND the attendee name, e.g. 'Consultation with Anna Schmidt', 'Demo call with Acme Corp', 'Tax review with John Doe'. Never use generic titles like 'Appointment' or 'Meeting'.",
+                "type": "string",
+                "source": "field",
+                "required": true,
+                "min": 3
+              },
+              {
+                "name": "Scheduled At",
+                "as": "scheduledAt",
+                "description": {
+                  "en": "Exact appointment start in ISO format",
+                  "de": "Exakter Startzeitpunkt im ISO-Format",
+                  "fr": "Heure exacte de debut du rendez-vous au format ISO",
+                  "es": "Hora exacta de inicio en formato ISO",
+                  "ro": "Ora exacta de inceput a programarii in format ISO",
+                  "it": "Exact appointment start in ISO format"
+                },
+                "bot": "Exact confirmed appointment start in ISO 8601 format.",
+                "type": "string",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Timezone",
+                "as": "timezone",
+                "description": {
+                  "en": "Appointment timezone",
+                  "de": "Zeitzone des Termins",
+                  "fr": "Fuseau horaire du rendez-vous",
+                  "es": "Zona horaria de la cita",
+                  "ro": "Fusul orar al programarii",
+                  "it": "Appointment timezone"
+                },
+                "bot": "Timezone identifier like Europe/Vienna, America/New_York, or UTC.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Service Slug",
+                "as": "serviceSlug",
+                "description": {
+                  "en": "Optional configured service identifier",
+                  "de": "Optionaler Bezeichner fuer einen konfigurierten Service",
+                  "fr": "Identifiant facultatif d un service configure",
+                  "es": "Identificador opcional de un servicio configurado",
+                  "ro": "Identificator optional pentru un serviciu configurat",
+                  "it": "Optional configured service identifier"
+                },
+                "bot": "If the booking belongs to a configured service, pass the same service slug used for availability.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Routed Agent UUID",
+                "as": "routedAgentUuid",
+                "description": {
+                  "en": "Optional staff agent UUID for routed bookings",
+                  "de": "Optionale UUID des Mitarbeiter-Agenten fuer geroutete Buchungen",
+                  "fr": "UUID facultatif de l agent affecte pour les reservations routees",
+                  "es": "UUID opcional del agente asignado para reservas enrutadas",
+                  "ro": "UUID optional al agentului alocat pentru rezervari directionate",
+                  "it": "Optional staff agent UUID for routed bookings"
+                },
+                "bot": "If appointment availability returned a specific agentUuid for the selected slot, pass it here unchanged.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Appointment Request ID",
+                "as": "appointmentRequestId",
+                "description": {
+                  "en": "Optional linked appointment request id",
+                  "de": "Optionale verknuepfte Terminanfrage-ID",
+                  "fr": "ID facultatif de la demande de rendez-vous liee",
+                  "es": "ID opcional de la solicitud de cita vinculada",
+                  "ro": "ID optional al cererii de programare asociate",
+                  "it": "Optional linked appointment request id"
+                },
+                "bot": "If this booking is fulfilling a previously created appointment request, pass that request id.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Contact IDs",
+                "as": "contactIds",
+                "description": {
+                  "en": "CRM contact IDs for the attendees",
+                  "de": "CRM-Kontakt-IDs der Teilnehmer",
+                  "fr": "IDs des contacts CRM des participants",
+                  "es": "IDs de los contactos CRM de los asistentes",
+                  "ro": "ID-urile contactelor CRM ale participantilor",
+                  "it": "CRM contact IDs for the attendees"
+                },
+                "bot": "Preferred. Pass CRM contact hashids as a JSON array. Resolve via find-or-create / list first; never invent duplicates.",
+                "type": "json",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Attendee Name",
+                "as": "attendeeName",
+                "description": {
+                  "en": "Full name of the person the appointment is for",
+                  "de": "Vollständiger Name der Person, für die der Termin ist",
+                  "fr": "Nom complet de la personne pour laquelle le rendez-vous est pris",
+                  "es": "Nombre completo de la persona para la que es la cita",
+                  "ro": "Numele complet al persoanei pentru care este programarea",
+                  "it": "Full name of the person the appointment is for"
+                },
+                "bot": "Required when contactIds is missing. Prefer contactIds. When contactIds is set, name is optional (taken from the contacts).",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "default": "{{JOAI_SENDER_NAME}}",
+                "min": 2
+              },
+              {
+                "name": "Attendee Email",
+                "as": "attendeeEmail",
+                "description": {
+                  "en": "The attendee email",
+                  "de": "E-Mail des Teilnehmers",
+                  "fr": "E-mail du participant",
+                  "es": "Correo de la persona asistente",
+                  "ro": "E-mailul participantului",
+                  "it": "The attendee email"
+                },
+                "bot": "Optional when contactIds is set. Otherwise pass when known for calendar invites.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Notes",
+                "as": "description",
+                "description": {
+                  "en": "Optional notes or agenda",
+                  "de": "Optionale Notizen oder Agenda",
+                  "fr": "Notes ou ordre du jour facultatifs",
+                  "es": "Notas o agenda opcionales",
+                  "ro": "Note sau agenda optionale",
+                  "it": "Optional notes or agenda"
+                },
+                "bot": "Optional notes, context, or agenda to include with the appointment.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Conference Provider",
+                "as": "conferenceProvider",
+                "description": {
+                  "en": "Optional remote meeting provider",
+                  "de": "Optionaler Anbieter fuer Videotermine",
+                  "fr": "Fournisseur facultatif pour la reunion a distance",
+                  "es": "Proveedor opcional para la reunion remota",
+                  "ro": "Furnizor optional pentru intalnirea la distanta",
+                  "it": "Optional remote meeting provider"
+                },
+                "bot": "Use 'google_meet', 'teams', or 'zoom' only if the user explicitly wants a remote meeting link. Otherwise leave empty.",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "options": {
+                  "google_meet": "Google Meet",
+                  "teams": "Microsoft Teams",
+                  "zoom": {
+                    "en": "Zoom",
+                    "de": "Zoom",
+                    "es": "Zoom",
+                    "fr": "Zoom",
+                    "ro": "Zoom",
+                    "it": "Zoom"
+                  }
+                }
+              }
+            ]
+          }
+        ],
+        "sections": [
+          {
+            "title": {
+              "en": "Who's coming?",
+              "de": "Wer kommt?",
+              "fr": "Qui participe ?",
+              "es": "Quien viene?",
+              "ro": "Cine participa?",
+              "it": "Who's coming?"
+            },
+            "description": {
+              "en": "We'll send your confirmation here.",
+              "de": "Wir schicken die Bestätigung dorthin.",
+              "fr": "Nous enverrons la confirmation a ces coordonnees.",
+              "es": "Enviaremos aqui la confirmacion.",
+              "ro": "Vom trimite confirmarea aici.",
+              "it": "We'll send your confirmation here."
+            },
+            "inputs": [
+              "contactIds",
+              "attendeeName",
+              "attendeeEmail"
+            ]
+          },
+          {
+            "title": {
+              "en": "When is it?",
+              "de": "Wann ist der Termin?",
+              "fr": "Quand a lieu le rendez-vous ?",
+              "es": "Cuando es?",
+              "ro": "Cand are loc?",
+              "it": "When is it?"
+            },
+            "description": {
+              "en": "Confirm the slot you've chosen.",
+              "de": "Bestätige den gewählten Zeitslot.",
+              "fr": "Confirmez le creneau choisi.",
+              "es": "Confirma el horario que has elegido.",
+              "ro": "Confirma intervalul ales.",
+              "it": "Confirm the slot you've chosen."
+            },
+            "inputs": [
+              "scheduledAt",
+              "timezone"
+            ]
+          },
+          {
+            "title": {
+              "en": "Anything else?",
+              "de": "Noch etwas?",
+              "fr": "Autre chose a ajouter ?",
+              "es": "Algo mas?",
+              "ro": "Mai este ceva?",
+              "it": "Anything else?"
+            },
+            "description": {
+              "en": "Add a note or choose how you'd like to meet.",
+              "de": "Füge eine Notiz hinzu oder wähle, wie ihr euch treffen wollt.",
+              "fr": "Ajoutez une note ou choisissez la facon de vous rencontrer.",
+              "es": "Anade una nota o elige como prefieres reunirte.",
+              "ro": "Adauga o nota sau alege cum vreti sa va intalniti.",
+              "it": "Add a note or choose how you'd like to meet."
+            },
+            "inputs": [
+              "description",
+              "conferenceProvider"
+            ]
+          }
+        ],
+        "output": {
+          "MEETING_ID": "out.data.id",
+          "MEETING_URL": "out.data.inviteUrl",
+          "ATTENDEE_EMAIL": "out.data.participants.0.email",
+          "ATTENDEE_NAME": "out.data.participants.0.name",
+          "MEETING_TITLE": "out.data.name",
+          "SCHEDULED_AT": "out.data.scheduledAt"
+        },
+        "messages": {
+          "error": {
+            "en": "Appointment booking failed: {{MESSAGE}}"
+          },
+          "success": {
+            "en": "Appointment booked successfully.",
+            "de": "Termin erfolgreich gebucht.",
+            "fr": "Rendez-vous confirme avec succes.",
+            "es": "Cita reservada correctamente.",
+            "ro": "Programarea a fost confirmata cu succes.",
+            "it": "Appointment booked successfully."
+          }
+        }
+      },
+      "extras": null
+    },
+    {
+      "key": "none:joai-document-list",
+      "identifier": "@joai-document-list",
+      "alias": "joai-document-list",
+      "chain": "none",
+      "hash": "d1c9752fb48a31fd9acc199a7bc0fca954e768e538808a43a5515c36900e19d6",
+      "checksum": "d1c9752fb48a31fd9acc199a7bc0fca954e768e538808a43a5515c36900e19d6",
+      "name": "JoAi: List Documents",
+      "title": {
+        "en": "List documents",
+        "de": "Dokumente auflisten",
+        "es": "List documents",
+        "fr": "List documents",
+        "ro": "List documents",
+        "it": "List documents"
+      },
+      "description": {
+        "en": "Retrieve documents from your agent's knowledge base. Filter by type to list only templates, or search by title. Returns paginated results.",
+        "de": "Dokumente aus der Wissensdatenbank deines Agenten abrufen. Nach Typ filtern, z.B. nur Templates, oder nach Titel suchen. Liefert paginierte Ergebnisse.",
+        "es": "Retrieve documents from your agent's knowledge base. Filter by type to list only templates, or search by title. Returns paginated results.",
+        "fr": "Retrieve documents from your agent's knowledge base. Filter by type to list only templates, or search by title. Returns paginated results.",
+        "ro": "Retrieve documents from your agent's knowledge base. Filter by type to list only templates, or search by title. Returns paginated results.",
+        "it": "Retrieve documents from your agent's knowledge base. Filter by type to list only templates, or search by title. Returns paginated results."
       },
       "preview": null,
       "creator": "github:JoAiHQ/warps",
@@ -61,21 +822,251 @@
       },
       "warp": {
         "protocol": "warp:3.0.0",
-        "name": "JoAi: Create Site",
+        "name": "JoAi: List Documents",
         "title": {
-          "en": "Add website",
-          "de": "Website hinzufügen",
-          "es": "Add website",
-          "fr": "Add website",
-          "ro": "Add website",
-          "it": "Add website"
+          "en": "List documents",
+          "de": "Dokumente auflisten",
+          "es": "List documents",
+          "fr": "List documents",
+          "ro": "List documents",
+          "it": "List documents"
         },
         "description": {
-          "en": "Add a website record for the team. Pass a name; optional URL and type (undefined|shop). Slug is generated automatically.",
-          "de": "Fügt einen Website-Eintrag für das Team hinzu. Name angeben; optional URL und Typ (undefined|shop). Der Slug wird automatisch erzeugt."
+          "en": "Retrieve documents from your agent's knowledge base. Filter by type to list only templates, or search by title. Returns paginated results.",
+          "de": "Dokumente aus der Wissensdatenbank deines Agenten abrufen. Nach Typ filtern, z.B. nur Templates, oder nach Titel suchen. Liefert paginierte Ergebnisse.",
+          "es": "Retrieve documents from your agent's knowledge base. Filter by type to list only templates, or search by title. Returns paginated results.",
+          "fr": "Retrieve documents from your agent's knowledge base. Filter by type to list only templates, or search by title. Returns paginated results.",
+          "ro": "Retrieve documents from your agent's knowledge base. Filter by type to list only templates, or search by title. Returns paginated results.",
+          "it": "Retrieve documents from your agent's knowledge base. Filter by type to list only templates, or search by title. Returns paginated results."
         },
-        "bot": "Add a website with team + name. Optional url and type. type=shop requires url and marks this site as the post-checkout storefront return URL (one shop per team; brandless records only). Omit type or pass type=undefined for a normal website/portfolio record. Do not pass slug — it is generated from the name. Optionally pass contactId, metricsSource, metricsResource, and monthlyReport=true to opt into the 1st-of-month report job (does not send now). If enabling monthlyReport returns channel_not_configured for cloudflare, call settings-integration-open with integration=cloudflare, then retry. Use site-provision when the site should be live on a Warp brand.",
+        "bot": "Use this when the user wants to see their documents or templates, or when a workflow needs to look up templates by type or search term.",
         "vars": {
+          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "auto": true,
+            "label": {
+              "en": "Load documents",
+              "de": "Dokumente laden",
+              "es": "Load documents",
+              "fr": "Load documents",
+              "ro": "Load documents",
+              "it": "Load documents"
+            },
+            "destination": {
+              "url": "https://api.joai.ai/v1/agents/{{JOAI_AGENT_UUID}}/documents?type={{type}}&search={{search}}&perPage={{perPage}}",
+              "method": "GET",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Type",
+                "as": "type",
+                "description": {
+                  "en": "Filter by document type (text, template, pdf, html, markdown)",
+                  "de": "Nach Dokumenttyp filtern (text, template, pdf, html, markdown)",
+                  "es": "Filter by document type (text, template, pdf, html, markdown)",
+                  "fr": "Filter by document type (text, template, pdf, html, markdown)",
+                  "ro": "Filter by document type (text, template, pdf, html, markdown)",
+                  "it": "Filter by document type (text, template, pdf, html, markdown)"
+                },
+                "bot": "Document type to filter by. Use 'template' to list only message templates. Omit for all types.",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "label": {
+                  "en": "Type",
+                  "de": "Type",
+                  "es": "Type",
+                  "fr": "Type",
+                  "ro": "Type",
+                  "it": "Type"
+                }
+              },
+              {
+                "name": "Search",
+                "as": "search",
+                "description": {
+                  "en": "Search term for document title",
+                  "de": "Suchbegriff für Dokumenttitel",
+                  "es": "Search term for document title",
+                  "fr": "Search term for document title",
+                  "ro": "Search term for document title",
+                  "it": "Search term for document title"
+                },
+                "bot": "Search documents by title. Omit to return all.",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "label": {
+                  "en": "Search",
+                  "de": "Search",
+                  "es": "Buscar",
+                  "fr": "Recherche",
+                  "ro": "Căutare",
+                  "it": "Ricerca"
+                }
+              },
+              {
+                "name": "Per Page",
+                "as": "perPage",
+                "description": {
+                  "en": "Number of results per page (max 500)",
+                  "de": "Ergebnisse pro Seite (max. 500)",
+                  "es": "Number of results per page (max 500)",
+                  "fr": "Number of results per page (max 500)",
+                  "ro": "Number of results per page (max 500)",
+                  "it": "Number of results per page (max 500)"
+                },
+                "bot": "Page size. Use up to 500 for bulk operations.",
+                "type": "uint16",
+                "source": "field",
+                "required": false,
+                "value": "50"
+              }
+            ]
+          }
+        ],
+        "messages": {
+          "success": {
+            "en": "Documents loaded.",
+            "de": "Dokumente geladen.",
+            "es": "Documents loaded.",
+            "fr": "Documents loaded.",
+            "ro": "Documents loaded.",
+            "it": "Documents loaded."
+          }
+        },
+        "ui": "https://raw.githubusercontent.com/JoAiHQ/warps/main/warps/joai/document-list/chatapp.79eeba0a.dist.html"
+      },
+      "extras": {
+        "keywords": {
+          "en": [
+            "list documents",
+            "search documents",
+            "find template",
+            "browse knowledge base",
+            "show templates"
+          ],
+          "de": [
+            "Dokumente auflisten",
+            "Dokumente suchen",
+            "Template finden",
+            "Wissensbasis durchsuchen",
+            "Templates anzeigen"
+          ]
+        },
+        "useCases": {
+          "en": [
+            "List all reusable message templates",
+            "Search for a specific document by title",
+            "Browse all stored knowledge base documents"
+          ],
+          "de": [
+            "Alle wiederverwendbaren Nachrichten-Templates auflisten",
+            "Nach einem bestimmten Dokument im Titel suchen",
+            "Alle gespeicherten Wissensbasis-Dokumente durchsuchen"
+          ]
+        },
+        "category": "productivity",
+        "faq": {
+          "en": [
+            {
+              "question": "Can I filter documents by type?",
+              "answer": "Yes — use the type filter to list only templates, text documents, or any other supported type."
+            }
+          ],
+          "de": [
+            {
+              "question": "Kann ich Dokumente nach Typ filtern?",
+              "answer": "Ja — nutze den Typ-Filter, um nur Templates, Textdokumente oder andere unterstützte Typen aufzulisten."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "key": "none:joai-order-notify",
+      "identifier": "@joai-order-notify",
+      "alias": "joai-order-notify",
+      "chain": "none",
+      "hash": "7acdc072ae935f18445fdadba76ea74c660f553ccbfe855f11247011d4198f29",
+      "checksum": "7acdc072ae935f18445fdadba76ea74c660f553ccbfe855f11247011d4198f29",
+      "name": "JoAi: Notify Order Contact",
+      "title": {
+        "en": "Notify order contact",
+        "de": "Bestellkontakt benachrichtigen",
+        "fr": "Notifier le contact de la commande",
+        "es": "Notificar al contacto del pedido",
+        "it": "Notifica il contatto dell'ordine",
+        "ro": "Notifică contactul comenzii"
+      },
+      "description": {
+        "en": "Send the branded order confirmation email (with invoice when available) to the customer contact for a pending order. Runs as the executing agent.",
+        "de": "Sendet die gebrandete Bestellbestätigung (mit Rechnung, falls vorhanden) an den Kundenkontakt einer ausstehenden Bestellung. Läuft als ausführender Agent.",
+        "fr": "Envoie l'e-mail de confirmation de commande (avec facture si disponible) au contact client d'une commande en attente. S'exécute via l'agent.",
+        "es": "Envía el correo de confirmación del pedido (con factura si está disponible) al contacto del cliente de un pedido pendiente. Se ejecuta como el agente.",
+        "it": "Invia l'email di conferma ordine (con fattura se disponibile) al contatto cliente di un ordine in sospeso. Eseguito come agente.",
+        "ro": "Trimite emailul de confirmare a comenzii (cu factură dacă există) către contactul client al unei comenzi în așteptare. Rulează ca agentul executant."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: Notify Order Contact",
+        "title": {
+          "en": "Notify order contact",
+          "de": "Bestellkontakt benachrichtigen",
+          "fr": "Notifier le contact de la commande",
+          "es": "Notificar al contacto del pedido",
+          "it": "Notifica il contatto dell'ordine",
+          "ro": "Notifică contactul comenzii"
+        },
+        "description": {
+          "en": "Send the branded order confirmation email (with invoice when available) to the customer contact for a pending order. Runs as the executing agent.",
+          "de": "Sendet die gebrandete Bestellbestätigung (mit Rechnung, falls vorhanden) an den Kundenkontakt einer ausstehenden Bestellung. Läuft als ausführender Agent.",
+          "fr": "Envoie l'e-mail de confirmation de commande (avec facture si disponible) au contact client d'une commande en attente. S'exécute via l'agent.",
+          "es": "Envía el correo de confirmación del pedido (con factura si está disponible) al contacto del cliente de un pedido pendiente. Se ejecuta como el agente.",
+          "it": "Invia l'email di conferma ordine (con fattura se disponibile) al contatto cliente di un ordine in sospeso. Eseguito come agente.",
+          "ro": "Trimite emailul de confirmare a comenzii (cu factură dacă există) către contactul client al unei comenzi în așteptare. Rulează ca agentul executant."
+        },
+        "bot": "Use when the merchant wants to email the customer a branded order confirmation for a pending order. List orders first to resolve orderId. Prefer this over drafting a freeform contact message so the invoice PDF and shop branding stay intact. The executing agent is used as the sender.",
+        "vars": {
+          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
           "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
           "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
         },
@@ -83,11 +1074,15 @@
           {
             "type": "collect",
             "label": {
-              "en": "Add",
-              "de": "Hinzufügen"
+              "en": "Notify contact",
+              "de": "Kontakt benachrichtigen",
+              "fr": "Notifier le contact",
+              "es": "Notificar al contacto",
+              "it": "Notifica contatto",
+              "ro": "Notifică contactul"
             },
             "destination": {
-              "url": "https://api.joai.ai/v1/sites",
+              "url": "https://api.joai.ai/v1/orders/{{orderId}}/send-confirmation",
               "method": "POST",
               "headers": {
                 "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
@@ -96,369 +1091,123 @@
             },
             "inputs": [
               {
-                "name": "Team",
-                "as": "team",
-                "type": "string",
-                "source": "field",
-                "required": true,
-                "default": "{{JOAI_TEAM_SLUG}}",
-                "position": "payload:team"
-              },
-              {
-                "name": "Name",
-                "as": "name",
-                "type": "string",
-                "source": "field",
-                "required": true,
-                "position": "payload:name",
+                "name": "Order ID",
+                "as": "orderId",
                 "description": {
-                  "en": "Display name for the website. Slug is generated automatically.",
-                  "de": "Anzeigename der Website. Der Slug wird automatisch erzeugt."
-                }
-              },
-              {
-                "name": "Website URL",
-                "as": "url",
+                  "en": "Hash ID of the order to notify about",
+                  "de": "Hash-ID der Bestellung"
+                },
+                "bot": "The order hash ID. List orders first if needed.",
                 "type": "string",
+                "position": "url:orderId",
                 "source": "field",
-                "required": false,
-                "position": "payload:url",
-                "description": {
-                  "en": "Optional public website address. Required when type is shop.",
-                  "de": "Optionale öffentliche Website-Adresse. Pflicht bei Typ shop."
-                }
+                "required": true
               },
               {
                 "name": "Type",
                 "as": "type",
-                "type": "string",
-                "source": "field",
-                "required": false,
-                "position": "payload:type",
-                "options": {
-                  "undefined": "Website",
-                  "shop": "Shop"
+                "description": {
+                  "en": "Notification type (currently only confirmation)",
+                  "de": "Benachrichtigungstyp (derzeit nur confirmation)"
                 },
-                "description": {
-                  "en": "undefined = normal website/portfolio record (default). shop = storefront return URL after checkout (brandless records only).",
-                  "de": "undefined = normale Website/Portfolio (Standard). shop = Shop-URL nach Checkout (nur ohne Brand)."
-                }
-              },
-              {
-                "name": "Contact",
-                "as": "contactId",
+                "bot": "Use confirmation.",
                 "type": "string",
                 "source": "field",
+                "position": "payload:type",
                 "required": false,
-                "position": "payload:contactId"
+                "default": "confirmation"
               },
               {
-                "name": "Metrics source",
-                "as": "metricsSource",
+                "name": "Agent ID",
+                "as": "agentId",
+                "description": {
+                  "en": "Agent UUID used as the email sender",
+                  "de": "Agent-UUID als Absender der E-Mail"
+                },
+                "bot": "Defaults to the executing agent.",
                 "type": "string",
                 "source": "field",
+                "position": "payload:agentId",
                 "required": false,
-                "position": "payload:metricsSource",
-                "description": {
-                  "en": "Metrics provider key (same as metrics-query source)",
-                  "de": "Metrik-Provider-Schlüssel (wie bei metrics-query source)"
-                }
-              },
-              {
-                "name": "Metrics resource",
-                "as": "metricsResource",
-                "type": "string",
-                "source": "field",
-                "required": false,
-                "position": "payload:metricsResource",
-                "description": {
-                  "en": "Provider resource identifier for the site",
-                  "de": "Ressourcenkennung des Providers für die Website"
-                }
-              },
-              {
-                "name": "Monthly report",
-                "as": "monthlyReport",
-                "type": "boolean",
-                "source": "field",
-                "required": false,
-                "position": "payload:monthlyReport",
-                "description": {
-                  "en": "Opt into the 1st-of-month report job (requires contact + metrics). Does not send now.",
-                  "de": "Für den Monatsbericht am 1. anmelden (braucht Kontakt + Metriken). Sendet nicht sofort."
-                }
-              }
-            ]
-          }
-        ],
-        "messages": {
-          "success": {
-            "en": "Website added.",
-            "de": "Website hinzugefügt."
-          }
-        }
-      },
-      "extras": {
-        "keywords": {
-          "en": [
-            "add website",
-            "website record",
-            "site reporting",
-            "shop site"
-          ],
-          "de": [
-            "Website hinzufügen",
-            "Website-Eintrag",
-            "Website-Reporting",
-            "Shop-Website"
-          ]
-        },
-        "useCases": {
-          "en": [
-            "Add a website by name",
-            "Optionally store the public URL for a site you manage",
-            "Mark a site as shop for post-checkout return"
-          ],
-          "de": [
-            "Eine Website per Name hinzufügen",
-            "Optional die öffentliche URL einer Website speichern",
-            "Website als Shop markieren für Rückkehr nach Checkout"
-          ]
-        },
-        "category": "productivity",
-        "faq": {
-          "en": [
-            {
-              "question": "Does this publish a live sites.joai.ai app?",
-              "answer": "No. It stores a website record you can report on. Use site-provision for a live brand site."
-            },
-            {
-              "question": "What does type shop do?",
-              "answer": "After payment, the JoAi thank-you page redirects buyers to that site URL."
-            }
-          ],
-          "de": [
-            {
-              "question": "Veröffentlicht dies eine Live-App auf sites.joai.ai?",
-              "answer": "Nein. Es speichert einen Website-Eintrag für Reporting. Für eine Live-Markenseite site-provision verwenden."
-            },
-            {
-              "question": "Wofür ist Typ shop?",
-              "answer": "Nach der Zahlung leitet die JoAi-Danke-Seite Käufer zu dieser Website-URL zurück."
-            }
-          ]
-        }
-      }
-    },
-    {
-      "key": "none:joai-site-update",
-      "identifier": "@joai-site-update",
-      "alias": "joai-site-update",
-      "chain": "none",
-      "hash": "9ff4bcd4142fe656556eaa54bf9a867093f9fccc3fd207c37e9892ff499958c7",
-      "checksum": "9ff4bcd4142fe656556eaa54bf9a867093f9fccc3fd207c37e9892ff499958c7",
-      "name": "JoAi: Update Site",
-      "title": {
-        "en": "Update site",
-        "de": "Website aktualisieren",
-        "es": "Update site",
-        "fr": "Update site",
-        "ro": "Update site",
-        "it": "Update site"
-      },
-      "description": {
-        "en": "Update a site’s enabled state, name, URL, type (undefined|shop), contact, metrics source/resource, or monthly report schedule.",
-        "de": "Aktualisiert Aktivierung, Name, URL, Typ (undefined|shop), Kontakt, Metrik-Quelle/-Ressource oder Monatsbericht einer Website."
-      },
-      "preview": null,
-      "creator": "github:JoAiHQ/warps",
-      "privileges": [],
-      "listed": true,
-      "visibility": "public",
-      "primaryAddress": null,
-      "primaryFunc": null,
-      "brand": {
-        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
-        "slug": "joai",
-        "active": true,
-        "protocol": "brand:0.2.0",
-        "name": "JoAi",
-        "description": {
-          "en": "JoAi is a platform for creating and managing your own AI agents.",
-          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
-          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
-          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
-          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
-        },
-        "logo": {
-          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
-        },
-        "urls": {
-          "web": "https://joai.ai"
-        },
-        "colors": {
-          "primary": "#98FF98",
-          "secondary": "#FFFF66"
-        }
-      },
-      "warp": {
-        "protocol": "warp:3.0.0",
-        "name": "JoAi: Update Site",
-        "title": {
-          "en": "Update site",
-          "de": "Website aktualisieren",
-          "es": "Update site",
-          "fr": "Update site",
-          "ro": "Update site",
-          "it": "Update site"
-        },
-        "description": {
-          "en": "Update a site’s enabled state, name, URL, type (undefined|shop), contact, metrics source/resource, or monthly report schedule.",
-          "de": "Aktualisiert Aktivierung, Name, URL, Typ (undefined|shop), Kontakt, Metrik-Quelle/-Ressource oder Monatsbericht einer Website."
-        },
-        "bot": "Update site fields including optional type. type=shop requires url, only works on brandless sites, and marks this site as the post-checkout storefront return URL (one shop per team). Pass type=undefined (or empty) to clear shop. Pass metricsSource and metricsResource together. monthlyReport=true opts into the 1st-of-month job when contact and metrics are set — it does not send immediately. If enabling monthlyReport returns channel_not_configured for cloudflare, call settings-integration-open with integration=cloudflare, then retry.",
-        "vars": {
-          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
-          "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
-        },
-        "actions": [
-          {
-            "type": "collect",
-            "label": {
-              "en": "Update",
-              "de": "Aktualisieren"
-            },
-            "destination": {
-              "url": "https://api.joai.ai/v1/sites/{{siteId}}",
-              "method": "PUT",
-              "headers": {
-                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
-                "X-Team": "{{team}}"
-              }
-            },
-            "inputs": [
-              {
-                "name": "Site ID",
-                "as": "siteId",
-                "type": "string",
-                "source": "field",
-                "required": true,
-                "position": "url:siteId"
+                "default": "{{JOAI_AGENT_UUID}}"
               },
               {
                 "name": "Team",
                 "as": "team",
+                "description": {
+                  "en": "Team slug for this action. Defaults to the current team.",
+                  "de": "Team-Slug. Standard: aktuelles Team."
+                },
+                "bot": "The slug of the team to operate on. Omit to use the current team.",
                 "type": "string",
                 "source": "field",
                 "required": false,
                 "default": "{{JOAI_TEAM_SLUG}}"
-              },
-              {
-                "name": "Enabled",
-                "as": "enabled",
-                "type": "boolean",
-                "source": "field",
-                "required": false,
-                "position": "payload:enabled"
-              },
-              {
-                "name": "Name",
-                "as": "name",
-                "type": "string",
-                "source": "field",
-                "required": false,
-                "position": "payload:name"
-              },
-              {
-                "name": "Website URL",
-                "as": "url",
-                "type": "string",
-                "source": "field",
-                "required": false,
-                "position": "payload:url"
-              },
-              {
-                "name": "Type",
-                "as": "type",
-                "type": "string",
-                "source": "field",
-                "required": false,
-                "position": "payload:type",
-                "options": {
-                  "undefined": "Website",
-                  "shop": "Shop"
-                },
-                "description": {
-                  "en": "undefined = normal website/portfolio. shop = storefront return URL after checkout (brandless sites only).",
-                  "de": "undefined = normale Website/Portfolio. shop = Shop-URL nach Checkout (nur ohne Brand)."
-                }
-              },
-              {
-                "name": "Contact",
-                "as": "contactId",
-                "type": "string",
-                "source": "field",
-                "required": false,
-                "position": "payload:contactId"
-              },
-              {
-                "name": "Metrics source",
-                "as": "metricsSource",
-                "type": "string",
-                "source": "field",
-                "required": false,
-                "position": "payload:metricsSource"
-              },
-              {
-                "name": "Metrics resource",
-                "as": "metricsResource",
-                "type": "string",
-                "source": "field",
-                "required": false,
-                "position": "payload:metricsResource"
-              },
-              {
-                "name": "Monthly report",
-                "as": "monthlyReport",
-                "type": "boolean",
-                "source": "field",
-                "required": false,
-                "position": "payload:monthlyReport"
               }
             ]
           }
         ],
         "messages": {
           "success": {
-            "en": "Site updated.",
-            "de": "Website aktualisiert."
+            "en": "Order confirmation sent.",
+            "de": "Bestellbestätigung gesendet."
+          },
+          "error": {
+            "en": "Failed to send order confirmation: {{MESSAGE}}",
+            "de": "Bestellbestätigung fehlgeschlagen: {{MESSAGE}}"
           }
         }
       },
       "extras": {
         "keywords": {
           "en": [
-            "update site",
-            "site metrics",
-            "monthly site report"
+            "notify contact",
+            "order confirmation email",
+            "send confirmation",
+            "pending order email",
+            "invoice email"
           ],
           "de": [
-            "Website aktualisieren",
-            "Website-Metriken",
-            "monatlicher Website-Bericht"
+            "Kontakt benachrichtigen",
+            "Bestellbestätigung",
+            "Bestätigung senden",
+            "ausstehende Bestellung",
+            "Rechnungs-E-Mail"
           ]
         },
         "useCases": {
           "en": [
-            "Attach a contact and metrics source/resource to a site",
-            "Enable or disable the monthly site report"
+            "Email a pending order confirmation to the customer",
+            "Resend branded order confirmation with invoice"
           ],
           "de": [
-            "Kontakt und Metrik-Quelle/-Ressource an eine Website hängen",
-            "Monatsbericht aktivieren oder deaktivieren"
+            "Bestellbestätigung an den Kunden senden",
+            "Gebrandete Bestellbestätigung mit Rechnung erneut senden"
           ]
         },
-        "category": "productivity"
+        "category": "commerce",
+        "faq": {
+          "en": [
+            {
+              "question": "Who receives the email?",
+              "answer": "The customer contact on the order (not a separate invoice recipient)."
+            },
+            {
+              "question": "Which agent sends it?",
+              "answer": "The executing agent is used as the sender."
+            }
+          ],
+          "de": [
+            {
+              "question": "Wer erhält die E-Mail?",
+              "answer": "Der Kundenkontakt der Bestellung (nicht ein separater Rechnungsempfänger)."
+            },
+            {
+              "question": "Welcher Agent sendet?",
+              "answer": "Der ausführende Agent wird als Absender verwendet."
+            }
+          ]
+        }
       }
     },
     {

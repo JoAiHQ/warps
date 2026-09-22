@@ -4,8 +4,8 @@
   "repo": "JoAiHQ/warps",
   "branch": "main",
   "network": "mainnet",
-  "commitSha": "c47c1a44233b70d4ee46f06fbc1e989a749ee03f",
-  "generatedAt": "2026-09-21T22:11:49.137Z",
+  "commitSha": "7696614daa0683562b2f5133a964e8e285795dd8",
+  "generatedAt": "2026-09-22T20:02:17.605Z",
   "warps": [
     {
       "key": "arbitrum:omniset-deposit-arbitrum",
@@ -39804,8 +39804,8 @@
       "identifier": "@appointment-availability",
       "alias": "appointment-availability",
       "chain": "none",
-      "hash": "a2573d008c446e669dd59e5b6eb62688106c224d9de5e6a406055919a8f3c073",
-      "checksum": "a2573d008c446e669dd59e5b6eb62688106c224d9de5e6a406055919a8f3c073",
+      "hash": "3f4da0cf2416d5a56901fa774c2fcdeaaa5017988ba5e8a5b4a0b9181e80fa72",
+      "checksum": "3f4da0cf2416d5a56901fa774c2fcdeaaa5017988ba5e8a5b4a0b9181e80fa72",
       "name": "Appointments: Availability",
       "title": {
         "en": "Appointment availability",
@@ -39869,7 +39869,7 @@
           "ro": "Colecteaza detaliile rezervarii si intoarce disponibilitatea din calendarul agentului curent.",
           "it": "Collect booking details and return appointment availability from the current agent calendar."
         },
-        "bot": "REQUIRED first step for any appointment booking. Before invoking, ask the user what time window works for them — never assume a time. Do not create calendar events directly; that bypasses availability checks, policy rules, and attendee tracking. Collect the purpose, their preferred time window, name, and timezone. Convert relative dates to exact ISO datetimes before submitting.",
+        "bot": "REQUIRED first step for any appointment booking. Do not create calendar events directly; that bypasses availability checks, policy rules, and attendee tracking. Collect purpose, preferred time, timezone, and attendee contacts. Convert relative dates to exact ISO datetimes with an explicit year (use the current year/next occurrence — never a past year). If the user agrees on a specific time (e.g. 'Wednesday Oct 7 at 11:00'), set windowStart to that exact datetime and windowEnd to start + durationMinutes — do NOT expand to a full day or next-day midnight. Only use a broad day/range window when the user is still flexible. Prefer contactIds from CRM (find-or-create / list contacts first); use attendeeName only as a fallback when no contacts exist yet.",
         "vars": {
           "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
           "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
@@ -39921,7 +39921,7 @@
                   "ro": "Cea mai devreme ora acceptata de inceput in format ISO",
                   "it": "The earliest acceptable start time in ISO format"
                 },
-                "bot": "Earliest acceptable appointment start in ISO 8601 format, for example 2026-04-03T09:00:00Z.",
+                "bot": "Earliest acceptable appointment start in ISO 8601 with time of day (never date-only / midnight unless the user said 'anytime that day'). For an agreed slot like 11:00, use that exact time, e.g. 2026-10-07T11:00:00+02:00. Verify the weekday matches the date.",
                 "type": "datetime",
                 "source": "field",
                 "required": true
@@ -39937,7 +39937,7 @@
                   "ro": "Cel mai tarziu sfarsit acceptat al intervalului in format ISO",
                   "it": "The latest acceptable end of the scheduling window in ISO format"
                 },
-                "bot": "End of the acceptable scheduling window in ISO 8601 format, for example 2026-04-03T17:00:00Z.",
+                "bot": "End of the acceptable scheduling window in ISO 8601 with time of day. For an agreed slot, set this to windowStart + durationMinutes (e.g. 11:00 start / 30 min → 11:30 same day). Do not push end to the next calendar day unless the user asked for a multi-day search window.",
                 "type": "datetime",
                 "source": "field",
                 "required": true
@@ -39960,6 +39960,22 @@
                 "default": 30
               },
               {
+                "name": "Contact IDs",
+                "as": "contactIds",
+                "description": {
+                  "en": "CRM contact IDs for the attendees",
+                  "de": "CRM-Kontakt-IDs der Teilnehmer",
+                  "fr": "IDs des contacts CRM des participants",
+                  "es": "IDs de los contactos CRM de los asistentes",
+                  "ro": "ID-urile contactelor CRM ale participantilor",
+                  "it": "CRM contact IDs for the attendees"
+                },
+                "bot": "Preferred. Pass CRM contact hashids as a JSON array. Resolve via find-or-create / list first; never invent duplicates.",
+                "type": "json",
+                "source": "field",
+                "required": false
+              },
+              {
                 "name": "Attendee Name",
                 "as": "attendeeName",
                 "description": {
@@ -39970,7 +39986,7 @@
                   "ro": "Numele participantului sau al solicitantului",
                   "it": "The attendee or requester name"
                 },
-                "bot": "The name of the person requesting or attending the appointment.",
+                "bot": "Fallback only when contactIds is unavailable. Prefer contactIds.",
                 "type": "string",
                 "source": "field",
                 "required": false
@@ -39986,7 +40002,7 @@
                   "ro": "E-mailul participantului sau al solicitantului",
                   "it": "The attendee or requester email"
                 },
-                "bot": "The email address of the attendee if known.",
+                "bot": "Optional if contactIds is set (emails come from the contacts). Otherwise pass when known.",
                 "type": "string",
                 "source": "field",
                 "required": false
@@ -40079,6 +40095,7 @@
               "it": "So we know who to expect."
             },
             "inputs": [
+              "contactIds",
               "attendeeName",
               "attendeeEmail",
               "description"
@@ -40321,8 +40338,8 @@
       "identifier": "@appointment-book-confirm",
       "alias": "appointment-book-confirm",
       "chain": "none",
-      "hash": "e8ff6e6f52e00ff5f69bb5d48ee1c55f95e23c2f060cd6579f89f07ea4c6cc37",
-      "checksum": "e8ff6e6f52e00ff5f69bb5d48ee1c55f95e23c2f060cd6579f89f07ea4c6cc37",
+      "hash": "95dce34ecd7db38a5e2acfd3cb96823198f805fd628893a707ebd4e450ee25a3",
+      "checksum": "95dce34ecd7db38a5e2acfd3cb96823198f805fd628893a707ebd4e450ee25a3",
       "name": "Appointments: Book",
       "title": {
         "en": "Book appointment",
@@ -40386,7 +40403,7 @@
           "ro": "Rezerva un interval confirmat pentru agentul curent.",
           "it": "Book a confirmed appointment slot for the current agent."
         },
-        "bot": "Use this only after running appointment-availability and the user has explicitly chosen a slot from the results. Never substitute this with direct calendar event creation — that skips booking policy, overlap checks, and attendee tracking. Always refer to bookings as 'appointments', never 'meetings'. The attendee is the person you are talking to — use their name and email from context without asking. Build a descriptive title combining purpose and name (e.g. 'Consultation with Anna Schmidt'). Pass exact start and end times from the chosen slot.",
+        "bot": "Use this only after running appointment-availability and the user has explicitly chosen a slot from the results. Never substitute this with direct calendar event creation — that skips booking policy, overlap checks, and attendee tracking. Always refer to bookings as 'appointments', never 'meetings'. Prefer contactIds for attendees (resolve via CRM find-or-create / list — never invent duplicates). Fall back to attendeeName/email only when no contacts exist. Build a descriptive title combining purpose and name (e.g. 'Consultation with Anna Schmidt'). Pass exact start time from the chosen slot as scheduledAt.",
         "vars": {
           "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
           "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
@@ -40508,6 +40525,22 @@
                 "required": false
               },
               {
+                "name": "Contact IDs",
+                "as": "contactIds",
+                "description": {
+                  "en": "CRM contact IDs for the attendees",
+                  "de": "CRM-Kontakt-IDs der Teilnehmer",
+                  "fr": "IDs des contacts CRM des participants",
+                  "es": "IDs de los contactos CRM de los asistentes",
+                  "ro": "ID-urile contactelor CRM ale participantilor",
+                  "it": "CRM contact IDs for the attendees"
+                },
+                "bot": "Preferred. Pass CRM contact hashids as a JSON array. Resolve via find-or-create / list first; never invent duplicates.",
+                "type": "json",
+                "source": "field",
+                "required": false
+              },
+              {
                 "name": "Attendee Name",
                 "as": "attendeeName",
                 "description": {
@@ -40518,10 +40551,10 @@
                   "ro": "Numele complet al persoanei pentru care este programarea",
                   "it": "Full name of the person the appointment is for"
                 },
-                "bot": "Full name of the attendee.",
+                "bot": "Required when contactIds is missing. Prefer contactIds. When contactIds is set, name is optional (taken from the contacts).",
                 "type": "string",
                 "source": "field",
-                "required": true,
+                "required": false,
                 "default": "{{JOAI_SENDER_NAME}}",
                 "min": 2
               },
@@ -40536,7 +40569,7 @@
                   "ro": "E-mailul participantului",
                   "it": "The attendee email"
                 },
-                "bot": "Email address of the attendee if available.",
+                "bot": "Optional when contactIds is set. Otherwise pass when known for calendar invites.",
                 "type": "string",
                 "source": "field",
                 "required": false
@@ -40607,6 +40640,7 @@
               "it": "We'll send your confirmation here."
             },
             "inputs": [
+              "contactIds",
               "attendeeName",
               "attendeeEmail"
             ]
@@ -84803,8 +84837,8 @@
       "identifier": "@joai-document-list",
       "alias": "joai-document-list",
       "chain": "none",
-      "hash": "c8d8efc3b6b3a356b23a2129bb184106741017f9770dd970b76ad255f550bf39",
-      "checksum": "c8d8efc3b6b3a356b23a2129bb184106741017f9770dd970b76ad255f550bf39",
+      "hash": "d1c9752fb48a31fd9acc199a7bc0fca954e768e538808a43a5515c36900e19d6",
+      "checksum": "d1c9752fb48a31fd9acc199a7bc0fca954e768e538808a43a5515c36900e19d6",
       "name": "JoAi: List Documents",
       "title": {
         "en": "List documents",
@@ -84975,7 +85009,7 @@
             "it": "Documents loaded."
           }
         },
-        "ui": "https://raw.githubusercontent.com/JoAiHQ/warps/main/warps/joai/document-list/chatapp.259b44a2.dist.html"
+        "ui": "https://raw.githubusercontent.com/JoAiHQ/warps/main/warps/joai/document-list/chatapp.79eeba0a.dist.html"
       },
       "extras": {
         "keywords": {
@@ -95271,6 +95305,226 @@
         "ui": "https://raw.githubusercontent.com/JoAiHQ/warps/main/warps/joai/order-list/chatapp.80e580a8.dist.html"
       },
       "extras": null
+    },
+    {
+      "key": "none:joai-order-notify",
+      "identifier": "@joai-order-notify",
+      "alias": "joai-order-notify",
+      "chain": "none",
+      "hash": "7acdc072ae935f18445fdadba76ea74c660f553ccbfe855f11247011d4198f29",
+      "checksum": "7acdc072ae935f18445fdadba76ea74c660f553ccbfe855f11247011d4198f29",
+      "name": "JoAi: Notify Order Contact",
+      "title": {
+        "en": "Notify order contact",
+        "de": "Bestellkontakt benachrichtigen",
+        "fr": "Notifier le contact de la commande",
+        "es": "Notificar al contacto del pedido",
+        "it": "Notifica il contatto dell'ordine",
+        "ro": "Notifică contactul comenzii"
+      },
+      "description": {
+        "en": "Send the branded order confirmation email (with invoice when available) to the customer contact for a pending order. Runs as the executing agent.",
+        "de": "Sendet die gebrandete Bestellbestätigung (mit Rechnung, falls vorhanden) an den Kundenkontakt einer ausstehenden Bestellung. Läuft als ausführender Agent.",
+        "fr": "Envoie l'e-mail de confirmation de commande (avec facture si disponible) au contact client d'une commande en attente. S'exécute via l'agent.",
+        "es": "Envía el correo de confirmación del pedido (con factura si está disponible) al contacto del cliente de un pedido pendiente. Se ejecuta como el agente.",
+        "it": "Invia l'email di conferma ordine (con fattura se disponibile) al contatto cliente di un ordine in sospeso. Eseguito come agente.",
+        "ro": "Trimite emailul de confirmare a comenzii (cu factură dacă există) către contactul client al unei comenzi în așteptare. Rulează ca agentul executant."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: Notify Order Contact",
+        "title": {
+          "en": "Notify order contact",
+          "de": "Bestellkontakt benachrichtigen",
+          "fr": "Notifier le contact de la commande",
+          "es": "Notificar al contacto del pedido",
+          "it": "Notifica il contatto dell'ordine",
+          "ro": "Notifică contactul comenzii"
+        },
+        "description": {
+          "en": "Send the branded order confirmation email (with invoice when available) to the customer contact for a pending order. Runs as the executing agent.",
+          "de": "Sendet die gebrandete Bestellbestätigung (mit Rechnung, falls vorhanden) an den Kundenkontakt einer ausstehenden Bestellung. Läuft als ausführender Agent.",
+          "fr": "Envoie l'e-mail de confirmation de commande (avec facture si disponible) au contact client d'une commande en attente. S'exécute via l'agent.",
+          "es": "Envía el correo de confirmación del pedido (con factura si está disponible) al contacto del cliente de un pedido pendiente. Se ejecuta como el agente.",
+          "it": "Invia l'email di conferma ordine (con fattura se disponibile) al contatto cliente di un ordine in sospeso. Eseguito come agente.",
+          "ro": "Trimite emailul de confirmare a comenzii (cu factură dacă există) către contactul client al unei comenzi în așteptare. Rulează ca agentul executant."
+        },
+        "bot": "Use when the merchant wants to email the customer a branded order confirmation for a pending order. List orders first to resolve orderId. Prefer this over drafting a freeform contact message so the invoice PDF and shop branding stay intact. The executing agent is used as the sender.",
+        "vars": {
+          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+          "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Notify contact",
+              "de": "Kontakt benachrichtigen",
+              "fr": "Notifier le contact",
+              "es": "Notificar al contacto",
+              "it": "Notifica contatto",
+              "ro": "Notifică contactul"
+            },
+            "destination": {
+              "url": "https://api.joai.ai/v1/orders/{{orderId}}/send-confirmation",
+              "method": "POST",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+                "X-Team": "{{team}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Order ID",
+                "as": "orderId",
+                "description": {
+                  "en": "Hash ID of the order to notify about",
+                  "de": "Hash-ID der Bestellung"
+                },
+                "bot": "The order hash ID. List orders first if needed.",
+                "type": "string",
+                "position": "url:orderId",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Type",
+                "as": "type",
+                "description": {
+                  "en": "Notification type (currently only confirmation)",
+                  "de": "Benachrichtigungstyp (derzeit nur confirmation)"
+                },
+                "bot": "Use confirmation.",
+                "type": "string",
+                "source": "field",
+                "position": "payload:type",
+                "required": false,
+                "default": "confirmation"
+              },
+              {
+                "name": "Agent ID",
+                "as": "agentId",
+                "description": {
+                  "en": "Agent UUID used as the email sender",
+                  "de": "Agent-UUID als Absender der E-Mail"
+                },
+                "bot": "Defaults to the executing agent.",
+                "type": "string",
+                "source": "field",
+                "position": "payload:agentId",
+                "required": false,
+                "default": "{{JOAI_AGENT_UUID}}"
+              },
+              {
+                "name": "Team",
+                "as": "team",
+                "description": {
+                  "en": "Team slug for this action. Defaults to the current team.",
+                  "de": "Team-Slug. Standard: aktuelles Team."
+                },
+                "bot": "The slug of the team to operate on. Omit to use the current team.",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "default": "{{JOAI_TEAM_SLUG}}"
+              }
+            ]
+          }
+        ],
+        "messages": {
+          "success": {
+            "en": "Order confirmation sent.",
+            "de": "Bestellbestätigung gesendet."
+          },
+          "error": {
+            "en": "Failed to send order confirmation: {{MESSAGE}}",
+            "de": "Bestellbestätigung fehlgeschlagen: {{MESSAGE}}"
+          }
+        }
+      },
+      "extras": {
+        "keywords": {
+          "en": [
+            "notify contact",
+            "order confirmation email",
+            "send confirmation",
+            "pending order email",
+            "invoice email"
+          ],
+          "de": [
+            "Kontakt benachrichtigen",
+            "Bestellbestätigung",
+            "Bestätigung senden",
+            "ausstehende Bestellung",
+            "Rechnungs-E-Mail"
+          ]
+        },
+        "useCases": {
+          "en": [
+            "Email a pending order confirmation to the customer",
+            "Resend branded order confirmation with invoice"
+          ],
+          "de": [
+            "Bestellbestätigung an den Kunden senden",
+            "Gebrandete Bestellbestätigung mit Rechnung erneut senden"
+          ]
+        },
+        "category": "commerce",
+        "faq": {
+          "en": [
+            {
+              "question": "Who receives the email?",
+              "answer": "The customer contact on the order (not a separate invoice recipient)."
+            },
+            {
+              "question": "Which agent sends it?",
+              "answer": "The executing agent is used as the sender."
+            }
+          ],
+          "de": [
+            {
+              "question": "Wer erhält die E-Mail?",
+              "answer": "Der Kundenkontakt der Bestellung (nicht ein separater Rechnungsempfänger)."
+            },
+            {
+              "question": "Welcher Agent sendet?",
+              "answer": "Der ausführende Agent wird als Absender verwendet."
+            }
+          ]
+        }
+      }
     },
     {
       "key": "none:joai-order-pay",
