@@ -9,7 +9,7 @@
     "en": "Create an Instagram, X, Facebook, or LinkedIn draft. Leave the time empty for a draft, or set a time to schedule it into JoAi's queue (the publish job posts later).",
     "de": "Erstelle einen Instagram-, X-, Facebook- oder LinkedIn-Entwurf. Ohne Zeit bleibt es ein Entwurf; mit Zeit wird er in JoAis Warteschlange geplant (der Publish-Job postet später)."
   },
-  "bot": "Use this to draft or schedule an Instagram, X, Facebook, or LinkedIn post. Upload images with media_upload first when needed, then pass their IDs in order as a JSON array in media. Set scheduledAt in the team timezone when the user names a time - that only queues the post; JoAi's publish job posts to the network later. Omit scheduledAt to keep a draft. Platforms: instagram, x, facebook, linkedin.",
+  "bot": "Use this to draft or schedule an Instagram, X, Facebook, or LinkedIn post. Prefer exportId (Studio export UUID) or elementVariationId when posting Studio/element stills — JoAi copies those images onto the post and leaves the originals alone. Otherwise upload with media_upload and pass IDs in media. Do not combine media with exportId or elementVariationId. Set scheduledAt in the team timezone when the user names a time - that only queues the post; JoAi's publish job posts to the network later. Omit scheduledAt to keep a draft. Platforms: instagram, x, facebook, linkedin.",
   "vars": {
     "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
     "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
@@ -64,10 +64,34 @@
           "name": "Images",
           "as": "media",
           "description": {
-            "en": "Ordered team media IDs, e.g. [\"abc\",\"def\"]. Instagram: JPEG 1–10. X: JPEG/PNG/WEBP/GIF 0–4. Facebook: JPEG/PNG/WEBP/GIF 0–10. LinkedIn: JPEG/PNG/GIF 0–9. Upload with media_upload first.",
-            "de": "Team-Medien-IDs in Reihenfolge, z.B. [\"abc\",\"def\"]. Instagram: JPEG 1–10. X: JPEG/PNG/WEBP/GIF 0–4. Facebook: JPEG/PNG/WEBP/GIF 0–10. LinkedIn: JPEG/PNG/GIF 0–9. Zuerst mit media_upload hochladen."
+            "en": "Ordered team media IDs, e.g. [\"abc\",\"def\"]. Instagram: JPEG 1–10. X: JPEG/PNG/WEBP/GIF 0–4. Facebook: JPEG/PNG/WEBP/GIF 0–10. LinkedIn: JPEG/PNG/GIF 0–9. Upload with media_upload first. Do not combine with exportId or elementVariationId.",
+            "de": "Team-Medien-IDs in Reihenfolge, z.B. [\"abc\",\"def\"]. Instagram: JPEG 1–10. X: JPEG/PNG/WEBP/GIF 0–4. Facebook: JPEG/PNG/WEBP/GIF 0–10. LinkedIn: JPEG/PNG/GIF 0–9. Zuerst mit media_upload hochladen. Nicht zusammen mit exportId oder elementVariationId."
           },
-          "bot": "JSON array of media IDs from media_upload, in order. Optional for X, Facebook, and LinkedIn text-only posts.",
+          "bot": "JSON array of media IDs from media_upload, in order. Optional for X, Facebook, and LinkedIn text-only posts. Mutually exclusive with exportId and elementVariationId. JoAi copies media onto the post.",
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Studio export",
+          "as": "exportId",
+          "description": {
+            "en": "Studio export UUID. Copies still images from that export onto the post. Mutually exclusive with media and elementVariationId.",
+            "de": "Studio-Export-UUID. Kopiert Standbilder aus dem Export auf den Post. Nicht zusammen mit media oder elementVariationId."
+          },
+          "bot": "UUID from studio_export / project export. Use instead of media when posting Studio stills.",
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Element variation",
+          "as": "elementVariationId",
+          "description": {
+            "en": "Element variation ID. Copies the variation images (primary first) onto the post. Mutually exclusive with media and exportId.",
+            "de": "Element-Variation-ID. Kopiert die Variationsbilder (Primär zuerst) auf den Post. Nicht zusammen mit media oder exportId."
+          },
+          "bot": "Hashid from list_element_variations / generate_element_variation. Use instead of media when posting element stills.",
           "type": "string",
           "source": "field",
           "required": false
