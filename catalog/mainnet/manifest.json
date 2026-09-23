@@ -4,8 +4,8 @@
   "repo": "JoAiHQ/warps",
   "branch": "main",
   "network": "mainnet",
-  "commitSha": "7696614daa0683562b2f5133a964e8e285795dd8",
-  "generatedAt": "2026-09-22T20:02:17.605Z",
+  "commitSha": "818880fe16c68233ae3e7c1a56f51f487b0748df",
+  "generatedAt": "2026-09-23T13:59:13.541Z",
   "warps": [
     {
       "key": "arbitrum:omniset-deposit-arbitrum",
@@ -41965,8 +41965,8 @@
       "identifier": "@appointment-policy-upsert",
       "alias": "appointment-policy-upsert",
       "chain": "none",
-      "hash": "cae5ccc04424bb735063793a891604605da594f2400252048ec07885ffb3f5a3",
-      "checksum": "cae5ccc04424bb735063793a891604605da594f2400252048ec07885ffb3f5a3",
+      "hash": "8901aff59d5be2974245f9a04885414ea3317e14fb6443c0c5b3fc39a66d7afb",
+      "checksum": "8901aff59d5be2974245f9a04885414ea3317e14fb6443c0c5b3fc39a66d7afb",
       "name": "Appointments: Upsert Policy",
       "title": {
         "en": "Update policy",
@@ -42030,7 +42030,7 @@
           "ro": "Salveaza politica de programari a agentului tau. Configureaza fusul orar, programul, intervalele sloturilor, timpii tampon, timpul minim de preaviz si serviciile disponibile.",
           "it": "Save the appointment booking policy for your agent. Configure timezone, office hours, slot intervals, buffer times, minimum notice periods, and available services."
         },
-        "bot": "Use this when the user wants to save appointment configuration changes such as timezone, availability, opening-hours synchronization, slot interval, buffer, notice period, or service settings. To keep hours synchronized with a selected native place, pass sync with enabled true after the place is selected; the source comes from the team place, not this input.",
+        "bot": "Use this when the user wants to save appointment configuration changes such as active (booking on/off), timezone, availability, opening-hours synchronization, slot interval, buffer, notice period, or service settings. Pass active false to keep hours/sync without online booking. To keep hours synchronized with a selected native place, pass sync with enabled true after the place is selected; the source comes from the team place, not this input.",
         "vars": {
           "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG|Team identifier"
         },
@@ -42064,6 +42064,17 @@
                 "description": {
                   "en": "Team slug to configure. Defaults to the current team.",
                   "de": "Team-Slug, das konfiguriert wird. Standardmäßig das aktuelle Team."
+                }
+              },
+              {
+                "name": "Active",
+                "as": "active",
+                "type": "boolean",
+                "source": "field",
+                "required": false,
+                "description": {
+                  "en": "Whether online appointment booking is enabled. Keep false to serve opening hours / sync without exposing booking. Does not disable opening-hours synchronization.",
+                  "de": "Ob Online-Terminbuchung aktiv ist. False behält Öffnungszeiten/Sync ohne Buchung. Deaktiviert die Öffnungszeiten-Synchronisation nicht."
                 }
               },
               {
@@ -105899,8 +105910,8 @@
       "identifier": "@joai-social-post-create",
       "alias": "joai-social-post-create",
       "chain": "none",
-      "hash": "f2f7e84ffe6858068157d0938b5b3a5861628fccd2a9ce7b06400e6c628d2441",
-      "checksum": "f2f7e84ffe6858068157d0938b5b3a5861628fccd2a9ce7b06400e6c628d2441",
+      "hash": "f940c9bac754275ae6856e22a854fa349657e7fb6f7d8be5f4e9d795c6bc0882",
+      "checksum": "f940c9bac754275ae6856e22a854fa349657e7fb6f7d8be5f4e9d795c6bc0882",
       "name": "JoAi: Create Social Post",
       "title": {
         "en": "Schedule a social post",
@@ -105952,7 +105963,7 @@
           "en": "Create an Instagram, X, Facebook, or LinkedIn draft. Leave the time empty for a draft, or set a time to schedule it into JoAi's queue (the publish job posts later).",
           "de": "Erstelle einen Instagram-, X-, Facebook- oder LinkedIn-Entwurf. Ohne Zeit bleibt es ein Entwurf; mit Zeit wird er in JoAis Warteschlange geplant (der Publish-Job postet später)."
         },
-        "bot": "Use this to draft or schedule an Instagram, X, Facebook, or LinkedIn post. Upload images with media_upload first when needed, then pass their IDs in order as a JSON array in media. Set scheduledAt in the team timezone when the user names a time - that only queues the post; JoAi's publish job posts to the network later. Omit scheduledAt to keep a draft. Platforms: instagram, x, facebook, linkedin.",
+        "bot": "Use this to draft or schedule an Instagram, X, Facebook, or LinkedIn post. Prefer exportId (Studio export UUID) or elementVariationId when posting Studio/element stills — JoAi copies those images onto the post and leaves the originals alone. Otherwise upload with media_upload and pass IDs in media. Do not combine media with exportId or elementVariationId. Set scheduledAt in the team timezone when the user names a time - that only queues the post; JoAi's publish job posts to the network later. Omit scheduledAt to keep a draft. Platforms: instagram, x, facebook, linkedin.",
         "vars": {
           "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
           "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
@@ -106007,10 +106018,34 @@
                 "name": "Images",
                 "as": "media",
                 "description": {
-                  "en": "Ordered team media IDs, e.g. [\"abc\",\"def\"]. Instagram: JPEG 1–10. X: JPEG/PNG/WEBP/GIF 0–4. Facebook: JPEG/PNG/WEBP/GIF 0–10. LinkedIn: JPEG/PNG/GIF 0–9. Upload with media_upload first.",
-                  "de": "Team-Medien-IDs in Reihenfolge, z.B. [\"abc\",\"def\"]. Instagram: JPEG 1–10. X: JPEG/PNG/WEBP/GIF 0–4. Facebook: JPEG/PNG/WEBP/GIF 0–10. LinkedIn: JPEG/PNG/GIF 0–9. Zuerst mit media_upload hochladen."
+                  "en": "Ordered team media IDs, e.g. [\"abc\",\"def\"]. Instagram: JPEG 1–10. X: JPEG/PNG/WEBP/GIF 0–4. Facebook: JPEG/PNG/WEBP/GIF 0–10. LinkedIn: JPEG/PNG/GIF 0–9. Upload with media_upload first. Do not combine with exportId or elementVariationId.",
+                  "de": "Team-Medien-IDs in Reihenfolge, z.B. [\"abc\",\"def\"]. Instagram: JPEG 1–10. X: JPEG/PNG/WEBP/GIF 0–4. Facebook: JPEG/PNG/WEBP/GIF 0–10. LinkedIn: JPEG/PNG/GIF 0–9. Zuerst mit media_upload hochladen. Nicht zusammen mit exportId oder elementVariationId."
                 },
-                "bot": "JSON array of media IDs from media_upload, in order. Optional for X, Facebook, and LinkedIn text-only posts.",
+                "bot": "JSON array of media IDs from media_upload, in order. Optional for X, Facebook, and LinkedIn text-only posts. Mutually exclusive with exportId and elementVariationId. JoAi copies media onto the post.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Studio export",
+                "as": "exportId",
+                "description": {
+                  "en": "Studio export UUID. Copies still images from that export onto the post. Mutually exclusive with media and elementVariationId.",
+                  "de": "Studio-Export-UUID. Kopiert Standbilder aus dem Export auf den Post. Nicht zusammen mit media oder elementVariationId."
+                },
+                "bot": "UUID from studio_export / project export. Use instead of media when posting Studio stills.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Element variation",
+                "as": "elementVariationId",
+                "description": {
+                  "en": "Element variation ID. Copies the variation images (primary first) onto the post. Mutually exclusive with media and exportId.",
+                  "de": "Element-Variation-ID. Kopiert die Variationsbilder (Primär zuerst) auf den Post. Nicht zusammen mit media oder exportId."
+                },
+                "bot": "Hashid from list_element_variations / generate_element_variation. Use instead of media when posting element stills.",
                 "type": "string",
                 "source": "field",
                 "required": false
@@ -106673,8 +106708,8 @@
       "identifier": "@joai-studio-export",
       "alias": "joai-studio-export",
       "chain": "none",
-      "hash": "1e3d27c7da18f17b4ab514bc3a5df8d9ce91df5dda398602af02d70c2a6edd08",
-      "checksum": "1e3d27c7da18f17b4ab514bc3a5df8d9ce91df5dda398602af02d70c2a6edd08",
+      "hash": "74e927e091bb170dba62657033c9d4b8f62f19bedd5d2e74b045f1870e76237e",
+      "checksum": "74e927e091bb170dba62657033c9d4b8f62f19bedd5d2e74b045f1870e76237e",
       "name": "JoAi: Studio Export",
       "title": {
         "en": "Export studio project",
@@ -106685,12 +106720,12 @@
         "it": "Export studio project"
       },
       "description": {
-        "en": "Export the final asset from a studio project to a permanent shareable URL.",
-        "de": "Exportiere das fertige Asset eines Studio-Projekts zu einer dauerhaften, teilbaren URL.",
-        "es": "Export the final asset from a studio project to a permanent shareable URL.",
-        "fr": "Export the final asset from a studio project to a permanent shareable URL.",
-        "ro": "Export the final asset from a studio project to a permanent shareable URL.",
-        "it": "Export the final asset from a studio project to a permanent shareable URL."
+        "en": "Export a composed studio project to a permanent shareable URL (video/clips MP4, or image/slideshow stills).",
+        "de": "Exportiere ein fertiges Studio-Projekt zu einer dauerhaften, teilbaren URL (Video/Clips als MP4, oder Bild/Slideshow als Stills).",
+        "es": "Export a composed studio project to a permanent shareable URL (video/clips MP4, or image/slideshow stills).",
+        "fr": "Export a composed studio project to a permanent shareable URL (video/clips MP4, or image/slideshow stills).",
+        "ro": "Export a composed studio project to a permanent shareable URL (video/clips MP4, or image/slideshow stills).",
+        "it": "Export a composed studio project to a permanent shareable URL (video/clips MP4, or image/slideshow stills)."
       },
       "preview": null,
       "creator": "github:JoAiHQ/warps",
@@ -106735,14 +106770,14 @@
           "it": "Export studio project"
         },
         "description": {
-          "en": "Export the final asset from a studio project to a permanent shareable URL.",
-          "de": "Exportiere das fertige Asset eines Studio-Projekts zu einer dauerhaften, teilbaren URL.",
-          "es": "Export the final asset from a studio project to a permanent shareable URL.",
-          "fr": "Export the final asset from a studio project to a permanent shareable URL.",
-          "ro": "Export the final asset from a studio project to a permanent shareable URL.",
-          "it": "Export the final asset from a studio project to a permanent shareable URL."
+          "en": "Export a composed studio project to a permanent shareable URL (video/clips MP4, or image/slideshow stills).",
+          "de": "Exportiere ein fertiges Studio-Projekt zu einer dauerhaften, teilbaren URL (Video/Clips als MP4, oder Bild/Slideshow als Stills).",
+          "es": "Export a composed studio project to a permanent shareable URL (video/clips MP4, or image/slideshow stills).",
+          "fr": "Export a composed studio project to a permanent shareable URL (video/clips MP4, or image/slideshow stills).",
+          "ro": "Export a composed studio project to a permanent shareable URL (video/clips MP4, or image/slideshow stills).",
+          "it": "Export a composed studio project to a permanent shareable URL (video/clips MP4, or image/slideshow stills)."
         },
-        "bot": "Use this when the user wants to finalize and export a studio project. The project must be in 'composed' status. Returns the public export URL and asset download links.",
+        "bot": "Use this when the user wants to finalize and export a studio project. The project must be in 'composed' status. Returns the public export URL and asset download links (MP4 for video/clips, stills for image/slideshow).",
         "vars": {
           "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
           "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
@@ -106907,8 +106942,8 @@
       "identifier": "@joai-studio-produce",
       "alias": "joai-studio-produce",
       "chain": "none",
-      "hash": "6546483ec075623cba48f922e86b43cc6399b13536f6137ba0c7c1f9087f8d96",
-      "checksum": "6546483ec075623cba48f922e86b43cc6399b13536f6137ba0c7c1f9087f8d96",
+      "hash": "fd882017ab76c406cd92e0266ee045e9e892f8bac1325dd01144907caf477dff",
+      "checksum": "fd882017ab76c406cd92e0266ee045e9e892f8bac1325dd01144907caf477dff",
       "name": "JoAi: Studio Produce",
       "title": {
         "en": "Produce studio content",
@@ -106976,7 +107011,7 @@
           "ro": "Trigger your agent to produce content for a studio project — generate text, images, or other creative output based on instructions.",
           "it": "Trigger your agent to produce content for a studio project — generate text, images, or other creative output based on instructions."
         },
-        "bot": "Use this when the user wants to generate or produce content for a specific studio project. Ask for the project ID and what to produce.",
+        "bot": "Use this when the user wants to generate or produce content for a specific studio project. Ask for the project ID. Video projects produce an MP4; image and slideshow projects produce stills only (no MP4); clips projects extract from source video.",
         "vars": {
           "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
           "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
@@ -107039,8 +107074,8 @@
       "identifier": "@joai-studio-send",
       "alias": "joai-studio-send",
       "chain": "none",
-      "hash": "de10fda3de2b39a2796613932c6ef95344ccb1ed686c9f928e12c29776158076",
-      "checksum": "de10fda3de2b39a2796613932c6ef95344ccb1ed686c9f928e12c29776158076",
+      "hash": "6b9802ea10ac7c043307135054b5b28bc43246b597809be4b3c07499196c2dc9",
+      "checksum": "6b9802ea10ac7c043307135054b5b28bc43246b597809be4b3c07499196c2dc9",
       "name": "JoAi: Studio Send",
       "title": {
         "en": "Send to Studio",
@@ -107108,7 +107143,7 @@
           "ro": "Send a message or instruction to the media studio to build or update a project.",
           "it": "Send a message or instruction to the media studio to build or update a project."
         },
-        "bot": "Use this when the user wants to create or continue a studio project — generative video, slideshow, or source-video clipping.",
+        "bot": "Use this when the user wants to create or continue a studio project — generative video, single image, slideshow stills, or source-video clipping.",
         "vars": {
           "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
           "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
@@ -107169,14 +107204,14 @@
                 "name": "Output Type",
                 "as": "outputType",
                 "description": {
-                  "en": "Primary output type: video, slideshow, or clips",
-                  "de": "Primärer Ausgabetyp: video, slideshow oder clips",
-                  "es": "Primary output type: video, slideshow, or clips",
-                  "fr": "Primary output type: video, slideshow, or clips",
-                  "ro": "Primary output type: video, slideshow, or clips",
-                  "it": "Primary output type: video, slideshow, or clips"
+                  "en": "Primary output type: video, image, slideshow, or clips",
+                  "de": "Primärer Ausgabetyp: video, image, slideshow oder clips",
+                  "es": "Primary output type: video, image, slideshow, or clips",
+                  "fr": "Primary output type: video, image, slideshow, or clips",
+                  "ro": "Primary output type: video, image, slideshow, or clips",
+                  "it": "Primary output type: video, image, slideshow, or clips"
                 },
-                "bot": "Use 'clips' to extract short clips from a source video. Use 'video' for generative video. Use 'slideshow' for image sequences.",
+                "bot": "Use 'image' for a single social still. Use 'slideshow' for multiple stills. Use 'video' for generative video. Use 'clips' to extract short clips from a source video.",
                 "type": "string",
                 "source": "field",
                 "required": false
