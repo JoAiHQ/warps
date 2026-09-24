@@ -9,7 +9,7 @@
     "en": "Queue a draft to publish. Set a time, or leave it empty to queue it for the next job run. The network post happens later via JoAi's publish job - this warp only schedules.",
     "de": "Plane einen Entwurf zur Veröffentlichung. Mit Zeit oder leer für den nächsten Job-Lauf. Der Netzwerk-Post kommt später über JoAis Publish-Job - dieser Warp plant nur."
   },
-  "bot": "Use after a draft exists. This warp only schedules into JoAi's queue; PublishSocialPostJob posts to the network later. scheduledAt is optional - omit it to queue for immediate publish (still via the job, not in this warp). Interpret unnamed times in the team timezone.",
+  "bot": "Use after a draft exists. This warp only schedules into JoAi's queue; PublishSocialPostJob posts to the network later. scheduledAt is optional - omit it to queue for immediate publish (still via the job, not in this warp). Interpret unnamed times in the team timezone. The response includes shareUrl for a public preview the user can review.",
   "vars": {
     "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
     "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
@@ -62,13 +62,19 @@
           "required": false,
           "default": "{{JOAI_TEAM_SLUG}}"
         }
-      ]
+      ],
+      "output": {
+        "id": "out.data.id",
+        "status": "out.data.status",
+        "scheduledAt": "out.data.scheduledAt",
+        "shareUrl": "out.data.shareUrl"
+      }
     }
   ],
   "messages": {
     "success": {
-      "en": "Social post scheduled. JoAi will publish it when due.",
-      "de": "Social-Post geplant. JoAi veröffentlicht ihn zum Termin."
+      "en": "Social post scheduled. Preview: {{shareUrl}}. JoAi will publish it when due.",
+      "de": "Social-Post geplant. Vorschau: {{shareUrl}}. JoAi veröffentlicht ihn zum Termin."
     }
   }
 }
