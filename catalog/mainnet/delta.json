@@ -4,25 +4,817 @@
   "repo": "JoAiHQ/warps",
   "branch": "main",
   "network": "mainnet",
-  "commitSha": "f8832401852d95cdedb950af159b52957f8b0da1",
-  "committedAt": "2026-09-24T11:25:13.750Z",
-  "generatedAt": "2026-09-24T11:25:15.963Z",
+  "commitSha": "c8d5ab79ad337d5c4ab17581845558d63b1e8eab",
+  "committedAt": "2026-09-24T13:53:54.510Z",
+  "generatedAt": "2026-09-24T13:53:57.540Z",
   "upserts": [
     {
-      "key": "none:joai-update-create",
-      "identifier": "@joai-update-create",
-      "alias": "joai-update-create",
+      "key": "none:appointment-book-confirm",
+      "identifier": "@appointment-book-confirm",
+      "alias": "appointment-book-confirm",
       "chain": "none",
-      "hash": "763202093d267fd895f5dc15bec90a436c6fa3e79306ab0c8b096fa162c99c43",
-      "checksum": "763202093d267fd895f5dc15bec90a436c6fa3e79306ab0c8b096fa162c99c43",
-      "name": "JoAi: Create Update",
+      "hash": "e288e495e1e156e33caaeb360414a5a91bda77a5a6cf93b12d6e86e0ed7f24d2",
+      "checksum": "e288e495e1e156e33caaeb360414a5a91bda77a5a6cf93b12d6e86e0ed7f24d2",
+      "name": "Appointments: Book",
       "title": {
-        "en": "Post an update",
-        "de": "Update veröffentlichen"
+        "en": "Book appointment",
+        "de": "Termin buchen",
+        "fr": "Confirmer le rendez-vous",
+        "es": "Reservar cita",
+        "ro": "Confirma programarea",
+        "it": "Book appointment"
       },
       "description": {
-        "en": "Post a deal, event, news, or article-style update for your team so it can appear in connected websites, directories, and public feeds. Supports scheduled publishing windows, links, media, custom props, and draft or published status for local business communication.",
-        "de": "Veröffentliche ein Angebot, Event, News oder einen Artikel für dein Team, damit sie auf verbundenen Websites, in Verzeichnissen und öffentlichen Feeds erscheinen kann. Unterstützt geplante Zeiträume, Links sowie Entwurf- oder Veröffentlichungsstatus für lokale Betriebsinfos."
+        "en": "Book a confirmed appointment slot for the current agent.",
+        "de": "Bucht einen bestaetigten Termin fuer den aktuellen Agenten.",
+        "fr": "Confirmez un creneau de rendez-vous pour l agent actuel.",
+        "es": "Reserva un horario ya confirmado para el agente actual.",
+        "ro": "Rezerva un interval confirmat pentru agentul curent.",
+        "it": "Book a confirmed appointment slot for the current agent."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "873defa13190da1a0124161ec46673a00290697aaea9851a2b8fc027482adac9",
+        "slug": "appointment",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "Appointment",
+        "description": {
+          "en": "Appointment booking and intake flows for service businesses.",
+          "de": "Terminbuchung und Intake-Abläufe für Dienstleistungsunternehmen.",
+          "fr": "Prise de rendez-vous et parcours de reservation pour les entreprises de services.",
+          "es": "Reservas de citas y flujos de atencion para negocios de servicios.",
+          "ro": "Programari si fluxuri de preluare pentru afaceri de servicii."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "Appointments: Book",
+        "title": {
+          "en": "Book appointment",
+          "de": "Termin buchen",
+          "fr": "Confirmer le rendez-vous",
+          "es": "Reservar cita",
+          "ro": "Confirma programarea",
+          "it": "Book appointment"
+        },
+        "description": {
+          "en": "Book a confirmed appointment slot for the current agent.",
+          "de": "Bucht einen bestaetigten Termin fuer den aktuellen Agenten.",
+          "fr": "Confirmez un creneau de rendez-vous pour l agent actuel.",
+          "es": "Reserva un horario ya confirmado para el agente actual.",
+          "ro": "Rezerva un interval confirmat pentru agentul curent.",
+          "it": "Book a confirmed appointment slot for the current agent."
+        },
+        "bot": "Use this only after running appointment-availability and the user has explicitly chosen a slot from the results. Never substitute this with direct calendar event creation — that skips booking policy, overlap checks, and attendee tracking. Always refer to bookings as 'appointments', never 'meetings'. Prefer contactIds for attendees (resolve via CRM find-or-create / list — never invent duplicates). Fall back to attendeeName/email only when no contacts exist. Build a descriptive title combining purpose and name (e.g. 'Consultation with Anna Schmidt'). Pass exact start time from the chosen slot as scheduledAt.",
+        "vars": {
+          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Book now",
+              "de": "Jetzt buchen",
+              "fr": "Confirmer maintenant",
+              "es": "Reservar ahora",
+              "ro": "Rezerva acum",
+              "it": "Book now"
+            },
+            "destination": {
+              "url": "https://api.joai.ai/v1/agents/{{JOAI_AGENT_UUID}}/appointments/book",
+              "method": "POST",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Appointment Title",
+                "as": "title",
+                "description": {
+                  "en": "Descriptive title shown on the calendar event",
+                  "de": "Aussagekräftiger Titel für den Kalendereintrag",
+                  "fr": "Titre descriptif affiche dans l evenement du calendrier",
+                  "es": "Titulo descriptivo que aparecera en el calendario",
+                  "ro": "Titlu descriptiv afisat in evenimentul din calendar",
+                  "it": "Descriptive title shown on the calendar event"
+                },
+                "bot": "Required. A descriptive title that identifies the appointment at a glance. Always combine the meeting purpose AND the attendee name, e.g. 'Consultation with Anna Schmidt', 'Demo call with Acme Corp', 'Tax review with John Doe'. Never use generic titles like 'Appointment' or 'Meeting'.",
+                "type": "string",
+                "source": "field",
+                "required": true,
+                "min": 3
+              },
+              {
+                "name": "Scheduled At",
+                "as": "scheduledAt",
+                "description": {
+                  "en": "Exact appointment start in ISO format",
+                  "de": "Exakter Startzeitpunkt im ISO-Format",
+                  "fr": "Heure exacte de debut du rendez-vous au format ISO",
+                  "es": "Hora exacta de inicio en formato ISO",
+                  "ro": "Ora exacta de inceput a programarii in format ISO",
+                  "it": "Exact appointment start in ISO format"
+                },
+                "bot": "Exact confirmed start in ISO 8601 with numeric offset (e.g. 2026-04-21T19:00:00+02:00). Prefer copying startAt from availability. Never invent a trailing Z for a local wall-clock time.",
+                "type": "string",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Timezone",
+                "as": "timezone",
+                "description": {
+                  "en": "Appointment timezone",
+                  "de": "Zeitzone des Termins",
+                  "fr": "Fuseau horaire du rendez-vous",
+                  "es": "Zona horaria de la cita",
+                  "ro": "Fusul orar al programarii",
+                  "it": "Appointment timezone"
+                },
+                "bot": "Timezone identifier like Europe/Vienna, America/New_York, or UTC.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Service Slug",
+                "as": "serviceSlug",
+                "description": {
+                  "en": "Optional configured service identifier",
+                  "de": "Optionaler Bezeichner fuer einen konfigurierten Service",
+                  "fr": "Identifiant facultatif d un service configure",
+                  "es": "Identificador opcional de un servicio configurado",
+                  "ro": "Identificator optional pentru un serviciu configurat",
+                  "it": "Optional configured service identifier"
+                },
+                "bot": "If the booking belongs to a configured service, pass the same service slug used for availability.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Routed Agent UUID",
+                "as": "routedAgentUuid",
+                "description": {
+                  "en": "Optional staff agent UUID for routed bookings",
+                  "de": "Optionale UUID des Mitarbeiter-Agenten fuer geroutete Buchungen",
+                  "fr": "UUID facultatif de l agent affecte pour les reservations routees",
+                  "es": "UUID opcional del agente asignado para reservas enrutadas",
+                  "ro": "UUID optional al agentului alocat pentru rezervari directionate",
+                  "it": "Optional staff agent UUID for routed bookings"
+                },
+                "bot": "If appointment availability returned a specific agentUuid for the selected slot, pass it here unchanged.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Appointment Request ID",
+                "as": "appointmentRequestId",
+                "description": {
+                  "en": "Optional linked appointment request id",
+                  "de": "Optionale verknuepfte Terminanfrage-ID",
+                  "fr": "ID facultatif de la demande de rendez-vous liee",
+                  "es": "ID opcional de la solicitud de cita vinculada",
+                  "ro": "ID optional al cererii de programare asociate",
+                  "it": "Optional linked appointment request id"
+                },
+                "bot": "If this booking is fulfilling a previously created appointment request, pass that request id.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Contact IDs",
+                "as": "contactIds",
+                "description": {
+                  "en": "CRM contact IDs for the attendees",
+                  "de": "CRM-Kontakt-IDs der Teilnehmer",
+                  "fr": "IDs des contacts CRM des participants",
+                  "es": "IDs de los contactos CRM de los asistentes",
+                  "ro": "ID-urile contactelor CRM ale participantilor",
+                  "it": "CRM contact IDs for the attendees"
+                },
+                "bot": "Preferred. Pass CRM contact hashids as a JSON array. Resolve via find-or-create / list first; never invent duplicates.",
+                "type": "json",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Attendee Name",
+                "as": "attendeeName",
+                "description": {
+                  "en": "Full name of the person the appointment is for",
+                  "de": "Vollständiger Name der Person, für die der Termin ist",
+                  "fr": "Nom complet de la personne pour laquelle le rendez-vous est pris",
+                  "es": "Nombre completo de la persona para la que es la cita",
+                  "ro": "Numele complet al persoanei pentru care este programarea",
+                  "it": "Full name of the person the appointment is for"
+                },
+                "bot": "Required when contactIds is missing. Prefer contactIds. When contactIds is set, name is optional (taken from the contacts).",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "default": "{{JOAI_SENDER_NAME}}",
+                "min": 2
+              },
+              {
+                "name": "Attendee Email",
+                "as": "attendeeEmail",
+                "description": {
+                  "en": "The attendee email",
+                  "de": "E-Mail des Teilnehmers",
+                  "fr": "E-mail du participant",
+                  "es": "Correo de la persona asistente",
+                  "ro": "E-mailul participantului",
+                  "it": "The attendee email"
+                },
+                "bot": "Optional when contactIds is set. Otherwise pass when known for calendar invites.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Notes",
+                "as": "description",
+                "description": {
+                  "en": "Optional notes or agenda",
+                  "de": "Optionale Notizen oder Agenda",
+                  "fr": "Notes ou ordre du jour facultatifs",
+                  "es": "Notas o agenda opcionales",
+                  "ro": "Note sau agenda optionale",
+                  "it": "Optional notes or agenda"
+                },
+                "bot": "Optional notes, context, or agenda to include with the appointment.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Conference Provider",
+                "as": "conferenceProvider",
+                "description": {
+                  "en": "Optional remote meeting provider",
+                  "de": "Optionaler Anbieter fuer Videotermine",
+                  "fr": "Fournisseur facultatif pour la reunion a distance",
+                  "es": "Proveedor opcional para la reunion remota",
+                  "ro": "Furnizor optional pentru intalnirea la distanta",
+                  "it": "Optional remote meeting provider"
+                },
+                "bot": "Use 'google_meet', 'teams', or 'zoom' only if the user explicitly wants a remote meeting link. Otherwise leave empty.",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "options": {
+                  "google_meet": "Google Meet",
+                  "teams": "Microsoft Teams",
+                  "zoom": {
+                    "en": "Zoom",
+                    "de": "Zoom",
+                    "es": "Zoom",
+                    "fr": "Zoom",
+                    "ro": "Zoom",
+                    "it": "Zoom"
+                  }
+                }
+              }
+            ]
+          }
+        ],
+        "sections": [
+          {
+            "title": {
+              "en": "Who's coming?",
+              "de": "Wer kommt?",
+              "fr": "Qui participe ?",
+              "es": "Quien viene?",
+              "ro": "Cine participa?",
+              "it": "Who's coming?"
+            },
+            "description": {
+              "en": "We'll send your confirmation here.",
+              "de": "Wir schicken die Bestätigung dorthin.",
+              "fr": "Nous enverrons la confirmation a ces coordonnees.",
+              "es": "Enviaremos aqui la confirmacion.",
+              "ro": "Vom trimite confirmarea aici.",
+              "it": "We'll send your confirmation here."
+            },
+            "inputs": [
+              "contactIds",
+              "attendeeName",
+              "attendeeEmail"
+            ]
+          },
+          {
+            "title": {
+              "en": "When is it?",
+              "de": "Wann ist der Termin?",
+              "fr": "Quand a lieu le rendez-vous ?",
+              "es": "Cuando es?",
+              "ro": "Cand are loc?",
+              "it": "When is it?"
+            },
+            "description": {
+              "en": "Confirm the slot you've chosen.",
+              "de": "Bestätige den gewählten Zeitslot.",
+              "fr": "Confirmez le creneau choisi.",
+              "es": "Confirma el horario que has elegido.",
+              "ro": "Confirma intervalul ales.",
+              "it": "Confirm the slot you've chosen."
+            },
+            "inputs": [
+              "scheduledAt",
+              "timezone"
+            ]
+          },
+          {
+            "title": {
+              "en": "Anything else?",
+              "de": "Noch etwas?",
+              "fr": "Autre chose a ajouter ?",
+              "es": "Algo mas?",
+              "ro": "Mai este ceva?",
+              "it": "Anything else?"
+            },
+            "description": {
+              "en": "Add a note or choose how you'd like to meet.",
+              "de": "Füge eine Notiz hinzu oder wähle, wie ihr euch treffen wollt.",
+              "fr": "Ajoutez une note ou choisissez la facon de vous rencontrer.",
+              "es": "Anade una nota o elige como prefieres reunirte.",
+              "ro": "Adauga o nota sau alege cum vreti sa va intalniti.",
+              "it": "Add a note or choose how you'd like to meet."
+            },
+            "inputs": [
+              "description",
+              "conferenceProvider"
+            ]
+          }
+        ],
+        "output": {
+          "MEETING_ID": "out.data.id",
+          "MEETING_URL": "out.data.inviteUrl",
+          "ATTENDEE_EMAIL": "out.data.participants.0.email",
+          "ATTENDEE_NAME": "out.data.participants.0.name",
+          "MEETING_TITLE": "out.data.name",
+          "SCHEDULED_AT": "out.data.scheduledAt"
+        },
+        "messages": {
+          "error": {
+            "en": "Appointment booking failed: {{MESSAGE}}"
+          },
+          "success": {
+            "en": "Appointment booked successfully.",
+            "de": "Termin erfolgreich gebucht.",
+            "fr": "Rendez-vous confirme avec succes.",
+            "es": "Cita reservada correctamente.",
+            "ro": "Programarea a fost confirmata cu succes.",
+            "it": "Appointment booked successfully."
+          }
+        }
+      },
+      "extras": null
+    },
+    {
+      "key": "none:calendar-create-event",
+      "identifier": "@calendar-create-event",
+      "alias": "calendar-create-event",
+      "chain": "none",
+      "hash": "5fb63bd72141bd2ae1632f8cc82983fed952807a542dcb47f4fa90f74886eed2",
+      "checksum": "5fb63bd72141bd2ae1632f8cc82983fed952807a542dcb47f4fa90f74886eed2",
+      "name": "Calendar: Create Event",
+      "title": {
+        "en": "Create calendar event",
+        "de": "Kalendereintrag erstellen",
+        "es": "Create calendar event",
+        "fr": "Create calendar event",
+        "ro": "Create calendar event",
+        "it": "Create calendar event"
+      },
+      "description": {
+        "en": "Create an event on the agent's local calendar or connected Google/Microsoft/Apple calendar. Supports weekly, biweekly, and monthly recurrence for scheduling recurring meetings like syncs and standups — each instance gets its own JoAi meeting invite link.",
+        "de": "Erstelle einen Termin im lokalen Kalender des Agenten oder im verbundenen Google/Microsoft/Apple-Kalender. Unterstützt wöchentliche, zweiwöchentliche und monatliche Wiederholungen für regelmäßige Meetings — jede Instanz erhält einen eigenen JoAi Meeting-Einladungslink."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "847f674ca9bc1b0fb15ce1efc2c0b283a4af8c06e08b9142a8ad0fe5f1931b8f",
+        "slug": "ai-calendar",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "AI Calendar",
+        "description": {
+          "en": "Manage calendar events — create, update, delete, and list — through your AI agent. Provider-agnostic: works with whichever calendar the agent is connected to (Google, Microsoft, Apple). Every action routes through your configured integration so there is one interface regardless of provider.",
+          "de": "Verwalte Kalenderereignisse — erstellen, aktualisieren, löschen, auflisten — über deinen KI-Agenten. Anbieterunabhängig: funktioniert mit dem verbundenen Kalender (Google, Microsoft, Apple). Jede Aktion läuft über deine konfigurierte Integration, damit es eine einheitliche Oberfläche gibt.",
+          "fr": "Gerez les evenements de calendrier — creer, mettre a jour, supprimer, lister — via votre agent IA. Independant du fournisseur: fonctionne avec le calendrier connecte (Google, Microsoft, Apple). Chaque action passe par votre integration configuree.",
+          "es": "Gestiona eventos de calendario — crear, actualizar, eliminar, listar — mediante tu agente IA. Independiente del proveedor: funciona con el calendario conectado (Google, Microsoft, Apple). Cada accion pasa por tu integracion configurada.",
+          "ro": "Gestioneaza evenimente de calendar — creare, actualizare, stergere, listare — prin agentul tau AI. Independent de furnizor: functioneaza cu calendarul conectat (Google, Microsoft, Apple). Fiecare actiune trece prin integrarea ta configurata."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "Calendar: Create Event",
+        "title": {
+          "en": "Create calendar event",
+          "de": "Kalendereintrag erstellen",
+          "es": "Create calendar event",
+          "fr": "Create calendar event",
+          "ro": "Create calendar event",
+          "it": "Create calendar event"
+        },
+        "description": {
+          "en": "Create an event on the agent's local calendar or connected Google/Microsoft/Apple calendar. Supports weekly, biweekly, and monthly recurrence for scheduling recurring meetings like syncs and standups — each instance gets its own JoAi meeting invite link.",
+          "de": "Erstelle einen Termin im lokalen Kalender des Agenten oder im verbundenen Google/Microsoft/Apple-Kalender. Unterstützt wöchentliche, zweiwöchentliche und monatliche Wiederholungen für regelmäßige Meetings — jede Instanz erhält einen eigenen JoAi Meeting-Einladungslink."
+        },
+        "bot": "Use this to schedule meetings, appointments, or reminders on the user's calendar. Provider is determined by the connected integration — do not ask which provider.",
+        "vars": {
+          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Create event",
+              "de": "Ereignis erstellen",
+              "es": "Create event",
+              "fr": "Create event",
+              "ro": "Create event",
+              "it": "Create event"
+            },
+            "destination": {
+              "url": "https://api.joai.ai/v1/agents/{{JOAI_AGENT_UUID}}/calendar/events",
+              "method": "POST",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+                "Content-Type": "application/json"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Title",
+                "as": "title",
+                "description": {
+                  "en": "Event title",
+                  "de": "Titel des Termins",
+                  "es": "Event title",
+                  "fr": "Event title",
+                  "ro": "Event title",
+                  "it": "Event title"
+                },
+                "bot": "Concise event title, e.g. 'Lunch with Sarah', 'Iron Clothes', 'Team standup'.",
+                "type": "string",
+                "source": "field",
+                "required": true,
+                "max": 500,
+                "position": "payload:title"
+              },
+              {
+                "name": "Description",
+                "as": "description",
+                "description": {
+                  "en": "Optional event description",
+                  "de": "Optionale Beschreibung",
+                  "es": "Optional event description",
+                  "fr": "Optional event description",
+                  "ro": "Optional event description",
+                  "it": "Optional event description"
+                },
+                "bot": "Optional longer description or agenda for the event.",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "max": 5000,
+                "position": "payload:description"
+              },
+              {
+                "name": "Start",
+                "as": "startAt",
+                "description": {
+                  "en": "Start datetime (ISO 8601, include timezone)",
+                  "de": "Startzeitpunkt (ISO 8601 mit Zeitzone)",
+                  "es": "Start datetime (ISO 8601, include timezone)",
+                  "fr": "Start datetime (ISO 8601, include timezone)",
+                  "ro": "Start datetime (ISO 8601, include timezone)",
+                  "it": "Start datetime (ISO 8601, include timezone)"
+                },
+                "bot": "Event start in ISO 8601 with numeric offset for the event timezone, e.g. '2026-04-21T14:00:00+02:00'. Prefer offset over Z for local wall-clock times; bare local is OK when timezone is also set.",
+                "type": "string",
+                "source": "field",
+                "required": true,
+                "position": "payload:startAt"
+              },
+              {
+                "name": "End",
+                "as": "endAt",
+                "description": {
+                  "en": "End datetime (ISO 8601, include timezone)",
+                  "de": "Endzeitpunkt (ISO 8601 mit Zeitzone)",
+                  "es": "End datetime (ISO 8601, include timezone)",
+                  "fr": "End datetime (ISO 8601, include timezone)",
+                  "ro": "End datetime (ISO 8601, include timezone)",
+                  "it": "End datetime (ISO 8601, include timezone)"
+                },
+                "bot": "Event end in ISO 8601 with timezone offset. If the user did not specify, default to one hour after start.",
+                "type": "string",
+                "source": "field",
+                "required": true,
+                "position": "payload:endAt"
+              },
+              {
+                "name": "Timezone",
+                "as": "timezone",
+                "description": {
+                  "en": "IANA timezone name for the event",
+                  "de": "IANA-Zeitzonenname",
+                  "es": "IANA timezone name for the event",
+                  "fr": "IANA timezone name for the event",
+                  "ro": "IANA timezone name for the event",
+                  "it": "IANA timezone name for the event"
+                },
+                "bot": "IANA timezone, e.g. 'Europe/Vienna', 'America/New_York'. Use the user's timezone from context.",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "max": 100,
+                "position": "payload:timezone"
+              },
+              {
+                "name": "Location",
+                "as": "location",
+                "description": {
+                  "en": "Location or meeting link",
+                  "de": "Ort oder Meeting-Link",
+                  "es": "Location or meeting link",
+                  "fr": "Location or meeting link",
+                  "ro": "Location or meeting link",
+                  "it": "Location or meeting link"
+                },
+                "bot": "Physical address, room, or video call link.",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "max": 500,
+                "position": "payload:location"
+              },
+              {
+                "name": "All day",
+                "as": "allDay",
+                "description": {
+                  "en": "Whether this is an all-day event",
+                  "de": "All-Day-Termin",
+                  "es": "Whether this is an all-day event",
+                  "fr": "Whether this is an all-day event",
+                  "ro": "Whether this is an all-day event",
+                  "it": "Whether this is an all-day event"
+                },
+                "bot": "True for full-day events where a specific time is not meaningful.",
+                "type": "boolean",
+                "source": "field",
+                "required": false,
+                "position": "payload:allDay"
+              },
+              {
+                "name": "Recurrence",
+                "as": "recurrence",
+                "description": {
+                  "en": "Repeats the event (none, weekly, biweekly, monthly)",
+                  "de": "Wiederholt den Termin (none, weekly, biweekly, monthly)",
+                  "es": "Repeats the event (none, weekly, biweekly, monthly)",
+                  "fr": "Repeats the event (none, weekly, biweekly, monthly)",
+                  "ro": "Repeats the event (none, weekly, biweekly, monthly)",
+                  "it": "Repeats the event (none, weekly, biweekly, monthly)"
+                },
+                "bot": "Set to biweekly for xAlliance Member Meet. Creates multiple event instances with auto-generated JoAi meeting links.",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "position": "payload:recurrence"
+              },
+              {
+                "name": "Number of events",
+                "as": "recurrenceCount",
+                "description": {
+                  "en": "How many events to create (e.g. 26 for 1 year bi-weekly)",
+                  "de": "Wie viele Termine erstellt werden sollen (z.B. 26 für 1 Jahr alle 2 Wochen)",
+                  "es": "How many events to create (e.g. 26 for 1 year bi-weekly)",
+                  "fr": "How many events to create (e.g. 26 for 1 year bi-weekly)",
+                  "ro": "How many events to create (e.g. 26 for 1 year bi-weekly)",
+                  "it": "How many events to create (e.g. 26 for 1 year bi-weekly)"
+                },
+                "bot": "Defaults to 26 for weekly, 13 for biweekly, 6 for monthly.",
+                "type": "uint64",
+                "source": "field",
+                "required": false,
+                "position": "payload:recurrenceCount"
+              }
+            ]
+          }
+        ],
+        "output": {
+          "EVENT_ID": "transform: const events = out?.data?.events; const src = events ? events[0] : out?.data; out = src?.id ?? ''",
+          "EVENT_EXTERNAL_ID": "transform: const events = out?.data?.events; const src = events ? events[0] : out?.data; out = src?.externalId ?? ''",
+          "EVENT_TITLE": "transform: const events = out?.data?.events; const src = events ? events[0] : out?.data; out = src?.title ?? ''",
+          "EVENT_START": "transform: const events = out?.data?.events; const src = events ? events[0] : out?.data; out = src?.startAt ?? ''"
+        },
+        "messages": {
+          "success": {
+            "en": "Created \"{{EVENT_TITLE}}\" on your calendar.",
+            "de": "\"{{EVENT_TITLE}}\" in deinem Kalender erstellt.",
+            "es": "Created \"{{EVENT_TITLE}}\" on your calendar.",
+            "fr": "Created \"{{EVENT_TITLE}}\" on your calendar.",
+            "ro": "Created \"{{EVENT_TITLE}}\" on your calendar.",
+            "it": "Created \"{{EVENT_TITLE}}\" on your calendar."
+          }
+        }
+      },
+      "extras": {
+        "keywords": {
+          "en": [
+            "AI calendar",
+            "AI schedule",
+            "AI meeting",
+            "AI appointment",
+            "AI calendar assistant",
+            "schedule meeting",
+            "book appointment",
+            "create event",
+            "add calendar event",
+            "update event",
+            "reschedule meeting",
+            "delete event",
+            "cancel meeting",
+            "list events",
+            "upcoming meetings",
+            "next meeting",
+            "free time",
+            "calendar availability",
+            "agent scheduling",
+            "AI scheduling",
+            "smart scheduling"
+          ],
+          "de": [
+            "KI Kalender",
+            "KI Termine",
+            "KI Meeting",
+            "KI Terminplaner",
+            "Termin vereinbaren",
+            "Termin buchen",
+            "Termin erstellen",
+            "Kalendereintrag hinzufügen",
+            "Termin aktualisieren",
+            "Termin verschieben",
+            "Termin löschen",
+            "Meeting absagen",
+            "Termine auflisten",
+            "kommende Termine",
+            "nächstes Meeting",
+            "freie Zeit",
+            "Kalenderverfügbarkeit",
+            "KI Terminplanung",
+            "intelligente Terminplanung"
+          ],
+          "fr": [
+            "IA calendrier",
+            "IA planning",
+            "IA reunion",
+            "IA rendez-vous",
+            "planifier reunion",
+            "reserver rendez-vous",
+            "creer evenement",
+            "modifier evenement",
+            "annuler reunion",
+            "supprimer evenement",
+            "lister evenements",
+            "prochain rendez-vous",
+            "disponibilite"
+          ],
+          "es": [
+            "IA calendario",
+            "IA agenda",
+            "IA reunion",
+            "IA cita",
+            "programar reunion",
+            "reservar cita",
+            "crear evento",
+            "modificar evento",
+            "cancelar reunion",
+            "eliminar evento",
+            "listar eventos",
+            "proxima reunion",
+            "disponibilidad"
+          ],
+          "ro": [
+            "AI calendar",
+            "AI agenda",
+            "AI intalnire",
+            "AI programare",
+            "programeaza intalnire",
+            "rezerva programare",
+            "creeaza eveniment",
+            "modifica eveniment",
+            "anuleaza intalnire",
+            "sterge eveniment",
+            "listeaza evenimente",
+            "urmatoarea intalnire",
+            "disponibilitate"
+          ]
+        },
+        "useCases": {
+          "en": [
+            "Schedule a meeting with a client from the agent chat in one message",
+            "Block focus time on your calendar by describing it to the agent",
+            "Create a recurring personal reminder (workout, medication, review) via natural language",
+            "Have the agent schedule a follow-up after an email or call without switching apps"
+          ],
+          "de": [
+            "Einen Kundentermin direkt aus dem Agent-Chat mit einer Nachricht buchen",
+            "Fokuszeit im Kalender blockieren, indem du sie dem Agenten beschreibst",
+            "Wiederkehrende persönliche Erinnerungen (Training, Medikation, Review) per Sprache anlegen",
+            "Nach einer E-Mail oder einem Anruf einen Follow-up-Termin vom Agenten planen lassen"
+          ]
+        },
+        "category": "productivity",
+        "faq": {
+          "en": [
+            {
+              "question": "Which calendar providers are supported?",
+              "answer": "Google Calendar, Microsoft Outlook/Exchange, and Apple iCloud Calendar. The warp is provider-agnostic — it always routes through the calendar integration connected to your agent, so you use the same interface regardless of provider."
+            },
+            {
+              "question": "Does the agent create events without my approval?",
+              "answer": "No. Calendar writes run through the warp approval pipeline unless the agent is explicitly in auto mode. You see a preview card and approve before the event is created."
+            },
+            {
+              "question": "How is the calendar connection handled?",
+              "answer": "Connect Google Calendar (or Microsoft/Apple) once from the agent's integration settings. The warp uses the tokens stored on that integration to make the call — no need to manage OAuth tokens per warp."
+            },
+            {
+              "question": "Does event creation sync back to my actual calendar?",
+              "answer": "Yes. Events are written to the connected provider (Google/Microsoft/Apple) and appear in your native calendar app alongside events created elsewhere."
+            }
+          ],
+          "de": [
+            {
+              "question": "Welche Kalenderanbieter werden unterstützt?",
+              "answer": "Google Calendar, Microsoft Outlook/Exchange und Apple iCloud Calendar. Der Warp ist anbieterunabhängig — er läuft immer über die verbundene Kalenderintegration deines Agenten, die Oberfläche ist unabhängig vom Anbieter gleich."
+            },
+            {
+              "question": "Erstellt der Agent Termine ohne meine Zustimmung?",
+              "answer": "Nein. Kalenderschreibvorgänge laufen über die Warp-Freigabe, außer der Agent ist explizit im Auto-Modus. Du siehst eine Vorschau und bestätigst, bevor der Termin angelegt wird."
+            },
+            {
+              "question": "Wie wird die Kalenderverbindung gehandhabt?",
+              "answer": "Verbinde Google Calendar (oder Microsoft/Apple) einmal in den Integrationseinstellungen des Agenten. Der Warp nutzt die dort gespeicherten Tokens — kein OAuth-Management pro Warp nötig."
+            },
+            {
+              "question": "Wird die Termin-Erstellung zurück in meinen Kalender synchronisiert?",
+              "answer": "Ja. Ereignisse werden direkt beim verbundenen Anbieter (Google/Microsoft/Apple) geschrieben und erscheinen in deiner nativen Kalender-App neben anderweitig erstellten Einträgen."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "key": "none:joai-social-post-create",
+      "identifier": "@joai-social-post-create",
+      "alias": "joai-social-post-create",
+      "chain": "none",
+      "hash": "f8c43122fa52ea91b29e3d6575e98686d8d997952a33c6d93a0609defe9899bf",
+      "checksum": "f8c43122fa52ea91b29e3d6575e98686d8d997952a33c6d93a0609defe9899bf",
+      "name": "JoAi: Create Social Post",
+      "title": {
+        "en": "Schedule a social post",
+        "de": "Social-Post planen"
+      },
+      "description": {
+        "en": "Create an Instagram, X, Facebook, or LinkedIn draft. Leave the time empty for a draft, or set a time to schedule it into JoAi's queue (the publish job posts later).",
+        "de": "Erstelle einen Instagram-, X-, Facebook- oder LinkedIn-Entwurf. Ohne Zeit bleibt es ein Entwurf; mit Zeit wird er in JoAis Warteschlange geplant (der Publish-Job postet später)."
       },
       "preview": null,
       "creator": "github:JoAiHQ/warps",
@@ -57,16 +849,16 @@
       },
       "warp": {
         "protocol": "warp:3.0.0",
-        "name": "JoAi: Create Update",
+        "name": "JoAi: Create Social Post",
         "title": {
-          "en": "Post an update",
-          "de": "Update veröffentlichen"
+          "en": "Schedule a social post",
+          "de": "Social-Post planen"
         },
         "description": {
-          "en": "Post a deal, event, news, or article-style update for your team so it can appear in connected websites, directories, and public feeds. Supports scheduled publishing windows, links, media, custom props, and draft or published status for local business communication.",
-          "de": "Veröffentliche ein Angebot, Event, News oder einen Artikel für dein Team, damit sie auf verbundenen Websites, in Verzeichnissen und öffentlichen Feeds erscheinen kann. Unterstützt geplante Zeiträume, Links sowie Entwurf- oder Veröffentlichungsstatus für lokale Betriebsinfos."
+          "en": "Create an Instagram, X, Facebook, or LinkedIn draft. Leave the time empty for a draft, or set a time to schedule it into JoAi's queue (the publish job posts later).",
+          "de": "Erstelle einen Instagram-, X-, Facebook- oder LinkedIn-Entwurf. Ohne Zeit bleibt es ein Entwurf; mit Zeit wird er in JoAis Warteschlange geplant (der Publish-Job postet später)."
         },
-        "bot": "Use this to create a deal, event, news, or article update for customers. Set startsAt/endsAt for time-limited offers or events. Optional props JSON object for flexible flags (e.g. {\"top-news\":\"true\"} for city-directory top news).",
+        "bot": "Use this to draft or schedule an Instagram, X, Facebook, or LinkedIn post. Prefer exportId (Studio export UUID) or elementVariationId when posting Studio/element stills — JoAi copies those images onto the post and leaves the originals alone. Otherwise upload with media_upload and pass IDs in media. Do not combine media with exportId or elementVariationId. Set scheduledAt in the team timezone when the user names a time - that only queues the post; JoAi's publish job posts to the network later. Omit scheduledAt to keep a draft. Platforms: instagram, x, facebook, linkedin. The response includes shareUrl — a public preview link (caption, stills, network, time) you can give the user for review before publish.",
         "vars": {
           "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
           "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
@@ -76,11 +868,11 @@
           {
             "type": "collect",
             "label": {
-              "en": "Post update",
-              "de": "Update veröffentlichen"
+              "en": "Schedule post",
+              "de": "Post planen"
             },
             "destination": {
-              "url": "https://api.joai.ai/v1/updates",
+              "url": "https://api.joai.ai/v1/social-posts",
               "method": "POST",
               "headers": {
                 "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
@@ -89,113 +881,78 @@
             },
             "inputs": [
               {
-                "name": "Title",
-                "as": "title",
+                "name": "Network",
+                "as": "platform",
                 "description": {
-                  "en": "Headline of the update",
-                  "de": "Überschrift des Updates"
-                },
-                "type": "string",
-                "source": "field",
-                "required": true
-              },
-              {
-                "name": "Type",
-                "as": "type",
-                "description": {
-                  "en": "Type of update",
-                  "de": "Art des Updates"
+                  "en": "Network to post on",
+                  "de": "Netzwerk für den Post"
                 },
                 "type": "string",
                 "source": "field",
                 "required": true,
                 "options": {
-                  "deal": "Deal",
-                  "event": "Event",
-                  "news": "News",
-                  "article": "Article"
-                }
+                  "instagram": "Instagram",
+                  "x": "X",
+                  "facebook": "Facebook",
+                  "linkedin": "LinkedIn"
+                },
+                "default": "instagram"
               },
               {
-                "name": "Body",
+                "name": "Caption",
                 "as": "body",
                 "description": {
-                  "en": "Detailed description (supports markdown)",
-                  "de": "Detailbeschreibung (unterstützt Markdown)"
+                  "en": "Post caption or tweet text",
+                  "de": "Bildunterschrift oder Tweet-Text"
                 },
                 "type": "string",
                 "source": "field",
                 "required": false
               },
               {
-                "name": "Starts At",
-                "as": "startsAt",
-                "description": {
-                  "en": "When the update becomes active (ISO date, optional)",
-                  "de": "Wann das Update aktiv wird (ISO-Datum, optional)"
-                },
-                "type": "string",
-                "source": "field",
-                "required": false
-              },
-              {
-                "name": "Ends At",
-                "as": "endsAt",
-                "description": {
-                  "en": "When the update expires (ISO date, optional)",
-                  "de": "Wann das Update abläuft (ISO-Datum, optional)"
-                },
-                "type": "string",
-                "source": "field",
-                "required": false
-              },
-              {
-                "name": "Status",
-                "as": "status",
-                "description": {
-                  "en": "Publication status",
-                  "de": "Veröffentlichungsstatus"
-                },
-                "type": "string",
-                "source": "field",
-                "required": false,
-                "options": {
-                  "draft": "Draft",
-                  "published": "Published",
-                  "archived": "Archived"
-                }
-              },
-              {
-                "name": "Link URL",
-                "as": "linkUrl",
-                "description": {
-                  "en": "URL to link from the update",
-                  "de": "URL, auf die das Update verlinkt"
-                },
-                "type": "string",
-                "source": "field",
-                "required": false
-              },
-              {
-                "name": "Media",
+                "name": "Images",
                 "as": "media",
                 "description": {
-                  "en": "Media IDs to attach (JSON array of team media IDs), e.g. [\"abc123\"]",
-                  "de": "Media-IDs zum Anhängen (JSON-Array), z. B. [\"abc123\"]"
+                  "en": "Ordered team media IDs, e.g. [\"abc\",\"def\"]. Instagram: JPEG 1–10. X: JPEG/PNG/WEBP/GIF 0–4. Facebook: JPEG/PNG/WEBP/GIF 0–10. LinkedIn: JPEG/PNG/GIF 0–9. Upload with media_upload first. Do not combine with exportId or elementVariationId.",
+                  "de": "Team-Medien-IDs in Reihenfolge, z.B. [\"abc\",\"def\"]. Instagram: JPEG 1–10. X: JPEG/PNG/WEBP/GIF 0–4. Facebook: JPEG/PNG/WEBP/GIF 0–10. LinkedIn: JPEG/PNG/GIF 0–9. Zuerst mit media_upload hochladen. Nicht zusammen mit exportId oder elementVariationId."
                 },
-                "type": "json",
+                "bot": "JSON array of media IDs from media_upload, in order. Optional for X, Facebook, and LinkedIn text-only posts. Mutually exclusive with exportId and elementVariationId. JoAi copies media onto the post.",
+                "type": "string",
                 "source": "field",
                 "required": false
               },
               {
-                "name": "Props",
-                "as": "props",
+                "name": "Studio export",
+                "as": "exportId",
                 "description": {
-                  "en": "Custom key/value properties as a JSON object (e.g. {\"top-news\":\"true\"}). Keys kebab-case; values strings.",
-                  "de": "Benutzerdefinierte Eigenschaften als JSON-Objekt (z. B. {\"top-news\":\"true\"}). Schlüssel in Kebab-Case; Werte als Strings."
+                  "en": "Studio export UUID. Copies still images from that export onto the post. Mutually exclusive with media and elementVariationId.",
+                  "de": "Studio-Export-UUID. Kopiert Standbilder aus dem Export auf den Post. Nicht zusammen mit media oder elementVariationId."
                 },
-                "bot": "Optional props object (string values). For city-directory top news set {\"top-news\":\"true\"} on type=news. Same flexible props bag as contacts.",
-                "type": "json",
+                "bot": "UUID from studio_export / project export. Use instead of media when posting Studio stills.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Element variation",
+                "as": "elementVariationId",
+                "description": {
+                  "en": "Element variation ID. Copies the variation images (primary first) onto the post. Mutually exclusive with media and exportId.",
+                  "de": "Element-Variation-ID. Kopiert die Variationsbilder (Primär zuerst) auf den Post. Nicht zusammen mit media oder exportId."
+                },
+                "bot": "Hashid from list_element_variations / generate_element_variation. Use instead of media when posting element stills.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Schedule for",
+                "as": "scheduledAt",
+                "description": {
+                  "en": "When JoAi should publish. ISO time. Without a timezone, the team timezone is used. Omit to save a draft. Scheduling queues the post; the publish job posts later.",
+                  "de": "Wann JoAi veröffentlichen soll. ISO-Zeit. Ohne Zeitzone gilt die Team-Zeitzone. Weglassen speichert einen Entwurf. Planen reiht ein; der Publish-Job postet später."
+                },
+                "type": "string",
                 "source": "field",
                 "required": false
               },
@@ -203,10 +960,9 @@
                 "name": "Team",
                 "as": "team",
                 "description": {
-                  "en": "Team slug for this action. Defaults to the current team.",
-                  "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team."
+                  "en": "Team slug. Defaults to the current team.",
+                  "de": "Team-Slug. Standardmäßig das aktuelle Team."
                 },
-                "bot": "The slug of the team to operate on. Omit to use the current team.",
                 "type": "string",
                 "source": "field",
                 "required": false,
@@ -215,94 +971,36 @@
             ],
             "output": {
               "id": "out.data.id",
-              "title": "out.data.title",
-              "type": "out.data.type",
-              "status": "out.data.status"
+              "status": "out.data.status",
+              "scheduledAt": "out.data.scheduledAt",
+              "shareUrl": "out.data.shareUrl"
             }
           }
         ],
-        "output": {
-          "UPDATE_ID": "out.1.id",
-          "UPDATE_TITLE": "out.1.title"
-        },
         "messages": {
           "success": {
-            "en": "Update '{{UPDATE_TITLE}}' posted!",
-            "de": "Update '{{UPDATE_TITLE}}' veröffentlicht!"
+            "en": "Social post {{status}}. Preview: {{shareUrl}}. If scheduled, JoAi will publish when due.",
+            "de": "Social-Post {{status}}. Vorschau: {{shareUrl}}. Wenn geplant, veröffentlicht JoAi zum Termin."
           }
         }
       },
-      "extras": {
-        "keywords": {
-          "en": [
-            "post update",
-            "create deal",
-            "publish event",
-            "business news",
-            "article",
-            "local announcement"
-          ],
-          "de": [
-            "Update veröffentlichen",
-            "Angebot erstellen",
-            "Event veröffentlichen",
-            "Betriebsnews",
-            "Artikel",
-            "lokale Ankündigung"
-          ]
-        },
-        "useCases": {
-          "en": [
-            "Publish a limited-time offer for customers",
-            "Announce an upcoming event on a business profile",
-            "Post a longer article or local news to connected directories"
-          ],
-          "de": [
-            "Ein zeitlich begrenztes Angebot für Kunden veröffentlichen",
-            "Ein bevorstehendes Event im Betriebsprofil ankündigen",
-            "Einen längeren Artikel oder lokale News in verbundenen Verzeichnissen posten"
-          ]
-        },
-        "category": "communication",
-        "faq": {
-          "en": [
-            {
-              "question": "Can I publish deals, events, news, and articles?",
-              "answer": "Yes. Use deal for offers, event for happenings, news for short announcements, and article for longer posts."
-            },
-            {
-              "question": "Can an update be scheduled?",
-              "answer": "Yes. Add startsAt and endsAt to control when the update is active."
-            }
-          ],
-          "de": [
-            {
-              "question": "Kann ich Angebote, Events, News und Artikel veröffentlichen?",
-              "answer": "Ja. Nutze deal für Angebote, event für Veranstaltungen, news für kurze Ankündigungen und article für längere Beiträge."
-            },
-            {
-              "question": "Kann ein Update geplant werden?",
-              "answer": "Ja. Mit startsAt und endsAt steuerst du, wann das Update aktiv ist."
-            }
-          ]
-        }
-      }
+      "extras": null
     },
     {
-      "key": "none:joai-update-update",
-      "identifier": "@joai-update-update",
-      "alias": "joai-update-update",
+      "key": "none:joai-social-post-list",
+      "identifier": "@joai-social-post-list",
+      "alias": "joai-social-post-list",
       "chain": "none",
-      "hash": "c852b303901442ee8a45211fb32f06671cd37269cfcdde2cad21ed7a0b79fd52",
-      "checksum": "c852b303901442ee8a45211fb32f06671cd37269cfcdde2cad21ed7a0b79fd52",
-      "name": "JoAi: Update Update",
+      "hash": "976338a40afb1046ab893480db4a6d7ce2c2be186e896931b7f6a5b22eaab3d3",
+      "checksum": "976338a40afb1046ab893480db4a6d7ce2c2be186e896931b7f6a5b22eaab3d3",
+      "name": "JoAi: List Social Posts",
       "title": {
-        "en": "Edit an update",
-        "de": "Update bearbeiten"
+        "en": "View social posts",
+        "de": "Social-Posts anzeigen"
       },
       "description": {
-        "en": "Edit an existing deal, event, news, or article-style update for your team. Change the title, body, type, schedule, link, media, props, or publication status so connected websites and public feeds stay accurate.",
-        "de": "Bearbeite ein bestehendes Angebot, Event, News oder einen Artikel für dein Team. Ändere Titel, Text, Typ, Zeitraum, Link oder Veröffentlichungsstatus, damit verbundene Websites und öffentliche Feeds aktuell bleiben."
+        "en": "List scheduled, published, and failed social posts for the team.",
+        "de": "Liste geplante, veröffentlichte und fehlgeschlagene Social-Posts des Teams."
       },
       "preview": null,
       "creator": "github:JoAiHQ/warps",
@@ -337,16 +1035,16 @@
       },
       "warp": {
         "protocol": "warp:3.0.0",
-        "name": "JoAi: Update Update",
+        "name": "JoAi: List Social Posts",
         "title": {
-          "en": "Edit an update",
-          "de": "Update bearbeiten"
+          "en": "View social posts",
+          "de": "Social-Posts anzeigen"
         },
         "description": {
-          "en": "Edit an existing deal, event, news, or article-style update for your team. Change the title, body, type, schedule, link, media, props, or publication status so connected websites and public feeds stay accurate.",
-          "de": "Bearbeite ein bestehendes Angebot, Event, News oder einen Artikel für dein Team. Ändere Titel, Text, Typ, Zeitraum, Link oder Veröffentlichungsstatus, damit verbundene Websites und öffentliche Feeds aktuell bleiben."
+          "en": "List scheduled, published, and failed social posts for the team.",
+          "de": "Liste geplante, veröffentlichte und fehlgeschlagene Social-Posts des Teams."
         },
-        "bot": "Use this when the user wants to edit an existing deal, event, news, or article update. If the user refers to an update by title, list updates first to find the matching ID. Optional props replaces the entire props bag when provided.",
+        "bot": "Use this to see the social queue. Filter with status when the user asks for scheduled or failed posts. Each post includes shareUrl — a public preview link you can share for review.",
         "vars": {
           "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
           "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
@@ -356,12 +1054,12 @@
           {
             "type": "collect",
             "label": {
-              "en": "Edit update",
-              "de": "Update bearbeiten"
+              "en": "View posts",
+              "de": "Posts anzeigen"
             },
             "destination": {
-              "url": "https://api.joai.ai/v1/updates/{{updateId}}",
-              "method": "PATCH",
+              "url": "https://api.joai.ai/v1/social-posts?status={{status}}&platform={{platform}}",
+              "method": "GET",
               "headers": {
                 "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
                 "X-Team": "{{team}}"
@@ -369,137 +1067,163 @@
             },
             "inputs": [
               {
-                "name": "Update ID",
-                "as": "updateId",
-                "description": {
-                  "en": "The ID of the update to edit",
-                  "de": "Die ID des Updates, das bearbeitet werden soll"
-                },
-                "type": "string",
-                "position": "url:updateId",
-                "source": "field",
-                "required": true,
-                "min": 1
-              },
-              {
-                "name": "Title",
-                "as": "title",
-                "description": {
-                  "en": "Updated headline",
-                  "de": "Aktualisierte Überschrift"
-                },
-                "type": "string",
-                "source": "field",
-                "required": false
-              },
-              {
-                "name": "Type",
-                "as": "type",
-                "description": {
-                  "en": "Updated type.",
-                  "de": "Aktualisierter Typ."
-                },
-                "type": "string",
-                "source": "field",
-                "required": false,
-                "options": {
-                  "deal": "Deal",
-                  "event": "Event",
-                  "news": "News",
-                  "article": "Article"
-                }
-              },
-              {
-                "name": "Body",
-                "as": "body",
-                "description": {
-                  "en": "Updated description or announcement body",
-                  "de": "Aktualisierte Beschreibung oder Nachricht"
-                },
-                "type": "string",
-                "source": "field",
-                "required": false
-              },
-              {
-                "name": "Starts At",
-                "as": "startsAt",
-                "description": {
-                  "en": "When the update becomes active (ISO date, optional)",
-                  "de": "Wann das Update aktiv wird (ISO-Datum, optional)"
-                },
-                "type": "string",
-                "source": "field",
-                "required": false
-              },
-              {
-                "name": "Ends At",
-                "as": "endsAt",
-                "description": {
-                  "en": "When the update expires (ISO date, optional)",
-                  "de": "Wann das Update abläuft (ISO-Datum, optional)"
-                },
-                "type": "string",
-                "source": "field",
-                "required": false
-              },
-              {
                 "name": "Status",
                 "as": "status",
                 "description": {
-                  "en": "Updated publication status",
-                  "de": "Aktualisierter Veröffentlichungsstatus"
+                  "en": "Filter by status",
+                  "de": "Nach Status filtern"
                 },
                 "type": "string",
+                "position": "url:status",
                 "source": "field",
                 "required": false,
                 "options": {
                   "draft": "Draft",
+                  "scheduled": "Scheduled",
+                  "publishing": "Publishing",
                   "published": "Published",
-                  "archived": "Archived"
+                  "failed": "Failed",
+                  "cancelled": "Cancelled"
                 }
               },
               {
-                "name": "Link URL",
-                "as": "linkUrl",
+                "name": "Network",
+                "as": "platform",
                 "description": {
-                  "en": "URL to link from the update",
-                  "de": "URL, auf die das Update verlinkt"
+                  "en": "Filter by network",
+                  "de": "Nach Netzwerk filtern"
+                },
+                "type": "string",
+                "position": "url:platform",
+                "source": "field",
+                "required": false,
+                "options": {
+                  "instagram": "Instagram",
+                  "x": "X",
+                  "facebook": "Facebook",
+                  "linkedin": "LinkedIn"
+                }
+              },
+              {
+                "name": "Team",
+                "as": "team",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "default": "{{JOAI_TEAM_SLUG}}"
+              }
+            ]
+          }
+        ]
+      },
+      "extras": null
+    },
+    {
+      "key": "none:joai-social-post-schedule",
+      "identifier": "@joai-social-post-schedule",
+      "alias": "joai-social-post-schedule",
+      "chain": "none",
+      "hash": "a3448c7a1bde79b203ed1265c31fc467b8d8d53da146ccd80ac5868525285711",
+      "checksum": "a3448c7a1bde79b203ed1265c31fc467b8d8d53da146ccd80ac5868525285711",
+      "name": "JoAi: Schedule Social Post",
+      "title": {
+        "en": "Schedule a social post",
+        "de": "Social-Post planen"
+      },
+      "description": {
+        "en": "Queue a draft to publish. Set a time, or leave it empty to queue it for the next job run. The network post happens later via JoAi's publish job - this warp only schedules.",
+        "de": "Plane einen Entwurf zur Veröffentlichung. Mit Zeit oder leer für den nächsten Job-Lauf. Der Netzwerk-Post kommt später über JoAis Publish-Job - dieser Warp plant nur."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: Schedule Social Post",
+        "title": {
+          "en": "Schedule a social post",
+          "de": "Social-Post planen"
+        },
+        "description": {
+          "en": "Queue a draft to publish. Set a time, or leave it empty to queue it for the next job run. The network post happens later via JoAi's publish job - this warp only schedules.",
+          "de": "Plane einen Entwurf zur Veröffentlichung. Mit Zeit oder leer für den nächsten Job-Lauf. Der Netzwerk-Post kommt später über JoAis Publish-Job - dieser Warp plant nur."
+        },
+        "bot": "Use after a draft exists. This warp only schedules into JoAi's queue; PublishSocialPostJob posts to the network later. scheduledAt is optional - omit it to queue for immediate publish (still via the job, not in this warp). Interpret unnamed times in the team timezone. The response includes shareUrl for a public preview the user can review.",
+        "vars": {
+          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+          "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Schedule",
+              "de": "Planen"
+            },
+            "destination": {
+              "url": "https://api.joai.ai/v1/social-posts/{{socialPostId}}/schedule",
+              "method": "POST",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+                "X-Team": "{{team}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Post",
+                "as": "socialPostId",
+                "description": {
+                  "en": "Social post ID",
+                  "de": "Social-Post-ID"
                 },
                 "type": "string",
                 "source": "field",
-                "required": false
+                "required": true,
+                "position": "url:socialPostId"
               },
               {
-                "name": "Media",
-                "as": "media",
+                "name": "Schedule for",
+                "as": "scheduledAt",
                 "description": {
-                  "en": "Replace attached media (JSON array of team media IDs)",
-                  "de": "Angehängte Medien ersetzen (JSON-Array von Media-IDs)"
+                  "en": "When JoAi should publish. Omit to queue for immediate publish via the job.",
+                  "de": "Wann JoAi veröffentlichen soll. Weglassen reiht es für sofortigen Publish über den Job ein."
                 },
-                "type": "json",
-                "source": "field",
-                "required": false
-              },
-              {
-                "name": "Props",
-                "as": "props",
-                "description": {
-                  "en": "Replace custom key/value properties as a JSON object (e.g. {\"top-news\":\"true\"}). Omitting leaves existing props unchanged; empty object clears them.",
-                  "de": "Ersetzt benutzerdefinierte Eigenschaften als JSON-Objekt (z. B. {\"top-news\":\"true\"}). Weglassen lässt bestehende Props unverändert; leeres Objekt löscht sie."
-                },
-                "bot": "Optional. When provided, replaces the entire props bag. For city-directory top news use {\"top-news\":\"true\"}; to remove it omit the key or set {\"top-news\":\"false\"}.",
-                "type": "json",
+                "type": "string",
                 "source": "field",
                 "required": false
               },
               {
                 "name": "Team",
                 "as": "team",
-                "description": {
-                  "en": "Team slug for this action. Defaults to the current team.",
-                  "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team."
-                },
-                "bot": "The slug of the team to operate on. Omit to use the current team.",
                 "type": "string",
                 "source": "field",
                 "required": false,
@@ -508,78 +1232,159 @@
             ],
             "output": {
               "id": "out.data.id",
-              "title": "out.data.title",
-              "type": "out.data.type",
-              "status": "out.data.status"
+              "status": "out.data.status",
+              "scheduledAt": "out.data.scheduledAt",
+              "shareUrl": "out.data.shareUrl"
             }
           }
         ],
-        "output": {
-          "UPDATE_ID": "out.1.id",
-          "UPDATE_TITLE": "out.1.title"
-        },
         "messages": {
           "success": {
-            "en": "Update '{{UPDATE_TITLE}}' edited.",
-            "de": "Update '{{UPDATE_TITLE}}' bearbeitet."
+            "en": "Social post scheduled. Preview: {{shareUrl}}. JoAi will publish it when due.",
+            "de": "Social-Post geplant. Vorschau: {{shareUrl}}. JoAi veröffentlicht ihn zum Termin."
           }
         }
       },
-      "extras": {
-        "keywords": {
-          "en": [
-            "edit update",
-            "update deal",
-            "edit event",
-            "change business news",
-            "edit article",
-            "announcement status"
-          ],
-          "de": [
-            "Update bearbeiten",
-            "Angebot bearbeiten",
-            "Event bearbeiten",
-            "Betriebsnews ändern",
-            "Artikel bearbeiten",
-            "Ankündigungsstatus"
-          ]
+      "extras": null
+    },
+    {
+      "key": "none:joai-social-post-update",
+      "identifier": "@joai-social-post-update",
+      "alias": "joai-social-post-update",
+      "chain": "none",
+      "hash": "aea531bda571b6e0b48325fefbf4ba5549eee1e6171f78542cc150cb74d793bc",
+      "checksum": "aea531bda571b6e0b48325fefbf4ba5549eee1e6171f78542cc150cb74d793bc",
+      "name": "JoAi: Update Social Post",
+      "title": {
+        "en": "Edit a social post",
+        "de": "Social-Post bearbeiten"
+      },
+      "description": {
+        "en": "Edit the caption or images of a draft, failed, or cancelled social post.",
+        "de": "Bearbeite Bildunterschrift oder Bilder eines Entwurfs, fehlgeschlagenen oder abgebrochenen Social-Posts."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
         },
-        "useCases": {
-          "en": [
-            "Change the dates of an event announcement",
-            "Archive an expired deal",
-            "Correct the title or link of a news or article post"
-          ],
-          "de": [
-            "Den Zeitraum einer Event-Ankündigung ändern",
-            "Ein abgelaufenes Angebot archivieren",
-            "Titel oder Link einer News oder eines Artikels korrigieren"
-          ]
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
         },
-        "category": "communication",
-        "faq": {
-          "en": [
-            {
-              "question": "Can I change the type of an update?",
-              "answer": "Yes. Existing posts can be changed between deal, event, news, and article when needed."
-            },
-            {
-              "question": "Can I unpublish an update?",
-              "answer": "Yes. Set its status to draft or archived depending on whether it should be hidden or retired."
-            }
-          ],
-          "de": [
-            {
-              "question": "Kann ich den Typ eines Updates ändern?",
-              "answer": "Ja. Bestehende Beiträge können bei Bedarf zwischen deal, event, news und article wechseln."
-            },
-            {
-              "question": "Kann ich ein Update ausblenden?",
-              "answer": "Ja. Setze den Status auf draft oder archived, je nachdem ob es versteckt oder endgültig erledigt ist."
-            }
-          ]
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
         }
-      }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: Update Social Post",
+        "title": {
+          "en": "Edit a social post",
+          "de": "Social-Post bearbeiten"
+        },
+        "description": {
+          "en": "Edit the caption or images of a draft, failed, or cancelled social post.",
+          "de": "Bearbeite Bildunterschrift oder Bilder eines Entwurfs, fehlgeschlagenen oder abgebrochenen Social-Posts."
+        },
+        "bot": "Use this to change a social post that is still a draft, failed, or cancelled. Pass media as a JSON array of media IDs to replace the images in order. The response includes shareUrl for the public preview link.",
+        "vars": {
+          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+          "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Save post",
+              "de": "Post speichern"
+            },
+            "destination": {
+              "url": "https://api.joai.ai/v1/social-posts/{{socialPostId}}",
+              "method": "PATCH",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+                "X-Team": "{{team}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Post",
+                "as": "socialPostId",
+                "description": {
+                  "en": "Social post ID",
+                  "de": "Social-Post-ID"
+                },
+                "type": "string",
+                "source": "field",
+                "required": true,
+                "position": "url:socialPostId"
+              },
+              {
+                "name": "Caption",
+                "as": "body",
+                "description": {
+                  "en": "New caption. Send empty to clear.",
+                  "de": "Neue Bildunterschrift. Leer zum Löschen."
+                },
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Images",
+                "as": "media",
+                "description": {
+                  "en": "Replacement media IDs in order, as a JSON array.",
+                  "de": "Ersatz-Medien-IDs in Reihenfolge, als JSON-Array."
+                },
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Team",
+                "as": "team",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "default": "{{JOAI_TEAM_SLUG}}"
+              }
+            ],
+            "output": {
+              "id": "out.data.id",
+              "status": "out.data.status",
+              "shareUrl": "out.data.shareUrl"
+            }
+          }
+        ],
+        "messages": {
+          "success": {
+            "en": "Social post updated. Preview: {{shareUrl}}.",
+            "de": "Social-Post aktualisiert. Vorschau: {{shareUrl}}."
+          }
+        }
+      },
+      "extras": null
     },
     {
       "key": "none:poll-results",
@@ -691,554 +1496,6 @@
             "abi": "hash:6305d23fc0759ecaddbc37107385954f77f0b2df97eaf5ef4dc0d56c4c7c7337"
           }
         ]
-      },
-      "extras": null
-    },
-    {
-      "key": "none:whatsapp-auth",
-      "identifier": "@whatsapp-auth",
-      "alias": "whatsapp-auth",
-      "chain": "none",
-      "hash": "6955f895e67288a13025f7025fa191503693bf120098af54de32578d5719c815",
-      "checksum": "6955f895e67288a13025f7025fa191503693bf120098af54de32578d5719c815",
-      "name": "WhatsApp: Pair Personal",
-      "title": {
-        "en": "Pair Personal WhatsApp",
-        "de": "Persönliches WhatsApp koppeln",
-        "es": "Pair Personal WhatsApp",
-        "fr": "Pair Personal WhatsApp",
-        "ro": "Pair Personal WhatsApp",
-        "it": "Pair Personal WhatsApp"
-      },
-      "description": {
-        "en": "Open the WhatsApp pairing QR in a live terminal so you can scan it with your phone.",
-        "de": "Öffnet den WhatsApp-Kopplungs-QR im Live-Terminal zum Scannen mit dem Handy.",
-        "es": "Open the WhatsApp pairing QR in a live terminal so you can scan it with your phone.",
-        "fr": "Open the WhatsApp pairing QR in a live terminal so you can scan it with your phone.",
-        "ro": "Open the WhatsApp pairing QR in a live terminal so you can scan it with your phone.",
-        "it": "Open the WhatsApp pairing QR in a live terminal so you can scan it with your phone."
-      },
-      "preview": null,
-      "creator": "github:JoAiHQ/warps",
-      "privileges": [],
-      "listed": true,
-      "visibility": "public",
-      "primaryAddress": null,
-      "primaryFunc": null,
-      "brand": {
-        "hash": "b83531cba0a021500d9201fe0b758945852b8e839d35815973abe4c647c01401",
-        "slug": "whatsapp",
-        "active": true,
-        "protocol": "brand:0.2.0",
-        "name": "WhatsApp",
-        "description": {
-          "en": "Pair personal WhatsApp and forward inbound messages to agent hooks.",
-          "de": "Persönliches WhatsApp koppeln und eingehende Nachrichten an Agent-Hooks weiterleiten."
-        },
-        "logo": {
-          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/whatsapp.svg"
-        },
-        "urls": {
-          "web": "https://whatsapp.com"
-        },
-        "colors": {
-          "primary": "#25D366"
-        }
-      },
-      "warp": {
-        "protocol": "warp:3.0.0",
-        "name": "WhatsApp: Pair Personal",
-        "title": {
-          "en": "Pair Personal WhatsApp",
-          "de": "Persönliches WhatsApp koppeln",
-          "es": "Pair Personal WhatsApp",
-          "fr": "Pair Personal WhatsApp",
-          "ro": "Pair Personal WhatsApp",
-          "it": "Pair Personal WhatsApp"
-        },
-        "description": {
-          "en": "Open the WhatsApp pairing QR in a live terminal so you can scan it with your phone.",
-          "de": "Öffnet den WhatsApp-Kopplungs-QR im Live-Terminal zum Scannen mit dem Handy.",
-          "es": "Open the WhatsApp pairing QR in a live terminal so you can scan it with your phone.",
-          "fr": "Open the WhatsApp pairing QR in a live terminal so you can scan it with your phone.",
-          "ro": "Open the WhatsApp pairing QR in a live terminal so you can scan it with your phone.",
-          "it": "Open the WhatsApp pairing QR in a live terminal so you can scan it with your phone."
-        },
-        "cli": {
-          "mode": "session"
-        },
-        "actions": [
-          {
-            "type": "prompt",
-            "label": {
-              "en": "Pair",
-              "de": "Koppeln",
-              "es": "Pair",
-              "fr": "Pair",
-              "ro": "Pair",
-              "it": "Pair"
-            },
-            "prompt": "/wacli auth",
-            "cli": {
-              "mode": "session"
-            }
-          }
-        ],
-        "messages": {
-          "success": {
-            "en": "WhatsApp paired.",
-            "de": "WhatsApp gekoppelt.",
-            "es": "WhatsApp paired.",
-            "fr": "WhatsApp paired.",
-            "ro": "WhatsApp paired.",
-            "it": "WhatsApp paired."
-          },
-          "error": {
-            "en": "WhatsApp pairing failed.",
-            "de": "WhatsApp-Kopplung fehlgeschlagen.",
-            "es": "WhatsApp pairing failed.",
-            "fr": "WhatsApp pairing failed.",
-            "ro": "WhatsApp pairing failed.",
-            "it": "WhatsApp pairing failed."
-          }
-        }
-      },
-      "extras": null
-    },
-    {
-      "key": "none:whatsapp-cli-update",
-      "identifier": "@whatsapp-cli-update",
-      "alias": "whatsapp-cli-update",
-      "chain": "none",
-      "hash": "5a9fa5fdaa1173b71ae6b97afba84e6491383c2ad8b5fdde25198e00aefd2e3e",
-      "checksum": "5a9fa5fdaa1173b71ae6b97afba84e6491383c2ad8b5fdde25198e00aefd2e3e",
-      "name": "WhatsApp: Update Personal CLI",
-      "title": {
-        "en": "Update WhatsApp CLI",
-        "de": "WhatsApp CLI aktualisieren",
-        "es": "Actualizar WhatsApp CLI",
-        "fr": "Mettre à jour WhatsApp CLI",
-        "ro": "Actualizează WhatsApp CLI",
-        "it": "Aggiorna WhatsApp CLI"
-      },
-      "description": {
-        "en": "Update wacli to the latest verified release for reliable personal WhatsApp messaging and sync. JoAi checks the downloaded release before installing it in the desktop app's managed tools directory.",
-        "de": "Aktualisiere wacli auf die neueste geprüfte Version, damit persönliche WhatsApp-Nachrichten und der Sync zuverlässig funktionieren. JoAi prüft den Download und installiert ihn im verwalteten Werkzeugordner der Desktop-App.",
-        "es": "Actualiza wacli a la última versión verificada para mantener fiables los mensajes y la sincronización de WhatsApp Personal. JoAi verifica la descarga antes de instalarla en el directorio de herramientas administrado por la aplicación de escritorio.",
-        "fr": "Mettez wacli à jour vers la dernière version vérifiée pour assurer la fiabilité des messages et de la synchronisation WhatsApp personnelle. JoAi vérifie le téléchargement avant de l’installer dans le dossier d’outils géré par l’application de bureau.",
-        "ro": "Actualizează wacli la cea mai nouă versiune verificată pentru mesaje și sincronizare WhatsApp Personal fiabile. JoAi verifică descărcarea înainte de instalarea în directorul de instrumente administrat de aplicația desktop.",
-        "it": "Aggiorna wacli all’ultima versione verificata per mantenere affidabili i messaggi e la sincronizzazione di WhatsApp personale. JoAi verifica il download prima di installarlo nella cartella degli strumenti gestita dall’app desktop."
-      },
-      "preview": null,
-      "creator": "github:JoAiHQ/warps",
-      "privileges": [],
-      "listed": true,
-      "visibility": "public",
-      "primaryAddress": null,
-      "primaryFunc": null,
-      "brand": {
-        "hash": "b83531cba0a021500d9201fe0b758945852b8e839d35815973abe4c647c01401",
-        "slug": "whatsapp",
-        "active": true,
-        "protocol": "brand:0.2.0",
-        "name": "WhatsApp",
-        "description": {
-          "en": "Pair personal WhatsApp and forward inbound messages to agent hooks.",
-          "de": "Persönliches WhatsApp koppeln und eingehende Nachrichten an Agent-Hooks weiterleiten."
-        },
-        "logo": {
-          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/whatsapp.svg"
-        },
-        "urls": {
-          "web": "https://whatsapp.com"
-        },
-        "colors": {
-          "primary": "#25D366"
-        }
-      },
-      "warp": {
-        "protocol": "warp:3.0.0",
-        "name": "WhatsApp: Update Personal CLI",
-        "title": {
-          "en": "Update WhatsApp CLI",
-          "de": "WhatsApp CLI aktualisieren",
-          "es": "Actualizar WhatsApp CLI",
-          "fr": "Mettre à jour WhatsApp CLI",
-          "ro": "Actualizează WhatsApp CLI",
-          "it": "Aggiorna WhatsApp CLI"
-        },
-        "description": {
-          "en": "Update wacli to the latest verified release for reliable personal WhatsApp messaging and sync. JoAi checks the downloaded release before installing it in the desktop app's managed tools directory.",
-          "de": "Aktualisiere wacli auf die neueste geprüfte Version, damit persönliche WhatsApp-Nachrichten und der Sync zuverlässig funktionieren. JoAi prüft den Download und installiert ihn im verwalteten Werkzeugordner der Desktop-App.",
-          "es": "Actualiza wacli a la última versión verificada para mantener fiables los mensajes y la sincronización de WhatsApp Personal. JoAi verifica la descarga antes de instalarla en el directorio de herramientas administrado por la aplicación de escritorio.",
-          "fr": "Mettez wacli à jour vers la dernière version vérifiée pour assurer la fiabilité des messages et de la synchronisation WhatsApp personnelle. JoAi vérifie le téléchargement avant de l’installer dans le dossier d’outils géré par l’application de bureau.",
-          "ro": "Actualizează wacli la cea mai nouă versiune verificată pentru mesaje și sincronizare WhatsApp Personal fiabile. JoAi verifică descărcarea înainte de instalarea în directorul de instrumente administrat de aplicația desktop.",
-          "it": "Aggiorna wacli all’ultima versione verificata per mantenere affidabili i messaggi e la sincronizzazione di WhatsApp personale. JoAi verifica il download prima di installarlo nella cartella degli strumenti gestita dall’app desktop."
-        },
-        "actions": [
-          {
-            "type": "prompt",
-            "label": {
-              "en": "Update",
-              "de": "Aktualisieren",
-              "es": "Actualizar",
-              "fr": "Mettre à jour",
-              "ro": "Actualizează",
-              "it": "Aggiorna"
-            },
-            "prompt": "/brew upgrade wacli"
-          }
-        ],
-        "messages": {
-          "success": {
-            "en": "WhatsApp CLI is up to date.",
-            "de": "WhatsApp CLI ist aktuell.",
-            "es": "WhatsApp CLI está actualizado.",
-            "fr": "WhatsApp CLI est à jour.",
-            "ro": "WhatsApp CLI este actualizat.",
-            "it": "WhatsApp CLI è aggiornato."
-          },
-          "error": {
-            "en": "WhatsApp CLI could not be updated.",
-            "de": "WhatsApp CLI konnte nicht aktualisiert werden.",
-            "es": "No se pudo actualizar WhatsApp CLI.",
-            "fr": "WhatsApp CLI n’a pas pu être mis à jour.",
-            "ro": "WhatsApp CLI nu a putut fi actualizat.",
-            "it": "Non è stato possibile aggiornare WhatsApp CLI."
-          }
-        }
-      },
-      "extras": {
-        "keywords": {
-          "en": [
-            "update wacli",
-            "latest WhatsApp CLI",
-            "fix WhatsApp sync"
-          ],
-          "de": [
-            "wacli aktualisieren",
-            "neueste WhatsApp CLI",
-            "WhatsApp Sync reparieren"
-          ]
-        },
-        "useCases": {
-          "en": [
-            "Install the latest compatible wacli release",
-            "Fix sync failures caused by an outdated WhatsApp protocol",
-            "Keep personal WhatsApp sending reliable"
-          ],
-          "de": [
-            "Die neueste kompatible wacli-Version installieren",
-            "Sync-Fehler durch ein veraltetes WhatsApp-Protokoll beheben",
-            "Persönliche WhatsApp-Nachrichten zuverlässig senden"
-          ]
-        },
-        "category": "communication",
-        "faq": {
-          "en": [
-            {
-              "question": "How do I update wacli?",
-              "answer": "Run this action in the JoAi desktop app to download and verify the latest supported release."
-            },
-            {
-              "question": "Will updating remove my WhatsApp pairing?",
-              "answer": "No. The update replaces only the executable and keeps your local WhatsApp account data."
-            }
-          ],
-          "de": [
-            {
-              "question": "Wie aktualisiere ich wacli?",
-              "answer": "Führe diese Aktion in der JoAi Desktop-App aus, um die neueste unterstützte Version herunterzuladen und zu prüfen."
-            },
-            {
-              "question": "Geht meine WhatsApp-Kopplung beim Update verloren?",
-              "answer": "Nein. Das Update ersetzt nur das Programm und behält deine lokalen WhatsApp-Kontodaten."
-            }
-          ]
-        }
-      }
-    },
-    {
-      "key": "none:whatsapp-send-text",
-      "identifier": "@whatsapp-send-text",
-      "alias": "whatsapp-send-text",
-      "chain": "none",
-      "hash": "47f93ea5c25a63ca5f28879b1f9f290497662d68e06a92a660a23bb2497d9c65",
-      "checksum": "47f93ea5c25a63ca5f28879b1f9f290497662d68e06a92a660a23bb2497d9c65",
-      "name": "WhatsApp: Send Text",
-      "title": {
-        "en": "Send WhatsApp Message",
-        "de": "WhatsApp-Nachricht senden",
-        "es": "Send WhatsApp Message",
-        "fr": "Send WhatsApp Message",
-        "ro": "Send WhatsApp Message",
-        "it": "Send WhatsApp Message"
-      },
-      "description": {
-        "en": "Send a text message to any phone number via WhatsApp. Perfect for customer notifications, order updates, reminders, or quick personal messages directly from your agent.",
-        "de": "Sende eine Textnachricht an beliebige Telefonnummern über WhatsApp. Ideal für Kundenbenachrichtigungen, Bestellupdates, Erinnerungen oder schnelle persönliche Nachrichten direkt von deinem Agenten.",
-        "es": "Send a text message to any phone number via WhatsApp. Perfect for customer notifications, order updates, reminders, or quick personal messages directly from your agent.",
-        "fr": "Send a text message to any phone number via WhatsApp. Perfect for customer notifications, order updates, reminders, or quick personal messages directly from your agent.",
-        "ro": "Send a text message to any phone number via WhatsApp. Perfect for customer notifications, order updates, reminders, or quick personal messages directly from your agent.",
-        "it": "Send a text message to any phone number via WhatsApp. Perfect for customer notifications, order updates, reminders, or quick personal messages directly from your agent."
-      },
-      "preview": null,
-      "creator": "github:JoAiHQ/warps",
-      "privileges": [],
-      "listed": true,
-      "visibility": "public",
-      "primaryAddress": null,
-      "primaryFunc": null,
-      "brand": {
-        "hash": "b83531cba0a021500d9201fe0b758945852b8e839d35815973abe4c647c01401",
-        "slug": "whatsapp",
-        "active": true,
-        "protocol": "brand:0.2.0",
-        "name": "WhatsApp",
-        "description": {
-          "en": "Pair personal WhatsApp and forward inbound messages to agent hooks.",
-          "de": "Persönliches WhatsApp koppeln und eingehende Nachrichten an Agent-Hooks weiterleiten."
-        },
-        "logo": {
-          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/whatsapp.svg"
-        },
-        "urls": {
-          "web": "https://whatsapp.com"
-        },
-        "colors": {
-          "primary": "#25D366"
-        }
-      },
-      "warp": {
-        "protocol": "warp:3.0.0",
-        "name": "WhatsApp: Send Text",
-        "title": {
-          "en": "Send WhatsApp Message",
-          "de": "WhatsApp-Nachricht senden",
-          "es": "Send WhatsApp Message",
-          "fr": "Send WhatsApp Message",
-          "ro": "Send WhatsApp Message",
-          "it": "Send WhatsApp Message"
-        },
-        "description": {
-          "en": "Send a text message to any phone number via WhatsApp. Perfect for customer notifications, order updates, reminders, or quick personal messages directly from your agent.",
-          "de": "Sende eine Textnachricht an beliebige Telefonnummern über WhatsApp. Ideal für Kundenbenachrichtigungen, Bestellupdates, Erinnerungen oder schnelle persönliche Nachrichten direkt von deinem Agenten.",
-          "es": "Send a text message to any phone number via WhatsApp. Perfect for customer notifications, order updates, reminders, or quick personal messages directly from your agent.",
-          "fr": "Send a text message to any phone number via WhatsApp. Perfect for customer notifications, order updates, reminders, or quick personal messages directly from your agent.",
-          "ro": "Send a text message to any phone number via WhatsApp. Perfect for customer notifications, order updates, reminders, or quick personal messages directly from your agent.",
-          "it": "Send a text message to any phone number via WhatsApp. Perfect for customer notifications, order updates, reminders, or quick personal messages directly from your agent."
-        },
-        "actions": [
-          {
-            "type": "prompt",
-            "label": {
-              "en": "Send",
-              "de": "Senden",
-              "es": "Send",
-              "fr": "Send",
-              "ro": "Send",
-              "it": "Send"
-            },
-            "prompt": "/wacli send text --to \"{{phone}}\" --message \"{{message}}\"",
-            "inputs": [
-              {
-                "name": "Phone",
-                "as": "phone",
-                "description": {
-                  "en": "Recipient phone number with country code (e.g. +43660...)",
-                  "de": "Telefonnummer mit Ländervorwahl (z.B. +43660...)",
-                  "es": "Recipient phone number with country code (e.g. +43660...)",
-                  "fr": "Recipient phone number with country code (e.g. +43660...)",
-                  "ro": "Recipient phone number with country code (e.g. +43660...)",
-                  "it": "Recipient phone number with country code (e.g. +43660...)"
-                },
-                "type": "string",
-                "source": "field",
-                "required": true,
-                "modifier": "transform:(value) => value.replace(/^\\+/, '')"
-              },
-              {
-                "name": "Message",
-                "as": "message",
-                "description": {
-                  "en": "The message text to send",
-                  "de": "Der zu sendende Nachrichtentext",
-                  "es": "The message text to send",
-                  "fr": "The message text to send",
-                  "ro": "The message text to send",
-                  "it": "The message text to send"
-                },
-                "type": "string",
-                "source": "field",
-                "required": true
-              }
-            ]
-          }
-        ],
-        "messages": {
-          "success": {
-            "en": "Message sent to {{phone}}.",
-            "de": "Nachricht an {{phone}} gesendet.",
-            "es": "Message sent to {{phone}}.",
-            "fr": "Message sent to {{phone}}.",
-            "ro": "Message sent to {{phone}}.",
-            "it": "Message sent to {{phone}}."
-          },
-          "error": {
-            "en": "Failed to send message to {{phone}}.",
-            "de": "Nachricht an {{phone}} konnte nicht gesendet werden.",
-            "es": "Failed to send message to {{phone}}.",
-            "fr": "Failed to send message to {{phone}}.",
-            "ro": "Failed to send message to {{phone}}.",
-            "it": "Failed to send message to {{phone}}."
-          }
-        }
-      },
-      "extras": null
-    },
-    {
-      "key": "none:whatsapp-sync",
-      "identifier": "@whatsapp-sync",
-      "alias": "whatsapp-sync",
-      "chain": "none",
-      "hash": "1653e82199b0c8e66ec2b81e47b5b26c15a3f93ccd9737e103aef7ae662d1d8f",
-      "checksum": "1653e82199b0c8e66ec2b81e47b5b26c15a3f93ccd9737e103aef7ae662d1d8f",
-      "name": "WhatsApp: Sync Personal",
-      "title": {
-        "en": "Sync Personal WhatsApp",
-        "de": "Persönliches WhatsApp synchronisieren",
-        "es": "Sync Personal WhatsApp",
-        "fr": "Sync Personal WhatsApp",
-        "ro": "Sync Personal WhatsApp",
-        "it": "Sync Personal WhatsApp"
-      },
-      "description": {
-        "en": "Keep personal WhatsApp in sync and forward new messages to your agent webhook while this laptop is online.",
-        "de": "Hält persönliches WhatsApp synchron und leitet neue Nachrichten an den Agent-Webhook weiter, solange dieses Laptop online ist.",
-        "es": "Keep personal WhatsApp in sync and forward new messages to your agent webhook while this laptop is online.",
-        "fr": "Keep personal WhatsApp in sync and forward new messages to your agent webhook while this laptop is online.",
-        "ro": "Keep personal WhatsApp in sync and forward new messages to your agent webhook while this laptop is online.",
-        "it": "Keep personal WhatsApp in sync and forward new messages to your agent webhook while this laptop is online."
-      },
-      "preview": null,
-      "creator": "github:JoAiHQ/warps",
-      "privileges": [],
-      "listed": true,
-      "visibility": "public",
-      "primaryAddress": null,
-      "primaryFunc": null,
-      "brand": {
-        "hash": "b83531cba0a021500d9201fe0b758945852b8e839d35815973abe4c647c01401",
-        "slug": "whatsapp",
-        "active": true,
-        "protocol": "brand:0.2.0",
-        "name": "WhatsApp",
-        "description": {
-          "en": "Pair personal WhatsApp and forward inbound messages to agent hooks.",
-          "de": "Persönliches WhatsApp koppeln und eingehende Nachrichten an Agent-Hooks weiterleiten."
-        },
-        "logo": {
-          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/whatsapp.svg"
-        },
-        "urls": {
-          "web": "https://whatsapp.com"
-        },
-        "colors": {
-          "primary": "#25D366"
-        }
-      },
-      "warp": {
-        "protocol": "warp:3.0.0",
-        "name": "WhatsApp: Sync Personal",
-        "title": {
-          "en": "Sync Personal WhatsApp",
-          "de": "Persönliches WhatsApp synchronisieren",
-          "es": "Sync Personal WhatsApp",
-          "fr": "Sync Personal WhatsApp",
-          "ro": "Sync Personal WhatsApp",
-          "it": "Sync Personal WhatsApp"
-        },
-        "description": {
-          "en": "Keep personal WhatsApp in sync and forward new messages to your agent webhook while this laptop is online.",
-          "de": "Hält persönliches WhatsApp synchron und leitet neue Nachrichten an den Agent-Webhook weiter, solange dieses Laptop online ist.",
-          "es": "Keep personal WhatsApp in sync and forward new messages to your agent webhook while this laptop is online.",
-          "fr": "Keep personal WhatsApp in sync and forward new messages to your agent webhook while this laptop is online.",
-          "ro": "Keep personal WhatsApp in sync and forward new messages to your agent webhook while this laptop is online.",
-          "it": "Keep personal WhatsApp in sync and forward new messages to your agent webhook while this laptop is online."
-        },
-        "cli": {
-          "mode": "session"
-        },
-        "hook": {
-          "source": "wacli"
-        },
-        "actions": [
-          {
-            "type": "prompt",
-            "label": {
-              "en": "Start sync",
-              "de": "Sync starten",
-              "es": "Start sync",
-              "fr": "Start sync",
-              "ro": "Start sync",
-              "it": "Start sync"
-            },
-            "prompt": "/wacli sync --follow --presence-mode quiet --max-reconnect 0 --webhook \"{{webhookUrl}}\" --webhook-secret \"{{webhookSecret}}\"",
-            "cli": {
-              "mode": "session"
-            },
-            "inputs": [
-              {
-                "name": "Webhook URL",
-                "as": "webhookUrl",
-                "description": {
-                  "en": "Agent inbound hooks URL",
-                  "de": "Agent-Inbound-Hooks-URL",
-                  "es": "Agent inbound hooks URL",
-                  "fr": "Agent inbound hooks URL",
-                  "ro": "Agent inbound hooks URL",
-                  "it": "Agent inbound hooks URL"
-                },
-                "type": "string",
-                "source": "field",
-                "required": true
-              },
-              {
-                "name": "Webhook secret",
-                "as": "webhookSecret",
-                "description": {
-                  "en": "HMAC secret for the inbound webhook signature",
-                  "de": "HMAC-Geheimnis für die Inbound-Webhook-Signatur",
-                  "es": "HMAC secret for the inbound webhook signature",
-                  "fr": "HMAC secret for the inbound webhook signature",
-                  "ro": "HMAC secret for the inbound webhook signature",
-                  "it": "HMAC secret for the inbound webhook signature"
-                },
-                "type": "string",
-                "source": "field",
-                "required": true
-              }
-            ]
-          }
-        ],
-        "messages": {
-          "success": {
-            "en": "WhatsApp sync started.",
-            "de": "WhatsApp-Sync gestartet.",
-            "es": "WhatsApp sync started.",
-            "fr": "WhatsApp sync started.",
-            "ro": "WhatsApp sync started.",
-            "it": "WhatsApp sync started."
-          },
-          "error": {
-            "en": "WhatsApp sync failed.",
-            "de": "WhatsApp-Sync fehlgeschlagen.",
-            "es": "WhatsApp sync failed.",
-            "fr": "WhatsApp sync failed.",
-            "ro": "WhatsApp sync failed.",
-            "it": "WhatsApp sync failed."
-          }
-        }
       },
       "extras": null
     }
