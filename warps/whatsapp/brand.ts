@@ -8,7 +8,7 @@ export const brand = async (config: WarpClientConfig): Promise<WarpbaseBrand> =>
       en: 'Pair personal WhatsApp and forward inbound messages to agent hooks.',
       de: 'Persönliches WhatsApp koppeln und eingehende Nachrichten an Agent-Hooks weiterleiten.',
     })
-    .setLogo('https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/whatsapp.png')
+    .setLogo('https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/whatsapp.svg')
     .setColors({ primary: '#25D366' })
     .setUrls({ web: 'https://whatsapp.com' })
     .build(),

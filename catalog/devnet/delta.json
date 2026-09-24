@@ -4,790 +4,25 @@
   "repo": "JoAiHQ/warps",
   "branch": "dev",
   "network": "devnet",
-  "commitSha": "d9b5c0bf9615c8d7a01db5075b106a94ad721674",
-  "committedAt": "2026-09-22T19:59:12.595Z",
-  "generatedAt": "2026-09-22T19:59:15.047Z",
+  "commitSha": "7581153b98a6334293ced685956e1f484d13dcdf",
+  "committedAt": "2026-09-24T11:22:44.850Z",
+  "generatedAt": "2026-09-24T11:22:47.115Z",
   "upserts": [
     {
-      "key": "none:appointment-availability",
-      "identifier": "@appointment-availability",
-      "alias": "appointment-availability",
+      "key": "none:joai-update-create",
+      "identifier": "@joai-update-create",
+      "alias": "joai-update-create",
       "chain": "none",
-      "hash": "e36840e417d2238a27d82fc3b3e487b11d01a79ccda487b596b633c69297a3ae",
-      "checksum": "e36840e417d2238a27d82fc3b3e487b11d01a79ccda487b596b633c69297a3ae",
-      "name": "Appointments: Availability",
+      "hash": "9628688a26890a2cea53bfabc452d61f552be016f1dd55a76b14aad8b76f15ea",
+      "checksum": "9628688a26890a2cea53bfabc452d61f552be016f1dd55a76b14aad8b76f15ea",
+      "name": "JoAi: Create Update",
       "title": {
-        "en": "Appointment availability",
-        "de": "Terminverfuegbarkeit",
-        "fr": "Disponibilite des rendez-vous",
-        "es": "Disponibilidad de citas",
-        "ro": "Disponibilitatea programarilor",
-        "it": "Appointment availability"
+        "en": "Post an update",
+        "de": "Update veröffentlichen"
       },
       "description": {
-        "en": "Collect booking details and return appointment availability from the current agent calendar.",
-        "de": "Sammelt Buchungsdetails und liefert Terminverfuegbarkeit aus dem Kalender des aktuellen Agenten.",
-        "fr": "Collectez les details de reservation et recuperez les disponibilites depuis le calendrier de l agent actuel.",
-        "es": "Recoge los datos de la reserva y devuelve la disponibilidad desde el calendario del agente actual.",
-        "ro": "Colecteaza detaliile rezervarii si intoarce disponibilitatea din calendarul agentului curent.",
-        "it": "Collect booking details and return appointment availability from the current agent calendar."
-      },
-      "preview": null,
-      "creator": "github:JoAiHQ/warps",
-      "privileges": [],
-      "listed": true,
-      "visibility": "public",
-      "primaryAddress": null,
-      "primaryFunc": null,
-      "brand": {
-        "hash": "873defa13190da1a0124161ec46673a00290697aaea9851a2b8fc027482adac9",
-        "slug": "appointment",
-        "active": true,
-        "protocol": "brand:0.2.0",
-        "name": "Appointment",
-        "description": {
-          "en": "Appointment booking and intake flows for service businesses.",
-          "de": "Terminbuchung und Intake-Abläufe für Dienstleistungsunternehmen.",
-          "fr": "Prise de rendez-vous et parcours de reservation pour les entreprises de services.",
-          "es": "Reservas de citas y flujos de atencion para negocios de servicios.",
-          "ro": "Programari si fluxuri de preluare pentru afaceri de servicii."
-        },
-        "logo": {
-          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
-        },
-        "urls": {
-          "web": "https://joai.ai"
-        }
-      },
-      "warp": {
-        "protocol": "warp:3.0.0",
-        "name": "Appointments: Availability",
-        "title": {
-          "en": "Appointment availability",
-          "de": "Terminverfuegbarkeit",
-          "fr": "Disponibilite des rendez-vous",
-          "es": "Disponibilidad de citas",
-          "ro": "Disponibilitatea programarilor",
-          "it": "Appointment availability"
-        },
-        "description": {
-          "en": "Collect booking details and return appointment availability from the current agent calendar.",
-          "de": "Sammelt Buchungsdetails und liefert Terminverfuegbarkeit aus dem Kalender des aktuellen Agenten.",
-          "fr": "Collectez les details de reservation et recuperez les disponibilites depuis le calendrier de l agent actuel.",
-          "es": "Recoge los datos de la reserva y devuelve la disponibilidad desde el calendario del agente actual.",
-          "ro": "Colecteaza detaliile rezervarii si intoarce disponibilitatea din calendarul agentului curent.",
-          "it": "Collect booking details and return appointment availability from the current agent calendar."
-        },
-        "bot": "REQUIRED first step for any appointment booking. Do not create calendar events directly; that bypasses availability checks, policy rules, and attendee tracking. Collect purpose, preferred time, timezone, and attendee contacts. Convert relative dates to exact ISO datetimes with an explicit year (use the current year/next occurrence — never a past year). If the user agrees on a specific time (e.g. 'Wednesday Oct 7 at 11:00'), set windowStart to that exact datetime and windowEnd to start + durationMinutes — do NOT expand to a full day or next-day midnight. Only use a broad day/range window when the user is still flexible. Prefer contactIds from CRM (find-or-create / list contacts first); use attendeeName only as a fallback when no contacts exist yet.",
-        "vars": {
-          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
-          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
-        },
-        "actions": [
-          {
-            "type": "collect",
-            "label": {
-              "en": "Check availability",
-              "de": "Verfuegbarkeit pruefen",
-              "fr": "Verifier les disponibilites",
-              "es": "Ver disponibilidad",
-              "ro": "Verifica disponibilitatea",
-              "it": "Check availability"
-            },
-            "destination": {
-              "url": "https://devnet-api.joai.ai/v1/agents/{{JOAI_AGENT_UUID}}/appointments/availability",
-              "method": "POST",
-              "headers": {
-                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
-              }
-            },
-            "inputs": [
-              {
-                "name": "Appointment Title",
-                "as": "title",
-                "description": {
-                  "en": "The purpose of the appointment",
-                  "de": "Der Zweck des Termins",
-                  "fr": "Objet du rendez-vous",
-                  "es": "Motivo de la cita",
-                  "ro": "Scopul programarii",
-                  "it": "The purpose of the appointment"
-                },
-                "bot": "Short title describing the appointment, such as 'Intro Call', 'Product Demo', or 'Support Session'.",
-                "type": "string",
-                "source": "field",
-                "required": true,
-                "min": 3
-              },
-              {
-                "name": "Window Start",
-                "as": "windowStart",
-                "description": {
-                  "en": "The earliest acceptable start time in ISO format",
-                  "de": "Die frueheste moegliche Startzeit im ISO-Format",
-                  "fr": "Heure de debut la plus tot acceptable au format ISO",
-                  "es": "Hora mas temprana aceptable en formato ISO",
-                  "ro": "Cea mai devreme ora acceptata de inceput in format ISO",
-                  "it": "The earliest acceptable start time in ISO format"
-                },
-                "bot": "Earliest acceptable appointment start in ISO 8601 with time of day (never date-only / midnight unless the user said 'anytime that day'). For an agreed slot like 11:00, use that exact time, e.g. 2026-10-07T11:00:00+02:00. Verify the weekday matches the date.",
-                "type": "datetime",
-                "source": "field",
-                "required": true
-              },
-              {
-                "name": "Window End",
-                "as": "windowEnd",
-                "description": {
-                  "en": "The latest acceptable end of the scheduling window in ISO format",
-                  "de": "Das spaeteste Ende des Zeitfensters im ISO-Format",
-                  "fr": "Heure de fin la plus tardive acceptable pour le creneau au format ISO",
-                  "es": "Fin mas tardio aceptable de la franja horaria en formato ISO",
-                  "ro": "Cel mai tarziu sfarsit acceptat al intervalului in format ISO",
-                  "it": "The latest acceptable end of the scheduling window in ISO format"
-                },
-                "bot": "End of the acceptable scheduling window in ISO 8601 with time of day. For an agreed slot, set this to windowStart + durationMinutes (e.g. 11:00 start / 30 min → 11:30 same day). Do not push end to the next calendar day unless the user asked for a multi-day search window.",
-                "type": "datetime",
-                "source": "field",
-                "required": true
-              },
-              {
-                "name": "Duration Minutes",
-                "as": "durationMinutes",
-                "description": {
-                  "en": "Appointment length in minutes",
-                  "de": "Terminlaenge in Minuten",
-                  "fr": "Duree du rendez-vous en minutes",
-                  "es": "Duracion de la cita en minutos",
-                  "ro": "Durata programarii in minute",
-                  "it": "Appointment length in minutes"
-                },
-                "bot": "Meeting duration in minutes. Use 30 unless the user asks for a different length.",
-                "type": "number",
-                "source": "var",
-                "required": true,
-                "default": 30
-              },
-              {
-                "name": "Contact IDs",
-                "as": "contactIds",
-                "description": {
-                  "en": "CRM contact IDs for the attendees",
-                  "de": "CRM-Kontakt-IDs der Teilnehmer",
-                  "fr": "IDs des contacts CRM des participants",
-                  "es": "IDs de los contactos CRM de los asistentes",
-                  "ro": "ID-urile contactelor CRM ale participantilor",
-                  "it": "CRM contact IDs for the attendees"
-                },
-                "bot": "Preferred. Pass CRM contact hashids as a JSON array. Resolve via find-or-create / list first; never invent duplicates.",
-                "type": "json",
-                "source": "field",
-                "required": false
-              },
-              {
-                "name": "Attendee Name",
-                "as": "attendeeName",
-                "description": {
-                  "en": "The attendee or requester name",
-                  "de": "Name des Teilnehmers oder Anfragenden",
-                  "fr": "Nom du participant ou du demandeur",
-                  "es": "Nombre de la persona asistente o solicitante",
-                  "ro": "Numele participantului sau al solicitantului",
-                  "it": "The attendee or requester name"
-                },
-                "bot": "Fallback only when contactIds is unavailable. Prefer contactIds.",
-                "type": "string",
-                "source": "field",
-                "required": false
-              },
-              {
-                "name": "Attendee Email",
-                "as": "attendeeEmail",
-                "description": {
-                  "en": "The attendee or requester email",
-                  "de": "E-Mail des Teilnehmers oder Anfragenden",
-                  "fr": "E-mail du participant ou du demandeur",
-                  "es": "Correo de la persona asistente o solicitante",
-                  "ro": "E-mailul participantului sau al solicitantului",
-                  "it": "The attendee or requester email"
-                },
-                "bot": "Optional if contactIds is set (emails come from the contacts). Otherwise pass when known.",
-                "type": "string",
-                "source": "field",
-                "required": false
-              },
-              {
-                "name": "Notes",
-                "as": "description",
-                "description": {
-                  "en": "Optional notes or agenda",
-                  "de": "Optionale Notizen oder Agenda",
-                  "fr": "Notes ou ordre du jour facultatifs",
-                  "es": "Notas o agenda opcionales",
-                  "ro": "Note sau agenda optionale",
-                  "it": "Optional notes or agenda"
-                },
-                "bot": "Optional notes, context, or agenda for the appointment.",
-                "type": "string",
-                "source": "field",
-                "required": false
-              },
-              {
-                "name": "Timezone",
-                "as": "timezone",
-                "type": "string",
-                "source": "field",
-                "required": false
-              }
-            ]
-          }
-        ],
-        "sections": [
-          {
-            "title": {
-              "en": "What's it about?",
-              "de": "Worum geht es?",
-              "fr": "De quoi s agit-il ?",
-              "es": "De que se trata?",
-              "ro": "Despre ce este vorba?",
-              "it": "What's it about?"
-            },
-            "description": {
-              "en": "Give us a quick idea of the purpose.",
-              "de": "Gib uns eine kurze Idee des Zwecks.",
-              "fr": "Donnez-nous rapidement le contexte du rendez-vous.",
-              "es": "Cuentanos brevemente el motivo.",
-              "ro": "Spune-ne pe scurt care este scopul.",
-              "it": "Give us a quick idea of the purpose."
-            },
-            "inputs": [
-              "title"
-            ]
-          },
-          {
-            "title": {
-              "en": "When are you free?",
-              "de": "Wann hast du Zeit?",
-              "fr": "Quand etes-vous disponible ?",
-              "es": "Cuando te viene bien?",
-              "ro": "Cand esti disponibil?",
-              "it": "When are you free?"
-            },
-            "description": {
-              "en": "Pick a window and we'll find the best slot.",
-              "de": "Wähle ein Zeitfenster und wir finden den besten Slot.",
-              "fr": "Choisissez un creneau et nous trouverons le meilleur horaire.",
-              "es": "Elige una franja y encontraremos el mejor hueco.",
-              "ro": "Alege un interval si gasim cel mai bun slot.",
-              "it": "Pick a window and we'll find the best slot."
-            },
-            "inputs": [
-              "windowStart",
-              "windowEnd"
-            ]
-          },
-          {
-            "title": {
-              "en": "About you",
-              "de": "Über dich",
-              "fr": "A votre sujet",
-              "es": "Sobre ti",
-              "ro": "Despre tine",
-              "it": "About you"
-            },
-            "description": {
-              "en": "So we know who to expect.",
-              "de": "Damit wir wissen, wen wir erwarten.",
-              "fr": "Pour savoir qui nous allons recevoir.",
-              "es": "Asi sabremos a quien esperar.",
-              "ro": "Ca sa stim pe cine asteptam.",
-              "it": "So we know who to expect."
-            },
-            "inputs": [
-              "contactIds",
-              "attendeeName",
-              "attendeeEmail",
-              "description"
-            ]
-          }
-        ],
-        "output": {
-          "CONNECTED": "out.data.connected",
-          "TIMEZONE": "out.data.timezone",
-          "SERVICE": "out.data.service",
-          "SLOTS": "out.data.slots",
-          "SLOT_COUNT": "out.data.slots.length"
-        },
-        "messages": {
-          "error": {
-            "en": "Failed to check appointment availability: {{MESSAGE}}"
-          },
-          "success": {
-            "en": "Found {{SLOT_COUNT}} appointment slot(s).",
-            "de": "{{SLOT_COUNT}} Terminvorschlaege gefunden.",
-            "fr": "{{SLOT_COUNT}} creneau(x) de rendez-vous trouve(s).",
-            "es": "Se han encontrado {{SLOT_COUNT}} horario(s) disponible(s).",
-            "ro": "Am gasit {{SLOT_COUNT}} interval(e) disponibile pentru programare.",
-            "it": "Found {{SLOT_COUNT}} appointment slot(s)."
-          }
-        }
-      },
-      "extras": {
-        "keywords": {
-          "en": [
-            "check availability",
-            "available time slots",
-            "open appointments",
-            "free schedule slots"
-          ],
-          "de": [
-            "Verfügbarkeit prüfen",
-            "verfügbare Zeitslots",
-            "offene Termine",
-            "freie Terminslots"
-          ]
-        },
-        "useCases": {
-          "en": [
-            "Browse available slots for next week before booking",
-            "Check if a specific date and time is still open",
-            "Find the earliest available appointment slot"
-          ],
-          "de": [
-            "Verfügbare Slots für nächste Woche vor der Buchung durchsuchen",
-            "Prüfen, ob ein bestimmtes Datum und eine bestimmte Uhrzeit noch frei ist",
-            "Den frühesten verfügbaren Terminslot finden"
-          ]
-        },
-        "category": "productivity",
-        "faq": {
-          "en": [
-            {
-              "question": "How are available appointment slots determined?",
-              "answer": "Available slots are based on the provider's configured working hours, existing bookings, and buffer times between appointments. Only genuinely open slots are shown."
-            },
-            {
-              "question": "Can I check availability for a specific date?",
-              "answer": "Yes, specify a date to see all open time slots for that day. You can also browse multiple days to find the most convenient option."
-            }
-          ],
-          "de": [
-            {
-              "question": "Wie werden verfügbare Terminslots ermittelt?",
-              "answer": "Verfügbare Slots basieren auf den konfigurierten Arbeitszeiten des Anbieters, bestehenden Buchungen und Pufferzeiten zwischen Terminen. Es werden nur tatsächlich freie Slots angezeigt."
-            },
-            {
-              "question": "Kann ich die Verfügbarkeit für ein bestimmtes Datum prüfen?",
-              "answer": "Ja, gib ein Datum an, um alle offenen Zeitslots für diesen Tag zu sehen. Du kannst auch mehrere Tage durchsuchen, um die passendste Option zu finden."
-            }
-          ]
-        }
-      }
-    },
-    {
-      "key": "none:appointment-book-confirm",
-      "identifier": "@appointment-book-confirm",
-      "alias": "appointment-book-confirm",
-      "chain": "none",
-      "hash": "4cd1af9c5a85d09303f0a93c61fc983bed7982fd3a71012990399324727f1191",
-      "checksum": "4cd1af9c5a85d09303f0a93c61fc983bed7982fd3a71012990399324727f1191",
-      "name": "Appointments: Book",
-      "title": {
-        "en": "Book appointment",
-        "de": "Termin buchen",
-        "fr": "Confirmer le rendez-vous",
-        "es": "Reservar cita",
-        "ro": "Confirma programarea",
-        "it": "Book appointment"
-      },
-      "description": {
-        "en": "Book a confirmed appointment slot for the current agent.",
-        "de": "Bucht einen bestaetigten Termin fuer den aktuellen Agenten.",
-        "fr": "Confirmez un creneau de rendez-vous pour l agent actuel.",
-        "es": "Reserva un horario ya confirmado para el agente actual.",
-        "ro": "Rezerva un interval confirmat pentru agentul curent.",
-        "it": "Book a confirmed appointment slot for the current agent."
-      },
-      "preview": null,
-      "creator": "github:JoAiHQ/warps",
-      "privileges": [],
-      "listed": true,
-      "visibility": "public",
-      "primaryAddress": null,
-      "primaryFunc": null,
-      "brand": {
-        "hash": "873defa13190da1a0124161ec46673a00290697aaea9851a2b8fc027482adac9",
-        "slug": "appointment",
-        "active": true,
-        "protocol": "brand:0.2.0",
-        "name": "Appointment",
-        "description": {
-          "en": "Appointment booking and intake flows for service businesses.",
-          "de": "Terminbuchung und Intake-Abläufe für Dienstleistungsunternehmen.",
-          "fr": "Prise de rendez-vous et parcours de reservation pour les entreprises de services.",
-          "es": "Reservas de citas y flujos de atencion para negocios de servicios.",
-          "ro": "Programari si fluxuri de preluare pentru afaceri de servicii."
-        },
-        "logo": {
-          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
-        },
-        "urls": {
-          "web": "https://joai.ai"
-        }
-      },
-      "warp": {
-        "protocol": "warp:3.0.0",
-        "name": "Appointments: Book",
-        "title": {
-          "en": "Book appointment",
-          "de": "Termin buchen",
-          "fr": "Confirmer le rendez-vous",
-          "es": "Reservar cita",
-          "ro": "Confirma programarea",
-          "it": "Book appointment"
-        },
-        "description": {
-          "en": "Book a confirmed appointment slot for the current agent.",
-          "de": "Bucht einen bestaetigten Termin fuer den aktuellen Agenten.",
-          "fr": "Confirmez un creneau de rendez-vous pour l agent actuel.",
-          "es": "Reserva un horario ya confirmado para el agente actual.",
-          "ro": "Rezerva un interval confirmat pentru agentul curent.",
-          "it": "Book a confirmed appointment slot for the current agent."
-        },
-        "bot": "Use this only after running appointment-availability and the user has explicitly chosen a slot from the results. Never substitute this with direct calendar event creation — that skips booking policy, overlap checks, and attendee tracking. Always refer to bookings as 'appointments', never 'meetings'. Prefer contactIds for attendees (resolve via CRM find-or-create / list — never invent duplicates). Fall back to attendeeName/email only when no contacts exist. Build a descriptive title combining purpose and name (e.g. 'Consultation with Anna Schmidt'). Pass exact start time from the chosen slot as scheduledAt.",
-        "vars": {
-          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
-          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
-        },
-        "actions": [
-          {
-            "type": "collect",
-            "label": {
-              "en": "Book now",
-              "de": "Jetzt buchen",
-              "fr": "Confirmer maintenant",
-              "es": "Reservar ahora",
-              "ro": "Rezerva acum",
-              "it": "Book now"
-            },
-            "destination": {
-              "url": "https://devnet-api.joai.ai/v1/agents/{{JOAI_AGENT_UUID}}/appointments/book",
-              "method": "POST",
-              "headers": {
-                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
-              }
-            },
-            "inputs": [
-              {
-                "name": "Appointment Title",
-                "as": "title",
-                "description": {
-                  "en": "Descriptive title shown on the calendar event",
-                  "de": "Aussagekräftiger Titel für den Kalendereintrag",
-                  "fr": "Titre descriptif affiche dans l evenement du calendrier",
-                  "es": "Titulo descriptivo que aparecera en el calendario",
-                  "ro": "Titlu descriptiv afisat in evenimentul din calendar",
-                  "it": "Descriptive title shown on the calendar event"
-                },
-                "bot": "Required. A descriptive title that identifies the appointment at a glance. Always combine the meeting purpose AND the attendee name, e.g. 'Consultation with Anna Schmidt', 'Demo call with Acme Corp', 'Tax review with John Doe'. Never use generic titles like 'Appointment' or 'Meeting'.",
-                "type": "string",
-                "source": "field",
-                "required": true,
-                "min": 3
-              },
-              {
-                "name": "Scheduled At",
-                "as": "scheduledAt",
-                "description": {
-                  "en": "Exact appointment start in ISO format",
-                  "de": "Exakter Startzeitpunkt im ISO-Format",
-                  "fr": "Heure exacte de debut du rendez-vous au format ISO",
-                  "es": "Hora exacta de inicio en formato ISO",
-                  "ro": "Ora exacta de inceput a programarii in format ISO",
-                  "it": "Exact appointment start in ISO format"
-                },
-                "bot": "Exact confirmed appointment start in ISO 8601 format.",
-                "type": "string",
-                "source": "field",
-                "required": true
-              },
-              {
-                "name": "Timezone",
-                "as": "timezone",
-                "description": {
-                  "en": "Appointment timezone",
-                  "de": "Zeitzone des Termins",
-                  "fr": "Fuseau horaire du rendez-vous",
-                  "es": "Zona horaria de la cita",
-                  "ro": "Fusul orar al programarii",
-                  "it": "Appointment timezone"
-                },
-                "bot": "Timezone identifier like Europe/Vienna, America/New_York, or UTC.",
-                "type": "string",
-                "source": "field",
-                "required": false
-              },
-              {
-                "name": "Service Slug",
-                "as": "serviceSlug",
-                "description": {
-                  "en": "Optional configured service identifier",
-                  "de": "Optionaler Bezeichner fuer einen konfigurierten Service",
-                  "fr": "Identifiant facultatif d un service configure",
-                  "es": "Identificador opcional de un servicio configurado",
-                  "ro": "Identificator optional pentru un serviciu configurat",
-                  "it": "Optional configured service identifier"
-                },
-                "bot": "If the booking belongs to a configured service, pass the same service slug used for availability.",
-                "type": "string",
-                "source": "field",
-                "required": false
-              },
-              {
-                "name": "Routed Agent UUID",
-                "as": "routedAgentUuid",
-                "description": {
-                  "en": "Optional staff agent UUID for routed bookings",
-                  "de": "Optionale UUID des Mitarbeiter-Agenten fuer geroutete Buchungen",
-                  "fr": "UUID facultatif de l agent affecte pour les reservations routees",
-                  "es": "UUID opcional del agente asignado para reservas enrutadas",
-                  "ro": "UUID optional al agentului alocat pentru rezervari directionate",
-                  "it": "Optional staff agent UUID for routed bookings"
-                },
-                "bot": "If appointment availability returned a specific agentUuid for the selected slot, pass it here unchanged.",
-                "type": "string",
-                "source": "field",
-                "required": false
-              },
-              {
-                "name": "Appointment Request ID",
-                "as": "appointmentRequestId",
-                "description": {
-                  "en": "Optional linked appointment request id",
-                  "de": "Optionale verknuepfte Terminanfrage-ID",
-                  "fr": "ID facultatif de la demande de rendez-vous liee",
-                  "es": "ID opcional de la solicitud de cita vinculada",
-                  "ro": "ID optional al cererii de programare asociate",
-                  "it": "Optional linked appointment request id"
-                },
-                "bot": "If this booking is fulfilling a previously created appointment request, pass that request id.",
-                "type": "string",
-                "source": "field",
-                "required": false
-              },
-              {
-                "name": "Contact IDs",
-                "as": "contactIds",
-                "description": {
-                  "en": "CRM contact IDs for the attendees",
-                  "de": "CRM-Kontakt-IDs der Teilnehmer",
-                  "fr": "IDs des contacts CRM des participants",
-                  "es": "IDs de los contactos CRM de los asistentes",
-                  "ro": "ID-urile contactelor CRM ale participantilor",
-                  "it": "CRM contact IDs for the attendees"
-                },
-                "bot": "Preferred. Pass CRM contact hashids as a JSON array. Resolve via find-or-create / list first; never invent duplicates.",
-                "type": "json",
-                "source": "field",
-                "required": false
-              },
-              {
-                "name": "Attendee Name",
-                "as": "attendeeName",
-                "description": {
-                  "en": "Full name of the person the appointment is for",
-                  "de": "Vollständiger Name der Person, für die der Termin ist",
-                  "fr": "Nom complet de la personne pour laquelle le rendez-vous est pris",
-                  "es": "Nombre completo de la persona para la que es la cita",
-                  "ro": "Numele complet al persoanei pentru care este programarea",
-                  "it": "Full name of the person the appointment is for"
-                },
-                "bot": "Required when contactIds is missing. Prefer contactIds. When contactIds is set, name is optional (taken from the contacts).",
-                "type": "string",
-                "source": "field",
-                "required": false,
-                "default": "{{JOAI_SENDER_NAME}}",
-                "min": 2
-              },
-              {
-                "name": "Attendee Email",
-                "as": "attendeeEmail",
-                "description": {
-                  "en": "The attendee email",
-                  "de": "E-Mail des Teilnehmers",
-                  "fr": "E-mail du participant",
-                  "es": "Correo de la persona asistente",
-                  "ro": "E-mailul participantului",
-                  "it": "The attendee email"
-                },
-                "bot": "Optional when contactIds is set. Otherwise pass when known for calendar invites.",
-                "type": "string",
-                "source": "field",
-                "required": false
-              },
-              {
-                "name": "Notes",
-                "as": "description",
-                "description": {
-                  "en": "Optional notes or agenda",
-                  "de": "Optionale Notizen oder Agenda",
-                  "fr": "Notes ou ordre du jour facultatifs",
-                  "es": "Notas o agenda opcionales",
-                  "ro": "Note sau agenda optionale",
-                  "it": "Optional notes or agenda"
-                },
-                "bot": "Optional notes, context, or agenda to include with the appointment.",
-                "type": "string",
-                "source": "field",
-                "required": false
-              },
-              {
-                "name": "Conference Provider",
-                "as": "conferenceProvider",
-                "description": {
-                  "en": "Optional remote meeting provider",
-                  "de": "Optionaler Anbieter fuer Videotermine",
-                  "fr": "Fournisseur facultatif pour la reunion a distance",
-                  "es": "Proveedor opcional para la reunion remota",
-                  "ro": "Furnizor optional pentru intalnirea la distanta",
-                  "it": "Optional remote meeting provider"
-                },
-                "bot": "Use 'google_meet', 'teams', or 'zoom' only if the user explicitly wants a remote meeting link. Otherwise leave empty.",
-                "type": "string",
-                "source": "field",
-                "required": false,
-                "options": {
-                  "google_meet": "Google Meet",
-                  "teams": "Microsoft Teams",
-                  "zoom": {
-                    "en": "Zoom",
-                    "de": "Zoom",
-                    "es": "Zoom",
-                    "fr": "Zoom",
-                    "ro": "Zoom",
-                    "it": "Zoom"
-                  }
-                }
-              }
-            ]
-          }
-        ],
-        "sections": [
-          {
-            "title": {
-              "en": "Who's coming?",
-              "de": "Wer kommt?",
-              "fr": "Qui participe ?",
-              "es": "Quien viene?",
-              "ro": "Cine participa?",
-              "it": "Who's coming?"
-            },
-            "description": {
-              "en": "We'll send your confirmation here.",
-              "de": "Wir schicken die Bestätigung dorthin.",
-              "fr": "Nous enverrons la confirmation a ces coordonnees.",
-              "es": "Enviaremos aqui la confirmacion.",
-              "ro": "Vom trimite confirmarea aici.",
-              "it": "We'll send your confirmation here."
-            },
-            "inputs": [
-              "contactIds",
-              "attendeeName",
-              "attendeeEmail"
-            ]
-          },
-          {
-            "title": {
-              "en": "When is it?",
-              "de": "Wann ist der Termin?",
-              "fr": "Quand a lieu le rendez-vous ?",
-              "es": "Cuando es?",
-              "ro": "Cand are loc?",
-              "it": "When is it?"
-            },
-            "description": {
-              "en": "Confirm the slot you've chosen.",
-              "de": "Bestätige den gewählten Zeitslot.",
-              "fr": "Confirmez le creneau choisi.",
-              "es": "Confirma el horario que has elegido.",
-              "ro": "Confirma intervalul ales.",
-              "it": "Confirm the slot you've chosen."
-            },
-            "inputs": [
-              "scheduledAt",
-              "timezone"
-            ]
-          },
-          {
-            "title": {
-              "en": "Anything else?",
-              "de": "Noch etwas?",
-              "fr": "Autre chose a ajouter ?",
-              "es": "Algo mas?",
-              "ro": "Mai este ceva?",
-              "it": "Anything else?"
-            },
-            "description": {
-              "en": "Add a note or choose how you'd like to meet.",
-              "de": "Füge eine Notiz hinzu oder wähle, wie ihr euch treffen wollt.",
-              "fr": "Ajoutez une note ou choisissez la facon de vous rencontrer.",
-              "es": "Anade una nota o elige como prefieres reunirte.",
-              "ro": "Adauga o nota sau alege cum vreti sa va intalniti.",
-              "it": "Add a note or choose how you'd like to meet."
-            },
-            "inputs": [
-              "description",
-              "conferenceProvider"
-            ]
-          }
-        ],
-        "output": {
-          "MEETING_ID": "out.data.id",
-          "MEETING_URL": "out.data.inviteUrl",
-          "ATTENDEE_EMAIL": "out.data.participants.0.email",
-          "ATTENDEE_NAME": "out.data.participants.0.name",
-          "MEETING_TITLE": "out.data.name",
-          "SCHEDULED_AT": "out.data.scheduledAt"
-        },
-        "messages": {
-          "error": {
-            "en": "Appointment booking failed: {{MESSAGE}}"
-          },
-          "success": {
-            "en": "Appointment booked successfully.",
-            "de": "Termin erfolgreich gebucht.",
-            "fr": "Rendez-vous confirme avec succes.",
-            "es": "Cita reservada correctamente.",
-            "ro": "Programarea a fost confirmata cu succes.",
-            "it": "Appointment booked successfully."
-          }
-        }
-      },
-      "extras": null
-    },
-    {
-      "key": "none:joai-document-list",
-      "identifier": "@joai-document-list",
-      "alias": "joai-document-list",
-      "chain": "none",
-      "hash": "65701417bf36ee433881311625eb64aa0b8dbbe6ca9ce3179e3e59338c1398e7",
-      "checksum": "65701417bf36ee433881311625eb64aa0b8dbbe6ca9ce3179e3e59338c1398e7",
-      "name": "JoAi: List Documents",
-      "title": {
-        "en": "List documents",
-        "de": "Dokumente auflisten",
-        "es": "List documents",
-        "fr": "List documents",
-        "ro": "List documents",
-        "it": "List documents"
-      },
-      "description": {
-        "en": "Retrieve documents from your agent's knowledge base. Filter by type to list only templates, or search by title. Returns paginated results.",
-        "de": "Dokumente aus der Wissensdatenbank deines Agenten abrufen. Nach Typ filtern, z.B. nur Templates, oder nach Titel suchen. Liefert paginierte Ergebnisse.",
-        "es": "Retrieve documents from your agent's knowledge base. Filter by type to list only templates, or search by title. Returns paginated results.",
-        "fr": "Retrieve documents from your agent's knowledge base. Filter by type to list only templates, or search by title. Returns paginated results.",
-        "ro": "Retrieve documents from your agent's knowledge base. Filter by type to list only templates, or search by title. Returns paginated results.",
-        "it": "Retrieve documents from your agent's knowledge base. Filter by type to list only templates, or search by title. Returns paginated results."
+        "en": "Post a deal, event, news, or article-style update for your team so it can appear in connected websites, directories, and public feeds. Supports scheduled publishing windows, links, media, custom props, and draft or published status for local business communication.",
+        "de": "Veröffentliche ein Angebot, Event, News oder einen Artikel für dein Team, damit sie auf verbundenen Websites, in Verzeichnissen und öffentlichen Feeds erscheinen kann. Unterstützt geplante Zeiträume, Links sowie Entwurf- oder Veröffentlichungsstatus für lokale Betriebsinfos."
       },
       "preview": null,
       "creator": "github:JoAiHQ/warps",
@@ -822,249 +57,16 @@
       },
       "warp": {
         "protocol": "warp:3.0.0",
-        "name": "JoAi: List Documents",
+        "name": "JoAi: Create Update",
         "title": {
-          "en": "List documents",
-          "de": "Dokumente auflisten",
-          "es": "List documents",
-          "fr": "List documents",
-          "ro": "List documents",
-          "it": "List documents"
+          "en": "Post an update",
+          "de": "Update veröffentlichen"
         },
         "description": {
-          "en": "Retrieve documents from your agent's knowledge base. Filter by type to list only templates, or search by title. Returns paginated results.",
-          "de": "Dokumente aus der Wissensdatenbank deines Agenten abrufen. Nach Typ filtern, z.B. nur Templates, oder nach Titel suchen. Liefert paginierte Ergebnisse.",
-          "es": "Retrieve documents from your agent's knowledge base. Filter by type to list only templates, or search by title. Returns paginated results.",
-          "fr": "Retrieve documents from your agent's knowledge base. Filter by type to list only templates, or search by title. Returns paginated results.",
-          "ro": "Retrieve documents from your agent's knowledge base. Filter by type to list only templates, or search by title. Returns paginated results.",
-          "it": "Retrieve documents from your agent's knowledge base. Filter by type to list only templates, or search by title. Returns paginated results."
+          "en": "Post a deal, event, news, or article-style update for your team so it can appear in connected websites, directories, and public feeds. Supports scheduled publishing windows, links, media, custom props, and draft or published status for local business communication.",
+          "de": "Veröffentliche ein Angebot, Event, News oder einen Artikel für dein Team, damit sie auf verbundenen Websites, in Verzeichnissen und öffentlichen Feeds erscheinen kann. Unterstützt geplante Zeiträume, Links sowie Entwurf- oder Veröffentlichungsstatus für lokale Betriebsinfos."
         },
-        "bot": "Use this when the user wants to see their documents or templates, or when a workflow needs to look up templates by type or search term.",
-        "vars": {
-          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
-          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
-        },
-        "actions": [
-          {
-            "type": "collect",
-            "auto": true,
-            "label": {
-              "en": "Load documents",
-              "de": "Dokumente laden",
-              "es": "Load documents",
-              "fr": "Load documents",
-              "ro": "Load documents",
-              "it": "Load documents"
-            },
-            "destination": {
-              "url": "https://devnet-api.joai.ai/v1/agents/{{JOAI_AGENT_UUID}}/documents?type={{type}}&search={{search}}&perPage={{perPage}}",
-              "method": "GET",
-              "headers": {
-                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
-              }
-            },
-            "inputs": [
-              {
-                "name": "Type",
-                "as": "type",
-                "description": {
-                  "en": "Filter by document type (text, template, pdf, html, markdown)",
-                  "de": "Nach Dokumenttyp filtern (text, template, pdf, html, markdown)",
-                  "es": "Filter by document type (text, template, pdf, html, markdown)",
-                  "fr": "Filter by document type (text, template, pdf, html, markdown)",
-                  "ro": "Filter by document type (text, template, pdf, html, markdown)",
-                  "it": "Filter by document type (text, template, pdf, html, markdown)"
-                },
-                "bot": "Document type to filter by. Use 'template' to list only message templates. Omit for all types.",
-                "type": "string",
-                "source": "field",
-                "required": false,
-                "label": {
-                  "en": "Type",
-                  "de": "Type",
-                  "es": "Type",
-                  "fr": "Type",
-                  "ro": "Type",
-                  "it": "Type"
-                }
-              },
-              {
-                "name": "Search",
-                "as": "search",
-                "description": {
-                  "en": "Search term for document title",
-                  "de": "Suchbegriff für Dokumenttitel",
-                  "es": "Search term for document title",
-                  "fr": "Search term for document title",
-                  "ro": "Search term for document title",
-                  "it": "Search term for document title"
-                },
-                "bot": "Search documents by title. Omit to return all.",
-                "type": "string",
-                "source": "field",
-                "required": false,
-                "label": {
-                  "en": "Search",
-                  "de": "Search",
-                  "es": "Buscar",
-                  "fr": "Recherche",
-                  "ro": "Căutare",
-                  "it": "Ricerca"
-                }
-              },
-              {
-                "name": "Per Page",
-                "as": "perPage",
-                "description": {
-                  "en": "Number of results per page (max 500)",
-                  "de": "Ergebnisse pro Seite (max. 500)",
-                  "es": "Number of results per page (max 500)",
-                  "fr": "Number of results per page (max 500)",
-                  "ro": "Number of results per page (max 500)",
-                  "it": "Number of results per page (max 500)"
-                },
-                "bot": "Page size. Use up to 500 for bulk operations.",
-                "type": "uint16",
-                "source": "field",
-                "required": false,
-                "value": "50"
-              }
-            ]
-          }
-        ],
-        "messages": {
-          "success": {
-            "en": "Documents loaded.",
-            "de": "Dokumente geladen.",
-            "es": "Documents loaded.",
-            "fr": "Documents loaded.",
-            "ro": "Documents loaded.",
-            "it": "Documents loaded."
-          }
-        },
-        "ui": "https://raw.githubusercontent.com/JoAiHQ/warps/main/warps/joai/document-list/chatapp.79eeba0a.dist.html"
-      },
-      "extras": {
-        "keywords": {
-          "en": [
-            "list documents",
-            "search documents",
-            "find template",
-            "browse knowledge base",
-            "show templates"
-          ],
-          "de": [
-            "Dokumente auflisten",
-            "Dokumente suchen",
-            "Template finden",
-            "Wissensbasis durchsuchen",
-            "Templates anzeigen"
-          ]
-        },
-        "useCases": {
-          "en": [
-            "List all reusable message templates",
-            "Search for a specific document by title",
-            "Browse all stored knowledge base documents"
-          ],
-          "de": [
-            "Alle wiederverwendbaren Nachrichten-Templates auflisten",
-            "Nach einem bestimmten Dokument im Titel suchen",
-            "Alle gespeicherten Wissensbasis-Dokumente durchsuchen"
-          ]
-        },
-        "category": "productivity",
-        "faq": {
-          "en": [
-            {
-              "question": "Can I filter documents by type?",
-              "answer": "Yes — use the type filter to list only templates, text documents, or any other supported type."
-            }
-          ],
-          "de": [
-            {
-              "question": "Kann ich Dokumente nach Typ filtern?",
-              "answer": "Ja — nutze den Typ-Filter, um nur Templates, Textdokumente oder andere unterstützte Typen aufzulisten."
-            }
-          ]
-        }
-      }
-    },
-    {
-      "key": "none:joai-order-notify",
-      "identifier": "@joai-order-notify",
-      "alias": "joai-order-notify",
-      "chain": "none",
-      "hash": "7c2a6d80d91873ee458705f5d08d70c51713cdce16f971d2b3e387f8e8a5be5a",
-      "checksum": "7c2a6d80d91873ee458705f5d08d70c51713cdce16f971d2b3e387f8e8a5be5a",
-      "name": "JoAi: Notify Order Contact",
-      "title": {
-        "en": "Notify order contact",
-        "de": "Bestellkontakt benachrichtigen",
-        "fr": "Notifier le contact de la commande",
-        "es": "Notificar al contacto del pedido",
-        "it": "Notifica il contatto dell'ordine",
-        "ro": "Notifică contactul comenzii"
-      },
-      "description": {
-        "en": "Send the branded order confirmation email (with invoice when available) to the customer contact for a pending order. Runs as the executing agent.",
-        "de": "Sendet die gebrandete Bestellbestätigung (mit Rechnung, falls vorhanden) an den Kundenkontakt einer ausstehenden Bestellung. Läuft als ausführender Agent.",
-        "fr": "Envoie l'e-mail de confirmation de commande (avec facture si disponible) au contact client d'une commande en attente. S'exécute via l'agent.",
-        "es": "Envía el correo de confirmación del pedido (con factura si está disponible) al contacto del cliente de un pedido pendiente. Se ejecuta como el agente.",
-        "it": "Invia l'email di conferma ordine (con fattura se disponibile) al contatto cliente di un ordine in sospeso. Eseguito come agente.",
-        "ro": "Trimite emailul de confirmare a comenzii (cu factură dacă există) către contactul client al unei comenzi în așteptare. Rulează ca agentul executant."
-      },
-      "preview": null,
-      "creator": "github:JoAiHQ/warps",
-      "privileges": [],
-      "listed": true,
-      "visibility": "public",
-      "primaryAddress": null,
-      "primaryFunc": null,
-      "brand": {
-        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
-        "slug": "joai",
-        "active": true,
-        "protocol": "brand:0.2.0",
-        "name": "JoAi",
-        "description": {
-          "en": "JoAi is a platform for creating and managing your own AI agents.",
-          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
-          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
-          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
-          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
-        },
-        "logo": {
-          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
-        },
-        "urls": {
-          "web": "https://joai.ai"
-        },
-        "colors": {
-          "primary": "#98FF98",
-          "secondary": "#FFFF66"
-        }
-      },
-      "warp": {
-        "protocol": "warp:3.0.0",
-        "name": "JoAi: Notify Order Contact",
-        "title": {
-          "en": "Notify order contact",
-          "de": "Bestellkontakt benachrichtigen",
-          "fr": "Notifier le contact de la commande",
-          "es": "Notificar al contacto del pedido",
-          "it": "Notifica il contatto dell'ordine",
-          "ro": "Notifică contactul comenzii"
-        },
-        "description": {
-          "en": "Send the branded order confirmation email (with invoice when available) to the customer contact for a pending order. Runs as the executing agent.",
-          "de": "Sendet die gebrandete Bestellbestätigung (mit Rechnung, falls vorhanden) an den Kundenkontakt einer ausstehenden Bestellung. Läuft als ausführender Agent.",
-          "fr": "Envoie l'e-mail de confirmation de commande (avec facture si disponible) au contact client d'une commande en attente. S'exécute via l'agent.",
-          "es": "Envía el correo de confirmación del pedido (con factura si está disponible) al contacto del cliente de un pedido pendiente. Se ejecuta como el agente.",
-          "it": "Invia l'email di conferma ordine (con fattura se disponibile) al contatto cliente di un ordine in sospeso. Eseguito come agente.",
-          "ro": "Trimite emailul de confirmare a comenzii (cu factură dacă există) către contactul client al unei comenzi în așteptare. Rulează ca agentul executant."
-        },
-        "bot": "Use when the merchant wants to email the customer a branded order confirmation for a pending order. List orders first to resolve orderId. Prefer this over drafting a freeform contact message so the invoice PDF and shop branding stay intact. The executing agent is used as the sender.",
+        "bot": "Use this to create a deal, event, news, or article update for customers. Set startsAt/endsAt for time-limited offers or events. Optional props JSON object for flexible flags (e.g. {\"top-news\":\"true\"} for city-directory top news).",
         "vars": {
           "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
           "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
@@ -1074,15 +76,11 @@
           {
             "type": "collect",
             "label": {
-              "en": "Notify contact",
-              "de": "Kontakt benachrichtigen",
-              "fr": "Notifier le contact",
-              "es": "Notificar al contacto",
-              "it": "Notifica contatto",
-              "ro": "Notifică contactul"
+              "en": "Post update",
+              "de": "Update veröffentlichen"
             },
             "destination": {
-              "url": "https://devnet-api.joai.ai/v1/orders/{{orderId}}/send-confirmation",
+              "url": "https://devnet-api.joai.ai/v1/updates",
               "method": "POST",
               "headers": {
                 "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
@@ -1091,15 +89,13 @@
             },
             "inputs": [
               {
-                "name": "Order ID",
-                "as": "orderId",
+                "name": "Title",
+                "as": "title",
                 "description": {
-                  "en": "Hash ID of the order to notify about",
-                  "de": "Hash-ID der Bestellung"
+                  "en": "Headline of the update",
+                  "de": "Überschrift des Updates"
                 },
-                "bot": "The order hash ID. List orders first if needed.",
                 "type": "string",
-                "position": "url:orderId",
                 "source": "field",
                 "required": true
               },
@@ -1107,36 +103,108 @@
                 "name": "Type",
                 "as": "type",
                 "description": {
-                  "en": "Notification type (currently only confirmation)",
-                  "de": "Benachrichtigungstyp (derzeit nur confirmation)"
+                  "en": "Type of update",
+                  "de": "Art des Updates"
                 },
-                "bot": "Use confirmation.",
                 "type": "string",
                 "source": "field",
-                "position": "payload:type",
-                "required": false,
-                "default": "confirmation"
+                "required": true,
+                "options": {
+                  "deal": "Deal",
+                  "event": "Event",
+                  "news": "News",
+                  "article": "Article"
+                }
               },
               {
-                "name": "Agent ID",
-                "as": "agentId",
+                "name": "Body",
+                "as": "body",
                 "description": {
-                  "en": "Agent UUID used as the email sender",
-                  "de": "Agent-UUID als Absender der E-Mail"
+                  "en": "Detailed description (supports markdown)",
+                  "de": "Detailbeschreibung (unterstützt Markdown)"
                 },
-                "bot": "Defaults to the executing agent.",
                 "type": "string",
                 "source": "field",
-                "position": "payload:agentId",
+                "required": false
+              },
+              {
+                "name": "Starts At",
+                "as": "startsAt",
+                "description": {
+                  "en": "When the update becomes active (ISO date, optional)",
+                  "de": "Wann das Update aktiv wird (ISO-Datum, optional)"
+                },
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Ends At",
+                "as": "endsAt",
+                "description": {
+                  "en": "When the update expires (ISO date, optional)",
+                  "de": "Wann das Update abläuft (ISO-Datum, optional)"
+                },
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Status",
+                "as": "status",
+                "description": {
+                  "en": "Publication status",
+                  "de": "Veröffentlichungsstatus"
+                },
+                "type": "string",
+                "source": "field",
                 "required": false,
-                "default": "{{JOAI_AGENT_UUID}}"
+                "options": {
+                  "draft": "Draft",
+                  "published": "Published",
+                  "archived": "Archived"
+                }
+              },
+              {
+                "name": "Link URL",
+                "as": "linkUrl",
+                "description": {
+                  "en": "URL to link from the update",
+                  "de": "URL, auf die das Update verlinkt"
+                },
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Media",
+                "as": "media",
+                "description": {
+                  "en": "Media IDs to attach (JSON array of team media IDs), e.g. [\"abc123\"]",
+                  "de": "Media-IDs zum Anhängen (JSON-Array), z. B. [\"abc123\"]"
+                },
+                "type": "json",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Props",
+                "as": "props",
+                "description": {
+                  "en": "Custom key/value properties as a JSON object (e.g. {\"top-news\":\"true\"}). Keys kebab-case; values strings.",
+                  "de": "Benutzerdefinierte Eigenschaften als JSON-Objekt (z. B. {\"top-news\":\"true\"}). Schlüssel in Kebab-Case; Werte als Strings."
+                },
+                "bot": "Optional props object (string values). For city-directory top news set {\"top-news\":\"true\"} on type=news. Same flexible props bag as contacts.",
+                "type": "json",
+                "source": "field",
+                "required": false
               },
               {
                 "name": "Team",
                 "as": "team",
                 "description": {
                   "en": "Team slug for this action. Defaults to the current team.",
-                  "de": "Team-Slug. Standard: aktuelles Team."
+                  "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team."
                 },
                 "bot": "The slug of the team to operate on. Omit to use the current team.",
                 "type": "string",
@@ -1144,67 +212,370 @@
                 "required": false,
                 "default": "{{JOAI_TEAM_SLUG}}"
               }
-            ]
+            ],
+            "output": {
+              "id": "out.data.id",
+              "title": "out.data.title",
+              "type": "out.data.type",
+              "status": "out.data.status"
+            }
           }
         ],
+        "output": {
+          "UPDATE_ID": "out.1.id",
+          "UPDATE_TITLE": "out.1.title"
+        },
         "messages": {
           "success": {
-            "en": "Order confirmation sent.",
-            "de": "Bestellbestätigung gesendet."
-          },
-          "error": {
-            "en": "Failed to send order confirmation: {{MESSAGE}}",
-            "de": "Bestellbestätigung fehlgeschlagen: {{MESSAGE}}"
+            "en": "Update '{{UPDATE_TITLE}}' posted!",
+            "de": "Update '{{UPDATE_TITLE}}' veröffentlicht!"
           }
         }
       },
       "extras": {
         "keywords": {
           "en": [
-            "notify contact",
-            "order confirmation email",
-            "send confirmation",
-            "pending order email",
-            "invoice email"
+            "post update",
+            "create deal",
+            "publish event",
+            "business news",
+            "article",
+            "local announcement"
           ],
           "de": [
-            "Kontakt benachrichtigen",
-            "Bestellbestätigung",
-            "Bestätigung senden",
-            "ausstehende Bestellung",
-            "Rechnungs-E-Mail"
+            "Update veröffentlichen",
+            "Angebot erstellen",
+            "Event veröffentlichen",
+            "Betriebsnews",
+            "Artikel",
+            "lokale Ankündigung"
           ]
         },
         "useCases": {
           "en": [
-            "Email a pending order confirmation to the customer",
-            "Resend branded order confirmation with invoice"
+            "Publish a limited-time offer for customers",
+            "Announce an upcoming event on a business profile",
+            "Post a longer article or local news to connected directories"
           ],
           "de": [
-            "Bestellbestätigung an den Kunden senden",
-            "Gebrandete Bestellbestätigung mit Rechnung erneut senden"
+            "Ein zeitlich begrenztes Angebot für Kunden veröffentlichen",
+            "Ein bevorstehendes Event im Betriebsprofil ankündigen",
+            "Einen längeren Artikel oder lokale News in verbundenen Verzeichnissen posten"
           ]
         },
-        "category": "commerce",
+        "category": "communication",
         "faq": {
           "en": [
             {
-              "question": "Who receives the email?",
-              "answer": "The customer contact on the order (not a separate invoice recipient)."
+              "question": "Can I publish deals, events, news, and articles?",
+              "answer": "Yes. Use deal for offers, event for happenings, news for short announcements, and article for longer posts."
             },
             {
-              "question": "Which agent sends it?",
-              "answer": "The executing agent is used as the sender."
+              "question": "Can an update be scheduled?",
+              "answer": "Yes. Add startsAt and endsAt to control when the update is active."
             }
           ],
           "de": [
             {
-              "question": "Wer erhält die E-Mail?",
-              "answer": "Der Kundenkontakt der Bestellung (nicht ein separater Rechnungsempfänger)."
+              "question": "Kann ich Angebote, Events, News und Artikel veröffentlichen?",
+              "answer": "Ja. Nutze deal für Angebote, event für Veranstaltungen, news für kurze Ankündigungen und article für längere Beiträge."
             },
             {
-              "question": "Welcher Agent sendet?",
-              "answer": "Der ausführende Agent wird als Absender verwendet."
+              "question": "Kann ein Update geplant werden?",
+              "answer": "Ja. Mit startsAt und endsAt steuerst du, wann das Update aktiv ist."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "key": "none:joai-update-update",
+      "identifier": "@joai-update-update",
+      "alias": "joai-update-update",
+      "chain": "none",
+      "hash": "56a2b672ea84ef0cf1edd406ff92a4696a056e6804540ead38ce3e1d33ce2991",
+      "checksum": "56a2b672ea84ef0cf1edd406ff92a4696a056e6804540ead38ce3e1d33ce2991",
+      "name": "JoAi: Update Update",
+      "title": {
+        "en": "Edit an update",
+        "de": "Update bearbeiten"
+      },
+      "description": {
+        "en": "Edit an existing deal, event, news, or article-style update for your team. Change the title, body, type, schedule, link, media, props, or publication status so connected websites and public feeds stay accurate.",
+        "de": "Bearbeite ein bestehendes Angebot, Event, News oder einen Artikel für dein Team. Ändere Titel, Text, Typ, Zeitraum, Link oder Veröffentlichungsstatus, damit verbundene Websites und öffentliche Feeds aktuell bleiben."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: Update Update",
+        "title": {
+          "en": "Edit an update",
+          "de": "Update bearbeiten"
+        },
+        "description": {
+          "en": "Edit an existing deal, event, news, or article-style update for your team. Change the title, body, type, schedule, link, media, props, or publication status so connected websites and public feeds stay accurate.",
+          "de": "Bearbeite ein bestehendes Angebot, Event, News oder einen Artikel für dein Team. Ändere Titel, Text, Typ, Zeitraum, Link oder Veröffentlichungsstatus, damit verbundene Websites und öffentliche Feeds aktuell bleiben."
+        },
+        "bot": "Use this when the user wants to edit an existing deal, event, news, or article update. If the user refers to an update by title, list updates first to find the matching ID. Optional props replaces the entire props bag when provided.",
+        "vars": {
+          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+          "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Edit update",
+              "de": "Update bearbeiten"
+            },
+            "destination": {
+              "url": "https://devnet-api.joai.ai/v1/updates/{{updateId}}",
+              "method": "PATCH",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+                "X-Team": "{{team}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Update ID",
+                "as": "updateId",
+                "description": {
+                  "en": "The ID of the update to edit",
+                  "de": "Die ID des Updates, das bearbeitet werden soll"
+                },
+                "type": "string",
+                "position": "url:updateId",
+                "source": "field",
+                "required": true,
+                "min": 1
+              },
+              {
+                "name": "Title",
+                "as": "title",
+                "description": {
+                  "en": "Updated headline",
+                  "de": "Aktualisierte Überschrift"
+                },
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Type",
+                "as": "type",
+                "description": {
+                  "en": "Updated type.",
+                  "de": "Aktualisierter Typ."
+                },
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "options": {
+                  "deal": "Deal",
+                  "event": "Event",
+                  "news": "News",
+                  "article": "Article"
+                }
+              },
+              {
+                "name": "Body",
+                "as": "body",
+                "description": {
+                  "en": "Updated description or announcement body",
+                  "de": "Aktualisierte Beschreibung oder Nachricht"
+                },
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Starts At",
+                "as": "startsAt",
+                "description": {
+                  "en": "When the update becomes active (ISO date, optional)",
+                  "de": "Wann das Update aktiv wird (ISO-Datum, optional)"
+                },
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Ends At",
+                "as": "endsAt",
+                "description": {
+                  "en": "When the update expires (ISO date, optional)",
+                  "de": "Wann das Update abläuft (ISO-Datum, optional)"
+                },
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Status",
+                "as": "status",
+                "description": {
+                  "en": "Updated publication status",
+                  "de": "Aktualisierter Veröffentlichungsstatus"
+                },
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "options": {
+                  "draft": "Draft",
+                  "published": "Published",
+                  "archived": "Archived"
+                }
+              },
+              {
+                "name": "Link URL",
+                "as": "linkUrl",
+                "description": {
+                  "en": "URL to link from the update",
+                  "de": "URL, auf die das Update verlinkt"
+                },
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Media",
+                "as": "media",
+                "description": {
+                  "en": "Replace attached media (JSON array of team media IDs)",
+                  "de": "Angehängte Medien ersetzen (JSON-Array von Media-IDs)"
+                },
+                "type": "json",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Props",
+                "as": "props",
+                "description": {
+                  "en": "Replace custom key/value properties as a JSON object (e.g. {\"top-news\":\"true\"}). Omitting leaves existing props unchanged; empty object clears them.",
+                  "de": "Ersetzt benutzerdefinierte Eigenschaften als JSON-Objekt (z. B. {\"top-news\":\"true\"}). Weglassen lässt bestehende Props unverändert; leeres Objekt löscht sie."
+                },
+                "bot": "Optional. When provided, replaces the entire props bag. For city-directory top news use {\"top-news\":\"true\"}; to remove it omit the key or set {\"top-news\":\"false\"}.",
+                "type": "json",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Team",
+                "as": "team",
+                "description": {
+                  "en": "Team slug for this action. Defaults to the current team.",
+                  "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team."
+                },
+                "bot": "The slug of the team to operate on. Omit to use the current team.",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "default": "{{JOAI_TEAM_SLUG}}"
+              }
+            ],
+            "output": {
+              "id": "out.data.id",
+              "title": "out.data.title",
+              "type": "out.data.type",
+              "status": "out.data.status"
+            }
+          }
+        ],
+        "output": {
+          "UPDATE_ID": "out.1.id",
+          "UPDATE_TITLE": "out.1.title"
+        },
+        "messages": {
+          "success": {
+            "en": "Update '{{UPDATE_TITLE}}' edited.",
+            "de": "Update '{{UPDATE_TITLE}}' bearbeitet."
+          }
+        }
+      },
+      "extras": {
+        "keywords": {
+          "en": [
+            "edit update",
+            "update deal",
+            "edit event",
+            "change business news",
+            "edit article",
+            "announcement status"
+          ],
+          "de": [
+            "Update bearbeiten",
+            "Angebot bearbeiten",
+            "Event bearbeiten",
+            "Betriebsnews ändern",
+            "Artikel bearbeiten",
+            "Ankündigungsstatus"
+          ]
+        },
+        "useCases": {
+          "en": [
+            "Change the dates of an event announcement",
+            "Archive an expired deal",
+            "Correct the title or link of a news or article post"
+          ],
+          "de": [
+            "Den Zeitraum einer Event-Ankündigung ändern",
+            "Ein abgelaufenes Angebot archivieren",
+            "Titel oder Link einer News oder eines Artikels korrigieren"
+          ]
+        },
+        "category": "communication",
+        "faq": {
+          "en": [
+            {
+              "question": "Can I change the type of an update?",
+              "answer": "Yes. Existing posts can be changed between deal, event, news, and article when needed."
+            },
+            {
+              "question": "Can I unpublish an update?",
+              "answer": "Yes. Set its status to draft or archived depending on whether it should be hidden or retired."
+            }
+          ],
+          "de": [
+            {
+              "question": "Kann ich den Typ eines Updates ändern?",
+              "answer": "Ja. Bestehende Beiträge können bei Bedarf zwischen deal, event, news und article wechseln."
+            },
+            {
+              "question": "Kann ich ein Update ausblenden?",
+              "answer": "Ja. Setze den Status auf draft oder archived, je nachdem ob es versteckt oder endgültig erledigt ist."
             }
           ]
         }
@@ -1320,6 +691,554 @@
             "abi": "hash:6305d23fc0759ecaddbc37107385954f77f0b2df97eaf5ef4dc0d56c4c7c7337"
           }
         ]
+      },
+      "extras": null
+    },
+    {
+      "key": "none:whatsapp-auth",
+      "identifier": "@whatsapp-auth",
+      "alias": "whatsapp-auth",
+      "chain": "none",
+      "hash": "6955f895e67288a13025f7025fa191503693bf120098af54de32578d5719c815",
+      "checksum": "6955f895e67288a13025f7025fa191503693bf120098af54de32578d5719c815",
+      "name": "WhatsApp: Pair Personal",
+      "title": {
+        "en": "Pair Personal WhatsApp",
+        "de": "Persönliches WhatsApp koppeln",
+        "es": "Pair Personal WhatsApp",
+        "fr": "Pair Personal WhatsApp",
+        "ro": "Pair Personal WhatsApp",
+        "it": "Pair Personal WhatsApp"
+      },
+      "description": {
+        "en": "Open the WhatsApp pairing QR in a live terminal so you can scan it with your phone.",
+        "de": "Öffnet den WhatsApp-Kopplungs-QR im Live-Terminal zum Scannen mit dem Handy.",
+        "es": "Open the WhatsApp pairing QR in a live terminal so you can scan it with your phone.",
+        "fr": "Open the WhatsApp pairing QR in a live terminal so you can scan it with your phone.",
+        "ro": "Open the WhatsApp pairing QR in a live terminal so you can scan it with your phone.",
+        "it": "Open the WhatsApp pairing QR in a live terminal so you can scan it with your phone."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b83531cba0a021500d9201fe0b758945852b8e839d35815973abe4c647c01401",
+        "slug": "whatsapp",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "WhatsApp",
+        "description": {
+          "en": "Pair personal WhatsApp and forward inbound messages to agent hooks.",
+          "de": "Persönliches WhatsApp koppeln und eingehende Nachrichten an Agent-Hooks weiterleiten."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/whatsapp.svg"
+        },
+        "urls": {
+          "web": "https://whatsapp.com"
+        },
+        "colors": {
+          "primary": "#25D366"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "WhatsApp: Pair Personal",
+        "title": {
+          "en": "Pair Personal WhatsApp",
+          "de": "Persönliches WhatsApp koppeln",
+          "es": "Pair Personal WhatsApp",
+          "fr": "Pair Personal WhatsApp",
+          "ro": "Pair Personal WhatsApp",
+          "it": "Pair Personal WhatsApp"
+        },
+        "description": {
+          "en": "Open the WhatsApp pairing QR in a live terminal so you can scan it with your phone.",
+          "de": "Öffnet den WhatsApp-Kopplungs-QR im Live-Terminal zum Scannen mit dem Handy.",
+          "es": "Open the WhatsApp pairing QR in a live terminal so you can scan it with your phone.",
+          "fr": "Open the WhatsApp pairing QR in a live terminal so you can scan it with your phone.",
+          "ro": "Open the WhatsApp pairing QR in a live terminal so you can scan it with your phone.",
+          "it": "Open the WhatsApp pairing QR in a live terminal so you can scan it with your phone."
+        },
+        "cli": {
+          "mode": "session"
+        },
+        "actions": [
+          {
+            "type": "prompt",
+            "label": {
+              "en": "Pair",
+              "de": "Koppeln",
+              "es": "Pair",
+              "fr": "Pair",
+              "ro": "Pair",
+              "it": "Pair"
+            },
+            "prompt": "/wacli auth",
+            "cli": {
+              "mode": "session"
+            }
+          }
+        ],
+        "messages": {
+          "success": {
+            "en": "WhatsApp paired.",
+            "de": "WhatsApp gekoppelt.",
+            "es": "WhatsApp paired.",
+            "fr": "WhatsApp paired.",
+            "ro": "WhatsApp paired.",
+            "it": "WhatsApp paired."
+          },
+          "error": {
+            "en": "WhatsApp pairing failed.",
+            "de": "WhatsApp-Kopplung fehlgeschlagen.",
+            "es": "WhatsApp pairing failed.",
+            "fr": "WhatsApp pairing failed.",
+            "ro": "WhatsApp pairing failed.",
+            "it": "WhatsApp pairing failed."
+          }
+        }
+      },
+      "extras": null
+    },
+    {
+      "key": "none:whatsapp-cli-update",
+      "identifier": "@whatsapp-cli-update",
+      "alias": "whatsapp-cli-update",
+      "chain": "none",
+      "hash": "5a9fa5fdaa1173b71ae6b97afba84e6491383c2ad8b5fdde25198e00aefd2e3e",
+      "checksum": "5a9fa5fdaa1173b71ae6b97afba84e6491383c2ad8b5fdde25198e00aefd2e3e",
+      "name": "WhatsApp: Update Personal CLI",
+      "title": {
+        "en": "Update WhatsApp CLI",
+        "de": "WhatsApp CLI aktualisieren",
+        "es": "Actualizar WhatsApp CLI",
+        "fr": "Mettre à jour WhatsApp CLI",
+        "ro": "Actualizează WhatsApp CLI",
+        "it": "Aggiorna WhatsApp CLI"
+      },
+      "description": {
+        "en": "Update wacli to the latest verified release for reliable personal WhatsApp messaging and sync. JoAi checks the downloaded release before installing it in the desktop app's managed tools directory.",
+        "de": "Aktualisiere wacli auf die neueste geprüfte Version, damit persönliche WhatsApp-Nachrichten und der Sync zuverlässig funktionieren. JoAi prüft den Download und installiert ihn im verwalteten Werkzeugordner der Desktop-App.",
+        "es": "Actualiza wacli a la última versión verificada para mantener fiables los mensajes y la sincronización de WhatsApp Personal. JoAi verifica la descarga antes de instalarla en el directorio de herramientas administrado por la aplicación de escritorio.",
+        "fr": "Mettez wacli à jour vers la dernière version vérifiée pour assurer la fiabilité des messages et de la synchronisation WhatsApp personnelle. JoAi vérifie le téléchargement avant de l’installer dans le dossier d’outils géré par l’application de bureau.",
+        "ro": "Actualizează wacli la cea mai nouă versiune verificată pentru mesaje și sincronizare WhatsApp Personal fiabile. JoAi verifică descărcarea înainte de instalarea în directorul de instrumente administrat de aplicația desktop.",
+        "it": "Aggiorna wacli all’ultima versione verificata per mantenere affidabili i messaggi e la sincronizzazione di WhatsApp personale. JoAi verifica il download prima di installarlo nella cartella degli strumenti gestita dall’app desktop."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b83531cba0a021500d9201fe0b758945852b8e839d35815973abe4c647c01401",
+        "slug": "whatsapp",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "WhatsApp",
+        "description": {
+          "en": "Pair personal WhatsApp and forward inbound messages to agent hooks.",
+          "de": "Persönliches WhatsApp koppeln und eingehende Nachrichten an Agent-Hooks weiterleiten."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/whatsapp.svg"
+        },
+        "urls": {
+          "web": "https://whatsapp.com"
+        },
+        "colors": {
+          "primary": "#25D366"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "WhatsApp: Update Personal CLI",
+        "title": {
+          "en": "Update WhatsApp CLI",
+          "de": "WhatsApp CLI aktualisieren",
+          "es": "Actualizar WhatsApp CLI",
+          "fr": "Mettre à jour WhatsApp CLI",
+          "ro": "Actualizează WhatsApp CLI",
+          "it": "Aggiorna WhatsApp CLI"
+        },
+        "description": {
+          "en": "Update wacli to the latest verified release for reliable personal WhatsApp messaging and sync. JoAi checks the downloaded release before installing it in the desktop app's managed tools directory.",
+          "de": "Aktualisiere wacli auf die neueste geprüfte Version, damit persönliche WhatsApp-Nachrichten und der Sync zuverlässig funktionieren. JoAi prüft den Download und installiert ihn im verwalteten Werkzeugordner der Desktop-App.",
+          "es": "Actualiza wacli a la última versión verificada para mantener fiables los mensajes y la sincronización de WhatsApp Personal. JoAi verifica la descarga antes de instalarla en el directorio de herramientas administrado por la aplicación de escritorio.",
+          "fr": "Mettez wacli à jour vers la dernière version vérifiée pour assurer la fiabilité des messages et de la synchronisation WhatsApp personnelle. JoAi vérifie le téléchargement avant de l’installer dans le dossier d’outils géré par l’application de bureau.",
+          "ro": "Actualizează wacli la cea mai nouă versiune verificată pentru mesaje și sincronizare WhatsApp Personal fiabile. JoAi verifică descărcarea înainte de instalarea în directorul de instrumente administrat de aplicația desktop.",
+          "it": "Aggiorna wacli all’ultima versione verificata per mantenere affidabili i messaggi e la sincronizzazione di WhatsApp personale. JoAi verifica il download prima di installarlo nella cartella degli strumenti gestita dall’app desktop."
+        },
+        "actions": [
+          {
+            "type": "prompt",
+            "label": {
+              "en": "Update",
+              "de": "Aktualisieren",
+              "es": "Actualizar",
+              "fr": "Mettre à jour",
+              "ro": "Actualizează",
+              "it": "Aggiorna"
+            },
+            "prompt": "/brew upgrade wacli"
+          }
+        ],
+        "messages": {
+          "success": {
+            "en": "WhatsApp CLI is up to date.",
+            "de": "WhatsApp CLI ist aktuell.",
+            "es": "WhatsApp CLI está actualizado.",
+            "fr": "WhatsApp CLI est à jour.",
+            "ro": "WhatsApp CLI este actualizat.",
+            "it": "WhatsApp CLI è aggiornato."
+          },
+          "error": {
+            "en": "WhatsApp CLI could not be updated.",
+            "de": "WhatsApp CLI konnte nicht aktualisiert werden.",
+            "es": "No se pudo actualizar WhatsApp CLI.",
+            "fr": "WhatsApp CLI n’a pas pu être mis à jour.",
+            "ro": "WhatsApp CLI nu a putut fi actualizat.",
+            "it": "Non è stato possibile aggiornare WhatsApp CLI."
+          }
+        }
+      },
+      "extras": {
+        "keywords": {
+          "en": [
+            "update wacli",
+            "latest WhatsApp CLI",
+            "fix WhatsApp sync"
+          ],
+          "de": [
+            "wacli aktualisieren",
+            "neueste WhatsApp CLI",
+            "WhatsApp Sync reparieren"
+          ]
+        },
+        "useCases": {
+          "en": [
+            "Install the latest compatible wacli release",
+            "Fix sync failures caused by an outdated WhatsApp protocol",
+            "Keep personal WhatsApp sending reliable"
+          ],
+          "de": [
+            "Die neueste kompatible wacli-Version installieren",
+            "Sync-Fehler durch ein veraltetes WhatsApp-Protokoll beheben",
+            "Persönliche WhatsApp-Nachrichten zuverlässig senden"
+          ]
+        },
+        "category": "communication",
+        "faq": {
+          "en": [
+            {
+              "question": "How do I update wacli?",
+              "answer": "Run this action in the JoAi desktop app to download and verify the latest supported release."
+            },
+            {
+              "question": "Will updating remove my WhatsApp pairing?",
+              "answer": "No. The update replaces only the executable and keeps your local WhatsApp account data."
+            }
+          ],
+          "de": [
+            {
+              "question": "Wie aktualisiere ich wacli?",
+              "answer": "Führe diese Aktion in der JoAi Desktop-App aus, um die neueste unterstützte Version herunterzuladen und zu prüfen."
+            },
+            {
+              "question": "Geht meine WhatsApp-Kopplung beim Update verloren?",
+              "answer": "Nein. Das Update ersetzt nur das Programm und behält deine lokalen WhatsApp-Kontodaten."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "key": "none:whatsapp-send-text",
+      "identifier": "@whatsapp-send-text",
+      "alias": "whatsapp-send-text",
+      "chain": "none",
+      "hash": "47f93ea5c25a63ca5f28879b1f9f290497662d68e06a92a660a23bb2497d9c65",
+      "checksum": "47f93ea5c25a63ca5f28879b1f9f290497662d68e06a92a660a23bb2497d9c65",
+      "name": "WhatsApp: Send Text",
+      "title": {
+        "en": "Send WhatsApp Message",
+        "de": "WhatsApp-Nachricht senden",
+        "es": "Send WhatsApp Message",
+        "fr": "Send WhatsApp Message",
+        "ro": "Send WhatsApp Message",
+        "it": "Send WhatsApp Message"
+      },
+      "description": {
+        "en": "Send a text message to any phone number via WhatsApp. Perfect for customer notifications, order updates, reminders, or quick personal messages directly from your agent.",
+        "de": "Sende eine Textnachricht an beliebige Telefonnummern über WhatsApp. Ideal für Kundenbenachrichtigungen, Bestellupdates, Erinnerungen oder schnelle persönliche Nachrichten direkt von deinem Agenten.",
+        "es": "Send a text message to any phone number via WhatsApp. Perfect for customer notifications, order updates, reminders, or quick personal messages directly from your agent.",
+        "fr": "Send a text message to any phone number via WhatsApp. Perfect for customer notifications, order updates, reminders, or quick personal messages directly from your agent.",
+        "ro": "Send a text message to any phone number via WhatsApp. Perfect for customer notifications, order updates, reminders, or quick personal messages directly from your agent.",
+        "it": "Send a text message to any phone number via WhatsApp. Perfect for customer notifications, order updates, reminders, or quick personal messages directly from your agent."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b83531cba0a021500d9201fe0b758945852b8e839d35815973abe4c647c01401",
+        "slug": "whatsapp",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "WhatsApp",
+        "description": {
+          "en": "Pair personal WhatsApp and forward inbound messages to agent hooks.",
+          "de": "Persönliches WhatsApp koppeln und eingehende Nachrichten an Agent-Hooks weiterleiten."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/whatsapp.svg"
+        },
+        "urls": {
+          "web": "https://whatsapp.com"
+        },
+        "colors": {
+          "primary": "#25D366"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "WhatsApp: Send Text",
+        "title": {
+          "en": "Send WhatsApp Message",
+          "de": "WhatsApp-Nachricht senden",
+          "es": "Send WhatsApp Message",
+          "fr": "Send WhatsApp Message",
+          "ro": "Send WhatsApp Message",
+          "it": "Send WhatsApp Message"
+        },
+        "description": {
+          "en": "Send a text message to any phone number via WhatsApp. Perfect for customer notifications, order updates, reminders, or quick personal messages directly from your agent.",
+          "de": "Sende eine Textnachricht an beliebige Telefonnummern über WhatsApp. Ideal für Kundenbenachrichtigungen, Bestellupdates, Erinnerungen oder schnelle persönliche Nachrichten direkt von deinem Agenten.",
+          "es": "Send a text message to any phone number via WhatsApp. Perfect for customer notifications, order updates, reminders, or quick personal messages directly from your agent.",
+          "fr": "Send a text message to any phone number via WhatsApp. Perfect for customer notifications, order updates, reminders, or quick personal messages directly from your agent.",
+          "ro": "Send a text message to any phone number via WhatsApp. Perfect for customer notifications, order updates, reminders, or quick personal messages directly from your agent.",
+          "it": "Send a text message to any phone number via WhatsApp. Perfect for customer notifications, order updates, reminders, or quick personal messages directly from your agent."
+        },
+        "actions": [
+          {
+            "type": "prompt",
+            "label": {
+              "en": "Send",
+              "de": "Senden",
+              "es": "Send",
+              "fr": "Send",
+              "ro": "Send",
+              "it": "Send"
+            },
+            "prompt": "/wacli send text --to \"{{phone}}\" --message \"{{message}}\"",
+            "inputs": [
+              {
+                "name": "Phone",
+                "as": "phone",
+                "description": {
+                  "en": "Recipient phone number with country code (e.g. +43660...)",
+                  "de": "Telefonnummer mit Ländervorwahl (z.B. +43660...)",
+                  "es": "Recipient phone number with country code (e.g. +43660...)",
+                  "fr": "Recipient phone number with country code (e.g. +43660...)",
+                  "ro": "Recipient phone number with country code (e.g. +43660...)",
+                  "it": "Recipient phone number with country code (e.g. +43660...)"
+                },
+                "type": "string",
+                "source": "field",
+                "required": true,
+                "modifier": "transform:(value) => value.replace(/^\\+/, '')"
+              },
+              {
+                "name": "Message",
+                "as": "message",
+                "description": {
+                  "en": "The message text to send",
+                  "de": "Der zu sendende Nachrichtentext",
+                  "es": "The message text to send",
+                  "fr": "The message text to send",
+                  "ro": "The message text to send",
+                  "it": "The message text to send"
+                },
+                "type": "string",
+                "source": "field",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "messages": {
+          "success": {
+            "en": "Message sent to {{phone}}.",
+            "de": "Nachricht an {{phone}} gesendet.",
+            "es": "Message sent to {{phone}}.",
+            "fr": "Message sent to {{phone}}.",
+            "ro": "Message sent to {{phone}}.",
+            "it": "Message sent to {{phone}}."
+          },
+          "error": {
+            "en": "Failed to send message to {{phone}}.",
+            "de": "Nachricht an {{phone}} konnte nicht gesendet werden.",
+            "es": "Failed to send message to {{phone}}.",
+            "fr": "Failed to send message to {{phone}}.",
+            "ro": "Failed to send message to {{phone}}.",
+            "it": "Failed to send message to {{phone}}."
+          }
+        }
+      },
+      "extras": null
+    },
+    {
+      "key": "none:whatsapp-sync",
+      "identifier": "@whatsapp-sync",
+      "alias": "whatsapp-sync",
+      "chain": "none",
+      "hash": "1653e82199b0c8e66ec2b81e47b5b26c15a3f93ccd9737e103aef7ae662d1d8f",
+      "checksum": "1653e82199b0c8e66ec2b81e47b5b26c15a3f93ccd9737e103aef7ae662d1d8f",
+      "name": "WhatsApp: Sync Personal",
+      "title": {
+        "en": "Sync Personal WhatsApp",
+        "de": "Persönliches WhatsApp synchronisieren",
+        "es": "Sync Personal WhatsApp",
+        "fr": "Sync Personal WhatsApp",
+        "ro": "Sync Personal WhatsApp",
+        "it": "Sync Personal WhatsApp"
+      },
+      "description": {
+        "en": "Keep personal WhatsApp in sync and forward new messages to your agent webhook while this laptop is online.",
+        "de": "Hält persönliches WhatsApp synchron und leitet neue Nachrichten an den Agent-Webhook weiter, solange dieses Laptop online ist.",
+        "es": "Keep personal WhatsApp in sync and forward new messages to your agent webhook while this laptop is online.",
+        "fr": "Keep personal WhatsApp in sync and forward new messages to your agent webhook while this laptop is online.",
+        "ro": "Keep personal WhatsApp in sync and forward new messages to your agent webhook while this laptop is online.",
+        "it": "Keep personal WhatsApp in sync and forward new messages to your agent webhook while this laptop is online."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b83531cba0a021500d9201fe0b758945852b8e839d35815973abe4c647c01401",
+        "slug": "whatsapp",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "WhatsApp",
+        "description": {
+          "en": "Pair personal WhatsApp and forward inbound messages to agent hooks.",
+          "de": "Persönliches WhatsApp koppeln und eingehende Nachrichten an Agent-Hooks weiterleiten."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/whatsapp.svg"
+        },
+        "urls": {
+          "web": "https://whatsapp.com"
+        },
+        "colors": {
+          "primary": "#25D366"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "WhatsApp: Sync Personal",
+        "title": {
+          "en": "Sync Personal WhatsApp",
+          "de": "Persönliches WhatsApp synchronisieren",
+          "es": "Sync Personal WhatsApp",
+          "fr": "Sync Personal WhatsApp",
+          "ro": "Sync Personal WhatsApp",
+          "it": "Sync Personal WhatsApp"
+        },
+        "description": {
+          "en": "Keep personal WhatsApp in sync and forward new messages to your agent webhook while this laptop is online.",
+          "de": "Hält persönliches WhatsApp synchron und leitet neue Nachrichten an den Agent-Webhook weiter, solange dieses Laptop online ist.",
+          "es": "Keep personal WhatsApp in sync and forward new messages to your agent webhook while this laptop is online.",
+          "fr": "Keep personal WhatsApp in sync and forward new messages to your agent webhook while this laptop is online.",
+          "ro": "Keep personal WhatsApp in sync and forward new messages to your agent webhook while this laptop is online.",
+          "it": "Keep personal WhatsApp in sync and forward new messages to your agent webhook while this laptop is online."
+        },
+        "cli": {
+          "mode": "session"
+        },
+        "hook": {
+          "source": "wacli"
+        },
+        "actions": [
+          {
+            "type": "prompt",
+            "label": {
+              "en": "Start sync",
+              "de": "Sync starten",
+              "es": "Start sync",
+              "fr": "Start sync",
+              "ro": "Start sync",
+              "it": "Start sync"
+            },
+            "prompt": "/wacli sync --follow --presence-mode quiet --max-reconnect 0 --webhook \"{{webhookUrl}}\" --webhook-secret \"{{webhookSecret}}\"",
+            "cli": {
+              "mode": "session"
+            },
+            "inputs": [
+              {
+                "name": "Webhook URL",
+                "as": "webhookUrl",
+                "description": {
+                  "en": "Agent inbound hooks URL",
+                  "de": "Agent-Inbound-Hooks-URL",
+                  "es": "Agent inbound hooks URL",
+                  "fr": "Agent inbound hooks URL",
+                  "ro": "Agent inbound hooks URL",
+                  "it": "Agent inbound hooks URL"
+                },
+                "type": "string",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Webhook secret",
+                "as": "webhookSecret",
+                "description": {
+                  "en": "HMAC secret for the inbound webhook signature",
+                  "de": "HMAC-Geheimnis für die Inbound-Webhook-Signatur",
+                  "es": "HMAC secret for the inbound webhook signature",
+                  "fr": "HMAC secret for the inbound webhook signature",
+                  "ro": "HMAC secret for the inbound webhook signature",
+                  "it": "HMAC secret for the inbound webhook signature"
+                },
+                "type": "string",
+                "source": "field",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "messages": {
+          "success": {
+            "en": "WhatsApp sync started.",
+            "de": "WhatsApp-Sync gestartet.",
+            "es": "WhatsApp sync started.",
+            "fr": "WhatsApp sync started.",
+            "ro": "WhatsApp sync started.",
+            "it": "WhatsApp sync started."
+          },
+          "error": {
+            "en": "WhatsApp sync failed.",
+            "de": "WhatsApp-Sync fehlgeschlagen.",
+            "es": "WhatsApp sync failed.",
+            "fr": "WhatsApp sync failed.",
+            "ro": "WhatsApp sync failed.",
+            "it": "WhatsApp sync failed."
+          }
+        }
       },
       "extras": null
     }
