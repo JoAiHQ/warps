@@ -6,10 +6,10 @@
     "de": "Aufgaben anzeigen"
   },
   "description": {
-    "en": "View all action items and tasks on your board with their status, priority, tags, and due dates. Filter by status or priority to find what needs attention.",
-    "de": "Alle Aufgaben und To-dos auf deinem Board mit Status, Priorität, Tags und Fälligkeitsdatum anzeigen. Filtere nach Status oder Priorität, um zu sehen, worauf du dich konzentrieren solltest."
+    "en": "View action items on your board with status, priority, tags, and due dates. By default lists items assigned to the calling agent; pass scope=all for the full team board.",
+    "de": "Aufgaben auf deinem Board mit Status, Priorität, Tags und Fälligkeitsdatum anzeigen. Standardmäßig nur dir zugewiesene Aufgaben; mit scope=all das ganze Team-Board."
   },
-  "bot": "Use when the user wants to see their board, action items, task list, or what they need to work on. List items first if the user refers to an item by title to find the matching ID.",
+  "bot": "Use when the user wants to see their board, action items, task list, or what they need to work on. Defaults to items assigned to this agent. Pass scope=all only when they need the full team board. List items first if the user refers to an item by title to find the matching ID.",
   "vars": {
     "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
     "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
@@ -28,7 +28,7 @@
         "de": "Aufgaben anzeigen"
       },
       "destination": {
-        "url": "INJECT:API_BASE/v1/items?status={{status}}&priority={{priority}}&dueToday={{dueToday}}",
+        "url": "INJECT:API_BASE/v1/items?status={{status}}&priority={{priority}}&dueToday={{dueToday}}&scope={{scope}}",
         "method": "GET",
         "headers": {
           "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
@@ -68,6 +68,18 @@
             "de": "Nach Priorität filtern (normal, hoch, kritisch)"
           },
           "bot": "Filter items by priority. Omit for all."
+        },
+        {
+          "name": "Scope",
+          "as": "scope",
+          "type": "string",
+          "position": "query",
+          "required": false,
+          "description": {
+            "en": "mine (default) = items assigned to this agent; all = full team board",
+            "de": "mine (Standard) = dir zugewiesene Aufgaben; all = ganzes Team-Board"
+          },
+          "bot": "Defaults to mine (assigned to this agent). Pass all only when the full team board is needed."
         }
       ]
     }
