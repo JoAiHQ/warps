@@ -10,14 +10,14 @@
     "it": "List documents"
   },
   "description": {
-    "en": "Retrieve documents from your agent's knowledge base. Filter by type to list only templates, or search by title. Returns paginated results.",
-    "de": "Dokumente aus der Wissensdatenbank deines Agenten abrufen. Nach Typ filtern, z.B. nur Templates, oder nach Titel suchen. Liefert paginierte Ergebnisse.",
-    "es": "Retrieve documents from your agent's knowledge base. Filter by type to list only templates, or search by title. Returns paginated results.",
-    "fr": "Retrieve documents from your agent's knowledge base. Filter by type to list only templates, or search by title. Returns paginated results.",
-    "ro": "Retrieve documents from your agent's knowledge base. Filter by type to list only templates, or search by title. Returns paginated results.",
-    "it": "Retrieve documents from your agent's knowledge base. Filter by type to list only templates, or search by title. Returns paginated results."
+    "en": "Retrieve documents from your agent's knowledge base. Filter by type, search by title, or list archived documents. Returns paginated results.",
+    "de": "Dokumente aus der Wissensdatenbank deines Agenten abrufen. Nach Typ filtern, nach Titel suchen oder archivierte Dokumente listen. Liefert paginierte Ergebnisse.",
+    "es": "Retrieve documents from your agent's knowledge base. Filter by type, search by title, or list archived documents. Returns paginated results.",
+    "fr": "Retrieve documents from your agent's knowledge base. Filter by type, search by title, or list archived documents. Returns paginated results.",
+    "ro": "Retrieve documents from your agent's knowledge base. Filter by type, search by title, or list archived documents. Returns paginated results.",
+    "it": "Retrieve documents from your agent's knowledge base. Filter by type, search by title, or list archived documents. Returns paginated results."
   },
-  "bot": "Use this when the user wants to see their documents or templates, or when a workflow needs to look up templates by type or search term.",
+  "bot": "Use this when the user wants to see their documents or templates. Default list excludes archived docs — pass archived=true to see the archive.",
   "vars": {
     "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
     "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
@@ -35,7 +35,7 @@
         "it": "Load documents"
       },
       "destination": {
-        "url": "INJECT:API_BASE/v1/agents/{{JOAI_AGENT_UUID}}/documents?type={{type}}&search={{search}}&perPage={{perPage}}",
+        "url": "INJECT:API_BASE/v1/agents/{{JOAI_AGENT_UUID}}/documents?type={{type}}&search={{search}}&perPage={{perPage}}&archived={{archived}}",
         "method": "GET",
         "headers": {
           "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
@@ -89,6 +89,22 @@
             "ro": "Căutare",
             "it": "Ricerca"
           }
+        },
+        {
+          "name": "Archived",
+          "as": "archived",
+          "description": {
+            "en": "List archived documents only (\"true\") or active documents (omit/\"false\")",
+            "de": "Nur archivierte Dokumente (\"true\") oder aktive (weglassen/\"false\")",
+            "es": "List archived documents only (\"true\") or active documents (omit/\"false\")",
+            "fr": "List archived documents only (\"true\") or active documents (omit/\"false\")",
+            "ro": "List archived documents only (\"true\") or active documents (omit/\"false\")",
+            "it": "List archived documents only (\"true\") or active documents (omit/\"false\")"
+          },
+          "bot": "Pass true to list archived documents. Default is active (non-archived) only.",
+          "type": "bool",
+          "source": "field",
+          "required": false
         },
         {
           "name": "Per Page",
