@@ -17,7 +17,7 @@
     "it": "Aggiorna un prodotto del negozio — nome, unità, tag, descrizione, stato attivo o visibilità. Vengono modificati solo i campi forniti.",
     "ro": "Actualizează un produs din magazin — nume, unitate, taguri, descriere, stare activă sau vizibilitate. Se schimbă doar câmpurile furnizate."
   },
-  "bot": "Use when the user wants to change an existing product. If the user refers to a product by name, list products first to find the matching ID.",
+  "bot": "Use when the user wants to change an existing product. Prefer the product slug for product_id (e.g. holz-schneidebrett); hashid also works. PUT goes to /v1/products/{product_id} — never the collection URL. Only include fields that change. Pass tags as [] to clear tags. Do not send price (price is on variations).",
   "vars": {
     "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
     "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
@@ -47,14 +47,14 @@
           "name": "Product ID",
           "as": "product_id",
           "description": {
-            "en": "The hashid of the product to update",
-            "de": "Die Hashid des zu aktualisierenden Produkts",
-            "fr": "Le hashid du produit à mettre à jour",
-            "es": "El hashid del producto a actualizar",
-            "it": "L'hashid del prodotto da aggiornare",
-            "ro": "Hashid-ul produsului de actualizat"
+            "en": "Product slug or hashid (path: /v1/products/{product_id})",
+            "de": "Produkt-Slug oder Hashid (Pfad: /v1/products/{product_id})",
+            "fr": "Slug ou hashid du produit (chemin : /v1/products/{product_id})",
+            "es": "Slug o hashid del producto (ruta: /v1/products/{product_id})",
+            "it": "Slug o hashid del prodotto (percorso: /v1/products/{product_id})",
+            "ro": "Slug sau hashid al produsului (cale: /v1/products/{product_id})"
           },
-          "bot": "The product hash ID. If the user refers to a product by name, list products first to find the matching ID.",
+          "bot": "Prefer the product slug (e.g. holz-schneidebrett). Hashid also works. Required for the PUT URL — without it the request hits /v1/products and fails. List products first if unsure.",
           "type": "string",
           "position": "url:product_id",
           "source": "field",
@@ -95,13 +95,14 @@
           "name": "Tags",
           "as": "tags",
           "description": {
-            "en": "Replacement tags, e.g. [\"appetizers\",\"mains\"]",
-            "de": "Ersatz-Tags, z.B. [\"vorspeisen\",\"hauptgerichte\"]",
-            "fr": "Tags de remplacement, ex. [\"entrées\",\"plats\"]",
-            "es": "Etiquetas de reemplazo, p. ej. [\"entrantes\",\"platos\"]",
-            "it": "Tag sostitutivi, es. [\"antipasti\",\"primi\"]",
-            "ro": "Taguri de înlocuire, ex. [\"aperitive\",\"feluri principale\"]"
+            "en": "Replacement tags, e.g. [\"appetizers\",\"mains\"]. Use [] to clear all tags.",
+            "de": "Ersatz-Tags, z.B. [\"vorspeisen\",\"hauptgerichte\"]. Mit [] alle Tags entfernen.",
+            "fr": "Tags de remplacement, ex. [\"entrées\",\"plats\"]. Utilise [] pour tout effacer.",
+            "es": "Etiquetas de reemplazo, p. ej. [\"entrantes\",\"platos\"]. Usa [] para borrarlas.",
+            "it": "Tag sostitutivi, es. [\"antipasti\",\"primi\"]. Usa [] per rimuoverli.",
+            "ro": "Taguri de înlocuire, ex. [\"aperitive\",\"feluri principale\"]. Folosește [] pentru a le șterge."
           },
+          "bot": "Replaces the full tag list. Pass [] to clear tags without changing other fields.",
           "type": "json",
           "source": "field",
           "required": false
