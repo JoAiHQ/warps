@@ -1,0 +1,84 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Update Product Volume Prices",
+  "title": {
+    "en": "Set product volume prices",
+    "de": "Mengenpreise für Produkt setzen"
+  },
+  "description": {
+    "en": "Replace the volume price tiers on a product. Each tier is a minimum quantity plus unit price in cents. Use with hidden Ab-N variations for quantity-picker pricing (same pattern as aluminum business cards).",
+    "de": "Ersetzt die Mengenpreis-Staffeln eines Produkts. Jede Stufe ist Mindestmenge plus Stückpreis in Cent. Verwende dies mit versteckten Ab-N-Varianten für den Mengen-Preiswähler."
+  },
+  "bot": "Use after creating hidden volume variations (Ab N) to drive the store quantity picker. Pass prices as a JSON array of {min_qty, unit_price} in cents. Replaces all existing volume prices on the product.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Update volume prices",
+        "de": "Mengenpreise aktualisieren"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/products/{{productId}}/volume-prices",
+        "method": "PUT",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Product",
+          "as": "productId",
+          "description": {
+            "en": "The slug of the existing product",
+            "de": "Der Slug des bestehenden Produkts"
+          },
+          "type": "string",
+          "source": "field",
+          "position": "url:productId",
+          "required": true
+        },
+        {
+          "name": "Prices",
+          "as": "prices",
+          "description": {
+            "en": "JSON array of {min_qty, unit_price} in cents, e.g. [{\"min_qty\":5,\"unit_price\":1190},{\"min_qty\":10,\"unit_price\":990}]",
+            "de": "JSON-Array aus {min_qty, unit_price} in Cent, z.B. [{\"min_qty\":5,\"unit_price\":1190}]"
+          },
+          "type": "string",
+          "source": "field",
+          "position": "body",
+          "required": true
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug of the product. Defaults to the current team.",
+            "de": "Team-Slug des Produkts. Standardmäßig das aktuelle Team."
+          },
+          "bot": "The slug of the team the product belongs to. Omit to use the current team.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Volume prices updated.",
+      "de": "Mengenpreise aktualisiert."
+    },
+    "error": {
+      "en": "Failed to update volume prices: {{MESSAGE}}",
+      "de": "Mengenpreise konnten nicht aktualisiert werden: {{MESSAGE}}"
+    }
+  }
+}
