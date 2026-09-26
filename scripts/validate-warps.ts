@@ -19,6 +19,7 @@
 import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
+import { checkHashidPublicIdInputs } from './hashid-public-ids.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -266,6 +267,9 @@ function main(): void {
     allIssues.push(...checkNoArgPositionsOnHttpActions(warp, relPath))
     allIssues.push(...checkInlineWarpsExist(warp, relPath, allWarpIds))
     allIssues.push(...checkUiReference(warp, path.dirname(file), relPath))
+    for (const issue of checkHashidPublicIdInputs(warp, relPath)) {
+      allIssues.push(issue)
+    }
   }
 
   if (allIssues.length === 0) {
