@@ -18,31 +18,57 @@
     "it": "Recupera la bozza attuale di un contenuto del sito JoAi con versioni prima che venga pubblicata. In questo modo revisione e pubblicazione restano separate e i team possono verificare testi, immagini e valori strutturati in sicurezza."
   },
   "bot": "Use this after an edit and before publishing. Present the draft for review; do not publish unless the user explicitly asks to make it live.",
-  "vars": { "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY" },
+  "vars": {
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+  },
   "actions": [
     {
       "type": "collect",
-      "label": { "en": "Preview draft", "de": "Entwurf prüfen", "es": "Vista previa", "fr": "Prévisualiser", "ro": "Previzualizează", "it": "Anteprima" },
+      "label": {
+        "en": "Preview draft",
+        "de": "Entwurf prüfen",
+        "es": "Vista previa",
+        "fr": "Prévisualiser",
+        "ro": "Previzualizează",
+        "it": "Anteprima"
+      },
       "destination": {
         "url": "INJECT:API_BASE/v1/contents/{{contentId}}/preview",
         "method": "GET",
-        "headers": { "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}" }
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
       },
       "inputs": [
         {
           "name": "Content ID",
           "as": "contentId",
-          "description": { "en": "ID of the website content whose draft should be reviewed", "de": "ID des Website-Inhalts, dessen Entwurf geprüft werden soll" },
+          "description": {
+            "en": "ID of the website content whose draft should be reviewed (public hashid, not an internal database id)",
+            "de": "ID des Website-Inhalts, dessen Entwurf geprüft werden soll"
+          },
           "type": "string",
           "source": "field",
           "required": true,
-          "position": "url:contentId"
+          "position": "url:contentId",
+          "bot": "Opaque public hashid from the list or get API. Never use a numeric internal database id — only the public hashid (or slug where documented)."
         }
       ]
     }
   ],
-  "output": { "VERSION": "out.data.number", "STATUS": "out.data.status", "ENTRIES": "out.data.entries" },
+  "output": {
+    "VERSION": "out.data.number",
+    "STATUS": "out.data.status",
+    "ENTRIES": "out.data.entries"
+  },
   "messages": {
-    "success": { "en": "Website content draft loaded for review.", "de": "Website-Inhaltsentwurf zur Prüfung geladen.", "es": "Borrador de contenido web cargado para revisión.", "fr": "Brouillon du site chargé pour vérification.", "ro": "Versiunea în lucru a site-ului a fost încărcată pentru revizuire.", "it": "Bozza del sito caricata per la revisione." }
+    "success": {
+      "en": "Website content draft loaded for review.",
+      "de": "Website-Inhaltsentwurf zur Prüfung geladen.",
+      "es": "Borrador de contenido web cargado para revisión.",
+      "fr": "Brouillon du site chargé pour vérification.",
+      "ro": "Versiunea în lucru a site-ului a fost încărcată pentru revizuire.",
+      "it": "Bozza del sito caricata per la revisione."
+    }
   }
 }

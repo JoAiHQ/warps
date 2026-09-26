@@ -5,6 +5,7 @@
  */
 import { describe, expect, it } from 'vitest'
 import {
+  assertNoLeakedSequentialIdsInJson,
   assertPublicHashid,
   collectPublicIdsFromAddressRow,
   collectPublicIdsFromFulfillmentLocationRow,
@@ -31,11 +32,12 @@ async function apiGet(path: string): Promise<unknown> {
 }
 
 describe.skipIf(!runLive)('JoAi API public id contract (live)', () => {
-  it('team fulfillment-locations expose hashid id fields', async () => {
-    const body = (await apiGet(`/v1/teams/${team}/fulfillment-locations`)) as {
-      data?: unknown[]
-    }
-    const rows = Array.isArray(body.data) ? body.data : []
+  it('team fulfillment-locations never expose internal database ids', async () => {
+    const body = await apiGet(`/v1/teams/${team}/fulfillment-locations`)
+    assertNoLeakedSequentialIdsInJson(body, 'GET /fulfillment-locations')
+    const rows = Array.isArray((body as { data?: unknown[] }).data)
+      ? (body as { data: unknown[] }).data
+      : []
     for (const row of rows) {
       if (!row || typeof row !== 'object') continue
       for (const { path, value } of collectPublicIdsFromFulfillmentLocationRow(
@@ -46,11 +48,12 @@ describe.skipIf(!runLive)('JoAi API public id contract (live)', () => {
     }
   })
 
-  it('team billing addresses expose hashid id fields', async () => {
-    const body = (await apiGet(`/v1/addresses?team=${encodeURIComponent(team)}`)) as {
-      data?: unknown[]
-    }
-    const rows = Array.isArray(body.data) ? body.data : []
+  it('team billing addresses never expose internal database ids', async () => {
+    const body = await apiGet(`/v1/addresses?team=${encodeURIComponent(team)}`)
+    assertNoLeakedSequentialIdsInJson(body, 'GET /addresses')
+    const rows = Array.isArray((body as { data?: unknown[] }).data)
+      ? (body as { data: unknown[] }).data
+      : []
     for (const row of rows) {
       if (!row || typeof row !== 'object') continue
       for (const { path, value } of collectPublicIdsFromAddressRow(row as Record<string, unknown>)) {
@@ -59,11 +62,12 @@ describe.skipIf(!runLive)('JoAi API public id contract (live)', () => {
     }
   })
 
-  it('checkout fulfillment-locations expose hashid id fields', async () => {
-    const body = (await apiGet(
-      `/v1/shops/${team}/checkout/fulfillment-locations`,
-    )) as { data?: unknown[] }
-    const rows = Array.isArray(body.data) ? body.data : []
+  it('checkout fulfillment-locations never expose internal database ids', async () => {
+    const body = await apiGet(`/v1/shops/${team}/checkout/fulfillment-locations`)
+    assertNoLeakedSequentialIdsInJson(body, 'GET /checkout/fulfillment-locations')
+    const rows = Array.isArray((body as { data?: unknown[] }).data)
+      ? (body as { data: unknown[] }).data
+      : []
     expect(rows.length).toBeGreaterThan(0)
     for (const row of rows) {
       if (!row || typeof row !== 'object') continue

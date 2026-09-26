@@ -6,9 +6,11 @@ import {
   assertPublicHashid,
   checkHashidPublicIdInputs,
   collectPublicIdsFromAddressRow,
+  collectLeakedSequentialIds,
   collectPublicIdsFromFulfillmentLocationRow,
   inputDocumentsHashid,
   looksLikeLeakedSequentialId,
+  assertNoLeakedSequentialIdsInJson,
   textDocumentsHashid,
 } from './hashid-public-ids.js'
 
@@ -43,11 +45,21 @@ describe('hashid-public-ids helpers', () => {
     expect(looksLikeLeakedSequentialId(fixture.variationControl.id)).toBe(false)
   })
 
+  it('collectLeakedSequentialIds finds integer id fields in fixture payloads', () => {
+    const leaks = collectLeakedSequentialIds({
+      data: [fixture.fulfillmentLocation, fixture.address],
+    })
+    expect(leaks.some((l) => l.path.includes('id'))).toBe(true)
+    expect(() =>
+      assertNoLeakedSequentialIdsInJson({ data: [fixture.fulfillmentLocation] }, 'fixture'),
+    ).toThrow(/internal database id/)
+  })
+
   it('assertPublicHashid rejects fixture integers and accepts control hashids', () => {
     expect(() => assertPublicHashid(fixture.fulfillmentLocation.id, 'location.id')).toThrow(
-      /leaked sequential/,
+      /internal database id/,
     )
-    expect(() => assertPublicHashid(fixture.address.id, 'address.id')).toThrow(/leaked sequential/)
+    expect(() => assertPublicHashid(fixture.address.id, 'address.id')).toThrow(/internal database id/)
     expect(() => assertPublicHashid(fixture.serviceControl.id, 'service.id')).not.toThrow()
   })
 
