@@ -692,12 +692,12 @@ export const meta: Record<string, WarpExtras> = {
     category: 'productivity',
     faq: {
       en: [
-        { question: 'What relation types are supported?', answer: 'Family (parent_of, child_of, spouse_of, sibling_of, aunt_of, nibling_of), organization (manages, reports_to, colleague_of), business (partner_of, client_of, supplier_of), and referral (referred_by, referred).' },
+        { question: 'What relation types are supported?', answer: 'Family (parent_of, child_of, spouse_of, sibling_of, aunt_of, nibling_of), personal/social (friend_of — personal friendship, not business partner_of), organization (manages, reports_to, colleague_of), business (partner_of, client_of, supplier_of), and referral (referred_by, referred). Symmetric types include spouse_of, sibling_of, colleague_of, partner_of, and friend_of.' },
         { question: 'Can I add both directions of a relationship?', answer: 'You only need to add it once. Adding the inverse of an existing relation reuses the same link instead of creating a duplicate.' },
         { question: 'Can I link contacts from different teams?', answer: 'No. Both contacts must belong to the same team.' },
       ],
       de: [
-        { question: 'Welche Beziehungstypen werden unterstützt?', answer: 'Familie (parent_of, child_of, spouse_of, sibling_of, aunt_of, nibling_of), Organisation (manages, reports_to, colleague_of), Geschäft (partner_of, client_of, supplier_of) und Empfehlung (referred_by, referred).' },
+        { question: 'Welche Beziehungstypen werden unterstützt?', answer: 'Familie (parent_of, child_of, spouse_of, sibling_of, aunt_of, nibling_of), persönlich/sozial (friend_of — persönliche Freundschaft, nicht Geschäftspartner partner_of), Organisation (manages, reports_to, colleague_of), Geschäft (partner_of, client_of, supplier_of) und Empfehlung (referred_by, referred). Symmetrische Typen sind u. a. spouse_of, sibling_of, colleague_of, partner_of und friend_of.' },
         { question: 'Muss ich beide Richtungen einer Beziehung erfassen?', answer: 'Nein, einmal genügt. Die Gegenrichtung einer bestehenden Beziehung verwendet dieselbe Verknüpfung statt ein Duplikat anzulegen.' },
         { question: 'Kann ich Kontakte aus verschiedenen Teams verknüpfen?', answer: 'Nein. Beide Kontakte müssen zum selben Team gehören.' },
       ],
