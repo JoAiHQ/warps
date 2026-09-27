@@ -501,6 +501,9 @@ export type JoAiUpdateFulfillmentInputs = {
   orderId: string;
   fulfillmentId: string;
   status: string;
+  carrierCode: string;
+  trackingNumber: string;
+  trackingUrl: string;
   team: string;
 };
 

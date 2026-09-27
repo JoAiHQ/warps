@@ -10,14 +10,14 @@
     "ro": "Actualizează o livrare"
   },
   "description": {
-    "en": "Update fulfillment status — pending, ready_for_pickup, shipped, delivered, or cancelled.",
-    "de": "Fulfillment-Status aktualisieren — pending, ready_for_pickup, shipped, delivered oder cancelled.",
-    "fr": "Met à jour le statut d'expédition — pending, ready_for_pickup, shipped, delivered ou cancelled.",
-    "es": "Actualiza el estado del envío — pending, ready_for_pickup, shipped, delivered o cancelled.",
-    "it": "Aggiorna lo stato dell'evasione — pending, ready_for_pickup, shipped, delivered o cancelled.",
-    "ro": "Actualizează statusul livrării — pending, ready_for_pickup, shipped, delivered sau cancelled."
+    "en": "Update fulfillment status and/or tracking details (carrier and tracking number).",
+    "de": "Fulfillment-Status und/oder Tracking-Daten aktualisieren (Carrier und Sendungsnummer).",
+    "fr": "Met à jour le statut d’expédition et/ou les infos de suivi (transporteur et numéro).",
+    "es": "Actualiza el estado del envío y/o los datos de seguimiento (transportista y número).",
+    "it": "Aggiorna lo stato dell’evasione e/o i dati di tracking (corriere e numero).",
+    "ro": "Actualizează statusul livrării și/sau datele de tracking (curier și număr)."
   },
-  "bot": "Use when the user wants to mark an order as shipped, delivered, ready for pickup, or cancelled. If the fulfillment ID is unknown, list fulfillments for the order first.",
+  "bot": "Use when the user wants to mark an order as shipped, delivered, ready for pickup, or cancelled — or to correct tracking after a typo. Status is optional when only updating carrierCode/trackingNumber. Use a known carrier id (post_at, dhl, dpd, gls, ups, fedex, hermes) so trackingUrl is auto-filled. If the fulfillment ID is unknown, list fulfillments for the order first.",
   "vars": {
     "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
     "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
@@ -82,16 +82,16 @@
           "name": "Status",
           "as": "status",
           "description": {
-            "en": "New fulfillment status",
-            "de": "Neuer Fulfillment-Status",
-            "fr": "Nouveau statut d'expédition",
-            "es": "Nuevo estado del envío",
-            "it": "Nuovo stato dell'evasione",
-            "ro": "Noul status al livrării"
+            "en": "New fulfillment status (optional when only updating tracking)",
+            "de": "Neuer Fulfillment-Status (optional bei reiner Tracking-Korrektur)",
+            "fr": "Nouveau statut d'expédition (optionnel si vous corrigez seulement le suivi)",
+            "es": "Nuevo estado del envío (opcional si solo corriges el seguimiento)",
+            "it": "Nuovo stato dell'evasione (opzionale se correggi solo il tracking)",
+            "ro": "Noul status al livrării (opțional dacă doar corectezi tracking-ul)"
           },
           "type": "string",
           "source": "field",
-          "required": true,
+          "required": false,
           "options": {
             "pending": "Pending",
             "ready_for_pickup": "Ready for pickup",
@@ -99,6 +99,37 @@
             "delivered": "Delivered",
             "cancelled": "Cancelled"
           }
+        },
+        {
+          "name": "Carrier Code",
+          "as": "carrierCode",
+          "description": {
+            "en": "Carrier id (optional): post_at, dhl, dpd, gls, ups, fedex, hermes",
+            "de": "Carrier-ID (optional): post_at, dhl, dpd, gls, ups, fedex, hermes",
+            "fr": "ID transporteur (optionnel) : post_at, dhl, dpd, gls, ups, fedex, hermes",
+            "es": "ID del transportista (opcional): post_at, dhl, dpd, gls, ups, fedex, hermes",
+            "it": "ID corriere (opzionale): post_at, dhl, dpd, gls, ups, fedex, hermes",
+            "ro": "ID curier (opțional): post_at, dhl, dpd, gls, ups, fedex, hermes"
+          },
+          "bot": "Must be a known carrier id (post_at, dhl, dpd, gls, ups, fedex, hermes). The API builds the tracking URL.",
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Tracking Number",
+          "as": "trackingNumber",
+          "description": {
+            "en": "Tracking number (optional). The API builds the tracking URL for known carriers.",
+            "de": "Sendungsnummer (optional). Die API setzt die Tracking-URL für bekannte Carrier.",
+            "fr": "Numéro de suivi (optionnel). L’API génère l’URL de suivi pour les transporteurs connus.",
+            "es": "Número de seguimiento (opcional). La API genera la URL para transportistas conocidos.",
+            "it": "Numero di tracking (opzionale). L’API genera l’URL per i corrieri noti.",
+            "ro": "Număr de tracking (opțional). API-ul generează URL-ul pentru curierii cunoscuți."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
         },
         {
           "name": "Team",
@@ -139,7 +170,11 @@
     },
     "error": {
       "en": "Failed to update fulfillment: {{MESSAGE}}",
-      "de": "Fulfillment konnte nicht aktualisiert werden: {{MESSAGE}}"
+      "de": "Fulfillment konnte nicht aktualisiert werden: {{MESSAGE}}",
+      "fr": "Échec de la mise à jour de l'expédition : {{MESSAGE}}",
+      "es": "No se pudo actualizar el envío: {{MESSAGE}}",
+      "it": "Impossibile aggiornare l'evasione: {{MESSAGE}}",
+      "ro": "Actualizarea livrării a eșuat: {{MESSAGE}}"
     }
   }
 }
