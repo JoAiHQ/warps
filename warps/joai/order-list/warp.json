@@ -10,18 +10,23 @@
     "ro": "List orders"
   },
   "description": {
-    "en": "View all orders and quotes for your team, with customer, type, status, and total.",
-    "de": "Zeige alle Bestellungen und Angebote deines Teams mit Kunde, Typ, Status und Summe an.",
-    "es": "View all orders and quotes for your team, with customer, type, status, and total.",
-    "fr": "View all orders and quotes for your team, with customer, type, status, and total.",
-    "it": "View all orders and quotes for your team, with customer, type, status, and total.",
-    "ro": "View all orders and quotes for your team, with customer, type, status, and total."
+    "en": "View orders and quotes for your team (paginated), with customer, type, status, and total.",
+    "de": "Zeige Bestellungen und Angebote deines Teams (paginiert) mit Kunde, Typ, Status und Summe an.",
+    "es": "View orders and quotes for your team (paginated), with customer, type, status, and total.",
+    "fr": "View orders and quotes for your team (paginated), with customer, type, status, and total.",
+    "it": "View orders and quotes for your team (paginated), with customer, type, status, and total.",
+    "ro": "View orders and quotes for your team (paginated), with customer, type, status, and total."
   },
-  "bot": "Use this when the user wants to see, list, or check their orders or quotes.",
+  "bot": "Use this when the user wants to see, list, or check their orders or quotes. Results are paginated — use page/perPage and read meta.lastPage for more.",
   "vars": {
     "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
     "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
     "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "output": {
+    "orders": "out",
+    "ordersList": "out.data",
+    "ordersCount": "out.data.length"
   },
   "actions": [
     {
@@ -36,7 +41,7 @@
         "ro": "List orders"
       },
       "destination": {
-        "url": "INJECT:API_BASE/v1/orders",
+        "url": "INJECT:API_BASE/v1/orders?page={{page}}&perPage={{perPage}}",
         "method": "GET",
         "headers": {
           "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
@@ -44,6 +49,32 @@
         }
       },
       "inputs": [
+        {
+          "name": "Page",
+          "as": "page",
+          "type": "string",
+          "position": "query",
+          "required": false,
+          "default": "1",
+          "description": {
+            "en": "Page number for pagination (default 1)",
+            "de": "Seitennummer für Pagination (Standard 1)"
+          },
+          "bot": "1-based page number. Omit for the first page."
+        },
+        {
+          "name": "Per Page",
+          "as": "perPage",
+          "type": "uint16",
+          "source": "field",
+          "required": false,
+          "value": "50",
+          "description": {
+            "en": "Number of results per page (max 50)",
+            "de": "Ergebnisse pro Seite (max. 50)"
+          },
+          "bot": "Page size, max 50. Default 50."
+        },
         {
           "name": "Team",
           "as": "team",
