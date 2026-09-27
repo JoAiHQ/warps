@@ -4,8 +4,8 @@
   "repo": "JoAiHQ/warps",
   "branch": "main",
   "network": "mainnet",
-  "commitSha": "dcae9e4f4b28ac0e63203900cbfc2de799f1e612",
-  "generatedAt": "2026-09-27T15:38:34.776Z",
+  "commitSha": "87a666b623b6beb5cc362c7854920b4f7b7a37c7",
+  "generatedAt": "2026-09-27T21:12:09.075Z",
   "warps": [
     {
       "key": "arbitrum:omniset-deposit-arbitrum",
@@ -95358,8 +95358,8 @@
       "identifier": "@joai-order-list",
       "alias": "joai-order-list",
       "chain": "none",
-      "hash": "863d6702e3775ddf9650c0556af022248de93155bb096df16579bf1d5043a33a",
-      "checksum": "863d6702e3775ddf9650c0556af022248de93155bb096df16579bf1d5043a33a",
+      "hash": "d43b30133a4a250c9dbc1618337b17fbd6877d63b2c198d9fcf6d78be1c176a7",
+      "checksum": "d43b30133a4a250c9dbc1618337b17fbd6877d63b2c198d9fcf6d78be1c176a7",
       "name": "JoAi: List Orders",
       "title": {
         "en": "List orders",
@@ -95370,12 +95370,12 @@
         "ro": "List orders"
       },
       "description": {
-        "en": "View all orders and quotes for your team, with customer, type, status, and total.",
-        "de": "Zeige alle Bestellungen und Angebote deines Teams mit Kunde, Typ, Status und Summe an.",
-        "es": "View all orders and quotes for your team, with customer, type, status, and total.",
-        "fr": "View all orders and quotes for your team, with customer, type, status, and total.",
-        "it": "View all orders and quotes for your team, with customer, type, status, and total.",
-        "ro": "View all orders and quotes for your team, with customer, type, status, and total."
+        "en": "View orders and quotes for your team (paginated), with customer, type, status, and total.",
+        "de": "Zeige Bestellungen und Angebote deines Teams (paginiert) mit Kunde, Typ, Status und Summe an.",
+        "es": "View orders and quotes for your team (paginated), with customer, type, status, and total.",
+        "fr": "View orders and quotes for your team (paginated), with customer, type, status, and total.",
+        "it": "View orders and quotes for your team (paginated), with customer, type, status, and total.",
+        "ro": "View orders and quotes for your team (paginated), with customer, type, status, and total."
       },
       "preview": null,
       "creator": "github:JoAiHQ/warps",
@@ -95420,18 +95420,23 @@
           "ro": "List orders"
         },
         "description": {
-          "en": "View all orders and quotes for your team, with customer, type, status, and total.",
-          "de": "Zeige alle Bestellungen und Angebote deines Teams mit Kunde, Typ, Status und Summe an.",
-          "es": "View all orders and quotes for your team, with customer, type, status, and total.",
-          "fr": "View all orders and quotes for your team, with customer, type, status, and total.",
-          "it": "View all orders and quotes for your team, with customer, type, status, and total.",
-          "ro": "View all orders and quotes for your team, with customer, type, status, and total."
+          "en": "View orders and quotes for your team (paginated), with customer, type, status, and total.",
+          "de": "Zeige Bestellungen und Angebote deines Teams (paginiert) mit Kunde, Typ, Status und Summe an.",
+          "es": "View orders and quotes for your team (paginated), with customer, type, status, and total.",
+          "fr": "View orders and quotes for your team (paginated), with customer, type, status, and total.",
+          "it": "View orders and quotes for your team (paginated), with customer, type, status, and total.",
+          "ro": "View orders and quotes for your team (paginated), with customer, type, status, and total."
         },
-        "bot": "Use this when the user wants to see, list, or check their orders or quotes.",
+        "bot": "Use this when the user wants to see, list, or check their orders or quotes. Results are paginated — use page/perPage and read meta.lastPage for more.",
         "vars": {
           "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
           "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
           "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+        },
+        "output": {
+          "orders": "out",
+          "ordersList": "out.data",
+          "ordersCount": "out.data.length"
         },
         "actions": [
           {
@@ -95446,7 +95451,7 @@
               "ro": "List orders"
             },
             "destination": {
-              "url": "https://api.joai.ai/v1/orders",
+              "url": "https://api.joai.ai/v1/orders?page={{page}}&perPage={{perPage}}",
               "method": "GET",
               "headers": {
                 "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
@@ -95454,6 +95459,32 @@
               }
             },
             "inputs": [
+              {
+                "name": "Page",
+                "as": "page",
+                "type": "string",
+                "position": "query",
+                "required": false,
+                "default": "1",
+                "description": {
+                  "en": "Page number for pagination (default 1)",
+                  "de": "Seitennummer für Pagination (Standard 1)"
+                },
+                "bot": "1-based page number. Omit for the first page."
+              },
+              {
+                "name": "Per Page",
+                "as": "perPage",
+                "type": "uint16",
+                "source": "field",
+                "required": false,
+                "value": "50",
+                "description": {
+                  "en": "Number of results per page (max 50)",
+                  "de": "Ergebnisse pro Seite (max. 50)"
+                },
+                "bot": "Page size, max 50. Default 50."
+              },
               {
                 "name": "Team",
                 "as": "team",
