@@ -1,0 +1,134 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Create Tax Class",
+  "title": {
+    "en": "Create a tax rate",
+    "de": "Steuersatz erstellen",
+    "fr": "Créer un taux de TVA",
+    "es": "Crear un tipo de IVA",
+    "it": "Crea un'aliquota IVA",
+    "ro": "Creează o cotă TVA"
+  },
+  "description": {
+    "en": "Create a tax rate for your catalog. Rate is an integer percent (e.g. 10 for 10%).",
+    "de": "Steuersatz für dein Sortiment erstellen. Rate als ganze Prozentzahl (z. B. 10 für 10 %).",
+    "fr": "Crée un taux de TVA pour ton catalogue. Taux en pourcentage entier (ex. 10 pour 10 %).",
+    "es": "Crea un tipo de IVA para tu catálogo. Tipo como porcentaje entero (p. ej. 10 para 10 %).",
+    "it": "Crea un'aliquota IVA per il catalogo. Aliquota come percentuale intera (es. 10 per 10 %).",
+    "ro": "Creează o cotă TVA pentru catalog. Cota ca procent întreg (ex. 10 pentru 10 %)."
+  },
+  "bot": "Use when the user wants to add a VAT / tax rate. Pass rate as integer percent 0–100 (20 = 20%), same as coupon percent.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Create tax rate",
+        "de": "Steuersatz erstellen",
+        "fr": "Créer le taux",
+        "es": "Crear el tipo",
+        "it": "Crea l'aliquota",
+        "ro": "Creează cota"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/teams/{{team}}/tax-classes",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Name",
+          "as": "name",
+          "description": {
+            "en": "Tax rate name (e.g. Reduced)",
+            "de": "Name des Steuersatzes (z. B. Ermäßigt)",
+            "fr": "Nom du taux (ex. Réduit)",
+            "es": "Nombre del tipo (p. ej. Reducido)",
+            "it": "Nome dell'aliquota (es. Ridotta)",
+            "ro": "Numele cotei (ex. Redusă)"
+          },
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Rate",
+          "as": "rate",
+          "description": {
+            "en": "Integer percent from 0 to 100 (10 = 10%)",
+            "de": "Ganze Prozentzahl von 0 bis 100 (10 = 10 %)",
+            "fr": "Pourcentage entier de 0 à 100 (10 = 10 %)",
+            "es": "Porcentaje entero de 0 a 100 (10 = 10 %)",
+            "it": "Percentuale intera da 0 a 100 (10 = 10 %)",
+            "ro": "Procent întreg de la 0 la 100 (10 = 10 %)"
+          },
+          "type": "number",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Default",
+          "as": "isDefault",
+          "description": {
+            "en": "Whether this is the team default rate (optional)",
+            "de": "Ob dies der Team-Standard ist (optional)",
+            "fr": "Si c'est le taux par défaut (optionnel)",
+            "es": "Si es el tipo predeterminado (opcional)",
+            "it": "Se è l'aliquota predefinita (opzionale)",
+            "ro": "Dacă este cota implicită (opțional)"
+          },
+          "type": "boolean",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug for this action. Defaults to the current team.",
+            "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team.",
+            "fr": "Slug d'équipe pour cette action. Par défaut l'équipe actuelle.",
+            "es": "Slug del equipo para esta acción. Por defecto el equipo actual.",
+            "it": "Slug del team per questa azione. Predefinito: team attuale.",
+            "ro": "Slug-ul echipei pentru această acțiune. Implicit echipa curentă."
+          },
+          "bot": "The slug of the team to operate on. Omit to use the current team.",
+          "type": "string",
+          "position": "url:team",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ],
+      "output": {
+        "id": "out.data.id",
+        "name": "out.data.name"
+      }
+    }
+  ],
+  "output": {
+    "TAX_CLASS_ID": "out.1.id",
+    "TAX_CLASS_NAME": "out.1.name"
+  },
+  "messages": {
+    "success": {
+      "en": "Tax rate '{{TAX_CLASS_NAME}}' created.",
+      "de": "Steuersatz '{{TAX_CLASS_NAME}}' erstellt.",
+      "fr": "Taux « {{TAX_CLASS_NAME}} » créé.",
+      "es": "Tipo « {{TAX_CLASS_NAME}} » creado.",
+      "it": "Aliquota « {{TAX_CLASS_NAME}} » creata.",
+      "ro": "Cota „{{TAX_CLASS_NAME}}” a fost creată."
+    },
+    "error": {
+      "en": "Failed to create tax rate: {{MESSAGE}}",
+      "de": "Steuersatz konnte nicht erstellt werden: {{MESSAGE}}"
+    }
+  }
+}
