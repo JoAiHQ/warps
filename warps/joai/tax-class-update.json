@@ -1,0 +1,151 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Update Tax Class",
+  "title": {
+    "en": "Update a tax rate",
+    "de": "Steuersatz aktualisieren",
+    "fr": "Mettre à jour un taux de TVA",
+    "es": "Actualizar un tipo de IVA",
+    "it": "Aggiorna un'aliquota IVA",
+    "ro": "Actualizează o cotă TVA"
+  },
+  "description": {
+    "en": "Update name, rate, or default flag of an existing tax rate.",
+    "de": "Name, Satz oder Standard-Flag eines bestehenden Steuersatzes aktualisieren.",
+    "fr": "Met à jour le nom, le taux ou le flag par défaut d'un taux existant.",
+    "es": "Actualiza nombre, tipo o marca predeterminada de un tipo existente.",
+    "it": "Aggiorna nome, aliquota o flag predefinito di un'aliquota esistente.",
+    "ro": "Actualizează numele, cota sau flag-ul implicit al unei cote existente."
+  },
+  "bot": "Use when the user wants to change a tax rate. List tax classes first; pass the hash id from the list. Rate is integer percent 0–100 (20 = 20%).",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Update tax rate",
+        "de": "Steuersatz aktualisieren",
+        "fr": "Mettre à jour le taux",
+        "es": "Actualizar el tipo",
+        "it": "Aggiorna l'aliquota",
+        "ro": "Actualizează cota"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/teams/{{team}}/tax-classes/{{taxClassId}}",
+        "method": "PATCH",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Tax Class ID",
+          "as": "taxClassId",
+          "description": {
+            "en": "Hash ID of the tax rate from list tax classes",
+            "de": "ID des zu aktualisierenden Steuersatzes",
+            "fr": "ID du taux à mettre à jour",
+            "es": "ID del tipo a actualizar",
+            "it": "ID dell'aliquota da aggiornare",
+            "ro": "ID-ul cotei de actualizat"
+          },
+          "bot": "Hash ID from tax-class-list.",
+          "type": "string",
+          "position": "url:taxClassId",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Name",
+          "as": "name",
+          "description": {
+            "en": "Tax rate name",
+            "de": "Name des Steuersatzes",
+            "fr": "Nom du taux",
+            "es": "Nombre del tipo",
+            "it": "Nome dell'aliquota",
+            "ro": "Numele cotei"
+          },
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Rate",
+          "as": "rate",
+          "description": {
+            "en": "Integer percent from 0 to 100 (10 = 10%)",
+            "de": "Ganze Prozentzahl von 0 bis 100 (10 = 10 %)",
+            "fr": "Pourcentage entier de 0 à 100 (10 = 10 %)",
+            "es": "Porcentaje entero de 0 a 100 (10 = 10 %)",
+            "it": "Percentuale intera da 0 a 100 (10 = 10 %)",
+            "ro": "Procent întreg de la 0 la 100 (10 = 10 %)"
+          },
+          "type": "number",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Default",
+          "as": "isDefault",
+          "description": {
+            "en": "Whether this is the team default rate",
+            "de": "Ob dies der Team-Standard ist",
+            "fr": "Si c'est le taux par défaut",
+            "es": "Si es el tipo predeterminado",
+            "it": "Se è l'aliquota predefinita",
+            "ro": "Dacă este cota implicită"
+          },
+          "type": "boolean",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug for this action. Defaults to the current team.",
+            "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team.",
+            "fr": "Slug d'équipe pour cette action. Par défaut l'équipe actuelle.",
+            "es": "Slug del equipo para esta acción. Por defecto el equipo actual.",
+            "it": "Slug del team per questa azione. Predefinito: team attuale.",
+            "ro": "Slug-ul echipei pentru această acțiune. Implicit echipa curentă."
+          },
+          "bot": "The slug of the team to operate on. Omit to use the current team.",
+          "type": "string",
+          "position": "url:team",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ],
+      "output": {
+        "id": "out.data.id",
+        "name": "out.data.name"
+      }
+    }
+  ],
+  "output": {
+    "TAX_CLASS_ID": "out.1.id",
+    "TAX_CLASS_NAME": "out.1.name"
+  },
+  "messages": {
+    "success": {
+      "en": "Tax rate '{{TAX_CLASS_NAME}}' updated.",
+      "de": "Steuersatz '{{TAX_CLASS_NAME}}' aktualisiert.",
+      "fr": "Taux « {{TAX_CLASS_NAME}} » mis à jour.",
+      "es": "Tipo « {{TAX_CLASS_NAME}} » actualizado.",
+      "it": "Aliquota « {{TAX_CLASS_NAME}} » aggiornata.",
+      "ro": "Cota „{{TAX_CLASS_NAME}}” a fost actualizată."
+    },
+    "error": {
+      "en": "Failed to update tax rate: {{MESSAGE}}",
+      "de": "Steuersatz konnte nicht aktualisiert werden: {{MESSAGE}}"
+    }
+  }
+}

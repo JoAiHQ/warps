@@ -1,0 +1,98 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Delete Tax Class",
+  "title": {
+    "en": "Delete a tax rate",
+    "de": "Steuersatz löschen",
+    "fr": "Supprimer un taux de TVA",
+    "es": "Eliminar un tipo de IVA",
+    "it": "Elimina un'aliquota IVA",
+    "ro": "Șterge o cotă TVA"
+  },
+  "description": {
+    "en": "Delete a non-default tax rate. Products using it fall back to the team default.",
+    "de": "Nicht-Standard-Steuersatz löschen. Produkte fallen auf den Team-Standard zurück.",
+    "fr": "Supprime un taux non par défaut. Les produits concernés utilisent alors le taux par défaut.",
+    "es": "Elimina un tipo no predeterminado. Los productos usarán el predeterminado del equipo.",
+    "it": "Elimina un'aliquota non predefinita. I prodotti useranno quella predefinita del team.",
+    "ro": "Șterge o cotă non-implicită. Produsele vor folosi cota implicită a echipei."
+  },
+  "bot": "Use when the user wants to remove a tax rate. Cannot delete the default. List tax classes first if ID unknown.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Delete tax rate",
+        "de": "Steuersatz löschen",
+        "fr": "Supprimer le taux",
+        "es": "Eliminar el tipo",
+        "it": "Elimina l'aliquota",
+        "ro": "Șterge cota"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/teams/{{team}}/tax-classes/{{taxClassId}}",
+        "method": "DELETE",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Tax Class ID",
+          "as": "taxClassId",
+          "description": {
+            "en": "Hash ID of the tax rate from list tax classes",
+            "de": "ID des zu löschenden Steuersatzes",
+            "fr": "ID du taux à supprimer",
+            "es": "ID del tipo a eliminar",
+            "it": "ID dell'aliquota da eliminare",
+            "ro": "ID-ul cotei de șters"
+          },
+          "bot": "Hash ID from tax-class-list.",
+          "type": "string",
+          "position": "url:taxClassId",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug for this action. Defaults to the current team.",
+            "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team.",
+            "fr": "Slug d'équipe pour cette action. Par défaut l'équipe actuelle.",
+            "es": "Slug del equipo para esta acción. Por defecto el equipo actual.",
+            "it": "Slug del team per questa azione. Predefinito: team attuale.",
+            "ro": "Slug-ul echipei pentru această acțiune. Implicit echipa curentă."
+          },
+          "bot": "The slug of the team to operate on. Omit to use the current team.",
+          "type": "string",
+          "position": "url:team",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Tax rate deleted.",
+      "de": "Steuersatz gelöscht.",
+      "fr": "Taux de TVA supprimé.",
+      "es": "Tipo de IVA eliminado.",
+      "it": "Aliquota IVA eliminata.",
+      "ro": "Cota TVA a fost ștearsă."
+    },
+    "error": {
+      "en": "Failed to delete tax rate: {{MESSAGE}}",
+      "de": "Steuersatz konnte nicht gelöscht werden: {{MESSAGE}}"
+    }
+  }
+}

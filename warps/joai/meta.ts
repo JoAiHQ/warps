@@ -985,6 +985,50 @@ export const meta: Record<string, WarpExtras> = {
     },
     category: 'commerce',
   },
+  'tax-class-list': {
+    keywords: {
+      en: ['tax rates', 'VAT rates', 'tax classes', 'Steuersätze'],
+      de: ['Steuersätze', 'Umsatzsteuer', 'MwSt', 'VAT'],
+    },
+    useCases: {
+      en: ['View configured VAT / tax rates for the shop'],
+      de: ['Konfigurierte Steuersätze des Shops anzeigen'],
+    },
+    category: 'commerce',
+  },
+  'tax-class-create': {
+    keywords: {
+      en: ['create tax rate', 'add VAT rate', 'reduced tax', 'food VAT'],
+      de: ['Steuersatz erstellen', 'ermäßigte USt', 'Lebensmittel MwSt'],
+    },
+    useCases: {
+      en: ['Add a reduced or special VAT rate for products'],
+      de: ['Einen ermäßigten oder speziellen Steuersatz für Produkte anlegen'],
+    },
+    category: 'commerce',
+  },
+  'tax-class-update': {
+    keywords: {
+      en: ['update tax rate', 'edit VAT rate', 'change tax class'],
+      de: ['Steuersatz ändern', 'USt anpassen'],
+    },
+    useCases: {
+      en: ['Change an existing VAT rate name or percentage'],
+      de: ['Namen oder Prozentsatz eines bestehenden Steuersatzes ändern'],
+    },
+    category: 'commerce',
+  },
+  'tax-class-delete': {
+    keywords: {
+      en: ['delete tax rate', 'remove VAT rate'],
+      de: ['Steuersatz löschen', 'USt entfernen'],
+    },
+    useCases: {
+      en: ['Remove a non-default tax rate from the shop'],
+      de: ['Einen Nicht-Standard-Steuersatz aus dem Shop entfernen'],
+    },
+    category: 'commerce',
+  },
   'service-list': {
     keywords: {
       en: ['list services', 'view services', 'service catalog', 'billable services', 'appointment services', 'inactive services', 'private services'],

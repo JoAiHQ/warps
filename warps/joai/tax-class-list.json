@@ -1,0 +1,81 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: List Tax Classes",
+  "title": {
+    "en": "List tax rates",
+    "de": "Steuersätze anzeigen",
+    "fr": "Lister les taux de TVA",
+    "es": "Listar tipos de IVA",
+    "it": "Elenca aliquote IVA",
+    "ro": "Listează cotele TVA"
+  },
+  "description": {
+    "en": "List all tax rates (VAT classes) configured for your team.",
+    "de": "Alle Steuersätze (USt-Klassen) deines Teams anzeigen.",
+    "fr": "Liste tous les taux de TVA configurés pour ton équipe.",
+    "es": "Lista todos los tipos de IVA configurados para tu equipo.",
+    "it": "Elenca tutte le aliquote IVA configurate per il team.",
+    "ro": "Listează toate cotele TVA configurate pentru echipă."
+  },
+  "bot": "Use when the user wants to see tax rates / Steuersätze for the shop.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "List tax rates",
+        "de": "Steuersätze anzeigen",
+        "fr": "Lister les taux",
+        "es": "Listar tipos",
+        "it": "Elenca aliquote",
+        "ro": "Listează cotele"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/teams/{{team}}/tax-classes",
+        "method": "GET",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug for this action. Defaults to the current team.",
+            "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team.",
+            "fr": "Slug d'équipe pour cette action. Par défaut l'équipe actuelle.",
+            "es": "Slug del equipo para esta acción. Por defecto el equipo actual.",
+            "it": "Slug del team per questa azione. Predefinito: team attuale.",
+            "ro": "Slug-ul echipei pentru această acțiune. Implicit echipa curentă."
+          },
+          "bot": "The slug of the team to operate on. Omit to use the current team.",
+          "type": "string",
+          "position": "url:team",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Tax rates loaded.",
+      "de": "Steuersätze geladen.",
+      "fr": "Taux de TVA chargés.",
+      "es": "Tipos de IVA cargados.",
+      "it": "Aliquote IVA caricate.",
+      "ro": "Cotele TVA au fost încărcate."
+    },
+    "error": {
+      "en": "Failed to list tax rates: {{MESSAGE}}",
+      "de": "Steuersätze konnten nicht geladen werden: {{MESSAGE}}"
+    }
+  }
+}
