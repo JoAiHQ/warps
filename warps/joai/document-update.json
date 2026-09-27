@@ -10,14 +10,14 @@
     "it": "Update a document"
   },
   "description": {
-    "en": "Update the title, content, metadata, public share state, or archive state of an existing document. Set public=true for a shareable link (url), archived=true to hide from knowledge (soft retire).",
-    "de": "Titel, Inhalt, Metadaten, öffentliche Freigabe oder Archivstatus eines Dokuments aktualisieren. public=true erzeugt einen teilbaren Link (url), archived=true blendet es aus der Wissensbasis aus.",
-    "es": "Update the title, content, metadata, public share state, or archive state of an existing document. Set public=true for a shareable link (url), archived=true to hide from knowledge (soft retire).",
-    "fr": "Update the title, content, metadata, public share state, or archive state of an existing document. Set public=true for a shareable link (url), archived=true to hide from knowledge (soft retire).",
-    "ro": "Update the title, content, metadata, public share state, or archive state of an existing document. Set public=true for a shareable link (url), archived=true to hide from knowledge (soft retire).",
-    "it": "Update the title, content, metadata, public share state, or archive state of an existing document. Set public=true for a shareable link (url), archived=true to hide from knowledge (soft retire)."
+    "en": "Update the title, content, metadata, public share state, optional share password, or archive state of an existing document. Set public=true for a shareable link (url), password to protect it, archived=true to hide from knowledge (soft retire).",
+    "de": "Titel, Inhalt, Metadaten, öffentliche Freigabe, optionales Share-Passwort oder Archivstatus eines Dokuments aktualisieren. public=true erzeugt einen teilbaren Link (url), password schützt ihn, archived=true blendet es aus der Wissensbasis aus.",
+    "es": "Update the title, content, metadata, public share state, optional share password, or archive state of an existing document. Set public=true for a shareable link (url), password to protect it, archived=true to hide from knowledge (soft retire).",
+    "fr": "Update the title, content, metadata, public share state, optional share password, or archive state of an existing document. Set public=true for a shareable link (url), password to protect it, archived=true to hide from knowledge (soft retire).",
+    "ro": "Update the title, content, metadata, public share state, optional share password, or archive state of an existing document. Set public=true for a shareable link (url), password to protect it, archived=true to hide from knowledge (soft retire).",
+    "it": "Update the title, content, metadata, public share state, optional share password, or archive state of an existing document. Set public=true for a shareable link (url), password to protect it, archived=true to hide from knowledge (soft retire)."
   },
-  "bot": "Use this when the user wants to edit an existing document or template, share/unshare via public link, or archive/unarchive it. Prefer archived=true over delete for soft retirement. When public=true, return the url from the response.",
+  "bot": "Use this when the user wants to edit an existing document or template, share/unshare via public link, set or clear a share password, or archive/unarchive it. Prefer archived=true over delete for soft retirement. When public=true, return the url from the response (includes ?password= when protected).",
   "vars": {
     "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
   },
@@ -117,6 +117,38 @@
             "it": "Archive (\"true\") or restore (\"false\"). Archived docs are hidden from knowledge and the default list."
           },
           "bot": "Set true to soft-retire a document (prefer over delete). Also revokes any public share link. Set false to restore. Omit to leave unchanged.",
+          "type": "bool",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Password",
+          "as": "password",
+          "description": {
+            "en": "Optional share password. Recipients need it in the link (?password=) or unlock form. Omit to leave unchanged. To remove, set Clear Password to true.",
+            "de": "Optionales Share-Passwort. Empfänger brauchen es im Link (?password=) oder im Freigabe-Formular. Weglassen lässt es unverändert. Zum Entfernen Clear Password auf true setzen.",
+            "es": "Optional share password. Recipients need it in the link (?password=) or unlock form. Omit to leave unchanged. To remove, set Clear Password to true.",
+            "fr": "Optional share password. Recipients need it in the link (?password=) or unlock form. Omit to leave unchanged. To remove, set Clear Password to true.",
+            "ro": "Optional share password. Recipients need it in the link (?password=) or unlock form. Omit to leave unchanged. To remove, set Clear Password to true.",
+            "it": "Optional share password. Recipients need it in the link (?password=) or unlock form. Omit to leave unchanged. To remove, set Clear Password to true."
+          },
+          "bot": "Set a share password for public documents (url will include ?password=). Omit to keep current password. To remove, set clearPassword=true instead of an empty string.",
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Clear Password",
+          "as": "clearPassword",
+          "description": {
+            "en": "Set true to remove the share password. Omit to leave unchanged.",
+            "de": "Auf true setzen, um das Share-Passwort zu entfernen. Weglassen lässt es unverändert.",
+            "es": "Set true to remove the share password. Omit to leave unchanged.",
+            "fr": "Set true to remove the share password. Omit to leave unchanged.",
+            "ro": "Set true to remove the share password. Omit to leave unchanged.",
+            "it": "Set true to remove the share password. Omit to leave unchanged."
+          },
+          "bot": "Set true to clear the share password. Prefer this over an empty password string (empty strings are dropped by the warp pipeline).",
           "type": "bool",
           "source": "field",
           "required": false

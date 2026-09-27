@@ -17,7 +17,7 @@
     "it": "Crea un'evasione per un ordine con le righe da spedire. Opzionalmente aggiungi corriere e tracking.",
     "ro": "Creează o livrare pentru o comandă cu liniile de expediat. Opțional adaugă curierul și tracking-ul."
   },
-  "bot": "Use when the user wants to ship or fulfill part of an order. Pass items as a JSON array like [{\"orderItemId\":1,\"quantity\":2}]. Optional: carrierCode, trackingNumber, trackingUrl.",
+  "bot": "Use when the user wants to ship or fulfill part of an order. Pass items as a JSON array like [{\"orderItemId\":1,\"quantity\":2}]. Optional tracking: known carrierCode (post_at, dhl, dpd, gls, ups, fedex, hermes) + trackingNumber — the API fills trackingUrl.",
   "vars": {
     "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
     "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
@@ -80,13 +80,14 @@
           "name": "Carrier Code",
           "as": "carrierCode",
           "description": {
-            "en": "Shipping carrier code (optional)",
-            "de": "Carrier-Code (optional)",
-            "fr": "Code transporteur (optionnel)",
-            "es": "Código del transportista (opcional)",
-            "it": "Codice corriere (opzionale)",
-            "ro": "Cod curier (opțional)"
+            "en": "Carrier id (optional): post_at, dhl, dpd, gls, ups, fedex, hermes",
+            "de": "Carrier-ID (optional): post_at, dhl, dpd, gls, ups, fedex, hermes",
+            "fr": "ID transporteur (optionnel) : post_at, dhl, dpd, gls, ups, fedex, hermes",
+            "es": "ID del transportista (opcional): post_at, dhl, dpd, gls, ups, fedex, hermes",
+            "it": "ID corriere (opzionale): post_at, dhl, dpd, gls, ups, fedex, hermes",
+            "ro": "ID curier (opțional): post_at, dhl, dpd, gls, ups, fedex, hermes"
           },
+          "bot": "Must be a known carrier id (post_at, dhl, dpd, gls, ups, fedex, hermes). The API builds the tracking URL.",
           "type": "string",
           "source": "field",
           "required": false
@@ -95,27 +96,12 @@
           "name": "Tracking Number",
           "as": "trackingNumber",
           "description": {
-            "en": "Tracking number (optional)",
-            "de": "Sendungsnummer (optional)",
-            "fr": "Numéro de suivi (optionnel)",
-            "es": "Número de seguimiento (opcional)",
-            "it": "Numero di tracking (opzionale)",
-            "ro": "Număr de tracking (opțional)"
-          },
-          "type": "string",
-          "source": "field",
-          "required": false
-        },
-        {
-          "name": "Tracking URL",
-          "as": "trackingUrl",
-          "description": {
-            "en": "Tracking URL (optional)",
-            "de": "Tracking-URL (optional)",
-            "fr": "URL de suivi (optionnel)",
-            "es": "URL de seguimiento (opcional)",
-            "it": "URL di tracking (opzionale)",
-            "ro": "URL de tracking (opțional)"
+            "en": "Tracking number (optional). The API builds the tracking URL for known carriers.",
+            "de": "Sendungsnummer (optional). Die API setzt die Tracking-URL für bekannte Carrier.",
+            "fr": "Numéro de suivi (optionnel). L’API génère l’URL de suivi pour les transporteurs connus.",
+            "es": "Número de seguimiento (opcional). La API genera la URL para transportistas conocidos.",
+            "it": "Numero di tracking (opzionale). L’API genera l’URL per i corrieri noti.",
+            "ro": "Număr de tracking (opțional). API-ul generează URL-ul pentru curierii cunoscuți."
           },
           "type": "string",
           "source": "field",
@@ -160,7 +146,11 @@
     },
     "error": {
       "en": "Failed to create fulfillment: {{MESSAGE}}",
-      "de": "Fulfillment konnte nicht erstellt werden: {{MESSAGE}}"
+      "de": "Fulfillment konnte nicht erstellt werden: {{MESSAGE}}",
+      "fr": "Échec de la création de l'expédition : {{MESSAGE}}",
+      "es": "No se pudo crear el envío: {{MESSAGE}}",
+      "it": "Impossibile creare l'evasione: {{MESSAGE}}",
+      "ro": "Crearea livrării a eșuat: {{MESSAGE}}"
     }
   }
 }
