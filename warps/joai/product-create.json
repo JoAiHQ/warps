@@ -9,7 +9,7 @@
     "en": "Create a shop product for a team with a base price in cents and an optional stock level for its default variation. For tiered pricing, add variations with their own SKU, price, and stock. Use it when launching a product catalog or adding a new item to a shop.",
     "de": "Erstelle ein Shop-Produkt für ein Team mit Basispreis in Cent und optionalem Lagerbestand für die Standardvariante. Für Staffelpreise füge Varianten mit eigener SKU, Preis und Bestand hinzu. Nutze dies, um einen Produktkatalog aufzubauen oder einen neuen Artikel in den Shop aufzunehmen."
   },
-  "bot": "Use when the user wants to create a new product, material, or billable item with multiple variations/pricing tiers. Extract name, price, and variation names/SKUs/prices from their description. For example: '10 pieces at €4, 50 pieces at €3' becomes variations with different SKUs. For food or reduced VAT, pass taxClassId from tax-class-list.",
+  "bot": "Use when the user wants to create a new product, material, or billable item with multiple variations/pricing tiers. Extract name, price, and variation names/SKUs/prices from their description. For example: '10 pieces at €4, 50 pieces at €3' becomes variations with different SKUs. For food or reduced VAT, pass taxClassId from tax-class-list. For nutrition/ingredients/specs, pass meta.details as a sections array (kind kv or text).",
   "vars": {
     "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
     "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
@@ -119,6 +119,19 @@
           "bot": "Hash ID from tax-class-list. Omit for team default rate.",
           "type": "string",
           "source": "field",
+          "required": false
+        },
+        {
+          "name": "Details",
+          "as": "details",
+          "description": {
+            "en": "Structured detail sections JSON, e.g. [{\"key\":\"nutrition\",\"title\":\"Nutrition\",\"kind\":\"kv\",\"rows\":[{\"label\":\"Energy\",\"value\":\"350 kcal\"}]},{\"key\":\"ingredients\",\"title\":\"Ingredients\",\"kind\":\"text\",\"text\":\"Flour, water\"}]. Use kind \"kv\" for label/value rows or \"text\" for a block.",
+            "de": "Strukturierte Detail-Abschnitte als JSON, z.B. [{\"key\":\"nutrition\",\"title\":\"Nährwerte\",\"kind\":\"kv\",\"rows\":[{\"label\":\"Energie\",\"value\":\"350 kcal\"}]},{\"key\":\"ingredients\",\"title\":\"Zutaten\",\"kind\":\"text\",\"text\":\"Mehl, Wasser\"}]. kind \"kv\" für Label/Wert-Zeilen oder \"text\" für einen Block."
+          },
+          "bot": "Optional meta.details sections: {key, title, kind:\"kv\"|\"text\", rows?|text?}. Keys: lowercase slug [a-z][a-z0-9_-]*.",
+          "type": "json",
+          "source": "field",
+          "position": "payload:meta.details",
           "required": false
         },
         {
