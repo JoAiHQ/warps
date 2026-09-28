@@ -1253,24 +1253,24 @@ export const meta: Record<string, WarpExtras> = {
   },
   'product-create': {
     keywords: {
-      en: ['create product', 'add product', 'new item', 'shop product', 'sell online', 'product catalog', 'product stock'],
-      de: ['Produkt erstellen', 'Produkt hinzufügen', 'neuer Artikel', 'Shop-Produkt', 'online verkaufen', 'Produktkatalog', 'Lagerbestand'],
+      en: ['create product', 'add product', 'new item', 'shop product', 'sell online', 'product catalog', 'product stock', 'nutrition facts', 'ingredients'],
+      de: ['Produkt erstellen', 'Produkt hinzufügen', 'neuer Artikel', 'Shop-Produkt', 'online verkaufen', 'Produktkatalog', 'Lagerbestand', 'Nährwerte', 'Zutaten'],
     },
     useCases: {
-      en: ['Add a new product with a price to your shop catalog', 'Create a product with variations and volume pricing tiers', 'Create a product with an initial stock level so it can be ordered right away'],
-      de: ['Ein neues Produkt mit Preis zum Shop-Katalog hinzufügen', 'Ein Produkt mit Varianten und Mengenrabatt-Stufen erstellen', 'Ein Produkt mit anfänglichem Lagerbestand anlegen, damit es sofort bestellbar ist'],
+      en: ['Add a new product with a price to your shop catalog', 'Create a product with variations and volume pricing tiers', 'Create a product with nutrition or ingredient detail sections'],
+      de: ['Ein neues Produkt mit Preis zum Shop-Katalog hinzufügen', 'Ein Produkt mit Varianten und Mengenrabatt-Stufen erstellen', 'Ein Produkt mit Nährwert- oder Zutaten-Abschnitten anlegen'],
     },
     category: 'commerce',
     faq: {
       en: [
-        { question: 'What do I need to create a product?', answer: 'A name and a price in cents. Unit, tags, and description are optional.' },
+        { question: 'What do I need to create a product?', answer: 'A name and a price in cents. Unit, tags, description, and details are optional.' },
         { question: 'Can I add volume pricing?', answer: 'Yes. Add variations with different SKUs and prices for bulk or volume tiers.' },
-        { question: 'How do I make a product orderable?', answer: 'Set stock on the default variation so the shop shows it as available; without stock it stays inactive in the store.' },
+        { question: 'How do I add nutrition or specs?', answer: 'Pass meta.details as sections with kind kv (label/value rows) or text (a block).' },
       ],
       de: [
-        { question: 'Was brauche ich, um ein Produkt zu erstellen?', answer: 'Einen Namen und einen Preis in Cent. Einheit, Tags und Beschreibung sind optional.' },
+        { question: 'Was brauche ich, um ein Produkt zu erstellen?', answer: 'Einen Namen und einen Preis in Cent. Einheit, Tags, Beschreibung und Details sind optional.' },
         { question: 'Kann ich Mengenrabatte anlegen?', answer: 'Ja. Füge Varianten mit unterschiedlichen SKUs und Preisen für Mengenstufen hinzu.' },
-        { question: 'Wie mache ich ein Produkt bestellbar?', answer: 'Setze stock bei der Standardvariante, damit der Shop es als verfügbar zeigt; ohne Bestand bleibt es im Shop inaktiv.' },
+        { question: 'Wie füge ich Nährwerte oder Specs hinzu?', answer: 'Übergib meta.details als Abschnitte mit kind kv (Label/Wert-Zeilen) oder text (Textblock).' },
       ],
     },
   },
@@ -1527,22 +1527,24 @@ export const meta: Record<string, WarpExtras> = {
   },
   'product-update': {
     keywords: {
-      en: ['update product', 'edit product', 'change product price', 'product settings', 'product visibility'],
-      de: ['Produkt aktualisieren', 'Produkt bearbeiten', 'Produktpreis ändern', 'Produkt-Sichtbarkeit'],
+      en: ['update product', 'edit product', 'change product price', 'product settings', 'product visibility', 'nutrition facts', 'product details'],
+      de: ['Produkt aktualisieren', 'Produkt bearbeiten', 'Produktpreis ändern', 'Produkt-Sichtbarkeit', 'Nährwerte', 'Produktdetails'],
     },
     useCases: {
-      en: ['Change the name or description of a shop product', 'Deactivate a product that is out of stock', 'Toggle whether a product is publicly visible'],
-      de: ['Name oder Beschreibung eines Shop-Produkts ändern', 'Ein vergriffenes Produkt deaktivieren', 'Sichtbarkeit eines Produkts umschalten'],
+      en: ['Change the name or description of a shop product', 'Add or update nutrition, ingredients, or spec sections', 'Toggle whether a product is publicly visible'],
+      de: ['Name oder Beschreibung eines Shop-Produkts ändern', 'Nährwerte, Zutaten oder Spec-Abschnitte setzen', 'Sichtbarkeit eines Produkts umschalten'],
     },
     category: 'commerce',
     faq: {
       en: [
-        { question: 'What can I update?', answer: 'Name, unit, tags, description, active state, virtual, and public visibility.' },
+        { question: 'What can I update?', answer: 'Name, unit, tags, description, structured details, active state, virtual, and public visibility.' },
         { question: 'Do I need to provide all fields?', answer: 'No. Only the fields you provide are changed.' },
+        { question: 'How do I clear detail sections?', answer: 'Pass meta.details as an empty array [].' },
       ],
       de: [
-        { question: 'Was kann ich aktualisieren?', answer: 'Name, Einheit, Tags, Beschreibung, Aktiv-Status, virtuell und Sichtbarkeit.' },
+        { question: 'Was kann ich aktualisieren?', answer: 'Name, Einheit, Tags, Beschreibung, strukturierte Details, Aktiv-Status, virtuell und Sichtbarkeit.' },
         { question: 'Muss ich alle Felder angeben?', answer: 'Nein. Nur die angegebenen Felder werden geändert.' },
+        { question: 'Wie leere ich Detail-Abschnitte?', answer: 'Übergib meta.details als leeres Array [].' },
       ],
     },
   },

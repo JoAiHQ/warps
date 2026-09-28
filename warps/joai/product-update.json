@@ -10,14 +10,14 @@
     "ro": "Actualizează un produs"
   },
   "description": {
-    "en": "Update an existing shop product — name, unit, tags, description, active state, or visibility. Only the fields you provide are changed.",
-    "de": "Ein bestehendes Shop-Produkt aktualisieren — Name, Einheit, Tags, Beschreibung, Aktiv-Status oder Sichtbarkeit. Nur die angegebenen Felder werden geändert.",
-    "fr": "Mettre à jour un produit de boutique — nom, unité, tags, description, état actif ou visibilité. Seuls les champs fournis sont modifiés.",
-    "es": "Actualiza un producto de tienda — nombre, unidad, etiquetas, descripción, estado activo o visibilidad. Solo cambian los campos proporcionados.",
-    "it": "Aggiorna un prodotto del negozio — nome, unità, tag, descrizione, stato attivo o visibilità. Vengono modificati solo i campi forniti.",
-    "ro": "Actualizează un produs din magazin — nume, unitate, taguri, descriere, stare activă sau vizibilitate. Se schimbă doar câmpurile furnizate."
+    "en": "Update an existing shop product — name, unit, tags, description, structured details, active state, or visibility. Only the fields you provide are changed.",
+    "de": "Ein bestehendes Shop-Produkt aktualisieren — Name, Einheit, Tags, Beschreibung, strukturierte Details, Aktiv-Status oder Sichtbarkeit. Nur die angegebenen Felder werden geändert.",
+    "fr": "Mettre à jour un produit de boutique — nom, unité, tags, description, détails structurés, état actif ou visibilité. Seuls les champs fournis sont modifiés.",
+    "es": "Actualiza un producto de tienda — nombre, unidad, etiquetas, descripción, detalles estructurados, estado activo o visibilidad. Solo cambian los campos proporcionados.",
+    "it": "Aggiorna un prodotto del negozio — nome, unità, tag, descrizione, dettagli strutturati, stato attivo o visibilità. Vengono modificati solo i campi forniti.",
+    "ro": "Actualizează un produs din magazin — nume, unitate, taguri, descriere, detalii structurate, stare activă sau vizibilitate. Se schimbă doar câmpurile furnizate."
   },
-  "bot": "Use when the user wants to change an existing product. Pass the product slug from list_products as product_id. PUT goes to /v1/products/{slug} — never the collection URL. Only include fields that change. Pass tags as [] to clear tags. Do not send price (price is on variations). To change VAT, pass taxClassId from tax-class-list.",
+  "bot": "Use when the user wants to change an existing product. Pass the product slug from list_products as product_id. PUT goes to /v1/products/{slug} — never the collection URL. Only include fields that change. Pass tags as [] to clear tags. Do not send price (price is on variations). To change VAT, pass taxClassId from tax-class-list. For nutrition/ingredients/specs, pass meta.details as a sections array (kind kv or text).",
   "vars": {
     "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
     "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
@@ -176,6 +176,19 @@
           },
           "type": "json",
           "source": "field",
+          "required": false
+        },
+        {
+          "name": "Details",
+          "as": "details",
+          "description": {
+            "en": "Structured detail sections JSON, e.g. [{\"key\":\"nutrition\",\"title\":\"Nutrition\",\"kind\":\"kv\",\"rows\":[{\"label\":\"Energy\",\"value\":\"350 kcal\"}]},{\"key\":\"ingredients\",\"title\":\"Ingredients\",\"kind\":\"text\",\"text\":\"Flour, water\"}]. Use kind \"kv\" for label/value rows or \"text\" for a block. title/text/label/value may be strings or locale maps. Pass [] to clear.",
+            "de": "Strukturierte Detail-Abschnitte als JSON, z.B. [{\"key\":\"nutrition\",\"title\":\"Nährwerte\",\"kind\":\"kv\",\"rows\":[{\"label\":\"Energie\",\"value\":\"350 kcal\"}]},{\"key\":\"ingredients\",\"title\":\"Zutaten\",\"kind\":\"text\",\"text\":\"Mehl, Wasser\"}]. kind \"kv\" für Label/Wert-Zeilen oder \"text\" für einen Block. title/text/label/value als String oder Locale-Map. Mit [] leeren."
+          },
+          "bot": "Sets meta.details on the product. Array of sections: {key, title, kind:\"kv\"|\"text\", rows?|text?}. Keys: lowercase slug [a-z][a-z0-9_-]*. Pass [] to clear all detail sections. Omit to leave unchanged.",
+          "type": "json",
+          "source": "field",
+          "position": "payload:meta.details",
           "required": false
         },
         {
