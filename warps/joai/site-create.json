@@ -13,7 +13,7 @@
     "en": "Add a website record for the team. Pass a name; optional URL and type (undefined|shop). Slug is generated automatically.",
     "de": "Fügt einen Website-Eintrag für das Team hinzu. Name angeben; optional URL und Typ (undefined|shop). Der Slug wird automatisch erzeugt."
   },
-  "bot": "Add a website with team + name. Optional url and type. type=shop requires url and marks this site as the post-checkout storefront return URL (one shop per team; brandless records only). Omit type or pass type=undefined for a normal website/portfolio record. Do not pass slug — it is generated from the name. Optionally pass contactId, metricsSource, metricsResource, and monthlyReport=true to opt into the 1st-of-month report job (does not send now). If enabling monthlyReport returns channel_not_configured for cloudflare, call settings-integration-open with integration=cloudflare, then retry. Use site-provision when the site should be live on a Warp brand.",
+  "bot": "Add a website with team + name. Optional url and type. type=shop requires url and marks this site as the post-checkout storefront return URL (one shop per team; brandless records only). Omit type or pass type=undefined for a normal website/portfolio record. Do not pass slug — it is generated from the name. Optionally pass contactId, metricsSource (cloudflare | google_search_console), metricsResource (Cloudflare zone tag or GSC property URL), and monthlyReport=true to opt into the 1st-of-month report job (does not send now). If enabling monthlyReport returns channel_not_configured, call settings-integration-open with integration=cloudflare or google-search-console matching the metrics source, then retry. Use site-provision when the site should be live on a Warp brand.",
   "vars": {
     "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
     "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
@@ -99,8 +99,12 @@
           "required": false,
           "position": "payload:metricsSource",
           "description": {
-            "en": "Metrics provider key (same as metrics-query source)",
-            "de": "Metrik-Provider-Schlüssel (wie bei metrics-query source)"
+            "en": "Metrics provider: cloudflare (zone analytics) or google_search_console (search clicks/impressions)",
+            "de": "Metrik-Provider: cloudflare (Zone-Analytics) oder google_search_console (Suchklicks/Impressionen)"
+          },
+          "options": {
+            "cloudflare": "Cloudflare",
+            "google_search_console": "Google Search Console"
           }
         },
         {
