@@ -4,25 +4,25 @@
   "repo": "JoAiHQ/warps",
   "branch": "dev",
   "network": "devnet",
-  "commitSha": "498e0fd8583203fbba55abc9e5b28c5255beca04",
-  "committedAt": "2026-09-30T21:40:38.772Z",
-  "generatedAt": "2026-09-30T21:40:41.678Z",
+  "commitSha": "f8ebaf810343c4cd1f1908d224d7f7c4dad48e74",
+  "committedAt": "2026-09-30T22:07:34.186Z",
+  "generatedAt": "2026-09-30T22:07:37.192Z",
   "upserts": [
     {
-      "key": "none:joai-artifact-deliver",
-      "identifier": "@joai-artifact-deliver",
-      "alias": "joai-artifact-deliver",
+      "key": "none:joai-site-list",
+      "identifier": "@joai-site-list",
+      "alias": "joai-site-list",
       "chain": "none",
-      "hash": "6188319908c10d33d520f48cccdd41c87f389f93d0ba6dec5ddc33a48109e1fd",
-      "checksum": "6188319908c10d33d520f48cccdd41c87f389f93d0ba6dec5ddc33a48109e1fd",
-      "name": "JoAi: Deliver Artifacts",
+      "hash": "4f6bb835806880ea01a956d578348f345ae6180c412b6b69463b169c92e8e7a4",
+      "checksum": "4f6bb835806880ea01a956d578348f345ae6180c412b6b69463b169c92e8e7a4",
+      "name": "JoAi: List Sites",
       "title": {
-        "en": "Deliver artifacts to contacts",
-        "de": "Artefakte an Kontakte liefern"
+        "en": "List sites",
+        "de": "Websites auflisten"
       },
       "description": {
-        "en": "Approve and send a delivery message for one or more artifacts to one or more contacts on the chosen channel. Marks included artifacts as sent. Never sends without approval.",
-        "de": "Gibt eine Liefernachricht für ein oder mehrere Artefakte frei und sendet sie an einen oder mehrere Kontakte über den gewählten Kanal. Markiert enthaltene Artefakte als gesendet. Sendet nie ohne Freigabe."
+        "en": "List sites for a team, including contact, metrics source/resource, and monthly report status.",
+        "de": "Listet Websites eines Teams inkl. Kontakt, Metrik-Quelle/-Ressource und Monatsbericht-Status."
       },
       "preview": null,
       "creator": "github:JoAiHQ/warps",
@@ -57,31 +57,34 @@
       },
       "warp": {
         "protocol": "warp:3.0.0",
-        "name": "JoAi: Deliver Artifacts",
+        "name": "JoAi: List Sites",
         "title": {
-          "en": "Deliver artifacts to contacts",
-          "de": "Artefakte an Kontakte liefern"
+          "en": "List sites",
+          "de": "Websites auflisten"
         },
         "description": {
-          "en": "Approve and send a delivery message for one or more artifacts to one or more contacts on the chosen channel. Marks included artifacts as sent. Never sends without approval.",
-          "de": "Gibt eine Liefernachricht für ein oder mehrere Artefakte frei und sendet sie an einen oder mehrere Kontakte über den gewählten Kanal. Markiert enthaltene Artefakte als gesendet. Sendet nie ohne Freigabe."
+          "en": "List sites for a team, including contact, metrics source/resource, and monthly report status.",
+          "de": "Listet Websites eines Teams inkl. Kontakt, Metrik-Quelle/-Ressource und Monatsbericht-Status."
         },
-        "bot": "Deliver one or more ready artifacts. Pass artifactIds (comma-separated) and message. Prefer integration=email unless the contact wants another channel. Pass contactIds when recipients are known; otherwise unique contacts on the artifacts are used. Optional subject for email. Same approval model as campaigns / contact-message-send. If message is missing, draft a short warm body first (for monthly site reports name one concrete highlight), then present it for approval. Never wrap the message body in quotation marks. In German always use informal du/dein (never Sie/Ihr/Ihnen).",
+        "bot": "Use to find site IDs and reporting config before site-update. Optional monthlyReport=true returns only sites opted into the 1st-of-month report job.",
         "vars": {
-          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
           "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
           "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+        },
+        "output": {
+          "sites": "out",
+          "sitesList": "out.data"
         },
         "actions": [
           {
             "type": "collect",
             "label": {
-              "en": "Review & send",
-              "de": "Prüfen & senden"
+              "en": "List sites",
+              "de": "Websites auflisten"
             },
             "destination": {
-              "url": "https://devnet-api.joai.ai/v1/artifacts/deliver",
-              "method": "POST",
+              "url": "https://devnet-api.joai.ai/v1/sites/mine?team={{team}}&monthlyReport={{monthlyReport}}",
+              "method": "GET",
               "headers": {
                 "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
                 "X-Team": "{{team}}"
@@ -89,159 +92,64 @@
             },
             "inputs": [
               {
-                "name": "Artifact IDs",
-                "as": "artifactIds",
-                "type": "string",
-                "source": "field",
-                "required": true,
-                "default": "{{artifactIds}}",
-                "bot": "Comma-separated artifact hash IDs included in this delivery."
-              },
-              {
-                "name": "Subject",
-                "as": "subject",
-                "type": "string",
-                "source": "field",
-                "required": false,
-                "default": "{{subject}}",
-                "description": {
-                  "en": "Email subject (editable)",
-                  "de": "E-Mail-Betreff (editierbar)"
-                },
-                "bot": "Use the provided subject when set. In German keep informal du/dein tone."
-              },
-              {
-                "name": "Message",
-                "as": "message",
-                "type": "string",
-                "source": "field",
-                "required": true,
-                "default": "{{message}}",
-                "description": {
-                  "en": "Final message body — edit before approving",
-                  "de": "Finaler Nachrichtentext — vor dem Freigeben bearbeiten"
-                },
-                "bot": "Pass the drafted message without wrapping quotation marks. The user may edit this before approval."
-              },
-              {
-                "name": "Integration",
-                "as": "integration",
-                "type": "string",
-                "source": "field",
-                "required": true,
-                "default": "{{integration}}",
-                "options": {
-                  "email": "Email",
-                  "sms": "SMS",
-                  "whatsapp": "WhatsApp"
-                }
-              },
-              {
-                "name": "Recipients",
-                "as": "contactIds",
-                "type": "string",
-                "source": "field",
-                "required": false,
-                "default": "{{contactIds}}",
-                "description": {
-                  "en": "Recipients for this delivery",
-                  "de": "Empfänger dieser Lieferung"
-                },
-                "bot": "Recipient hash IDs, comma-separated. One recipient = one id."
-              },
-              {
                 "name": "Team",
                 "as": "team",
                 "type": "string",
-                "source": "hidden",
+                "source": "field",
                 "required": false,
-                "default": "{{team}}"
+                "default": "{{JOAI_TEAM_SLUG}}",
+                "position": "url:team",
+                "description": {
+                  "en": "Team slug. Defaults to the current team.",
+                  "de": "Team-Slug. Standardmäßig das aktuelle Team."
+                }
+              },
+              {
+                "name": "Monthly report only",
+                "as": "monthlyReport",
+                "type": "boolean",
+                "source": "field",
+                "required": false,
+                "position": "url:monthlyReport",
+                "description": {
+                  "en": "Optional. Leave off to list all sites. On = only sites with monthly report enabled.",
+                  "de": "Optional. Aus = alle Websites. An = nur Websites mit aktivem Monatsbericht."
+                }
               }
-            ],
-            "output": {
-              "id": "out.data.0.id",
-              "artifactIds": "out.data.0.artifactIds",
-              "deliveredAt": "out.data.0.deliveredAt"
-            }
+            ]
           }
         ],
-        "output": {
-          "DELIVERY_ID": "out.0.id",
-          "ARTIFACT_IDS": "out.0.artifactIds"
-        },
         "messages": {
           "success": {
-            "en": "Delivery sent ({{DELIVERY_ID}}).",
-            "de": "Lieferung gesendet ({{DELIVERY_ID}})."
+            "en": "Sites loaded.",
+            "de": "Websites geladen."
           }
         }
       },
       "extras": {
         "keywords": {
           "en": [
-            "deliver artifact",
-            "send delivery",
-            "send project update",
-            "send demo link",
-            "deliver multiple"
+            "list sites",
+            "site portfolio",
+            "monthly report sites"
           ],
           "de": [
-            "Artefakt liefern",
-            "Lieferung senden",
-            "Projekt-Update senden",
-            "Demo-Link senden",
-            "mehrere liefern"
+            "Websites auflisten",
+            "Website-Portfolio",
+            "Monatsbericht Websites"
           ]
         },
         "useCases": {
           "en": [
-            "Draft and send one email for several finished artifacts",
-            "Deliver slides and a demo link to a client in a single editable message"
+            "Find site IDs and metrics config",
+            "See which sites have monthly report enabled"
           ],
           "de": [
-            "Eine E-Mail für mehrere fertige Artefakte entwerfen und senden",
-            "Folien und Demo-Link in einer editierbaren Nachricht an einen Kunden liefern"
+            "Website-IDs und Metrik-Konfiguration finden",
+            "Sehen welche Websites den Monatsbericht aktiviert haben"
           ]
         },
-        "category": "communication",
-        "faq": {
-          "en": [
-            {
-              "question": "Can I deliver multiple artifacts at once?",
-              "answer": "Yes. Pass several artifact IDs (comma-separated). One message is drafted and sent; all included artifacts become sent."
-            },
-            {
-              "question": "Does it send automatically?",
-              "answer": "No. A draft is generated first; the final message must be approved before send."
-            },
-            {
-              "question": "What happens after send?",
-              "answer": "One delivery record is created per recipient, all included artifacts become sent with deliveredAt set, and messaging logs a contact activity per recipient."
-            },
-            {
-              "question": "Who receives the message?",
-              "answer": "Pass contactIds (comma-separated; one id is fine). If omitted, unique contacts attached to the artifacts are used. Email/SMS/WhatsApp uses each contact’s email or phone."
-            }
-          ],
-          "de": [
-            {
-              "question": "Kann ich mehrere Artefakte auf einmal liefern?",
-              "answer": "Ja. Übergib mehrere Artefakt-IDs (kommagetrennt). Es wird eine Nachricht entworfen und gesendet; alle enthaltenen Artefakte werden sent."
-            },
-            {
-              "question": "Wird automatisch gesendet?",
-              "answer": "Nein. Zuerst entsteht ein Entwurf; die finale Nachricht muss vor dem Versand freigegeben werden."
-            },
-            {
-              "question": "Was passiert nach dem Versand?",
-              "answer": "Pro Empfänger entsteht ein Delivery-Eintrag, alle enthaltenen Artefakte werden sent mit deliveredAt, und Messaging loggt pro Empfänger eine Kontakt-Aktivität."
-            },
-            {
-              "question": "Wer empfängt die Nachricht?",
-              "answer": "Übergib contactIds (kommagetrennt; eine ID reicht). Fehlt das, werden die eindeutigen Kontakte an den Artefakten genutzt. E-Mail/SMS/WhatsApp nutzt E-Mail oder Telefon jedes Kontakts."
-            }
-          ]
-        }
+        "category": "productivity"
       }
     },
     {
