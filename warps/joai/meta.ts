@@ -18,10 +18,10 @@ export const meta: Record<string, WarpExtras> = {
     category: 'productivity',
   },
   'metrics-query': {
-    keywords: { en: ['metrics', 'Cloudflare analytics', 'page views', 'reporting'], de: ['Metriken', 'Cloudflare Analytics', 'Seitenaufrufe', 'Reporting'] },
-    useCases: { en: ['Collect source-backed facts for a client update', 'Compare normalized metrics for a chosen period'], de: ['Quellenbasierte Fakten für ein Kunden-Update sammeln', 'Normalisierte Metriken für einen gewählten Zeitraum vergleichen'] },
+    keywords: { en: ['metrics', 'Cloudflare analytics', 'Google Search Console', 'page views', 'search clicks', 'reporting'], de: ['Metriken', 'Cloudflare Analytics', 'Google Search Console', 'Seitenaufrufe', 'Suchklicks', 'Reporting'] },
+    useCases: { en: ['Collect source-backed facts for a client update', 'Compare Cloudflare traffic or Search Console clicks/impressions for a period'], de: ['Quellenbasierte Fakten für ein Kunden-Update sammeln', 'Cloudflare-Traffic oder Search-Console-Klicks/Impressionen für einen Zeitraum vergleichen'] },
     category: 'analytics',
-    faq: { en: [{ question: 'Does this estimate visitors?', answer: 'No. It reports the normalized requests and page views returned by Cloudflare.' }], de: [{ question: 'Schätzt dies Besucher?', answer: 'Nein. Es liefert die von Cloudflare zurückgegebenen normalisierten Anfragen und Seitenaufrufe.' }] },
+    faq: { en: [{ question: 'Does this estimate visitors?', answer: 'No. For Cloudflare it reports unique visitors and page views from analytics. For Google Search Console it reports search clicks and impressions — not site analytics visitors.' }], de: [{ question: 'Schätzt dies Besucher?', answer: 'Nein. Bei Cloudflare liefert es Unique Visitors und Seitenaufrufe aus Analytics. Bei Google Search Console liefert es Suchklicks und Impressionen — keine Website-Analytics-Besucher.' }] },
   },
   'content-get': {
     keywords: { en: ['view website content', 'JoAi content record', 'website content version'], de: ['Website-Inhalt ansehen', 'JoAi Inhaltsbereich', 'Website Inhaltsversion'] },
