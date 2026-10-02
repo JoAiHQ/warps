@@ -4,8 +4,8 @@
   "repo": "JoAiHQ/warps",
   "branch": "dev",
   "network": "devnet",
-  "commitSha": "9f4fe0ccb9fb08866d65bfed95fe84d49ea151af",
-  "generatedAt": "2026-10-02T11:55:26.829Z",
+  "commitSha": "d9b5bbcc529b035f4fe4d17d8f24c5f1b696c4b3",
+  "generatedAt": "2026-10-02T17:02:45.539Z",
   "warps": [
     {
       "key": "arbitrum:omniset-deposit-arbitrum",
@@ -59191,8 +59191,8 @@
       "identifier": "@form-update",
       "alias": "form-update",
       "chain": "none",
-      "hash": "5fc94f0865c31f16041b3d25b71a1cf65d91564cda87d1035ad2e7e10a03a014",
-      "checksum": "5fc94f0865c31f16041b3d25b71a1cf65d91564cda87d1035ad2e7e10a03a014",
+      "hash": "8ebfd3a16bd6802e83c0cfccb4a04419b0cc3758f206bdd5eaecdc265b09c1f0",
+      "checksum": "8ebfd3a16bd6802e83c0cfccb4a04419b0cc3758f206bdd5eaecdc265b09c1f0",
       "name": "Form: Update",
       "title": {
         "en": "Update a form",
@@ -59242,7 +59242,8 @@
         },
         "bot": "Use this to update form metadata, definition, publication settings, notifications, or public results.",
         "vars": {
-          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+          "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
         },
         "actions": [
           {
@@ -59255,7 +59256,8 @@
               "url": "https://devnet-api.joai.ai/v1/warps/{{formId}}",
               "method": "PATCH",
               "headers": {
-                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+                "X-Team": "{{team}}"
               }
             },
             "inputs": [
@@ -59266,6 +59268,19 @@
                 "position": "url:formId",
                 "source": "field",
                 "required": true
+              },
+              {
+                "name": "Team",
+                "as": "team",
+                "description": {
+                  "en": "Team slug that owns this form. Defaults to the current team.",
+                  "de": "Team-Slug, dem dieses Formular gehört. Standardmäßig wird das aktuelle Team verwendet."
+                },
+                "bot": "Pass the business team slug that owns the form (e.g. lernstudio-satzinger). Omit to use the current team. Required when the form belongs to a different team than the agent home team.",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "default": "{{JOAI_TEAM_SLUG}}"
               },
               {
                 "name": "Name",
@@ -100131,8 +100146,8 @@
       "identifier": "@joai-room-list",
       "alias": "joai-room-list",
       "chain": "none",
-      "hash": "2b08f8baa4e338bcd4a8d0392d4cc50979799be06fbf6bd07afe80893778070f",
-      "checksum": "2b08f8baa4e338bcd4a8d0392d4cc50979799be06fbf6bd07afe80893778070f",
+      "hash": "af48548667daa28e0eda6d9b8745fe58c787ad83c4523599d892cdd3b1066e39",
+      "checksum": "af48548667daa28e0eda6d9b8745fe58c787ad83c4523599d892cdd3b1066e39",
       "name": "JoAi: List Rooms",
       "title": {
         "en": "List rooms",
@@ -100218,7 +100233,7 @@
               "ro": "List rooms"
             },
             "destination": {
-              "url": "https://devnet-api.joai.ai/v1/rooms",
+              "url": "https://devnet-api.joai.ai/v1/rooms?agent={{JOAI_AGENT_UUID}}",
               "method": "GET",
               "headers": {
                 "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
