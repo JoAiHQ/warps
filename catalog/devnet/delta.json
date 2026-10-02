@@ -4,246 +4,10 @@
   "repo": "JoAiHQ/warps",
   "branch": "dev",
   "network": "devnet",
-  "commitSha": "498e0fd8583203fbba55abc9e5b28c5255beca04",
-  "committedAt": "2026-09-30T21:40:38.772Z",
-  "generatedAt": "2026-09-30T21:40:41.678Z",
+  "commitSha": "9f4fe0ccb9fb08866d65bfed95fe84d49ea151af",
+  "committedAt": "2026-10-02T11:55:23.897Z",
+  "generatedAt": "2026-10-02T11:55:26.829Z",
   "upserts": [
-    {
-      "key": "none:joai-artifact-deliver",
-      "identifier": "@joai-artifact-deliver",
-      "alias": "joai-artifact-deliver",
-      "chain": "none",
-      "hash": "6188319908c10d33d520f48cccdd41c87f389f93d0ba6dec5ddc33a48109e1fd",
-      "checksum": "6188319908c10d33d520f48cccdd41c87f389f93d0ba6dec5ddc33a48109e1fd",
-      "name": "JoAi: Deliver Artifacts",
-      "title": {
-        "en": "Deliver artifacts to contacts",
-        "de": "Artefakte an Kontakte liefern"
-      },
-      "description": {
-        "en": "Approve and send a delivery message for one or more artifacts to one or more contacts on the chosen channel. Marks included artifacts as sent. Never sends without approval.",
-        "de": "Gibt eine Liefernachricht für ein oder mehrere Artefakte frei und sendet sie an einen oder mehrere Kontakte über den gewählten Kanal. Markiert enthaltene Artefakte als gesendet. Sendet nie ohne Freigabe."
-      },
-      "preview": null,
-      "creator": "github:JoAiHQ/warps",
-      "privileges": [],
-      "listed": true,
-      "visibility": "public",
-      "primaryAddress": null,
-      "primaryFunc": null,
-      "brand": {
-        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
-        "slug": "joai",
-        "active": true,
-        "protocol": "brand:0.2.0",
-        "name": "JoAi",
-        "description": {
-          "en": "JoAi is a platform for creating and managing your own AI agents.",
-          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
-          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
-          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
-          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
-        },
-        "logo": {
-          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
-        },
-        "urls": {
-          "web": "https://joai.ai"
-        },
-        "colors": {
-          "primary": "#98FF98",
-          "secondary": "#FFFF66"
-        }
-      },
-      "warp": {
-        "protocol": "warp:3.0.0",
-        "name": "JoAi: Deliver Artifacts",
-        "title": {
-          "en": "Deliver artifacts to contacts",
-          "de": "Artefakte an Kontakte liefern"
-        },
-        "description": {
-          "en": "Approve and send a delivery message for one or more artifacts to one or more contacts on the chosen channel. Marks included artifacts as sent. Never sends without approval.",
-          "de": "Gibt eine Liefernachricht für ein oder mehrere Artefakte frei und sendet sie an einen oder mehrere Kontakte über den gewählten Kanal. Markiert enthaltene Artefakte als gesendet. Sendet nie ohne Freigabe."
-        },
-        "bot": "Deliver one or more ready artifacts. Pass artifactIds (comma-separated) and message. Prefer integration=email unless the contact wants another channel. Pass contactIds when recipients are known; otherwise unique contacts on the artifacts are used. Optional subject for email. Same approval model as campaigns / contact-message-send. If message is missing, draft a short warm body first (for monthly site reports name one concrete highlight), then present it for approval. Never wrap the message body in quotation marks. In German always use informal du/dein (never Sie/Ihr/Ihnen).",
-        "vars": {
-          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
-          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
-          "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
-        },
-        "actions": [
-          {
-            "type": "collect",
-            "label": {
-              "en": "Review & send",
-              "de": "Prüfen & senden"
-            },
-            "destination": {
-              "url": "https://devnet-api.joai.ai/v1/artifacts/deliver",
-              "method": "POST",
-              "headers": {
-                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
-                "X-Team": "{{team}}"
-              }
-            },
-            "inputs": [
-              {
-                "name": "Artifact IDs",
-                "as": "artifactIds",
-                "type": "string",
-                "source": "field",
-                "required": true,
-                "default": "{{artifactIds}}",
-                "bot": "Comma-separated artifact hash IDs included in this delivery."
-              },
-              {
-                "name": "Subject",
-                "as": "subject",
-                "type": "string",
-                "source": "field",
-                "required": false,
-                "default": "{{subject}}",
-                "description": {
-                  "en": "Email subject (editable)",
-                  "de": "E-Mail-Betreff (editierbar)"
-                },
-                "bot": "Use the provided subject when set. In German keep informal du/dein tone."
-              },
-              {
-                "name": "Message",
-                "as": "message",
-                "type": "string",
-                "source": "field",
-                "required": true,
-                "default": "{{message}}",
-                "description": {
-                  "en": "Final message body — edit before approving",
-                  "de": "Finaler Nachrichtentext — vor dem Freigeben bearbeiten"
-                },
-                "bot": "Pass the drafted message without wrapping quotation marks. The user may edit this before approval."
-              },
-              {
-                "name": "Integration",
-                "as": "integration",
-                "type": "string",
-                "source": "field",
-                "required": true,
-                "default": "{{integration}}",
-                "options": {
-                  "email": "Email",
-                  "sms": "SMS",
-                  "whatsapp": "WhatsApp"
-                }
-              },
-              {
-                "name": "Recipients",
-                "as": "contactIds",
-                "type": "string",
-                "source": "field",
-                "required": false,
-                "default": "{{contactIds}}",
-                "description": {
-                  "en": "Recipients for this delivery",
-                  "de": "Empfänger dieser Lieferung"
-                },
-                "bot": "Recipient hash IDs, comma-separated. One recipient = one id."
-              },
-              {
-                "name": "Team",
-                "as": "team",
-                "type": "string",
-                "source": "hidden",
-                "required": false,
-                "default": "{{team}}"
-              }
-            ],
-            "output": {
-              "id": "out.data.0.id",
-              "artifactIds": "out.data.0.artifactIds",
-              "deliveredAt": "out.data.0.deliveredAt"
-            }
-          }
-        ],
-        "output": {
-          "DELIVERY_ID": "out.0.id",
-          "ARTIFACT_IDS": "out.0.artifactIds"
-        },
-        "messages": {
-          "success": {
-            "en": "Delivery sent ({{DELIVERY_ID}}).",
-            "de": "Lieferung gesendet ({{DELIVERY_ID}})."
-          }
-        }
-      },
-      "extras": {
-        "keywords": {
-          "en": [
-            "deliver artifact",
-            "send delivery",
-            "send project update",
-            "send demo link",
-            "deliver multiple"
-          ],
-          "de": [
-            "Artefakt liefern",
-            "Lieferung senden",
-            "Projekt-Update senden",
-            "Demo-Link senden",
-            "mehrere liefern"
-          ]
-        },
-        "useCases": {
-          "en": [
-            "Draft and send one email for several finished artifacts",
-            "Deliver slides and a demo link to a client in a single editable message"
-          ],
-          "de": [
-            "Eine E-Mail für mehrere fertige Artefakte entwerfen und senden",
-            "Folien und Demo-Link in einer editierbaren Nachricht an einen Kunden liefern"
-          ]
-        },
-        "category": "communication",
-        "faq": {
-          "en": [
-            {
-              "question": "Can I deliver multiple artifacts at once?",
-              "answer": "Yes. Pass several artifact IDs (comma-separated). One message is drafted and sent; all included artifacts become sent."
-            },
-            {
-              "question": "Does it send automatically?",
-              "answer": "No. A draft is generated first; the final message must be approved before send."
-            },
-            {
-              "question": "What happens after send?",
-              "answer": "One delivery record is created per recipient, all included artifacts become sent with deliveredAt set, and messaging logs a contact activity per recipient."
-            },
-            {
-              "question": "Who receives the message?",
-              "answer": "Pass contactIds (comma-separated; one id is fine). If omitted, unique contacts attached to the artifacts are used. Email/SMS/WhatsApp uses each contact’s email or phone."
-            }
-          ],
-          "de": [
-            {
-              "question": "Kann ich mehrere Artefakte auf einmal liefern?",
-              "answer": "Ja. Übergib mehrere Artefakt-IDs (kommagetrennt). Es wird eine Nachricht entworfen und gesendet; alle enthaltenen Artefakte werden sent."
-            },
-            {
-              "question": "Wird automatisch gesendet?",
-              "answer": "Nein. Zuerst entsteht ein Entwurf; die finale Nachricht muss vor dem Versand freigegeben werden."
-            },
-            {
-              "question": "Was passiert nach dem Versand?",
-              "answer": "Pro Empfänger entsteht ein Delivery-Eintrag, alle enthaltenen Artefakte werden sent mit deliveredAt, und Messaging loggt pro Empfänger eine Kontakt-Aktivität."
-            },
-            {
-              "question": "Wer empfängt die Nachricht?",
-              "answer": "Übergib contactIds (kommagetrennt; eine ID reicht). Fehlt das, werden die eindeutigen Kontakte an den Artefakten genutzt. E-Mail/SMS/WhatsApp nutzt E-Mail oder Telefon jedes Kontakts."
-            }
-          ]
-        }
-      }
-    },
     {
       "key": "none:poll-results",
       "identifier": "@poll-results",
@@ -354,6 +118,671 @@
             "abi": "hash:6305d23fc0759ecaddbc37107385954f77f0b2df97eaf5ef4dc0d56c4c7c7337"
           }
         ]
+      },
+      "extras": null
+    },
+    {
+      "key": "none:whatsapp-media-import",
+      "identifier": "@whatsapp-media-import",
+      "alias": "whatsapp-media-import",
+      "chain": "none",
+      "hash": "0e3c722779784084e26317fac6cf554e29a528a9f028b43b755801363a21019a",
+      "checksum": "0e3c722779784084e26317fac6cf554e29a528a9f028b43b755801363a21019a",
+      "name": "WhatsApp: Media Import",
+      "title": {
+        "en": "Import WhatsApp Media",
+        "de": "WhatsApp-Medien importieren",
+        "es": "Import WhatsApp Media",
+        "fr": "Import WhatsApp Media",
+        "ro": "Import WhatsApp Media",
+        "it": "Import WhatsApp Media"
+      },
+      "description": {
+        "en": "Download personal WhatsApp media (voice notes, photos, and files) from the local sync store into the JoAi workspace. JoAi then attaches the file so the agent can use it in the conversation. Requires the desktop app with sync media download enabled.",
+        "de": "Lädt persönliche WhatsApp-Medien (Sprachnachrichten, Fotos und Dateien) aus dem lokalen Sync-Speicher in den JoAi-Arbeitsbereich. JoAi hängt die Datei anschließend an, damit der Agent sie in der Unterhaltung nutzen kann. Benötigt die Desktop-App mit aktiviertem Media-Download beim Sync.",
+        "es": "Download personal WhatsApp media (voice notes, photos, and files) from the local sync store into the JoAi workspace. JoAi then attaches the file so the agent can use it in the conversation. Requires the desktop app with sync media download enabled.",
+        "fr": "Download personal WhatsApp media (voice notes, photos, and files) from the local sync store into the JoAi workspace. JoAi then attaches the file so the agent can use it in the conversation. Requires the desktop app with sync media download enabled.",
+        "ro": "Download personal WhatsApp media (voice notes, photos, and files) from the local sync store into the JoAi workspace. JoAi then attaches the file so the agent can use it in the conversation. Requires the desktop app with sync media download enabled.",
+        "it": "Download personal WhatsApp media (voice notes, photos, and files) from the local sync store into the JoAi workspace. JoAi then attaches the file so the agent can use it in the conversation. Requires the desktop app with sync media download enabled."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b83531cba0a021500d9201fe0b758945852b8e839d35815973abe4c647c01401",
+        "slug": "whatsapp",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "WhatsApp",
+        "description": {
+          "en": "Pair personal WhatsApp and forward inbound messages to agent hooks.",
+          "de": "Persönliches WhatsApp koppeln und eingehende Nachrichten an Agent-Hooks weiterleiten."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/whatsapp.svg"
+        },
+        "urls": {
+          "web": "https://whatsapp.com"
+        },
+        "colors": {
+          "primary": "#25D366"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "WhatsApp: Media Import",
+        "title": {
+          "en": "Import WhatsApp Media",
+          "de": "WhatsApp-Medien importieren",
+          "es": "Import WhatsApp Media",
+          "fr": "Import WhatsApp Media",
+          "ro": "Import WhatsApp Media",
+          "it": "Import WhatsApp Media"
+        },
+        "description": {
+          "en": "Download personal WhatsApp media (voice notes, photos, and files) from the local sync store into the JoAi workspace. JoAi then attaches the file so the agent can use it in the conversation. Requires the desktop app with sync media download enabled.",
+          "de": "Lädt persönliche WhatsApp-Medien (Sprachnachrichten, Fotos und Dateien) aus dem lokalen Sync-Speicher in den JoAi-Arbeitsbereich. JoAi hängt die Datei anschließend an, damit der Agent sie in der Unterhaltung nutzen kann. Benötigt die Desktop-App mit aktiviertem Media-Download beim Sync.",
+          "es": "Download personal WhatsApp media (voice notes, photos, and files) from the local sync store into the JoAi workspace. JoAi then attaches the file so the agent can use it in the conversation. Requires the desktop app with sync media download enabled.",
+          "fr": "Download personal WhatsApp media (voice notes, photos, and files) from the local sync store into the JoAi workspace. JoAi then attaches the file so the agent can use it in the conversation. Requires the desktop app with sync media download enabled.",
+          "ro": "Download personal WhatsApp media (voice notes, photos, and files) from the local sync store into the JoAi workspace. JoAi then attaches the file so the agent can use it in the conversation. Requires the desktop app with sync media download enabled.",
+          "it": "Download personal WhatsApp media (voice notes, photos, and files) from the local sync store into the JoAi workspace. JoAi then attaches the file so the agent can use it in the conversation. Requires the desktop app with sync media download enabled."
+        },
+        "actions": [
+          {
+            "type": "prompt",
+            "label": {
+              "en": "Import",
+              "de": "Importieren",
+              "es": "Import",
+              "fr": "Import",
+              "ro": "Import",
+              "it": "Import"
+            },
+            "prompt": "/wacli --read-only media download --chat \"{{chat}}\" --id \"{{id}}\" --output \"joai-wa-{{messageId}}\"",
+            "inputs": [
+              {
+                "name": "Chat",
+                "as": "chat",
+                "description": {
+                  "en": "WhatsApp chat JID",
+                  "de": "WhatsApp-Chat-JID",
+                  "es": "WhatsApp chat JID",
+                  "fr": "WhatsApp chat JID",
+                  "ro": "WhatsApp chat JID",
+                  "it": "WhatsApp chat JID"
+                },
+                "type": "string",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Message ID",
+                "as": "id",
+                "description": {
+                  "en": "WhatsApp message ID",
+                  "de": "WhatsApp-Nachrichten-ID",
+                  "es": "WhatsApp message ID",
+                  "fr": "WhatsApp message ID",
+                  "ro": "WhatsApp message ID",
+                  "it": "WhatsApp message ID"
+                },
+                "type": "string",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "JoAi message",
+                "as": "messageId",
+                "description": {
+                  "en": "JoAi message hash id used for the local temp file and upload",
+                  "de": "JoAi-Nachrichten-Hash-ID für die lokale Temp-Datei und den Upload",
+                  "es": "JoAi message hash id used for the local temp file and upload",
+                  "fr": "JoAi message hash id used for the local temp file and upload",
+                  "ro": "JoAi message hash id used for the local temp file and upload",
+                  "it": "JoAi message hash id used for the local temp file and upload"
+                },
+                "type": "string",
+                "source": "field",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "messages": {
+          "success": {
+            "en": "WhatsApp media downloaded.",
+            "de": "WhatsApp-Medien heruntergeladen.",
+            "es": "WhatsApp media downloaded.",
+            "fr": "WhatsApp media downloaded.",
+            "ro": "WhatsApp media downloaded.",
+            "it": "WhatsApp media downloaded."
+          },
+          "error": {
+            "en": "Failed to download WhatsApp media.",
+            "de": "WhatsApp-Medien konnten nicht heruntergeladen werden.",
+            "es": "Failed to download WhatsApp media.",
+            "fr": "Failed to download WhatsApp media.",
+            "ro": "Failed to download WhatsApp media.",
+            "it": "Failed to download WhatsApp media."
+          }
+        }
+      },
+      "extras": {
+        "keywords": {
+          "en": [
+            "import WhatsApp media",
+            "download WhatsApp photo",
+            "import WhatsApp voice note",
+            "attach WhatsApp file"
+          ],
+          "de": [
+            "WhatsApp Medien importieren",
+            "WhatsApp Foto herunterladen",
+            "WhatsApp Sprachnachricht importieren",
+            "WhatsApp Datei anhängen"
+          ]
+        },
+        "useCases": {
+          "en": [
+            "Import a personal WhatsApp voice note or photo into JoAi",
+            "Attach synced WhatsApp media so the agent can use it"
+          ],
+          "de": [
+            "Persönliche WhatsApp-Sprachnachricht oder Foto in JoAi importieren",
+            "Synchronisierte WhatsApp-Medien anhängen, damit der Agent sie nutzen kann"
+          ]
+        },
+        "category": "communication"
+      }
+    },
+    {
+      "key": "none:whatsapp-send-media",
+      "identifier": "@whatsapp-send-media",
+      "alias": "whatsapp-send-media",
+      "chain": "none",
+      "hash": "fd0bf54d6366ff03c140f80a8e4c25c14efba50f7bc4728307a307a744c5b349",
+      "checksum": "fd0bf54d6366ff03c140f80a8e4c25c14efba50f7bc4728307a307a744c5b349",
+      "name": "WhatsApp: Send Media",
+      "title": {
+        "en": "Send WhatsApp Media",
+        "de": "WhatsApp-Medien senden",
+        "es": "Send WhatsApp Media",
+        "fr": "Send WhatsApp Media",
+        "ro": "Send WhatsApp Media",
+        "it": "Send WhatsApp Media"
+      },
+      "description": {
+        "en": "Send a photo or file to a phone number or WhatsApp group via personal WhatsApp. Use a local workspace path or a downloadable media URL (the desktop app materializes URLs before sending).",
+        "de": "Sende ein Foto oder eine Datei an eine Telefonnummer oder WhatsApp-Gruppe über persönliches WhatsApp. Nutze einen lokalen Workspace-Pfad oder eine herunterladbare Medien-URL (die Desktop-App materialisiert URLs vor dem Senden).",
+        "es": "Send a photo or file to a phone number or WhatsApp group via personal WhatsApp. Use a local workspace path or a downloadable media URL (the desktop app materializes URLs before sending).",
+        "fr": "Send a photo or file to a phone number or WhatsApp group via personal WhatsApp. Use a local workspace path or a downloadable media URL (the desktop app materializes URLs before sending).",
+        "ro": "Send a photo or file to a phone number or WhatsApp group via personal WhatsApp. Use a local workspace path or a downloadable media URL (the desktop app materializes URLs before sending).",
+        "it": "Send a photo or file to a phone number or WhatsApp group via personal WhatsApp. Use a local workspace path or a downloadable media URL (the desktop app materializes URLs before sending)."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b83531cba0a021500d9201fe0b758945852b8e839d35815973abe4c647c01401",
+        "slug": "whatsapp",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "WhatsApp",
+        "description": {
+          "en": "Pair personal WhatsApp and forward inbound messages to agent hooks.",
+          "de": "Persönliches WhatsApp koppeln und eingehende Nachrichten an Agent-Hooks weiterleiten."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/whatsapp.svg"
+        },
+        "urls": {
+          "web": "https://whatsapp.com"
+        },
+        "colors": {
+          "primary": "#25D366"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "WhatsApp: Send Media",
+        "title": {
+          "en": "Send WhatsApp Media",
+          "de": "WhatsApp-Medien senden",
+          "es": "Send WhatsApp Media",
+          "fr": "Send WhatsApp Media",
+          "ro": "Send WhatsApp Media",
+          "it": "Send WhatsApp Media"
+        },
+        "description": {
+          "en": "Send a photo or file to a phone number or WhatsApp group via personal WhatsApp. Use a local workspace path or a downloadable media URL (the desktop app materializes URLs before sending).",
+          "de": "Sende ein Foto oder eine Datei an eine Telefonnummer oder WhatsApp-Gruppe über persönliches WhatsApp. Nutze einen lokalen Workspace-Pfad oder eine herunterladbare Medien-URL (die Desktop-App materialisiert URLs vor dem Senden).",
+          "es": "Send a photo or file to a phone number or WhatsApp group via personal WhatsApp. Use a local workspace path or a downloadable media URL (the desktop app materializes URLs before sending).",
+          "fr": "Send a photo or file to a phone number or WhatsApp group via personal WhatsApp. Use a local workspace path or a downloadable media URL (the desktop app materializes URLs before sending).",
+          "ro": "Send a photo or file to a phone number or WhatsApp group via personal WhatsApp. Use a local workspace path or a downloadable media URL (the desktop app materializes URLs before sending).",
+          "it": "Send a photo or file to a phone number or WhatsApp group via personal WhatsApp. Use a local workspace path or a downloadable media URL (the desktop app materializes URLs before sending)."
+        },
+        "actions": [
+          {
+            "type": "prompt",
+            "label": {
+              "en": "Send",
+              "de": "Senden",
+              "es": "Send",
+              "fr": "Send",
+              "ro": "Send",
+              "it": "Send"
+            },
+            "prompt": "/wacli send file --to \"{{phone}}\" --file \"{{file}}\" --caption \"{{caption}}\"",
+            "inputs": [
+              {
+                "name": "Phone",
+                "as": "phone",
+                "description": {
+                  "en": "Recipient phone (country code, e.g. +43660...) or group JID (…@g.us)",
+                  "de": "Telefonnummer mit Ländervorwahl (z.B. +43660...) oder Gruppen-JID (…@g.us)",
+                  "es": "Recipient phone (country code, e.g. +43660...) or group JID (…@g.us)",
+                  "fr": "Recipient phone (country code, e.g. +43660...) or group JID (…@g.us)",
+                  "ro": "Recipient phone (country code, e.g. +43660...) or group JID (…@g.us)",
+                  "it": "Recipient phone (country code, e.g. +43660...) or group JID (…@g.us)"
+                },
+                "type": "string",
+                "source": "field",
+                "required": true,
+                "modifier": "transform:(value) => value.replace(/^\\+/, '')"
+              },
+              {
+                "name": "File",
+                "as": "file",
+                "description": {
+                  "en": "Local workspace file path or https media URL to send",
+                  "de": "Lokaler Workspace-Dateipfad oder https-Medien-URL zum Senden",
+                  "es": "Local workspace file path or https media URL to send",
+                  "fr": "Local workspace file path or https media URL to send",
+                  "ro": "Local workspace file path or https media URL to send",
+                  "it": "Local workspace file path or https media URL to send"
+                },
+                "type": "string",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Caption",
+                "as": "caption",
+                "description": {
+                  "en": "Optional caption for the photo or file",
+                  "de": "Optionaler Bild-/Dateitext",
+                  "es": "Optional caption for the photo or file",
+                  "fr": "Optional caption for the photo or file",
+                  "ro": "Optional caption for the photo or file",
+                  "it": "Optional caption for the photo or file"
+                },
+                "type": "string",
+                "source": "field",
+                "required": false
+              }
+            ]
+          }
+        ],
+        "messages": {
+          "success": {
+            "en": "Media sent to {{phone}}.",
+            "de": "Medien an {{phone}} gesendet.",
+            "es": "Media sent to {{phone}}.",
+            "fr": "Media sent to {{phone}}.",
+            "ro": "Media sent to {{phone}}.",
+            "it": "Media sent to {{phone}}."
+          },
+          "error": {
+            "en": "Failed to send media to {{phone}}.",
+            "de": "Medien an {{phone}} konnten nicht gesendet werden.",
+            "es": "Failed to send media to {{phone}}.",
+            "fr": "Failed to send media to {{phone}}.",
+            "ro": "Failed to send media to {{phone}}.",
+            "it": "Failed to send media to {{phone}}."
+          }
+        }
+      },
+      "extras": {
+        "keywords": {
+          "en": [
+            "send WhatsApp photo",
+            "send WhatsApp file",
+            "send WhatsApp media",
+            "share image on WhatsApp"
+          ],
+          "de": [
+            "WhatsApp Foto senden",
+            "WhatsApp Datei senden",
+            "WhatsApp Medien senden",
+            "Bild über WhatsApp teilen"
+          ]
+        },
+        "useCases": {
+          "en": [
+            "Send a photo or document through personal WhatsApp",
+            "Share a local or JoAi media file with a contact or group"
+          ],
+          "de": [
+            "Foto oder Dokument über persönliches WhatsApp senden",
+            "Lokale oder JoAi-Mediendatei an Kontakt oder Gruppe teilen"
+          ]
+        },
+        "category": "communication"
+      }
+    },
+    {
+      "key": "none:whatsapp-send-voice",
+      "identifier": "@whatsapp-send-voice",
+      "alias": "whatsapp-send-voice",
+      "chain": "none",
+      "hash": "71336015f1d9c3fa1ea6ca8ed4a6d5e1c4ca78b4ec76dd00e4aff89d74399bf2",
+      "checksum": "71336015f1d9c3fa1ea6ca8ed4a6d5e1c4ca78b4ec76dd00e4aff89d74399bf2",
+      "name": "WhatsApp: Send Voice",
+      "title": {
+        "en": "Send WhatsApp Voice Note",
+        "de": "WhatsApp-Sprachnachricht senden",
+        "es": "Send WhatsApp Voice Note",
+        "fr": "Send WhatsApp Voice Note",
+        "ro": "Send WhatsApp Voice Note",
+        "it": "Send WhatsApp Voice Note"
+      },
+      "description": {
+        "en": "Send a voice note (OGG/Opus) to a phone number or WhatsApp group via personal WhatsApp. Use a local workspace path or a downloadable media URL (the desktop app materializes URLs before sending).",
+        "de": "Sende eine Sprachnachricht (OGG/Opus) an eine Telefonnummer oder WhatsApp-Gruppe über persönliches WhatsApp. Nutze einen lokalen Workspace-Pfad oder eine herunterladbare Medien-URL (die Desktop-App materialisiert URLs vor dem Senden).",
+        "es": "Send a voice note (OGG/Opus) to a phone number or WhatsApp group via personal WhatsApp. Use a local workspace path or a downloadable media URL (the desktop app materializes URLs before sending).",
+        "fr": "Send a voice note (OGG/Opus) to a phone number or WhatsApp group via personal WhatsApp. Use a local workspace path or a downloadable media URL (the desktop app materializes URLs before sending).",
+        "ro": "Send a voice note (OGG/Opus) to a phone number or WhatsApp group via personal WhatsApp. Use a local workspace path or a downloadable media URL (the desktop app materializes URLs before sending).",
+        "it": "Send a voice note (OGG/Opus) to a phone number or WhatsApp group via personal WhatsApp. Use a local workspace path or a downloadable media URL (the desktop app materializes URLs before sending)."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b83531cba0a021500d9201fe0b758945852b8e839d35815973abe4c647c01401",
+        "slug": "whatsapp",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "WhatsApp",
+        "description": {
+          "en": "Pair personal WhatsApp and forward inbound messages to agent hooks.",
+          "de": "Persönliches WhatsApp koppeln und eingehende Nachrichten an Agent-Hooks weiterleiten."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/whatsapp.svg"
+        },
+        "urls": {
+          "web": "https://whatsapp.com"
+        },
+        "colors": {
+          "primary": "#25D366"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "WhatsApp: Send Voice",
+        "title": {
+          "en": "Send WhatsApp Voice Note",
+          "de": "WhatsApp-Sprachnachricht senden",
+          "es": "Send WhatsApp Voice Note",
+          "fr": "Send WhatsApp Voice Note",
+          "ro": "Send WhatsApp Voice Note",
+          "it": "Send WhatsApp Voice Note"
+        },
+        "description": {
+          "en": "Send a voice note (OGG/Opus) to a phone number or WhatsApp group via personal WhatsApp. Use a local workspace path or a downloadable media URL (the desktop app materializes URLs before sending).",
+          "de": "Sende eine Sprachnachricht (OGG/Opus) an eine Telefonnummer oder WhatsApp-Gruppe über persönliches WhatsApp. Nutze einen lokalen Workspace-Pfad oder eine herunterladbare Medien-URL (die Desktop-App materialisiert URLs vor dem Senden).",
+          "es": "Send a voice note (OGG/Opus) to a phone number or WhatsApp group via personal WhatsApp. Use a local workspace path or a downloadable media URL (the desktop app materializes URLs before sending).",
+          "fr": "Send a voice note (OGG/Opus) to a phone number or WhatsApp group via personal WhatsApp. Use a local workspace path or a downloadable media URL (the desktop app materializes URLs before sending).",
+          "ro": "Send a voice note (OGG/Opus) to a phone number or WhatsApp group via personal WhatsApp. Use a local workspace path or a downloadable media URL (the desktop app materializes URLs before sending).",
+          "it": "Send a voice note (OGG/Opus) to a phone number or WhatsApp group via personal WhatsApp. Use a local workspace path or a downloadable media URL (the desktop app materializes URLs before sending)."
+        },
+        "actions": [
+          {
+            "type": "prompt",
+            "label": {
+              "en": "Send",
+              "de": "Senden",
+              "es": "Send",
+              "fr": "Send",
+              "ro": "Send",
+              "it": "Send"
+            },
+            "prompt": "/wacli send voice --to \"{{phone}}\" --file \"{{file}}\"",
+            "inputs": [
+              {
+                "name": "Phone",
+                "as": "phone",
+                "description": {
+                  "en": "Recipient phone (country code, e.g. +43660...) or group JID (…@g.us)",
+                  "de": "Telefonnummer mit Ländervorwahl (z.B. +43660...) oder Gruppen-JID (…@g.us)",
+                  "es": "Recipient phone (country code, e.g. +43660...) or group JID (…@g.us)",
+                  "fr": "Recipient phone (country code, e.g. +43660...) or group JID (…@g.us)",
+                  "ro": "Recipient phone (country code, e.g. +43660...) or group JID (…@g.us)",
+                  "it": "Recipient phone (country code, e.g. +43660...) or group JID (…@g.us)"
+                },
+                "type": "string",
+                "source": "field",
+                "required": true,
+                "modifier": "transform:(value) => value.replace(/^\\+/, '')"
+              },
+              {
+                "name": "File",
+                "as": "file",
+                "description": {
+                  "en": "Local OGG/Opus workspace path or https media URL to send as a voice note",
+                  "de": "Lokaler OGG/Opus-Workspace-Pfad oder https-Medien-URL als Sprachnachricht",
+                  "es": "Local OGG/Opus workspace path or https media URL to send as a voice note",
+                  "fr": "Local OGG/Opus workspace path or https media URL to send as a voice note",
+                  "ro": "Local OGG/Opus workspace path or https media URL to send as a voice note",
+                  "it": "Local OGG/Opus workspace path or https media URL to send as a voice note"
+                },
+                "type": "string",
+                "source": "field",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "messages": {
+          "success": {
+            "en": "Voice note sent to {{phone}}.",
+            "de": "Sprachnachricht an {{phone}} gesendet.",
+            "es": "Voice note sent to {{phone}}.",
+            "fr": "Voice note sent to {{phone}}.",
+            "ro": "Voice note sent to {{phone}}.",
+            "it": "Voice note sent to {{phone}}."
+          },
+          "error": {
+            "en": "Failed to send voice note to {{phone}}.",
+            "de": "Sprachnachricht an {{phone}} konnte nicht gesendet werden.",
+            "es": "Failed to send voice note to {{phone}}.",
+            "fr": "Failed to send voice note to {{phone}}.",
+            "ro": "Failed to send voice note to {{phone}}.",
+            "it": "Failed to send voice note to {{phone}}."
+          }
+        }
+      },
+      "extras": {
+        "keywords": {
+          "en": [
+            "send WhatsApp voice note",
+            "send voice message",
+            "WhatsApp audio"
+          ],
+          "de": [
+            "WhatsApp Sprachnachricht senden",
+            "Sprachnachricht senden",
+            "WhatsApp Audio"
+          ]
+        },
+        "useCases": {
+          "en": [
+            "Send an OGG/Opus voice note through personal WhatsApp",
+            "Reply with audio to a WhatsApp Personal contact or group"
+          ],
+          "de": [
+            "OGG/Opus-Sprachnachricht über persönliches WhatsApp senden",
+            "Mit Audio an einen WhatsApp-Personal-Kontakt oder eine Gruppe antworten"
+          ]
+        },
+        "category": "communication"
+      }
+    },
+    {
+      "key": "none:whatsapp-sync",
+      "identifier": "@whatsapp-sync",
+      "alias": "whatsapp-sync",
+      "chain": "none",
+      "hash": "5e46aafbde7b841b278596f4e1d0c6dd0fe5cc990e37651210b145beb522d964",
+      "checksum": "5e46aafbde7b841b278596f4e1d0c6dd0fe5cc990e37651210b145beb522d964",
+      "name": "WhatsApp: Sync Personal",
+      "title": {
+        "en": "Sync Personal WhatsApp",
+        "de": "Persönliches WhatsApp synchronisieren",
+        "es": "Sync Personal WhatsApp",
+        "fr": "Sync Personal WhatsApp",
+        "ro": "Sync Personal WhatsApp",
+        "it": "Sync Personal WhatsApp"
+      },
+      "description": {
+        "en": "Keep personal WhatsApp in sync and forward new messages to your agent webhook while this laptop is online.",
+        "de": "Hält persönliches WhatsApp synchron und leitet neue Nachrichten an den Agent-Webhook weiter, solange dieses Laptop online ist.",
+        "es": "Keep personal WhatsApp in sync and forward new messages to your agent webhook while this laptop is online.",
+        "fr": "Keep personal WhatsApp in sync and forward new messages to your agent webhook while this laptop is online.",
+        "ro": "Keep personal WhatsApp in sync and forward new messages to your agent webhook while this laptop is online.",
+        "it": "Keep personal WhatsApp in sync and forward new messages to your agent webhook while this laptop is online."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b83531cba0a021500d9201fe0b758945852b8e839d35815973abe4c647c01401",
+        "slug": "whatsapp",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "WhatsApp",
+        "description": {
+          "en": "Pair personal WhatsApp and forward inbound messages to agent hooks.",
+          "de": "Persönliches WhatsApp koppeln und eingehende Nachrichten an Agent-Hooks weiterleiten."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/whatsapp.svg"
+        },
+        "urls": {
+          "web": "https://whatsapp.com"
+        },
+        "colors": {
+          "primary": "#25D366"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "WhatsApp: Sync Personal",
+        "title": {
+          "en": "Sync Personal WhatsApp",
+          "de": "Persönliches WhatsApp synchronisieren",
+          "es": "Sync Personal WhatsApp",
+          "fr": "Sync Personal WhatsApp",
+          "ro": "Sync Personal WhatsApp",
+          "it": "Sync Personal WhatsApp"
+        },
+        "description": {
+          "en": "Keep personal WhatsApp in sync and forward new messages to your agent webhook while this laptop is online.",
+          "de": "Hält persönliches WhatsApp synchron und leitet neue Nachrichten an den Agent-Webhook weiter, solange dieses Laptop online ist.",
+          "es": "Keep personal WhatsApp in sync and forward new messages to your agent webhook while this laptop is online.",
+          "fr": "Keep personal WhatsApp in sync and forward new messages to your agent webhook while this laptop is online.",
+          "ro": "Keep personal WhatsApp in sync and forward new messages to your agent webhook while this laptop is online.",
+          "it": "Keep personal WhatsApp in sync and forward new messages to your agent webhook while this laptop is online."
+        },
+        "cli": {
+          "mode": "session"
+        },
+        "hook": {
+          "source": "wacli"
+        },
+        "actions": [
+          {
+            "type": "prompt",
+            "label": {
+              "en": "Start sync",
+              "de": "Sync starten",
+              "es": "Start sync",
+              "fr": "Start sync",
+              "ro": "Start sync",
+              "it": "Start sync"
+            },
+            "prompt": "/wacli sync --follow --presence-mode quiet --max-reconnect 0 --download-media --webhook \"{{webhookUrl}}\" --webhook-secret \"{{webhookSecret}}\"",
+            "cli": {
+              "mode": "session"
+            },
+            "inputs": [
+              {
+                "name": "Webhook URL",
+                "as": "webhookUrl",
+                "description": {
+                  "en": "Agent inbound hooks URL",
+                  "de": "Agent-Inbound-Hooks-URL",
+                  "es": "Agent inbound hooks URL",
+                  "fr": "Agent inbound hooks URL",
+                  "ro": "Agent inbound hooks URL",
+                  "it": "Agent inbound hooks URL"
+                },
+                "type": "string",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Webhook secret",
+                "as": "webhookSecret",
+                "description": {
+                  "en": "HMAC secret for the inbound webhook signature",
+                  "de": "HMAC-Geheimnis für die Inbound-Webhook-Signatur",
+                  "es": "HMAC secret for the inbound webhook signature",
+                  "fr": "HMAC secret for the inbound webhook signature",
+                  "ro": "HMAC secret for the inbound webhook signature",
+                  "it": "HMAC secret for the inbound webhook signature"
+                },
+                "type": "string",
+                "source": "field",
+                "required": true
+              }
+            ]
+          }
+        ],
+        "messages": {
+          "success": {
+            "en": "WhatsApp sync started.",
+            "de": "WhatsApp-Sync gestartet.",
+            "es": "WhatsApp sync started.",
+            "fr": "WhatsApp sync started.",
+            "ro": "WhatsApp sync started.",
+            "it": "WhatsApp sync started."
+          },
+          "error": {
+            "en": "WhatsApp sync failed.",
+            "de": "WhatsApp-Sync fehlgeschlagen.",
+            "es": "WhatsApp sync failed.",
+            "fr": "WhatsApp sync failed.",
+            "ro": "WhatsApp sync failed.",
+            "it": "WhatsApp sync failed."
+          }
+        }
       },
       "extras": null
     }
