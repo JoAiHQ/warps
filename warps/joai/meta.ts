@@ -910,22 +910,32 @@ export const meta: Record<string, WarpExtras> = {
   },
   'order-notify': {
     keywords: {
-      en: ['notify contact', 'order confirmation email', 'send confirmation', 'pending order email', 'invoice email'],
-      de: ['Kontakt benachrichtigen', 'Bestellbestätigung', 'Bestätigung senden', 'ausstehende Bestellung', 'Rechnungs-E-Mail'],
+      en: ['notify contact', 'order confirmation email', 'send confirmation', 'payment reminder', 'pending order email', 'invoice email'],
+      de: ['Kontakt benachrichtigen', 'Bestellbestätigung', 'Bestätigung senden', 'Zahlungserinnerung', 'ausstehende Bestellung', 'Rechnungs-E-Mail'],
     },
     useCases: {
-      en: ['Email a pending order confirmation to the customer', 'Resend branded order confirmation with invoice'],
-      de: ['Bestellbestätigung an den Kunden senden', 'Gebrandete Bestellbestätigung mit Rechnung erneut senden'],
+      en: [
+        'Email a pending order confirmation to the customer',
+        'Resend branded order confirmation with invoice',
+        'Send a payment reminder for an unpaid pending shop order',
+      ],
+      de: [
+        'Bestellbestätigung an den Kunden senden',
+        'Gebrandete Bestellbestätigung mit Rechnung erneut senden',
+        'Zahlungserinnerung für eine unbezahlte Shop-Bestellung senden',
+      ],
     },
     category: 'commerce',
     faq: {
       en: [
         { question: 'Who receives the email?', answer: 'The customer contact on the order (not a separate invoice recipient).' },
         { question: 'Which agent sends it?', answer: 'The executing agent is used as the sender.' },
+        { question: 'When do I use payment-reminder?', answer: 'Only for unpaid pending shop orders (not quotes). Use confirmation otherwise.' },
       ],
       de: [
         { question: 'Wer erhält die E-Mail?', answer: 'Der Kundenkontakt der Bestellung (nicht ein separater Rechnungsempfänger).' },
         { question: 'Welcher Agent sendet?', answer: 'Der ausführende Agent wird als Absender verwendet.' },
+        { question: 'Wann nutze ich payment-reminder?', answer: 'Nur für unbezahlte ausstehende Shop-Bestellungen (keine Angebote). Sonst confirmation.' },
       ],
     },
   },
