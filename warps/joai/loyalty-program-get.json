@@ -1,0 +1,75 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Get Loyalty Program",
+  "title": {
+    "en": "Get loyalty program",
+    "de": "Treueprogramm abrufen"
+  },
+  "description": {
+    "en": "Load the team's loyalty program with settings, rewards, tiers and all collect points (QR codes, Advent doors, checkpoints). Collect points show whether a code is required, never the code itself. Today's code of daily-rotating points is shown only to signed-in team members (loyalty editor, checkpoint display).",
+    "de": "Lädt das Treueprogramm des Teams mit Einstellungen, Prämien, Stufen und allen Sammelpunkten (QR-Codes, Advent-Türchen, Checkpoints). Sammelpunkte zeigen nur, ob ein Code nötig ist, nie den Code selbst. Den heutigen Code täglich wechselnder Punkte sehen nur angemeldete Team-Mitglieder (Loyalty-Editor, Checkpoint-Display)."
+  },
+  "bot": "Use this before changing collect points: joai-loyalty-collect-points-set replaces the whole list, so start from the collect points returned here and keep every entry that should stay (with its codeRotation). Codes are never returned here; if someone asks for today's code, point them to a team member with the loyalty editor or the checkpoint display.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "auto": true,
+      "label": {
+        "en": "Get loyalty program",
+        "de": "Treueprogramm abrufen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/loyalty/program",
+        "method": "GET",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}",
+          "Accept": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Team",
+          "as": "team",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}",
+          "description": {
+            "en": "Team slug for this action. Defaults to the current team.",
+            "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team."
+          },
+          "bot": "The slug of the team to operate on. Omit to use the current team."
+        }
+      ],
+      "output": {
+        "name": "out.data.name",
+        "active": "out.data.active",
+        "settings": "out.data.settings",
+        "rewards": "out.data.rewards",
+        "tiers": "out.data.tiers",
+        "collectPoints": "out.data.collectPoints"
+      }
+    }
+  ],
+  "output": {
+    "PROGRAM_NAME": "out.1.name",
+    "name": "out.1.name",
+    "active": "out.1.active",
+    "settings": "out.1.settings",
+    "rewards": "out.1.rewards",
+    "tiers": "out.1.tiers",
+    "collectPoints": "out.1.collectPoints"
+  },
+  "messages": {
+    "success": {
+      "en": "Loyalty program '{{PROGRAM_NAME}}' loaded.",
+      "de": "Treueprogramm '{{PROGRAM_NAME}}' geladen."
+    }
+  }
+}

@@ -18,6 +18,10 @@
     "it": "Fetch a form with its current definition, public URL, and publication status."
   },
   "bot": "Use this to read the current definition of a form before modifying it.",
+  "vars": {
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
   "actions": [
     {
       "type": "collect",
@@ -33,7 +37,8 @@
         "url": "INJECT:API_BASE/v1/warps/{{formId}}",
         "method": "GET",
         "headers": {
-          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
         }
       },
       "inputs": [
@@ -44,6 +49,19 @@
           "position": "url:formId",
           "source": "field",
           "required": true
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug that owns this form. Defaults to the current team.",
+            "de": "Team-Slug, dem dieses Formular gehört. Standardmäßig wird das aktuelle Team verwendet."
+          },
+          "bot": "Pass the business team slug that owns the form (e.g. lernstudio-satzinger). Omit to use the current team. Required when the form belongs to a different team than the agent home team.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
         }
       ]
     }
