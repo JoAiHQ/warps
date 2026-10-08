@@ -1,0 +1,81 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Set Loyalty Collect Points",
+  "title": {
+    "en": "Set loyalty collect points",
+    "de": "Sammelpunkte setzen"
+  },
+  "description": {
+    "en": "Replace the collect points of the team's loyalty program (QR codes, Advent doors, checkpoints where customers collect points themselves). Entries are matched by key: existing keys keep their id and history, keys left out are removed. Requires team manage permission.",
+    "de": "Ersetzt die Sammelpunkte des Treueprogramms (QR-Codes, Advent-Türchen, Checkpoints, an denen Kunden selbst Punkte sammeln). Einträge werden per Key zugeordnet: bestehende Keys behalten ID und Verlauf, weggelassene Keys werden entfernt. Benötigt Team-Verwaltungsrechte."
+  },
+  "bot": "Load the program first and send the FULL list (it replaces all collect points). Each entry: key, name, source, points, optional limit (once | daily | per_window), windowMinutes (required for per_window), startsAt, endsAt, active, code, codeRotation (none | daily), meta. Omit code to keep the existing one, pass null to remove it. codeRotation daily makes the code change every midnight in the team timezone (no fixed code allowed then); omit codeRotation to keep the current mode. Today's daily code is never returned to agents; only signed-in team members see it (loyalty editor, checkpoint display). Never echo fixed codes back to customers in public channels.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Save collect points",
+        "de": "Sammelpunkte speichern"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/loyalty/program",
+        "method": "PATCH",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}",
+          "Accept": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Settings",
+          "as": "settings",
+          "type": "json",
+          "source": "field",
+          "required": true,
+          "description": {
+            "en": "Program settings with the full collect point list: {\"collect_points\": [...]}",
+            "de": "Programm-Einstellungen mit der vollständigen Sammelpunkt-Liste: {\"collect_points\": [...]}"
+          },
+          "bot": "JSON object {\"collect_points\":[{\"key\":\"advent-2026-7\",\"name\":\"Türchen 7\",\"source\":\"advent-door\",\"points\":1,\"limit\":\"once\",\"startsAt\":\"2026-12-07T00:00:00+01:00\",\"code\":\"tuer-7-x9\"},{\"key\":\"checkpoint-hauptplatz\",\"name\":\"Hauptplatz\",\"source\":\"checkpoint\",\"points\":1,\"limit\":\"daily\",\"codeRotation\":\"daily\"}]}. The list replaces all collect points."
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}",
+          "description": {
+            "en": "Team slug for this action. Defaults to the current team.",
+            "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team."
+          },
+          "bot": "The slug of the team to operate on. Omit to use the current team."
+        }
+      ],
+      "output": {
+        "name": "out.data.name",
+        "collectPoints": "out.data.collectPoints"
+      }
+    }
+  ],
+  "output": {
+    "name": "out.1.name",
+    "collectPoints": "out.1.collectPoints"
+  },
+  "messages": {
+    "success": {
+      "en": "Collect points saved.",
+      "de": "Sammelpunkte gespeichert."
+    },
+    "error": {
+      "en": "Failed to save collect points: {{MESSAGE}}",
+      "de": "Sammelpunkte konnten nicht gespeichert werden: {{MESSAGE}}"
+    }
+  }
+}
