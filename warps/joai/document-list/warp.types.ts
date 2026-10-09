@@ -4,4 +4,5 @@ export type JoAiListDocumentsInputs = {
   type: string;
   search: string;
   perPage: string;
+  page: string;
 };
