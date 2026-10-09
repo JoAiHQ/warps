@@ -2,6 +2,7 @@
 
 export type JoAiListCampaignsInputs = {
   team: string;
+  page: string;
 };
 
 export type JoAiListCampaignsData = {

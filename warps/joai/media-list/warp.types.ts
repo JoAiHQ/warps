@@ -2,4 +2,6 @@
 
 export type JoAiListMediaInputs = {
   team: string;
+  page: string;
+  perPage: string;
 };

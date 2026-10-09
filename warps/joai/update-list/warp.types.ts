@@ -5,4 +5,6 @@ export type JoAiListUpdatesInputs = {
   type: string;
   status: string;
   team: string;
+  page: string;
+  perPage: string;
 };

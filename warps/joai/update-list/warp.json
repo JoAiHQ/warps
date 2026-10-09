@@ -9,7 +9,7 @@
     "en": "View current or archived deals, events, news, and article-style updates for your team. Filter by type, status, or active publishing window to check what customers can see across connected websites and public feeds.",
     "de": "Zeige aktuelle oder archivierte Angebote, Events, News und Artikel für dein Team. Filtere nach Typ, Status oder aktivem Veröffentlichungszeitraum, um zu prüfen, was Kunden auf verbundenen Websites und öffentlichen Feeds sehen."
   },
-  "bot": "Use this to see team updates. By default active=true returns currently visible updates.",
+  "bot": "Use this to see team updates. By default active=true returns currently visible updates. Results are paginated: check meta.lastPage and pass page to load more.",
   "vars": {
     "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
     "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
@@ -23,7 +23,7 @@
         "de": "Updates anzeigen"
       },
       "destination": {
-        "url": "INJECT:API_BASE/v1/updates?active={{active}}&type={{type}}&status={{status}}",
+        "url": "INJECT:API_BASE/v1/updates?active={{active}}&type={{type}}&status={{status}}&page={{page}}&perPage={{perPage}}",
         "method": "GET",
         "headers": {
           "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
@@ -91,6 +91,34 @@
           "source": "field",
           "required": false,
           "default": "{{JOAI_TEAM_SLUG}}"
+        },
+        {
+          "name": "Page",
+          "as": "page",
+          "description": {
+            "en": "Page number (default 1). Check meta.lastPage for more pages.",
+            "de": "Seitennummer (Standard 1). Prüfe meta.lastPage für weitere Seiten."
+          },
+          "bot": "1-based page number. Omit for the first page.",
+          "type": "uint16",
+          "position": "url:page",
+          "source": "field",
+          "required": false,
+          "min": 1
+        },
+        {
+          "name": "Per Page",
+          "as": "perPage",
+          "description": {
+            "en": "Results per page (default 20, max 100).",
+            "de": "Ergebnisse pro Seite (Standard 20, max. 100)."
+          },
+          "type": "uint16",
+          "position": "url:perPage",
+          "source": "field",
+          "required": false,
+          "min": 1,
+          "max": 100
         }
       ]
     }
