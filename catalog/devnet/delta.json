@@ -4,25 +4,25 @@
   "repo": "JoAiHQ/warps",
   "branch": "dev",
   "network": "devnet",
-  "commitSha": "08f4ede66c31432fc1f11643283fbc7f9feaa222",
-  "committedAt": "2026-10-09T14:00:17.868Z",
-  "generatedAt": "2026-10-09T14:00:20.587Z",
+  "commitSha": "69b0f2eeff66a99ac49b7b93bc2b9a3b2343a5d1",
+  "committedAt": "2026-10-10T13:57:08.717Z",
+  "generatedAt": "2026-10-10T13:57:10.655Z",
   "upserts": [
     {
-      "key": "none:joai-artifact-list",
-      "identifier": "@joai-artifact-list",
-      "alias": "joai-artifact-list",
+      "key": "none:joai-campaign-audience-preview",
+      "identifier": "@joai-campaign-audience-preview",
+      "alias": "joai-campaign-audience-preview",
       "chain": "none",
-      "hash": "4e3b1248e38ae16e51452be93428d3dbee68cb54d8b4db680984cceb8663a177",
-      "checksum": "4e3b1248e38ae16e51452be93428d3dbee68cb54d8b4db680984cceb8663a177",
-      "name": "JoAi: List Artifacts",
+      "hash": "3412671822a282195fd77b871a2e9cdfa23b7eaab0a1104c70bdc75f43086271",
+      "checksum": "3412671822a282195fd77b871a2e9cdfa23b7eaab0a1104c70bdc75f43086271",
+      "name": "JoAi: Campaign Audience Preview",
       "title": {
-        "en": "View delivery artifacts",
-        "de": "Liefer-Artefakte anzeigen"
+        "en": "Preview campaign audience",
+        "de": "Kampagnen-Zielgruppe prüfen"
       },
       "description": {
-        "en": "List client delivery artifacts for your team. Filter by type, status, contact, or order.",
-        "de": "Liste Client-Lieferartefakte für dein Team. Filtere nach Typ, Status, Kontakt oder Order."
+        "en": "Preview how many recipients are sendable vs skipped for a campaign or audience (contacts or push installs).",
+        "de": "Prüfe, wie viele Empfänger für eine Kampagne oder Zielgruppe sendbar vs. übersprungen sind (Kontakte oder Push-Installationen)."
       },
       "preview": null,
       "creator": "github:JoAiHQ/warps",
@@ -57,34 +57,30 @@
       },
       "warp": {
         "protocol": "warp:3.0.0",
-        "name": "JoAi: List Artifacts",
+        "name": "JoAi: Campaign Audience Preview",
         "title": {
-          "en": "View delivery artifacts",
-          "de": "Liefer-Artefakte anzeigen"
+          "en": "Preview campaign audience",
+          "de": "Kampagnen-Zielgruppe prüfen"
         },
         "description": {
-          "en": "List client delivery artifacts for your team. Filter by type, status, contact, or order.",
-          "de": "Liste Client-Lieferartefakte für dein Team. Filtere nach Typ, Status, Kontakt oder Order."
+          "en": "Preview how many recipients are sendable vs skipped for a campaign or audience (contacts or push installs).",
+          "de": "Prüfe, wie viele Empfänger für eine Kampagne oder Zielgruppe sendbar vs. übersprungen sind (Kontakte oder Push-Installationen)."
         },
-        "bot": "Use this to see what deliverables exist and their delivery status (draft, ready, sent, archived).",
+        "bot": "Call BEFORE send_campaign. Pass campaignId for a draft, or channel plus segmentId/tags/contactIds/installIds. For push with no targeting, previews all subscribed installs.",
         "vars": {
           "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
           "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
           "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
         },
-        "output": {
-          "artifacts": "out",
-          "artifactsList": "out.data"
-        },
         "actions": [
           {
             "type": "collect",
             "label": {
-              "en": "View artifacts",
-              "de": "Artefakte anzeigen"
+              "en": "Preview audience",
+              "de": "Zielgruppe prüfen"
             },
             "destination": {
-              "url": "https://devnet-api.joai.ai/v1/artifacts?type={{type}}&status={{status}}&contactId={{contactId}}&orderId={{orderId}}&ids={{ids}}&page={{page}}",
+              "url": "https://devnet-api.joai.ai/v1/campaigns/audience-preview?campaignId={{campaignId}}&channel={{channel}}&segmentId={{segmentId}}&tags={{tags}}&contactIds={{contactIds}}&installIds={{installIds}}",
               "method": "GET",
               "headers": {
                 "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
@@ -93,63 +89,84 @@
             },
             "inputs": [
               {
-                "name": "IDs",
-                "as": "ids",
+                "name": "Campaign ID",
+                "as": "campaignId",
                 "type": "string",
-                "position": "url:ids",
+                "position": "query",
                 "source": "field",
                 "required": false,
                 "description": {
-                  "en": "Optional comma-separated artifact IDs to load",
-                  "de": "Optionale kommagetrennte Artefakt-IDs zum Laden"
-                }
+                  "en": "Existing campaign hashid — uses that campaign's channel and audience",
+                  "de": "Hashid einer bestehenden Kampagne — nutzt deren Kanal und Zielgruppe"
+                },
+                "bot": "Prefer this when previewing before send_campaign. Omit when previewing by channel + audience fields."
               },
               {
-                "name": "Type",
-                "as": "type",
+                "name": "Channel",
+                "as": "channel",
                 "type": "string",
-                "position": "url:type",
+                "position": "query",
                 "source": "field",
                 "required": false,
                 "options": {
-                  "agreement": "Agreement",
-                  "offer": "Offer",
-                  "concept": "Concept",
-                  "update": "Update",
-                  "demo": "Demo",
-                  "file": "File",
-                  "other": "Other"
+                  "email": "Email",
+                  "whatsapp": "WhatsApp",
+                  "sms": "SMS",
+                  "push": "Push"
+                },
+                "description": {
+                  "en": "Delivery channel (required when campaignId is omitted)",
+                  "de": "Versandkanal (erforderlich ohne campaignId)"
                 }
               },
               {
-                "name": "Status",
-                "as": "status",
+                "name": "Segment ID",
+                "as": "segmentId",
                 "type": "string",
-                "position": "url:status",
+                "position": "query",
                 "source": "field",
                 "required": false,
-                "options": {
-                  "draft": "Draft",
-                  "ready": "Ready",
-                  "sent": "Sent",
-                  "archived": "Archived"
+                "description": {
+                  "en": "Saved segment hashid to preview",
+                  "de": "Hashid eines gespeicherten Segments"
                 }
               },
               {
-                "name": "Contact ID",
-                "as": "contactId",
+                "name": "Tags",
+                "as": "tags",
                 "type": "string",
-                "position": "url:contactId",
+                "position": "query",
                 "source": "field",
-                "required": false
+                "required": false,
+                "description": {
+                  "en": "Comma-separated tags — contacts with any of these",
+                  "de": "Kommagetrennte Tags — Kontakte mit einem dieser Tags"
+                }
               },
               {
-                "name": "Order ID",
-                "as": "orderId",
+                "name": "Contact IDs",
+                "as": "contactIds",
                 "type": "string",
-                "position": "url:orderId",
+                "position": "query",
                 "source": "field",
-                "required": false
+                "required": false,
+                "description": {
+                  "en": "Comma-separated contact hashids to preview",
+                  "de": "Kommagetrennte Kontakt-Hashids"
+                }
+              },
+              {
+                "name": "Install IDs",
+                "as": "installIds",
+                "type": "string",
+                "position": "query",
+                "source": "field",
+                "required": false,
+                "description": {
+                  "en": "Push only: comma-separated install hashids to preview",
+                  "de": "Nur Push: kommagetrennte Installations-Hashids"
+                },
+                "bot": "Use with channel=push when previewing specific devices from List Installs."
               },
               {
                 "name": "Team",
@@ -163,496 +180,105 @@
                   "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team."
                 },
                 "bot": "The slug of the team to operate on. Omit to use the current team."
-              },
-              {
-                "name": "Page",
-                "as": "page",
-                "description": {
-                  "en": "Page number (default 1). Check meta for the last page.",
-                  "de": "Seitennummer (Standard 1). Die letzte Seite steht in meta."
-                },
-                "bot": "1-based page number. Omit for the first page.",
-                "type": "uint16",
-                "position": "url:page",
-                "source": "field",
-                "required": false,
-                "min": 1
               }
-            ]
+            ],
+            "output": {
+              "total": "out.data.total",
+              "sendable": "out.data.sendable",
+              "willSkip": "out.data.willSkip",
+              "reasons": "out.data.reasons"
+            }
           }
         ],
+        "output": {
+          "TOTAL": "out.1.total",
+          "SENDABLE": "out.1.sendable",
+          "WILL_SKIP": "out.1.willSkip",
+          "REASONS": "out.1.reasons"
+        },
         "messages": {
           "success": {
-            "en": "Artifacts loaded.",
-            "de": "Artefakte geladen."
+            "en": "Audience: {{SENDABLE}} sendable of {{TOTAL}} ({{WILL_SKIP}} will skip).",
+            "de": "Zielgruppe: {{SENDABLE}} sendbar von {{TOTAL}} ({{WILL_SKIP}} werden übersprungen)."
           }
         },
-        "ui": "https://raw.githubusercontent.com/JoAiHQ/warps/main/warps/joai/artifact-list/chatapp.c132b8e6.dist.html"
+        "ui": "https://raw.githubusercontent.com/JoAiHQ/warps/main/warps/joai/campaign-audience-preview/chatapp.e25065be.dist.html"
       },
       "extras": {
         "keywords": {
           "en": [
-            "list artifacts",
-            "delivery status",
-            "sent deliverables"
+            "preview audience",
+            "campaign recipients",
+            "who will receive",
+            "sendable contacts",
+            "skip reasons"
           ],
           "de": [
-            "Artefakte anzeigen",
-            "Lieferstatus",
-            "gesendete Lieferungen"
+            "Zielgruppe prüfen",
+            "Kampagnen-Empfänger",
+            "wer erhält",
+            "sendbare Kontakte",
+            "Übersprungen"
           ]
         },
         "useCases": {
           "en": [
-            "See which deliverables are ready or already sent",
-            "Filter artifacts by contact or type"
+            "Check how many contacts will receive a draft campaign before sending",
+            "Preview sendable vs skipped for a segment or tag audience"
           ],
           "de": [
-            "Sehen, welche Lieferungen ready oder bereits gesendet sind",
-            "Artefakte nach Kontakt oder Typ filtern"
+            "Vor dem Versand prüfen, wie viele Kontakte eine Entwurfs-Kampagne erhalten",
+            "Sendbar vs. übersprungen für ein Segment oder Tag-Zielgruppe prüfen"
           ]
         },
         "category": "communication",
         "faq": {
           "en": [
             {
-              "question": "Can I filter by status?",
-              "answer": "Yes. Filter by draft, ready, sent, or archived."
+              "question": "When should I use this?",
+              "answer": "Call it before send_campaign (or before create) to see total, sendable, and skip reasons such as pending consent or missing channel."
             },
             {
-              "question": "Can I filter by contact?",
-              "answer": "Yes. Pass contactId to see only that contact’s artifacts."
+              "question": "Campaign or raw audience?",
+              "answer": "Pass campaignId for an existing campaign, or channel plus segmentId, tags, or contactIds."
             }
           ],
           "de": [
             {
-              "question": "Kann ich nach Status filtern?",
-              "answer": "Ja. Filtere nach draft, ready, sent oder archived."
+              "question": "Wann nutze ich das?",
+              "answer": "Vor send_campaign (oder vor dem Erstellen), um total, sendable und Skip-Gründe wie ausstehende Einwilligung oder fehlenden Kanal zu sehen."
             },
             {
-              "question": "Kann ich nach Kontakt filtern?",
-              "answer": "Ja. Übergib contactId, um nur Artefakte dieses Kontakts zu sehen."
-            }
-          ]
-        }
-      }
-    },
-    {
-      "key": "none:joai-campaign-list",
-      "identifier": "@joai-campaign-list",
-      "alias": "joai-campaign-list",
-      "chain": "none",
-      "hash": "5c7a84d1aab2efb373fbe6e34eedce14a1116d3b9c098801daa11f910d22082c",
-      "checksum": "5c7a84d1aab2efb373fbe6e34eedce14a1116d3b9c098801daa11f910d22082c",
-      "name": "JoAi: List Campaigns",
-      "title": {
-        "en": "List campaigns",
-        "de": "Kampagnen anzeigen",
-        "es": "List campaigns",
-        "fr": "List campaigns",
-        "ro": "List campaigns",
-        "it": "List campaigns"
-      },
-      "description": {
-        "en": "View all marketing campaigns for your team, with their channel, status, and send progress.",
-        "de": "Zeige alle Marketing-Kampagnen deines Teams mit Kanal, Status und Versandfortschritt an.",
-        "es": "View all marketing campaigns for your team, with their channel, status, and send progress.",
-        "fr": "View all marketing campaigns for your team, with their channel, status, and send progress.",
-        "ro": "View all marketing campaigns for your team, with their channel, status, and send progress.",
-        "it": "View all marketing campaigns for your team, with their channel, status, and send progress."
-      },
-      "preview": null,
-      "creator": "github:JoAiHQ/warps",
-      "privileges": [],
-      "listed": true,
-      "visibility": "public",
-      "primaryAddress": null,
-      "primaryFunc": null,
-      "brand": {
-        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
-        "slug": "joai",
-        "active": true,
-        "protocol": "brand:0.2.0",
-        "name": "JoAi",
-        "description": {
-          "en": "JoAi is a platform for creating and managing your own AI agents.",
-          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
-          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
-          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
-          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
-        },
-        "logo": {
-          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
-        },
-        "urls": {
-          "web": "https://joai.ai"
-        },
-        "colors": {
-          "primary": "#98FF98",
-          "secondary": "#FFFF66"
-        }
-      },
-      "warp": {
-        "protocol": "warp:3.0.0",
-        "name": "JoAi: List Campaigns",
-        "title": {
-          "en": "List campaigns",
-          "de": "Kampagnen anzeigen",
-          "es": "List campaigns",
-          "fr": "List campaigns",
-          "ro": "List campaigns",
-          "it": "List campaigns"
-        },
-        "description": {
-          "en": "View all marketing campaigns for your team, with their channel, status, and send progress.",
-          "de": "Zeige alle Marketing-Kampagnen deines Teams mit Kanal, Status und Versandfortschritt an.",
-          "es": "View all marketing campaigns for your team, with their channel, status, and send progress.",
-          "fr": "View all marketing campaigns for your team, with their channel, status, and send progress.",
-          "ro": "View all marketing campaigns for your team, with their channel, status, and send progress.",
-          "it": "View all marketing campaigns for your team, with their channel, status, and send progress."
-        },
-        "bot": "Use this when the user wants to see, list, or check their marketing campaigns.",
-        "vars": {
-          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
-          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
-          "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
-        },
-        "output": {
-          "campaigns": "out",
-          "campaignsList": "out.data",
-          "campaignsCount": "out.data.length"
-        },
-        "actions": [
-          {
-            "type": "collect",
-            "label": {
-              "en": "List campaigns",
-              "de": "Kampagnen anzeigen"
-            },
-            "destination": {
-              "url": "https://devnet-api.joai.ai/v1/campaigns?page={{page}}",
-              "method": "GET",
-              "headers": {
-                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
-                "X-Team": "{{team}}"
-              }
-            },
-            "inputs": [
-              {
-                "name": "Team",
-                "as": "team",
-                "type": "string",
-                "source": "field",
-                "required": false,
-                "default": "{{JOAI_TEAM_SLUG}}",
-                "description": {
-                  "en": "Team slug to list campaigns for. Defaults to the current team.",
-                  "de": "Team-Slug, für das Kampagnen angezeigt werden. Standardmäßig das aktuelle Team."
-                }
-              },
-              {
-                "name": "Page",
-                "as": "page",
-                "description": {
-                  "en": "Page number (default 1). Check meta for the last page.",
-                  "de": "Seitennummer (Standard 1). Die letzte Seite steht in meta."
-                },
-                "bot": "1-based page number. Omit for the first page.",
-                "type": "uint16",
-                "position": "url:page",
-                "source": "field",
-                "required": false,
-                "min": 1
-              }
-            ]
-          }
-        ],
-        "ui": "https://raw.githubusercontent.com/JoAiHQ/warps/main/warps/joai/campaign-list/chatapp.eecd48e9.dist.html"
-      },
-      "extras": null
-    },
-    {
-      "key": "none:joai-document-list",
-      "identifier": "@joai-document-list",
-      "alias": "joai-document-list",
-      "chain": "none",
-      "hash": "4edadf0dd10fa5f8c1cf848b936eea4d4b7dafcf72d5fe7fd687ef9797cda2e6",
-      "checksum": "4edadf0dd10fa5f8c1cf848b936eea4d4b7dafcf72d5fe7fd687ef9797cda2e6",
-      "name": "JoAi: List Documents",
-      "title": {
-        "en": "List documents",
-        "de": "Dokumente auflisten",
-        "es": "List documents",
-        "fr": "List documents",
-        "ro": "List documents",
-        "it": "List documents"
-      },
-      "description": {
-        "en": "Retrieve documents from your agent's knowledge base. Filter by type, search by title, or list archived documents. Returns paginated results.",
-        "de": "Dokumente aus der Wissensdatenbank deines Agenten abrufen. Nach Typ filtern, nach Titel suchen oder archivierte Dokumente listen. Liefert paginierte Ergebnisse.",
-        "es": "Retrieve documents from your agent's knowledge base. Filter by type, search by title, or list archived documents. Returns paginated results.",
-        "fr": "Retrieve documents from your agent's knowledge base. Filter by type, search by title, or list archived documents. Returns paginated results.",
-        "ro": "Retrieve documents from your agent's knowledge base. Filter by type, search by title, or list archived documents. Returns paginated results.",
-        "it": "Retrieve documents from your agent's knowledge base. Filter by type, search by title, or list archived documents. Returns paginated results."
-      },
-      "preview": null,
-      "creator": "github:JoAiHQ/warps",
-      "privileges": [],
-      "listed": true,
-      "visibility": "public",
-      "primaryAddress": null,
-      "primaryFunc": null,
-      "brand": {
-        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
-        "slug": "joai",
-        "active": true,
-        "protocol": "brand:0.2.0",
-        "name": "JoAi",
-        "description": {
-          "en": "JoAi is a platform for creating and managing your own AI agents.",
-          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
-          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
-          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
-          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
-        },
-        "logo": {
-          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
-        },
-        "urls": {
-          "web": "https://joai.ai"
-        },
-        "colors": {
-          "primary": "#98FF98",
-          "secondary": "#FFFF66"
-        }
-      },
-      "warp": {
-        "protocol": "warp:3.0.0",
-        "name": "JoAi: List Documents",
-        "title": {
-          "en": "List documents",
-          "de": "Dokumente auflisten",
-          "es": "List documents",
-          "fr": "List documents",
-          "ro": "List documents",
-          "it": "List documents"
-        },
-        "description": {
-          "en": "Retrieve documents from your agent's knowledge base. Filter by type, search by title, or list archived documents. Returns paginated results.",
-          "de": "Dokumente aus der Wissensdatenbank deines Agenten abrufen. Nach Typ filtern, nach Titel suchen oder archivierte Dokumente listen. Liefert paginierte Ergebnisse.",
-          "es": "Retrieve documents from your agent's knowledge base. Filter by type, search by title, or list archived documents. Returns paginated results.",
-          "fr": "Retrieve documents from your agent's knowledge base. Filter by type, search by title, or list archived documents. Returns paginated results.",
-          "ro": "Retrieve documents from your agent's knowledge base. Filter by type, search by title, or list archived documents. Returns paginated results.",
-          "it": "Retrieve documents from your agent's knowledge base. Filter by type, search by title, or list archived documents. Returns paginated results."
-        },
-        "bot": "Use this when the user wants to see their documents or templates. Default list excludes archived docs — pass archived=true to see the archive.",
-        "vars": {
-          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
-          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
-        },
-        "actions": [
-          {
-            "type": "collect",
-            "auto": true,
-            "label": {
-              "en": "Load documents",
-              "de": "Dokumente laden",
-              "es": "Load documents",
-              "fr": "Load documents",
-              "ro": "Load documents",
-              "it": "Load documents"
-            },
-            "destination": {
-              "url": "https://devnet-api.joai.ai/v1/agents/{{JOAI_AGENT_UUID}}/documents?type={{type}}&search={{search}}&perPage={{perPage}}&archived={{archived}}&page={{page}}",
-              "method": "GET",
-              "headers": {
-                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
-              }
-            },
-            "inputs": [
-              {
-                "name": "Type",
-                "as": "type",
-                "description": {
-                  "en": "Filter by document type (text, template, pdf, html, markdown)",
-                  "de": "Nach Dokumenttyp filtern (text, template, pdf, html, markdown)",
-                  "es": "Filter by document type (text, template, pdf, html, markdown)",
-                  "fr": "Filter by document type (text, template, pdf, html, markdown)",
-                  "ro": "Filter by document type (text, template, pdf, html, markdown)",
-                  "it": "Filter by document type (text, template, pdf, html, markdown)"
-                },
-                "bot": "Document type to filter by. Use 'template' to list only message templates. Omit for all types.",
-                "type": "string",
-                "source": "field",
-                "required": false,
-                "label": {
-                  "en": "Type",
-                  "de": "Type",
-                  "es": "Type",
-                  "fr": "Type",
-                  "ro": "Type",
-                  "it": "Type"
-                }
-              },
-              {
-                "name": "Search",
-                "as": "search",
-                "description": {
-                  "en": "Search term for document title",
-                  "de": "Suchbegriff für Dokumenttitel",
-                  "es": "Search term for document title",
-                  "fr": "Search term for document title",
-                  "ro": "Search term for document title",
-                  "it": "Search term for document title"
-                },
-                "bot": "Search documents by title. Omit to return all.",
-                "type": "string",
-                "source": "field",
-                "required": false,
-                "label": {
-                  "en": "Search",
-                  "de": "Search",
-                  "es": "Buscar",
-                  "fr": "Recherche",
-                  "ro": "Căutare",
-                  "it": "Ricerca"
-                }
-              },
-              {
-                "name": "Archived",
-                "as": "archived",
-                "description": {
-                  "en": "List archived documents only (\"true\") or active documents (omit/\"false\")",
-                  "de": "Nur archivierte Dokumente (\"true\") oder aktive (weglassen/\"false\")",
-                  "es": "List archived documents only (\"true\") or active documents (omit/\"false\")",
-                  "fr": "List archived documents only (\"true\") or active documents (omit/\"false\")",
-                  "ro": "List archived documents only (\"true\") or active documents (omit/\"false\")",
-                  "it": "List archived documents only (\"true\") or active documents (omit/\"false\")"
-                },
-                "bot": "Pass true to list archived documents. Default is active (non-archived) only.",
-                "type": "bool",
-                "source": "field",
-                "required": false
-              },
-              {
-                "name": "Per Page",
-                "as": "perPage",
-                "description": {
-                  "en": "Number of results per page (max 500)",
-                  "de": "Ergebnisse pro Seite (max. 500)",
-                  "es": "Number of results per page (max 500)",
-                  "fr": "Number of results per page (max 500)",
-                  "ro": "Number of results per page (max 500)",
-                  "it": "Number of results per page (max 500)"
-                },
-                "bot": "Page size. Use up to 500 for bulk operations.",
-                "type": "uint16",
-                "source": "field",
-                "required": false,
-                "value": "50"
-              },
-              {
-                "name": "Page",
-                "as": "page",
-                "description": {
-                  "en": "Page number (default 1). Check meta for the last page.",
-                  "de": "Seitennummer (Standard 1). Die letzte Seite steht in meta.",
-                  "es": "Page number (default 1). Check meta for the last page.",
-                  "fr": "Page number (default 1). Check meta for the last page.",
-                  "ro": "Page number (default 1). Check meta for the last page.",
-                  "it": "Page number (default 1). Check meta for the last page."
-                },
-                "bot": "1-based page number. Omit for the first page.",
-                "type": "uint16",
-                "position": "url:page",
-                "source": "field",
-                "required": false,
-                "min": 1
-              }
-            ]
-          }
-        ],
-        "messages": {
-          "success": {
-            "en": "Documents loaded.",
-            "de": "Dokumente geladen.",
-            "es": "Documents loaded.",
-            "fr": "Documents loaded.",
-            "ro": "Documents loaded.",
-            "it": "Documents loaded."
-          }
-        },
-        "ui": "https://raw.githubusercontent.com/JoAiHQ/warps/main/warps/joai/document-list/chatapp.79eeba0a.dist.html"
-      },
-      "extras": {
-        "keywords": {
-          "en": [
-            "list documents",
-            "search documents",
-            "find template",
-            "browse knowledge base",
-            "show templates"
-          ],
-          "de": [
-            "Dokumente auflisten",
-            "Dokumente suchen",
-            "Template finden",
-            "Wissensbasis durchsuchen",
-            "Templates anzeigen"
-          ]
-        },
-        "useCases": {
-          "en": [
-            "List all reusable message templates",
-            "Search for a specific document by title",
-            "Browse all stored knowledge base documents"
-          ],
-          "de": [
-            "Alle wiederverwendbaren Nachrichten-Templates auflisten",
-            "Nach einem bestimmten Dokument im Titel suchen",
-            "Alle gespeicherten Wissensbasis-Dokumente durchsuchen"
-          ]
-        },
-        "category": "productivity",
-        "faq": {
-          "en": [
-            {
-              "question": "Can I filter documents by type?",
-              "answer": "Yes — use the type filter to list only templates, text documents, or any other supported type."
-            }
-          ],
-          "de": [
-            {
-              "question": "Kann ich Dokumente nach Typ filtern?",
-              "answer": "Ja — nutze den Typ-Filter, um nur Templates, Textdokumente oder andere unterstützte Typen aufzulisten."
+              "question": "Kampagne oder Roh-Zielgruppe?",
+              "answer": "campaignId für eine bestehende Kampagne, oder channel plus segmentId, tags oder contactIds."
             }
           ]
         }
       }
     },
     {
-      "key": "none:joai-goal-list",
-      "identifier": "@joai-goal-list",
-      "alias": "joai-goal-list",
+      "key": "none:joai-campaign-create",
+      "identifier": "@joai-campaign-create",
+      "alias": "joai-campaign-create",
       "chain": "none",
-      "hash": "9a8006d72746cf4ca9e45dd177924c8ebc064ad1da6ddb0aa17843ebae1c0ba6",
-      "checksum": "9a8006d72746cf4ca9e45dd177924c8ebc064ad1da6ddb0aa17843ebae1c0ba6",
-      "name": "JoAi: List Goals",
+      "hash": "bef88866e7aa43a2bf134e1896beb2e60f25d2db183331ab37ddb984af30bfde",
+      "checksum": "bef88866e7aa43a2bf134e1896beb2e60f25d2db183331ab37ddb984af30bfde",
+      "name": "JoAi: Create Campaign",
       "title": {
-        "en": "List goals",
-        "de": "Ziele anzeigen",
-        "es": "List goals",
-        "fr": "List goals",
-        "it": "List goals",
-        "ro": "List goals"
+        "en": "Create a campaign",
+        "de": "Kampagne erstellen",
+        "fr": "Créer une campagne",
+        "es": "Crear una campaña",
+        "it": "Crea una campagna",
+        "ro": "Creează o campanie"
       },
       "description": {
-        "en": "View all goals for your agent, with their status, priority, and progress.",
-        "de": "Zeige alle Ziele deines Agenten mit Status, Priorität und Fortschritt an.",
-        "es": "View all goals for your agent, with their status, priority, and progress.",
-        "fr": "View all goals for your agent, with their status, priority, and progress.",
-        "it": "View all goals for your agent, with their status, priority, and progress.",
-        "ro": "View all goals for your agent, with their status, priority, and progress."
+        "en": "Create a marketing campaign via email, WhatsApp, SMS, or push. Target a saved segment, tags, specific contacts, or (for push) specific app installs. Draft only — use Send Campaign to deliver or schedule.",
+        "de": "Erstelle eine Marketing-Kampagne per E-Mail, WhatsApp, SMS oder Push. Zielgruppe: Segment, Tags, bestimmte Kontakte oder (bei Push) bestimmte App-Installationen. Nur Entwurf — Versand/Planung über Kampagne senden.",
+        "fr": "Créez une campagne marketing par e-mail, WhatsApp, SMS ou push. Ciblez un segment, des tags, des contacts, ou (pour le push) des installations d'app. Brouillon uniquement — utilisez Envoyer la campagne pour livrer ou planifier.",
+        "es": "Crea una campaña de marketing por email, WhatsApp, SMS o push. Dirígete a un segmento, etiquetas, contactos o (para push) instalaciones de app. Solo borrador — usa Enviar campaña para entregar o programar.",
+        "it": "Crea una campagna di marketing via email, WhatsApp, SMS o push. Destinatari: segmento, tag, contatti o (per push) installazioni app. Solo bozza — usa Invia campagna per inviare o programmare.",
+        "ro": "Creează o campanie de marketing prin email, WhatsApp, SMS sau push. Țintește un segment, taguri, contacte sau (pentru push) instalări de app. Doar schiță — folosește Trimite campanie pentru livrare sau programare."
       },
       "preview": null,
       "creator": "github:JoAiHQ/warps",
@@ -687,670 +313,24 @@
       },
       "warp": {
         "protocol": "warp:3.0.0",
-        "name": "JoAi: List Goals",
+        "name": "JoAi: Create Campaign",
         "title": {
-          "en": "List goals",
-          "de": "Ziele anzeigen",
-          "es": "List goals",
-          "fr": "List goals",
-          "it": "List goals",
-          "ro": "List goals"
+          "en": "Create a campaign",
+          "de": "Kampagne erstellen",
+          "fr": "Créer une campagne",
+          "es": "Crear una campaña",
+          "it": "Crea una campagna",
+          "ro": "Creează o campanie"
         },
         "description": {
-          "en": "View all goals for your agent, with their status, priority, and progress.",
-          "de": "Zeige alle Ziele deines Agenten mit Status, Priorität und Fortschritt an.",
-          "es": "View all goals for your agent, with their status, priority, and progress.",
-          "fr": "View all goals for your agent, with their status, priority, and progress.",
-          "it": "View all goals for your agent, with their status, priority, and progress.",
-          "ro": "View all goals for your agent, with their status, priority, and progress."
+          "en": "Create a marketing campaign via email, WhatsApp, SMS, or push. Target a saved segment, tags, specific contacts, or (for push) specific app installs. Draft only — use Send Campaign to deliver or schedule.",
+          "de": "Erstelle eine Marketing-Kampagne per E-Mail, WhatsApp, SMS oder Push. Zielgruppe: Segment, Tags, bestimmte Kontakte oder (bei Push) bestimmte App-Installationen. Nur Entwurf — Versand/Planung über Kampagne senden.",
+          "fr": "Créez une campagne marketing par e-mail, WhatsApp, SMS ou push. Ciblez un segment, des tags, des contacts, ou (pour le push) des installations d'app. Brouillon uniquement — utilisez Envoyer la campagne pour livrer ou planifier.",
+          "es": "Crea una campaña de marketing por email, WhatsApp, SMS o push. Dirígete a un segmento, etiquetas, contactos o (para push) instalaciones de app. Solo borrador — usa Enviar campaña para entregar o programar.",
+          "it": "Crea una campagna di marketing via email, WhatsApp, SMS o push. Destinatari: segmento, tag, contatti o (per push) installazioni app. Solo bozza — usa Invia campagna per inviare o programmare.",
+          "ro": "Creează o campanie de marketing prin email, WhatsApp, SMS sau push. Țintește un segment, taguri, contacte sau (pentru push) instalări de app. Doar schiță — folosește Trimite campanie pentru livrare sau programare."
         },
-        "bot": "Use this when the user wants to see, list, or check their goals.",
-        "vars": {
-          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
-          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
-        },
-        "actions": [
-          {
-            "type": "collect",
-            "auto": true,
-            "label": {
-              "en": "List goals",
-              "de": "Ziele anzeigen",
-              "es": "List goals",
-              "fr": "List goals",
-              "it": "List goals",
-              "ro": "List goals"
-            },
-            "destination": {
-              "url": "https://devnet-api.joai.ai/v1/goals?page={{page}}",
-              "method": "GET",
-              "headers": {
-                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
-              }
-            },
-            "inputs": [
-              {
-                "name": "Page",
-                "as": "page",
-                "description": {
-                  "en": "Page number (default 1). Check meta for the last page.",
-                  "de": "Seitennummer (Standard 1). Die letzte Seite steht in meta."
-                },
-                "bot": "1-based page number. Omit for the first page.",
-                "type": "uint16",
-                "position": "url:page",
-                "source": "field",
-                "required": false,
-                "min": 1
-              }
-            ]
-          }
-        ],
-        "ui": "https://raw.githubusercontent.com/JoAiHQ/warps/main/warps/joai/goal-list/chatapp.f63eb17a.dist.html"
-      },
-      "extras": null
-    },
-    {
-      "key": "none:joai-media-list",
-      "identifier": "@joai-media-list",
-      "alias": "joai-media-list",
-      "chain": "none",
-      "hash": "5e82431a86b559b704765390886671961e2b95455c6c63abb3cd2be89edfa1c4",
-      "checksum": "5e82431a86b559b704765390886671961e2b95455c6c63abb3cd2be89edfa1c4",
-      "name": "JoAi: List Media",
-      "title": {
-        "en": "List media",
-        "de": "Medien anzeigen",
-        "es": "List media",
-        "fr": "List media",
-        "it": "List media",
-        "ro": "List media"
-      },
-      "description": {
-        "en": "View the media library for your team, optionally filtered by type.",
-        "de": "Zeige die Medienbibliothek deines Teams an, optional nach Typ gefiltert.",
-        "es": "View the media library for your team, optionally filtered by type.",
-        "fr": "View the media library for your team, optionally filtered by type.",
-        "it": "View the media library for your team, optionally filtered by type.",
-        "ro": "View the media library for your team, optionally filtered by type."
-      },
-      "preview": null,
-      "creator": "github:JoAiHQ/warps",
-      "privileges": [],
-      "listed": true,
-      "visibility": "public",
-      "primaryAddress": null,
-      "primaryFunc": null,
-      "brand": {
-        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
-        "slug": "joai",
-        "active": true,
-        "protocol": "brand:0.2.0",
-        "name": "JoAi",
-        "description": {
-          "en": "JoAi is a platform for creating and managing your own AI agents.",
-          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
-          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
-          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
-          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
-        },
-        "logo": {
-          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
-        },
-        "urls": {
-          "web": "https://joai.ai"
-        },
-        "colors": {
-          "primary": "#98FF98",
-          "secondary": "#FFFF66"
-        }
-      },
-      "warp": {
-        "protocol": "warp:3.0.0",
-        "name": "JoAi: List Media",
-        "title": {
-          "en": "List media",
-          "de": "Medien anzeigen",
-          "es": "List media",
-          "fr": "List media",
-          "it": "List media",
-          "ro": "List media"
-        },
-        "description": {
-          "en": "View the media library for your team, optionally filtered by type.",
-          "de": "Zeige die Medienbibliothek deines Teams an, optional nach Typ gefiltert.",
-          "es": "View the media library for your team, optionally filtered by type.",
-          "fr": "View the media library for your team, optionally filtered by type.",
-          "it": "View the media library for your team, optionally filtered by type.",
-          "ro": "View the media library for your team, optionally filtered by type."
-        },
-        "bot": "Use this when the user wants to see, list, or check team media assets.",
-        "vars": {
-          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
-          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
-          "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
-        },
-        "actions": [
-          {
-            "type": "collect",
-            "auto": true,
-            "label": {
-              "en": "List media",
-              "de": "Medien anzeigen",
-              "es": "List media",
-              "fr": "List media",
-              "it": "List media",
-              "ro": "List media"
-            },
-            "destination": {
-              "url": "https://devnet-api.joai.ai/v1/media?page={{page}}&perPage={{perPage}}",
-              "method": "GET",
-              "headers": {
-                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
-                "X-Team": "{{team}}"
-              }
-            },
-            "inputs": [
-              {
-                "name": "Team",
-                "as": "team",
-                "type": "string",
-                "source": "field",
-                "required": false,
-                "default": "{{JOAI_TEAM_SLUG}}",
-                "description": {
-                  "en": "Team slug for this action. Defaults to the current team.",
-                  "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team.",
-                  "es": "Team slug for this action. Defaults to the current team.",
-                  "fr": "Team slug for this action. Defaults to the current team.",
-                  "ro": "Team slug for this action. Defaults to the current team.",
-                  "it": "Team slug for this action. Defaults to the current team."
-                },
-                "bot": "The slug of the team to operate on. Omit to use the current team."
-              },
-              {
-                "name": "Page",
-                "as": "page",
-                "description": {
-                  "en": "Page number (default 1). Check meta for the last page.",
-                  "de": "Seitennummer (Standard 1). Die letzte Seite steht in meta.",
-                  "es": "Page number (default 1). Check meta for the last page.",
-                  "fr": "Page number (default 1). Check meta for the last page.",
-                  "ro": "Page number (default 1). Check meta for the last page.",
-                  "it": "Page number (default 1). Check meta for the last page."
-                },
-                "bot": "1-based page number. Omit for the first page.",
-                "type": "uint16",
-                "position": "url:page",
-                "source": "field",
-                "required": false,
-                "min": 1
-              },
-              {
-                "name": "Per Page",
-                "as": "perPage",
-                "description": {
-                  "en": "Results per page (default 20, max 100).",
-                  "de": "Ergebnisse pro Seite (Standard 20, max. 100).",
-                  "es": "Results per page (default 20, max 100).",
-                  "fr": "Results per page (default 20, max 100).",
-                  "ro": "Results per page (default 20, max 100).",
-                  "it": "Results per page (default 20, max 100)."
-                },
-                "type": "uint16",
-                "position": "url:perPage",
-                "source": "field",
-                "required": false,
-                "min": 1,
-                "max": 100
-              }
-            ]
-          }
-        ],
-        "ui": "https://raw.githubusercontent.com/JoAiHQ/warps/main/warps/joai/media-list/chatapp.c1e56ed0.dist.html"
-      },
-      "extras": null
-    },
-    {
-      "key": "none:joai-reminder-list",
-      "identifier": "@joai-reminder-list",
-      "alias": "joai-reminder-list",
-      "chain": "none",
-      "hash": "d96c4bd5596cac77839dfd61d9291999355d4dc4e95d9a1ea53847faeff41bce",
-      "checksum": "d96c4bd5596cac77839dfd61d9291999355d4dc4e95d9a1ea53847faeff41bce",
-      "name": "JoAi: List Reminders",
-      "title": {
-        "en": "List reminders",
-        "de": "Erinnerungen anzeigen",
-        "es": "List reminders",
-        "fr": "List reminders",
-        "it": "List reminders",
-        "ro": "List reminders"
-      },
-      "description": {
-        "en": "View all reminders for your agent with their scheduled times.",
-        "de": "Zeige alle Erinnerungen deines Agenten mit ihren geplanten Zeiten an.",
-        "es": "View all reminders for your agent with their scheduled times.",
-        "fr": "View all reminders for your agent with their scheduled times.",
-        "it": "View all reminders for your agent with their scheduled times.",
-        "ro": "View all reminders for your agent with their scheduled times."
-      },
-      "preview": null,
-      "creator": "github:JoAiHQ/warps",
-      "privileges": [],
-      "listed": true,
-      "visibility": "public",
-      "primaryAddress": null,
-      "primaryFunc": null,
-      "brand": {
-        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
-        "slug": "joai",
-        "active": true,
-        "protocol": "brand:0.2.0",
-        "name": "JoAi",
-        "description": {
-          "en": "JoAi is a platform for creating and managing your own AI agents.",
-          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
-          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
-          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
-          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
-        },
-        "logo": {
-          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
-        },
-        "urls": {
-          "web": "https://joai.ai"
-        },
-        "colors": {
-          "primary": "#98FF98",
-          "secondary": "#FFFF66"
-        }
-      },
-      "warp": {
-        "protocol": "warp:3.0.0",
-        "name": "JoAi: List Reminders",
-        "title": {
-          "en": "List reminders",
-          "de": "Erinnerungen anzeigen",
-          "es": "List reminders",
-          "fr": "List reminders",
-          "it": "List reminders",
-          "ro": "List reminders"
-        },
-        "description": {
-          "en": "View all reminders for your agent with their scheduled times.",
-          "de": "Zeige alle Erinnerungen deines Agenten mit ihren geplanten Zeiten an.",
-          "es": "View all reminders for your agent with their scheduled times.",
-          "fr": "View all reminders for your agent with their scheduled times.",
-          "it": "View all reminders for your agent with their scheduled times.",
-          "ro": "View all reminders for your agent with their scheduled times."
-        },
-        "bot": "Use this when the user wants to see, list, or check their reminders.",
-        "vars": {
-          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
-          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
-        },
-        "actions": [
-          {
-            "type": "collect",
-            "auto": true,
-            "label": {
-              "en": "List reminders",
-              "de": "Erinnerungen anzeigen",
-              "es": "List reminders",
-              "fr": "List reminders",
-              "it": "List reminders",
-              "ro": "List reminders"
-            },
-            "destination": {
-              "url": "https://devnet-api.joai.ai/v1/reminders?page={{page}}",
-              "method": "GET",
-              "headers": {
-                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
-              }
-            },
-            "inputs": [
-              {
-                "name": "Page",
-                "as": "page",
-                "description": {
-                  "en": "Page number (default 1). Check meta for the last page.",
-                  "de": "Seitennummer (Standard 1). Die letzte Seite steht in meta."
-                },
-                "bot": "1-based page number. Omit for the first page.",
-                "type": "uint16",
-                "position": "url:page",
-                "source": "field",
-                "required": false,
-                "min": 1
-              }
-            ]
-          }
-        ],
-        "ui": "https://raw.githubusercontent.com/JoAiHQ/warps/main/warps/joai/reminder-list/chatapp.f025a573.dist.html"
-      },
-      "extras": null
-    },
-    {
-      "key": "none:joai-subscription-list",
-      "identifier": "@joai-subscription-list",
-      "alias": "joai-subscription-list",
-      "chain": "none",
-      "hash": "71aca169805d2a3fe65b43439cab65f52a638ff534ae39541064ebb7dc3d9d5c",
-      "checksum": "71aca169805d2a3fe65b43439cab65f52a638ff534ae39541064ebb7dc3d9d5c",
-      "name": "JoAi: List Subscriptions",
-      "title": {
-        "en": "List subscriptions",
-        "de": "Abonnements anzeigen",
-        "fr": "Lister les abonnements",
-        "es": "Listar suscripciones",
-        "it": "Elenca abbonamenti",
-        "ro": "Listează abonamentele"
-      },
-      "description": {
-        "en": "View all subscriptions for your team, including status, renewal date, and delivery settings.",
-        "de": "Zeige alle Abonnements deines Teams mit Status, Verlängerungsdatum und Liefer-Einstellungen an.",
-        "fr": "Consultez tous les abonnements de votre équipe, avec statut, date de renouvellement et paramètres de livraison.",
-        "es": "Consulta todas las suscripciones de tu equipo, con estado, fecha de renovación y ajustes de entrega.",
-        "it": "Visualizza tutti gli abbonamenti del tuo team, con stato, data di rinnovo e impostazioni di consegna.",
-        "ro": "Vezi toate abonamentele echipei tale, cu status, data reînnoirii și setările de livrare."
-      },
-      "preview": null,
-      "creator": "github:JoAiHQ/warps",
-      "privileges": [],
-      "listed": true,
-      "visibility": "public",
-      "primaryAddress": null,
-      "primaryFunc": null,
-      "brand": {
-        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
-        "slug": "joai",
-        "active": true,
-        "protocol": "brand:0.2.0",
-        "name": "JoAi",
-        "description": {
-          "en": "JoAi is a platform for creating and managing your own AI agents.",
-          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
-          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
-          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
-          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
-        },
-        "logo": {
-          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
-        },
-        "urls": {
-          "web": "https://joai.ai"
-        },
-        "colors": {
-          "primary": "#98FF98",
-          "secondary": "#FFFF66"
-        }
-      },
-      "warp": {
-        "protocol": "warp:3.0.0",
-        "name": "JoAi: List Subscriptions",
-        "title": {
-          "en": "List subscriptions",
-          "de": "Abonnements anzeigen",
-          "fr": "Lister les abonnements",
-          "es": "Listar suscripciones",
-          "it": "Elenca abbonamenti",
-          "ro": "Listează abonamentele"
-        },
-        "description": {
-          "en": "View all subscriptions for your team, including status, renewal date, and delivery settings.",
-          "de": "Zeige alle Abonnements deines Teams mit Status, Verlängerungsdatum und Liefer-Einstellungen an.",
-          "fr": "Consultez tous les abonnements de votre équipe, avec statut, date de renouvellement et paramètres de livraison.",
-          "es": "Consulta todas las suscripciones de tu equipo, con estado, fecha de renovación y ajustes de entrega.",
-          "it": "Visualizza tutti gli abbonamenti del tuo team, con stato, data di rinnovo e impostazioni di consegna.",
-          "ro": "Vezi toate abonamentele echipei tale, cu status, data reînnoirii și setările de livrare."
-        },
-        "bot": "Use this when the user wants to see, list, or check subscriptions for their team or customers.",
-        "vars": {
-          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
-          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
-          "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
-        },
-        "actions": [
-          {
-            "type": "collect",
-            "auto": true,
-            "label": {
-              "en": "List subscriptions",
-              "de": "Abonnements anzeigen",
-              "fr": "Lister les abonnements",
-              "es": "Listar suscripciones",
-              "it": "Elenca abbonamenti",
-              "ro": "Listează abonamentele"
-            },
-            "destination": {
-              "url": "https://devnet-api.joai.ai/v1/subscriptions?page={{page}}",
-              "method": "GET",
-              "headers": {
-                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
-                "X-Team": "{{team}}"
-              }
-            },
-            "inputs": [
-              {
-                "name": "Team",
-                "as": "team",
-                "type": "string",
-                "source": "field",
-                "required": false,
-                "default": "{{JOAI_TEAM_SLUG}}",
-                "description": {
-                  "en": "Team slug for this action. Defaults to the current team.",
-                  "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team.",
-                  "fr": "Slug d'équipe pour cette action. Par défaut l'équipe actuelle.",
-                  "es": "Slug del equipo para esta acción. Por defecto el equipo actual.",
-                  "it": "Slug del team per questa azione. Predefinito: team attuale.",
-                  "ro": "Slug-ul echipei pentru această acțiune. Implicit echipa curentă."
-                },
-                "bot": "The slug of the team to operate on. Omit to use the current team."
-              },
-              {
-                "name": "Page",
-                "as": "page",
-                "description": {
-                  "en": "Page number (default 1). Check meta for the last page.",
-                  "de": "Seitennummer (Standard 1). Die letzte Seite steht in meta.",
-                  "fr": "Page number (default 1). Check meta for the last page.",
-                  "es": "Page number (default 1). Check meta for the last page.",
-                  "it": "Page number (default 1). Check meta for the last page.",
-                  "ro": "Page number (default 1). Check meta for the last page."
-                },
-                "bot": "1-based page number. Omit for the first page.",
-                "type": "uint16",
-                "position": "url:page",
-                "source": "field",
-                "required": false,
-                "min": 1
-              }
-            ]
-          }
-        ]
-      },
-      "extras": null
-    },
-    {
-      "key": "none:joai-task-list",
-      "identifier": "@joai-task-list",
-      "alias": "joai-task-list",
-      "chain": "none",
-      "hash": "a75e73c24f1c2a6fc13b38d6f7d8acb6533aabd3feff39c0c912190c732e2036",
-      "checksum": "a75e73c24f1c2a6fc13b38d6f7d8acb6533aabd3feff39c0c912190c732e2036",
-      "name": "JoAi: List Scheduled Tasks",
-      "title": {
-        "en": "List scheduled tasks",
-        "de": "Geplante Aufgaben anzeigen",
-        "es": "List scheduled tasks",
-        "fr": "List scheduled tasks",
-        "ro": "List scheduled tasks",
-        "it": "List scheduled tasks"
-      },
-      "description": {
-        "en": "View all active scheduled tasks for your agent.",
-        "de": "Zeige alle aktiven geplanten Aufgaben deines Agenten an.",
-        "es": "View all active scheduled tasks for your agent.",
-        "fr": "View all active scheduled tasks for your agent.",
-        "ro": "View all active scheduled tasks for your agent.",
-        "it": "View all active scheduled tasks for your agent."
-      },
-      "preview": null,
-      "creator": "github:JoAiHQ/warps",
-      "privileges": [],
-      "listed": true,
-      "visibility": "public",
-      "primaryAddress": null,
-      "primaryFunc": null,
-      "brand": {
-        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
-        "slug": "joai",
-        "active": true,
-        "protocol": "brand:0.2.0",
-        "name": "JoAi",
-        "description": {
-          "en": "JoAi is a platform for creating and managing your own AI agents.",
-          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
-          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
-          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
-          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
-        },
-        "logo": {
-          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
-        },
-        "urls": {
-          "web": "https://joai.ai"
-        },
-        "colors": {
-          "primary": "#98FF98",
-          "secondary": "#FFFF66"
-        }
-      },
-      "warp": {
-        "protocol": "warp:3.0.0",
-        "name": "JoAi: List Scheduled Tasks",
-        "title": {
-          "en": "List scheduled tasks",
-          "de": "Geplante Aufgaben anzeigen",
-          "es": "List scheduled tasks",
-          "fr": "List scheduled tasks",
-          "ro": "List scheduled tasks",
-          "it": "List scheduled tasks"
-        },
-        "description": {
-          "en": "View all active scheduled tasks for your agent.",
-          "de": "Zeige alle aktiven geplanten Aufgaben deines Agenten an.",
-          "es": "View all active scheduled tasks for your agent.",
-          "fr": "View all active scheduled tasks for your agent.",
-          "ro": "View all active scheduled tasks for your agent.",
-          "it": "View all active scheduled tasks for your agent."
-        },
-        "bot": "Use this when the user wants to see, list, or check their scheduled tasks, cron jobs, or recurring automations.",
-        "vars": {
-          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
-          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
-        },
-        "actions": [
-          {
-            "type": "collect",
-            "label": {
-              "en": "List tasks",
-              "de": "Aufgaben anzeigen",
-              "es": "List tasks",
-              "fr": "List tasks",
-              "ro": "List tasks",
-              "it": "List tasks"
-            },
-            "destination": {
-              "url": "https://devnet-api.joai.ai/v1/tasks?page={{page}}",
-              "method": "GET",
-              "headers": {
-                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
-              }
-            },
-            "inputs": [
-              {
-                "name": "Page",
-                "as": "page",
-                "description": {
-                  "en": "Page number (default 1). Check meta for the last page.",
-                  "de": "Seitennummer (Standard 1). Die letzte Seite steht in meta."
-                },
-                "bot": "1-based page number. Omit for the first page.",
-                "type": "uint16",
-                "position": "url:page",
-                "source": "field",
-                "required": false,
-                "min": 1
-              }
-            ]
-          }
-        ],
-        "ui": "https://raw.githubusercontent.com/JoAiHQ/warps/main/warps/joai/task-list/chatapp.d8dd6afb.dist.html"
-      },
-      "extras": null
-    },
-    {
-      "key": "none:joai-update-create",
-      "identifier": "@joai-update-create",
-      "alias": "joai-update-create",
-      "chain": "none",
-      "hash": "b065a3abaef2004c52e6a69d027bd7d7379c75505d09d14887ec7c8c68701f4c",
-      "checksum": "b065a3abaef2004c52e6a69d027bd7d7379c75505d09d14887ec7c8c68701f4c",
-      "name": "JoAi: Create Update",
-      "title": {
-        "en": "Post an update",
-        "de": "Update veröffentlichen"
-      },
-      "description": {
-        "en": "Post a deal, event, news, or article-style update for your team so it can appear in connected websites, directories, and public feeds. Supports scheduled publishing windows, links, media, custom props, and draft or published status for local business communication.",
-        "de": "Veröffentliche ein Angebot, Event, News oder einen Artikel für dein Team, damit sie auf verbundenen Websites, in Verzeichnissen und öffentlichen Feeds erscheinen kann. Unterstützt geplante Zeiträume, Links sowie Entwurf- oder Veröffentlichungsstatus für lokale Betriebsinfos."
-      },
-      "preview": null,
-      "creator": "github:JoAiHQ/warps",
-      "privileges": [],
-      "listed": true,
-      "visibility": "public",
-      "primaryAddress": null,
-      "primaryFunc": null,
-      "brand": {
-        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
-        "slug": "joai",
-        "active": true,
-        "protocol": "brand:0.2.0",
-        "name": "JoAi",
-        "description": {
-          "en": "JoAi is a platform for creating and managing your own AI agents.",
-          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
-          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
-          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
-          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
-        },
-        "logo": {
-          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
-        },
-        "urls": {
-          "web": "https://joai.ai"
-        },
-        "colors": {
-          "primary": "#98FF98",
-          "secondary": "#FFFF66"
-        }
-      },
-      "warp": {
-        "protocol": "warp:3.0.0",
-        "name": "JoAi: Create Update",
-        "title": {
-          "en": "Post an update",
-          "de": "Update veröffentlichen"
-        },
-        "description": {
-          "en": "Post a deal, event, news, or article-style update for your team so it can appear in connected websites, directories, and public feeds. Supports scheduled publishing windows, links, media, custom props, and draft or published status for local business communication.",
-          "de": "Veröffentliche ein Angebot, Event, News oder einen Artikel für dein Team, damit sie auf verbundenen Websites, in Verzeichnissen und öffentlichen Feeds erscheinen kann. Unterstützt geplante Zeiträume, Links sowie Entwurf- oder Veröffentlichungsstatus für lokale Betriebsinfos."
-        },
-        "bot": "Use this to create a deal, event, news, or article update for customers. Set startsAt/endsAt for time-limited offers or events. Optional props JSON object for flexible flags (e.g. {\"top-news\":\"true\"} for city-directory top news).",
+        "bot": "Use when creating a campaign. Collect channel, content, and audience. For push: omit audience to target all subscribed installs, or pass segmentId / installIds / contactIds (contacts resolve to their installs). List installs first if picking devices. Prefer segmentId for reusable push audiences (e.g. has_install + install_push_status subscribed). If content uses {{placeholders}}, set templateParams and/or aiParams. For WhatsApp set language and category.",
         "vars": {
           "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
           "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
@@ -1360,11 +340,15 @@
           {
             "type": "collect",
             "label": {
-              "en": "Post update",
-              "de": "Update veröffentlichen"
+              "en": "Create campaign",
+              "de": "Kampagne erstellen",
+              "fr": "Créer la campagne",
+              "es": "Crear la campaña",
+              "it": "Crea la campagna",
+              "ro": "Creează campania"
             },
             "destination": {
-              "url": "https://devnet-api.joai.ai/v1/updates",
+              "url": "https://devnet-api.joai.ai/v1/campaigns",
               "method": "POST",
               "headers": {
                 "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
@@ -1373,124 +357,228 @@
             },
             "inputs": [
               {
-                "name": "Title",
-                "as": "title",
+                "name": "Name",
+                "as": "name",
                 "description": {
-                  "en": "Headline of the update",
-                  "de": "Überschrift des Updates"
+                  "en": "Campaign name",
+                  "de": "Kampagnenname",
+                  "fr": "Nom de la campagne",
+                  "es": "Nombre de la campaña",
+                  "it": "Nome della campagna",
+                  "ro": "Numele campaniei"
                 },
                 "type": "string",
                 "source": "field",
                 "required": true
               },
               {
-                "name": "Type",
-                "as": "type",
+                "name": "Channel",
+                "as": "channel",
                 "description": {
-                  "en": "Type of update",
-                  "de": "Art des Updates"
+                  "en": "Delivery channel",
+                  "de": "Versandkanal",
+                  "fr": "Canal de livraison",
+                  "es": "Canal de entrega",
+                  "it": "Canale di invio",
+                  "ro": "Canal de livrare"
                 },
                 "type": "string",
                 "source": "field",
                 "required": true,
                 "options": {
-                  "deal": "Deal",
-                  "event": "Event",
-                  "news": "News",
-                  "article": "Article"
+                  "email": "Email",
+                  "whatsapp": "WhatsApp",
+                  "sms": "SMS",
+                  "push": "Push"
                 }
               },
               {
-                "name": "Body",
-                "as": "body",
+                "name": "Subject",
+                "as": "subject",
                 "description": {
-                  "en": "Detailed description (supports markdown)",
-                  "de": "Detailbeschreibung (unterstützt Markdown)"
+                  "en": "Email subject line (email channel only)",
+                  "de": "E-Mail-Betreff (nur E-Mail-Kanal)",
+                  "fr": "Objet de l'e-mail (canal e-mail uniquement)",
+                  "es": "Asunto del correo (solo canal de correo)",
+                  "it": "Oggetto dell'email (solo canale email)",
+                  "ro": "Subiectul emailului (doar canalul email)"
                 },
                 "type": "string",
                 "source": "field",
                 "required": false
               },
               {
-                "name": "Starts At",
-                "as": "startsAt",
+                "name": "Content",
+                "as": "content",
                 "description": {
-                  "en": "When the update becomes active (ISO 8601 with Z or offset, e.g. 2026-10-09T14:00:00+02:00, optional)",
-                  "de": "Wann das Update aktiv wird (ISO 8601 mit Z oder Offset, z. B. 2026-10-09T14:00:00+02:00, optional)"
+                  "en": "Message content",
+                  "de": "Nachrichteninhalt",
+                  "fr": "Contenu du message",
+                  "es": "Contenido del mensaje",
+                  "it": "Contenuto del messaggio",
+                  "ro": "Conținutul mesajului"
                 },
                 "type": "string",
                 "source": "field",
-                "required": false,
-                "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}(:\\d{2}(\\.\\d+)?)?(Z|[+-]\\d{2}:\\d{2})$"
+                "required": true
               },
               {
-                "name": "Ends At",
-                "as": "endsAt",
+                "name": "Tags",
+                "as": "tags",
                 "description": {
-                  "en": "When the update expires (ISO 8601 with Z or offset, e.g. 2026-10-09T16:00:00+02:00, optional)",
-                  "de": "Wann das Update abläuft (ISO 8601 mit Z oder Offset, z. B. 2026-10-09T16:00:00+02:00, optional)"
+                  "en": "Tags — target contacts with any of these",
+                  "de": "Tags — Kontakte mit einem dieser Tags ansprechen",
+                  "fr": "Tags — cibler les contacts avec l'un de ces tags",
+                  "es": "Etiquetas — dirigirse a contactos con cualquiera de estas",
+                  "it": "Tag — contattare chi ha uno di questi tag",
+                  "ro": "Taguri — țintește contactele cu oricare dintre acestea"
                 },
+                "type": "json",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Contact IDs",
+                "as": "contactIds",
+                "description": {
+                  "en": "Specific contact hashids to target",
+                  "de": "Bestimmte Kontakt-Hashids als Zielgruppe",
+                  "fr": "Hashids de contacts spécifiques à cibler",
+                  "es": "Hashids de contactos específicos a los que dirigirse",
+                  "it": "Hashid di contatti specifici da contattare",
+                  "ro": "Hashid-uri de contacte specifice de țintit"
+                },
+                "type": "json",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Segment ID",
+                "as": "segmentId",
+                "description": {
+                  "en": "Saved segment (hashid) to target",
+                  "de": "Gespeichertes Segment (Hashid) als Zielgruppe",
+                  "fr": "Segment enregistré (hashid) à cibler",
+                  "es": "Segmento guardado (hashid) al que dirigirse",
+                  "it": "Segmento salvato (hashid) da contattare",
+                  "ro": "Segment salvat (hashid) de țintit"
+                },
+                "bot": "Preferred for reusable audiences. For push install audiences use conditions like [{\"type\":\"has_install\",\"value\":true},{\"type\":\"install_push_status\",\"value\":\"subscribed\"}]. When set, tags/contactIds/installIds are ignored.",
                 "type": "string",
                 "source": "field",
-                "required": false,
-                "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}(:\\d{2}(\\.\\d+)?)?(Z|[+-]\\d{2}:\\d{2})$"
+                "required": false
               },
               {
-                "name": "Status",
-                "as": "status",
+                "name": "Install IDs",
+                "as": "installIds",
                 "description": {
-                  "en": "Publication status",
-                  "de": "Veröffentlichungsstatus"
+                  "en": "Push only: specific install hashids (devices) to target",
+                  "de": "Nur Push: bestimmte Installations-Hashids (Geräte) als Zielgruppe",
+                  "fr": "Push uniquement : hashids d'installations (appareils) à cibler",
+                  "es": "Solo push: hashids de instalaciones (dispositivos) a los que dirigirse",
+                  "it": "Solo push: hashid di installazioni (dispositivi) da contattare",
+                  "ro": "Doar push: hashid-uri de instalări (dispozitive) de țintit"
                 },
+                "bot": "Use for push when targeting specific devices. Get IDs from List Installs. Ignored when segmentId is set. Omit with channel=push to target all subscribed installs.",
+                "type": "json",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Template params",
+                "as": "templateParams",
+                "description": {
+                  "en": "Static placeholder values as JSON object. Keys match {{placeholders}} in content/subject. Values are literals or contact.* paths (e.g. {\"name\":\"contact.name\"}).",
+                  "de": "Statische Platzhalter-Werte als JSON-Objekt. Schlüssel entsprechen {{Platzhaltern}} in Inhalt/Betreff. Werte sind Literale oder contact.*-Pfade (z. B. {\"name\":\"contact.name\"}).",
+                  "fr": "Valeurs de placeholders statiques en objet JSON. Les clés correspondent aux {{placeholders}} du contenu/objet. Valeurs littérales ou chemins contact.* (ex. {\"name\":\"contact.name\"}).",
+                  "es": "Valores estáticos de placeholders como objeto JSON. Las claves coinciden con {{placeholders}} en contenido/asunto. Valores literales o rutas contact.* (p. ej. {\"name\":\"contact.name\"}).",
+                  "it": "Valori statici dei placeholder come oggetto JSON. Le chiavi corrispondono ai {{placeholders}} in contenuto/oggetto. Valori letterali o percorsi contact.* (es. {\"name\":\"contact.name\"}).",
+                  "ro": "Valori statice pentru placeholder ca obiect JSON. Cheile corespund {{placeholders}} din conținut/subiect. Valori literale sau căi contact.* (ex. {\"name\":\"contact.name\"})."
+                },
+                "bot": "Required whenever content/subject contains {{placeholders}} that should not be AI-filled. Pass a JSON object like {\"name\":\"contact.name\",\"city\":\"Vienna\"}. Supported contact paths: contact.name, contact.email, contact.phone, contact.company, contact.title, contact.location. Do not leave placeholders unmapped.",
+                "type": "json",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "AI params",
+                "as": "aiParams",
+                "description": {
+                  "en": "AI placeholder prompts as JSON object. Keys match {{placeholders}}; values are prompts the sending agent fills per contact. Requires agentId. Not supported for WhatsApp.",
+                  "de": "KI-Platzhalter-Prompts als JSON-Objekt. Schlüssel entsprechen {{Platzhaltern}}; Werte sind Prompts, die der sendende Agent pro Kontakt füllt. Erfordert agentId. Nicht für WhatsApp.",
+                  "fr": "Prompts IA pour placeholders en objet JSON. Les clés correspondent aux {{placeholders}} ; les valeurs sont des prompts remplis par agent et contact. Nécessite agentId. Non pris en charge pour WhatsApp.",
+                  "es": "Prompts de IA para placeholders como objeto JSON. Las claves coinciden con {{placeholders}}; los valores son prompts que el agente rellena por contacto. Requiere agentId. No compatible con WhatsApp.",
+                  "it": "Prompt IA per placeholder come oggetto JSON. Le chiavi corrispondono ai {{placeholders}}; i valori sono prompt che l'agente riempie per contatto. Richiede agentId. Non supportato per WhatsApp.",
+                  "ro": "Prompturi AI pentru placeholder ca obiect JSON. Cheile corespund {{placeholders}}; valorile sunt prompturi pe care agentul le completează per contact. Necesită agentId. Nu e suportat pentru WhatsApp."
+                },
+                "bot": "Use for personalized AI-written slots, e.g. {\"offer\":\"Mention a short local offer\"}. Each key must appear as {{key}} in content/subject. Requires agentId. Do not use on WhatsApp. A placeholder must be in either templateParams or aiParams, not both.",
+                "type": "json",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Agent ID",
+                "as": "agentId",
+                "description": {
+                  "en": "Agent UUID used to fill AI placeholders (required when aiParams is set)",
+                  "de": "Agent-UUID zum Füllen der KI-Platzhalter (erforderlich bei aiParams)",
+                  "fr": "UUID de l'agent pour remplir les placeholders IA (requis si aiParams est défini)",
+                  "es": "UUID del agente para rellenar placeholders de IA (obligatorio si hay aiParams)",
+                  "it": "UUID dell'agente per riempire i placeholder IA (obbligatorio con aiParams)",
+                  "ro": "UUID-ul agentului pentru completarea placeholder-elor AI (obligatoriu când există aiParams)"
+                },
+                "bot": "Pass the sending agent's UUID when aiParams is set. The agent must have an active integration for the campaign channel.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Language",
+                "as": "language",
+                "description": {
+                  "en": "Template language code for WhatsApp approval (e.g. de, en)",
+                  "de": "Vorlagen-Sprachcode für WhatsApp-Freigabe (z. B. de, en)",
+                  "fr": "Code langue du modèle pour l'approbation WhatsApp (ex. de, en)",
+                  "es": "Código de idioma de la plantilla para aprobación de WhatsApp (p. ej. de, en)",
+                  "it": "Codice lingua del template per l'approvazione WhatsApp (es. de, en)",
+                  "ro": "Codul de limbă al șablonului pentru aprobarea WhatsApp (ex. de, en)"
+                },
+                "bot": "Required for WhatsApp template campaigns before submit-for-approval. Use a short locale like de or en.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Category",
+                "as": "category",
+                "description": {
+                  "en": "WhatsApp template category: MARKETING, UTILITY, or AUTHENTICATION",
+                  "de": "WhatsApp-Vorlagenkategorie: MARKETING, UTILITY oder AUTHENTICATION",
+                  "fr": "Catégorie de modèle WhatsApp : MARKETING, UTILITY ou AUTHENTICATION",
+                  "es": "Categoría de plantilla de WhatsApp: MARKETING, UTILITY o AUTHENTICATION",
+                  "it": "Categoria template WhatsApp: MARKETING, UTILITY o AUTHENTICATION",
+                  "ro": "Categoria șablonului WhatsApp: MARKETING, UTILITY sau AUTHENTICATION"
+                },
+                "bot": "Required for WhatsApp template campaigns. Usually MARKETING for promo messages.",
                 "type": "string",
                 "source": "field",
                 "required": false,
                 "options": {
-                  "draft": "Draft",
-                  "published": "Published",
-                  "archived": "Archived"
+                  "MARKETING": "Marketing",
+                  "UTILITY": "Utility",
+                  "AUTHENTICATION": "Authentication"
                 }
-              },
-              {
-                "name": "Link URL",
-                "as": "linkUrl",
-                "description": {
-                  "en": "URL to link from the update",
-                  "de": "URL, auf die das Update verlinkt"
-                },
-                "type": "string",
-                "source": "field",
-                "required": false
-              },
-              {
-                "name": "Media",
-                "as": "media",
-                "description": {
-                  "en": "Media IDs to attach (JSON array of team media IDs), e.g. [\"abc123\"]",
-                  "de": "Media-IDs zum Anhängen (JSON-Array), z. B. [\"abc123\"]"
-                },
-                "type": "json",
-                "source": "field",
-                "required": false
-              },
-              {
-                "name": "Props",
-                "as": "props",
-                "description": {
-                  "en": "Custom key/value properties as a JSON object (e.g. {\"top-news\":\"true\"}). Keys kebab-case; values strings.",
-                  "de": "Benutzerdefinierte Eigenschaften als JSON-Objekt (z. B. {\"top-news\":\"true\"}). Schlüssel in Kebab-Case; Werte als Strings."
-                },
-                "bot": "Optional props object (string values). For city-directory top news set {\"top-news\":\"true\"} on type=news. Same flexible props bag as contacts.",
-                "type": "json",
-                "source": "field",
-                "required": false
               },
               {
                 "name": "Team",
                 "as": "team",
                 "description": {
                   "en": "Team slug for this action. Defaults to the current team.",
-                  "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team."
+                  "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team.",
+                  "fr": "Slug d'équipe pour cette action. Par défaut l'équipe actuelle.",
+                  "es": "Slug del equipo para esta acción. Por defecto el equipo actual.",
+                  "it": "Slug del team per questa azione. Predefinito: team attuale.",
+                  "ro": "Slug-ul echipei pentru această acțiune. Implicit echipa curentă."
                 },
                 "bot": "The slug of the team to operate on. Omit to use the current team.",
                 "type": "string",
@@ -1501,94 +589,129 @@
             ],
             "output": {
               "id": "out.data.id",
-              "title": "out.data.title",
-              "type": "out.data.type",
-              "status": "out.data.status"
+              "name": "out.data.name",
+              "channel": "out.data.channel",
+              "status": "out.data.status",
+              "totalCount": "out.data.totalCount"
             }
           }
         ],
         "output": {
-          "UPDATE_ID": "out.1.id",
-          "UPDATE_TITLE": "out.1.title"
+          "CAMPAIGN_ID": "out.1.id",
+          "CAMPAIGN_NAME": "out.1.name",
+          "CAMPAIGN_TOTAL": "out.1.totalCount"
         },
         "messages": {
           "success": {
-            "en": "Update '{{UPDATE_TITLE}}' posted!",
-            "de": "Update '{{UPDATE_TITLE}}' veröffentlicht!"
+            "en": "Campaign '{{CAMPAIGN_NAME}}' created as draft targeting {{CAMPAIGN_TOTAL}} recipients.",
+            "de": "Kampagne '{{CAMPAIGN_NAME}}' als Entwurf erstellt, Zielgruppe: {{CAMPAIGN_TOTAL}} Empfänger.",
+            "fr": "Campagne « {{CAMPAIGN_NAME}} » créée comme brouillon ciblant {{CAMPAIGN_TOTAL}} destinataires.",
+            "es": "Campaña « {{CAMPAIGN_NAME}} » creada como borrador con {{CAMPAIGN_TOTAL}} destinatarios.",
+            "it": "Campagna « {{CAMPAIGN_NAME}} » creata come bozza con {{CAMPAIGN_TOTAL}} destinatari.",
+            "ro": "Campania „{{CAMPAIGN_NAME}}” a fost creată ca schiță țintind {{CAMPAIGN_TOTAL}} destinatari."
+          },
+          "error": {
+            "en": "Failed to create campaign: {{MESSAGE}}",
+            "de": "Kampagne konnte nicht erstellt werden: {{MESSAGE}}",
+            "fr": "Échec de la création de la campagne : {{MESSAGE}}",
+            "es": "Error al crear la campaña: {{MESSAGE}}",
+            "it": "Impossibile creare la campagna: {{MESSAGE}}",
+            "ro": "Nu s-a putut crea campania: {{MESSAGE}}"
           }
         }
       },
       "extras": {
         "keywords": {
           "en": [
-            "post update",
-            "create deal",
-            "publish event",
-            "business news",
-            "article",
-            "local announcement"
+            "create campaign",
+            "marketing campaign",
+            "email blast",
+            "sms blast",
+            "newsletter",
+            "audience messaging",
+            "placeholders",
+            "personalization"
           ],
           "de": [
-            "Update veröffentlichen",
-            "Angebot erstellen",
-            "Event veröffentlichen",
-            "Betriebsnews",
-            "Artikel",
-            "lokale Ankündigung"
+            "Kampagne erstellen",
+            "Marketing-Kampagne",
+            "Newsletter",
+            "SMS-Versand",
+            "Zielgruppen-Messaging",
+            "Platzhalter",
+            "Personalisierung"
           ]
         },
         "useCases": {
           "en": [
-            "Publish a limited-time offer for customers",
-            "Announce an upcoming event on a business profile",
-            "Post a longer article or local news to connected directories"
+            "Create an email campaign for a saved segment of contacts",
+            "Send a WhatsApp promo to customers tagged as loyal",
+            "Draft a campaign with {{name}} mapped to contact.name",
+            "Use AI prompts for personalized offer slots"
           ],
           "de": [
-            "Ein zeitlich begrenztes Angebot für Kunden veröffentlichen",
-            "Ein bevorstehendes Event im Betriebsprofil ankündigen",
-            "Einen längeren Artikel oder lokale News in verbundenen Verzeichnissen posten"
+            "Eine E-Mail-Kampagne für ein gespeichertes Segment erstellen",
+            "WhatsApp-Aktion an treue Kunden senden",
+            "Eine Kampagne mit {{name}} → contact.name anlegen",
+            "KI-Prompts für personalisierte Angebots-Slots nutzen"
           ]
         },
         "category": "communication",
         "faq": {
           "en": [
             {
-              "question": "Can I publish deals, events, news, and articles?",
-              "answer": "Yes. Use deal for offers, event for happenings, news for short announcements, and article for longer posts."
+              "question": "Can I target specific contacts?",
+              "answer": "Yes. Use a saved segment, tags, or explicit contact IDs to define the audience."
             },
             {
-              "question": "Can an update be scheduled?",
-              "answer": "Yes. Add startsAt and endsAt to control when the update is active."
+              "question": "Is the campaign sent immediately?",
+              "answer": "No. The campaign is created as a draft — use Send Campaign to start delivery."
+            },
+            {
+              "question": "How do placeholders work?",
+              "answer": "Pass templateParams for static or contact.* values (e.g. {\"name\":\"contact.name\"}), and aiParams for AI-filled prompts (requires agentId; not on WhatsApp). Map every {{placeholder}} or it stays empty on send."
             }
           ],
           "de": [
             {
-              "question": "Kann ich Angebote, Events, News und Artikel veröffentlichen?",
-              "answer": "Ja. Nutze deal für Angebote, event für Veranstaltungen, news für kurze Ankündigungen und article für längere Beiträge."
+              "question": "Kann ich bestimmte Kontakte ansprechen?",
+              "answer": "Ja. Nutze ein gespeichertes Segment, Tags oder konkrete Kontakt-IDs für die Zielgruppe."
             },
             {
-              "question": "Kann ein Update geplant werden?",
-              "answer": "Ja. Mit startsAt und endsAt steuerst du, wann das Update aktiv ist."
+              "question": "Wird die Kampagne sofort versendet?",
+              "answer": "Nein. Die Kampagne wird als Entwurf angelegt – zum Versand nutze Kampagne senden."
+            },
+            {
+              "question": "Wie funktionieren Platzhalter?",
+              "answer": "Setze templateParams für statische oder contact.*-Werte (z. B. {\"name\":\"contact.name\"}) und aiParams für KI-Prompts (braucht agentId; nicht bei WhatsApp). Jeder {{Platzhalter}} muss gemappt sein, sonst bleibt er beim Versand leer."
             }
           ]
         }
       }
     },
     {
-      "key": "none:joai-update-list",
-      "identifier": "@joai-update-list",
-      "alias": "joai-update-list",
+      "key": "none:joai-campaign-send-test",
+      "identifier": "@joai-campaign-send-test",
+      "alias": "joai-campaign-send-test",
       "chain": "none",
-      "hash": "ec127dea7d41fe616094aa3b01b753ae9769cdce8db940373373501b68998870",
-      "checksum": "ec127dea7d41fe616094aa3b01b753ae9769cdce8db940373373501b68998870",
-      "name": "JoAi: List Updates",
+      "hash": "80125945e86e0abe1da67f51eec323f55a7a4e4cdbf23a5087086d93572c9947",
+      "checksum": "80125945e86e0abe1da67f51eec323f55a7a4e4cdbf23a5087086d93572c9947",
+      "name": "JoAi: Send Campaign Test",
       "title": {
-        "en": "View updates",
-        "de": "Updates anzeigen"
+        "en": "Send a campaign test",
+        "de": "Kampagnen-Test senden",
+        "fr": "Envoyer un test de campagne",
+        "es": "Enviar prueba de campaña",
+        "it": "Invia test campagna",
+        "ro": "Trimite test campanie"
       },
       "description": {
-        "en": "View current or archived deals, events, news, and article-style updates for your team. Filter by type, status, or active publishing window to check what customers can see across connected websites and public feeds.",
-        "de": "Zeige aktuelle oder archivierte Angebote, Events, News und Artikel für dein Team. Filtere nach Typ, Status oder aktivem Veröffentlichungszeitraum, um zu prüfen, was Kunden auf verbundenen Websites und öffentlichen Feeds sehen."
+        "en": "Send a test of an existing draft campaign to one contact (email) or one install (push) without attaching them to the campaign audience.",
+        "de": "Sende einen Test einer bestehenden Entwurfskampagne an einen Kontakt (E-Mail) oder eine Installation (Push), ohne sie der Zielgruppe hinzuzufügen.",
+        "fr": "Envoyez un test d'une campagne brouillon à un contact (e-mail) ou une installation (push) sans les ajouter à l'audience.",
+        "es": "Envía una prueba de una campaña borrador a un contacto (email) o una instalación (push) sin añadirlos a la audiencia.",
+        "it": "Invia un test di una campagna bozza a un contatto (email) o un'installazione (push) senza aggiungerli al pubblico.",
+        "ro": "Trimite un test al unei campanii schiță către un contact (email) sau o instalare (push), fără a-i adăuga în audiență."
       },
       "preview": null,
       "creator": "github:JoAiHQ/warps",
@@ -1623,16 +746,24 @@
       },
       "warp": {
         "protocol": "warp:3.0.0",
-        "name": "JoAi: List Updates",
+        "name": "JoAi: Send Campaign Test",
         "title": {
-          "en": "View updates",
-          "de": "Updates anzeigen"
+          "en": "Send a campaign test",
+          "de": "Kampagnen-Test senden",
+          "fr": "Envoyer un test de campagne",
+          "es": "Enviar prueba de campaña",
+          "it": "Invia test campagna",
+          "ro": "Trimite test campanie"
         },
         "description": {
-          "en": "View current or archived deals, events, news, and article-style updates for your team. Filter by type, status, or active publishing window to check what customers can see across connected websites and public feeds.",
-          "de": "Zeige aktuelle oder archivierte Angebote, Events, News und Artikel für dein Team. Filtere nach Typ, Status oder aktivem Veröffentlichungszeitraum, um zu prüfen, was Kunden auf verbundenen Websites und öffentlichen Feeds sehen."
+          "en": "Send a test of an existing draft campaign to one contact (email) or one install (push) without attaching them to the campaign audience.",
+          "de": "Sende einen Test einer bestehenden Entwurfskampagne an einen Kontakt (E-Mail) oder eine Installation (Push), ohne sie der Zielgruppe hinzuzufügen.",
+          "fr": "Envoyez un test d'une campagne brouillon à un contact (e-mail) ou une installation (push) sans les ajouter à l'audience.",
+          "es": "Envía una prueba de una campaña borrador a un contacto (email) o una instalación (push) sin añadirlos a la audiencia.",
+          "it": "Invia un test di una campagna bozza a un contatto (email) o un'installazione (push) senza aggiungerli al pubblico.",
+          "ro": "Trimite un test al unei campanii schiță către un contact (email) sau o instalare (push), fără a-i adăuga în audiență."
         },
-        "bot": "Use this to see team updates. By default active=true returns currently visible updates. Results are paginated: check meta.lastPage and pass page to load more.",
+        "bot": "Use to smoke-test a draft before send. For email pass contactId; for push pass installId (from List Installs). Exactly one of contactId or installId is required.",
         "vars": {
           "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
           "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
@@ -1642,11 +773,195 @@
           {
             "type": "collect",
             "label": {
-              "en": "View updates",
-              "de": "Updates anzeigen"
+              "en": "Send test",
+              "de": "Test senden",
+              "fr": "Envoyer le test",
+              "es": "Enviar prueba",
+              "it": "Invia test",
+              "ro": "Trimite test"
             },
             "destination": {
-              "url": "https://devnet-api.joai.ai/v1/updates?active={{active}}&type={{type}}&status={{status}}&page={{page}}&perPage={{perPage}}",
+              "url": "https://devnet-api.joai.ai/v1/campaigns/{{campaign_id}}/send-test",
+              "method": "POST",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+                "X-Team": "{{team}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Campaign ID",
+                "as": "campaign_id",
+                "description": {
+                  "en": "Hashid of the draft campaign to test",
+                  "de": "Hashid der zu testenden Entwurfskampagne"
+                },
+                "type": "string",
+                "position": "url:campaign_id",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Contact ID",
+                "as": "contactId",
+                "description": {
+                  "en": "Contact hashid for email tests",
+                  "de": "Kontakt-Hashid für E-Mail-Tests"
+                },
+                "bot": "Required for email channel tests (contact must have an email).",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "position": "payload:contactId"
+              },
+              {
+                "name": "Install ID",
+                "as": "installId",
+                "description": {
+                  "en": "Install hashid for push tests",
+                  "de": "Installations-Hashid für Push-Tests"
+                },
+                "bot": "Required for push channel tests. Get from List Installs (subscribed).",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "position": "payload:installId"
+              },
+              {
+                "name": "Team",
+                "as": "team",
+                "description": {
+                  "en": "Team slug. Defaults to the current team.",
+                  "de": "Team-Slug. Standardmäßig das aktuelle Team."
+                },
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "default": "{{JOAI_TEAM_SLUG}}"
+              }
+            ]
+          }
+        ],
+        "messages": {
+          "success": {
+            "en": "Test sent.",
+            "de": "Test gesendet.",
+            "fr": "Test envoyé.",
+            "es": "Prueba enviada.",
+            "it": "Test inviato.",
+            "ro": "Test trimis."
+          },
+          "error": {
+            "en": "Failed to send test: {{MESSAGE}}",
+            "de": "Test konnte nicht gesendet werden: {{MESSAGE}}",
+            "fr": "Échec de l'envoi du test : {{MESSAGE}}",
+            "es": "Error al enviar la prueba: {{MESSAGE}}",
+            "it": "Impossibile inviare il test: {{MESSAGE}}",
+            "ro": "Nu s-a putut trimite testul: {{MESSAGE}}"
+          }
+        }
+      },
+      "extras": null
+    },
+    {
+      "key": "none:joai-install-list",
+      "identifier": "@joai-install-list",
+      "alias": "joai-install-list",
+      "chain": "none",
+      "hash": "9ce96a9d585d71891301be43d9eb09a25895e44b7fa00b837eed5bd960fbb53d",
+      "checksum": "9ce96a9d585d71891301be43d9eb09a25895e44b7fa00b837eed5bd960fbb53d",
+      "name": "JoAi: List Installs",
+      "title": {
+        "en": "List app installs",
+        "de": "App-Installationen anzeigen",
+        "fr": "Lister les installations",
+        "es": "Listar instalaciones",
+        "it": "Elenca installazioni",
+        "ro": "Listează instalările"
+      },
+      "description": {
+        "en": "List device installs for push campaigns (including anonymous). Filter by push status and search name, email, platform, or provider ref.",
+        "de": "Liste Geräte-Installationen für Push-Kampagnen (inkl. anonym). Filter nach Push-Status und Suche nach Name, E-Mail, Plattform oder Provider-Ref.",
+        "fr": "Liste les installations d'appareils pour les campagnes push (y compris anonymes). Filtrez par statut push et recherchez nom, e-mail, plateforme ou réf. fournisseur.",
+        "es": "Lista instalaciones de dispositivos para campañas push (incluidas anónimas). Filtra por estado push y busca nombre, email, plataforma o ref. de proveedor.",
+        "it": "Elenca le installazioni dispositivo per campagne push (anche anonime). Filtra per stato push e cerca nome, email, piattaforma o ref. provider.",
+        "ro": "Listează instalările de dispozitive pentru campanii push (inclusiv anonime). Filtrează după status push și caută nume, email, platformă sau ref. provider."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: List Installs",
+        "title": {
+          "en": "List app installs",
+          "de": "App-Installationen anzeigen",
+          "fr": "Lister les installations",
+          "es": "Listar instalaciones",
+          "it": "Elenca installazioni",
+          "ro": "Listează instalările"
+        },
+        "description": {
+          "en": "List device installs for push campaigns (including anonymous). Filter by push status and search name, email, platform, or provider ref.",
+          "de": "Liste Geräte-Installationen für Push-Kampagnen (inkl. anonym). Filter nach Push-Status und Suche nach Name, E-Mail, Plattform oder Provider-Ref.",
+          "fr": "Liste les installations d'appareils pour les campagnes push (y compris anonymes). Filtrez par statut push et recherchez nom, e-mail, plateforme ou réf. fournisseur.",
+          "es": "Lista instalaciones de dispositivos para campañas push (incluidas anónimas). Filtra por estado push y busca nombre, email, plataforma o ref. de proveedor.",
+          "it": "Elenca le installazioni dispositivo per campagne push (anche anonime). Filtra per stato push e cerca nome, email, piattaforma o ref. provider.",
+          "ro": "Listează instalările de dispozitive pentru campanii push (inclusiv anonime). Filtrează după status push și caută nume, email, platformă sau ref. provider."
+        },
+        "bot": "Use before creating a push campaign when you need install hashids, or to check who is subscribed. Prefer pushStatus=subscribed for sendable devices. Pass returned id values as installIds to Create Campaign.",
+        "vars": {
+          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+          "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+        },
+        "output": {
+          "installs": "out",
+          "installsList": "out.data",
+          "installsCount": "out.data.length"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "auto": true,
+            "label": {
+              "en": "List installs",
+              "de": "Installationen anzeigen",
+              "fr": "Lister les installations",
+              "es": "Listar instalaciones",
+              "it": "Elenca installazioni",
+              "ro": "Listează instalările"
+            },
+            "destination": {
+              "url": "https://devnet-api.joai.ai/v1/installs?pushStatus={{pushStatus}}&q={{q}}&perPage={{perPage}}&page={{page}}",
               "method": "GET",
               "headers": {
                 "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
@@ -1655,176 +970,103 @@
             },
             "inputs": [
               {
-                "name": "Active",
-                "as": "active",
-                "description": {
-                  "en": "Whether to show only currently active updates. Use true by default.",
-                  "de": "Ob nur aktuell aktive Updates angezeigt werden sollen. Standardmäßig true verwenden."
-                },
-                "type": "boolean",
-                "position": "url:active",
-                "source": "field",
-                "required": false,
-                "default": true
-              },
-              {
-                "name": "Type",
-                "as": "type",
-                "description": {
-                  "en": "Filter by update type.",
-                  "de": "Nach Update-Typ filtern."
-                },
+                "name": "Push status",
+                "as": "pushStatus",
                 "type": "string",
-                "position": "url:type",
+                "position": "query",
                 "source": "field",
                 "required": false,
                 "options": {
-                  "deal": "Deal",
-                  "event": "Event",
-                  "news": "News",
-                  "article": "Article"
+                  "subscribed": "Subscribed",
+                  "opted_out": "Opted out",
+                  "unavailable": "Unavailable"
+                },
+                "description": {
+                  "en": "Filter by push subscription status",
+                  "de": "Nach Push-Abonnementstatus filtern"
+                },
+                "bot": "Pass subscribed to list sendable installs for push campaigns."
+              },
+              {
+                "name": "Search",
+                "as": "q",
+                "type": "string",
+                "position": "query",
+                "source": "field",
+                "required": false,
+                "description": {
+                  "en": "Search by contact name/email, platform (ios|android|web), bundle id, or provider ref",
+                  "de": "Suche nach Kontaktname/E-Mail, Plattform (ios|android|web), Bundle-ID oder Provider-Ref"
                 }
               },
               {
-                "name": "Status",
-                "as": "status",
-                "description": {
-                  "en": "Filter by publication status",
-                  "de": "Nach Veröffentlichungsstatus filtern"
-                },
+                "name": "Per page",
+                "as": "perPage",
                 "type": "string",
-                "position": "url:status",
+                "position": "query",
                 "source": "field",
                 "required": false,
-                "options": {
-                  "draft": "Draft",
-                  "published": "Published",
-                  "archived": "Archived"
+                "default": "50",
+                "description": {
+                  "en": "Page size (max 250)",
+                  "de": "Seitengröße (max. 250)"
+                }
+              },
+              {
+                "name": "Page",
+                "as": "page",
+                "type": "string",
+                "position": "query",
+                "source": "field",
+                "required": false,
+                "default": "1",
+                "description": {
+                  "en": "Page number",
+                  "de": "Seitennummer"
                 }
               },
               {
                 "name": "Team",
                 "as": "team",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "default": "{{JOAI_TEAM_SLUG}}",
                 "description": {
                   "en": "Team slug for this action. Defaults to the current team.",
                   "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team."
                 },
-                "bot": "The slug of the team to operate on. Omit to use the current team.",
-                "type": "string",
-                "source": "field",
-                "required": false,
-                "default": "{{JOAI_TEAM_SLUG}}"
-              },
-              {
-                "name": "Page",
-                "as": "page",
-                "description": {
-                  "en": "Page number (default 1). Check meta.lastPage for more pages.",
-                  "de": "Seitennummer (Standard 1). Prüfe meta.lastPage für weitere Seiten."
-                },
-                "bot": "1-based page number. Omit for the first page.",
-                "type": "uint16",
-                "position": "url:page",
-                "source": "field",
-                "required": false,
-                "min": 1
-              },
-              {
-                "name": "Per Page",
-                "as": "perPage",
-                "description": {
-                  "en": "Results per page (default 20, max 100).",
-                  "de": "Ergebnisse pro Seite (Standard 20, max. 100)."
-                },
-                "type": "uint16",
-                "position": "url:perPage",
-                "source": "field",
-                "required": false,
-                "min": 1,
-                "max": 100
+                "bot": "The slug of the team to operate on. Omit to use the current team."
               }
             ]
           }
-        ],
-        "messages": {
-          "success": {
-            "en": "Here are your updates.",
-            "de": "Hier sind deine Updates."
-          }
-        },
-        "ui": "https://raw.githubusercontent.com/JoAiHQ/warps/main/warps/joai/update-list/chatapp.b6b36d96.dist.html"
+        ]
       },
-      "extras": {
-        "keywords": {
-          "en": [
-            "list updates",
-            "view deals",
-            "view events",
-            "business announcements",
-            "active updates",
-            "articles"
-          ],
-          "de": [
-            "Updates anzeigen",
-            "Angebote anzeigen",
-            "Events anzeigen",
-            "Betriebsankündigungen",
-            "aktive Updates",
-            "Artikel"
-          ]
-        },
-        "useCases": {
-          "en": [
-            "Check currently active customer announcements",
-            "Filter updates by deal, event, news, or article type",
-            "Review published content before editing it"
-          ],
-          "de": [
-            "Aktive Kundenankündigungen prüfen",
-            "Updates nach Angebot, Event, News oder Artikel filtern",
-            "Veröffentlichte Inhalte vor dem Bearbeiten prüfen"
-          ]
-        },
-        "category": "communication",
-        "faq": {
-          "en": [
-            {
-              "question": "Can I filter updates by type?",
-              "answer": "Yes. Filter by deal, event, news, or article."
-            },
-            {
-              "question": "Does this show only visible updates?",
-              "answer": "By default active updates are shown, but you can adjust the active and status filters."
-            }
-          ],
-          "de": [
-            {
-              "question": "Kann ich Updates nach Typ filtern?",
-              "answer": "Ja. Filtere nach deal, event, news oder article."
-            },
-            {
-              "question": "Zeigt diese Aktion nur sichtbare Updates?",
-              "answer": "Standardmäßig werden aktive Updates angezeigt, du kannst active und status aber anpassen."
-            }
-          ]
-        }
-      }
+      "extras": null
     },
     {
-      "key": "none:joai-update-update",
-      "identifier": "@joai-update-update",
-      "alias": "joai-update-update",
+      "key": "none:joai-segment-create",
+      "identifier": "@joai-segment-create",
+      "alias": "joai-segment-create",
       "chain": "none",
-      "hash": "42cd0d7f0fb25438a8d47d5c759562db6910d775a9a2b8354f8252e18b406afb",
-      "checksum": "42cd0d7f0fb25438a8d47d5c759562db6910d775a9a2b8354f8252e18b406afb",
-      "name": "JoAi: Update Update",
+      "hash": "7ea6702008842555989f535daea715bc29f7945488029cbd5c1a0cb384763871",
+      "checksum": "7ea6702008842555989f535daea715bc29f7945488029cbd5c1a0cb384763871",
+      "name": "JoAi: Create Segment",
       "title": {
-        "en": "Edit an update",
-        "de": "Update bearbeiten"
+        "en": "Create a segment",
+        "de": "Segment erstellen",
+        "fr": "Créer un segment",
+        "es": "Crear un segmento",
+        "it": "Crea un segmento",
+        "ro": "Creează un segment"
       },
       "description": {
-        "en": "Edit an existing deal, event, news, or article-style update for your team. Change the title, body, type, schedule, link, media, props, or publication status so connected websites and public feeds stay accurate.",
-        "de": "Bearbeite ein bestehendes Angebot, Event, News oder einen Artikel für dein Team. Ändere Titel, Text, Typ, Zeitraum, Link oder Veröffentlichungsstatus, damit verbundene Websites und öffentliche Feeds aktuell bleiben."
+        "en": "Create a saved audience segment. Conditions AND together. Contact conditions: tag, has_email, has_phone, created_after, created_before, email_contains, …. Install (push) conditions: has_install, install_push_status (subscribed|opted_out|unavailable).",
+        "de": "Erstelle ein gespeichertes Zielgruppen-Segment. Bedingungen gelten UND-verknüpft. Kontakt: tag, has_email, has_phone, created_after, created_before, email_contains, …. Installationen (Push): has_install, install_push_status (subscribed|opted_out|unavailable).",
+        "fr": "Créez un segment d'audience. Conditions en ET. Contacts : tag, has_email, has_phone, created_after, created_before, email_contains, …. Installations (push) : has_install, install_push_status (subscribed|opted_out|unavailable).",
+        "es": "Crea un segmento de audiencia. Condiciones en Y. Contactos: tag, has_email, has_phone, created_after, created_before, email_contains, …. Instalaciones (push): has_install, install_push_status (subscribed|opted_out|unavailable).",
+        "it": "Crea un segmento di pubblico. Condizioni in AND. Contatti: tag, has_email, has_phone, created_after, created_before, email_contains, …. Installazioni (push): has_install, install_push_status (subscribed|opted_out|unavailable).",
+        "ro": "Creează un segment de audiență. Condițiile se aplică cu ȘI. Contacte: tag, has_email, has_phone, created_after, created_before, email_contains, …. Instalări (push): has_install, install_push_status (subscribed|opted_out|unavailable)."
       },
       "preview": null,
       "creator": "github:JoAiHQ/warps",
@@ -1859,16 +1101,24 @@
       },
       "warp": {
         "protocol": "warp:3.0.0",
-        "name": "JoAi: Update Update",
+        "name": "JoAi: Create Segment",
         "title": {
-          "en": "Edit an update",
-          "de": "Update bearbeiten"
+          "en": "Create a segment",
+          "de": "Segment erstellen",
+          "fr": "Créer un segment",
+          "es": "Crear un segmento",
+          "it": "Crea un segmento",
+          "ro": "Creează un segment"
         },
         "description": {
-          "en": "Edit an existing deal, event, news, or article-style update for your team. Change the title, body, type, schedule, link, media, props, or publication status so connected websites and public feeds stay accurate.",
-          "de": "Bearbeite ein bestehendes Angebot, Event, News oder einen Artikel für dein Team. Ändere Titel, Text, Typ, Zeitraum, Link oder Veröffentlichungsstatus, damit verbundene Websites und öffentliche Feeds aktuell bleiben."
+          "en": "Create a saved audience segment. Conditions AND together. Contact conditions: tag, has_email, has_phone, created_after, created_before, email_contains, …. Install (push) conditions: has_install, install_push_status (subscribed|opted_out|unavailable).",
+          "de": "Erstelle ein gespeichertes Zielgruppen-Segment. Bedingungen gelten UND-verknüpft. Kontakt: tag, has_email, has_phone, created_after, created_before, email_contains, …. Installationen (Push): has_install, install_push_status (subscribed|opted_out|unavailable).",
+          "fr": "Créez un segment d'audience. Conditions en ET. Contacts : tag, has_email, has_phone, created_after, created_before, email_contains, …. Installations (push) : has_install, install_push_status (subscribed|opted_out|unavailable).",
+          "es": "Crea un segmento de audiencia. Condiciones en Y. Contactos: tag, has_email, has_phone, created_after, created_before, email_contains, …. Instalaciones (push): has_install, install_push_status (subscribed|opted_out|unavailable).",
+          "it": "Crea un segmento di pubblico. Condizioni in AND. Contatti: tag, has_email, has_phone, created_after, created_before, email_contains, …. Installazioni (push): has_install, install_push_status (subscribed|opted_out|unavailable).",
+          "ro": "Creează un segment de audiență. Condițiile se aplică cu ȘI. Contacte: tag, has_email, has_phone, created_after, created_before, email_contains, …. Instalări (push): has_install, install_push_status (subscribed|opted_out|unavailable)."
         },
-        "bot": "Use this when the user wants to edit an existing deal, event, news, or article update. If the user refers to an update by title, list updates first to find the matching ID. Optional props replaces the entire props bag when provided.",
+        "bot": "Build reusable audiences. Pass conditions as [{\"type\":\"tag\",\"value\":\"vip\"}]. For push campaigns targeting all subscribed devices (including anonymous), use install-only conditions: [{\"type\":\"has_install\",\"value\":true},{\"type\":\"install_push_status\",\"value\":\"subscribed\"}]. Do not mix install-only conditions with contact tag filters if you want anonymous installs included.",
         "vars": {
           "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
           "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
@@ -1878,12 +1128,16 @@
           {
             "type": "collect",
             "label": {
-              "en": "Edit update",
-              "de": "Update bearbeiten"
+              "en": "Create segment",
+              "de": "Segment erstellen",
+              "fr": "Créer le segment",
+              "es": "Crear el segmento",
+              "it": "Crea il segmento",
+              "ro": "Creează segmentul"
             },
             "destination": {
-              "url": "https://devnet-api.joai.ai/v1/updates/{{updateId}}",
-              "method": "PATCH",
+              "url": "https://devnet-api.joai.ai/v1/segments",
+              "method": "POST",
               "headers": {
                 "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
                 "X-Team": "{{team}}"
@@ -1891,137 +1145,46 @@
             },
             "inputs": [
               {
-                "name": "Update ID",
-                "as": "updateId",
+                "name": "Name",
+                "as": "name",
                 "description": {
-                  "en": "The ID of the update to edit",
-                  "de": "Die ID des Updates, das bearbeitet werden soll"
-                },
-                "type": "string",
-                "position": "url:updateId",
-                "source": "field",
-                "required": true,
-                "min": 1
-              },
-              {
-                "name": "Title",
-                "as": "title",
-                "description": {
-                  "en": "Updated headline",
-                  "de": "Aktualisierte Überschrift"
+                  "en": "Segment name",
+                  "de": "Segmentname",
+                  "fr": "Nom du segment",
+                  "es": "Nombre del segmento",
+                  "it": "Nome del segmento",
+                  "ro": "Numele segmentului"
                 },
                 "type": "string",
                 "source": "field",
-                "required": false
+                "required": true
               },
               {
-                "name": "Type",
-                "as": "type",
+                "name": "Conditions",
+                "as": "conditions",
                 "description": {
-                  "en": "Updated type.",
-                  "de": "Aktualisierter Typ."
+                  "en": "Conditions — all must match. Array of objects",
+                  "de": "Bedingungen — alle müssen zutreffen. Array von Objekten",
+                  "fr": "Conditions — toutes doivent correspondre. Tableau d'objets",
+                  "es": "Condiciones — todas deben cumplirse. Matriz de objetos",
+                  "it": "Condizioni — tutte devono corrispondere. Array di oggetti",
+                  "ro": "Condiții — toate trebuie să se potrivească. Matrice de obiecte"
                 },
-                "type": "string",
-                "source": "field",
-                "required": false,
-                "options": {
-                  "deal": "Deal",
-                  "event": "Event",
-                  "news": "News",
-                  "article": "Article"
-                }
-              },
-              {
-                "name": "Body",
-                "as": "body",
-                "description": {
-                  "en": "Updated description or announcement body",
-                  "de": "Aktualisierte Beschreibung oder Nachricht"
-                },
-                "type": "string",
-                "source": "field",
-                "required": false
-              },
-              {
-                "name": "Starts At",
-                "as": "startsAt",
-                "description": {
-                  "en": "When the update becomes active (ISO 8601 with Z or offset, e.g. 2026-10-09T14:00:00+02:00, optional)",
-                  "de": "Wann das Update aktiv wird (ISO 8601 mit Z oder Offset, z. B. 2026-10-09T14:00:00+02:00, optional)"
-                },
-                "type": "string",
-                "source": "field",
-                "required": false,
-                "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}(:\\d{2}(\\.\\d+)?)?(Z|[+-]\\d{2}:\\d{2})$"
-              },
-              {
-                "name": "Ends At",
-                "as": "endsAt",
-                "description": {
-                  "en": "When the update expires (ISO 8601 with Z or offset, e.g. 2026-10-09T16:00:00+02:00, optional)",
-                  "de": "Wann das Update abläuft (ISO 8601 mit Z oder Offset, z. B. 2026-10-09T16:00:00+02:00, optional)"
-                },
-                "type": "string",
-                "source": "field",
-                "required": false,
-                "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}(:\\d{2}(\\.\\d+)?)?(Z|[+-]\\d{2}:\\d{2})$"
-              },
-              {
-                "name": "Status",
-                "as": "status",
-                "description": {
-                  "en": "Updated publication status",
-                  "de": "Aktualisierter Veröffentlichungsstatus"
-                },
-                "type": "string",
-                "source": "field",
-                "required": false,
-                "options": {
-                  "draft": "Draft",
-                  "published": "Published",
-                  "archived": "Archived"
-                }
-              },
-              {
-                "name": "Link URL",
-                "as": "linkUrl",
-                "description": {
-                  "en": "URL to link from the update",
-                  "de": "URL, auf die das Update verlinkt"
-                },
-                "type": "string",
-                "source": "field",
-                "required": false
-              },
-              {
-                "name": "Media",
-                "as": "media",
-                "description": {
-                  "en": "Replace attached media (JSON array of team media IDs)",
-                  "de": "Angehängte Medien ersetzen (JSON-Array von Media-IDs)"
-                },
+                "bot": "Examples: [{\"type\":\"tag\",\"value\":\"vip\"}] or push [{\"type\":\"has_install\",\"value\":true},{\"type\":\"install_push_status\",\"value\":\"subscribed\"}].",
                 "type": "json",
                 "source": "field",
-                "required": false
-              },
-              {
-                "name": "Props",
-                "as": "props",
-                "description": {
-                  "en": "Replace custom key/value properties as a JSON object (e.g. {\"top-news\":\"true\"}). Omitting leaves existing props unchanged; empty object clears them.",
-                  "de": "Ersetzt benutzerdefinierte Eigenschaften als JSON-Objekt (z. B. {\"top-news\":\"true\"}). Weglassen lässt bestehende Props unverändert; leeres Objekt löscht sie."
-                },
-                "bot": "Optional. When provided, replaces the entire props bag. For city-directory top news use {\"top-news\":\"true\"}; to remove it omit the key or set {\"top-news\":\"false\"}.",
-                "type": "json",
-                "source": "field",
-                "required": false
+                "required": true
               },
               {
                 "name": "Team",
                 "as": "team",
                 "description": {
                   "en": "Team slug for this action. Defaults to the current team.",
-                  "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team."
+                  "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team.",
+                  "fr": "Slug d'équipe pour cette action. Par défaut l'équipe actuelle.",
+                  "es": "Slug del equipo para esta acción. Por defecto el equipo actual.",
+                  "it": "Slug del team per questa azione. Predefinito: team attuale.",
+                  "ro": "Slug-ul echipei pentru această acțiune. Implicit echipa curentă."
                 },
                 "bot": "The slug of the team to operate on. Omit to use the current team.",
                 "type": "string",
@@ -2032,74 +1195,83 @@
             ],
             "output": {
               "id": "out.data.id",
-              "title": "out.data.title",
-              "type": "out.data.type",
-              "status": "out.data.status"
+              "name": "out.data.name",
+              "count": "out.data.count"
             }
           }
         ],
         "output": {
-          "UPDATE_ID": "out.1.id",
-          "UPDATE_TITLE": "out.1.title"
+          "SEGMENT_ID": "out.1.id",
+          "SEGMENT_NAME": "out.1.name",
+          "SEGMENT_COUNT": "out.1.count"
         },
         "messages": {
           "success": {
-            "en": "Update '{{UPDATE_TITLE}}' edited.",
-            "de": "Update '{{UPDATE_TITLE}}' bearbeitet."
+            "en": "Segment '{{SEGMENT_NAME}}' created with {{SEGMENT_COUNT}} matches.",
+            "de": "Segment '{{SEGMENT_NAME}}' mit {{SEGMENT_COUNT}} Treffern erstellt.",
+            "fr": "Segment « {{SEGMENT_NAME}} » créé avec {{SEGMENT_COUNT}} correspondances.",
+            "es": "Segmento « {{SEGMENT_NAME}} » creado con {{SEGMENT_COUNT}} coincidencias.",
+            "it": "Segmento « {{SEGMENT_NAME}} » creato con {{SEGMENT_COUNT}} corrispondenze.",
+            "ro": "Segmentul „{{SEGMENT_NAME}}” a fost creat cu {{SEGMENT_COUNT}} potriviri."
+          },
+          "error": {
+            "en": "Failed to create segment: {{MESSAGE}}",
+            "de": "Segment konnte nicht erstellt werden: {{MESSAGE}}",
+            "fr": "Échec de la création du segment : {{MESSAGE}}",
+            "es": "Error al crear el segmento: {{MESSAGE}}",
+            "it": "Impossibile creare il segmento: {{MESSAGE}}",
+            "ro": "Nu s-a putut crea segmentul: {{MESSAGE}}"
           }
         }
       },
       "extras": {
         "keywords": {
           "en": [
-            "edit update",
-            "update deal",
-            "edit event",
-            "change business news",
-            "edit article",
-            "announcement status"
+            "create segment",
+            "audience segment",
+            "filter contacts",
+            "contact list",
+            "build audience"
           ],
           "de": [
-            "Update bearbeiten",
-            "Angebot bearbeiten",
-            "Event bearbeiten",
-            "Betriebsnews ändern",
-            "Artikel bearbeiten",
-            "Ankündigungsstatus"
+            "Segment erstellen",
+            "Zielgruppe erstellen",
+            "Kontakte filtern",
+            "Audience aufbauen"
           ]
         },
         "useCases": {
           "en": [
-            "Change the dates of an event announcement",
-            "Archive an expired deal",
-            "Correct the title or link of a news or article post"
+            "Build a reusable audience of contacts with a specific tag",
+            "Create a segment of contacts with an email address for campaigns",
+            "Save a filter for contacts created after a date"
           ],
           "de": [
-            "Den Zeitraum einer Event-Ankündigung ändern",
-            "Ein abgelaufenes Angebot archivieren",
-            "Titel oder Link einer News oder eines Artikels korrigieren"
+            "Eine wiederverwendbare Zielgruppe mit einem bestimmten Tag aufbauen",
+            "Ein Segment mit E-Mail-Adresse für Kampagnen erstellen",
+            "Einen Filter für Kontakte nach einem Datum speichern"
           ]
         },
         "category": "communication",
         "faq": {
           "en": [
             {
-              "question": "Can I change the type of an update?",
-              "answer": "Yes. Existing posts can be changed between deal, event, news, and article when needed."
+              "question": "What conditions can I use?",
+              "answer": "Tag, has email, has phone, created before/after a date, and email contains."
             },
             {
-              "question": "Can I unpublish an update?",
-              "answer": "Yes. Set its status to draft or archived depending on whether it should be hidden or retired."
+              "question": "Do all conditions need to match?",
+              "answer": "Yes. Contacts must satisfy every condition to be included in the segment."
             }
           ],
           "de": [
             {
-              "question": "Kann ich den Typ eines Updates ändern?",
-              "answer": "Ja. Bestehende Beiträge können bei Bedarf zwischen deal, event, news und article wechseln."
+              "question": "Welche Bedingungen gibt es?",
+              "answer": "Tag, hat E-Mail, hat Telefon, erstellt vor/nach einem Datum und E-Mail enthält."
             },
             {
-              "question": "Kann ich ein Update ausblenden?",
-              "answer": "Ja. Setze den Status auf draft oder archived, je nachdem ob es versteckt oder endgültig erledigt ist."
+              "question": "Müssen alle Bedingungen zutreffen?",
+              "answer": "Ja. Kontakte müssen jede Bedingung erfüllen, um ins Segment zu kommen."
             }
           ]
         }
