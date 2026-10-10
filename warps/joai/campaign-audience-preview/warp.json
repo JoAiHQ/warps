@@ -6,10 +6,10 @@
     "de": "Kampagnen-Zielgruppe prüfen"
   },
   "description": {
-    "en": "Preview how many contacts are sendable vs skipped for a campaign or audience (pending consent, opted out, missing channel, approval skipped).",
-    "de": "Prüfe, wie viele Kontakte für eine Kampagne oder Zielgruppe sendbar vs. übersprungen sind (Einwilligung ausstehend, Opt-out, fehlender Kanal, Freigabe übersprungen)."
+    "en": "Preview how many recipients are sendable vs skipped for a campaign or audience (contacts or push installs).",
+    "de": "Prüfe, wie viele Empfänger für eine Kampagne oder Zielgruppe sendbar vs. übersprungen sind (Kontakte oder Push-Installationen)."
   },
-  "bot": "Call this BEFORE send_campaign. Pass campaignId for an existing draft, or channel plus segmentId/tags/contactIds to preview an audience before creating. Use the counts to confirm sendable recipients and explain skips.",
+  "bot": "Call BEFORE send_campaign. Pass campaignId for a draft, or channel plus segmentId/tags/contactIds/installIds. For push with no targeting, previews all subscribed installs.",
   "vars": {
     "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
     "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
@@ -23,7 +23,7 @@
         "de": "Zielgruppe prüfen"
       },
       "destination": {
-        "url": "INJECT:API_BASE/v1/campaigns/audience-preview?campaignId={{campaignId}}&channel={{channel}}&segmentId={{segmentId}}&tags={{tags}}&contactIds={{contactIds}}",
+        "url": "INJECT:API_BASE/v1/campaigns/audience-preview?campaignId={{campaignId}}&channel={{channel}}&segmentId={{segmentId}}&tags={{tags}}&contactIds={{contactIds}}&installIds={{installIds}}",
         "method": "GET",
         "headers": {
           "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
@@ -97,6 +97,19 @@
             "en": "Comma-separated contact hashids to preview",
             "de": "Kommagetrennte Kontakt-Hashids"
           }
+        },
+        {
+          "name": "Install IDs",
+          "as": "installIds",
+          "type": "string",
+          "position": "query",
+          "source": "field",
+          "required": false,
+          "description": {
+            "en": "Push only: comma-separated install hashids to preview",
+            "de": "Nur Push: kommagetrennte Installations-Hashids"
+          },
+          "bot": "Use with channel=push when previewing specific devices from List Installs."
         },
         {
           "name": "Team",

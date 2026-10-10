@@ -10,14 +10,14 @@
     "ro": "Creează o campanie"
   },
   "description": {
-    "en": "Create a marketing campaign to send messages to your contacts via email, WhatsApp, or SMS. Target a saved segment, contacts with specific tags, or specific contacts by ID. The campaign is created as a draft — use Send Campaign to start delivery.",
-    "de": "Erstelle eine Marketing-Kampagne, um Nachrichten per E-Mail, WhatsApp oder SMS an deine Kontakte zu senden. Zielgruppen: gespeichertes Segment, Kontakte mit bestimmten Tags oder bestimmte Kontakte per ID. Die Kampagne wird als Entwurf erstellt – verwende Kampagne senden, um den Versand zu starten.",
-    "fr": "Créez une campagne marketing pour envoyer des messages à vos contacts par e-mail, WhatsApp ou SMS. Ciblez un segment enregistré, des contacts avec des tags spécifiques ou des contacts spécifiques par ID. La campagne est créée comme brouillon — utilisez Envoyer la campagne pour lancer l'envoi.",
-    "es": "Crea una campaña de marketing para enviar mensajes a tus contactos por correo electrónico, WhatsApp o SMS. Dirígete a un segmento guardado, contactos con etiquetas específicas o contactos específicos por ID. La campaña se crea como borrador — usa Enviar campaña para iniciar el envío.",
-    "it": "Crea una campagna di marketing per inviare messaggi ai tuoi contatti via email, WhatsApp o SMS. Scegli come destinatario un segmento salvato, contatti con tag specifici o contatti specifici per ID. La campagna viene creata come bozza — usa Invia campagna per avviare l'invio.",
-    "ro": "Creează o campanie de marketing pentru a trimite mesaje contactelor tale prin email, WhatsApp sau SMS. Țintește un segment salvat, contacte cu anumite taguri sau contacte specifice după ID. Campania este creată ca schiță — folosește Trimite campanie pentru a începe livrarea."
+    "en": "Create a marketing campaign via email, WhatsApp, SMS, or push. Target a saved segment, tags, specific contacts, or (for push) specific app installs. Draft only — use Send Campaign to deliver or schedule.",
+    "de": "Erstelle eine Marketing-Kampagne per E-Mail, WhatsApp, SMS oder Push. Zielgruppe: Segment, Tags, bestimmte Kontakte oder (bei Push) bestimmte App-Installationen. Nur Entwurf — Versand/Planung über Kampagne senden.",
+    "fr": "Créez une campagne marketing par e-mail, WhatsApp, SMS ou push. Ciblez un segment, des tags, des contacts, ou (pour le push) des installations d'app. Brouillon uniquement — utilisez Envoyer la campagne pour livrer ou planifier.",
+    "es": "Crea una campaña de marketing por email, WhatsApp, SMS o push. Dirígete a un segmento, etiquetas, contactos o (para push) instalaciones de app. Solo borrador — usa Enviar campaña para entregar o programar.",
+    "it": "Crea una campagna di marketing via email, WhatsApp, SMS o push. Destinatari: segmento, tag, contatti o (per push) installazioni app. Solo bozza — usa Invia campagna per inviare o programmare.",
+    "ro": "Creează o campanie de marketing prin email, WhatsApp, SMS sau push. Țintește un segment, taguri, contacte sau (pentru push) instalări de app. Doar schiță — folosește Trimite campanie pentru livrare sau programare."
   },
-  "bot": "Use when the user wants to create a campaign to reach a group of contacts. Collect the message channel, content, and audience (segment, tags, or specific contacts). If content uses {{placeholders}}, always set templateParams and/or aiParams for each one — otherwise those slots stay empty on send. Prefer contact.* paths for personalization (e.g. {\"name\":\"contact.name\"}). For AI-filled slots use aiParams prompts plus agentId (not supported on WhatsApp). For WhatsApp also set language and category.",
+  "bot": "Use when creating a campaign. Collect channel, content, and audience. For push: omit audience to target all subscribed installs, or pass segmentId / installIds / contactIds (contacts resolve to their installs). List installs first if picking devices. Prefer segmentId for reusable push audiences (e.g. has_install + install_push_status subscribed). If content uses {{placeholders}}, set templateParams and/or aiParams. For WhatsApp set language and category.",
   "vars": {
     "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
     "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
@@ -150,7 +150,24 @@
             "it": "Segmento salvato (hashid) da contattare",
             "ro": "Segment salvat (hashid) de țintit"
           },
+          "bot": "Preferred for reusable audiences. For push install audiences use conditions like [{\"type\":\"has_install\",\"value\":true},{\"type\":\"install_push_status\",\"value\":\"subscribed\"}]. When set, tags/contactIds/installIds are ignored.",
           "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Install IDs",
+          "as": "installIds",
+          "description": {
+            "en": "Push only: specific install hashids (devices) to target",
+            "de": "Nur Push: bestimmte Installations-Hashids (Geräte) als Zielgruppe",
+            "fr": "Push uniquement : hashids d'installations (appareils) à cibler",
+            "es": "Solo push: hashids de instalaciones (dispositivos) a los que dirigirse",
+            "it": "Solo push: hashid di installazioni (dispositivi) da contattare",
+            "ro": "Doar push: hashid-uri de instalări (dispozitive) de țintit"
+          },
+          "bot": "Use for push when targeting specific devices. Get IDs from List Installs. Ignored when segmentId is set. Omit with channel=push to target all subscribed installs.",
+          "type": "json",
           "source": "field",
           "required": false
         },
@@ -273,12 +290,12 @@
   },
   "messages": {
     "success": {
-      "en": "Campaign '{{CAMPAIGN_NAME}}' created as draft targeting {{CAMPAIGN_TOTAL}} contacts.",
-      "de": "Kampagne '{{CAMPAIGN_NAME}}' als Entwurf erstellt, Zielgruppe: {{CAMPAIGN_TOTAL}} Kontakte.",
-      "fr": "Campagne « {{CAMPAIGN_NAME}} » créée comme brouillon ciblant {{CAMPAIGN_TOTAL}} contacts.",
-      "es": "Campaña « {{CAMPAIGN_NAME}} » creada como borrador con {{CAMPAIGN_TOTAL}} contactos.",
-      "it": "Campagna « {{CAMPAIGN_NAME}} » creata come bozza con {{CAMPAIGN_TOTAL}} contatti.",
-      "ro": "Campania „{{CAMPAIGN_NAME}}” a fost creată ca schiță țintind {{CAMPAIGN_TOTAL}} contacte."
+      "en": "Campaign '{{CAMPAIGN_NAME}}' created as draft targeting {{CAMPAIGN_TOTAL}} recipients.",
+      "de": "Kampagne '{{CAMPAIGN_NAME}}' als Entwurf erstellt, Zielgruppe: {{CAMPAIGN_TOTAL}} Empfänger.",
+      "fr": "Campagne « {{CAMPAIGN_NAME}} » créée comme brouillon ciblant {{CAMPAIGN_TOTAL}} destinataires.",
+      "es": "Campaña « {{CAMPAIGN_NAME}} » creada como borrador con {{CAMPAIGN_TOTAL}} destinatarios.",
+      "it": "Campagna « {{CAMPAIGN_NAME}} » creata come bozza con {{CAMPAIGN_TOTAL}} destinatari.",
+      "ro": "Campania „{{CAMPAIGN_NAME}}” a fost creată ca schiță țintind {{CAMPAIGN_TOTAL}} destinatari."
     },
     "error": {
       "en": "Failed to create campaign: {{MESSAGE}}",

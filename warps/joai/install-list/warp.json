@@ -1,0 +1,124 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: List Installs",
+  "title": {
+    "en": "List app installs",
+    "de": "App-Installationen anzeigen",
+    "fr": "Lister les installations",
+    "es": "Listar instalaciones",
+    "it": "Elenca installazioni",
+    "ro": "Listează instalările"
+  },
+  "description": {
+    "en": "List device installs for push campaigns (including anonymous). Filter by push status and search name, email, platform, or provider ref.",
+    "de": "Liste Geräte-Installationen für Push-Kampagnen (inkl. anonym). Filter nach Push-Status und Suche nach Name, E-Mail, Plattform oder Provider-Ref.",
+    "fr": "Liste les installations d'appareils pour les campagnes push (y compris anonymes). Filtrez par statut push et recherchez nom, e-mail, plateforme ou réf. fournisseur.",
+    "es": "Lista instalaciones de dispositivos para campañas push (incluidas anónimas). Filtra por estado push y busca nombre, email, plataforma o ref. de proveedor.",
+    "it": "Elenca le installazioni dispositivo per campagne push (anche anonime). Filtra per stato push e cerca nome, email, piattaforma o ref. provider.",
+    "ro": "Listează instalările de dispozitive pentru campanii push (inclusiv anonime). Filtrează după status push și caută nume, email, platformă sau ref. provider."
+  },
+  "bot": "Use before creating a push campaign when you need install hashids, or to check who is subscribed. Prefer pushStatus=subscribed for sendable devices. Pass returned id values as installIds to Create Campaign.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "output": {
+    "installs": "out",
+    "installsList": "out.data",
+    "installsCount": "out.data.length"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "auto": true,
+      "label": {
+        "en": "List installs",
+        "de": "Installationen anzeigen",
+        "fr": "Lister les installations",
+        "es": "Listar instalaciones",
+        "it": "Elenca installazioni",
+        "ro": "Listează instalările"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/installs?pushStatus={{pushStatus}}&q={{q}}&perPage={{perPage}}&page={{page}}",
+        "method": "GET",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Push status",
+          "as": "pushStatus",
+          "type": "string",
+          "position": "query",
+          "source": "field",
+          "required": false,
+          "options": {
+            "subscribed": "Subscribed",
+            "opted_out": "Opted out",
+            "unavailable": "Unavailable"
+          },
+          "description": {
+            "en": "Filter by push subscription status",
+            "de": "Nach Push-Abonnementstatus filtern"
+          },
+          "bot": "Pass subscribed to list sendable installs for push campaigns."
+        },
+        {
+          "name": "Search",
+          "as": "q",
+          "type": "string",
+          "position": "query",
+          "source": "field",
+          "required": false,
+          "description": {
+            "en": "Search by contact name/email, platform (ios|android|web), bundle id, or provider ref",
+            "de": "Suche nach Kontaktname/E-Mail, Plattform (ios|android|web), Bundle-ID oder Provider-Ref"
+          }
+        },
+        {
+          "name": "Per page",
+          "as": "perPage",
+          "type": "string",
+          "position": "query",
+          "source": "field",
+          "required": false,
+          "default": "50",
+          "description": {
+            "en": "Page size (max 250)",
+            "de": "Seitengröße (max. 250)"
+          }
+        },
+        {
+          "name": "Page",
+          "as": "page",
+          "type": "string",
+          "position": "query",
+          "source": "field",
+          "required": false,
+          "default": "1",
+          "description": {
+            "en": "Page number",
+            "de": "Seitennummer"
+          }
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}",
+          "description": {
+            "en": "Team slug for this action. Defaults to the current team.",
+            "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team."
+          },
+          "bot": "The slug of the team to operate on. Omit to use the current team."
+        }
+      ]
+    }
+  ]
+}

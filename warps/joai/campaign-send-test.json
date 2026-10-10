@@ -1,0 +1,117 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Send Campaign Test",
+  "title": {
+    "en": "Send a campaign test",
+    "de": "Kampagnen-Test senden",
+    "fr": "Envoyer un test de campagne",
+    "es": "Enviar prueba de campaña",
+    "it": "Invia test campagna",
+    "ro": "Trimite test campanie"
+  },
+  "description": {
+    "en": "Send a test of an existing draft campaign to one contact (email) or one install (push) without attaching them to the campaign audience.",
+    "de": "Sende einen Test einer bestehenden Entwurfskampagne an einen Kontakt (E-Mail) oder eine Installation (Push), ohne sie der Zielgruppe hinzuzufügen.",
+    "fr": "Envoyez un test d'une campagne brouillon à un contact (e-mail) ou une installation (push) sans les ajouter à l'audience.",
+    "es": "Envía una prueba de una campaña borrador a un contacto (email) o una instalación (push) sin añadirlos a la audiencia.",
+    "it": "Invia un test di una campagna bozza a un contatto (email) o un'installazione (push) senza aggiungerli al pubblico.",
+    "ro": "Trimite un test al unei campanii schiță către un contact (email) sau o instalare (push), fără a-i adăuga în audiență."
+  },
+  "bot": "Use to smoke-test a draft before send. For email pass contactId; for push pass installId (from List Installs). Exactly one of contactId or installId is required.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Send test",
+        "de": "Test senden",
+        "fr": "Envoyer le test",
+        "es": "Enviar prueba",
+        "it": "Invia test",
+        "ro": "Trimite test"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/campaigns/{{campaign_id}}/send-test",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Campaign ID",
+          "as": "campaign_id",
+          "description": {
+            "en": "Hashid of the draft campaign to test",
+            "de": "Hashid der zu testenden Entwurfskampagne"
+          },
+          "type": "string",
+          "position": "url:campaign_id",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Contact ID",
+          "as": "contactId",
+          "description": {
+            "en": "Contact hashid for email tests",
+            "de": "Kontakt-Hashid für E-Mail-Tests"
+          },
+          "bot": "Required for email channel tests (contact must have an email).",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:contactId"
+        },
+        {
+          "name": "Install ID",
+          "as": "installId",
+          "description": {
+            "en": "Install hashid for push tests",
+            "de": "Installations-Hashid für Push-Tests"
+          },
+          "bot": "Required for push channel tests. Get from List Installs (subscribed).",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:installId"
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug. Defaults to the current team.",
+            "de": "Team-Slug. Standardmäßig das aktuelle Team."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Test sent.",
+      "de": "Test gesendet.",
+      "fr": "Test envoyé.",
+      "es": "Prueba enviada.",
+      "it": "Test inviato.",
+      "ro": "Test trimis."
+    },
+    "error": {
+      "en": "Failed to send test: {{MESSAGE}}",
+      "de": "Test konnte nicht gesendet werden: {{MESSAGE}}",
+      "fr": "Échec de l'envoi du test : {{MESSAGE}}",
+      "es": "Error al enviar la prueba: {{MESSAGE}}",
+      "it": "Impossibile inviare il test: {{MESSAGE}}",
+      "ro": "Nu s-a putut trimite testul: {{MESSAGE}}"
+    }
+  }
+}

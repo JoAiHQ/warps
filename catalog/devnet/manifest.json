@@ -4,8 +4,8 @@
   "repo": "JoAiHQ/warps",
   "branch": "dev",
   "network": "devnet",
-  "commitSha": "08f4ede66c31432fc1f11643283fbc7f9feaa222",
-  "generatedAt": "2026-10-09T14:00:20.587Z",
+  "commitSha": "69b0f2eeff66a99ac49b7b93bc2b9a3b2343a5d1",
+  "generatedAt": "2026-10-10T13:57:10.655Z",
   "warps": [
     {
       "key": "arbitrum:omniset-deposit-arbitrum",
@@ -74174,16 +74174,16 @@
       "identifier": "@joai-campaign-audience-preview",
       "alias": "joai-campaign-audience-preview",
       "chain": "none",
-      "hash": "bf841a7656cba4a3fe1576c55d9adfae41b4e27298b9b6c33c9b8418eb7c4a02",
-      "checksum": "bf841a7656cba4a3fe1576c55d9adfae41b4e27298b9b6c33c9b8418eb7c4a02",
+      "hash": "3412671822a282195fd77b871a2e9cdfa23b7eaab0a1104c70bdc75f43086271",
+      "checksum": "3412671822a282195fd77b871a2e9cdfa23b7eaab0a1104c70bdc75f43086271",
       "name": "JoAi: Campaign Audience Preview",
       "title": {
         "en": "Preview campaign audience",
         "de": "Kampagnen-Zielgruppe prüfen"
       },
       "description": {
-        "en": "Preview how many contacts are sendable vs skipped for a campaign or audience (pending consent, opted out, missing channel, approval skipped).",
-        "de": "Prüfe, wie viele Kontakte für eine Kampagne oder Zielgruppe sendbar vs. übersprungen sind (Einwilligung ausstehend, Opt-out, fehlender Kanal, Freigabe übersprungen)."
+        "en": "Preview how many recipients are sendable vs skipped for a campaign or audience (contacts or push installs).",
+        "de": "Prüfe, wie viele Empfänger für eine Kampagne oder Zielgruppe sendbar vs. übersprungen sind (Kontakte oder Push-Installationen)."
       },
       "preview": null,
       "creator": "github:JoAiHQ/warps",
@@ -74224,10 +74224,10 @@
           "de": "Kampagnen-Zielgruppe prüfen"
         },
         "description": {
-          "en": "Preview how many contacts are sendable vs skipped for a campaign or audience (pending consent, opted out, missing channel, approval skipped).",
-          "de": "Prüfe, wie viele Kontakte für eine Kampagne oder Zielgruppe sendbar vs. übersprungen sind (Einwilligung ausstehend, Opt-out, fehlender Kanal, Freigabe übersprungen)."
+          "en": "Preview how many recipients are sendable vs skipped for a campaign or audience (contacts or push installs).",
+          "de": "Prüfe, wie viele Empfänger für eine Kampagne oder Zielgruppe sendbar vs. übersprungen sind (Kontakte oder Push-Installationen)."
         },
-        "bot": "Call this BEFORE send_campaign. Pass campaignId for an existing draft, or channel plus segmentId/tags/contactIds to preview an audience before creating. Use the counts to confirm sendable recipients and explain skips.",
+        "bot": "Call BEFORE send_campaign. Pass campaignId for a draft, or channel plus segmentId/tags/contactIds/installIds. For push with no targeting, previews all subscribed installs.",
         "vars": {
           "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
           "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
@@ -74241,7 +74241,7 @@
               "de": "Zielgruppe prüfen"
             },
             "destination": {
-              "url": "https://devnet-api.joai.ai/v1/campaigns/audience-preview?campaignId={{campaignId}}&channel={{channel}}&segmentId={{segmentId}}&tags={{tags}}&contactIds={{contactIds}}",
+              "url": "https://devnet-api.joai.ai/v1/campaigns/audience-preview?campaignId={{campaignId}}&channel={{channel}}&segmentId={{segmentId}}&tags={{tags}}&contactIds={{contactIds}}&installIds={{installIds}}",
               "method": "GET",
               "headers": {
                 "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
@@ -74315,6 +74315,19 @@
                   "en": "Comma-separated contact hashids to preview",
                   "de": "Kommagetrennte Kontakt-Hashids"
                 }
+              },
+              {
+                "name": "Install IDs",
+                "as": "installIds",
+                "type": "string",
+                "position": "query",
+                "source": "field",
+                "required": false,
+                "description": {
+                  "en": "Push only: comma-separated install hashids to preview",
+                  "de": "Nur Push: kommagetrennte Installations-Hashids"
+                },
+                "bot": "Use with channel=push when previewing specific devices from List Installs."
               },
               {
                 "name": "Team",
@@ -74409,8 +74422,8 @@
       "identifier": "@joai-campaign-create",
       "alias": "joai-campaign-create",
       "chain": "none",
-      "hash": "3937b8ef7d9c5d5ec3a038d3a27f886460147b18938319a802ead1f985d23da2",
-      "checksum": "3937b8ef7d9c5d5ec3a038d3a27f886460147b18938319a802ead1f985d23da2",
+      "hash": "bef88866e7aa43a2bf134e1896beb2e60f25d2db183331ab37ddb984af30bfde",
+      "checksum": "bef88866e7aa43a2bf134e1896beb2e60f25d2db183331ab37ddb984af30bfde",
       "name": "JoAi: Create Campaign",
       "title": {
         "en": "Create a campaign",
@@ -74421,12 +74434,12 @@
         "ro": "Creează o campanie"
       },
       "description": {
-        "en": "Create a marketing campaign to send messages to your contacts via email, WhatsApp, or SMS. Target a saved segment, contacts with specific tags, or specific contacts by ID. The campaign is created as a draft — use Send Campaign to start delivery.",
-        "de": "Erstelle eine Marketing-Kampagne, um Nachrichten per E-Mail, WhatsApp oder SMS an deine Kontakte zu senden. Zielgruppen: gespeichertes Segment, Kontakte mit bestimmten Tags oder bestimmte Kontakte per ID. Die Kampagne wird als Entwurf erstellt – verwende Kampagne senden, um den Versand zu starten.",
-        "fr": "Créez une campagne marketing pour envoyer des messages à vos contacts par e-mail, WhatsApp ou SMS. Ciblez un segment enregistré, des contacts avec des tags spécifiques ou des contacts spécifiques par ID. La campagne est créée comme brouillon — utilisez Envoyer la campagne pour lancer l'envoi.",
-        "es": "Crea una campaña de marketing para enviar mensajes a tus contactos por correo electrónico, WhatsApp o SMS. Dirígete a un segmento guardado, contactos con etiquetas específicas o contactos específicos por ID. La campaña se crea como borrador — usa Enviar campaña para iniciar el envío.",
-        "it": "Crea una campagna di marketing per inviare messaggi ai tuoi contatti via email, WhatsApp o SMS. Scegli come destinatario un segmento salvato, contatti con tag specifici o contatti specifici per ID. La campagna viene creata come bozza — usa Invia campagna per avviare l'invio.",
-        "ro": "Creează o campanie de marketing pentru a trimite mesaje contactelor tale prin email, WhatsApp sau SMS. Țintește un segment salvat, contacte cu anumite taguri sau contacte specifice după ID. Campania este creată ca schiță — folosește Trimite campanie pentru a începe livrarea."
+        "en": "Create a marketing campaign via email, WhatsApp, SMS, or push. Target a saved segment, tags, specific contacts, or (for push) specific app installs. Draft only — use Send Campaign to deliver or schedule.",
+        "de": "Erstelle eine Marketing-Kampagne per E-Mail, WhatsApp, SMS oder Push. Zielgruppe: Segment, Tags, bestimmte Kontakte oder (bei Push) bestimmte App-Installationen. Nur Entwurf — Versand/Planung über Kampagne senden.",
+        "fr": "Créez une campagne marketing par e-mail, WhatsApp, SMS ou push. Ciblez un segment, des tags, des contacts, ou (pour le push) des installations d'app. Brouillon uniquement — utilisez Envoyer la campagne pour livrer ou planifier.",
+        "es": "Crea una campaña de marketing por email, WhatsApp, SMS o push. Dirígete a un segmento, etiquetas, contactos o (para push) instalaciones de app. Solo borrador — usa Enviar campaña para entregar o programar.",
+        "it": "Crea una campagna di marketing via email, WhatsApp, SMS o push. Destinatari: segmento, tag, contatti o (per push) installazioni app. Solo bozza — usa Invia campagna per inviare o programmare.",
+        "ro": "Creează o campanie de marketing prin email, WhatsApp, SMS sau push. Țintește un segment, taguri, contacte sau (pentru push) instalări de app. Doar schiță — folosește Trimite campanie pentru livrare sau programare."
       },
       "preview": null,
       "creator": "github:JoAiHQ/warps",
@@ -74471,14 +74484,14 @@
           "ro": "Creează o campanie"
         },
         "description": {
-          "en": "Create a marketing campaign to send messages to your contacts via email, WhatsApp, or SMS. Target a saved segment, contacts with specific tags, or specific contacts by ID. The campaign is created as a draft — use Send Campaign to start delivery.",
-          "de": "Erstelle eine Marketing-Kampagne, um Nachrichten per E-Mail, WhatsApp oder SMS an deine Kontakte zu senden. Zielgruppen: gespeichertes Segment, Kontakte mit bestimmten Tags oder bestimmte Kontakte per ID. Die Kampagne wird als Entwurf erstellt – verwende Kampagne senden, um den Versand zu starten.",
-          "fr": "Créez une campagne marketing pour envoyer des messages à vos contacts par e-mail, WhatsApp ou SMS. Ciblez un segment enregistré, des contacts avec des tags spécifiques ou des contacts spécifiques par ID. La campagne est créée comme brouillon — utilisez Envoyer la campagne pour lancer l'envoi.",
-          "es": "Crea una campaña de marketing para enviar mensajes a tus contactos por correo electrónico, WhatsApp o SMS. Dirígete a un segmento guardado, contactos con etiquetas específicas o contactos específicos por ID. La campaña se crea como borrador — usa Enviar campaña para iniciar el envío.",
-          "it": "Crea una campagna di marketing per inviare messaggi ai tuoi contatti via email, WhatsApp o SMS. Scegli come destinatario un segmento salvato, contatti con tag specifici o contatti specifici per ID. La campagna viene creata come bozza — usa Invia campagna per avviare l'invio.",
-          "ro": "Creează o campanie de marketing pentru a trimite mesaje contactelor tale prin email, WhatsApp sau SMS. Țintește un segment salvat, contacte cu anumite taguri sau contacte specifice după ID. Campania este creată ca schiță — folosește Trimite campanie pentru a începe livrarea."
+          "en": "Create a marketing campaign via email, WhatsApp, SMS, or push. Target a saved segment, tags, specific contacts, or (for push) specific app installs. Draft only — use Send Campaign to deliver or schedule.",
+          "de": "Erstelle eine Marketing-Kampagne per E-Mail, WhatsApp, SMS oder Push. Zielgruppe: Segment, Tags, bestimmte Kontakte oder (bei Push) bestimmte App-Installationen. Nur Entwurf — Versand/Planung über Kampagne senden.",
+          "fr": "Créez une campagne marketing par e-mail, WhatsApp, SMS ou push. Ciblez un segment, des tags, des contacts, ou (pour le push) des installations d'app. Brouillon uniquement — utilisez Envoyer la campagne pour livrer ou planifier.",
+          "es": "Crea una campaña de marketing por email, WhatsApp, SMS o push. Dirígete a un segmento, etiquetas, contactos o (para push) instalaciones de app. Solo borrador — usa Enviar campaña para entregar o programar.",
+          "it": "Crea una campagna di marketing via email, WhatsApp, SMS o push. Destinatari: segmento, tag, contatti o (per push) installazioni app. Solo bozza — usa Invia campagna per inviare o programmare.",
+          "ro": "Creează o campanie de marketing prin email, WhatsApp, SMS sau push. Țintește un segment, taguri, contacte sau (pentru push) instalări de app. Doar schiță — folosește Trimite campanie pentru livrare sau programare."
         },
-        "bot": "Use when the user wants to create a campaign to reach a group of contacts. Collect the message channel, content, and audience (segment, tags, or specific contacts). If content uses {{placeholders}}, always set templateParams and/or aiParams for each one — otherwise those slots stay empty on send. Prefer contact.* paths for personalization (e.g. {\"name\":\"contact.name\"}). For AI-filled slots use aiParams prompts plus agentId (not supported on WhatsApp). For WhatsApp also set language and category.",
+        "bot": "Use when creating a campaign. Collect channel, content, and audience. For push: omit audience to target all subscribed installs, or pass segmentId / installIds / contactIds (contacts resolve to their installs). List installs first if picking devices. Prefer segmentId for reusable push audiences (e.g. has_install + install_push_status subscribed). If content uses {{placeholders}}, set templateParams and/or aiParams. For WhatsApp set language and category.",
         "vars": {
           "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
           "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
@@ -74611,7 +74624,24 @@
                   "it": "Segmento salvato (hashid) da contattare",
                   "ro": "Segment salvat (hashid) de țintit"
                 },
+                "bot": "Preferred for reusable audiences. For push install audiences use conditions like [{\"type\":\"has_install\",\"value\":true},{\"type\":\"install_push_status\",\"value\":\"subscribed\"}]. When set, tags/contactIds/installIds are ignored.",
                 "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Install IDs",
+                "as": "installIds",
+                "description": {
+                  "en": "Push only: specific install hashids (devices) to target",
+                  "de": "Nur Push: bestimmte Installations-Hashids (Geräte) als Zielgruppe",
+                  "fr": "Push uniquement : hashids d'installations (appareils) à cibler",
+                  "es": "Solo push: hashids de instalaciones (dispositivos) a los que dirigirse",
+                  "it": "Solo push: hashid di installazioni (dispositivi) da contattare",
+                  "ro": "Doar push: hashid-uri de instalări (dispozitive) de țintit"
+                },
+                "bot": "Use for push when targeting specific devices. Get IDs from List Installs. Ignored when segmentId is set. Omit with channel=push to target all subscribed installs.",
+                "type": "json",
                 "source": "field",
                 "required": false
               },
@@ -74734,12 +74764,12 @@
         },
         "messages": {
           "success": {
-            "en": "Campaign '{{CAMPAIGN_NAME}}' created as draft targeting {{CAMPAIGN_TOTAL}} contacts.",
-            "de": "Kampagne '{{CAMPAIGN_NAME}}' als Entwurf erstellt, Zielgruppe: {{CAMPAIGN_TOTAL}} Kontakte.",
-            "fr": "Campagne « {{CAMPAIGN_NAME}} » créée comme brouillon ciblant {{CAMPAIGN_TOTAL}} contacts.",
-            "es": "Campaña « {{CAMPAIGN_NAME}} » creada como borrador con {{CAMPAIGN_TOTAL}} contactos.",
-            "it": "Campagna « {{CAMPAIGN_NAME}} » creata come bozza con {{CAMPAIGN_TOTAL}} contatti.",
-            "ro": "Campania „{{CAMPAIGN_NAME}}” a fost creată ca schiță țintind {{CAMPAIGN_TOTAL}} contacte."
+            "en": "Campaign '{{CAMPAIGN_NAME}}' created as draft targeting {{CAMPAIGN_TOTAL}} recipients.",
+            "de": "Kampagne '{{CAMPAIGN_NAME}}' als Entwurf erstellt, Zielgruppe: {{CAMPAIGN_TOTAL}} Empfänger.",
+            "fr": "Campagne « {{CAMPAIGN_NAME}} » créée comme brouillon ciblant {{CAMPAIGN_TOTAL}} destinataires.",
+            "es": "Campaña « {{CAMPAIGN_NAME}} » creada como borrador con {{CAMPAIGN_TOTAL}} destinatarios.",
+            "it": "Campagna « {{CAMPAIGN_NAME}} » creata come bozza con {{CAMPAIGN_TOTAL}} destinatari.",
+            "ro": "Campania „{{CAMPAIGN_NAME}}” a fost creată ca schiță țintind {{CAMPAIGN_TOTAL}} destinatari."
           },
           "error": {
             "en": "Failed to create campaign: {{MESSAGE}}",
@@ -75596,6 +75626,180 @@
           ]
         }
       }
+    },
+    {
+      "key": "none:joai-campaign-send-test",
+      "identifier": "@joai-campaign-send-test",
+      "alias": "joai-campaign-send-test",
+      "chain": "none",
+      "hash": "80125945e86e0abe1da67f51eec323f55a7a4e4cdbf23a5087086d93572c9947",
+      "checksum": "80125945e86e0abe1da67f51eec323f55a7a4e4cdbf23a5087086d93572c9947",
+      "name": "JoAi: Send Campaign Test",
+      "title": {
+        "en": "Send a campaign test",
+        "de": "Kampagnen-Test senden",
+        "fr": "Envoyer un test de campagne",
+        "es": "Enviar prueba de campaña",
+        "it": "Invia test campagna",
+        "ro": "Trimite test campanie"
+      },
+      "description": {
+        "en": "Send a test of an existing draft campaign to one contact (email) or one install (push) without attaching them to the campaign audience.",
+        "de": "Sende einen Test einer bestehenden Entwurfskampagne an einen Kontakt (E-Mail) oder eine Installation (Push), ohne sie der Zielgruppe hinzuzufügen.",
+        "fr": "Envoyez un test d'une campagne brouillon à un contact (e-mail) ou une installation (push) sans les ajouter à l'audience.",
+        "es": "Envía una prueba de una campaña borrador a un contacto (email) o una instalación (push) sin añadirlos a la audiencia.",
+        "it": "Invia un test di una campagna bozza a un contatto (email) o un'installazione (push) senza aggiungerli al pubblico.",
+        "ro": "Trimite un test al unei campanii schiță către un contact (email) sau o instalare (push), fără a-i adăuga în audiență."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: Send Campaign Test",
+        "title": {
+          "en": "Send a campaign test",
+          "de": "Kampagnen-Test senden",
+          "fr": "Envoyer un test de campagne",
+          "es": "Enviar prueba de campaña",
+          "it": "Invia test campagna",
+          "ro": "Trimite test campanie"
+        },
+        "description": {
+          "en": "Send a test of an existing draft campaign to one contact (email) or one install (push) without attaching them to the campaign audience.",
+          "de": "Sende einen Test einer bestehenden Entwurfskampagne an einen Kontakt (E-Mail) oder eine Installation (Push), ohne sie der Zielgruppe hinzuzufügen.",
+          "fr": "Envoyez un test d'une campagne brouillon à un contact (e-mail) ou une installation (push) sans les ajouter à l'audience.",
+          "es": "Envía una prueba de una campaña borrador a un contacto (email) o una instalación (push) sin añadirlos a la audiencia.",
+          "it": "Invia un test di una campagna bozza a un contatto (email) o un'installazione (push) senza aggiungerli al pubblico.",
+          "ro": "Trimite un test al unei campanii schiță către un contact (email) sau o instalare (push), fără a-i adăuga în audiență."
+        },
+        "bot": "Use to smoke-test a draft before send. For email pass contactId; for push pass installId (from List Installs). Exactly one of contactId or installId is required.",
+        "vars": {
+          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+          "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Send test",
+              "de": "Test senden",
+              "fr": "Envoyer le test",
+              "es": "Enviar prueba",
+              "it": "Invia test",
+              "ro": "Trimite test"
+            },
+            "destination": {
+              "url": "https://devnet-api.joai.ai/v1/campaigns/{{campaign_id}}/send-test",
+              "method": "POST",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+                "X-Team": "{{team}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Campaign ID",
+                "as": "campaign_id",
+                "description": {
+                  "en": "Hashid of the draft campaign to test",
+                  "de": "Hashid der zu testenden Entwurfskampagne"
+                },
+                "type": "string",
+                "position": "url:campaign_id",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Contact ID",
+                "as": "contactId",
+                "description": {
+                  "en": "Contact hashid for email tests",
+                  "de": "Kontakt-Hashid für E-Mail-Tests"
+                },
+                "bot": "Required for email channel tests (contact must have an email).",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "position": "payload:contactId"
+              },
+              {
+                "name": "Install ID",
+                "as": "installId",
+                "description": {
+                  "en": "Install hashid for push tests",
+                  "de": "Installations-Hashid für Push-Tests"
+                },
+                "bot": "Required for push channel tests. Get from List Installs (subscribed).",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "position": "payload:installId"
+              },
+              {
+                "name": "Team",
+                "as": "team",
+                "description": {
+                  "en": "Team slug. Defaults to the current team.",
+                  "de": "Team-Slug. Standardmäßig das aktuelle Team."
+                },
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "default": "{{JOAI_TEAM_SLUG}}"
+              }
+            ]
+          }
+        ],
+        "messages": {
+          "success": {
+            "en": "Test sent.",
+            "de": "Test gesendet.",
+            "fr": "Test envoyé.",
+            "es": "Prueba enviada.",
+            "it": "Test inviato.",
+            "ro": "Test trimis."
+          },
+          "error": {
+            "en": "Failed to send test: {{MESSAGE}}",
+            "de": "Test konnte nicht gesendet werden: {{MESSAGE}}",
+            "fr": "Échec de l'envoi du test : {{MESSAGE}}",
+            "es": "Error al enviar la prueba: {{MESSAGE}}",
+            "it": "Impossibile inviare il test: {{MESSAGE}}",
+            "ro": "Nu s-a putut trimite testul: {{MESSAGE}}"
+          }
+        }
+      },
+      "extras": null
     },
     {
       "key": "none:joai-campaign-stats",
@@ -89561,6 +89765,187 @@
       }
     },
     {
+      "key": "none:joai-install-list",
+      "identifier": "@joai-install-list",
+      "alias": "joai-install-list",
+      "chain": "none",
+      "hash": "9ce96a9d585d71891301be43d9eb09a25895e44b7fa00b837eed5bd960fbb53d",
+      "checksum": "9ce96a9d585d71891301be43d9eb09a25895e44b7fa00b837eed5bd960fbb53d",
+      "name": "JoAi: List Installs",
+      "title": {
+        "en": "List app installs",
+        "de": "App-Installationen anzeigen",
+        "fr": "Lister les installations",
+        "es": "Listar instalaciones",
+        "it": "Elenca installazioni",
+        "ro": "Listează instalările"
+      },
+      "description": {
+        "en": "List device installs for push campaigns (including anonymous). Filter by push status and search name, email, platform, or provider ref.",
+        "de": "Liste Geräte-Installationen für Push-Kampagnen (inkl. anonym). Filter nach Push-Status und Suche nach Name, E-Mail, Plattform oder Provider-Ref.",
+        "fr": "Liste les installations d'appareils pour les campagnes push (y compris anonymes). Filtrez par statut push et recherchez nom, e-mail, plateforme ou réf. fournisseur.",
+        "es": "Lista instalaciones de dispositivos para campañas push (incluidas anónimas). Filtra por estado push y busca nombre, email, plataforma o ref. de proveedor.",
+        "it": "Elenca le installazioni dispositivo per campagne push (anche anonime). Filtra per stato push e cerca nome, email, piattaforma o ref. provider.",
+        "ro": "Listează instalările de dispozitive pentru campanii push (inclusiv anonime). Filtrează după status push și caută nume, email, platformă sau ref. provider."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: List Installs",
+        "title": {
+          "en": "List app installs",
+          "de": "App-Installationen anzeigen",
+          "fr": "Lister les installations",
+          "es": "Listar instalaciones",
+          "it": "Elenca installazioni",
+          "ro": "Listează instalările"
+        },
+        "description": {
+          "en": "List device installs for push campaigns (including anonymous). Filter by push status and search name, email, platform, or provider ref.",
+          "de": "Liste Geräte-Installationen für Push-Kampagnen (inkl. anonym). Filter nach Push-Status und Suche nach Name, E-Mail, Plattform oder Provider-Ref.",
+          "fr": "Liste les installations d'appareils pour les campagnes push (y compris anonymes). Filtrez par statut push et recherchez nom, e-mail, plateforme ou réf. fournisseur.",
+          "es": "Lista instalaciones de dispositivos para campañas push (incluidas anónimas). Filtra por estado push y busca nombre, email, plataforma o ref. de proveedor.",
+          "it": "Elenca le installazioni dispositivo per campagne push (anche anonime). Filtra per stato push e cerca nome, email, piattaforma o ref. provider.",
+          "ro": "Listează instalările de dispozitive pentru campanii push (inclusiv anonime). Filtrează după status push și caută nume, email, platformă sau ref. provider."
+        },
+        "bot": "Use before creating a push campaign when you need install hashids, or to check who is subscribed. Prefer pushStatus=subscribed for sendable devices. Pass returned id values as installIds to Create Campaign.",
+        "vars": {
+          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+          "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+        },
+        "output": {
+          "installs": "out",
+          "installsList": "out.data",
+          "installsCount": "out.data.length"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "auto": true,
+            "label": {
+              "en": "List installs",
+              "de": "Installationen anzeigen",
+              "fr": "Lister les installations",
+              "es": "Listar instalaciones",
+              "it": "Elenca installazioni",
+              "ro": "Listează instalările"
+            },
+            "destination": {
+              "url": "https://devnet-api.joai.ai/v1/installs?pushStatus={{pushStatus}}&q={{q}}&perPage={{perPage}}&page={{page}}",
+              "method": "GET",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+                "X-Team": "{{team}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Push status",
+                "as": "pushStatus",
+                "type": "string",
+                "position": "query",
+                "source": "field",
+                "required": false,
+                "options": {
+                  "subscribed": "Subscribed",
+                  "opted_out": "Opted out",
+                  "unavailable": "Unavailable"
+                },
+                "description": {
+                  "en": "Filter by push subscription status",
+                  "de": "Nach Push-Abonnementstatus filtern"
+                },
+                "bot": "Pass subscribed to list sendable installs for push campaigns."
+              },
+              {
+                "name": "Search",
+                "as": "q",
+                "type": "string",
+                "position": "query",
+                "source": "field",
+                "required": false,
+                "description": {
+                  "en": "Search by contact name/email, platform (ios|android|web), bundle id, or provider ref",
+                  "de": "Suche nach Kontaktname/E-Mail, Plattform (ios|android|web), Bundle-ID oder Provider-Ref"
+                }
+              },
+              {
+                "name": "Per page",
+                "as": "perPage",
+                "type": "string",
+                "position": "query",
+                "source": "field",
+                "required": false,
+                "default": "50",
+                "description": {
+                  "en": "Page size (max 250)",
+                  "de": "Seitengröße (max. 250)"
+                }
+              },
+              {
+                "name": "Page",
+                "as": "page",
+                "type": "string",
+                "position": "query",
+                "source": "field",
+                "required": false,
+                "default": "1",
+                "description": {
+                  "en": "Page number",
+                  "de": "Seitennummer"
+                }
+              },
+              {
+                "name": "Team",
+                "as": "team",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "default": "{{JOAI_TEAM_SLUG}}",
+                "description": {
+                  "en": "Team slug for this action. Defaults to the current team.",
+                  "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team."
+                },
+                "bot": "The slug of the team to operate on. Omit to use the current team."
+              }
+            ]
+          }
+        ]
+      },
+      "extras": null
+    },
+    {
       "key": "none:joai-item-create",
       "identifier": "@joai-item-create",
       "alias": "joai-item-create",
@@ -101584,8 +101969,8 @@
       "identifier": "@joai-segment-create",
       "alias": "joai-segment-create",
       "chain": "none",
-      "hash": "1cf113ed736bde17e9aab8d1d10bdc4e79b7f59edce22c766708c1070f34af8d",
-      "checksum": "1cf113ed736bde17e9aab8d1d10bdc4e79b7f59edce22c766708c1070f34af8d",
+      "hash": "7ea6702008842555989f535daea715bc29f7945488029cbd5c1a0cb384763871",
+      "checksum": "7ea6702008842555989f535daea715bc29f7945488029cbd5c1a0cb384763871",
       "name": "JoAi: Create Segment",
       "title": {
         "en": "Create a segment",
@@ -101596,12 +101981,12 @@
         "ro": "Creează un segment"
       },
       "description": {
-        "en": "Create a saved audience segment from a list of conditions. All conditions must match (AND). Conditions: tag (has tag), has_email, has_phone, created_after, created_before, email_contains.",
-        "de": "Erstelle ein gespeichertes Zielgruppen-Segment aus einer Liste von Bedingungen. Alle Bedingungen müssen zutreffen (UND). Bedingungen: tag (hat Tag), has_email, has_phone, created_after, created_before, email_contains.",
-        "fr": "Créez un segment d'audience enregistré à partir d'une liste de conditions. Toutes les conditions doivent correspondre (ET). Conditions : tag (a le tag), has_email, has_phone, created_after, created_before, email_contains.",
-        "es": "Crea un segmento de audiencia guardado a partir de una lista de condiciones. Todas las condiciones deben cumplirse (Y). Condiciones: tag (tiene etiqueta), has_email, has_phone, created_after, created_before, email_contains.",
-        "it": "Crea un segmento di pubblico salvato da un elenco di condizioni. Tutte le condizioni devono corrispondere (AND). Condizioni: tag (ha tag), has_email, has_phone, created_after, created_before, email_contains.",
-        "ro": "Creează un segment de audiență salvat dintr-o listă de condiții. Toate condițiile trebuie să se potrivească (ȘI). Condiții: tag (are tag), has_email, has_phone, created_after, created_before, email_contains."
+        "en": "Create a saved audience segment. Conditions AND together. Contact conditions: tag, has_email, has_phone, created_after, created_before, email_contains, …. Install (push) conditions: has_install, install_push_status (subscribed|opted_out|unavailable).",
+        "de": "Erstelle ein gespeichertes Zielgruppen-Segment. Bedingungen gelten UND-verknüpft. Kontakt: tag, has_email, has_phone, created_after, created_before, email_contains, …. Installationen (Push): has_install, install_push_status (subscribed|opted_out|unavailable).",
+        "fr": "Créez un segment d'audience. Conditions en ET. Contacts : tag, has_email, has_phone, created_after, created_before, email_contains, …. Installations (push) : has_install, install_push_status (subscribed|opted_out|unavailable).",
+        "es": "Crea un segmento de audiencia. Condiciones en Y. Contactos: tag, has_email, has_phone, created_after, created_before, email_contains, …. Instalaciones (push): has_install, install_push_status (subscribed|opted_out|unavailable).",
+        "it": "Crea un segmento di pubblico. Condizioni in AND. Contatti: tag, has_email, has_phone, created_after, created_before, email_contains, …. Installazioni (push): has_install, install_push_status (subscribed|opted_out|unavailable).",
+        "ro": "Creează un segment de audiență. Condițiile se aplică cu ȘI. Contacte: tag, has_email, has_phone, created_after, created_before, email_contains, …. Instalări (push): has_install, install_push_status (subscribed|opted_out|unavailable)."
       },
       "preview": null,
       "creator": "github:JoAiHQ/warps",
@@ -101646,14 +102031,14 @@
           "ro": "Creează un segment"
         },
         "description": {
-          "en": "Create a saved audience segment from a list of conditions. All conditions must match (AND). Conditions: tag (has tag), has_email, has_phone, created_after, created_before, email_contains.",
-          "de": "Erstelle ein gespeichertes Zielgruppen-Segment aus einer Liste von Bedingungen. Alle Bedingungen müssen zutreffen (UND). Bedingungen: tag (hat Tag), has_email, has_phone, created_after, created_before, email_contains.",
-          "fr": "Créez un segment d'audience enregistré à partir d'une liste de conditions. Toutes les conditions doivent correspondre (ET). Conditions : tag (a le tag), has_email, has_phone, created_after, created_before, email_contains.",
-          "es": "Crea un segmento de audiencia guardado a partir de una lista de condiciones. Todas las condiciones deben cumplirse (Y). Condiciones: tag (tiene etiqueta), has_email, has_phone, created_after, created_before, email_contains.",
-          "it": "Crea un segmento di pubblico salvato da un elenco di condizioni. Tutte le condizioni devono corrispondere (AND). Condizioni: tag (ha tag), has_email, has_phone, created_after, created_before, email_contains.",
-          "ro": "Creează un segment de audiență salvat dintr-o listă de condiții. Toate condițiile trebuie să se potrivească (ȘI). Condiții: tag (are tag), has_email, has_phone, created_after, created_before, email_contains."
+          "en": "Create a saved audience segment. Conditions AND together. Contact conditions: tag, has_email, has_phone, created_after, created_before, email_contains, …. Install (push) conditions: has_install, install_push_status (subscribed|opted_out|unavailable).",
+          "de": "Erstelle ein gespeichertes Zielgruppen-Segment. Bedingungen gelten UND-verknüpft. Kontakt: tag, has_email, has_phone, created_after, created_before, email_contains, …. Installationen (Push): has_install, install_push_status (subscribed|opted_out|unavailable).",
+          "fr": "Créez un segment d'audience. Conditions en ET. Contacts : tag, has_email, has_phone, created_after, created_before, email_contains, …. Installations (push) : has_install, install_push_status (subscribed|opted_out|unavailable).",
+          "es": "Crea un segmento de audiencia. Condiciones en Y. Contactos: tag, has_email, has_phone, created_after, created_before, email_contains, …. Instalaciones (push): has_install, install_push_status (subscribed|opted_out|unavailable).",
+          "it": "Crea un segmento di pubblico. Condizioni in AND. Contatti: tag, has_email, has_phone, created_after, created_before, email_contains, …. Installazioni (push): has_install, install_push_status (subscribed|opted_out|unavailable).",
+          "ro": "Creează un segment de audiență. Condițiile se aplică cu ȘI. Contacte: tag, has_email, has_phone, created_after, created_before, email_contains, …. Instalări (push): has_install, install_push_status (subscribed|opted_out|unavailable)."
         },
-        "bot": "Use when the user wants to build a reusable audience by criteria, e.g. contacts with a tag, with email, or created in a period. Pass conditions as an array of objects like [{\"type\":\"tag\",\"value\":\"vip\"}].",
+        "bot": "Build reusable audiences. Pass conditions as [{\"type\":\"tag\",\"value\":\"vip\"}]. For push campaigns targeting all subscribed devices (including anonymous), use install-only conditions: [{\"type\":\"has_install\",\"value\":true},{\"type\":\"install_push_status\",\"value\":\"subscribed\"}]. Do not mix install-only conditions with contact tag filters if you want anonymous installs included.",
         "vars": {
           "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
           "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
@@ -101705,6 +102090,7 @@
                   "it": "Condizioni — tutte devono corrispondere. Array di oggetti",
                   "ro": "Condiții — toate trebuie să se potrivească. Matrice de obiecte"
                 },
+                "bot": "Examples: [{\"type\":\"tag\",\"value\":\"vip\"}] or push [{\"type\":\"has_install\",\"value\":true},{\"type\":\"install_push_status\",\"value\":\"subscribed\"}].",
                 "type": "json",
                 "source": "field",
                 "required": true
@@ -101741,12 +102127,12 @@
         },
         "messages": {
           "success": {
-            "en": "Segment '{{SEGMENT_NAME}}' created with {{SEGMENT_COUNT}} contacts.",
-            "de": "Segment '{{SEGMENT_NAME}}' mit {{SEGMENT_COUNT}} Kontakten erstellt.",
-            "fr": "Segment « {{SEGMENT_NAME}} » créé avec {{SEGMENT_COUNT}} contacts.",
-            "es": "Segmento « {{SEGMENT_NAME}} » creado con {{SEGMENT_COUNT}} contactos.",
-            "it": "Segmento « {{SEGMENT_NAME}} » creato con {{SEGMENT_COUNT}} contatti.",
-            "ro": "Segmentul „{{SEGMENT_NAME}}” a fost creat cu {{SEGMENT_COUNT}} contacte."
+            "en": "Segment '{{SEGMENT_NAME}}' created with {{SEGMENT_COUNT}} matches.",
+            "de": "Segment '{{SEGMENT_NAME}}' mit {{SEGMENT_COUNT}} Treffern erstellt.",
+            "fr": "Segment « {{SEGMENT_NAME}} » créé avec {{SEGMENT_COUNT}} correspondances.",
+            "es": "Segmento « {{SEGMENT_NAME}} » creado con {{SEGMENT_COUNT}} coincidencias.",
+            "it": "Segmento « {{SEGMENT_NAME}} » creato con {{SEGMENT_COUNT}} corrispondenze.",
+            "ro": "Segmentul „{{SEGMENT_NAME}}” a fost creat cu {{SEGMENT_COUNT}} potriviri."
           },
           "error": {
             "en": "Failed to create segment: {{MESSAGE}}",
