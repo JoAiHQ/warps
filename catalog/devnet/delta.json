@@ -4,10 +4,166 @@
   "repo": "JoAiHQ/warps",
   "branch": "dev",
   "network": "devnet",
-  "commitSha": "6708c6c45da5ea5e9b3a0b2c4430b8c371089606",
-  "committedAt": "2026-10-12T19:55:49.106Z",
-  "generatedAt": "2026-10-12T19:55:51.296Z",
+  "commitSha": "0d43f9ba68751f9e8b637395f733aa19027fb994",
+  "committedAt": "2026-10-13T11:47:33.092Z",
+  "generatedAt": "2026-10-13T11:47:35.691Z",
   "upserts": [
+    {
+      "key": "none:joai-order-get",
+      "identifier": "@joai-order-get",
+      "alias": "joai-order-get",
+      "chain": "none",
+      "hash": "4e9615a22604667b4d6f0fee9da79d12a0795f350f2edd8f3f82143f18c1a435",
+      "checksum": "4e9615a22604667b4d6f0fee9da79d12a0795f350f2edd8f3f82143f18c1a435",
+      "name": "JoAi: Get Order",
+      "title": {
+        "en": "Get order"
+      },
+      "description": {
+        "en": "Fetch order details by ID. Guest access requires the X-Order-Access-Token from checkout."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: Get Order",
+        "title": {
+          "en": "Get order"
+        },
+        "description": {
+          "en": "Fetch order details by ID. Guest access requires the X-Order-Access-Token from checkout."
+        },
+        "bot": "Use when the user wants order details. For guest orders, pass the access token returned at checkout. Team managers also receive deliveryNoteUrl and shippingLabelUrl (signed PDF links) for packing.",
+        "vars": {
+          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+          "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Get order"
+            },
+            "destination": {
+              "url": "https://devnet-api.joai.ai/v1/orders/{{orderId}}",
+              "method": "GET",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+                "X-Team": "{{team}}",
+                "X-Order-Access-Token": "{{orderAccessToken}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Order ID",
+                "as": "orderId",
+                "description": {
+                  "en": "The hashid of the order"
+                },
+                "bot": "The order hash ID. List orders first if the user refers to an order by customer or item.",
+                "type": "string",
+                "position": "url:orderId",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Order Access Token",
+                "as": "orderAccessToken",
+                "description": {
+                  "en": "Guest access token for the order"
+                },
+                "bot": "Optional. Required for guest checkout orders — use the orderAccessToken from place-order.",
+                "type": "string",
+                "source": "field",
+                "position": "header:X-Order-Access-Token",
+                "required": false
+              },
+              {
+                "name": "Team",
+                "as": "team",
+                "description": {
+                  "en": "Team slug for this action. Defaults to the current team."
+                },
+                "bot": "The slug of the team to operate on. Omit to use the current team.",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "default": "{{JOAI_TEAM_SLUG}}"
+              }
+            ],
+            "output": {
+              "id": "out.data.id",
+              "status": "out.data.status",
+              "total": "out.data.total",
+              "paymentUrl": "out.data.paymentUrl",
+              "invoiceUrl": "out.data.invoiceUrl",
+              "deliveryNoteUrl": "out.data.deliveryNoteUrl",
+              "shippingLabelUrl": "out.data.shippingLabelUrl",
+              "fulfillmentMethod": "out.data.fulfillmentMethod",
+              "invoiceDate": "out.data.invoiceDate",
+              "serviceDate": "out.data.serviceDate",
+              "invoiceContactId": "out.data.invoiceContactId",
+              "invoiceContactName": "out.data.invoiceContact.name",
+              "invoiceContactEmail": "out.data.invoiceContact.email"
+            }
+          }
+        ],
+        "output": {
+          "ORDER_ID": "out.1.id",
+          "ORDER_STATUS": "out.1.status",
+          "ORDER_TOTAL": "out.1.total",
+          "PAYMENT_URL": "out.1.paymentUrl",
+          "INVOICE_URL": "out.1.invoiceUrl",
+          "DELIVERY_NOTE_URL": "out.1.deliveryNoteUrl",
+          "SHIPPING_LABEL_URL": "out.1.shippingLabelUrl",
+          "FULFILLMENT_METHOD": "out.1.fulfillmentMethod",
+          "INVOICE_DATE": "out.1.invoiceDate",
+          "SERVICE_DATE": "out.1.serviceDate",
+          "INVOICE_CONTACT_ID": "out.1.invoiceContactId",
+          "INVOICE_CONTACT_NAME": "out.1.invoiceContactName",
+          "INVOICE_CONTACT_EMAIL": "out.1.invoiceContactEmail"
+        },
+        "messages": {
+          "success": {
+            "en": "Order {{ORDER_ID}} — status: {{ORDER_STATUS}}."
+          },
+          "error": {
+            "en": "Failed to get order: {{MESSAGE}}"
+          }
+        }
+      },
+      "extras": null
+    },
     {
       "key": "none:poll-results",
       "identifier": "@poll-results",
