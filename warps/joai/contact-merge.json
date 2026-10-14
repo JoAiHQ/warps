@@ -1,0 +1,103 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Merge Contacts",
+  "title": {
+    "en": "Merge contacts",
+    "de": "Kontakte zusammenführen",
+    "es": "Merge contacts",
+    "fr": "Merge contacts",
+    "ro": "Merge contacts",
+    "it": "Merge contacts"
+  },
+  "description": {
+    "en": "Merge a duplicate contact into another. Activities, conversations, tags, and empty fields move to the contact you keep; the duplicate is deleted.",
+    "de": "Führe einen doppelten Kontakt in einen anderen zusammen. Aktivitäten, Unterhaltungen, Tags und leere Felder wandern zum behaltenen Kontakt; das Duplikat wird gelöscht.",
+    "es": "Merge a duplicate contact into another. Activities, conversations, tags, and empty fields move to the contact you keep; the duplicate is deleted.",
+    "fr": "Merge a duplicate contact into another. Activities, conversations, tags, and empty fields move to the contact you keep; the duplicate is deleted.",
+    "ro": "Merge a duplicate contact into another. Activities, conversations, tags, and empty fields move to the contact you keep; the duplicate is deleted.",
+    "it": "Merge a duplicate contact into another. Activities, conversations, tags, and empty fields move to the contact you keep; the duplicate is deleted."
+  },
+  "bot": "Use when the user has two CRM contacts for the same person (e.g. a thin Instagram stub and a fuller contact). Pass contactId as the duplicate to absorb and intoId as the contact to keep. Prefer list contacts first to resolve both IDs. Never create a third contact.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Merge contacts",
+        "de": "Kontakte zusammenführen",
+        "es": "Merge contacts",
+        "fr": "Merge contacts",
+        "ro": "Merge contacts",
+        "it": "Merge contacts"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/contacts/{{contactId}}/merge",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "intoId": "{{intoId}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Contact ID",
+          "as": "contactId",
+          "description": {
+            "en": "The duplicate contact to absorb and delete",
+            "de": "Der doppelte Kontakt, der übernommen und gelöscht wird"
+          },
+          "bot": "Hash ID of the stub/duplicate contact that should disappear after the merge.",
+          "type": "string",
+          "position": "url:contactId",
+          "source": "field",
+          "required": true,
+          "min": 1
+        },
+        {
+          "name": "Into contact ID",
+          "as": "intoId",
+          "description": {
+            "en": "The contact to keep",
+            "de": "Der Kontakt, der behalten wird"
+          },
+          "bot": "Hash ID of the richer contact that remains. Missing fields, socials, tags, activities, and rooms from the duplicate are moved here.",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "min": 1
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug for this action. Defaults to the current team.",
+            "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team."
+          },
+          "bot": "The slug of the team to operate on. Omit to use the current team.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Contacts merged.",
+      "de": "Kontakte zusammengeführt.",
+      "es": "Contacts merged.",
+      "fr": "Contacts merged.",
+      "ro": "Contacts merged.",
+      "it": "Contacts merged."
+    }
+  }
+}

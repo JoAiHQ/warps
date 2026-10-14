@@ -9,7 +9,7 @@
     "en": "Create an Instagram, X, Facebook, or LinkedIn draft. Leave the time empty for a draft, or set a time to schedule it into JoAi's queue (the publish job posts later).",
     "de": "Erstelle einen Instagram-, X-, Facebook- oder LinkedIn-Entwurf. Ohne Zeit bleibt es ein Entwurf; mit Zeit wird er in JoAis Warteschlange geplant (der Publish-Job postet später)."
   },
-  "bot": "Use this to draft or schedule an Instagram, X, Facebook, or LinkedIn post. Prefer exportId (Studio export UUID) or elementVariationId when posting Studio/element stills — JoAi copies those images onto the post and leaves the originals alone. Otherwise upload with media_upload and pass IDs in media. Do not combine media with exportId or elementVariationId. Set scheduledAt in the team timezone when the user names a time - that only queues the post; JoAi's publish job posts to the network later. Omit scheduledAt to keep a draft. Platforms: instagram, x, facebook, linkedin. The response includes shareUrl — a public preview link (caption, stills, network, time) you can give the user for review before publish.",
+  "bot": "Use this to draft or schedule an Instagram, X, Facebook, or LinkedIn post. Prefer exportId (Studio export UUID) or elementVariationId when posting Studio/element stills — JoAi copies those images onto the post and leaves the originals alone. Otherwise upload with media_upload and pass IDs in media. Do not combine media with exportId or elementVariationId. For Instagram, set format to feed (default), short (one MP4 → Reel), or story (one JPEG or MP4). Set scheduledAt in the team timezone when the user names a time - that only queues the post; JoAi's publish job posts to the network later. Omit scheduledAt to keep a draft. Platforms: instagram, x, facebook, linkedin. The response includes shareUrl — a public preview link (caption, media, network, time) you can give the user for review before publish.",
   "vars": {
     "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
     "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
@@ -61,11 +61,29 @@
           "required": false
         },
         {
-          "name": "Images",
+          "name": "Format",
+          "as": "format",
+          "description": {
+            "en": "Instagram only: feed (default), short (one MP4 Reel), or story (one JPEG or MP4).",
+            "de": "Nur Instagram: feed (Standard), short (ein MP4-Reel) oder story (ein JPEG oder MP4)."
+          },
+          "bot": "Instagram only. feed | short | story. Defaults to feed. short requires one MP4; story requires one JPEG or MP4.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "options": {
+            "feed": "Feed",
+            "short": "Short",
+            "story": "Story"
+          },
+          "default": "feed"
+        },
+        {
+          "name": "Media",
           "as": "media",
           "description": {
-            "en": "Ordered team media IDs, e.g. [\"abc\",\"def\"]. Instagram: JPEG 1–10. X: JPEG/PNG/WEBP/GIF 0–4. Facebook: JPEG/PNG/WEBP/GIF 0–10. LinkedIn: JPEG/PNG/GIF 0–9. Upload with media_upload first. Do not combine with exportId or elementVariationId.",
-            "de": "Team-Medien-IDs in Reihenfolge, z.B. [\"abc\",\"def\"]. Instagram: JPEG 1–10. X: JPEG/PNG/WEBP/GIF 0–4. Facebook: JPEG/PNG/WEBP/GIF 0–10. LinkedIn: JPEG/PNG/GIF 0–9. Zuerst mit media_upload hochladen. Nicht zusammen mit exportId oder elementVariationId."
+            "en": "Ordered team media IDs, e.g. [\"abc\",\"def\"]. Instagram feed: JPEG 1–10 or one MP4; short: one MP4; story: one JPEG or MP4. X: JPEG/PNG/WEBP/GIF 0–4. Facebook: JPEG/PNG/WEBP/GIF 0–10. LinkedIn: JPEG/PNG/GIF 0–9. Upload with media_upload first. Do not combine with exportId or elementVariationId.",
+            "de": "Team-Medien-IDs in Reihenfolge, z.B. [\"abc\",\"def\"]. Instagram Feed: JPEG 1–10 oder ein MP4; Short: ein MP4; Story: ein JPEG oder MP4. X: JPEG/PNG/WEBP/GIF 0–4. Facebook: JPEG/PNG/WEBP/GIF 0–10. LinkedIn: JPEG/PNG/GIF 0–9. Zuerst mit media_upload hochladen. Nicht zusammen mit exportId oder elementVariationId."
           },
           "bot": "JSON array of media IDs from media_upload, in order. Optional for X, Facebook, and LinkedIn text-only posts. Mutually exclusive with exportId and elementVariationId. JoAi copies media onto the post.",
           "type": "string",
@@ -123,6 +141,7 @@
       "output": {
         "id": "out.data.id",
         "status": "out.data.status",
+        "format": "out.data.format",
         "scheduledAt": "out.data.scheduledAt",
         "shareUrl": "out.data.shareUrl"
       }
