@@ -4,23 +4,33 @@
   "repo": "JoAiHQ/warps",
   "branch": "main",
   "network": "mainnet",
-  "commitSha": "bc1882cfa6898ac32d01555b8d48791b841f790a",
-  "committedAt": "2026-10-13T22:20:48.852Z",
-  "generatedAt": "2026-10-13T22:20:52.280Z",
+  "commitSha": "6eab53374c1e8e21ed5a5130696ce48bcc749149",
+  "committedAt": "2026-10-14T17:16:41.773Z",
+  "generatedAt": "2026-10-14T17:16:44.276Z",
   "upserts": [
     {
-      "key": "none:joai-order-get",
-      "identifier": "@joai-order-get",
-      "alias": "joai-order-get",
+      "key": "none:joai-contact-merge",
+      "identifier": "@joai-contact-merge",
+      "alias": "joai-contact-merge",
       "chain": "none",
-      "hash": "d6710975cae27d3efc4bedb35667d43ed68799b549ecdc44c7b8a07f5fada103",
-      "checksum": "d6710975cae27d3efc4bedb35667d43ed68799b549ecdc44c7b8a07f5fada103",
-      "name": "JoAi: Get Order",
+      "hash": "ad73a0d269fce8b9cc98fffe15a33ceb57bd5241b5710fc60409344f6f752633",
+      "checksum": "ad73a0d269fce8b9cc98fffe15a33ceb57bd5241b5710fc60409344f6f752633",
+      "name": "JoAi: Merge Contacts",
       "title": {
-        "en": "Get order"
+        "en": "Merge contacts",
+        "de": "Kontakte zusammenführen",
+        "es": "Merge contacts",
+        "fr": "Merge contacts",
+        "ro": "Merge contacts",
+        "it": "Merge contacts"
       },
       "description": {
-        "en": "Fetch order details by ID. Guest access requires the X-Order-Access-Token from checkout."
+        "en": "Merge a duplicate contact into another. Activities, conversations, tags, and empty fields move to the contact you keep; the duplicate is deleted.",
+        "de": "Führe einen doppelten Kontakt in einen anderen zusammen. Aktivitäten, Unterhaltungen, Tags und leere Felder wandern zum behaltenen Kontakt; das Duplikat wird gelöscht.",
+        "es": "Merge a duplicate contact into another. Activities, conversations, tags, and empty fields move to the contact you keep; the duplicate is deleted.",
+        "fr": "Merge a duplicate contact into another. Activities, conversations, tags, and empty fields move to the contact you keep; the duplicate is deleted.",
+        "ro": "Merge a duplicate contact into another. Activities, conversations, tags, and empty fields move to the contact you keep; the duplicate is deleted.",
+        "it": "Merge a duplicate contact into another. Activities, conversations, tags, and empty fields move to the contact you keep; the duplicate is deleted."
       },
       "preview": null,
       "creator": "github:JoAiHQ/warps",
@@ -55,14 +65,24 @@
       },
       "warp": {
         "protocol": "warp:3.0.0",
-        "name": "JoAi: Get Order",
+        "name": "JoAi: Merge Contacts",
         "title": {
-          "en": "Get order"
+          "en": "Merge contacts",
+          "de": "Kontakte zusammenführen",
+          "es": "Merge contacts",
+          "fr": "Merge contacts",
+          "ro": "Merge contacts",
+          "it": "Merge contacts"
         },
         "description": {
-          "en": "Fetch order details by ID. Guest access requires the X-Order-Access-Token from checkout."
+          "en": "Merge a duplicate contact into another. Activities, conversations, tags, and empty fields move to the contact you keep; the duplicate is deleted.",
+          "de": "Führe einen doppelten Kontakt in einen anderen zusammen. Aktivitäten, Unterhaltungen, Tags und leere Felder wandern zum behaltenen Kontakt; das Duplikat wird gelöscht.",
+          "es": "Merge a duplicate contact into another. Activities, conversations, tags, and empty fields move to the contact you keep; the duplicate is deleted.",
+          "fr": "Merge a duplicate contact into another. Activities, conversations, tags, and empty fields move to the contact you keep; the duplicate is deleted.",
+          "ro": "Merge a duplicate contact into another. Activities, conversations, tags, and empty fields move to the contact you keep; the duplicate is deleted.",
+          "it": "Merge a duplicate contact into another. Activities, conversations, tags, and empty fields move to the contact you keep; the duplicate is deleted."
         },
-        "bot": "Use when the user wants order details. For guest orders, pass the access token returned at checkout. Team managers also receive deliveryNoteUrl and shippingLabelUrl (signed PDF links) for packing.",
+        "bot": "Use when the user has two CRM contacts for the same person (e.g. a thin Instagram stub and a fuller contact). Pass contactId as the duplicate to absorb and intoId as the contact to keep. Prefer list contacts first to resolve both IDs. Never create a third contact.",
         "vars": {
           "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
           "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
@@ -72,49 +92,485 @@
           {
             "type": "collect",
             "label": {
-              "en": "Get order"
+              "en": "Merge contacts",
+              "de": "Kontakte zusammenführen",
+              "es": "Merge contacts",
+              "fr": "Merge contacts",
+              "ro": "Merge contacts",
+              "it": "Merge contacts"
             },
             "destination": {
-              "url": "https://api.joai.ai/v1/orders/{{orderId}}",
-              "method": "GET",
+              "url": "https://api.joai.ai/v1/contacts/{{contactId}}/merge",
+              "method": "POST",
               "headers": {
                 "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
                 "X-Team": "{{team}}",
-                "X-Order-Access-Token": "{{orderAccessToken}}"
+                "Content-Type": "application/json"
+              },
+              "body": {
+                "intoId": "{{intoId}}"
               }
             },
             "inputs": [
               {
-                "name": "Order ID",
-                "as": "orderId",
+                "name": "Contact ID",
+                "as": "contactId",
                 "description": {
-                  "en": "The hashid of the order"
+                  "en": "The duplicate contact to absorb and delete",
+                  "de": "Der doppelte Kontakt, der übernommen und gelöscht wird"
                 },
-                "bot": "The order hash ID. List orders first if the user refers to an order by customer or item.",
+                "bot": "Hash ID of the stub/duplicate contact that should disappear after the merge.",
                 "type": "string",
-                "position": "url:orderId",
+                "position": "url:contactId",
                 "source": "field",
-                "required": true
+                "required": true,
+                "min": 1
               },
               {
-                "name": "Order Access Token",
-                "as": "orderAccessToken",
+                "name": "Into contact ID",
+                "as": "intoId",
                 "description": {
-                  "en": "Guest access token for the order"
+                  "en": "The contact to keep",
+                  "de": "Der Kontakt, der behalten wird"
                 },
-                "bot": "Optional. Required for guest checkout orders — use the orderAccessToken from place-order.",
+                "bot": "Hash ID of the richer contact that remains. Missing fields, socials, tags, activities, and rooms from the duplicate are moved here.",
                 "type": "string",
                 "source": "field",
-                "position": "header:X-Order-Access-Token",
+                "required": true,
+                "min": 1
+              },
+              {
+                "name": "Team",
+                "as": "team",
+                "description": {
+                  "en": "Team slug for this action. Defaults to the current team.",
+                  "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team."
+                },
+                "bot": "The slug of the team to operate on. Omit to use the current team.",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "default": "{{JOAI_TEAM_SLUG}}"
+              }
+            ]
+          }
+        ],
+        "messages": {
+          "success": {
+            "en": "Contacts merged.",
+            "de": "Kontakte zusammengeführt.",
+            "es": "Contacts merged.",
+            "fr": "Contacts merged.",
+            "ro": "Contacts merged.",
+            "it": "Contacts merged."
+          }
+        }
+      },
+      "extras": null
+    },
+    {
+      "key": "none:joai-metrics-query",
+      "identifier": "@joai-metrics-query",
+      "alias": "joai-metrics-query",
+      "chain": "none",
+      "hash": "0ecb8779a9e1b308889fa134a894b25c95d2628e2b135c3fc1a7968786ae9e3f",
+      "checksum": "0ecb8779a9e1b308889fa134a894b25c95d2628e2b135c3fc1a7968786ae9e3f",
+      "name": "JoAi: Query Metrics",
+      "title": {
+        "en": "Query metrics",
+        "de": "Metriken abfragen",
+        "es": "Consultar métricas",
+        "fr": "Consulter les métriques",
+        "ro": "Interoghează metrici",
+        "it": "Consulta metriche"
+      },
+      "description": {
+        "en": "Read normalized metrics for an explicit source, resource, and period. Providers: Cloudflare (web traffic), Google Search Console (search clicks/impressions), and Instagram (reach, views, profile views, followers; max 30 days).",
+        "de": "Lies normalisierte Metriken für eine explizite Quelle, Ressource und einen Zeitraum. Provider: Cloudflare (Webtraffic), Google Search Console (Suchklicks/Impressionen) und Instagram (Reichweite, Aufrufe, Profilaufrufe, Follower; max. 30 Tage).",
+        "es": "Consulta métricas normalizadas para una fuente, un recurso y un período explícitos. Proveedores: Cloudflare (tráfico web), Google Search Console (clics/impresiones de búsqueda) e Instagram (alcance, vistas, visitas al perfil, seguidores; máx. 30 días).",
+        "fr": "Consulte des métriques normalisées pour une source, une ressource et une période explicites. Fournisseurs : Cloudflare (trafic web), Google Search Console (clics/impressions de recherche) et Instagram (portée, vues, vues du profil, abonnés ; max. 30 jours).",
+        "ro": "Citește metrici normalizate pentru o sursă, o resursă și o perioadă explicite. Furnizori: Cloudflare (trafic web), Google Search Console (clicuri/impresii de căutare) și Instagram (reach, vizualizări, vizualizări profil, urmăritori; max. 30 zile).",
+        "it": "Leggi metriche normalizzate per una fonte, una risorsa e un periodo espliciti. Provider: Cloudflare (traffico web), Google Search Console (clic/impressioni di ricerca) e Instagram (reach, visualizzazioni, visualizzazioni profilo, follower; max 30 giorni)."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: Query Metrics",
+        "title": {
+          "en": "Query metrics",
+          "de": "Metriken abfragen",
+          "es": "Consultar métricas",
+          "fr": "Consulter les métriques",
+          "ro": "Interoghează metrici",
+          "it": "Consulta metriche"
+        },
+        "description": {
+          "en": "Read normalized metrics for an explicit source, resource, and period. Providers: Cloudflare (web traffic), Google Search Console (search clicks/impressions), and Instagram (reach, views, profile views, followers; max 30 days).",
+          "de": "Lies normalisierte Metriken für eine explizite Quelle, Ressource und einen Zeitraum. Provider: Cloudflare (Webtraffic), Google Search Console (Suchklicks/Impressionen) und Instagram (Reichweite, Aufrufe, Profilaufrufe, Follower; max. 30 Tage).",
+          "es": "Consulta métricas normalizadas para una fuente, un recurso y un período explícitos. Proveedores: Cloudflare (tráfico web), Google Search Console (clics/impresiones de búsqueda) e Instagram (alcance, vistas, visitas al perfil, seguidores; máx. 30 días).",
+          "fr": "Consulte des métriques normalisées pour une source, une ressource et une période explicites. Fournisseurs : Cloudflare (trafic web), Google Search Console (clics/impressions de recherche) et Instagram (portée, vues, vues du profil, abonnés ; max. 30 jours).",
+          "ro": "Citește metrici normalizate pentru o sursă, o resursă și o perioadă explicite. Furnizori: Cloudflare (trafic web), Google Search Console (clicuri/impresii de căutare) și Instagram (reach, vizualizări, vizualizări profil, urmăritori; max. 30 zile).",
+          "it": "Leggi metriche normalizzate per una fonte, una risorsa e un periodo espliciti. Provider: Cloudflare (traffico web), Google Search Console (clic/impressioni di ricerca) e Instagram (reach, visualizzazioni, visualizzazioni profilo, follower; max 30 giorni)."
+        },
+        "bot": "Use this to obtain source-backed facts before creating a client update. For Cloudflare, report unique visitors and page views exactly as returned. For google_search_console, report search.clicks and search.impressions — these are Search Console metrics, not site analytics visitors. For instagram, report social.reach, social.views, social.profileViews, and social.followers (periods up to 30 days). Resource for Cloudflare is the 32-char zone tag; for Google Search Console use sc-domain:example.com or https://example.com/; for Instagram use the numeric Instagram account id (INSTAGRAM_ACCOUNT_ID).",
+        "vars": {
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+          "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Query metrics",
+              "de": "Metriken abfragen",
+              "es": "Consultar métricas",
+              "fr": "Consulter les métriques",
+              "ro": "Interoghează metricile",
+              "it": "Consulta metriche"
+            },
+            "destination": {
+              "url": "https://api.joai.ai/v1/metrics",
+              "method": "GET",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+                "X-Team": "{{team}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Source",
+                "as": "source",
+                "type": "string",
+                "source": "field",
+                "required": true,
+                "default": "cloudflare",
+                "options": {
+                  "cloudflare": "Cloudflare",
+                  "google_search_console": "Google Search Console",
+                  "instagram": "Instagram"
+                }
+              },
+              {
+                "name": "Resource",
+                "as": "resource",
+                "type": "string",
+                "source": "field",
+                "required": true,
+                "description": {
+                  "en": "Provider resource id. Cloudflare: 32-char zone tag. Google Search Console: sc-domain:example.com or https://example.com/. Instagram: numeric account id.",
+                  "de": "Ressourcenkennung. Cloudflare: 32-stelliger Zone-Tag. Google Search Console: sc-domain:example.com oder https://example.com/. Instagram: numerische Account-ID."
+                }
+              },
+              {
+                "name": "From",
+                "as": "from",
+                "type": "string",
+                "source": "field",
+                "required": true,
+                "description": {
+                  "en": "Inclusive start date, YYYY-MM-DD",
+                  "de": "Inklusives Startdatum, JJJJ-MM-TT"
+                }
+              },
+              {
+                "name": "To",
+                "as": "to",
+                "type": "string",
+                "source": "field",
+                "required": true,
+                "description": {
+                  "en": "Inclusive end date, YYYY-MM-DD",
+                  "de": "Inklusives Enddatum, JJJJ-MM-TT"
+                }
+              },
+              {
+                "name": "Team",
+                "as": "team",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "default": "{{JOAI_TEAM_SLUG}}",
+                "description": {
+                  "en": "Team slug. Uses the current team by default.",
+                  "de": "Team-Slug. Standardmäßig wird das aktuelle Team verwendet."
+                }
+              }
+            ]
+          }
+        ],
+        "output": {
+          "METRICS": "out.data.metrics",
+          "FROM": "out.data.from",
+          "TO": "out.data.to"
+        },
+        "messages": {
+          "success": {
+            "en": "Metrics loaded.",
+            "de": "Metriken geladen.",
+            "es": "Métricas cargadas.",
+            "fr": "Métriques chargées.",
+            "ro": "Metrici încărcate.",
+            "it": "Metriche caricate."
+          }
+        }
+      },
+      "extras": {
+        "keywords": {
+          "en": [
+            "metrics",
+            "Cloudflare analytics",
+            "Google Search Console",
+            "page views",
+            "search clicks",
+            "reporting"
+          ],
+          "de": [
+            "Metriken",
+            "Cloudflare Analytics",
+            "Google Search Console",
+            "Seitenaufrufe",
+            "Suchklicks",
+            "Reporting"
+          ]
+        },
+        "useCases": {
+          "en": [
+            "Collect source-backed facts for a client update",
+            "Compare Cloudflare traffic or Search Console clicks/impressions for a period"
+          ],
+          "de": [
+            "Quellenbasierte Fakten für ein Kunden-Update sammeln",
+            "Cloudflare-Traffic oder Search-Console-Klicks/Impressionen für einen Zeitraum vergleichen"
+          ]
+        },
+        "category": "analytics",
+        "faq": {
+          "en": [
+            {
+              "question": "Does this estimate visitors?",
+              "answer": "No. For Cloudflare it reports unique visitors and page views from analytics. For Google Search Console it reports search clicks and impressions — not site analytics visitors."
+            }
+          ],
+          "de": [
+            {
+              "question": "Schätzt dies Besucher?",
+              "answer": "Nein. Bei Cloudflare liefert es Unique Visitors und Seitenaufrufe aus Analytics. Bei Google Search Console liefert es Suchklicks und Impressionen — keine Website-Analytics-Besucher."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "key": "none:joai-social-post-create",
+      "identifier": "@joai-social-post-create",
+      "alias": "joai-social-post-create",
+      "chain": "none",
+      "hash": "7d4ec183d44274d1fa54ff347ea89c0f466dd8fe8791c23d8b96a2b9e359897c",
+      "checksum": "7d4ec183d44274d1fa54ff347ea89c0f466dd8fe8791c23d8b96a2b9e359897c",
+      "name": "JoAi: Create Social Post",
+      "title": {
+        "en": "Schedule a social post",
+        "de": "Social-Post planen"
+      },
+      "description": {
+        "en": "Create an Instagram, X, Facebook, or LinkedIn draft. Leave the time empty for a draft, or set a time to schedule it into JoAi's queue (the publish job posts later).",
+        "de": "Erstelle einen Instagram-, X-, Facebook- oder LinkedIn-Entwurf. Ohne Zeit bleibt es ein Entwurf; mit Zeit wird er in JoAis Warteschlange geplant (der Publish-Job postet später)."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: Create Social Post",
+        "title": {
+          "en": "Schedule a social post",
+          "de": "Social-Post planen"
+        },
+        "description": {
+          "en": "Create an Instagram, X, Facebook, or LinkedIn draft. Leave the time empty for a draft, or set a time to schedule it into JoAi's queue (the publish job posts later).",
+          "de": "Erstelle einen Instagram-, X-, Facebook- oder LinkedIn-Entwurf. Ohne Zeit bleibt es ein Entwurf; mit Zeit wird er in JoAis Warteschlange geplant (der Publish-Job postet später)."
+        },
+        "bot": "Use this to draft or schedule an Instagram, X, Facebook, or LinkedIn post. Prefer exportId (Studio export UUID) or elementVariationId when posting Studio/element stills — JoAi copies those images onto the post and leaves the originals alone. Otherwise upload with media_upload and pass IDs in media. Do not combine media with exportId or elementVariationId. For Instagram, set format to feed (default), short (one MP4 → Reel), or story (one JPEG or MP4). Set scheduledAt in the team timezone when the user names a time - that only queues the post; JoAi's publish job posts to the network later. Omit scheduledAt to keep a draft. Platforms: instagram, x, facebook, linkedin. The response includes shareUrl — a public preview link (caption, media, network, time) you can give the user for review before publish.",
+        "vars": {
+          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+          "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Schedule post",
+              "de": "Post planen"
+            },
+            "destination": {
+              "url": "https://api.joai.ai/v1/social-posts",
+              "method": "POST",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+                "X-Team": "{{team}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Network",
+                "as": "platform",
+                "description": {
+                  "en": "Network to post on",
+                  "de": "Netzwerk für den Post"
+                },
+                "type": "string",
+                "source": "field",
+                "required": true,
+                "options": {
+                  "instagram": "Instagram",
+                  "x": "X",
+                  "facebook": "Facebook",
+                  "linkedin": "LinkedIn"
+                },
+                "default": "instagram"
+              },
+              {
+                "name": "Caption",
+                "as": "body",
+                "description": {
+                  "en": "Post caption or tweet text",
+                  "de": "Bildunterschrift oder Tweet-Text"
+                },
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Format",
+                "as": "format",
+                "description": {
+                  "en": "Instagram only: feed (default), short (one MP4 Reel), or story (one JPEG or MP4).",
+                  "de": "Nur Instagram: feed (Standard), short (ein MP4-Reel) oder story (ein JPEG oder MP4)."
+                },
+                "bot": "Instagram only. feed | short | story. Defaults to feed. short requires one MP4; story requires one JPEG or MP4.",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "options": {
+                  "feed": "Feed",
+                  "short": "Short",
+                  "story": "Story"
+                },
+                "default": "feed"
+              },
+              {
+                "name": "Media",
+                "as": "media",
+                "description": {
+                  "en": "Ordered team media IDs, e.g. [\"abc\",\"def\"]. Instagram feed: JPEG 1–10 or one MP4; short: one MP4; story: one JPEG or MP4. X: JPEG/PNG/WEBP/GIF 0–4. Facebook: JPEG/PNG/WEBP/GIF 0–10. LinkedIn: JPEG/PNG/GIF 0–9. Upload with media_upload first. Do not combine with exportId or elementVariationId.",
+                  "de": "Team-Medien-IDs in Reihenfolge, z.B. [\"abc\",\"def\"]. Instagram Feed: JPEG 1–10 oder ein MP4; Short: ein MP4; Story: ein JPEG oder MP4. X: JPEG/PNG/WEBP/GIF 0–4. Facebook: JPEG/PNG/WEBP/GIF 0–10. LinkedIn: JPEG/PNG/GIF 0–9. Zuerst mit media_upload hochladen. Nicht zusammen mit exportId oder elementVariationId."
+                },
+                "bot": "JSON array of media IDs from media_upload, in order. Optional for X, Facebook, and LinkedIn text-only posts. Mutually exclusive with exportId and elementVariationId. JoAi copies media onto the post.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Studio export",
+                "as": "exportId",
+                "description": {
+                  "en": "Studio export UUID. Copies still images from that export onto the post. Mutually exclusive with media and elementVariationId.",
+                  "de": "Studio-Export-UUID. Kopiert Standbilder aus dem Export auf den Post. Nicht zusammen mit media oder elementVariationId."
+                },
+                "bot": "UUID from studio_export / project export. Use instead of media when posting Studio stills.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Element variation",
+                "as": "elementVariationId",
+                "description": {
+                  "en": "Element variation ID. Copies the variation images (primary first) onto the post. Mutually exclusive with media and exportId.",
+                  "de": "Element-Variation-ID. Kopiert die Variationsbilder (Primär zuerst) auf den Post. Nicht zusammen mit media oder exportId."
+                },
+                "bot": "Hashid from list_element_variations / generate_element_variation. Use instead of media when posting element stills.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Schedule for",
+                "as": "scheduledAt",
+                "description": {
+                  "en": "When JoAi should publish. ISO time. Without a timezone, the team timezone is used. Omit to save a draft. Scheduling queues the post; the publish job posts later.",
+                  "de": "Wann JoAi veröffentlichen soll. ISO-Zeit. Ohne Zeitzone gilt die Team-Zeitzone. Weglassen speichert einen Entwurf. Planen reiht ein; der Publish-Job postet später."
+                },
+                "type": "string",
+                "source": "field",
                 "required": false
               },
               {
                 "name": "Team",
                 "as": "team",
                 "description": {
-                  "en": "Team slug for this action. Defaults to the current team."
+                  "en": "Team slug. Defaults to the current team.",
+                  "de": "Team-Slug. Standardmäßig das aktuelle Team."
                 },
-                "bot": "The slug of the team to operate on. Omit to use the current team.",
                 "type": "string",
                 "source": "field",
                 "required": false,
@@ -124,41 +580,173 @@
             "output": {
               "id": "out.data.id",
               "status": "out.data.status",
-              "total": "out.data.total",
-              "paymentUrl": "out.data.paymentUrl",
-              "invoiceUrl": "out.data.invoiceUrl",
-              "deliveryNoteUrl": "out.data.deliveryNoteUrl",
-              "shippingLabelUrl": "out.data.shippingLabelUrl",
-              "fulfillmentMethod": "out.data.fulfillmentMethod",
-              "invoiceDate": "out.data.invoiceDate",
-              "serviceDate": "out.data.serviceDate",
-              "invoiceContactId": "out.data.invoiceContactId",
-              "invoiceContactName": "out.data.invoiceContact.name",
-              "invoiceContactEmail": "out.data.invoiceContact.email"
+              "format": "out.data.format",
+              "scheduledAt": "out.data.scheduledAt",
+              "shareUrl": "out.data.shareUrl"
             }
           }
         ],
-        "output": {
-          "ORDER_ID": "out.1.id",
-          "ORDER_STATUS": "out.1.status",
-          "ORDER_TOTAL": "out.1.total",
-          "PAYMENT_URL": "out.1.paymentUrl",
-          "INVOICE_URL": "out.1.invoiceUrl",
-          "DELIVERY_NOTE_URL": "out.1.deliveryNoteUrl",
-          "SHIPPING_LABEL_URL": "out.1.shippingLabelUrl",
-          "FULFILLMENT_METHOD": "out.1.fulfillmentMethod",
-          "INVOICE_DATE": "out.1.invoiceDate",
-          "SERVICE_DATE": "out.1.serviceDate",
-          "INVOICE_CONTACT_ID": "out.1.invoiceContactId",
-          "INVOICE_CONTACT_NAME": "out.1.invoiceContactName",
-          "INVOICE_CONTACT_EMAIL": "out.1.invoiceContactEmail"
-        },
         "messages": {
           "success": {
-            "en": "Order {{ORDER_ID}} — status: {{ORDER_STATUS}}."
-          },
-          "error": {
-            "en": "Failed to get order: {{MESSAGE}}"
+            "en": "Social post {{status}}. Preview: {{shareUrl}}. If scheduled, JoAi will publish when due.",
+            "de": "Social-Post {{status}}. Vorschau: {{shareUrl}}. Wenn geplant, veröffentlicht JoAi zum Termin."
+          }
+        }
+      },
+      "extras": null
+    },
+    {
+      "key": "none:joai-social-post-update",
+      "identifier": "@joai-social-post-update",
+      "alias": "joai-social-post-update",
+      "chain": "none",
+      "hash": "d9cc9e4c090d97eee4731a6952cfc287fc80501779de00906d2aaaf432ac25f3",
+      "checksum": "d9cc9e4c090d97eee4731a6952cfc287fc80501779de00906d2aaaf432ac25f3",
+      "name": "JoAi: Update Social Post",
+      "title": {
+        "en": "Edit a social post",
+        "de": "Social-Post bearbeiten"
+      },
+      "description": {
+        "en": "Edit the caption or images of a draft, failed, or cancelled social post.",
+        "de": "Bearbeite Bildunterschrift oder Bilder eines Entwurfs, fehlgeschlagenen oder abgebrochenen Social-Posts."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: Update Social Post",
+        "title": {
+          "en": "Edit a social post",
+          "de": "Social-Post bearbeiten"
+        },
+        "description": {
+          "en": "Edit the caption or images of a draft, failed, or cancelled social post.",
+          "de": "Bearbeite Bildunterschrift oder Bilder eines Entwurfs, fehlgeschlagenen oder abgebrochenen Social-Posts."
+        },
+        "bot": "Use this to change a social post that is still a draft, failed, or cancelled. Pass media as a JSON array of media IDs to replace media in order. For Instagram, optional format: feed | short | story. The response includes shareUrl for the public preview link.",
+        "vars": {
+          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+          "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Save post",
+              "de": "Post speichern"
+            },
+            "destination": {
+              "url": "https://api.joai.ai/v1/social-posts/{{socialPostId}}",
+              "method": "PATCH",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+                "X-Team": "{{team}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Post",
+                "as": "socialPostId",
+                "description": {
+                  "en": "Social post ID",
+                  "de": "Social-Post-ID"
+                },
+                "type": "string",
+                "source": "field",
+                "required": true,
+                "position": "url:socialPostId"
+              },
+              {
+                "name": "Caption",
+                "as": "body",
+                "description": {
+                  "en": "New caption. Send empty to clear.",
+                  "de": "Neue Bildunterschrift. Leer zum Löschen."
+                },
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Format",
+                "as": "format",
+                "description": {
+                  "en": "Instagram only: feed, short, or story.",
+                  "de": "Nur Instagram: feed, short oder story."
+                },
+                "bot": "Instagram only. feed | short | story.",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "options": {
+                  "feed": "Feed",
+                  "short": "Short",
+                  "story": "Story"
+                }
+              },
+              {
+                "name": "Media",
+                "as": "media",
+                "description": {
+                  "en": "Replacement media IDs in order, as a JSON array.",
+                  "de": "Ersatz-Medien-IDs in Reihenfolge, als JSON-Array."
+                },
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Team",
+                "as": "team",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "default": "{{JOAI_TEAM_SLUG}}"
+              }
+            ],
+            "output": {
+              "id": "out.data.id",
+              "status": "out.data.status",
+              "format": "out.data.format",
+              "shareUrl": "out.data.shareUrl"
+            }
+          }
+        ],
+        "messages": {
+          "success": {
+            "en": "Social post updated. Preview: {{shareUrl}}.",
+            "de": "Social-Post aktualisiert. Vorschau: {{shareUrl}}."
           }
         }
       },
