@@ -9,7 +9,7 @@
     "en": "Edit the caption or images of a draft, failed, or cancelled social post.",
     "de": "Bearbeite Bildunterschrift oder Bilder eines Entwurfs, fehlgeschlagenen oder abgebrochenen Social-Posts."
   },
-  "bot": "Use this to change a social post that is still a draft, failed, or cancelled. Pass media as a JSON array of media IDs to replace the images in order. The response includes shareUrl for the public preview link.",
+  "bot": "Use this to change a social post that is still a draft, failed, or cancelled. Pass media as a JSON array of media IDs to replace media in order. For Instagram, optional format: feed | short | story. The response includes shareUrl for the public preview link.",
   "vars": {
     "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
     "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
@@ -55,7 +55,24 @@
           "required": false
         },
         {
-          "name": "Images",
+          "name": "Format",
+          "as": "format",
+          "description": {
+            "en": "Instagram only: feed, short, or story.",
+            "de": "Nur Instagram: feed, short oder story."
+          },
+          "bot": "Instagram only. feed | short | story.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "options": {
+            "feed": "Feed",
+            "short": "Short",
+            "story": "Story"
+          }
+        },
+        {
+          "name": "Media",
           "as": "media",
           "description": {
             "en": "Replacement media IDs in order, as a JSON array.",
@@ -77,6 +94,7 @@
       "output": {
         "id": "out.data.id",
         "status": "out.data.status",
+        "format": "out.data.format",
         "shareUrl": "out.data.shareUrl"
       }
     }
