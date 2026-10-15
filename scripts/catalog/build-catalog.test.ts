@@ -414,7 +414,7 @@ describe('distribution catalog', () => {
             authPrerequisites: [],
           },
           legal: {
-            privacyUrl: 'https://legal.vleap.ai/policies/privacy.html',
+            privacyUrl: 'https://legal.vleap.at/policies/privacy.html',
             supportEmail: 'support@joai.ai',
           },
           review: {

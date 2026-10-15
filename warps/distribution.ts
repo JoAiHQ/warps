@@ -7,8 +7,8 @@ import {
   WarpbaseBrand,
 } from './types'
 
-const JOAI_LEGAL_NOTICE_URL = 'https://legal.vleap.ai/general/legal-notice.html'
-const JOAI_PRIVACY_URL = 'https://legal.vleap.ai/policies/privacy.html'
+const JOAI_LEGAL_NOTICE_URL = 'https://legal.vleap.at/general/legal-notice.html'
+const JOAI_PRIVACY_URL = 'https://legal.vleap.at/policies/privacy.html'
 const JOAI_SUPPORT_URL = 'https://joai.ai'
 const JOAI_SUPPORT_EMAIL = 'support@joai.ai'
 
