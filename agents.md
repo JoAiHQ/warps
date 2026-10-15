@@ -2,7 +2,7 @@
 
 ## Testing Billing Flow (Devnet)
 **Target URL**: `https://devnet.joai.ai`
-**Test User**: `apptester@vleap.ai` (Magic Link Login)
+**Test User**: `apptester@vleap.at` (Magic Link Login)
 
 ### Automation Steps
 1.  **Login**: Use email only. No password required. Verify dashboard loads.
