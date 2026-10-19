@@ -1745,11 +1745,11 @@ export const meta: Record<string, WarpExtras> = {
     category: 'communication',
     faq: {
       en: [
-        { question: 'What does this return?', answer: 'Title, type, status, summary, urls, password, links, and attached contact details.' },
+        { question: 'What does this return?', answer: 'Title, type, status, summary, urls, hasPassword (boolean), links, and attached contact details. Never the plaintext password.' },
         { question: 'When should I use get vs list?', answer: 'Use get when you already know the artifact ID; use list to discover IDs.' },
       ],
       de: [
-        { question: 'Was wird zurückgegeben?', answer: 'Titel, Typ, Status, Summary, URLs, Passwort, Links und Kontakt-Details.' },
+        { question: 'Was wird zurückgegeben?', answer: 'Titel, Typ, Status, Summary, URLs, hasPassword (Boolean), Links und Kontakt-Details — nie das Klartext-Passwort.' },
         { question: 'Wann get und wann list?', answer: 'get, wenn die Artefakt-ID bekannt ist; list, um IDs zu finden.' },
       ],
     },
