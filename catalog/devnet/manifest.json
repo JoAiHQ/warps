@@ -4,8 +4,8 @@
   "repo": "JoAiHQ/warps",
   "branch": "dev",
   "network": "devnet",
-  "commitSha": "e3c7acb5ce66f9652c916c14d2b491ec6ee90d1b",
-  "generatedAt": "2026-10-17T20:53:21.774Z",
+  "commitSha": "8556ddb9aa3fe82282a85ec0d025442e93c21826",
+  "generatedAt": "2026-10-19T11:36:23.809Z",
   "warps": [
     {
       "key": "arbitrum:omniset-deposit-arbitrum",
@@ -70521,8 +70521,8 @@
       "identifier": "@joai-artifact-create",
       "alias": "joai-artifact-create",
       "chain": "none",
-      "hash": "763e560d20629eba1d4e0dcb6beb817908ed7c29bae42cc4b048681c6337456d",
-      "checksum": "763e560d20629eba1d4e0dcb6beb817908ed7c29bae42cc4b048681c6337456d",
+      "hash": "4eab58481d242d7bd9d94775083a9a6a2c58f49779f474f15b5ce0f31db9df43",
+      "checksum": "4eab58481d242d7bd9d94775083a9a6a2c58f49779f474f15b5ce0f31db9df43",
       "name": "JoAi: Create Artifact",
       "title": {
         "en": "Create a delivery artifact",
@@ -70679,9 +70679,10 @@
                 "source": "field",
                 "required": false,
                 "description": {
-                  "en": "Optional access password for the primary URL",
-                  "de": "Optionales Zugangspasswort für die primäre URL"
-                }
+                  "en": "Optional access password for the primary URL (hashed at rest; never returned — remember it for the delivery message)",
+                  "de": "Optionales Zugangspasswort für die primäre URL (gehasht gespeichert, wird nie zurückgegeben — für die Liefernachricht merken)"
+                },
+                "bot": "Write-only. Response has hasPassword only. If you set a password, include that plaintext in any delivery message yourself."
               },
               {
                 "name": "Extra Link URL",
@@ -71223,8 +71224,8 @@
       "identifier": "@joai-artifact-get",
       "alias": "joai-artifact-get",
       "chain": "none",
-      "hash": "531a3c5f14069383a7146979194167f24f1b2f3aa16973d8be0e0bcfacefede8",
-      "checksum": "531a3c5f14069383a7146979194167f24f1b2f3aa16973d8be0e0bcfacefede8",
+      "hash": "8a0df8db1c10b8c1bb126fbbe8ba1f545a3af99b22e2a383fd7fcc956782781c",
+      "checksum": "8a0df8db1c10b8c1bb126fbbe8ba1f545a3af99b22e2a383fd7fcc956782781c",
       "name": "JoAi: Get Artifact",
       "title": {
         "en": "Get a delivery artifact",
@@ -71276,7 +71277,7 @@
           "en": "Fetch one delivery artifact by ID, including links, contact, and delivery status.",
           "de": "Ein Lieferartefakt per ID abrufen, inkl. Links, Kontakt und Lieferstatus."
         },
-        "bot": "Use this before drafting or delivering to load title, summary, urls/links, and contactId.",
+        "bot": "Use this before drafting or delivering to load title, summary, urls/links, hasPassword, and contactId. Passwords are hashed and never returned — only hasPassword. If you set a password on create/update, include that plaintext in the delivery message yourself.",
         "vars": {
           "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
           "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
@@ -71327,7 +71328,7 @@
               "status": "out.data.status",
               "summary": "out.data.summary",
               "url": "out.data.url",
-              "password": "out.data.password",
+              "hasPassword": "out.data.hasPassword",
               "links": "out.data.links",
               "contactId": "out.data.contactId",
               "contactEmail": "out.data.contact.email",
@@ -71344,7 +71345,7 @@
           "status": "out.1.status",
           "summary": "out.1.summary",
           "url": "out.1.url",
-          "password": "out.1.password",
+          "hasPassword": "out.1.hasPassword",
           "links": "out.1.links",
           "contactId": "out.1.contactId",
           "contactEmail": "out.1.contactEmail",
@@ -71382,7 +71383,7 @@
           "en": [
             {
               "question": "What does this return?",
-              "answer": "Title, type, status, summary, urls, password, links, and attached contact details."
+              "answer": "Title, type, status, summary, urls, hasPassword (boolean), links, and attached contact details. Never the plaintext password."
             },
             {
               "question": "When should I use get vs list?",
@@ -71392,7 +71393,7 @@
           "de": [
             {
               "question": "Was wird zurückgegeben?",
-              "answer": "Titel, Typ, Status, Summary, URLs, Passwort, Links und Kontakt-Details."
+              "answer": "Titel, Typ, Status, Summary, URLs, hasPassword (Boolean), Links und Kontakt-Details — nie das Klartext-Passwort."
             },
             {
               "question": "Wann get und wann list?",
@@ -71636,8 +71637,8 @@
       "identifier": "@joai-artifact-update",
       "alias": "joai-artifact-update",
       "chain": "none",
-      "hash": "afbd3725309038a55e9dca66de3b3a082273df83606186ee8d42e28619871215",
-      "checksum": "afbd3725309038a55e9dca66de3b3a082273df83606186ee8d42e28619871215",
+      "hash": "acae0d79b33ca5c4efeaf3e225361e7de87443166ba7327058cfff71c1458170",
+      "checksum": "acae0d79b33ca5c4efeaf3e225361e7de87443166ba7327058cfff71c1458170",
       "name": "JoAi: Update Artifact",
       "title": {
         "en": "Update a delivery artifact",
@@ -71786,7 +71787,12 @@
                 "as": "password",
                 "type": "string",
                 "source": "field",
-                "required": false
+                "required": false,
+                "description": {
+                  "en": "Updated access password (hashed at rest; never returned)",
+                  "de": "Aktualisiertes Zugangspasswort (gehasht gespeichert; wird nie zurückgegeben)"
+                },
+                "bot": "Write-only. Response has hasPassword only."
               },
               {
                 "name": "Media",
@@ -85602,8 +85608,8 @@
       "identifier": "@joai-document-update",
       "alias": "joai-document-update",
       "chain": "none",
-      "hash": "48e1d26d39ade68c4248f27f6e1a9723b325870b979d204846aa2fbc6be2c7e1",
-      "checksum": "48e1d26d39ade68c4248f27f6e1a9723b325870b979d204846aa2fbc6be2c7e1",
+      "hash": "017576b3d508407550df5b0b5373b0b173d06d5af952b751e948468761c47662",
+      "checksum": "017576b3d508407550df5b0b5373b0b173d06d5af952b751e948468761c47662",
       "name": "JoAi: Update Document",
       "title": {
         "en": "Update a document",
@@ -85671,7 +85677,7 @@
           "ro": "Update the title, content, metadata, public share state, optional share password, or archive state of an existing document. Set public=true for a shareable link (url), password to protect it, archived=true to hide from knowledge (soft retire).",
           "it": "Update the title, content, metadata, public share state, optional share password, or archive state of an existing document. Set public=true for a shareable link (url), password to protect it, archived=true to hide from knowledge (soft retire)."
         },
-        "bot": "Use this when the user wants to edit an existing document or template, share/unshare via public link, set or clear a share password, or archive/unarchive it. Prefer archived=true over delete for soft retirement. When public=true, return the url from the response (includes ?password= when protected).",
+        "bot": "Use this when the user wants to edit an existing document or template, share/unshare via public link, set or clear a share password, or archive/unarchive it. Prefer archived=true over delete for soft retirement. When public=true, return the url from the response (never includes the password). Response has hasPassword only — if you set a password, tell the user the plaintext and that recipients can use ?password= or the unlock form.",
         "vars": {
           "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
         },
@@ -85779,14 +85785,14 @@
                 "name": "Password",
                 "as": "password",
                 "description": {
-                  "en": "Optional share password. Recipients need it in the link (?password=) or unlock form. Omit to leave unchanged. To remove, set Clear Password to true.",
-                  "de": "Optionales Share-Passwort. Empfänger brauchen es im Link (?password=) oder im Freigabe-Formular. Weglassen lässt es unverändert. Zum Entfernen Clear Password auf true setzen.",
-                  "es": "Optional share password. Recipients need it in the link (?password=) or unlock form. Omit to leave unchanged. To remove, set Clear Password to true.",
-                  "fr": "Optional share password. Recipients need it in the link (?password=) or unlock form. Omit to leave unchanged. To remove, set Clear Password to true.",
-                  "ro": "Optional share password. Recipients need it in the link (?password=) or unlock form. Omit to leave unchanged. To remove, set Clear Password to true.",
-                  "it": "Optional share password. Recipients need it in the link (?password=) or unlock form. Omit to leave unchanged. To remove, set Clear Password to true."
+                  "en": "Optional share password (hashed at rest). Recipients auto-unlock via ?password= or the unlock form. Omit to leave unchanged. To remove, set Clear Password to true.",
+                  "de": "Optionales Share-Passwort (gehasht gespeichert). Empfänger entsperren per ?password= oder Freigabe-Formular. Weglassen lässt es unverändert. Zum Entfernen Clear Password auf true setzen.",
+                  "es": "Optional share password (hashed at rest). Recipients auto-unlock via ?password= or the unlock form. Omit to leave unchanged. To remove, set Clear Password to true.",
+                  "fr": "Optional share password (hashed at rest). Recipients auto-unlock via ?password= or the unlock form. Omit to leave unchanged. To remove, set Clear Password to true.",
+                  "ro": "Optional share password (hashed at rest). Recipients auto-unlock via ?password= or the unlock form. Omit to leave unchanged. To remove, set Clear Password to true.",
+                  "it": "Optional share password (hashed at rest). Recipients auto-unlock via ?password= or the unlock form. Omit to leave unchanged. To remove, set Clear Password to true."
                 },
-                "bot": "Set a share password for public documents (url will include ?password=). Omit to keep current password. To remove, set clearPassword=true instead of an empty string.",
+                "bot": "Set a share password for public documents. The API never returns the password (only hasPassword). Tell the user the plaintext you set so they can share ?password= links. Omit to keep current password. To remove, set clearPassword=true instead of an empty string.",
                 "type": "string",
                 "source": "field",
                 "required": false
