@@ -4,8 +4,8 @@
   "repo": "JoAiHQ/warps",
   "branch": "dev",
   "network": "devnet",
-  "commitSha": "44d594e2721fc55f874cb8122c34ac5c8d10ec31",
-  "generatedAt": "2026-10-20T12:07:21.920Z",
+  "commitSha": "f75e9ef4e21540eaf8a902a0a90e8173235617fc",
+  "generatedAt": "2026-10-20T14:15:57.804Z",
   "warps": [
     {
       "key": "arbitrum:omniset-deposit-arbitrum",
@@ -109119,6 +109119,104 @@
       "extras": null
     },
     {
+      "key": "none:joai-social-accounts-list",
+      "identifier": "@joai-social-accounts-list",
+      "alias": "joai-social-accounts-list",
+      "chain": "none",
+      "hash": "82ec5d8094bcd5b1924ad2789c9f340b2421f94436cf9b14a93b2fcbabb5dea9",
+      "checksum": "82ec5d8094bcd5b1924ad2789c9f340b2421f94436cf9b14a93b2fcbabb5dea9",
+      "name": "JoAi: List Social Accounts",
+      "title": {
+        "en": "View social accounts",
+        "de": "Social-Konten anzeigen"
+      },
+      "description": {
+        "en": "List the social profiles and Facebook Pages the team can publish to.",
+        "de": "Liste die Social-Profile und Facebook-Seiten auf, auf denen das Team veröffentlichen kann."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: List Social Accounts",
+        "title": {
+          "en": "View social accounts",
+          "de": "Social-Konten anzeigen"
+        },
+        "description": {
+          "en": "List the social profiles and Facebook Pages the team can publish to.",
+          "de": "Liste die Social-Profile und Facebook-Seiten auf, auf denen das Team veröffentlichen kann."
+        },
+        "bot": "Use this before creating a post when the team has more than one connected profile or Facebook Page. Each connection has platform, connected, displayName, and accounts[]. Pass the chosen accounts[].id as accountId to create_social_post. Omit accountId to use the default profile.",
+        "vars": {
+          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+          "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+        },
+        "output": {
+          "connections": "out.data"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "auto": true,
+            "label": {
+              "en": "View social accounts",
+              "de": "Social-Konten anzeigen"
+            },
+            "destination": {
+              "url": "https://devnet-api.joai.ai/v1/social-posts/connections",
+              "method": "GET",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+                "X-Team": "{{team}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Team",
+                "as": "team",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "default": "{{JOAI_TEAM_SLUG}}"
+              }
+            ]
+          }
+        ]
+      },
+      "extras": null
+    },
+    {
       "key": "none:joai-social-post-cancel",
       "identifier": "@joai-social-post-cancel",
       "alias": "joai-social-post-cancel",
@@ -109235,8 +109333,8 @@
       "identifier": "@joai-social-post-create",
       "alias": "joai-social-post-create",
       "chain": "none",
-      "hash": "381b8d9032ac3057e0705d41bbf272c99fb30c5ec5d12e1ba0603e4686ddcd73",
-      "checksum": "381b8d9032ac3057e0705d41bbf272c99fb30c5ec5d12e1ba0603e4686ddcd73",
+      "hash": "676daff99e677a5666cfae2e7dd5d13f0502c26c0b6ff0019e310914fc8f48b3",
+      "checksum": "676daff99e677a5666cfae2e7dd5d13f0502c26c0b6ff0019e310914fc8f48b3",
       "name": "JoAi: Create Social Post",
       "title": {
         "en": "Schedule a social post",
@@ -109288,7 +109386,7 @@
           "en": "Create an Instagram, X, Facebook, or LinkedIn draft. Leave the time empty for a draft, or set a time to schedule it into JoAi's queue (the publish job posts later).",
           "de": "Erstelle einen Instagram-, X-, Facebook- oder LinkedIn-Entwurf. Ohne Zeit bleibt es ein Entwurf; mit Zeit wird er in JoAis Warteschlange geplant (der Publish-Job postet später)."
         },
-        "bot": "Use this to draft or schedule an Instagram, X, Facebook, or LinkedIn post. Prefer exportId (Studio export UUID) or elementVariationId when posting Studio/element stills — JoAi copies those images onto the post and leaves the originals alone. Otherwise upload with media_upload and pass IDs in media. Do not combine media with exportId or elementVariationId. For Instagram, set format to feed (default), short (one MP4 → Reel), or story (one JPEG or MP4). Set scheduledAt in the team timezone when the user names a time - that only queues the post; JoAi's publish job posts to the network later. Omit scheduledAt to keep a draft. Platforms: instagram, x, facebook, linkedin. The response includes shareUrl — a public preview link (caption, media, network, time) you can give the user for review before publish.",
+        "bot": "Use this to draft or schedule an Instagram, X, Facebook, or LinkedIn post. Prefer exportId (Studio export UUID) or elementVariationId when posting Studio/element stills — JoAi copies those images onto the post and leaves the originals alone. Otherwise upload with media_upload and pass IDs in media. Do not combine media with exportId or elementVariationId. For Instagram, set format to feed (default), short (one MP4 → Reel), or story (one JPEG or MP4). Use list_social_accounts first when the team has more than one connected profile and pass the chosen account id as accountId — on Facebook that selects the Page. Set scheduledAt in the team timezone when the user names a time - that only queues the post; JoAi's publish job posts to the network later. Omit scheduledAt to keep a draft. Platforms: instagram, x, facebook, linkedin. The response includes shareUrl — a public preview link (caption, media, network, time) you can give the user for review before publish.",
         "vars": {
           "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
           "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
@@ -109327,6 +109425,18 @@
                   "linkedin": "LinkedIn"
                 },
                 "default": "instagram"
+              },
+              {
+                "name": "Account",
+                "as": "accountId",
+                "description": {
+                  "en": "Optional profile or Page ID from list_social_accounts. On Facebook this chooses the Page; omit to use the default Page.",
+                  "de": "Optionale Profil- oder Seiten-ID aus list_social_accounts. Bei Facebook wird damit die Seite gewählt; weglassen für die Standardseite."
+                },
+                "bot": "Account id from list_social_accounts. Required to target a specific Facebook Page when more than one is connected. Omit for the default profile.",
+                "type": "string",
+                "source": "field",
+                "required": false
               },
               {
                 "name": "Caption",
@@ -109422,6 +109532,7 @@
           "id": "out.data.id",
           "status": "out.data.status",
           "format": "out.data.format",
+          "accountId": "out.data.accountId",
           "scheduledAt": "out.data.scheduledAt",
           "shareUrl": "out.data.shareUrl"
         },

@@ -9,7 +9,7 @@
     "en": "Create an Instagram, X, Facebook, or LinkedIn draft. Leave the time empty for a draft, or set a time to schedule it into JoAi's queue (the publish job posts later).",
     "de": "Erstelle einen Instagram-, X-, Facebook- oder LinkedIn-Entwurf. Ohne Zeit bleibt es ein Entwurf; mit Zeit wird er in JoAis Warteschlange geplant (der Publish-Job postet später)."
   },
-  "bot": "Use this to draft or schedule an Instagram, X, Facebook, or LinkedIn post. Prefer exportId (Studio export UUID) or elementVariationId when posting Studio/element stills — JoAi copies those images onto the post and leaves the originals alone. Otherwise upload with media_upload and pass IDs in media. Do not combine media with exportId or elementVariationId. For Instagram, set format to feed (default), short (one MP4 → Reel), or story (one JPEG or MP4). Set scheduledAt in the team timezone when the user names a time - that only queues the post; JoAi's publish job posts to the network later. Omit scheduledAt to keep a draft. Platforms: instagram, x, facebook, linkedin. The response includes shareUrl — a public preview link (caption, media, network, time) you can give the user for review before publish.",
+  "bot": "Use this to draft or schedule an Instagram, X, Facebook, or LinkedIn post. Prefer exportId (Studio export UUID) or elementVariationId when posting Studio/element stills — JoAi copies those images onto the post and leaves the originals alone. Otherwise upload with media_upload and pass IDs in media. Do not combine media with exportId or elementVariationId. For Instagram, set format to feed (default), short (one MP4 → Reel), or story (one JPEG or MP4). Use list_social_accounts first when the team has more than one connected profile and pass the chosen account id as accountId — on Facebook that selects the Page. Set scheduledAt in the team timezone when the user names a time - that only queues the post; JoAi's publish job posts to the network later. Omit scheduledAt to keep a draft. Platforms: instagram, x, facebook, linkedin. The response includes shareUrl — a public preview link (caption, media, network, time) you can give the user for review before publish.",
   "vars": {
     "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
     "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
@@ -48,6 +48,18 @@
             "linkedin": "LinkedIn"
           },
           "default": "instagram"
+        },
+        {
+          "name": "Account",
+          "as": "accountId",
+          "description": {
+            "en": "Optional profile or Page ID from list_social_accounts. On Facebook this chooses the Page; omit to use the default Page.",
+            "de": "Optionale Profil- oder Seiten-ID aus list_social_accounts. Bei Facebook wird damit die Seite gewählt; weglassen für die Standardseite."
+          },
+          "bot": "Account id from list_social_accounts. Required to target a specific Facebook Page when more than one is connected. Omit for the default profile.",
+          "type": "string",
+          "source": "field",
+          "required": false
         },
         {
           "name": "Caption",
@@ -143,6 +155,7 @@
     "id": "out.data.id",
     "status": "out.data.status",
     "format": "out.data.format",
+    "accountId": "out.data.accountId",
     "scheduledAt": "out.data.scheduledAt",
     "shareUrl": "out.data.shareUrl"
   },
