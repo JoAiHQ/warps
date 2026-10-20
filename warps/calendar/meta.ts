@@ -145,4 +145,49 @@ export const meta: Record<string, WarpExtras> = {
     category: 'productivity',
     faq: sharedFaq,
   },
+  'list-feeds': {
+    keywords: sharedKeywords,
+    useCases: {
+      en: ['Review every iCalendar source importing events into a team', 'Check whether a fixture or events feed last synchronized successfully', 'Inspect a source before changing its publishing or public properties'],
+      de: ['Alle iCalendar-Quellen eines Teams prüfen', 'Sehen, ob ein Spielplan oder Event-Feed zuletzt erfolgreich synchronisiert wurde', 'Eine Quelle prüfen, bevor Veröffentlichung oder öffentliche Felder geändert werden'],
+    },
+    category: 'productivity',
+    faq: sharedFaq,
+  },
+  'create-feed': {
+    keywords: sharedKeywords,
+    useCases: {
+      en: ['Import a club fixture feed into public team updates', 'Bring a public event calendar into JoAi without manual event entry', 'Add safe public properties so a website can filter imported events'],
+      de: ['Einen Vereinsspielplan in öffentliche Team-Updates importieren', 'Einen öffentlichen Veranstaltungskalender ohne manuelle Eingabe nach JoAi übernehmen', 'Sichere öffentliche Felder ergänzen, damit eine Website importierte Ereignisse filtern kann'],
+    },
+    category: 'productivity',
+    faq: sharedFaq,
+  },
+  'update-feed': {
+    keywords: sharedKeywords,
+    useCases: {
+      en: ['Correct a changed iCalendar source URL or timezone', 'Pause daily imports without deleting a configured source', 'Adjust which imported events publish automatically'],
+      de: ['Eine geänderte iCalendar-URL oder Zeitzone korrigieren', 'Tägliche Importe pausieren, ohne eine Quelle zu löschen', 'Einstellen, ob importierte Ereignisse automatisch veröffentlicht werden'],
+    },
+    category: 'productivity',
+    faq: sharedFaq,
+  },
+  'sync-feed': {
+    keywords: sharedKeywords,
+    useCases: {
+      en: ['Refresh a fixture feed immediately before a matchday', 'Confirm that a public events feed imports new dates correctly', 'See exactly how many imported team updates changed in a sync'],
+      de: ['Einen Spielplan direkt vor einem Spieltag aktualisieren', 'Prüfen, ob ein öffentlicher Event-Feed neue Termine korrekt importiert', 'Genau sehen, wie viele importierte Team-Updates sich geändert haben'],
+    },
+    category: 'productivity',
+    faq: sharedFaq,
+  },
+  'delete-feed': {
+    keywords: sharedKeywords,
+    useCases: {
+      en: ['Stop importing a retired public calendar source', 'Remove a duplicate feed after explicit confirmation', 'Clean up an obsolete fixture source from a team'],
+      de: ['Den Import einer eingestellten öffentlichen Kalenderquelle stoppen', 'Eine doppelte Quelle nach ausdrücklicher Bestätigung entfernen', 'Eine veraltete Spielplanquelle aus einem Team bereinigen'],
+    },
+    category: 'productivity',
+    faq: sharedFaq,
+  },
 }

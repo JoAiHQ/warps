@@ -1,0 +1,39 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Calendar: Remove Imported Feed",
+  "title": {
+    "en": "Remove imported calendar feed",
+    "de": "Kalenderquelle entfernen",
+    "es": "Remove imported calendar feed",
+    "fr": "Remove imported calendar feed",
+    "ro": "Remove imported calendar feed",
+    "it": "Remove imported calendar feed"
+  },
+  "description": {
+    "en": "Remove an iCalendar source from this team's imported updates. This stops future imports for that source while preserving the explicit approval step for a destructive configuration change.",
+    "de": "Entfernt eine iCalendar-Quelle aus den importierten Updates dieses Teams. Dadurch werden künftige Importe gestoppt; für diese destruktive Konfigurationsänderung bleibt die explizite Freigabe erhalten."
+  },
+  "bot": "Use this only after the user explicitly confirms removal of the identified calendar source. List feeds first if necessary; explain that it stops future imports before executing.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": { "en": "Remove calendar feed", "de": "Kalenderquelle entfernen", "es": "Remove calendar feed", "fr": "Remove calendar feed", "ro": "Remove calendar feed", "it": "Remove calendar feed" },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/agents/{{JOAI_AGENT_UUID}}/calendar/feeds/{{feedId}}",
+        "method": "DELETE",
+        "headers": { "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}" }
+      },
+      "inputs": [
+        { "name": "Feed ID", "as": "feedId", "description": { "en": "Identifier of the imported calendar source to remove", "de": "Kennung der zu entfernenden Kalenderquelle" }, "bot": "The feed ID from list imported calendar feeds. Confirm removal with the user first.", "type": "string", "source": "field", "required": true, "position": "url:feedId" }
+      ]
+    }
+  ],
+  "output": {},
+  "messages": {
+    "success": { "en": "Removed the calendar source.", "de": "Kalenderquelle entfernt.", "es": "Removed the calendar source.", "fr": "Removed the calendar source.", "ro": "Removed the calendar source.", "it": "Removed the calendar source." }
+  }
+}
