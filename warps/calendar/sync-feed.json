@@ -1,0 +1,39 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Calendar: Sync Imported Feed",
+  "title": {
+    "en": "Sync imported calendar feed",
+    "de": "Kalenderquelle synchronisieren",
+    "es": "Sync imported calendar feed",
+    "fr": "Sync imported calendar feed",
+    "ro": "Sync imported calendar feed",
+    "it": "Sync imported calendar feed"
+  },
+  "description": {
+    "en": "Fetch one iCalendar source now and apply its changes to this team's imported updates. The result reports how many events were created, updated, archived, or unchanged so an agent can confirm the synchronization outcome.",
+    "de": "Ruft eine iCalendar-Quelle sofort ab und übernimmt Änderungen in die importierten Updates dieses Teams. Das Ergebnis zeigt erstellte, aktualisierte, archivierte und unveränderte Ereignisse, damit ein Agent die Synchronisierung bestätigen kann."
+  },
+  "bot": "Use this when the user asks to refresh a specific imported calendar source immediately. List feeds first when the source ID is unknown; this does not change the daily sync schedule.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": { "en": "Sync calendar feed", "de": "Kalenderquelle synchronisieren", "es": "Sync calendar feed", "fr": "Sync calendar feed", "ro": "Sync calendar feed", "it": "Sync calendar feed" },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/agents/{{JOAI_AGENT_UUID}}/calendar/feeds/{{feedId}}/sync",
+        "method": "POST",
+        "headers": { "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}", "Content-Type": "application/json" }
+      },
+      "inputs": [
+        { "name": "Feed ID", "as": "feedId", "description": { "en": "Identifier of the imported calendar source", "de": "Kennung der importierten Kalenderquelle" }, "bot": "The feed ID from list imported calendar feeds.", "type": "string", "source": "field", "required": true, "position": "url:feedId" }
+      ]
+    }
+  ],
+  "output": { "FEED_NAME": "out.data.feed.name", "CREATED": "out.data.created", "UPDATED": "out.data.updated", "ARCHIVED": "out.data.archived", "UNCHANGED": "out.data.unchanged" },
+  "messages": {
+    "success": { "en": "Synced \"{{FEED_NAME}}\": {{CREATED}} created, {{UPDATED}} updated, {{ARCHIVED}} archived, {{UNCHANGED}} unchanged.", "de": "\"{{FEED_NAME}}\" synchronisiert: {{CREATED}} erstellt, {{UPDATED}} aktualisiert, {{ARCHIVED}} archiviert, {{UNCHANGED}} unverändert.", "es": "Synced \"{{FEED_NAME}}\": {{CREATED}} created, {{UPDATED}} updated, {{ARCHIVED}} archived, {{UNCHANGED}} unchanged.", "fr": "Synced \"{{FEED_NAME}}\": {{CREATED}} created, {{UPDATED}} updated, {{ARCHIVED}} archived, {{UNCHANGED}} unchanged.", "ro": "Synced \"{{FEED_NAME}}\": {{CREATED}} created, {{UPDATED}} updated, {{ARCHIVED}} archived, {{UNCHANGED}} unchanged.", "it": "Synced \"{{FEED_NAME}}\": {{CREATED}} created, {{UPDATED}} updated, {{ARCHIVED}} archived, {{UNCHANGED}} unchanged." }
+  }
+}

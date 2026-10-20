@@ -1,0 +1,43 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Calendar: Add Imported Feed",
+  "title": {
+    "en": "Add imported calendar feed",
+    "de": "Kalenderquelle hinzufügen",
+    "es": "Add imported calendar feed",
+    "fr": "Add imported calendar feed",
+    "ro": "Add imported calendar feed",
+    "it": "Add imported calendar feed"
+  },
+  "description": {
+    "en": "Add a public iCalendar feed that imports events into this team's JoAi updates. Set the source timezone, choose whether incoming events publish automatically, and provide only public properties that websites may display.",
+    "de": "Fügt eine öffentliche iCalendar-Quelle hinzu, die Ereignisse in die JoAi-Updates dieses Teams importiert. Lege die Zeitzone fest, entscheide über automatische Veröffentlichung und übergib nur öffentliche Felder für Websites."
+  },
+  "bot": "Use this when the user wants JoAi to regularly import events from a public .ics or webcal source. Confirm the source URL and timezone first; never place private contact data in properties.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": { "en": "Add calendar feed", "de": "Kalenderquelle hinzufügen", "es": "Add calendar feed", "fr": "Add calendar feed", "ro": "Add calendar feed", "it": "Add calendar feed" },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/agents/{{JOAI_AGENT_UUID}}/calendar/feeds",
+        "method": "POST",
+        "headers": { "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}", "Content-Type": "application/json" }
+      },
+      "inputs": [
+        { "name": "Name", "as": "name", "description": { "en": "A clear name for this calendar source", "de": "Ein eindeutiger Name für diese Kalenderquelle" }, "bot": "A short descriptive source name, for example 'ÖFB fixtures' or 'Community events'.", "type": "string", "source": "field", "required": true, "max": 255, "position": "payload:name" },
+        { "name": "Source URL", "as": "url", "description": { "en": "Public HTTPS .ics or webcal URL", "de": "Öffentliche HTTPS-.ics- oder webcal-URL" }, "bot": "A publicly reachable HTTPS or webcal iCalendar URL. Do not use a private or authenticated URL.", "type": "string", "source": "field", "required": true, "max": 2048, "position": "payload:url" },
+        { "name": "Timezone", "as": "timezone", "description": { "en": "IANA timezone used by the source", "de": "IANA-Zeitzone der Quelle" }, "bot": "The source's IANA timezone, for example Europe/Vienna. Ask when the source does not make it clear.", "type": "string", "source": "field", "required": true, "max": 100, "position": "payload:timezone" },
+        { "name": "Publish automatically", "as": "publish", "description": { "en": "Publish imported events immediately", "de": "Importierte Ereignisse sofort veröffentlichen" }, "bot": "True only if incoming events should become publicly visible immediately; otherwise they remain drafts for review.", "type": "boolean", "source": "field", "required": false, "position": "payload:publish" },
+        { "name": "Public properties", "as": "properties", "description": { "en": "Optional public key-value properties attached to every imported event", "de": "Optionale öffentliche Schlüssel-Wert-Felder für jedes importierte Ereignis" }, "bot": "Optional object of safe public string values, for example {\"section\":\"fussball\",\"source\":\"oefb\"}. Never include personal or private data.", "type": "object", "source": "field", "required": false, "position": "payload:properties" }
+      ]
+    }
+  ],
+  "output": { "FEED_ID": "out.data.id", "FEED_NAME": "out.data.name", "FEED_URL": "out.data.url" },
+  "messages": {
+    "success": { "en": "Added the calendar source \"{{FEED_NAME}}\".", "de": "Kalenderquelle \"{{FEED_NAME}}\" hinzugefügt.", "es": "Added the calendar source \"{{FEED_NAME}}\".", "fr": "Added the calendar source \"{{FEED_NAME}}\".", "ro": "Added the calendar source \"{{FEED_NAME}}\".", "it": "Added the calendar source \"{{FEED_NAME}}\"." }
+  }
+}

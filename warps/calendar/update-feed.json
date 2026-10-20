@@ -1,0 +1,45 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Calendar: Update Imported Feed",
+  "title": {
+    "en": "Update imported calendar feed",
+    "de": "Kalenderquelle aktualisieren",
+    "es": "Update imported calendar feed",
+    "fr": "Update imported calendar feed",
+    "ro": "Update imported calendar feed",
+    "it": "Update imported calendar feed"
+  },
+  "description": {
+    "en": "Change an existing iCalendar source for this team's imported updates. Update its source address, timezone, sync state, publishing preference, or safe public properties without changing unrelated calendar sources.",
+    "de": "Ändert eine bestehende iCalendar-Quelle für importierte Updates dieses Teams. Aktualisiere Quelladresse, Zeitzone, Synchronisierung, Veröffentlichungsoptionen oder sichere öffentliche Felder ohne andere Quellen zu verändern."
+  },
+  "bot": "Use this only after identifying the feed with the list action. Supply only fields the user wants to change; properties replace the full public-properties object, so retain existing values unless the user wants them removed.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": { "en": "Update calendar feed", "de": "Kalenderquelle aktualisieren", "es": "Update calendar feed", "fr": "Update calendar feed", "ro": "Update calendar feed", "it": "Update calendar feed" },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/agents/{{JOAI_AGENT_UUID}}/calendar/feeds/{{feedId}}",
+        "method": "PATCH",
+        "headers": { "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}", "Content-Type": "application/json" }
+      },
+      "inputs": [
+        { "name": "Feed ID", "as": "feedId", "description": { "en": "Identifier of the imported calendar source", "de": "Kennung der importierten Kalenderquelle" }, "bot": "The feed ID from list imported calendar feeds.", "type": "string", "source": "field", "required": true, "position": "url:feedId" },
+        { "name": "Name", "as": "name", "description": { "en": "New display name", "de": "Neuer Anzeigename" }, "bot": "Optional source name.", "type": "string", "source": "field", "required": false, "max": 255, "position": "payload:name" },
+        { "name": "Source URL", "as": "url", "description": { "en": "New public HTTPS .ics or webcal URL", "de": "Neue öffentliche HTTPS-.ics- oder webcal-URL" }, "bot": "Optional new public source URL.", "type": "string", "source": "field", "required": false, "max": 2048, "position": "payload:url" },
+        { "name": "Timezone", "as": "timezone", "description": { "en": "New IANA source timezone", "de": "Neue IANA-Zeitzone der Quelle" }, "bot": "Optional IANA timezone such as Europe/Vienna.", "type": "string", "source": "field", "required": false, "max": 100, "position": "payload:timezone" },
+        { "name": "Sync daily", "as": "active", "description": { "en": "Whether daily synchronization is enabled", "de": "Ob die tägliche Synchronisierung aktiv ist" }, "bot": "False pauses automatic daily synchronization. It does not delete already imported updates.", "type": "boolean", "source": "field", "required": false, "position": "payload:active" },
+        { "name": "Publish automatically", "as": "publish", "description": { "en": "Whether new imported events publish immediately", "de": "Ob neue importierte Ereignisse sofort veröffentlicht werden" }, "bot": "False keeps newly imported events as drafts for review.", "type": "boolean", "source": "field", "required": false, "position": "payload:publish" },
+        { "name": "Public properties", "as": "properties", "description": { "en": "Replacement public key-value properties", "de": "Ersatz für öffentliche Schlüssel-Wert-Felder" }, "bot": "Optional full replacement object of safe public string values. Never include personal or private data.", "type": "object", "source": "field", "required": false, "position": "payload:properties" }
+      ]
+    }
+  ],
+  "output": { "FEED_ID": "out.data.id", "FEED_NAME": "out.data.name" },
+  "messages": {
+    "success": { "en": "Updated the calendar source \"{{FEED_NAME}}\".", "de": "Kalenderquelle \"{{FEED_NAME}}\" aktualisiert.", "es": "Updated the calendar source \"{{FEED_NAME}}\".", "fr": "Updated the calendar source \"{{FEED_NAME}}\".", "ro": "Updated the calendar source \"{{FEED_NAME}}\".", "it": "Updated the calendar source \"{{FEED_NAME}}\"." }
+  }
+}
