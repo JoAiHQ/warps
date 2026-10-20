@@ -1,0 +1,49 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: List Social Accounts",
+  "title": {
+    "en": "View social accounts",
+    "de": "Social-Konten anzeigen"
+  },
+  "description": {
+    "en": "List the social profiles and Facebook Pages the team can publish to.",
+    "de": "Liste die Social-Profile und Facebook-Seiten auf, auf denen das Team veröffentlichen kann."
+  },
+  "bot": "Use this before creating a post when the team has more than one connected profile or Facebook Page. Each connection has platform, connected, displayName, and accounts[]. Pass the chosen accounts[].id as accountId to create_social_post. Omit accountId to use the default profile.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "output": {
+    "connections": "out.data"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "auto": true,
+      "label": {
+        "en": "View social accounts",
+        "de": "Social-Konten anzeigen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/social-posts/connections",
+        "method": "GET",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Team",
+          "as": "team",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ]
+    }
+  ]
+}
