@@ -15,19 +15,21 @@
   },
   "bot": "Use this to inspect the team's imported calendar sources. These are inbound iCalendar feeds for team updates, not the agent's personal Google, Microsoft, or Apple calendar.",
   "vars": {
-    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
-    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
   },
   "actions": [
     {
       "type": "collect",
       "label": { "en": "List calendar feeds", "de": "Kalenderquellen auflisten", "es": "List calendar feeds", "fr": "List calendar feeds", "ro": "List calendar feeds", "it": "List calendar feeds" },
       "destination": {
-        "url": "INJECT:API_BASE/v1/agents/{{JOAI_AGENT_UUID}}/calendar/feeds",
+        "url": "INJECT:API_BASE/v1/calendar/feeds",
         "method": "GET",
-        "headers": { "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}" }
+        "headers": { "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}", "X-Team": "{{team}}" }
       },
-      "inputs": []
+      "inputs": [
+        { "name": "Team", "as": "team", "description": { "en": "Team slug whose calendar sources should be listed", "de": "Team-Slug, dessen Kalenderquellen aufgelistet werden sollen" }, "bot": "The slug of the team to inspect. Omit it to use the current team.", "type": "string", "source": "field", "required": false, "default": "{{JOAI_TEAM_SLUG}}" }
+      ]
     }
   ],
   "output": { "FEEDS": "out.data", "FEED_COUNT": "out.data.length" },

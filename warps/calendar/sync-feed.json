@@ -15,20 +15,21 @@
   },
   "bot": "Use this when the user asks to refresh a specific imported calendar source immediately. List feeds first when the source ID is unknown; this does not change the daily sync schedule.",
   "vars": {
-    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
-    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
   },
   "actions": [
     {
       "type": "collect",
       "label": { "en": "Sync calendar feed", "de": "Kalenderquelle synchronisieren", "es": "Sync calendar feed", "fr": "Sync calendar feed", "ro": "Sync calendar feed", "it": "Sync calendar feed" },
       "destination": {
-        "url": "INJECT:API_BASE/v1/agents/{{JOAI_AGENT_UUID}}/calendar/feeds/{{feedId}}/sync",
+        "url": "INJECT:API_BASE/v1/calendar/feeds/{{feedId}}/sync",
         "method": "POST",
-        "headers": { "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}", "Content-Type": "application/json" }
+        "headers": { "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}", "X-Team": "{{team}}", "Content-Type": "application/json" }
       },
       "inputs": [
-        { "name": "Feed ID", "as": "feedId", "description": { "en": "Identifier of the imported calendar source", "de": "Kennung der importierten Kalenderquelle" }, "bot": "The feed ID from list imported calendar feeds.", "type": "string", "source": "field", "required": true, "position": "url:feedId" }
+        { "name": "Feed ID", "as": "feedId", "description": { "en": "Identifier of the imported calendar source", "de": "Kennung der importierten Kalenderquelle" }, "bot": "The feed ID from list imported calendar feeds.", "type": "string", "source": "field", "required": true, "position": "url:feedId" },
+        { "name": "Team", "as": "team", "description": { "en": "Team slug that owns this calendar source", "de": "Team-Slug, dem diese Kalenderquelle gehört" }, "bot": "The slug of the team that owns this calendar source. Omit it to use the current team.", "type": "string", "source": "field", "required": false, "default": "{{JOAI_TEAM_SLUG}}" }
       ]
     }
   ],
