@@ -15,17 +15,17 @@
   },
   "bot": "Use this only after identifying the feed with the list action. Supply only fields the user wants to change; properties replace the full public-properties object, so retain existing values unless the user wants them removed.",
   "vars": {
-    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
-    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
   },
   "actions": [
     {
       "type": "collect",
       "label": { "en": "Update calendar feed", "de": "Kalenderquelle aktualisieren", "es": "Update calendar feed", "fr": "Update calendar feed", "ro": "Update calendar feed", "it": "Update calendar feed" },
       "destination": {
-        "url": "INJECT:API_BASE/v1/agents/{{JOAI_AGENT_UUID}}/calendar/feeds/{{feedId}}",
+        "url": "INJECT:API_BASE/v1/calendar/feeds/{{feedId}}",
         "method": "PATCH",
-        "headers": { "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}", "Content-Type": "application/json" }
+        "headers": { "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}", "X-Team": "{{team}}", "Content-Type": "application/json" }
       },
       "inputs": [
         { "name": "Feed ID", "as": "feedId", "description": { "en": "Identifier of the imported calendar source", "de": "Kennung der importierten Kalenderquelle" }, "bot": "The feed ID from list imported calendar feeds.", "type": "string", "source": "field", "required": true, "position": "url:feedId" },
@@ -34,7 +34,8 @@
         { "name": "Timezone", "as": "timezone", "description": { "en": "New IANA source timezone", "de": "Neue IANA-Zeitzone der Quelle" }, "bot": "Optional IANA timezone such as Europe/Vienna.", "type": "string", "source": "field", "required": false, "max": 100, "position": "payload:timezone" },
         { "name": "Sync daily", "as": "active", "description": { "en": "Whether daily synchronization is enabled", "de": "Ob die tägliche Synchronisierung aktiv ist" }, "bot": "False pauses automatic daily synchronization. It does not delete already imported updates.", "type": "boolean", "source": "field", "required": false, "position": "payload:active" },
         { "name": "Publish automatically", "as": "publish", "description": { "en": "Whether new imported events publish immediately", "de": "Ob neue importierte Ereignisse sofort veröffentlicht werden" }, "bot": "False keeps newly imported events as drafts for review.", "type": "boolean", "source": "field", "required": false, "position": "payload:publish" },
-        { "name": "Public properties", "as": "properties", "description": { "en": "Replacement public key-value properties", "de": "Ersatz für öffentliche Schlüssel-Wert-Felder" }, "bot": "Optional full replacement object of safe public string values. Never include personal or private data.", "type": "object", "source": "field", "required": false, "position": "payload:properties" }
+        { "name": "Public properties", "as": "properties", "description": { "en": "Replacement public key-value properties", "de": "Ersatz für öffentliche Schlüssel-Wert-Felder" }, "bot": "Optional full replacement object of safe public string values. Never include personal or private data.", "type": "object", "source": "field", "required": false, "position": "payload:properties" },
+        { "name": "Team", "as": "team", "description": { "en": "Team slug that owns this calendar source", "de": "Team-Slug, dem diese Kalenderquelle gehört" }, "bot": "The slug of the team that owns this calendar source. Omit it to use the current team.", "type": "string", "source": "field", "required": false, "default": "{{JOAI_TEAM_SLUG}}" }
       ]
     }
   ],
