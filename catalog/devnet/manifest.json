@@ -4,8 +4,8 @@
   "repo": "JoAiHQ/warps",
   "branch": "dev",
   "network": "devnet",
-  "commitSha": "a9009995f609c4186aac2689df018c8dde220365",
-  "generatedAt": "2026-10-21T10:08:43.570Z",
+  "commitSha": "d9181a9fcd763eeffa62256b03d1f87286cfd391",
+  "generatedAt": "2026-10-21T18:03:15.601Z",
   "warps": [
     {
       "key": "arbitrum:omniset-deposit-arbitrum",
@@ -71516,8 +71516,8 @@
       "identifier": "@joai-agent-list",
       "alias": "joai-agent-list",
       "chain": "none",
-      "hash": "49215b3a6e3a829541652f4656188cbc1cfe466f99c8d46392ae9c6fb665d930",
-      "checksum": "49215b3a6e3a829541652f4656188cbc1cfe466f99c8d46392ae9c6fb665d930",
+      "hash": "4619dd99b85e5287cd10d13993ca60ec93214d2e8d8749274d8ec76858e23c89",
+      "checksum": "4619dd99b85e5287cd10d13993ca60ec93214d2e8d8749274d8ec76858e23c89",
       "name": "JoAi: List Agents",
       "title": {
         "en": "List agents",
@@ -71528,12 +71528,12 @@
         "ro": "List agents"
       },
       "description": {
-        "en": "View all agents in your workspace with their MCP server URLs.",
-        "de": "Zeige alle Agenten in deinem Workspace mit ihren MCP-Server-URLs an.",
-        "es": "View all agents in your workspace with their MCP server URLs.",
-        "fr": "View all agents in your workspace with their MCP server URLs.",
-        "it": "View all agents in your workspace with their MCP server URLs.",
-        "ro": "View all agents in your workspace with their MCP server URLs."
+        "en": "View all agents in a team with their MCP server URLs.",
+        "de": "Zeige alle Agenten eines Teams mit ihren MCP-Server-URLs an.",
+        "es": "View all agents in a team with their MCP server URLs.",
+        "fr": "View all agents in a team with their MCP server URLs.",
+        "it": "View all agents in a team with their MCP server URLs.",
+        "ro": "View all agents in a team with their MCP server URLs."
       },
       "preview": null,
       "creator": "github:JoAiHQ/warps",
@@ -71578,17 +71578,18 @@
           "ro": "List agents"
         },
         "description": {
-          "en": "View all agents in your workspace with their MCP server URLs.",
-          "de": "Zeige alle Agenten in deinem Workspace mit ihren MCP-Server-URLs an.",
-          "es": "View all agents in your workspace with their MCP server URLs.",
-          "fr": "View all agents in your workspace with their MCP server URLs.",
-          "it": "View all agents in your workspace with their MCP server URLs.",
-          "ro": "View all agents in your workspace with their MCP server URLs."
+          "en": "View all agents in a team with their MCP server URLs.",
+          "de": "Zeige alle Agenten eines Teams mit ihren MCP-Server-URLs an.",
+          "es": "View all agents in a team with their MCP server URLs.",
+          "fr": "View all agents in a team with their MCP server URLs.",
+          "it": "View all agents in a team with their MCP server URLs.",
+          "ro": "View all agents in a team with their MCP server URLs."
         },
-        "bot": "Use this when the user wants to discover the agents available in their workspace.",
+        "bot": "Use this when the user wants to discover the agents available in a team. Defaults to the current team; pass a team slug to list another team's agents.",
         "vars": {
           "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
-          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+          "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
         },
         "actions": [
           {
@@ -71606,10 +71607,29 @@
               "url": "https://devnet-api.joai.ai/v1/agents",
               "method": "GET",
               "headers": {
-                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+                "X-Team": "{{team}}"
               }
             },
-            "inputs": []
+            "inputs": [
+              {
+                "name": "Team",
+                "as": "team",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "default": "{{JOAI_TEAM_SLUG}}",
+                "description": {
+                  "en": "Team slug for this action. Defaults to the current team.",
+                  "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team.",
+                  "es": "Team slug for this action. Defaults to the current team.",
+                  "fr": "Team slug for this action. Defaults to the current team.",
+                  "it": "Team slug for this action. Defaults to the current team.",
+                  "ro": "Team slug for this action. Defaults to the current team."
+                },
+                "bot": "The slug of the team to list agents for. Omit to use the current team."
+              }
+            ]
           }
         ],
         "output": {
