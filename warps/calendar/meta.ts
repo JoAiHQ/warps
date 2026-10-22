@@ -145,7 +145,7 @@ export const meta: Record<string, WarpExtras> = {
     category: 'productivity',
     faq: sharedFaq,
   },
-  'list-feeds': {
+  'feed-list': {
     keywords: sharedKeywords,
     useCases: {
       en: ['Review every iCalendar source importing events into a team', 'Check whether a fixture or events feed last synchronized successfully', 'Inspect a source before changing its publishing or public properties'],
@@ -154,7 +154,7 @@ export const meta: Record<string, WarpExtras> = {
     category: 'productivity',
     faq: sharedFaq,
   },
-  'create-feed': {
+  'feed-create': {
     keywords: sharedKeywords,
     useCases: {
       en: ['Import a club fixture feed into public team updates', 'Bring a public event calendar into JoAi without manual event entry', 'Add safe public properties so a website can filter imported events'],
@@ -163,7 +163,7 @@ export const meta: Record<string, WarpExtras> = {
     category: 'productivity',
     faq: sharedFaq,
   },
-  'update-feed': {
+  'feed-update': {
     keywords: sharedKeywords,
     useCases: {
       en: ['Correct a changed iCalendar source URL or timezone', 'Pause daily imports without deleting a configured source', 'Adjust which imported events publish automatically'],
@@ -172,7 +172,7 @@ export const meta: Record<string, WarpExtras> = {
     category: 'productivity',
     faq: sharedFaq,
   },
-  'sync-feed': {
+  'feed-sync': {
     keywords: sharedKeywords,
     useCases: {
       en: ['Refresh a fixture feed immediately before a matchday', 'Confirm that a public events feed imports new dates correctly', 'See exactly how many imported team updates changed in a sync'],
@@ -181,7 +181,7 @@ export const meta: Record<string, WarpExtras> = {
     category: 'productivity',
     faq: sharedFaq,
   },
-  'delete-feed': {
+  'feed-delete': {
     keywords: sharedKeywords,
     useCases: {
       en: ['Stop importing a retired public calendar source', 'Remove a duplicate feed after explicit confirmation', 'Clean up an obsolete fixture source from a team'],
