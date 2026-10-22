@@ -41,7 +41,7 @@
         "ro": "List contacts"
       },
       "destination": {
-        "url": "INJECT:API_BASE/v1/contacts?filter[search]={{search}}&filter[followup_overdue]={{followup_overdue}}&filter[waiting_on]={{waiting_on}}&filter[prop]={{prop}}&filter[tags]={{tags}}&filter[has_phone]={{has_phone}}&page={{page}}",
+        "url": "INJECT:API_BASE/v1/contacts?filter[search]={{search}}&filter[followup_overdue]={{followup_overdue}}&filter[waiting_on]={{waiting_on}}&filter[prop]={{prop}}&filter[tags]={{tags}}&filter[has_phone]={{has_phone}}&sort={{sort}}&page={{page}}",
         "method": "GET",
         "headers": {
           "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
@@ -68,26 +68,26 @@
         {
           "name": "Follow-up overdue",
           "as": "followup_overdue",
-          "type": "string",
+          "type": "boolean",
           "position": "query",
           "required": false,
           "description": {
             "en": "When true, only contacts whose follow-up date has passed with no activity since",
             "de": "Wenn true, nur Kontakte deren Follow-up-Datum überschritten ist und seitdem keine Aktivität hatten"
           },
-          "bot": "Pass true/1 to list overdue follow-ups only. Omit otherwise."
+          "bot": "Set to true to list overdue follow-ups only. Omit otherwise."
         },
         {
           "name": "Waiting on",
           "as": "waiting_on",
-          "type": "string",
+          "type": "boolean",
           "position": "query",
           "required": false,
           "description": {
             "en": "When true, only contacts with a nextFollowUpAt set; when false, only without one",
             "de": "Wenn true, nur Kontakte mit gesetztem nextFollowUpAt; wenn false, nur ohne"
           },
-          "bot": "Pass true/1 for open follow-ups, false/0 for contacts without a follow-up. Omit otherwise."
+          "bot": "Set to true for open follow-ups, false for contacts without a follow-up. Omit otherwise."
         },
         {
           "name": "Property",
@@ -116,14 +116,27 @@
         {
           "name": "Has phone",
           "as": "has_phone",
-          "type": "string",
+          "type": "boolean",
           "position": "query",
           "required": false,
           "description": {
             "en": "When true, only contacts with a phone number; when false, only without",
             "de": "Wenn true, nur Kontakte mit Telefonnummer; wenn false, nur ohne"
           },
-          "bot": "Pass true/1 or false/0. Omit otherwise."
+          "bot": "Set to true to only include contacts with a phone number, false for contacts without one. Omit otherwise."
+        },
+        {
+          "name": "Sort",
+          "as": "sort",
+          "type": "string",
+          "position": "query",
+          "required": false,
+          "options": ["-last_activity_at", "last_activity_at", "-created_at", "created_at", "name", "-name"],
+          "description": {
+            "en": "Sort order; prefix with - for descending (e.g. -last_activity_at for most recently active first)",
+            "de": "Sortierreihenfolge; mit - für absteigend (z. B. -last_activity_at für zuletzt aktiv zuerst)"
+          },
+          "bot": "Use -last_activity_at to get the most recently active contacts (incl. incoming messages) first."
         },
         {
           "name": "Page",
