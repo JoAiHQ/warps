@@ -1,0 +1,112 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: List Client Proposals",
+  "title": {
+    "en": "List client proposals",
+    "de": "Kundenangebote anzeigen",
+    "es": "Ver propuestas para clientes",
+    "fr": "Afficher les propositions clients",
+    "it": "Visualizza le proposte per i clienti",
+    "ro": "Afișează ofertele pentru clienți"
+  },
+  "description": {
+    "en": "View the team's tailored client proposals, including their status, selected scope, validity, and resulting quote when a client has confirmed.",
+    "de": "Zeige die individuellen Kundenangebote des Teams mit Status, gewähltem Umfang, Gültigkeit und dem entstandenen verbindlichen Angebot nach Bestätigung an.",
+    "es": "Consulta las propuestas personalizadas del equipo, con estado, alcance seleccionado, vigencia y la cotización resultante tras la confirmación.",
+    "fr": "Affichez les propositions clients personnalisées de l’équipe, avec leur statut, périmètre sélectionné, validité et devis créé après confirmation.",
+    "it": "Visualizza le proposte personalizzate del team, con stato, ambito selezionato, validità e preventivo creato dopo la conferma.",
+    "ro": "Afișează ofertele personalizate ale echipei, inclusiv statusul, pachetul selectat, valabilitatea și oferta formală creată după confirmare."
+  },
+  "bot": "Use this to review proposal follow-up after a discovery call or to check whether a client has confirmed. Do not create or send a formal quote yourself: a quote is created only when the client confirms their selection on the shared proposal page.",
+  "vars": {
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "messages": {
+    "success": {
+      "en": "Found {{count}} client proposals.",
+      "de": "{{count}} Kundenangebote gefunden.",
+      "es": "Se encontraron {{count}} propuestas para clientes.",
+      "fr": "{{count}} propositions clients trouvées.",
+      "it": "Trovate {{count}} proposte per i clienti.",
+      "ro": "Au fost găsite {{count}} oferte pentru clienți."
+    }
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "auto": true,
+      "label": {
+        "en": "List client proposals",
+        "de": "Kundenangebote anzeigen",
+        "es": "Ver propuestas para clientes",
+        "fr": "Afficher les propositions clients",
+        "it": "Visualizza le proposte per i clienti",
+        "ro": "Afișează ofertele pentru clienți"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/proposals?page={{page}}&perPage={{perPage}}",
+        "method": "GET",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Page",
+          "as": "page",
+          "type": "string",
+          "position": "query",
+          "required": false,
+          "default": "1",
+          "description": {
+            "en": "Page number, starting at 1",
+            "de": "Seitennummer, beginnend bei 1",
+            "es": "Número de página, a partir de 1",
+            "fr": "Numéro de page, à partir de 1",
+            "it": "Numero di pagina, a partire da 1",
+            "ro": "Numărul paginii, începând cu 1"
+          }
+        },
+        {
+          "name": "Per Page",
+          "as": "perPage",
+          "type": "uint16",
+          "source": "field",
+          "required": false,
+          "value": "50",
+          "description": {
+            "en": "Results per page, up to 50",
+            "de": "Ergebnisse pro Seite, maximal 50",
+            "es": "Resultados por página, hasta 50",
+            "fr": "Résultats par page, jusqu’à 50",
+            "it": "Risultati per pagina, fino a 50",
+            "ro": "Rezultate pe pagină, maximum 50"
+          }
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}",
+          "description": {
+            "en": "Team slug; defaults to the current team",
+            "de": "Team-Slug; standardmäßig das aktuelle Team",
+            "es": "Slug del equipo; por defecto, el equipo actual",
+            "fr": "Slug de l’équipe ; l’équipe actuelle par défaut",
+            "it": "Slug del team; per impostazione predefinita il team corrente",
+            "ro": "Slug-ul echipei; implicit echipa curentă"
+          }
+        }
+      ]
+    }
+  ],
+  "output": {
+    "proposals": "out.data",
+    "count": "out.data.length",
+    "pagination": "out.meta"
+  }
+}

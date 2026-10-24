@@ -1939,4 +1939,48 @@ export const meta: Record<string, WarpExtras> = {
       ],
     },
   },
+  'proposal-create': {
+    keywords: { en: ['client proposal', 'service proposal', 'custom quote', 'proposal builder'], de: ['Kundenangebot', 'Dienstleistungsangebot', 'individuelles Angebot', 'Angebot erstellen'] },
+    useCases: { en: ['Turn a discovery call into a scoped client proposal', 'Keep foundational services required while offering useful upgrades', 'Create a formal quote only after the client confirms'], de: ['Ein Gespräch in ein klares Kundenangebot überführen', 'Grundlagen fix halten und passende Erweiterungen anbieten', 'Ein verbindliches Angebot erst nach der Kundenbestätigung erstellen'] },
+    category: 'commerce',
+    faq: {
+      en: [
+        { question: 'Can a client remove every item from a proposal?', answer: 'No. Items marked as required always remain included; only optional scope can be changed.' },
+        { question: 'When is the formal quote created?', answer: 'Only when the client confirms their chosen scope. It is then emailed to the contact immediately.' },
+      ],
+      de: [
+        { question: 'Kann ein Kunde alle Positionen abwählen?', answer: 'Nein. Als erforderlich markierte Positionen bleiben immer enthalten; nur optionale Leistungen sind wählbar.' },
+        { question: 'Wann wird das verbindliche Angebot erstellt?', answer: 'Erst wenn der Kunde den gewählten Umfang bestätigt. Danach wird es sofort per E-Mail versendet.' },
+      ],
+    },
+  },
+  'proposal-list': {
+    keywords: {
+      en: ['list client proposals', 'proposal follow-up', 'proposal status', 'confirmed proposal', 'client quote status'],
+      de: ['Kundenangebote anzeigen', 'Angebotsnachverfolgung', 'Angebotsstatus', 'bestätigtes Angebot', 'Kundenangebot Status'],
+    },
+    useCases: {
+      en: [
+        'Review the proposals created after client conversations',
+        'See which clients have confirmed their selected scope',
+        'Find the formal quote created from a confirmed proposal',
+      ],
+      de: [
+        'Die nach Kundengesprächen erstellten Angebote prüfen',
+        'Sehen, welche Kunden ihren gewählten Umfang bestätigt haben',
+        'Das verbindliche Angebot aus einem bestätigten Kundenangebot finden',
+      ],
+    },
+    category: 'commerce',
+    faq: {
+      en: [
+        { question: 'Does this create a quote?', answer: 'No. It only reads proposal status. A formal quote is created when the client confirms their scope on the shared page.' },
+        { question: 'What does converted mean?', answer: 'The client confirmed their selection and JoAi created the associated quote.' },
+      ],
+      de: [
+        { question: 'Erstellt diese Aktion ein verbindliches Angebot?', answer: 'Nein. Sie liest nur den Angebotsstatus. Ein verbindliches Angebot entsteht erst, wenn der Kunde den Umfang auf der geteilten Seite bestätigt.' },
+        { question: 'Was bedeutet konvertiert?', answer: 'Der Kunde hat seine Auswahl bestätigt und JoAi hat das zugehörige verbindliche Angebot erstellt.' },
+      ],
+    },
+  },
 }
