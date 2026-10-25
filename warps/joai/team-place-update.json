@@ -20,7 +20,8 @@
   "bot": "Use this when a confirmed place search result should become the team's native business location. Pass the sourceId of the place to select it, or null to remove the location. Do not use it for opening hours; enable synchronization through the appointment policy after the place is selected.",
   "vars": {
     "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
-    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
   },
   "actions": [
     {
@@ -38,7 +39,8 @@
         "url": "INJECT:API_BASE/v1/teams/{{slug}}/place",
         "method": "PUT",
         "headers": {
-          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
         }
       },
       "inputs": [
@@ -74,6 +76,23 @@
           "type": "json",
           "source": "field",
           "required": true
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug of the team to update. Defaults to the current team.",
+            "de": "Team-Slug des zu aktualisierenden Teams. Standardmäßig das aktuelle Team.",
+            "fr": "Slug de l'équipe à mettre à jour. Par défaut l'équipe actuelle.",
+            "es": "Slug del equipo a actualizar. Por defecto el equipo actual.",
+            "it": "Slug del team da aggiornare. Predefinito: team attuale.",
+            "ro": "Slug-ul echipei de actualizat. Implicit echipa curentă."
+          },
+          "bot": "The slug of the team being changed — must be the same value as slug. Omit to use the current team.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
         }
       ]
     }
