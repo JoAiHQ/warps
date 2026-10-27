@@ -17,7 +17,7 @@
     "ro": "Actualizează profilul unei echipe JoAi existente — modifică numele, descrierea, etichetele, datele de contact, categoria, sloganul sau vizibilitatea. Folosește această acțiune pentru a menține actualizată lista publică a echipei tale în aplicații, magazine, directoare și cataloage conectate, fără a recrea echipa.",
     "it": "Aggiorna il profilo di un team JoAi esistente — modifica nome, descrizione, tag, dati di contatto, categoria, tagline o visibilità. Usa questa azione per mantenere aggiornata la scheda pubblica del tuo team in app, negozi, directory e cataloghi collegati senza dover ricreare il team."
   },
-  "bot": "Use this when the user wants to update or edit an existing JoAi team, business, or organization profile. First identify the team slug — it is required. Then collect only the fields the user explicitly wants to change. Do not ask for fields the user hasn't mentioned.",
+  "bot": "Use this when the user wants to update or edit an existing JoAi team, business, or organization profile. First identify the team slug — it is required. Then collect only the fields the user explicitly wants to change. Do not ask for fields the user hasn't mentioned. Branding and invoice details (colors, logo, bank details, billing address) are changed by passing them in the branding object.",
   "vars": {
     "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
     "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
@@ -259,6 +259,22 @@
           "required": false
         },
         {
+          "name": "Branding",
+          "as": "branding",
+          "description": {
+            "en": "Branding and invoice settings as a JSON object. Pass only the keys to change — colors, logo, bank details, and billing address — so invoices and branded pages stay consistent.",
+            "de": "Branding- und Rechnungseinstellungen als JSON-Objekt. Übergib nur die zu ändernden Schlüssel — Farben, Logo, Bankdaten und Rechnungsadresse — damit Rechnungen und gebrandete Seiten konsistent bleiben.",
+            "es": "Ajustes de branding y facturación como objeto JSON. Pasa solo las claves que quieras cambiar — colores, logo, datos bancarios y dirección de facturación — para mantener coherentes las facturas y las páginas de marca.",
+            "fr": "Paramètres de branding et de facturation sous forme d'objet JSON. Passez uniquement les clés à modifier — couleurs, logo, coordonnées bancaires et adresse de facturation — pour garder factures et pages de marque cohérentes.",
+            "ro": "Setări de branding și facturare ca obiect JSON. Transmite doar cheile pe care vrei să le modifici — culori, logo, date bancare și adresă de facturare — pentru a menține consecvente facturile și paginile de brand.",
+            "it": "Impostazioni di branding e fatturazione come oggetto JSON. Passa solo le chiavi da modificare — colori, logo, dati bancari e indirizzo di fatturazione — per mantenere coerenti fatture e pagine brandizzate."
+          },
+          "bot": "Optional object with only the branding/invoice keys to change: bg, fg, label, accent, logo, bankAccountHolder, bankIban, bankBic, invoiceAddress, invoiceVat, invoiceCity, invoiceZip, invoiceCountry (ISO-2). Keys not passed stay unchanged; set a key to null or an empty string to clear it.",
+          "type": "json",
+          "source": "field",
+          "required": false
+        },
+        {
           "name": "Team",
           "as": "team",
           "description": {
@@ -284,9 +300,9 @@
     }
   ],
   "output": {
-    "TEAM_ID": "out.1.id",
-    "TEAM_NAME": "out.1.name",
-    "TEAM_SLUG": "out.1.slug"
+    "TEAM_ID": "out.data.id",
+    "TEAM_NAME": "out.data.name",
+    "TEAM_SLUG": "out.data.slug"
   },
   "messages": {
     "success": {

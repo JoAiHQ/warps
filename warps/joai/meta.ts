@@ -234,6 +234,35 @@ export const meta: Record<string, WarpExtras> = {
       ],
     },
   },
+  'team-get': {
+    keywords: {
+      en: ['get team', 'team profile', 'view team', 'team branding', 'invoice settings'],
+      de: ['Team abrufen', 'Teamprofil', 'Team anzeigen', 'Team-Branding', 'Rechnungseinstellungen'],
+    },
+    useCases: {
+      en: [
+        'Review a team profile and its branding before editing it',
+        'Check current invoice details before a billing change',
+        'Look up the public details of a team by slug',
+      ],
+      de: [
+        'Profil und Branding eines Teams vor der Bearbeitung prüfen',
+        'Aktuelle Rechnungsdaten vor einer Abrechnungsänderung prüfen',
+        'Öffentliche Angaben eines Teams anhand des Slugs nachschlagen',
+      ],
+    },
+    category: 'productivity',
+    faq: {
+      en: [
+        { question: 'How do I check a team’s current branding?', answer: 'Load the team by slug to see its current branding and invoice settings.' },
+        { question: 'Do I need the team slug to view a profile?', answer: 'Yes, the team slug identifies which profile to load.' },
+      ],
+      de: [
+        { question: 'Wie prüfe ich das aktuelle Branding eines Teams?', answer: 'Lade das Team anhand des Slugs, um Branding und Rechnungseinstellungen zu sehen.' },
+        { question: 'Brauche ich das Team-Slug, um ein Profil zu sehen?', answer: 'Ja, das Team-Slug bestimmt, welches Profil geladen wird.' },
+      ],
+    },
+  },
   'desk-upload': {
     keywords: {
       en: ['upload file', 'add to desk', 'pin document', 'attach pdf', 'share file with agent'],
