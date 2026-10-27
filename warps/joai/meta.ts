@@ -9,7 +9,7 @@ export const meta: Record<string, WarpExtras> = {
   },
   'site-list': {
     keywords: { en: ['list sites', 'site portfolio', 'monthly report sites'], de: ['Websites auflisten', 'Website-Portfolio', 'Monatsbericht Websites'] },
-    useCases: { en: ['Find site IDs and metrics config', 'See which sites have monthly report enabled'], de: ['Website-IDs und Metrik-Konfiguration finden', 'Sehen welche Websites den Monatsbericht aktiviert haben'] },
+    useCases: { en: ['Find site hashids and metrics config', 'See which sites have monthly report enabled'], de: ['Website-Hashids und Metrik-Konfiguration finden', 'Sehen welche Websites den Monatsbericht aktiviert haben'] },
     category: 'productivity',
   },
   'site-update': {
