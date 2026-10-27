@@ -13,9 +13,10 @@ export const meta: Record<string, WarpExtras> = {
     category: 'productivity',
   },
   'site-update': {
-    keywords: { en: ['update site', 'site metrics', 'monthly site report'], de: ['Website aktualisieren', 'Website-Metriken', 'monatlicher Website-Bericht'] },
-    useCases: { en: ['Attach a contact and metrics source/resource to a site', 'Enable or disable the monthly site report'], de: ['Kontakt und Metrik-Quelle/-Ressource an eine Website hängen', 'Monatsbericht aktivieren oder deaktivieren'] },
+    keywords: { en: ['update site', 'custom domain', 'site metrics', 'monthly site report'], de: ['Website aktualisieren', 'eigene Domain', 'Website-Metriken', 'monatlicher Website-Bericht'] },
+    useCases: { en: ['Set a custom domain for a site', 'Attach a contact and metrics source/resource to a site', 'Enable or disable the monthly site report'], de: ['Eine eigene Domain für eine Website hinterlegen', 'Kontakt und Metrik-Quelle/-Ressource an eine Website hängen', 'Monatsbericht aktivieren oder deaktivieren'] },
     category: 'productivity',
+    faq: { en: [{ question: 'How do I connect a custom domain to a site?', answer: 'Pass the bare hostname, for example example.com, as the custom domain. It must be unique across teams.' }], de: [{ question: 'Wie verbinde ich eine eigene Domain mit einer Website?', answer: 'Gib den nackten Hostname an, zum Beispiel example.com. Er muss teamübergreifend eindeutig sein.' }] },
   },
   'metrics-query': {
     keywords: { en: ['metrics', 'Cloudflare analytics', 'Google Search Console', 'page views', 'search clicks', 'reporting'], de: ['Metriken', 'Cloudflare Analytics', 'Google Search Console', 'Seitenaufrufe', 'Suchklicks', 'Reporting'] },
