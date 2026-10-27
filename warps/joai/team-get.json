@@ -1,0 +1,110 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Get Team",
+  "title": {
+    "en": "Get team profile",
+    "de": "Team-Profil abrufen",
+    "es": "Obtener perfil del equipo",
+    "fr": "Obtenir le profil de l'équipe",
+    "ro": "Obține profilul echipei",
+    "it": "Ottieni profilo team"
+  },
+  "description": {
+    "en": "Read a JoAi team's profile by slug, including its public details, branding, and invoice settings. Use this action to review the current team configuration before making a partial update to branding, contact details, or billing information.",
+    "de": "Lies das Profil eines JoAi-Teams anhand seines Slugs, inklusive öffentlicher Angaben, Branding und Rechnungseinstellungen. Nutze diese Aktion, um die aktuelle Team-Konfiguration zu prüfen, bevor du Branding, Kontaktdaten oder Rechnungsdaten teilweise aktualisierst.",
+    "es": "Lee el perfil de un equipo JoAi por su slug, incluidos sus datos públicos, branding y ajustes de facturación. Usa esta acción para revisar la configuración actual del equipo antes de actualizar parcialmente el branding, los datos de contacto o la facturación.",
+    "fr": "Lisez le profil d'une équipe JoAi par son slug, y compris ses informations publiques, son branding et ses paramètres de facturation. Utilisez cette action pour vérifier la configuration actuelle de l'équipe avant une mise à jour partielle du branding, des coordonnées ou de la facturation.",
+    "ro": "Citește profilul unei echipe JoAi după slug, inclusiv datele publice, brandingul și setările de facturare. Folosește această acțiune pentru a verifica configurația actuală a echipei înainte de o actualizare parțială a brandingului, datelor de contact sau facturării.",
+    "it": "Leggi il profilo di un team JoAi tramite slug, inclusi i dati pubblici, il branding e le impostazioni di fatturazione. Usa questa azione per verificare la configurazione attuale del team prima di un aggiornamento parziale di branding, contatti o fatturazione."
+  },
+  "bot": "Use this to read a team profile including current branding and invoice settings before a partial update. Pass the team slug — it is required.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Get team",
+        "de": "Team abrufen",
+        "es": "Obtener equipo",
+        "fr": "Obtenir l'équipe",
+        "ro": "Obține echipa",
+        "it": "Ottieni team"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/teams/{{slug}}",
+        "method": "GET",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}",
+          "Accept": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Slug",
+          "as": "slug",
+          "description": {
+            "en": "The team slug to load",
+            "de": "Das zu ladende Team-Slug",
+            "es": "El slug del equipo a cargar",
+            "fr": "Le slug de l'équipe à charger",
+            "ro": "Slug-ul echipei de încărcat",
+            "it": "Lo slug del team da caricare"
+          },
+          "bot": "The unique slug of the team to load. Required.",
+          "type": "string",
+          "source": "field",
+          "position": "url:slug",
+          "required": true
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug for this action. Required.",
+            "de": "Team-Slug für diese Aktion. Erforderlich.",
+            "es": "Slug del equipo para esta acción. Obligatorio.",
+            "fr": "Slug de l'équipe pour cette action. Requis.",
+            "ro": "Slug-ul echipei pentru această acțiune. Obligatoriu.",
+            "it": "Slug del team per questa azione. Obbligatorio."
+          },
+          "bot": "The slug of the team to operate on. Required.",
+          "type": "string",
+          "source": "field",
+          "required": true
+        }
+      ],
+      "output": {
+        "team": "out.data",
+        "branding": "out.data.branding"
+      }
+    }
+  ],
+  "output": {
+    "team": "out.data",
+    "branding": "out.data.branding",
+    "MESSAGE": "out.message"
+  },
+  "messages": {
+    "success": {
+      "en": "Team '{{slug}}' loaded.",
+      "de": "Team '{{slug}}' geladen.",
+      "es": "Equipo '{{slug}}' cargado.",
+      "fr": "Équipe '{{slug}}' chargée.",
+      "ro": "Echipa '{{slug}}' a fost încărcată.",
+      "it": "Team '{{slug}}' caricato."
+    },
+    "error": {
+      "en": "Failed to load team: {{MESSAGE}}",
+      "de": "Team konnte nicht geladen werden: {{MESSAGE}}",
+      "es": "Error al cargar el equipo: {{MESSAGE}}",
+      "fr": "Échec du chargement de l'équipe : {{MESSAGE}}",
+      "ro": "Eroare la încărcarea echipei: {{MESSAGE}}",
+      "it": "Impossibile caricare il team: {{MESSAGE}}"
+    }
+  }
+}

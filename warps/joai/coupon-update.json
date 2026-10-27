@@ -17,7 +17,7 @@
     "it": "Aggiorna un coupon esistente — codice, percentuale o importo, ordine minimo, limite di utilizzi o scadenza. Vengono modificati solo i campi forniti.",
     "ro": "Actualizează un cupon existent — cod, procent sau sumă, valoare minimă, limită de utilizări sau expirare. Se schimbă doar câmpurile furnizate."
   },
-  "bot": "Use when the user wants to change an existing coupon. If the user refers to a coupon by code, list coupons first to find the matching ID.",
+  "bot": "Use when the user wants to change an existing coupon. If the user refers to a coupon by code, list coupons first to find the matching ID, and set optional restrictedItems to limit the discount to specific items.",
   "vars": {
     "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
     "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
@@ -173,6 +173,22 @@
           "required": false
         },
         {
+          "name": "Restricted Items",
+          "as": "restrictedItems",
+          "description": {
+            "en": "Optional list of catalog items the discount applies to: [{\"type\":\"service\",\"ref\":\"<service hash ID>\"}] or [{\"type\":\"product\",\"ref\":\"<product slug>\"}]. Send [] to remove all restrictions.",
+            "de": "Optionale Liste der Katalogpositionen, für die der Rabatt gilt: [{\"type\":\"service\",\"ref\":\"<Service-Hash-ID>\"}] oder [{\"type\":\"product\",\"ref\":\"<Produkt-Slug>\"}]. Sende [], um alle Einschränkungen zu entfernen.",
+            "fr": "Liste facultative des articles du catalogue auxquels la réduction s'applique : [{\"type\":\"service\",\"ref\":\"<ID hash du service>\"}] ou [{\"type\":\"product\",\"ref\":\"<slug du produit>\"}]. Envoie [] pour supprimer toutes les restrictions.",
+            "es": "Lista opcional de artículos del catálogo a los que se aplica el descuento: [{\"type\":\"service\",\"ref\":\"<ID hash del servicio>\"}] o [{\"type\":\"product\",\"ref\":\"<slug del producto>\"}]. Envía [] para eliminar todas las restricciones.",
+            "it": "Elenco facoltativo degli articoli del catalogo a cui si applica lo sconto: [{\"type\":\"service\",\"ref\":\"<ID hash del servizio>\"}] o [{\"type\":\"product\",\"ref\":\"<slug del prodotto>\"}]. Invia [] per rimuovere tutte le restrizioni.",
+            "ro": "Listă opțională a articolelor din catalog pentru care se aplică reducerea: [{\"type\":\"service\",\"ref\":\"<ID hash al serviciului>\"}] sau [{\"type\":\"product\",\"ref\":\"<slug-ul produsului>\"}]. Trimite [] pentru a elimina toate restricțiile."
+          },
+          "bot": "Only set when the discount must be limited to specific items. Each entry needs type (service or product) and ref (service hash ID or product slug).",
+          "type": "json",
+          "source": "field",
+          "required": false
+        },
+        {
           "name": "Team",
           "as": "team",
           "description": {
@@ -197,8 +213,8 @@
     }
   ],
   "output": {
-    "COUPON_ID": "out.1.id",
-    "COUPON_CODE": "out.1.code"
+    "COUPON_ID": "out.data.id",
+    "COUPON_CODE": "out.data.code"
   },
   "messages": {
     "success": {
