@@ -10,10 +10,10 @@
     "it": "Update site"
   },
   "description": {
-    "en": "Update a site’s enabled state, name, URL, type (undefined|shop), contact, metrics source/resource, or monthly report schedule.",
-    "de": "Aktualisiert Aktivierung, Name, URL, Typ (undefined|shop), Kontakt, Metrik-Quelle/-Ressource oder Monatsbericht einer Website."
+    "en": "Update a site’s enabled state, name, URL, custom domain, type (undefined|shop), contact, metrics source/resource, or monthly report schedule.",
+    "de": "Aktualisiert Aktivierung, Name, URL, eigene Domain, Typ (undefined|shop), Kontakt, Metrik-Quelle/-Ressource oder Monatsbericht einer Website."
   },
-  "bot": "Update site fields including optional type. type=shop requires url, only works on brandless sites, and marks this site as the post-checkout storefront return URL (one shop per team). Pass type=undefined (or empty) to clear shop. For metricsSource=analytics, pass analyticsDomains as the public hostname JSON array; metricsResource is optional because JoAi generates a site key when needed. For Cloudflare and Google Search Console, pass metricsResource as the zone tag or property URL. monthlyReport=true opts into the 1st-of-month job when contact and metrics are set — it does not send immediately. Native analytics needs no third-party integration. If another source returns channel_not_configured, call settings-integration-open with its integration, then retry.",
+  "bot": "Update site fields including optional type and custom domain. customDomain sets the site’s own bare hostname (e.g. example.com, no protocol) and must be unique across teams. type=shop requires url, only works on brandless sites, and marks this site as the post-checkout storefront return URL (one shop per team). Pass type=undefined (or empty) to clear shop. For metricsSource=analytics, pass analyticsDomains as the public hostname JSON array; metricsResource is optional because JoAi generates a site key when needed. For Cloudflare and Google Search Console, pass metricsResource as the zone tag or property URL. monthlyReport=true opts into the 1st-of-month job when contact and metrics are set — it does not send immediately. Native analytics needs no third-party integration. If another source returns channel_not_configured, call settings-integration-open with its integration, then retry.",
   "vars": {
     "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
     "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
@@ -40,7 +40,11 @@
           "type": "string",
           "source": "field",
           "required": true,
-          "position": "url:siteId"
+          "position": "url:siteId",
+          "description": {
+            "en": "Site hashid from site-list",
+            "de": "Website-Hashid aus site-list"
+          }
         },
         {
           "name": "Team",
@@ -73,6 +77,18 @@
           "source": "field",
           "required": false,
           "position": "payload:url"
+        },
+        {
+          "name": "Custom domain",
+          "as": "customDomain",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:customDomain",
+          "description": {
+            "en": "Bare hostname without protocol, e.g. example.com. Must be unique across teams; omit to leave unchanged.",
+            "de": "Nackter Hostname ohne Protokoll, z. B. example.com. Muss teamübergreifend eindeutig sein; weglassen, um ihn nicht zu ändern."
+          }
         },
         {
           "name": "Type",
