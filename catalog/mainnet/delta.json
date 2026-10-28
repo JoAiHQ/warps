@@ -4,17 +4,197 @@
   "repo": "JoAiHQ/warps",
   "branch": "main",
   "network": "mainnet",
-  "commitSha": "fac378d1a8533b0283129ba9ee142b2b164328da",
-  "committedAt": "2026-10-27T22:56:53.787Z",
-  "generatedAt": "2026-10-27T22:56:56.231Z",
+  "commitSha": "7ef5505d0f46dfcc6348af99b3153518d530e3ab",
+  "committedAt": "2026-10-28T08:17:15.799Z",
+  "generatedAt": "2026-10-28T08:17:19.511Z",
   "upserts": [
+    {
+      "key": "none:joai-checkout-snapshot",
+      "identifier": "@joai-checkout-snapshot",
+      "alias": "joai-checkout-snapshot",
+      "chain": "none",
+      "hash": "f66134672d66549dca1b0aa7fba35ddf4e1f1ddd8767f4b9f5f446fdf8e888a2",
+      "checksum": "f66134672d66549dca1b0aa7fba35ddf4e1f1ddd8767f4b9f5f446fdf8e888a2",
+      "name": "JoAi: Checkout Snapshot",
+      "title": {
+        "en": "Create checkout snapshot"
+      },
+      "description": {
+        "en": "Create a checkout snapshot with totals for the selected items, fulfillment method, and addresses."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: Checkout Snapshot",
+        "title": {
+          "en": "Create checkout snapshot"
+        },
+        "description": {
+          "en": "Create a checkout snapshot with totals for the selected items, fulfillment method, and addresses."
+        },
+        "bot": "Use during checkout after collecting items, fulfillment method, and address or rate hashids. Returns snapshot id, totals, and guest access token.",
+        "vars": {
+          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+          "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Create snapshot"
+            },
+            "destination": {
+              "url": "https://api.joai.ai/v1/shops/{{team}}/checkout/snapshots",
+              "method": "POST",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+                "X-Team": "{{team}}",
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Items",
+                "as": "items",
+                "description": {
+                  "en": "Cart items — array of {id, type, quantity} objects"
+                },
+                "bot": "JSON array of line items, e.g. [{\"id\":\"abc\",\"type\":\"product\",\"quantity\":1}].",
+                "type": "json",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Fulfillment Method",
+                "as": "fulfillmentMethod",
+                "description": {
+                  "en": "shipping or pickup"
+                },
+                "type": "string",
+                "source": "field",
+                "required": true,
+                "options": [
+                  "shipping",
+                  "pickup"
+                ]
+              },
+              {
+                "name": "Billing Address ID",
+                "as": "billingAddressId",
+                "description": {
+                  "en": "Saved billing address ID for authenticated users"
+                },
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Shipping Address ID",
+                "as": "shippingAddressId",
+                "description": {
+                  "en": "Saved shipping address ID for authenticated users"
+                },
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Shipping Rate ID",
+                "as": "shippingRateId",
+                "description": {
+                  "en": "Selected shipping rate hashid from checkout-shipping-rates"
+                },
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Fulfillment Location ID",
+                "as": "fulfillmentLocationId",
+                "description": {
+                  "en": "Pickup location ID when fulfillmentMethod is pickup"
+                },
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Team",
+                "as": "team",
+                "description": {
+                  "en": "Team slug for this action. Defaults to the current team."
+                },
+                "bot": "The slug of the shop team. Omit to use the current team.",
+                "type": "string",
+                "source": "field",
+                "position": "url:team",
+                "required": false,
+                "default": "{{JOAI_TEAM_SLUG}}"
+              }
+            ],
+            "output": {
+              "id": "out.data.id",
+              "expiresAt": "out.data.expiresAt",
+              "totals": "out.data.totals",
+              "accessToken": "out.data.accessToken"
+            }
+          }
+        ],
+        "output": {
+          "SNAPSHOT_ID": "out.data.id",
+          "SNAPSHOT_TOTALS": "out.data.totals",
+          "SNAPSHOT_ACCESS_TOKEN": "out.data.accessToken"
+        },
+        "messages": {
+          "success": {
+            "en": "Checkout snapshot created."
+          },
+          "error": {
+            "en": "Failed to create checkout snapshot: {{MESSAGE}}"
+          }
+        }
+      },
+      "extras": null
+    },
     {
       "key": "none:joai-proposal-create",
       "identifier": "@joai-proposal-create",
       "alias": "joai-proposal-create",
       "chain": "none",
-      "hash": "572f8712ff58f722c66358af33d0cf1f0ff63839c3e59ea8e960d71fde122880",
-      "checksum": "572f8712ff58f722c66358af33d0cf1f0ff63839c3e59ea8e960d71fde122880",
+      "hash": "21e13ab0a7027e63eb35cb7bbeb64574f23e6ce39c6f7523b926348d4cee2bfd",
+      "checksum": "21e13ab0a7027e63eb35cb7bbeb64574f23e6ce39c6f7523b926348d4cee2bfd",
       "name": "JoAi: Create Client Proposal",
       "title": {
         "en": "Create a client proposal",
@@ -154,12 +334,12 @@
                 "source": "field",
                 "required": true,
                 "description": {
-                  "en": "Array of catalog items: [{\"id\":\"...\",\"type\":\"service\",\"required\":true,\"minimumTermDays\":365}]. Use type productVariation for a product variation. Optional minimumTermDays sets a minimum term in days (e.g. 365 = 12 months) for recurring items.",
-                  "de": "Liste von Katalogpositionen: [{\"id\":\"...\",\"type\":\"service\",\"required\":true,\"minimumTermDays\":365}]. Für Produktvarianten type productVariation verwenden. Optionales minimumTermDays legt eine Mindestlaufzeit in Tagen fest (z. B. 365 = 12 Monate) für wiederkehrende Positionen.",
-                  "es": "Lista de elementos del catálogo: [{\"id\":\"...\",\"type\":\"service\",\"required\":true,\"minimumTermDays\":365}]. Usa productVariation para una variante de producto. El minimumTermDays opcional define una permanencia mínima en días (por ejemplo, 365 = 12 meses) para elementos recurrentes.",
-                  "fr": "Liste d'éléments du catalogue : [{\"id\":\"...\",\"type\":\"service\",\"required\":true,\"minimumTermDays\":365}]. Utilise productVariation pour une variante de produit. Le minimumTermDays facultatif définit une durée minimale en jours (par exemple 365 = 12 mois) pour les éléments récurrents.",
-                  "it": "Elenco di elementi del catalogo: [{\"id\":\"...\",\"type\":\"service\",\"required\":true,\"minimumTermDays\":365}]. Usa productVariation per una variante di prodotto. Il minimumTermDays facoltativo imposta una durata minima in giorni (ad esempio 365 = 12 mesi) per gli elementi ricorrenti.",
-                  "ro": "Listă de elemente din catalog: [{\"id\":\"...\",\"type\":\"service\",\"required\":true,\"minimumTermDays\":365}]. Folosește productVariation pentru o variantă de produs. minimumTermDays opțional stabilește o durată minimă în zile (de exemplu 365 = 12 luni) pentru elementele recurente."
+                  "en": "Array of catalog items: [{\"id\":\"...\",\"type\":\"service\",\"required\":true,\"minimumTermDays\":365,\"choiceGroup\":\"billing\"}]. Use type productVariation for a product variation. Optional minimumTermDays sets a minimum term in days (e.g. 365 = 12 months) for recurring items. Items sharing the same choiceGroup are mutually exclusive alternatives, such as monthly or yearly billing; the client picks exactly one, the item with the lowest position is preselected, and all items in a group must have the same required value with at least two items.",
+                  "de": "Liste von Katalogpositionen: [{\"id\":\"...\",\"type\":\"service\",\"required\":true,\"minimumTermDays\":365,\"choiceGroup\":\"billing\"}]. Für Produktvarianten type productVariation verwenden. Optionales minimumTermDays legt eine Mindestlaufzeit in Tagen fest (z. B. 365 = 12 Monate) für wiederkehrende Positionen. Positionen mit derselben choiceGroup sind sich gegenseitig ausschließende Alternativen, etwa monatliche oder jährliche Abrechnung; der Kunde wählt genau eine aus, die Position mit dem niedrigsten position-Wert ist vorausgewählt, und alle Positionen einer Gruppe müssen denselben required-Wert haben, wobei mindestens zwei nötig sind.",
+                  "es": "Lista de elementos del catálogo: [{\"id\":\"...\",\"type\":\"service\",\"required\":true,\"minimumTermDays\":365,\"choiceGroup\":\"billing\"}]. Usa productVariation para una variante de producto. El minimumTermDays opcional define una permanencia mínima en días (por ejemplo, 365 = 12 meses) para elementos recurrentes. Los elementos con el mismo choiceGroup son alternativas mutuamente excluyentes, como facturación mensual o anual; el cliente elige exactamente una, se preselecciona el elemento con la position más baja y todos los elementos del grupo deben tener el mismo valor required con al menos dos en total.",
+                  "fr": "Liste d'éléments du catalogue : [{\"id\":\"...\",\"type\":\"service\",\"required\":true,\"minimumTermDays\":365,\"choiceGroup\":\"billing\"}]. Utilise productVariation pour une variante de produit. Le minimumTermDays facultatif définit une durée minimale en jours (par exemple 365 = 12 mois) pour les éléments récurrents. Les éléments partageant le même choiceGroup sont des alternatives mutuellement exclusives, comme une facturation mensuelle ou annuelle ; le client en choisit exactement une, l'élément avec la position la plus basse est présélectionné et tous les éléments d'un groupe doivent avoir la même valeur required avec au moins deux éléments.",
+                  "it": "Elenco di elementi del catalogo: [{\"id\":\"...\",\"type\":\"service\",\"required\":true,\"minimumTermDays\":365,\"choiceGroup\":\"billing\"}]. Usa productVariation per una variante di prodotto. Il minimumTermDays facoltativo imposta una durata minima in giorni (ad esempio 365 = 12 mesi) per gli elementi ricorrenti. Gli elementi con lo stesso choiceGroup sono alternative mutuamente esclusive, come la fatturazione mensile o annuale; il cliente ne sceglie esattamente una, l'elemento con la position più bassa è preselezionato e tutti gli elementi di un gruppo devono avere lo stesso valore required con almeno due elementi.",
+                  "ro": "Listă de elemente din catalog: [{\"id\":\"...\",\"type\":\"service\",\"required\":true,\"minimumTermDays\":365,\"choiceGroup\":\"billing\"}]. Folosește productVariation pentru o variantă de produs. minimumTermDays opțional stabilește o durată minimă în zile (de exemplu 365 = 12 luni) pentru elementele recurente. Elementele cu același choiceGroup sunt alternative care se exclud reciproc, cum ar fi facturarea lunară sau anuală; clientul alege exact una, elementul cu cea mai mică position este preselectat, iar toate elementele dintr-un grup trebuie să aibă aceeași valoare required și să fie cel puțin două."
                 }
               },
               {
@@ -363,6 +543,1841 @@
           ]
         }
       }
+    },
+    {
+      "key": "none:joai-shipping-rate-create",
+      "identifier": "@joai-shipping-rate-create",
+      "alias": "joai-shipping-rate-create",
+      "chain": "none",
+      "hash": "710226936c00d131ec83deadcf56014717eaf97170949f17cf64e0b552fa2e9d",
+      "checksum": "710226936c00d131ec83deadcf56014717eaf97170949f17cf64e0b552fa2e9d",
+      "name": "JoAi: Create Shipping Rate",
+      "title": {
+        "en": "Create a shipping rate",
+        "de": "Versandtarif erstellen",
+        "fr": "Créer un tarif d'expédition",
+        "es": "Crear una tarifa de envío",
+        "it": "Crea una tariffa di spedizione",
+        "ro": "Creează un tarif de livrare"
+      },
+      "description": {
+        "en": "Add a shipping rate to a zone. Set name and price in cents. Optionally configure order value thresholds, weight limits, and delivery estimates.",
+        "de": "Versandtarif zu einer Zone hinzufügen. Name und Preis in Cent. Optional Bestellwert-Schwellen, Gewichtsgrenzen und Lieferzeiten.",
+        "fr": "Ajoute un tarif d'expédition à une zone. Nom et prix en centimes. Seuils de commande, limites de poids et délais optionnels.",
+        "es": "Añade una tarifa de envío a una zona. Nombre y precio en céntimos. Umbrales de pedido, límites de peso y plazos opcionales.",
+        "it": "Aggiunge una tariffa di spedizione a una zona. Nome e prezzo in centesimi. Soglie ordine, limiti peso e tempi opzionali.",
+        "ro": "Adaugă un tarif de livrare la o zonă. Nume și preț în cenți. Praguri comandă, limite greutate și termene opționale."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: Create Shipping Rate",
+        "title": {
+          "en": "Create a shipping rate",
+          "de": "Versandtarif erstellen",
+          "fr": "Créer un tarif d'expédition",
+          "es": "Crear una tarifa de envío",
+          "it": "Crea una tariffa di spedizione",
+          "ro": "Creează un tarif de livrare"
+        },
+        "description": {
+          "en": "Add a shipping rate to a zone. Set name and price in cents. Optionally configure order value thresholds, weight limits, and delivery estimates.",
+          "de": "Versandtarif zu einer Zone hinzufügen. Name und Preis in Cent. Optional Bestellwert-Schwellen, Gewichtsgrenzen und Lieferzeiten.",
+          "fr": "Ajoute un tarif d'expédition à une zone. Nom et prix en centimes. Seuils de commande, limites de poids et délais optionnels.",
+          "es": "Añade una tarifa de envío a una zona. Nombre y precio en céntimos. Umbrales de pedido, límites de peso y plazos opcionales.",
+          "it": "Aggiunge una tariffa di spedizione a una zona. Nome e prezzo in centesimi. Soglie ordine, limiti peso e tempi opzionali.",
+          "ro": "Adaugă un tarif de livrare la o zonă. Nume și preț în cenți. Praguri comandă, limite greutate și termene opționale."
+        },
+        "bot": "Use when the user wants to add a shipping option to a zone. Price is in cents. Optional: freeShippingThreshold, minOrderValue, maxOrderValue, minWeight, maxWeight, estimatedMinDays, estimatedMaxDays, active.",
+        "vars": {
+          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+          "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Create shipping rate",
+              "de": "Versandtarif erstellen",
+              "fr": "Créer le tarif",
+              "es": "Crear la tarifa",
+              "it": "Crea la tariffa",
+              "ro": "Creează tariful"
+            },
+            "destination": {
+              "url": "https://api.joai.ai/v1/teams/{{team}}/shipping-zones/{{zoneId}}/rates",
+              "method": "POST",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+                "X-Team": "{{team}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Zone ID",
+                "as": "zoneId",
+                "description": {
+                  "en": "Shipping zone hashid from shipping-zone-list",
+                  "de": "Versandzonen-Hashid aus shipping-zone-list",
+                  "fr": "Hashid de la zone d'expédition depuis shipping-zone-list",
+                  "es": "Hashid de la zona de envío desde shipping-zone-list",
+                  "it": "Hashid della zona di spedizione da shipping-zone-list",
+                  "ro": "Hashid-ul zonei de livrare din shipping-zone-list"
+                },
+                "bot": "The shipping zone hashid from shipping-zone-list. List shipping zones if unknown.",
+                "type": "string",
+                "position": "url:zoneId",
+                "source": "field",
+                "required": true,
+                "min": 1
+              },
+              {
+                "name": "Name",
+                "as": "name",
+                "description": {
+                  "en": "Rate name, e.g. Standard Shipping",
+                  "de": "Tarifname, z. B. Standardversand",
+                  "fr": "Nom du tarif, ex. Livraison standard",
+                  "es": "Nombre de la tarifa, p. ej. Envío estándar",
+                  "it": "Nome tariffa, es. Spedizione standard",
+                  "ro": "Numele tarifului, ex. Livrare standard"
+                },
+                "type": "string",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Price",
+                "as": "price",
+                "description": {
+                  "en": "Shipping price in cents",
+                  "de": "Versandpreis in Cent",
+                  "fr": "Prix d'expédition en centimes",
+                  "es": "Precio de envío en céntimos",
+                  "it": "Prezzo spedizione in centesimi",
+                  "ro": "Preț livrare în cenți"
+                },
+                "type": "string",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Free Shipping Threshold",
+                "as": "freeShippingThreshold",
+                "description": {
+                  "en": "Order total in cents for free shipping (optional)",
+                  "de": "Bestellwert in Cent für kostenlosen Versand (optional)",
+                  "fr": "Montant de commande en centimes pour livraison gratuite (optionnel)",
+                  "es": "Total del pedido en céntimos para envío gratis (opcional)",
+                  "it": "Totale ordine in centesimi per spedizione gratuita (opzionale)",
+                  "ro": "Total comandă în cenți pentru livrare gratuită (opțional)"
+                },
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Min Order Value",
+                "as": "minOrderValue",
+                "description": {
+                  "en": "Minimum order value in cents (optional)",
+                  "de": "Mindestbestellwert in Cent (optional)",
+                  "fr": "Montant minimum de commande en centimes (optionnel)",
+                  "es": "Valor mínimo del pedido en céntimos (opcional)",
+                  "it": "Valore minimo ordine in centesimi (opzionale)",
+                  "ro": "Valoare minimă comandă în cenți (opțional)"
+                },
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Max Order Value",
+                "as": "maxOrderValue",
+                "description": {
+                  "en": "Maximum order value in cents (optional)",
+                  "de": "Maximaler Bestellwert in Cent (optional)",
+                  "fr": "Montant maximum de commande en centimes (optionnel)",
+                  "es": "Valor máximo del pedido en céntimos (opcional)",
+                  "it": "Valore massimo ordine in centesimi (opzionale)",
+                  "ro": "Valoare maximă comandă în cenți (opțional)"
+                },
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Min Weight",
+                "as": "minWeight",
+                "description": {
+                  "en": "Minimum weight (optional)",
+                  "de": "Mindestgewicht (optional)",
+                  "fr": "Poids minimum (optionnel)",
+                  "es": "Peso mínimo (opcional)",
+                  "it": "Peso minimo (opzionale)",
+                  "ro": "Greutate minimă (opțional)"
+                },
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Max Weight",
+                "as": "maxWeight",
+                "description": {
+                  "en": "Maximum weight (optional)",
+                  "de": "Maximalgewicht (optional)",
+                  "fr": "Poids maximum (optionnel)",
+                  "es": "Peso máximo (opcional)",
+                  "it": "Peso massimo (opzionale)",
+                  "ro": "Greutate maximă (opțional)"
+                },
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Estimated Min Days",
+                "as": "estimatedMinDays",
+                "description": {
+                  "en": "Minimum delivery days (optional)",
+                  "de": "Mindest-Liefertage (optional)",
+                  "fr": "Jours de livraison minimum (optionnel)",
+                  "es": "Días mínimos de entrega (opcional)",
+                  "it": "Giorni minimi di consegna (opzionale)",
+                  "ro": "Zile minime de livrare (opțional)"
+                },
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Estimated Max Days",
+                "as": "estimatedMaxDays",
+                "description": {
+                  "en": "Maximum delivery days (optional)",
+                  "de": "Maximale Liefertage (optional)",
+                  "fr": "Jours de livraison maximum (optionnel)",
+                  "es": "Días máximos de entrega (opcional)",
+                  "it": "Giorni massimi di consegna (opzionale)",
+                  "ro": "Zile maxime de livrare (opțional)"
+                },
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Active",
+                "as": "active",
+                "description": {
+                  "en": "Whether the rate is active (optional)",
+                  "de": "Ob der Tarif aktiv ist (optional)",
+                  "fr": "Si le tarif est actif (optionnel)",
+                  "es": "Si la tarifa está activa (opcional)",
+                  "it": "Se la tariffa è attiva (opzionale)",
+                  "ro": "Dacă tariful este activ (opțional)"
+                },
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Team",
+                "as": "team",
+                "description": {
+                  "en": "Team slug for this action. Defaults to the current team.",
+                  "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team.",
+                  "fr": "Slug d'équipe pour cette action. Par défaut l'équipe actuelle.",
+                  "es": "Slug del equipo para esta acción. Por defecto el equipo actual.",
+                  "it": "Slug del team per questa azione. Predefinito: team attuale.",
+                  "ro": "Slug-ul echipei pentru această acțiune. Implicit echipa curentă."
+                },
+                "bot": "The slug of the team to operate on. Omit to use the current team.",
+                "type": "string",
+                "position": "url:team",
+                "source": "field",
+                "required": false,
+                "default": "{{JOAI_TEAM_SLUG}}"
+              }
+            ],
+            "output": {
+              "id": "out.data.id",
+              "name": "out.data.name"
+            }
+          }
+        ],
+        "output": {
+          "RATE_ID": "out.data.id",
+          "RATE_NAME": "out.data.name"
+        },
+        "messages": {
+          "success": {
+            "en": "Shipping rate '{{RATE_NAME}}' created.",
+            "de": "Versandtarif '{{RATE_NAME}}' erstellt.",
+            "fr": "Tarif d'expédition « {{RATE_NAME}} » créé.",
+            "es": "Tarifa de envío « {{RATE_NAME}} » creada.",
+            "it": "Tariffa di spedizione « {{RATE_NAME}} » creata.",
+            "ro": "Tariful de livrare „{{RATE_NAME}}” a fost creat."
+          },
+          "error": {
+            "en": "Failed to create shipping rate: {{MESSAGE}}",
+            "de": "Versandtarif konnte nicht erstellt werden: {{MESSAGE}}"
+          }
+        }
+      },
+      "extras": null
+    },
+    {
+      "key": "none:joai-shipping-rate-delete",
+      "identifier": "@joai-shipping-rate-delete",
+      "alias": "joai-shipping-rate-delete",
+      "chain": "none",
+      "hash": "dbc3058cf281b94f8c09f731d65537462c8453d00386c0d389d0ca0bec666728",
+      "checksum": "dbc3058cf281b94f8c09f731d65537462c8453d00386c0d389d0ca0bec666728",
+      "name": "JoAi: Delete Shipping Rate",
+      "title": {
+        "en": "Delete a shipping rate",
+        "de": "Versandtarif löschen",
+        "fr": "Supprimer un tarif d'expédition",
+        "es": "Eliminar una tarifa de envío",
+        "it": "Elimina una tariffa di spedizione",
+        "ro": "Șterge un tarif de livrare"
+      },
+      "description": {
+        "en": "Permanently delete a shipping rate from a zone. Use with care — this cannot be undone.",
+        "de": "Versandtarif aus einer Zone dauerhaft löschen. Vorsicht — dies kann nicht rückgängig gemacht werden.",
+        "fr": "Supprime définitivement un tarif d'expédition d'une zone. À utiliser avec précaution — irréversible.",
+        "es": "Elimina permanentemente una tarifa de envío de una zona. Úsalo con cuidado: no se puede deshacer.",
+        "it": "Elimina definitivamente una tariffa di spedizione da una zona. Da usare con cautela — non reversibile.",
+        "ro": "Șterge definitiv un tarif de livrare dintr-o zonă. Folosește cu atenție — nu poate fi anulat."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: Delete Shipping Rate",
+        "title": {
+          "en": "Delete a shipping rate",
+          "de": "Versandtarif löschen",
+          "fr": "Supprimer un tarif d'expédition",
+          "es": "Eliminar una tarifa de envío",
+          "it": "Elimina una tariffa di spedizione",
+          "ro": "Șterge un tarif de livrare"
+        },
+        "description": {
+          "en": "Permanently delete a shipping rate from a zone. Use with care — this cannot be undone.",
+          "de": "Versandtarif aus einer Zone dauerhaft löschen. Vorsicht — dies kann nicht rückgängig gemacht werden.",
+          "fr": "Supprime définitivement un tarif d'expédition d'une zone. À utiliser avec précaution — irréversible.",
+          "es": "Elimina permanentemente una tarifa de envío de una zona. Úsalo con cuidado: no se puede deshacer.",
+          "it": "Elimina definitivamente una tariffa di spedizione da una zona. Da usare con cautela — non reversibile.",
+          "ro": "Șterge definitiv un tarif de livrare dintr-o zonă. Folosește cu atenție — nu poate fi anulat."
+        },
+        "bot": "Use when the user wants to remove a shipping rate. List shipping zones to find zone and rate hashids if unknown.",
+        "vars": {
+          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+          "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Delete shipping rate",
+              "de": "Versandtarif löschen",
+              "fr": "Supprimer le tarif",
+              "es": "Eliminar la tarifa",
+              "it": "Elimina la tariffa",
+              "ro": "Șterge tariful"
+            },
+            "destination": {
+              "url": "https://api.joai.ai/v1/teams/{{team}}/shipping-zones/{{zoneId}}/rates/{{rateId}}",
+              "method": "DELETE",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+                "X-Team": "{{team}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Zone ID",
+                "as": "zoneId",
+                "description": {
+                  "en": "Shipping zone hashid from shipping-zone-list",
+                  "de": "Versandzonen-Hashid aus shipping-zone-list",
+                  "fr": "Hashid de la zone d'expédition depuis shipping-zone-list",
+                  "es": "Hashid de la zona de envío desde shipping-zone-list",
+                  "it": "Hashid della zona di spedizione da shipping-zone-list",
+                  "ro": "Hashid-ul zonei de livrare din shipping-zone-list"
+                },
+                "bot": "The shipping zone hashid from shipping-zone-list. List shipping zones if unknown.",
+                "type": "string",
+                "position": "url:zoneId",
+                "source": "field",
+                "required": true,
+                "min": 1
+              },
+              {
+                "name": "Rate ID",
+                "as": "rateId",
+                "description": {
+                  "en": "Shipping rate hashid from shipping-zone-list",
+                  "de": "Versandtarif-Hashid aus shipping-zone-list",
+                  "fr": "Hashid du tarif d'expédition depuis shipping-zone-list",
+                  "es": "Hashid de la tarifa de envío desde shipping-zone-list",
+                  "it": "Hashid della tariffa di spedizione da shipping-zone-list",
+                  "ro": "Hashid-ul tarifului de livrare din shipping-zone-list"
+                },
+                "bot": "The shipping rate hashid from shipping-zone-list. List shipping zones to find it if unknown.",
+                "type": "string",
+                "position": "url:rateId",
+                "source": "field",
+                "required": true,
+                "min": 1
+              },
+              {
+                "name": "Team",
+                "as": "team",
+                "description": {
+                  "en": "Team slug for this action. Defaults to the current team.",
+                  "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team.",
+                  "fr": "Slug d'équipe pour cette action. Par défaut l'équipe actuelle.",
+                  "es": "Slug del equipo para esta acción. Por defecto el equipo actual.",
+                  "it": "Slug del team per questa azione. Predefinito: team attuale.",
+                  "ro": "Slug-ul echipei pentru această acțiune. Implicit echipa curentă."
+                },
+                "bot": "The slug of the team to operate on. Omit to use the current team.",
+                "type": "string",
+                "position": "url:team",
+                "source": "field",
+                "required": false,
+                "default": "{{JOAI_TEAM_SLUG}}"
+              }
+            ]
+          }
+        ],
+        "messages": {
+          "success": {
+            "en": "Shipping rate deleted.",
+            "de": "Versandtarif gelöscht.",
+            "fr": "Tarif d'expédition supprimé.",
+            "es": "Tarifa de envío eliminada.",
+            "it": "Tariffa di spedizione eliminata.",
+            "ro": "Tariful de livrare șters."
+          },
+          "error": {
+            "en": "Failed to delete shipping rate: {{MESSAGE}}",
+            "de": "Versandtarif konnte nicht gelöscht werden: {{MESSAGE}}"
+          }
+        }
+      },
+      "extras": null
+    },
+    {
+      "key": "none:joai-shipping-rate-update",
+      "identifier": "@joai-shipping-rate-update",
+      "alias": "joai-shipping-rate-update",
+      "chain": "none",
+      "hash": "be9d645153298f79c7abc598ee221cc9e0ae137df269df418c964ca777b07767",
+      "checksum": "be9d645153298f79c7abc598ee221cc9e0ae137df269df418c964ca777b07767",
+      "name": "JoAi: Update Shipping Rate",
+      "title": {
+        "en": "Update a shipping rate",
+        "de": "Versandtarif aktualisieren",
+        "fr": "Mettre à jour un tarif d'expédition",
+        "es": "Actualizar una tarifa de envío",
+        "it": "Aggiorna una tariffa di spedizione",
+        "ro": "Actualizează un tarif de livrare"
+      },
+      "description": {
+        "en": "Update a shipping rate within a zone. Change name, price, thresholds, weight limits, delivery estimates, or active status.",
+        "de": "Versandtarif in einer Zone aktualisieren. Name, Preis, Schwellen, Gewichtsgrenzen, Lieferzeiten oder Aktiv-Status ändern.",
+        "fr": "Met à jour un tarif d'expédition dans une zone. Modifie nom, prix, seuils, limites de poids, délais ou statut actif.",
+        "es": "Actualiza una tarifa de envío en una zona. Cambia nombre, precio, umbrales, límites de peso, plazos o estado activo.",
+        "it": "Aggiorna una tariffa di spedizione in una zona. Modifica nome, prezzo, soglie, limiti peso, tempi o stato attivo.",
+        "ro": "Actualizează un tarif de livrare într-o zonă. Schimbă nume, preț, praguri, limite greutate, termene sau status activ."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: Update Shipping Rate",
+        "title": {
+          "en": "Update a shipping rate",
+          "de": "Versandtarif aktualisieren",
+          "fr": "Mettre à jour un tarif d'expédition",
+          "es": "Actualizar una tarifa de envío",
+          "it": "Aggiorna una tariffa di spedizione",
+          "ro": "Actualizează un tarif de livrare"
+        },
+        "description": {
+          "en": "Update a shipping rate within a zone. Change name, price, thresholds, weight limits, delivery estimates, or active status.",
+          "de": "Versandtarif in einer Zone aktualisieren. Name, Preis, Schwellen, Gewichtsgrenzen, Lieferzeiten oder Aktiv-Status ändern.",
+          "fr": "Met à jour un tarif d'expédition dans une zone. Modifie nom, prix, seuils, limites de poids, délais ou statut actif.",
+          "es": "Actualiza una tarifa de envío en una zona. Cambia nombre, precio, umbrales, límites de peso, plazos o estado activo.",
+          "it": "Aggiorna una tariffa di spedizione in una zona. Modifica nome, prezzo, soglie, limiti peso, tempi o stato attivo.",
+          "ro": "Actualizează un tarif de livrare într-o zonă. Schimbă nume, preț, praguri, limite greutate, termene sau status activ."
+        },
+        "bot": "Use when the user wants to change a shipping rate. List shipping zones to find zone and rate hashids if unknown.",
+        "vars": {
+          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+          "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Update shipping rate",
+              "de": "Versandtarif aktualisieren",
+              "fr": "Mettre à jour le tarif",
+              "es": "Actualizar la tarifa",
+              "it": "Aggiorna la tariffa",
+              "ro": "Actualizează tariful"
+            },
+            "destination": {
+              "url": "https://api.joai.ai/v1/teams/{{team}}/shipping-zones/{{zoneId}}/rates/{{rateId}}",
+              "method": "PATCH",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+                "X-Team": "{{team}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Zone ID",
+                "as": "zoneId",
+                "description": {
+                  "en": "Shipping zone hashid from shipping-zone-list",
+                  "de": "Versandzonen-Hashid aus shipping-zone-list",
+                  "fr": "Hashid de la zone d'expédition depuis shipping-zone-list",
+                  "es": "Hashid de la zona de envío desde shipping-zone-list",
+                  "it": "Hashid della zona di spedizione da shipping-zone-list",
+                  "ro": "Hashid-ul zonei de livrare din shipping-zone-list"
+                },
+                "bot": "The shipping zone hashid from shipping-zone-list. List shipping zones if unknown.",
+                "type": "string",
+                "position": "url:zoneId",
+                "source": "field",
+                "required": true,
+                "min": 1
+              },
+              {
+                "name": "Rate ID",
+                "as": "rateId",
+                "description": {
+                  "en": "Shipping rate hashid from shipping-zone-list",
+                  "de": "Versandtarif-Hashid aus shipping-zone-list",
+                  "fr": "Hashid du tarif d'expédition depuis shipping-zone-list",
+                  "es": "Hashid de la tarifa de envío desde shipping-zone-list",
+                  "it": "Hashid della tariffa di spedizione da shipping-zone-list",
+                  "ro": "Hashid-ul tarifului de livrare din shipping-zone-list"
+                },
+                "bot": "The shipping rate hashid from shipping-zone-list. List shipping zones to find it if unknown.",
+                "type": "string",
+                "position": "url:rateId",
+                "source": "field",
+                "required": true,
+                "min": 1
+              },
+              {
+                "name": "Name",
+                "as": "name",
+                "description": {
+                  "en": "Rate name",
+                  "de": "Tarifname",
+                  "fr": "Nom du tarif",
+                  "es": "Nombre de la tarifa",
+                  "it": "Nome tariffa",
+                  "ro": "Numele tarifului"
+                },
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Price",
+                "as": "price",
+                "description": {
+                  "en": "Shipping price in cents",
+                  "de": "Versandpreis in Cent",
+                  "fr": "Prix d'expédition en centimes",
+                  "es": "Precio de envío en céntimos",
+                  "it": "Prezzo spedizione in centesimi",
+                  "ro": "Preț livrare în cenți"
+                },
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Free Shipping Threshold",
+                "as": "freeShippingThreshold",
+                "description": {
+                  "en": "Order total in cents for free shipping",
+                  "de": "Bestellwert in Cent für kostenlosen Versand",
+                  "fr": "Montant de commande en centimes pour livraison gratuite",
+                  "es": "Total del pedido en céntimos para envío gratis",
+                  "it": "Totale ordine in centesimi per spedizione gratuita",
+                  "ro": "Total comandă în cenți pentru livrare gratuită"
+                },
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Min Order Value",
+                "as": "minOrderValue",
+                "description": {
+                  "en": "Minimum order value in cents",
+                  "de": "Mindestbestellwert in Cent",
+                  "fr": "Montant minimum de commande en centimes",
+                  "es": "Valor mínimo del pedido en céntimos",
+                  "it": "Valore minimo ordine in centesimi",
+                  "ro": "Valoare minimă comandă în cenți"
+                },
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Max Order Value",
+                "as": "maxOrderValue",
+                "description": {
+                  "en": "Maximum order value in cents",
+                  "de": "Maximaler Bestellwert in Cent",
+                  "fr": "Montant maximum de commande en centimes",
+                  "es": "Valor máximo del pedido en céntimos",
+                  "it": "Valore massimo ordine in centesimi",
+                  "ro": "Valoare maximă comandă în cenți"
+                },
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Min Weight",
+                "as": "minWeight",
+                "description": {
+                  "en": "Minimum weight",
+                  "de": "Mindestgewicht",
+                  "fr": "Poids minimum",
+                  "es": "Peso mínimo",
+                  "it": "Peso minimo",
+                  "ro": "Greutate minimă"
+                },
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Max Weight",
+                "as": "maxWeight",
+                "description": {
+                  "en": "Maximum weight",
+                  "de": "Maximalgewicht",
+                  "fr": "Poids maximum",
+                  "es": "Peso máximo",
+                  "it": "Peso massimo",
+                  "ro": "Greutate maximă"
+                },
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Estimated Min Days",
+                "as": "estimatedMinDays",
+                "description": {
+                  "en": "Minimum delivery days",
+                  "de": "Mindest-Liefertage",
+                  "fr": "Jours de livraison minimum",
+                  "es": "Días mínimos de entrega",
+                  "it": "Giorni minimi di consegna",
+                  "ro": "Zile minime de livrare"
+                },
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Estimated Max Days",
+                "as": "estimatedMaxDays",
+                "description": {
+                  "en": "Maximum delivery days",
+                  "de": "Maximale Liefertage",
+                  "fr": "Jours de livraison maximum",
+                  "es": "Días máximos de entrega",
+                  "it": "Giorni massimi di consegna",
+                  "ro": "Zile maxime de livrare"
+                },
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Active",
+                "as": "active",
+                "description": {
+                  "en": "Whether the rate is active",
+                  "de": "Ob der Tarif aktiv ist",
+                  "fr": "Si le tarif est actif",
+                  "es": "Si la tarifa está activa",
+                  "it": "Se la tariffa è attiva",
+                  "ro": "Dacă tariful este activ"
+                },
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Team",
+                "as": "team",
+                "description": {
+                  "en": "Team slug for this action. Defaults to the current team.",
+                  "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team.",
+                  "fr": "Slug d'équipe pour cette action. Par défaut l'équipe actuelle.",
+                  "es": "Slug del equipo para esta acción. Por defecto el equipo actual.",
+                  "it": "Slug del team per questa azione. Predefinito: team attuale.",
+                  "ro": "Slug-ul echipei pentru această acțiune. Implicit echipa curentă."
+                },
+                "bot": "The slug of the team to operate on. Omit to use the current team.",
+                "type": "string",
+                "position": "url:team",
+                "source": "field",
+                "required": false,
+                "default": "{{JOAI_TEAM_SLUG}}"
+              }
+            ],
+            "output": {
+              "id": "out.data.id",
+              "name": "out.data.name"
+            }
+          }
+        ],
+        "output": {
+          "RATE_ID": "out.data.id",
+          "RATE_NAME": "out.data.name"
+        },
+        "messages": {
+          "success": {
+            "en": "Shipping rate '{{RATE_NAME}}' updated.",
+            "de": "Versandtarif '{{RATE_NAME}}' aktualisiert.",
+            "fr": "Tarif d'expédition « {{RATE_NAME}} » mis à jour.",
+            "es": "Tarifa de envío « {{RATE_NAME}} » actualizada.",
+            "it": "Tariffa di spedizione « {{RATE_NAME}} » aggiornata.",
+            "ro": "Tariful de livrare „{{RATE_NAME}}” a fost actualizat."
+          },
+          "error": {
+            "en": "Failed to update shipping rate: {{MESSAGE}}",
+            "de": "Versandtarif konnte nicht aktualisiert werden: {{MESSAGE}}"
+          }
+        }
+      },
+      "extras": null
+    },
+    {
+      "key": "none:joai-shipping-zone-delete",
+      "identifier": "@joai-shipping-zone-delete",
+      "alias": "joai-shipping-zone-delete",
+      "chain": "none",
+      "hash": "3145e61844a864b8ecec6730a0bc8e2ca3167dc4a30f5d23fb236586d6ce95d4",
+      "checksum": "3145e61844a864b8ecec6730a0bc8e2ca3167dc4a30f5d23fb236586d6ce95d4",
+      "name": "JoAi: Delete Shipping Zone",
+      "title": {
+        "en": "Delete a shipping zone",
+        "de": "Versandzone löschen",
+        "fr": "Supprimer une zone d'expédition",
+        "es": "Eliminar una zona de envío",
+        "it": "Elimina una zona di spedizione",
+        "ro": "Șterge o zonă de livrare"
+      },
+      "description": {
+        "en": "Permanently delete a shipping zone and its rates. Use with care — this cannot be undone.",
+        "de": "Versandzone und zugehörige Tarife dauerhaft löschen. Vorsicht — dies kann nicht rückgängig gemacht werden.",
+        "fr": "Supprime définitivement une zone d'expédition et ses tarifs. À utiliser avec précaution — irréversible.",
+        "es": "Elimina permanentemente una zona de envío y sus tarifas. Úsalo con cuidado: no se puede deshacer.",
+        "it": "Elimina definitivamente una zona di spedizione e le sue tariffe. Da usare con cautela — non reversibile.",
+        "ro": "Șterge definitiv o zonă de livrare și tarifele sale. Folosește cu atenție — nu poate fi anulată."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: Delete Shipping Zone",
+        "title": {
+          "en": "Delete a shipping zone",
+          "de": "Versandzone löschen",
+          "fr": "Supprimer une zone d'expédition",
+          "es": "Eliminar una zona de envío",
+          "it": "Elimina una zona di spedizione",
+          "ro": "Șterge o zonă de livrare"
+        },
+        "description": {
+          "en": "Permanently delete a shipping zone and its rates. Use with care — this cannot be undone.",
+          "de": "Versandzone und zugehörige Tarife dauerhaft löschen. Vorsicht — dies kann nicht rückgängig gemacht werden.",
+          "fr": "Supprime définitivement une zone d'expédition et ses tarifs. À utiliser avec précaution — irréversible.",
+          "es": "Elimina permanentemente una zona de envío y sus tarifas. Úsalo con cuidado: no se puede deshacer.",
+          "it": "Elimina definitivamente una zona di spedizione e le sue tariffe. Da usare con cautela — non reversibile.",
+          "ro": "Șterge definitiv o zonă de livrare și tarifele sale. Folosește cu atenție — nu poate fi anulată."
+        },
+        "bot": "Use when the user wants to remove a shipping zone. If the zone is unknown, list shipping zones first.",
+        "vars": {
+          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+          "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Delete shipping zone",
+              "de": "Versandzone löschen",
+              "fr": "Supprimer la zone",
+              "es": "Eliminar la zona",
+              "it": "Elimina la zona",
+              "ro": "Șterge zona"
+            },
+            "destination": {
+              "url": "https://api.joai.ai/v1/teams/{{team}}/shipping-zones/{{zoneId}}",
+              "method": "DELETE",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+                "X-Team": "{{team}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Zone ID",
+                "as": "zoneId",
+                "description": {
+                  "en": "Shipping zone hashid from shipping-zone-list",
+                  "de": "Versandzonen-Hashid aus shipping-zone-list",
+                  "fr": "Hashid de la zone d'expédition depuis shipping-zone-list",
+                  "es": "Hashid de la zona de envío desde shipping-zone-list",
+                  "it": "Hashid della zona di spedizione da shipping-zone-list",
+                  "ro": "Hashid-ul zonei de livrare din shipping-zone-list"
+                },
+                "bot": "The shipping zone hashid from shipping-zone-list. List shipping zones if unknown.",
+                "type": "string",
+                "position": "url:zoneId",
+                "source": "field",
+                "required": true,
+                "min": 1
+              },
+              {
+                "name": "Team",
+                "as": "team",
+                "description": {
+                  "en": "Team slug for this action. Defaults to the current team.",
+                  "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team.",
+                  "fr": "Slug d'équipe pour cette action. Par défaut l'équipe actuelle.",
+                  "es": "Slug del equipo para esta acción. Por defecto el equipo actual.",
+                  "it": "Slug del team per questa azione. Predefinito: team attuale.",
+                  "ro": "Slug-ul echipei pentru această acțiune. Implicit echipa curentă."
+                },
+                "bot": "The slug of the team to operate on. Omit to use the current team.",
+                "type": "string",
+                "position": "url:team",
+                "source": "field",
+                "required": false,
+                "default": "{{JOAI_TEAM_SLUG}}"
+              }
+            ]
+          }
+        ],
+        "messages": {
+          "success": {
+            "en": "Shipping zone deleted.",
+            "de": "Versandzone gelöscht.",
+            "fr": "Zone d'expédition supprimée.",
+            "es": "Zona de envío eliminada.",
+            "it": "Zona di spedizione eliminata.",
+            "ro": "Zona de livrare ștearsă."
+          },
+          "error": {
+            "en": "Failed to delete shipping zone: {{MESSAGE}}",
+            "de": "Versandzone konnte nicht gelöscht werden: {{MESSAGE}}"
+          }
+        }
+      },
+      "extras": null
+    },
+    {
+      "key": "none:joai-shipping-zone-update",
+      "identifier": "@joai-shipping-zone-update",
+      "alias": "joai-shipping-zone-update",
+      "chain": "none",
+      "hash": "4a9aee2465f34e23dd1d131319fe4e7da0b49f17623da6847cbb971084898c9c",
+      "checksum": "4a9aee2465f34e23dd1d131319fe4e7da0b49f17623da6847cbb971084898c9c",
+      "name": "JoAi: Update Shipping Zone",
+      "title": {
+        "en": "Update a shipping zone",
+        "de": "Versandzone aktualisieren",
+        "fr": "Mettre à jour une zone d'expédition",
+        "es": "Actualizar una zona de envío",
+        "it": "Aggiorna una zona di spedizione",
+        "ro": "Actualizează o zonă de livrare"
+      },
+      "description": {
+        "en": "Update a shipping zone — name, countries, postal code rules, or active status. Only provided fields are changed.",
+        "de": "Versandzone aktualisieren — Name, Länder, Postleitzahl-Regeln oder Aktiv-Status. Nur angegebene Felder werden geändert.",
+        "fr": "Met à jour une zone d'expédition — nom, pays, règles de codes postaux ou statut actif. Seuls les champs fournis sont modifiés.",
+        "es": "Actualiza una zona de envío — nombre, países, reglas de códigos postales o estado activo. Solo cambian los campos proporcionados.",
+        "it": "Aggiorna una zona di spedizione — nome, paesi, regole CAP o stato attivo. Vengono modificati solo i campi forniti.",
+        "ro": "Actualizează o zonă de livrare — nume, țări, reguli cod poștal sau status activ. Se schimbă doar câmpurile furnizate."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: Update Shipping Zone",
+        "title": {
+          "en": "Update a shipping zone",
+          "de": "Versandzone aktualisieren",
+          "fr": "Mettre à jour une zone d'expédition",
+          "es": "Actualizar una zona de envío",
+          "it": "Aggiorna una zona di spedizione",
+          "ro": "Actualizează o zonă de livrare"
+        },
+        "description": {
+          "en": "Update a shipping zone — name, countries, postal code rules, or active status. Only provided fields are changed.",
+          "de": "Versandzone aktualisieren — Name, Länder, Postleitzahl-Regeln oder Aktiv-Status. Nur angegebene Felder werden geändert.",
+          "fr": "Met à jour une zone d'expédition — nom, pays, règles de codes postaux ou statut actif. Seuls les champs fournis sont modifiés.",
+          "es": "Actualiza una zona de envío — nombre, países, reglas de códigos postales o estado activo. Solo cambian los campos proporcionados.",
+          "it": "Aggiorna una zona di spedizione — nome, paesi, regole CAP o stato attivo. Vengono modificati solo i campi forniti.",
+          "ro": "Actualizează o zonă de livrare — nume, țări, reguli cod poștal sau status activ. Se schimbă doar câmpurile furnizate."
+        },
+        "bot": "Use when the user wants to change an existing shipping zone. If the zone is unknown, list shipping zones first.",
+        "vars": {
+          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+          "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Update shipping zone",
+              "de": "Versandzone aktualisieren",
+              "fr": "Mettre à jour la zone",
+              "es": "Actualizar la zona",
+              "it": "Aggiorna la zona",
+              "ro": "Actualizează zona"
+            },
+            "destination": {
+              "url": "https://api.joai.ai/v1/teams/{{team}}/shipping-zones/{{zoneId}}",
+              "method": "PATCH",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+                "X-Team": "{{team}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Zone ID",
+                "as": "zoneId",
+                "description": {
+                  "en": "Shipping zone hashid from shipping-zone-list",
+                  "de": "Versandzonen-Hashid aus shipping-zone-list",
+                  "fr": "Hashid de la zone d'expédition depuis shipping-zone-list",
+                  "es": "Hashid de la zona de envío desde shipping-zone-list",
+                  "it": "Hashid della zona di spedizione da shipping-zone-list",
+                  "ro": "Hashid-ul zonei de livrare din shipping-zone-list"
+                },
+                "bot": "The shipping zone hashid from shipping-zone-list. List shipping zones if unknown.",
+                "type": "string",
+                "position": "url:zoneId",
+                "source": "field",
+                "required": true,
+                "min": 1
+              },
+              {
+                "name": "Name",
+                "as": "name",
+                "description": {
+                  "en": "Zone name",
+                  "de": "Zonenname",
+                  "fr": "Nom de la zone",
+                  "es": "Nombre de la zona",
+                  "it": "Nome della zona",
+                  "ro": "Numele zonei"
+                },
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Countries",
+                "as": "countries",
+                "description": {
+                  "en": "ISO country codes — JSON array",
+                  "de": "ISO-Ländercodes — JSON-Array",
+                  "fr": "Codes pays ISO — tableau JSON",
+                  "es": "Códigos de país ISO — array JSON",
+                  "it": "Codici paese ISO — array JSON",
+                  "ro": "Coduri țări ISO — array JSON"
+                },
+                "type": "json",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Postal Code Rules",
+                "as": "postalCodeRules",
+                "description": {
+                  "en": "Postal code patterns (optional JSON array)",
+                  "de": "Postleitzahl-Muster (optionales JSON-Array)",
+                  "fr": "Motifs de codes postaux (tableau JSON optionnel)",
+                  "es": "Patrones de código postal (array JSON opcional)",
+                  "it": "Pattern CAP (array JSON opzionale)",
+                  "ro": "Modele cod poștal (array JSON opțional)"
+                },
+                "type": "json",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Active",
+                "as": "active",
+                "description": {
+                  "en": "Whether the zone is active",
+                  "de": "Ob die Zone aktiv ist",
+                  "fr": "Si la zone est active",
+                  "es": "Si la zona está activa",
+                  "it": "Se la zona è attiva",
+                  "ro": "Dacă zona este activă"
+                },
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Team",
+                "as": "team",
+                "description": {
+                  "en": "Team slug for this action. Defaults to the current team.",
+                  "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team.",
+                  "fr": "Slug d'équipe pour cette action. Par défaut l'équipe actuelle.",
+                  "es": "Slug del equipo para esta acción. Por defecto el equipo actual.",
+                  "it": "Slug del team per questa azione. Predefinito: team attuale.",
+                  "ro": "Slug-ul echipei pentru această acțiune. Implicit echipa curentă."
+                },
+                "bot": "The slug of the team to operate on. Omit to use the current team.",
+                "type": "string",
+                "position": "url:team",
+                "source": "field",
+                "required": false,
+                "default": "{{JOAI_TEAM_SLUG}}"
+              }
+            ],
+            "output": {
+              "id": "out.data.id",
+              "name": "out.data.name"
+            }
+          }
+        ],
+        "output": {
+          "ZONE_ID": "out.data.id",
+          "ZONE_NAME": "out.data.name"
+        },
+        "messages": {
+          "success": {
+            "en": "Shipping zone '{{ZONE_NAME}}' updated.",
+            "de": "Versandzone '{{ZONE_NAME}}' aktualisiert.",
+            "fr": "Zone d'expédition « {{ZONE_NAME}} » mise à jour.",
+            "es": "Zona de envío « {{ZONE_NAME}} » actualizada.",
+            "it": "Zona di spedizione « {{ZONE_NAME}} » aggiornata.",
+            "ro": "Zona de livrare „{{ZONE_NAME}}” a fost actualizată."
+          },
+          "error": {
+            "en": "Failed to update shipping zone: {{MESSAGE}}",
+            "de": "Versandzone konnte nicht aktualisiert werden: {{MESSAGE}}"
+          }
+        }
+      },
+      "extras": null
+    },
+    {
+      "key": "none:joai-site-list",
+      "identifier": "@joai-site-list",
+      "alias": "joai-site-list",
+      "chain": "none",
+      "hash": "c5b215838ed5b2ff4b2314076c2eb111d2c492d00ff291f766c5fe3c57c36a36",
+      "checksum": "c5b215838ed5b2ff4b2314076c2eb111d2c492d00ff291f766c5fe3c57c36a36",
+      "name": "JoAi: List Sites",
+      "title": {
+        "en": "List sites",
+        "de": "Websites auflisten"
+      },
+      "description": {
+        "en": "List sites for a team, including contact, metrics source/resource, and monthly report status.",
+        "de": "Listet Websites eines Teams inkl. Kontakt, Metrik-Quelle/-Ressource und Monatsbericht-Status."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: List Sites",
+        "title": {
+          "en": "List sites",
+          "de": "Websites auflisten"
+        },
+        "description": {
+          "en": "List sites for a team, including contact, metrics source/resource, and monthly report status.",
+          "de": "Listet Websites eines Teams inkl. Kontakt, Metrik-Quelle/-Ressource und Monatsbericht-Status."
+        },
+        "bot": "Use to find site hashids and reporting config before site-update. Optional monthlyReport=true returns only sites opted into the 1st-of-month report job.",
+        "vars": {
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+          "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+        },
+        "output": {
+          "sites": "out",
+          "sitesList": "out.data"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "List sites",
+              "de": "Websites auflisten"
+            },
+            "destination": {
+              "url": "https://api.joai.ai/v1/sites/mine?team={{team}}&monthlyReport={{monthlyReport}}",
+              "method": "GET",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+                "X-Team": "{{team}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Team",
+                "as": "team",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "default": "{{JOAI_TEAM_SLUG}}",
+                "position": "url:team",
+                "description": {
+                  "en": "Team slug. Defaults to the current team.",
+                  "de": "Team-Slug. Standardmäßig das aktuelle Team."
+                }
+              },
+              {
+                "name": "Monthly report only",
+                "as": "monthlyReport",
+                "type": "boolean",
+                "source": "field",
+                "required": false,
+                "position": "url:monthlyReport",
+                "description": {
+                  "en": "Optional. Leave off to list all sites. On = only sites with monthly report enabled.",
+                  "de": "Optional. Aus = alle Websites. An = nur Websites mit aktivem Monatsbericht."
+                }
+              }
+            ]
+          }
+        ],
+        "messages": {
+          "success": {
+            "en": "Sites loaded.",
+            "de": "Websites geladen."
+          }
+        }
+      },
+      "extras": {
+        "keywords": {
+          "en": [
+            "list sites",
+            "site portfolio",
+            "monthly report sites"
+          ],
+          "de": [
+            "Websites auflisten",
+            "Website-Portfolio",
+            "Monatsbericht Websites"
+          ]
+        },
+        "useCases": {
+          "en": [
+            "Find site hashids and metrics config",
+            "See which sites have monthly report enabled"
+          ],
+          "de": [
+            "Website-Hashids und Metrik-Konfiguration finden",
+            "Sehen welche Websites den Monatsbericht aktiviert haben"
+          ]
+        },
+        "category": "productivity"
+      }
+    },
+    {
+      "key": "none:joai-site-update",
+      "identifier": "@joai-site-update",
+      "alias": "joai-site-update",
+      "chain": "none",
+      "hash": "06de5a062a6a55eefb7e2682e4592b3942db39dd57f6f62ca9492d15943305d7",
+      "checksum": "06de5a062a6a55eefb7e2682e4592b3942db39dd57f6f62ca9492d15943305d7",
+      "name": "JoAi: Update Site",
+      "title": {
+        "en": "Update site",
+        "de": "Website aktualisieren",
+        "es": "Update site",
+        "fr": "Update site",
+        "ro": "Update site",
+        "it": "Update site"
+      },
+      "description": {
+        "en": "Update a site’s enabled state, name, URL, custom domain, type (undefined|shop), contact, metrics source/resource, or monthly report schedule.",
+        "de": "Aktualisiert Aktivierung, Name, URL, eigene Domain, Typ (undefined|shop), Kontakt, Metrik-Quelle/-Ressource oder Monatsbericht einer Website."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: Update Site",
+        "title": {
+          "en": "Update site",
+          "de": "Website aktualisieren",
+          "es": "Update site",
+          "fr": "Update site",
+          "ro": "Update site",
+          "it": "Update site"
+        },
+        "description": {
+          "en": "Update a site’s enabled state, name, URL, custom domain, type (undefined|shop), contact, metrics source/resource, or monthly report schedule.",
+          "de": "Aktualisiert Aktivierung, Name, URL, eigene Domain, Typ (undefined|shop), Kontakt, Metrik-Quelle/-Ressource oder Monatsbericht einer Website."
+        },
+        "bot": "Update site fields including optional type and custom domain. customDomain sets the site’s own bare hostname (e.g. example.com, no protocol) and must be unique across teams. type=shop requires url, only works on brandless sites, and marks this site as the post-checkout storefront return URL (one shop per team). Pass type=undefined (or empty) to clear shop. For metricsSource=analytics, pass analyticsDomains as the public hostname JSON array; metricsResource is optional because JoAi generates a site key when needed. For Cloudflare and Google Search Console, pass metricsResource as the zone tag or property URL. monthlyReport=true opts into the 1st-of-month job when contact and metrics are set — it does not send immediately. Native analytics needs no third-party integration. If another source returns channel_not_configured, call settings-integration-open with its integration, then retry.",
+        "vars": {
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+          "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Update",
+              "de": "Aktualisieren"
+            },
+            "destination": {
+              "url": "https://api.joai.ai/v1/sites/{{siteId}}",
+              "method": "PUT",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+                "X-Team": "{{team}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Site ID",
+                "as": "siteId",
+                "type": "string",
+                "source": "field",
+                "required": true,
+                "position": "url:siteId",
+                "description": {
+                  "en": "Site hashid from site-list",
+                  "de": "Website-Hashid aus site-list"
+                }
+              },
+              {
+                "name": "Team",
+                "as": "team",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "default": "{{JOAI_TEAM_SLUG}}"
+              },
+              {
+                "name": "Enabled",
+                "as": "enabled",
+                "type": "boolean",
+                "source": "field",
+                "required": false,
+                "position": "payload:enabled"
+              },
+              {
+                "name": "Name",
+                "as": "name",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "position": "payload:name"
+              },
+              {
+                "name": "Website URL",
+                "as": "url",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "position": "payload:url"
+              },
+              {
+                "name": "Custom domain",
+                "as": "customDomain",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "position": "payload:customDomain",
+                "description": {
+                  "en": "Bare hostname without protocol, e.g. example.com. Must be unique across teams; omit to leave unchanged.",
+                  "de": "Nackter Hostname ohne Protokoll, z. B. example.com. Muss teamübergreifend eindeutig sein; weglassen, um ihn nicht zu ändern."
+                }
+              },
+              {
+                "name": "Type",
+                "as": "type",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "position": "payload:type",
+                "options": {
+                  "undefined": "Website",
+                  "shop": "Shop"
+                },
+                "description": {
+                  "en": "undefined = normal website/portfolio. shop = storefront return URL after checkout (brandless sites only).",
+                  "de": "undefined = normale Website/Portfolio. shop = Shop-URL nach Checkout (nur ohne Brand)."
+                }
+              },
+              {
+                "name": "Contact",
+                "as": "contactId",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "position": "payload:contactId"
+              },
+              {
+                "name": "Metrics source",
+                "as": "metricsSource",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "position": "payload:metricsSource",
+                "options": {
+                  "analytics": "JoAi Analytics",
+                  "cloudflare": "Cloudflare",
+                  "google_search_console": "Google Search Console"
+                }
+              },
+              {
+                "name": "Metrics resource",
+                "as": "metricsResource",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "position": "payload:metricsResource",
+                "description": {
+                  "en": "Provider resource identifier. Omit for analytics to let JoAi generate the private site key."
+                }
+              },
+              {
+                "name": "Analytics allowed domains",
+                "as": "analyticsDomains",
+                "type": "json",
+                "source": "field",
+                "required": false,
+                "position": "payload:analyticsDomains",
+                "description": {
+                  "en": "For analytics, allowed hostname JSON array, e.g. [\"cafe-jordan.at\"]"
+                }
+              },
+              {
+                "name": "Monthly report",
+                "as": "monthlyReport",
+                "type": "boolean",
+                "source": "field",
+                "required": false,
+                "position": "payload:monthlyReport"
+              }
+            ]
+          }
+        ],
+        "messages": {
+          "success": {
+            "en": "Site updated.",
+            "de": "Website aktualisiert."
+          }
+        }
+      },
+      "extras": {
+        "keywords": {
+          "en": [
+            "update site",
+            "custom domain",
+            "site metrics",
+            "monthly site report"
+          ],
+          "de": [
+            "Website aktualisieren",
+            "eigene Domain",
+            "Website-Metriken",
+            "monatlicher Website-Bericht"
+          ]
+        },
+        "useCases": {
+          "en": [
+            "Set a custom domain for a site",
+            "Attach a contact and metrics source/resource to a site",
+            "Enable or disable the monthly site report"
+          ],
+          "de": [
+            "Eine eigene Domain für eine Website hinterlegen",
+            "Kontakt und Metrik-Quelle/-Ressource an eine Website hängen",
+            "Monatsbericht aktivieren oder deaktivieren"
+          ]
+        },
+        "category": "productivity",
+        "faq": {
+          "en": [
+            {
+              "question": "How do I connect a custom domain to a site?",
+              "answer": "Pass the bare hostname, for example example.com, as the custom domain. It must be unique across teams."
+            }
+          ],
+          "de": [
+            {
+              "question": "Wie verbinde ich eine eigene Domain mit einer Website?",
+              "answer": "Gib den nackten Hostname an, zum Beispiel example.com. Er muss teamübergreifend eindeutig sein."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "key": "none:joai-subscription-delivery-update",
+      "identifier": "@joai-subscription-delivery-update",
+      "alias": "joai-subscription-delivery-update",
+      "chain": "none",
+      "hash": "36ef135eb30bc4ed98df163f5d6f0680d07c66436cb25a2f79308ffb76349178",
+      "checksum": "36ef135eb30bc4ed98df163f5d6f0680d07c66436cb25a2f79308ffb76349178",
+      "name": "JoAi: Update Subscription Delivery",
+      "title": {
+        "en": "Update subscription delivery",
+        "de": "Abonnement-Lieferung aktualisieren",
+        "fr": "Mettre à jour la livraison de l'abonnement",
+        "es": "Actualizar entrega de suscripción",
+        "it": "Aggiorna consegna abbonamento",
+        "ro": "Actualizează livrarea abonamentului"
+      },
+      "description": {
+        "en": "Change how a subscription is fulfilled — shipping or pickup — including address, shipping rate, or pickup location.",
+        "de": "Ändere, wie ein Abonnement erfüllt wird — Versand oder Abholung — einschließlich Adresse, Versandtarif oder Abholort.",
+        "fr": "Modifiez la façon dont un abonnement est livré — expédition ou retrait — y compris l'adresse, le tarif d'expédition ou le point de retrait.",
+        "es": "Cambia cómo se cumple una suscripción — envío o recogida — incluyendo dirección, tarifa de envío o punto de recogida.",
+        "it": "Modifica come viene evaso un abbonamento — spedizione o ritiro — inclusi indirizzo, tariffa di spedizione o punto di ritiro.",
+        "ro": "Schimbă modul în care este onorat un abonament — livrare sau ridicare — inclusiv adresa, tariful de livrare sau locația de ridicare."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: Update Subscription Delivery",
+        "title": {
+          "en": "Update subscription delivery",
+          "de": "Abonnement-Lieferung aktualisieren",
+          "fr": "Mettre à jour la livraison de l'abonnement",
+          "es": "Actualizar entrega de suscripción",
+          "it": "Aggiorna consegna abbonamento",
+          "ro": "Actualizează livrarea abonamentului"
+        },
+        "description": {
+          "en": "Change how a subscription is fulfilled — shipping or pickup — including address, shipping rate, or pickup location.",
+          "de": "Ändere, wie ein Abonnement erfüllt wird — Versand oder Abholung — einschließlich Adresse, Versandtarif oder Abholort.",
+          "fr": "Modifiez la façon dont un abonnement est livré — expédition ou retrait — y compris l'adresse, le tarif d'expédition ou le point de retrait.",
+          "es": "Cambia cómo se cumple una suscripción — envío o recogida — incluyendo dirección, tarifa de envío o punto de recogida.",
+          "it": "Modifica come viene evaso un abbonamento — spedizione o ritiro — inclusi indirizzo, tariffa di spedizione o punto di ritiro.",
+          "ro": "Schimbă modul în care este onorat un abonament — livrare sau ridicare — inclusiv adresa, tariful de livrare sau locația de ridicare."
+        },
+        "bot": "Use when the user wants to change subscription delivery settings. fulfillmentMethod is required. For shipping, provide shippingAddressId and shippingRateId (both hashids). For pickup, provide fulfillmentLocationId.",
+        "vars": {
+          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+          "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Update delivery",
+              "de": "Lieferung aktualisieren",
+              "fr": "Mettre à jour la livraison",
+              "es": "Actualizar entrega",
+              "it": "Aggiorna consegna",
+              "ro": "Actualizează livrarea"
+            },
+            "destination": {
+              "url": "https://api.joai.ai/v1/subscriptions/{{subscriptionId}}/delivery",
+              "method": "PATCH",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+                "X-Team": "{{team}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Subscription ID",
+                "as": "subscriptionId",
+                "description": {
+                  "en": "The hashid of the subscription to update",
+                  "de": "Die Hashid des zu aktualisierenden Abonnements",
+                  "fr": "Le hashid de l'abonnement à mettre à jour",
+                  "es": "El hashid de la suscripción a actualizar",
+                  "it": "L'hashid dell'abbonamento da aggiornare",
+                  "ro": "Hashid-ul abonamentului de actualizat"
+                },
+                "bot": "The subscription hash ID. If the user refers to a subscription by customer or product, list subscriptions first to find the matching ID.",
+                "type": "string",
+                "position": "url:subscriptionId",
+                "source": "field",
+                "required": true,
+                "min": 1
+              },
+              {
+                "name": "Fulfillment Method",
+                "as": "fulfillmentMethod",
+                "description": {
+                  "en": "How the subscription is fulfilled: shipping or pickup",
+                  "de": "Wie das Abonnement erfüllt wird: Versand oder Abholung",
+                  "fr": "Mode de livraison de l'abonnement : expédition ou retrait",
+                  "es": "Cómo se cumple la suscripción: envío o recogida",
+                  "it": "Come viene evaso l'abbonamento: spedizione o ritiro",
+                  "ro": "Modul de onorare al abonamentului: livrare sau ridicare"
+                },
+                "bot": "Required. Use shipping for delivery to an address, or pickup for collection at a location.",
+                "type": "string",
+                "source": "field",
+                "required": true,
+                "options": {
+                  "shipping": "Shipping",
+                  "pickup": "Pickup"
+                }
+              },
+              {
+                "name": "Shipping Address ID",
+                "as": "shippingAddressId",
+                "description": {
+                  "en": "Address ID for shipping fulfillment",
+                  "de": "Adress-ID für Versand",
+                  "fr": "ID d'adresse pour l'expédition",
+                  "es": "ID de dirección para envío",
+                  "it": "ID indirizzo per la spedizione",
+                  "ro": "ID adresă pentru livrare"
+                },
+                "bot": "Required when fulfillmentMethod is shipping.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Shipping Rate ID",
+                "as": "shippingRateId",
+                "description": {
+                  "en": "Shipping rate hashid for shipping fulfillment",
+                  "de": "Versandtarif-Hashid für Versand",
+                  "fr": "Hashid du tarif d'expédition",
+                  "es": "Hashid de tarifa de envío",
+                  "it": "Hashid tariffa di spedizione",
+                  "ro": "Hashid tarif de livrare"
+                },
+                "bot": "Required when fulfillmentMethod is shipping.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Fulfillment Location ID",
+                "as": "fulfillmentLocationId",
+                "description": {
+                  "en": "Pickup location ID for pickup fulfillment",
+                  "de": "Abholort-ID für Abholung",
+                  "fr": "ID du point de retrait",
+                  "es": "ID del punto de recogida",
+                  "it": "ID punto di ritiro",
+                  "ro": "ID locație de ridicare"
+                },
+                "bot": "Required when fulfillmentMethod is pickup.",
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Team",
+                "as": "team",
+                "description": {
+                  "en": "Team slug for this action. Defaults to the current team.",
+                  "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team.",
+                  "fr": "Slug d'équipe pour cette action. Par défaut l'équipe actuelle.",
+                  "es": "Slug del equipo para esta acción. Por defecto el equipo actual.",
+                  "it": "Slug del team per questa azione. Predefinito: team attuale.",
+                  "ro": "Slug-ul echipei pentru această acțiune. Implicit echipa curentă."
+                },
+                "bot": "The slug of the team to operate on. Omit to use the current team.",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "default": "{{JOAI_TEAM_SLUG}}"
+              }
+            ]
+          }
+        ],
+        "messages": {
+          "success": {
+            "en": "Subscription delivery updated.",
+            "de": "Abonnement-Lieferung aktualisiert.",
+            "fr": "Livraison de l'abonnement mise à jour.",
+            "es": "Entrega de suscripción actualizada.",
+            "it": "Consegna abbonamento aggiornata.",
+            "ro": "Livrarea abonamentului a fost actualizată."
+          },
+          "error": {
+            "en": "Failed to update subscription delivery: {{MESSAGE}}",
+            "de": "Abonnement-Lieferung konnte nicht aktualisiert werden: {{MESSAGE}}",
+            "fr": "Échec de la mise à jour de la livraison : {{MESSAGE}}",
+            "es": "Error al actualizar la entrega de la suscripción: {{MESSAGE}}",
+            "it": "Impossibile aggiornare la consegna dell'abbonamento: {{MESSAGE}}",
+            "ro": "Nu s-a putut actualiza livrarea abonamentului: {{MESSAGE}}"
+          }
+        }
+      },
+      "extras": null
     },
     {
       "key": "none:poll-results",
