@@ -4,8 +4,8 @@
   "repo": "JoAiHQ/warps",
   "branch": "main",
   "network": "mainnet",
-  "commitSha": "7ef5505d0f46dfcc6348af99b3153518d530e3ab",
-  "generatedAt": "2026-10-28T08:17:19.511Z",
+  "commitSha": "0f996d18e0f196dd1326d52f27b22c3e2d1b61b7",
+  "generatedAt": "2026-10-28T08:44:36.825Z",
   "warps": [
     {
       "key": "arbitrum:omniset-deposit-arbitrum",
@@ -105220,16 +105220,16 @@
       "identifier": "@joai-service-create",
       "alias": "joai-service-create",
       "chain": "none",
-      "hash": "83bba6f437dcc59c0d63fbb9e319b98cba1c510a14ce1dac98af33b31f3391d3",
-      "checksum": "83bba6f437dcc59c0d63fbb9e319b98cba1c510a14ce1dac98af33b31f3391d3",
+      "hash": "1733a1dfa240af3c1420c69b43c20e25e653aeead33d892a9dca2655d8d3a61e",
+      "checksum": "1733a1dfa240af3c1420c69b43c20e25e653aeead33d892a9dca2655d8d3a61e",
       "name": "JoAi: Create Service",
       "title": {
         "en": "Create a service",
         "de": "Dienstleistung erstellen"
       },
       "description": {
-        "en": "Create a new billable service with name, price, and pricing model for your team catalog. Services can be one-time or monthly subscription. Monthly services use Stripe for recurring billing.",
-        "de": "Erstelle eine neue abrechenbare Dienstleistung mit Name, Preis und Abrechnungsmodell für deinen Team-Katalog. Dienstleistungen können einmalig oder monatlich als Abo sein. Monatliche Services nutzen Stripe für wiederkehrende Zahlungen."
+        "en": "Create a new billable service with name, price, and pricing model for your team catalog. Services can be one-time or a recurring subscription (weekly, biweekly, monthly, quarterly or yearly). Recurring services use Stripe for recurring billing.",
+        "de": "Erstelle eine neue abrechenbare Dienstleistung mit Name, Preis und Abrechnungsmodell für deinen Team-Katalog. Dienstleistungen können einmalig oder ein wiederkehrendes Abo sein (wöchentlich, zweiwöchentlich, monatlich, quartalsweise oder jährlich). Wiederkehrende Services nutzen Stripe für wiederkehrende Zahlungen."
       },
       "preview": null,
       "creator": "github:JoAiHQ/warps",
@@ -105270,10 +105270,10 @@
           "de": "Dienstleistung erstellen"
         },
         "description": {
-          "en": "Create a new billable service with name, price, and pricing model for your team catalog. Services can be one-time or monthly subscription. Monthly services use Stripe for recurring billing.",
-          "de": "Erstelle eine neue abrechenbare Dienstleistung mit Name, Preis und Abrechnungsmodell für deinen Team-Katalog. Dienstleistungen können einmalig oder monatlich als Abo sein. Monatliche Services nutzen Stripe für wiederkehrende Zahlungen."
+          "en": "Create a new billable service with name, price, and pricing model for your team catalog. Services can be one-time or a recurring subscription (weekly, biweekly, monthly, quarterly or yearly). Recurring services use Stripe for recurring billing.",
+          "de": "Erstelle eine neue abrechenbare Dienstleistung mit Name, Preis und Abrechnungsmodell für deinen Team-Katalog. Dienstleistungen können einmalig oder ein wiederkehrendes Abo sein (wöchentlich, zweiwöchentlich, monatlich, quartalsweise oder jährlich). Wiederkehrende Services nutzen Stripe für wiederkehrende Zahlungen."
         },
-        "bot": "Use when the user wants to create a new service, billable offering, or subscription plan. Extract name, price, and pricing model from their description. If they say 'monthly' or 'subscription', set pricingModel to 'monthly'. The price modifier automatically converts euros to cents. Use public for store visibility and bookable for appointment booking — a service can be public without being bookable. For reduced/special VAT, pass taxClassId from tax-class-list.",
+        "bot": "Use when the user wants to create a new service, billable offering, or subscription plan. Extract name, price, and pricing model from their description. Set pricingModel to the billing interval they name (weekly, biweekly, monthly, quarterly, yearly); a plain 'subscription' means monthly; otherwise omit it for one-time. The price modifier automatically converts euros to cents. Use public for store visibility and bookable for appointment booking — a service can be public without being bookable. For reduced/special VAT, pass taxClassId from tax-class-list.",
         "vars": {
           "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
           "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
@@ -105325,10 +105325,10 @@
                 "name": "Price",
                 "as": "price",
                 "description": {
-                  "en": "Price in euros (e.g. 49 for €49). For subscriptions this is the monthly price.",
-                  "de": "Preis in Euro (z.B. 49 für 49€). Bei Abos ist das der monatliche Preis."
+                  "en": "Price in euros (e.g. 49 for €49). For subscriptions this is the price per billing interval (e.g. per year for yearly).",
+                  "de": "Preis in Euro (z.B. 49 für 49€). Bei Abos ist das der Preis pro Abrechnungsintervall (z.B. pro Jahr bei jährlich)."
                 },
-                "bot": "Ask for the price naturally. For subscriptions, ask if monthly or one-time.",
+                "bot": "Ask for the price naturally. For subscriptions, ask which billing interval applies.",
                 "modifier": "transform:(value) => Number(value) * 100",
                 "type": "number",
                 "source": "field",
@@ -105338,15 +105338,19 @@
                 "name": "Pricing model",
                 "as": "pricingModel",
                 "description": {
-                  "en": "One-time payment or monthly subscription",
-                  "de": "Einmalzahlung oder monatliches Abo"
+                  "en": "One-time payment or recurring subscription: weekly, biweekly, monthly, quarterly or yearly",
+                  "de": "Einmalzahlung oder wiederkehrendes Abo: wöchentlich, zweiwöchentlich, monatlich, quartalsweise oder jährlich"
                 },
                 "type": "string",
                 "source": "field",
                 "required": false,
                 "options": [
                   "one-time",
-                  "monthly"
+                  "weekly",
+                  "biweekly",
+                  "monthly",
+                  "quarterly",
+                  "yearly"
                 ]
               },
               {
