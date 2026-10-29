@@ -1090,8 +1090,8 @@ export const meta: Record<string, WarpExtras> = {
   },
   'service-create': {
     keywords: {
-      en: ['create service', 'add service', 'new billable service', 'appointment type', 'service catalog', 'bookable service', 'public service'],
-      de: ['Dienstleistung erstellen', 'Service hinzufügen', 'neue abrechenbare Leistung', 'Terminart', 'Service-Katalog', 'buchbare Dienstleistung'],
+      en: ['create service', 'add service', 'new billable service', 'appointment type', 'service catalog', 'bookable service', 'public service', 'booking form fields'],
+      de: ['Dienstleistung erstellen', 'Service hinzufügen', 'neue abrechenbare Leistung', 'Terminart', 'Service-Katalog', 'buchbare Dienstleistung', 'Buchungsformular-Felder'],
     },
     useCases: {
       en: [
@@ -1099,20 +1099,22 @@ export const meta: Record<string, WarpExtras> = {
         'Create a billable service with a set price and duration',
         'Set up consultation, maintenance, or repair service offerings',
         'List a service in the store without enabling appointment booking',
+        'Collect booking details such as phone or address before an appointment',
       ],
       de: [
         'Einen neuen Dienstleistungstyp für Terminbuchungen hinzufügen',
         'Eine abrechenbare Dienstleistung mit festem Preis und Dauer erstellen',
         'Beratungs-, Wartungs- oder Reparaturleistungen anlegen',
         'Eine Dienstleistung im Store listen, ohne Terminbuchung zu aktivieren',
+        'Buchungsdetails wie Telefon oder Adresse vor einem Termin abfragen',
       ],
     },
     category: 'productivity',
   },
   'service-update': {
     keywords: {
-      en: ['update service', 'edit service', 'change service price', 'modify service duration', 'service settings', 'enable booking', 'disable booking'],
-      de: ['Dienstleistung aktualisieren', 'Service bearbeiten', 'Preis ändern', 'Dauer anpassen', 'Service-Einstellungen', 'Buchung aktivieren', 'Buchung deaktivieren'],
+      en: ['update service', 'edit service', 'change service price', 'modify service duration', 'service settings', 'enable booking', 'disable booking', 'booking form fields'],
+      de: ['Dienstleistung aktualisieren', 'Service bearbeiten', 'Preis ändern', 'Dauer anpassen', 'Service-Einstellungen', 'Buchung aktivieren', 'Buchung deaktivieren', 'Buchungsformular-Felder'],
     },
     useCases: {
       en: [
@@ -1121,6 +1123,7 @@ export const meta: Record<string, WarpExtras> = {
         'Activate or deactivate a service in your catalog',
         'Make a service public in the store but not bookable',
         'Enable or disable appointment booking for a service',
+        'Add, change, or remove booking detail fields for a service',
       ],
       de: [
         'Den Preis einer bestehenden Dienstleistung ändern',
@@ -1128,6 +1131,7 @@ export const meta: Record<string, WarpExtras> = {
         'Eine Dienstleistung im Katalog aktivieren oder deaktivieren',
         'Eine Dienstleistung im Store listen, aber nicht buchbar machen',
         'Terminbuchung für eine Dienstleistung aktivieren oder deaktivieren',
+        'Buchungsdetails einer Dienstleistung hinzufügen, ändern oder entfernen',
       ],
     },
     category: 'productivity',

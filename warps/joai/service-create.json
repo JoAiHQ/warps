@@ -6,10 +6,10 @@
     "de": "Dienstleistung erstellen"
   },
   "description": {
-    "en": "Create a new billable service with name, price, and pricing model for your team catalog. Services can be one-time or a recurring subscription (weekly, biweekly, monthly, quarterly or yearly). Recurring services use Stripe for recurring billing.",
-    "de": "Erstelle eine neue abrechenbare Dienstleistung mit Name, Preis und Abrechnungsmodell für deinen Team-Katalog. Dienstleistungen können einmalig oder ein wiederkehrendes Abo sein (wöchentlich, zweiwöchentlich, monatlich, quartalsweise oder jährlich). Wiederkehrende Services nutzen Stripe für wiederkehrende Zahlungen."
+    "en": "Create a new billable service with name, price, and pricing model for your team catalog. Services can be one-time or a recurring subscription (weekly, biweekly, monthly, quarterly or yearly). Recurring services use Stripe for recurring billing. Add booking details to collect information such as phone or address before an appointment.",
+    "de": "Erstelle eine neue abrechenbare Dienstleistung mit Name, Preis und Abrechnungsmodell für deinen Team-Katalog. Dienstleistungen können einmalig oder ein wiederkehrendes Abo sein (wöchentlich, zweiwöchentlich, monatlich, quartalsweise oder jährlich). Wiederkehrende Services nutzen Stripe für wiederkehrende Zahlungen. Ergänze Buchungsdetails, um vor einem Termin Informationen wie Telefon oder Adresse abzufragen."
   },
-  "bot": "Use when the user wants to create a new service, billable offering, or subscription plan. Extract name, price, and pricing model from their description. Set pricingModel to the billing interval they name (weekly, biweekly, monthly, quarterly, yearly); a plain 'subscription' means monthly; otherwise omit it for one-time. The price modifier automatically converts euros to cents. Use public for store visibility and bookable for appointment booking — a service can be public without being bookable. For reduced/special VAT, pass taxClassId from tax-class-list.",
+  "bot": "Use when the user wants to create a new service, billable offering, or subscription plan. Extract name, price, and pricing model from their description. Set pricingModel to the billing interval they name (weekly, biweekly, monthly, quarterly, yearly); a plain 'subscription' means monthly; otherwise omit it for one-time. The price modifier automatically converts euros to cents. Use public for store visibility and bookable for appointment booking — a service can be public without being bookable. For reduced/special VAT, pass taxClassId from tax-class-list. To collect booking detail fields, pass settings.configurator as a collect action with inputs.",
   "vars": {
     "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
     "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
@@ -194,6 +194,18 @@
           "source": "field",
           "required": false,
           "default": "{{JOAI_TEAM_SLUG}}"
+        },
+        {
+          "name": "Settings",
+          "as": "settings",
+          "description": {
+            "en": "Service settings as JSON, e.g. {\"configurator\":{\"type\":\"collect\",\"label\":\"Booking details\",\"inputs\":[{\"name\":\"phone\",\"label\":\"Phone\",\"type\":\"string\",\"required\":true}]}}. Omit when not needed.",
+            "de": "Dienstleistungs-Einstellungen als JSON, z.B. {\"configurator\":{\"type\":\"collect\",\"label\":\"Buchungsdetails\",\"inputs\":[{\"name\":\"phone\",\"label\":\"Telefon\",\"type\":\"string\",\"required\":true}]}}. Weglassen, wenn nicht benötigt."
+          },
+          "bot": "Settings JSON. To collect booking detail fields before a booking, pass settings.configurator as a collect action with inputs. Omit when not needed.",
+          "type": "json",
+          "source": "field",
+          "required": false
         }
       ]
     }
