@@ -2017,4 +2017,33 @@ export const meta: Record<string, WarpExtras> = {
       ],
     },
   },
+  'proposal-update': {
+    keywords: {
+      en: ['update client proposal', 'edit proposal', 'add agreements', 'change proposal terms', 'proposal access code'],
+      de: ['Kundenangebot bearbeiten', 'Angebot aktualisieren', 'Vereinbarungen ergänzen', 'Angebotskonditionen ändern', 'Angebot Zugangscode'],
+    },
+    useCases: {
+      en: [
+        'Add agreements and a go-live date after talking to the client',
+        'Adjust the objective, introduction, or next step of an open proposal',
+        'Change the coupon, price mode, validity, or access code before the client confirms',
+      ],
+      de: [
+        'Vereinbarungen und ein Go-live-Datum nach dem Kundengespräch ergänzen',
+        'Ziel, Einleitung oder nächsten Schritt eines offenen Angebots anpassen',
+        'Gutschein, Preismodus, Gültigkeit oder Zugangscode vor der Kundenbestätigung ändern',
+      ],
+    },
+    category: 'commerce',
+    faq: {
+      en: [
+        { question: 'Can I change the items on an existing proposal?', answer: 'No. Items are fixed after creation; you can only update the text fields, validity, coupon, price mode, and access code.' },
+        { question: 'Can I update a proposal the client already accepted?', answer: 'No. Only proposals that are not yet accepted can be changed.' },
+      ],
+      de: [
+        { question: 'Kann ich die Positionen eines bestehenden Angebots ändern?', answer: 'Nein. Die Positionen sind nach dem Erstellen fix; du kannst nur Textfelder, Gültigkeit, Gutschein, Preismodus und Zugangscode aktualisieren.' },
+        { question: 'Kann ich ein bereits angenommenes Angebot aktualisieren?', answer: 'Nein. Nur Angebote, die noch nicht angenommen wurden, lassen sich ändern.' },
+      ],
+    },
+  },
 }
