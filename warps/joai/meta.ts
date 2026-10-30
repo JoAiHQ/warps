@@ -1216,8 +1216,8 @@ export const meta: Record<string, WarpExtras> = {
 
   'product-variation-create': {
     keywords: {
-      en: ['add variation', 'volume pricing', 'price tier', 'bulk discount', 'product SKU', 'pricing tier', 'variation stock'],
-      de: ['Variante hinzufügen', 'Mengenrabatt', 'Preisstaffel', 'Staffelpreis', 'Produkt-SKU', 'Preisstufe', 'Variantenbestand'],
+      en: ['add variation', 'volume pricing', 'price tier', 'bulk discount', 'product SKU', 'pricing tier', 'variation stock', 'barcode', 'EAN', 'GTIN', 'UPC'],
+      de: ['Variante hinzufügen', 'Mengenrabatt', 'Preisstaffel', 'Staffelpreis', 'Produkt-SKU', 'Preisstufe', 'Variantenbestand', 'Barcode', 'EAN', 'GTIN', 'UPC'],
     },
     useCases: {
       en: [
@@ -1239,18 +1239,20 @@ export const meta: Record<string, WarpExtras> = {
         { question: 'Can I add multiple variations at once?', answer: 'This warp adds one variation at a time. For multiple tiers, call it once per variation.' },
         { question: 'What is a volume variation?', answer: 'A volume variation sets a different price per unit based on the quantity ordered. For example, €8/card for 1-9 cards and €4/card for 10-49 cards.' },
         { question: 'Can a variation have its own stock level?', answer: 'Yes. Pass stock when creating the variation to set how many units are available for ordering.' },
+        { question: 'Can I add a barcode to a variation?', answer: 'Yes. Pass barcode (EAN/GTIN/UPC or your own shop code, max 64 characters) when creating the variation. It must be unique per team and enables scanning and cross-system lookup.' },
       ],
       de: [
         { question: 'Kann ich mehrere Varianten auf einmal hinzufügen?', answer: 'Dieser Warp fügt eine Variante auf einmal hinzu. Für mehrere Stufen rufe ihn pro Variante auf.' },
         { question: 'Was ist eine Mengenvariante?', answer: 'Eine Mengenvariante setzt einen anderen Preis pro Einheit basierend auf der bestellten Menge. Zum Beispiel €8/Karte für 1-9 Karten und €4/Karte für 10-49 Karten.' },
         { question: 'Kann eine Variante einen eigenen Lagerbestand haben?', answer: 'Ja. Übergib stock beim Erstellen der Variante, um festzulegen, wie viele Stück bestellbar sind.' },
+        { question: 'Kann ich einer Variante einen Barcode geben?', answer: 'Ja. Übergib barcode (EAN/GTIN/UPC oder dein eigener Shop-Code, max. 64 Zeichen) beim Erstellen der Variante. Er muss pro Team eindeutig sein und ermöglicht Scannen sowie den Abgleich zwischen Systemen.' },
       ],
     },
   },
   'product-variation-update': {
     keywords: {
-      en: ['update variation', 'change price', 'variation stock', 'restock variation', 'hide variation', 'variation visibility'],
-      de: ['Variante aktualisieren', 'Preis ändern', 'Variantenbestand', 'Variante nachfüllen', 'Variante ausblenden', 'Varianten-Sichtbarkeit'],
+      en: ['update variation', 'change price', 'variation stock', 'restock variation', 'hide variation', 'variation visibility', 'variation barcode', 'EAN', 'GTIN', 'UPC'],
+      de: ['Variante aktualisieren', 'Preis ändern', 'Variantenbestand', 'Variante nachfüllen', 'Variante ausblenden', 'Varianten-Sichtbarkeit', 'Varianten-Barcode', 'EAN', 'GTIN', 'UPC'],
     },
     useCases: {
       en: [
@@ -1269,10 +1271,138 @@ export const meta: Record<string, WarpExtras> = {
       en: [
         { question: 'Does this change fields I do not pass?', answer: 'No. Only the fields you provide are changed, so you can update just the price or just the stock.' },
         { question: 'How is the price formatted?', answer: 'Price is in cents, so 100 means €1.' },
+        { question: 'Can I change a barcode?', answer: 'Yes. Pass a new barcode (EAN/GTIN/UPC or your own shop code, max 64 characters) to replace it, omit it to keep the current barcode, or pass null to remove it.' },
       ],
       de: [
         { question: 'Werden Felder geändert, die ich nicht übergebe?', answer: 'Nein. Nur die angegebenen Felder werden geändert, du kannst also nur den Preis oder nur den Bestand aktualisieren.' },
         { question: 'Wie wird der Preis angegeben?', answer: 'Der Preis ist in Cent, 100 bedeutet also 1 €.' },
+        { question: 'Kann ich einen Barcode ändern?', answer: 'Ja. Übergib einen neuen Barcode (EAN/GTIN/UPC oder dein eigener Shop-Code, max. 64 Zeichen), um ihn zu ersetzen, oder lass ihn weg, um den aktuellen zu behalten. Übergib null, um ihn zu entfernen.' },
+      ],
+    },
+  },
+  'product-variation-external-reference-create': {
+    keywords: {
+      en: ['link variation external article', 'external reference product', 'POS article ID', 'ERP item number', 'marketplace listing ID', 'supplier article number', 'product variation reference'],
+      de: ['Variante extern verknüpfen', 'externe Referenz Produkt', 'POS Artikelnummer', 'ERP Artikelnummer', 'Marktplatz Artikel-ID', 'Lieferanten-Artikelnummer', 'Produktvarianten-Referenz'],
+    },
+    useCases: {
+      en: [
+        'Connect a variation to the article number used at the till so scanned items resolve correctly',
+        'Map shop variations to their ERP item numbers for inventory sync',
+        'Store a marketplace listing ID on a variation so orders can be matched',
+        'Record a supplier article number so you reorder the right variation',
+      ],
+      de: [
+        'Eine Variante mit der Artikelnummer an der Kasse verknüpfen, damit gescannte Artikel korrekt zugeordnet werden',
+        'Shop-Varianten ihren ERP-Artikelnummern zuordnen, um den Lagerbestand abzugleichen',
+        'Eine Marktplatz-Listing-ID an einer Variante hinterlegen, damit Bestellungen zugeordnet werden können',
+        'Eine Lieferanten-Artikelnummer festhalten, um die richtige Variante nachzubestellen',
+      ],
+    },
+    category: 'commerce',
+    faq: {
+      en: [
+        { question: 'Which sources are supported?', answer: 'pos (till/POS), erp, marketplace, supplier, and other.' },
+        { question: 'Can I link more than one external ID?', answer: 'Yes. A variation can have several references, for example a POS number and an ERP number. Each external ID can only be linked once per team and source.' },
+        { question: 'Does the external ID replace my SKU?', answer: 'No. The SKU stays as it is; the external reference adds a mapping to the other system.' },
+      ],
+      de: [
+        { question: 'Welche Quellen werden unterstützt?', answer: 'pos (Kasse/POS), erp, marketplace, supplier und other.' },
+        { question: 'Kann ich mehr als eine externe ID verknüpfen?', answer: 'Ja. Eine Variante kann mehrere Referenzen haben, zum Beispiel eine POS-Nummer und eine ERP-Nummer. Jede externe ID kann pro Team und Quelle nur einmal verknüpft werden.' },
+        { question: 'Ersetzt die externe ID meine SKU?', answer: 'Nein. Die SKU bleibt unverändert; die externe Referenz ergänzt die Zuordnung zum anderen System.' },
+      ],
+    },
+  },
+  'product-variation-external-reference-update': {
+    keywords: {
+      en: ['update external reference', 'change POS article ID', 'fix ERP item number', 'edit marketplace listing', 'relink variation article'],
+      de: ['externe Referenz aktualisieren', 'POS Artikelnummer ändern', 'ERP Artikelnummer korrigieren', 'Marktplatz-Listing bearbeiten', 'Varianten-Artikel neu verknüpfen'],
+    },
+    useCases: {
+      en: [
+        'Correct an external article number that was entered with a typo',
+        'Move a variation reference to a new POS or ERP system',
+        'Update a supplier item number when the supplier changes it',
+      ],
+      de: [
+        'Eine externe Artikelnummer korrigieren, die mit einem Tippfehler erfasst wurde',
+        'Eine Varianten-Referenz auf ein neues POS- oder ERP-System umstellen',
+        'Eine Lieferanten-Artikelnummer aktualisieren, wenn der Lieferant sie ändert',
+      ],
+    },
+    category: 'commerce',
+    faq: {
+      en: [
+        { question: 'Can I change only the external ID?', answer: 'Yes. Omit the source and only the external article ID is updated.' },
+        { question: 'Can I move a reference to another system type?', answer: 'Yes. Pass a new source; it must still be unique per team per source.' },
+        { question: 'Does updating a reference affect the variation?', answer: 'No. Only the link to the outside system changes; the variation, SKU, and price stay the same.' },
+      ],
+      de: [
+        { question: 'Kann ich nur die externe ID ändern?', answer: 'Ja. Lass die Quelle weg und nur die externe Artikel-ID wird aktualisiert.' },
+        { question: 'Kann ich eine Referenz auf einen anderen Systemtyp umstellen?', answer: 'Ja. Übergib eine neue Quelle; sie muss weiterhin pro Team und Quelle eindeutig sein.' },
+        { question: 'Wirkt sich das Aktualisieren einer Referenz auf die Variante aus?', answer: 'Nein. Nur die Verknüpfung zum externen System ändert sich; Variante, SKU und Preis bleiben gleich.' },
+      ],
+    },
+  },
+  'product-variation-external-reference-delete': {
+    keywords: {
+      en: ['delete external reference', 'unlink variation article', 'remove POS article ID', 'remove ERP item number', 'clean up variation reference'],
+      de: ['externe Referenz löschen', 'Varianten-Artikel entknüpfen', 'POS Artikelnummer entfernen', 'ERP Artikelnummer entfernen', 'Varianten-Referenz bereinigen'],
+    },
+    useCases: {
+      en: [
+        'Remove a supplier article number that is no longer valid',
+        'Clean up a reference that was linked to the wrong variation',
+        'Unlink an old marketplace listing before adding the current one',
+      ],
+      de: [
+        'Eine Lieferanten-Artikelnummer entfernen, die nicht mehr gilt',
+        'Eine Referenz bereinigen, die mit der falschen Variante verknüpft wurde',
+        'Ein altes Marktplatz-Listing entknüpfen, bevor du das aktuelle hinzufügst',
+      ],
+    },
+    category: 'commerce',
+    faq: {
+      en: [
+        { question: 'Does deleting a reference delete the variation?', answer: 'No. Only the link to the outside system is removed; the variation stays untouched.' },
+        { question: 'Can I add the reference again later?', answer: 'Yes. Once removed, the same source and external ID can be linked again.' },
+      ],
+      de: [
+        { question: 'Löscht das Entfernen einer Referenz auch die Variante?', answer: 'Nein. Nur die Verknüpfung zum externen System wird entfernt; die Variante bleibt unverändert.' },
+        { question: 'Kann ich die Referenz später wieder hinzufügen?', answer: 'Ja. Nach dem Entfernen können dieselbe Quelle und externe ID erneut verknüpft werden.' },
+      ],
+    },
+  },
+  'product-variation-lookup': {
+    keywords: {
+      en: ['find product by barcode', 'barcode lookup', 'scan product code', 'EAN lookup', 'GTIN search', 'UPC lookup', 'find variation by article ID', 'POS article lookup'],
+      de: ['Produkt per Barcode finden', 'Barcode-Suche', 'Produktcode scannen', 'EAN Suche', 'GTIN Suche', 'UPC Suche', 'Variante per Artikelnummer finden', 'POS-Artikel suchen'],
+    },
+    useCases: {
+      en: [
+        'Scan a barcode at the counter to find the matching variation and price',
+        'Look up a variation by its ERP or supplier article number',
+        'Reconcile a marketplace listing with the right shop variation',
+        'Check stock and price for a scanned EAN or UPC',
+      ],
+      de: [
+        'Einen Barcode an der Kasse scannen, um die passende Variante und den Preis zu finden',
+        'Eine Variante über ihre ERP- oder Lieferanten-Artikelnummer nachschlagen',
+        'Ein Marktplatz-Listing der richtigen Shop-Variante zuordnen',
+        'Bestand und Preis für eine gescannte EAN oder UPC prüfen',
+      ],
+    },
+    category: 'commerce',
+    faq: {
+      en: [
+        { question: 'What is searched first?', answer: 'Source plus external ID is matched first, then the barcode.' },
+        { question: 'What happens when nothing matches?', answer: 'No variation is returned, so you can fall back to searching by name or SKU.' },
+        { question: 'Which fields come back?', answer: 'The variation ID, SKU, name, barcode, price, stock, product slug and name, and its external references.' },
+      ],
+      de: [
+        { question: 'Was wird zuerst gesucht?', answer: 'Zuerst wird Quelle plus externe ID abgeglichen, danach der Barcode.' },
+        { question: 'Was passiert, wenn nichts passt?', answer: 'Es wird keine Variante zurückgegeben, du kannst dann auf die Suche nach Name oder SKU ausweichen.' },
+        { question: 'Welche Felder kommen zurück?', answer: 'Varianten-ID, SKU, Name, Barcode, Preis, Bestand, Produkt-Slug und -Name sowie die externen Referenzen.' },
       ],
     },
   },

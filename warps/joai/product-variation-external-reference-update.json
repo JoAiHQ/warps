@@ -1,0 +1,151 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Update Product Variation External Reference",
+  "title": {
+    "en": "Update an external reference",
+    "de": "Externe Referenz aktualisieren",
+    "es": "Update an external reference",
+    "fr": "Update an external reference",
+    "ro": "Update an external reference",
+    "it": "Update an external reference"
+  },
+  "description": {
+    "en": "Change the source or the external article ID of an existing product variation reference, for example when an item moves to a new POS system or gets a new supplier number. Only the fields you provide are changed. Use this to keep cross-system article links accurate without removing and re-adding them.",
+    "de": "Ändere die Quelle oder die externe Artikel-ID einer bestehenden Referenz einer Produktvariante, zum Beispiel wenn ein Artikel in ein neues Kassensystem umzieht oder eine neue Lieferantennummer bekommt. Nur die angegebenen Felder werden geändert. So bleiben Artikelverknüpfungen zwischen Systemen korrekt, ohne sie zu entfernen und neu anzulegen.",
+    "es": "Change the source or the external article ID of an existing product variation reference, for example when an item moves to a new POS system or gets a new supplier number. Only the fields you provide are changed. Use this to keep cross-system article links accurate without removing and re-adding them.",
+    "fr": "Change the source or the external article ID of an existing product variation reference, for example when an item moves to a new POS system or gets a new supplier number. Only the fields you provide are changed. Use this to keep cross-system article links accurate without removing and re-adding them.",
+    "ro": "Change the source or the external article ID of an existing product variation reference, for example when an item moves to a new POS system or gets a new supplier number. Only the fields you provide are changed. Use this to keep cross-system article links accurate without removing and re-adding them.",
+    "it": "Change the source or the external article ID of an existing product variation reference, for example when an item moves to a new POS system or gets a new supplier number. Only the fields you provide are changed. Use this to keep cross-system article links accurate without removing and re-adding them."
+  },
+  "bot": "Use this to change the source or external ID of an existing external reference on a product variation. Pass variationId and referenceId, then the new source and/or externalId. Omit a field to keep its current value. If the reference ID is unknown, look up the variation first.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Update external reference",
+        "de": "Externe Referenz aktualisieren",
+        "es": "Update external reference",
+        "fr": "Update external reference",
+        "ro": "Update external reference",
+        "it": "Update external reference"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/products/variations/{{variationId}}/external-references/{{referenceId}}",
+        "method": "PUT",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Variation ID",
+          "as": "variationId",
+          "description": {
+            "en": "The hash ID of the product variation.",
+            "de": "Die Hash-ID der Produktvariante.",
+            "es": "The hash ID of the product variation.",
+            "fr": "The hash ID of the product variation.",
+            "ro": "The hash ID of the product variation.",
+            "it": "The hash ID of the product variation."
+          },
+          "bot": "The product variation hash ID. List products first to find it.",
+          "type": "string",
+          "position": "url:variationId",
+          "source": "field",
+          "required": true,
+          "min": 1
+        },
+        {
+          "name": "Reference ID",
+          "as": "referenceId",
+          "description": {
+            "en": "The ID of the external reference to update.",
+            "de": "Die ID der zu aktualisierenden externen Referenz.",
+            "es": "The ID of the external reference to update.",
+            "fr": "The ID of the external reference to update.",
+            "ro": "The ID of the external reference to update.",
+            "it": "The ID of the external reference to update."
+          },
+          "bot": "The external reference ID. If unknown, look up the variation to read its externalReferences first.",
+          "type": "string",
+          "position": "url:referenceId",
+          "source": "field",
+          "required": true,
+          "min": 1
+        },
+        {
+          "name": "Source",
+          "as": "source",
+          "description": {
+            "en": "The new outside system type: pos, erp, marketplace, supplier, or other. Omit to keep the current source.",
+            "de": "Der neue Typ des externen Systems: pos, erp, marketplace, supplier oder other. Weglassen, um die aktuelle Quelle beizubehalten.",
+            "es": "The new outside system type: pos, erp, marketplace, supplier, or other. Omit to keep the current source.",
+            "fr": "The new outside system type: pos, erp, marketplace, supplier, or other. Omit to keep the current source.",
+            "ro": "The new outside system type: pos, erp, marketplace, supplier, or other. Omit to keep the current source.",
+            "it": "The new outside system type: pos, erp, marketplace, supplier, or other. Omit to keep the current source."
+          },
+          "bot": "Optional new source: pos (till/POS), erp, marketplace, supplier, or other. Omit to keep the current source.",
+          "type": "string",
+          "position": "payload:source",
+          "source": "field",
+          "required": false,
+          "min": 1,
+          "options": ["pos", "erp", "marketplace", "supplier", "other"]
+        },
+        {
+          "name": "External ID",
+          "as": "externalId",
+          "description": {
+            "en": "The new article or item ID used by the outside system. Omit to keep the current ID.",
+            "de": "Die neue Artikel- oder Positions-ID des externen Systems. Weglassen, um die aktuelle ID beizubehalten.",
+            "es": "The new article or item ID used by the outside system. Omit to keep the current ID.",
+            "fr": "The new article or item ID used by the outside system. Omit to keep the current ID.",
+            "ro": "The new article or item ID used by the outside system. Omit to keep the current ID.",
+            "it": "The new article or item ID used by the outside system. Omit to keep the current ID."
+          },
+          "bot": "Optional new article/item number from the outside system. Unique per team per source.",
+          "type": "string",
+          "position": "payload:externalId",
+          "source": "field",
+          "required": false,
+          "min": 1,
+          "max": 191
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug for this action. Defaults to the current team.",
+            "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team."
+          },
+          "bot": "The slug of the team to operate on. Omit to use the current team.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "referenceId": "out.data.id",
+    "referenceSource": "out.data.source",
+    "referenceExternalId": "out.data.externalId"
+  },
+  "messages": {
+    "success": {
+      "en": "External reference updated ({{referenceSource}}: {{referenceExternalId}}).",
+      "de": "Externe Referenz aktualisiert ({{referenceSource}}: {{referenceExternalId}}).",
+      "es": "External reference updated ({{referenceSource}}: {{referenceExternalId}}).",
+      "fr": "External reference updated ({{referenceSource}}: {{referenceExternalId}}).",
+      "ro": "External reference updated ({{referenceSource}}: {{referenceExternalId}}).",
+      "it": "External reference updated ({{referenceSource}}: {{referenceExternalId}})."
+    }
+  }
+}
