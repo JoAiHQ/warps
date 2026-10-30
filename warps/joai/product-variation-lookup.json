@@ -1,0 +1,136 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Find Product Variation",
+  "title": {
+    "en": "Find a product variation",
+    "de": "Produktvariante finden",
+    "es": "Find a product variation",
+    "fr": "Find a product variation",
+    "ro": "Find a product variation",
+    "it": "Find a product variation"
+  },
+  "description": {
+    "en": "Find a product variation by barcode (EAN/GTIN/UPC or your own shop code) or by the article ID of an outside system such as a POS, ERP, marketplace, or supplier. Source plus external ID is matched first, then the barcode, and the result returns the variation ID, SKU, price, stock, and product. Ideal for scanning a code or reconciling articles across systems.",
+    "de": "Finde eine Produktvariante über den Barcode (EAN/GTIN/UPC oder deinen eigenen Shop-Code) oder über die Artikel-ID eines externen Systems wie Kassensystem, ERP, Marktplatz oder Lieferant. Zuerst wird Quelle plus externe ID abgeglichen, dann der Barcode; zurück kommen Varianten-ID, SKU, Preis, Bestand und Produkt. Ideal zum Scannen eines Codes oder zum Abgleich von Artikeln zwischen Systemen.",
+    "es": "Find a product variation by barcode (EAN/GTIN/UPC or your own shop code) or by the article ID of an outside system such as a POS, ERP, marketplace, or supplier. Source plus external ID is matched first, then the barcode, and the result returns the variation ID, SKU, price, stock, and product. Ideal for scanning a code or reconciling articles across systems.",
+    "fr": "Find a product variation by barcode (EAN/GTIN/UPC or your own shop code) or by the article ID of an outside system such as a POS, ERP, marketplace, or supplier. Source plus external ID is matched first, then the barcode, and the result returns the variation ID, SKU, price, stock, and product. Ideal for scanning a code or reconciling articles across systems.",
+    "ro": "Find a product variation by barcode (EAN/GTIN/UPC or your own shop code) or by the article ID of an outside system such as a POS, ERP, marketplace, or supplier. Source plus external ID is matched first, then the barcode, and the result returns the variation ID, SKU, price, stock, and product. Ideal for scanning a code or reconciling articles across systems.",
+    "it": "Find a product variation by barcode (EAN/GTIN/UPC or your own shop code) or by the article ID of an outside system such as a POS, ERP, marketplace, or supplier. Source plus external ID is matched first, then the barcode, and the result returns the variation ID, SKU, price, stock, and product. Ideal for scanning a code or reconciling articles across systems."
+  },
+  "bot": "Use this when the user wants to find a product variation from a barcode or an external article ID. Pass barcode, or source together with externalId. Source plus externalId is checked first, then the barcode. Returns one variation with its ID, SKU, barcode, price, stock, and product.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "auto": true,
+      "label": {
+        "en": "Find variation",
+        "de": "Variante finden",
+        "es": "Find variation",
+        "fr": "Find variation",
+        "ro": "Find variation",
+        "it": "Find variation"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/products/variations/lookup?barcode={{barcode}}&source={{source}}&externalId={{externalId}}",
+        "method": "GET",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Barcode",
+          "as": "barcode",
+          "description": {
+            "en": "Barcode to look up (EAN/GTIN/UPC or your own shop code).",
+            "de": "Barcode zum Nachschlagen (EAN/GTIN/UPC oder dein eigener Shop-Code).",
+            "es": "Barcode to look up (EAN/GTIN/UPC or your own shop code).",
+            "fr": "Barcode to look up (EAN/GTIN/UPC or your own shop code).",
+            "ro": "Barcode to look up (EAN/GTIN/UPC or your own shop code).",
+            "it": "Barcode to look up (EAN/GTIN/UPC or your own shop code)."
+          },
+          "bot": "Optional barcode. Use this for scanning, or when you do not know the external system reference.",
+          "type": "string",
+          "position": "query",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Source",
+          "as": "source",
+          "description": {
+            "en": "Outside system type for the external ID: pos, erp, marketplace, supplier, or other.",
+            "de": "Typ des externen Systems für die externe ID: pos, erp, marketplace, supplier oder other.",
+            "es": "Outside system type for the external ID: pos, erp, marketplace, supplier, or other.",
+            "fr": "Outside system type for the external ID: pos, erp, marketplace, supplier, or other.",
+            "ro": "Outside system type for the external ID: pos, erp, marketplace, supplier, or other.",
+            "it": "Outside system type for the external ID: pos, erp, marketplace, supplier, or other."
+          },
+          "bot": "Optional. Use together with externalId to match an article from a specific outside system.",
+          "type": "string",
+          "position": "query",
+          "source": "field",
+          "required": false,
+          "options": ["pos", "erp", "marketplace", "supplier", "other"]
+        },
+        {
+          "name": "External ID",
+          "as": "externalId",
+          "description": {
+            "en": "Article or item ID used by the outside system.",
+            "de": "Artikel- oder Positions-ID des externen Systems.",
+            "es": "Article or item ID used by the outside system.",
+            "fr": "Article or item ID used by the outside system.",
+            "ro": "Article or item ID used by the outside system.",
+            "it": "Article or item ID used by the outside system."
+          },
+          "bot": "Optional external article/item number. Pair it with source to match a specific system first.",
+          "type": "string",
+          "position": "query",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug to search in. Defaults to the current team.",
+            "de": "Team-Slug, in dem gesucht wird. Standardmäßig das aktuelle Team."
+          },
+          "bot": "The slug of the team to search. Omit to use the current team.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "variationId": "out.data.id",
+    "sku": "out.data.sku",
+    "barcode": "out.data.barcode",
+    "name": "out.data.name",
+    "price": "out.data.price",
+    "stock": "out.data.stock",
+    "productSlug": "out.data.product.slug",
+    "productName": "out.data.product.name",
+    "externalReferences": "out.data.externalReferences"
+  },
+  "messages": {
+    "success": {
+      "en": "Found variation {{sku}} ({{variationId}}).",
+      "de": "Variante {{sku}} ({{variationId}}) gefunden.",
+      "es": "Found variation {{sku}} ({{variationId}}).",
+      "fr": "Found variation {{sku}} ({{variationId}}).",
+      "ro": "Found variation {{sku}} ({{variationId}}).",
+      "it": "Found variation {{sku}} ({{variationId}})."
+    }
+  }
+}

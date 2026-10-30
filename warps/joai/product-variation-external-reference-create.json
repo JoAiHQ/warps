@@ -1,0 +1,133 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Add Product Variation External Reference",
+  "title": {
+    "en": "Link a variation to an external article",
+    "de": "Variante mit einem externen Artikel verknüpfen",
+    "es": "Link a variation to an external article",
+    "fr": "Link a variation to an external article",
+    "ro": "Link a variation to an external article",
+    "it": "Link a variation to an external article"
+  },
+  "description": {
+    "en": "Link a product variation to the article or item ID of the same item in an outside system such as a point-of-sale till, an ERP, a marketplace listing, or a supplier. External references let you find and reconcile the right variation even when the other system uses its own article numbers. Each external ID can be linked once per team and source.",
+    "de": "Verknüpfe eine Produktvariante mit der Artikel- oder Positions-ID desselben Artikels in einem externen System wie einer Kasse, einem ERP, einem Marktplatz-Listing oder bei einem Lieferanten. Über externe Referenzen findest und ordnest du die richtige Variante zu, auch wenn das andere System eigene Artikelnummern verwendet. Jede externe ID kann pro Team und Quelle einmal verknüpft werden.",
+    "es": "Link a product variation to the article or item ID of the same item in an outside system such as a point-of-sale till, an ERP, a marketplace listing, or a supplier. External references let you find and reconcile the right variation even when the other system uses its own article numbers. Each external ID can be linked once per team and source.",
+    "fr": "Link a product variation to the article or item ID of the same item in an outside system such as a point-of-sale till, an ERP, a marketplace listing, or a supplier. External references let you find and reconcile the right variation even when the other system uses its own article numbers. Each external ID can be linked once per team and source.",
+    "ro": "Link a product variation to the article or item ID of the same item in an outside system such as a point-of-sale till, an ERP, a marketplace listing, or a supplier. External references let you find and reconcile the right variation even when the other system uses its own article numbers. Each external ID can be linked once per team and source.",
+    "it": "Link a product variation to the article or item ID of the same item in an outside system such as a point-of-sale till, an ERP, a marketplace listing, or a supplier. External references let you find and reconcile the right variation even when the other system uses its own article numbers. Each external ID can be linked once per team and source."
+  },
+  "bot": "Use this to connect a product variation to the article or item ID used by an outside system. Pass variationId, the source (pos, erp, marketplace, supplier, or other), and the externalId from that system. List products first to find the variation ID. An external ID can only be linked once per team and source.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Add external reference",
+        "de": "Externe Referenz hinzufügen",
+        "es": "Add external reference",
+        "fr": "Add external reference",
+        "ro": "Add external reference",
+        "it": "Add external reference"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/products/variations/{{variationId}}/external-references",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Variation ID",
+          "as": "variationId",
+          "description": {
+            "en": "The hash ID of the product variation to link.",
+            "de": "Die Hash-ID der Produktvariante, die verknüpft werden soll.",
+            "es": "The hash ID of the product variation to link.",
+            "fr": "The hash ID of the product variation to link.",
+            "ro": "The hash ID of the product variation to link.",
+            "it": "The hash ID of the product variation to link."
+          },
+          "bot": "The product variation hash ID. List products first to find it.",
+          "type": "string",
+          "position": "url:variationId",
+          "source": "field",
+          "required": true,
+          "min": 1
+        },
+        {
+          "name": "Source",
+          "as": "source",
+          "description": {
+            "en": "The outside system type: pos, erp, marketplace, supplier, or other.",
+            "de": "Der Typ des externen Systems: pos, erp, marketplace, supplier oder other.",
+            "es": "The outside system type: pos, erp, marketplace, supplier, or other.",
+            "fr": "The outside system type: pos, erp, marketplace, supplier, or other.",
+            "ro": "The outside system type: pos, erp, marketplace, supplier, or other.",
+            "it": "The outside system type: pos, erp, marketplace, supplier, or other."
+          },
+          "bot": "Where the external article ID comes from: pos (till/POS), erp, marketplace, supplier, or other.",
+          "type": "string",
+          "position": "payload:source",
+          "source": "field",
+          "required": true,
+          "min": 1,
+          "options": ["pos", "erp", "marketplace", "supplier", "other"]
+        },
+        {
+          "name": "External ID",
+          "as": "externalId",
+          "description": {
+            "en": "The article or item ID used by the outside system.",
+            "de": "Die Artikel- oder Positions-ID, die das externe System verwendet.",
+            "es": "The article or item ID used by the outside system.",
+            "fr": "The article or item ID used by the outside system.",
+            "ro": "The article or item ID used by the outside system.",
+            "it": "The article or item ID used by the outside system."
+          },
+          "bot": "The exact article/item number from the outside system. Unique per team per source.",
+          "type": "string",
+          "position": "payload:externalId",
+          "source": "field",
+          "required": true,
+          "min": 1,
+          "max": 191
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug for this action. Defaults to the current team.",
+            "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team."
+          },
+          "bot": "The slug of the team to operate on. Omit to use the current team.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "referenceId": "out.data.id",
+    "referenceSource": "out.data.source",
+    "referenceExternalId": "out.data.externalId"
+  },
+  "messages": {
+    "success": {
+      "en": "External reference added ({{referenceSource}}: {{referenceExternalId}}).",
+      "de": "Externe Referenz hinzugefügt ({{referenceSource}}: {{referenceExternalId}}).",
+      "es": "External reference added ({{referenceSource}}: {{referenceExternalId}}).",
+      "fr": "External reference added ({{referenceSource}}: {{referenceExternalId}}).",
+      "ro": "External reference added ({{referenceSource}}: {{referenceExternalId}}).",
+      "it": "External reference added ({{referenceSource}}: {{referenceExternalId}})."
+    }
+  }
+}

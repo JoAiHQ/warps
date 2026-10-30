@@ -1,0 +1,108 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Delete Product Variation External Reference",
+  "title": {
+    "en": "Delete an external reference",
+    "de": "Externe Referenz löschen",
+    "es": "Delete an external reference",
+    "fr": "Delete an external reference",
+    "ro": "Delete an external reference",
+    "it": "Delete an external reference"
+  },
+  "description": {
+    "en": "Remove a single external reference from a product variation, for example when a supplier number or marketplace listing is retired. Only the link to the outside system is removed; the variation itself and its SKU stay untouched. Look up the variation first to find the reference ID.",
+    "de": "Entferne eine einzelne externe Referenz von einer Produktvariante, zum Beispiel wenn eine Lieferantennummer oder ein Marktplatz-Listing nicht mehr gilt. Nur die Verknüpfung zum externen System wird entfernt; die Variante selbst und ihre SKU bleiben unverändert. Suche zuerst die Variante, um die Referenz-ID zu finden.",
+    "es": "Remove a single external reference from a product variation, for example when a supplier number or marketplace listing is retired. Only the link to the outside system is removed; the variation itself and its SKU stay untouched. Look up the variation first to find the reference ID.",
+    "fr": "Remove a single external reference from a product variation, for example when a supplier number or marketplace listing is retired. Only the link to the outside system is removed; the variation itself and its SKU stay untouched. Look up the variation first to find the reference ID.",
+    "ro": "Remove a single external reference from a product variation, for example when a supplier number or marketplace listing is retired. Only the link to the outside system is removed; the variation itself and its SKU stay untouched. Look up the variation first to find the reference ID.",
+    "it": "Remove a single external reference from a product variation, for example when a supplier number or marketplace listing is retired. Only the link to the outside system is removed; the variation itself and its SKU stay untouched. Look up the variation first to find the reference ID."
+  },
+  "bot": "Use this to remove an external reference from a product variation. Pass variationId and referenceId. If the reference ID is unknown, look up the variation first to read its externalReferences. Deleting a reference does not delete the variation.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Delete external reference",
+        "de": "Externe Referenz löschen",
+        "es": "Delete external reference",
+        "fr": "Delete external reference",
+        "ro": "Delete external reference",
+        "it": "Delete external reference"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/products/variations/{{variationId}}/external-references/{{referenceId}}",
+        "method": "DELETE",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Variation ID",
+          "as": "variationId",
+          "description": {
+            "en": "The hash ID of the product variation.",
+            "de": "Die Hash-ID der Produktvariante.",
+            "es": "The hash ID of the product variation.",
+            "fr": "The hash ID of the product variation.",
+            "ro": "The hash ID of the product variation.",
+            "it": "The hash ID of the product variation."
+          },
+          "bot": "The product variation hash ID. List products first to find it.",
+          "type": "string",
+          "position": "url:variationId",
+          "source": "field",
+          "required": true,
+          "min": 1
+        },
+        {
+          "name": "Reference ID",
+          "as": "referenceId",
+          "description": {
+            "en": "The ID of the external reference to remove.",
+            "de": "Die ID der zu entfernenden externen Referenz.",
+            "es": "The ID of the external reference to remove.",
+            "fr": "The ID of the external reference to remove.",
+            "ro": "The ID of the external reference to remove.",
+            "it": "The ID of the external reference to remove."
+          },
+          "bot": "The external reference ID. If unknown, look up the variation to read its externalReferences first.",
+          "type": "string",
+          "position": "url:referenceId",
+          "source": "field",
+          "required": true,
+          "min": 1
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug for this action. Defaults to the current team.",
+            "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team."
+          },
+          "bot": "The slug of the team to operate on. Omit to use the current team.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "External reference deleted.",
+      "de": "Externe Referenz gelöscht.",
+      "es": "External reference deleted.",
+      "fr": "External reference deleted.",
+      "ro": "External reference deleted.",
+      "it": "External reference deleted."
+    }
+  }
+}
