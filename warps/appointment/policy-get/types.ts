@@ -24,6 +24,7 @@ export type AppointmentPolicyView = {
   conferenceEnabled?: boolean | null
   serviceSelectionEnabled?: boolean | null
   paymentEnabled?: boolean | null
+  bookingTheme?: 'classic' | 'soft' | 'editorial' | null
   bookingCapacity?: number | null
   bookingCapacityUnit?: 'booking' | 'person' | null
   requireApproval?: boolean | null

@@ -1,3 +1,5 @@
+export type BookingTheme = 'classic' | 'soft' | 'editorial'
+
 export type AppointmentPolicy = {
   timezone?: string | null
   availability?: Record<string, string[]>
@@ -10,6 +12,7 @@ export type AppointmentPolicy = {
   conferenceEnabled?: boolean | null
   serviceSelectionEnabled?: boolean | null
   paymentEnabled?: boolean | null
+  bookingTheme?: BookingTheme | null
 }
 
 export type AvailableStaffMember = {

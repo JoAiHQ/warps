@@ -1,0 +1,290 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Reviews: List",
+  "title": {
+    "en": "List reviews",
+    "de": "Bewertungen auflisten",
+    "es": "Ver reseñas",
+    "fr": "Lister les avis",
+    "ro": "Listează recenziile",
+    "it": "Elenca le recensioni"
+  },
+  "description": {
+    "en": "List review requests and responses for the team. Includes pending requests, ratings, feedback, and follow-up status.",
+    "de": "Listet Bewertungsanfragen und Antworten des Teams auf. Enthält offene Anfragen, Bewertungen, Feedback und Follow-up-Status.",
+    "es": "Consulta las solicitudes de reseña y las respuestas del equipo. Incluye solicitudes pendientes, valoraciones, comentarios y estado de seguimiento.",
+    "fr": "Consultez les demandes d’avis et les réponses de l’équipe. Inclut les demandes en attente, les notes, les commentaires et le suivi.",
+    "ro": "Vezi cererile de recenzie și răspunsurile echipei. Include cereri în așteptare, evaluări, feedback și starea de urmărire.",
+    "it": "Consulta le richieste di recensione e le risposte del team. Include richieste in sospeso, valutazioni, feedback e stato del follow-up."
+  },
+  "bot": "Use this when the user wants to see reviews, feedback, response rates, or which customers left negative feedback. Filters are optional.",
+  "vars": {
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "List reviews",
+        "de": "Bewertungen auflisten",
+        "es": "Ver reseñas",
+        "fr": "Lister les avis",
+        "ro": "Listează recenziile",
+        "it": "Elenca le recensioni"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/teams/{{team}}/reviews",
+        "method": "GET",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Team",
+          "as": "team",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}",
+          "position": "url:team",
+          "description": {
+            "en": "Team slug. Defaults to the current team.",
+            "de": "Team-Slug. Standardmäßig das aktuelle Team.",
+            "es": "Slug del equipo. Por defecto, el equipo actual.",
+            "fr": "Slug de l’équipe. Par défaut, l’équipe actuelle.",
+            "ro": "Slugul echipei. Implicit, echipa curentă.",
+            "it": "Slug del team. Per impostazione predefinita, il team corrente."
+          }
+        },
+        {
+          "name": "Status",
+          "as": "status",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "query:status",
+          "description": {
+            "en": "Filter by review status.",
+            "de": "Nach Bewertungsstatus filtern.",
+            "es": "Filtrar por estado de la reseña.",
+            "fr": "Filtrer par statut de l’avis.",
+            "ro": "Filtrează după starea recenziei.",
+            "it": "Filtra per stato della recensione."
+          },
+          "options": {
+            "queued": {
+              "en": "Queued",
+              "de": "In Warteschlange",
+              "es": "En cola",
+              "fr": "En attente",
+              "ro": "În așteptare",
+              "it": "In coda"
+            },
+            "sent": {
+              "en": "Sent",
+              "de": "Gesendet",
+              "es": "Enviada",
+              "fr": "Envoyée",
+              "ro": "Trimisă",
+              "it": "Inviata"
+            },
+            "failed": {
+              "en": "Failed",
+              "de": "Fehlgeschlagen",
+              "es": "Fallida",
+              "fr": "Échouée",
+              "ro": "Eșuată",
+              "it": "Non riuscita"
+            },
+            "responded": {
+              "en": "Responded",
+              "de": "Beantwortet",
+              "es": "Respondida",
+              "fr": "Répondue",
+              "ro": "Răspunsă",
+              "it": "Risposta"
+            },
+            "suppressed": {
+              "en": "Suppressed",
+              "de": "Unterdrückt",
+              "es": "Suprimida",
+              "fr": "Masquée",
+              "ro": "Suprimată",
+              "it": "Soppressa"
+            },
+            "expired": {
+              "en": "Expired",
+              "de": "Abgelaufen",
+              "es": "Caducada",
+              "fr": "Expirée",
+              "ro": "Expirată",
+              "it": "Scaduta"
+            }
+          }
+        },
+        {
+          "name": "Subject type",
+          "as": "subjectType",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "query:subjectType",
+          "description": {
+            "en": "Filter by appointment or order.",
+            "de": "Nach Termin oder Bestellung filtern.",
+            "es": "Filtrar por cita o pedido.",
+            "fr": "Filtrer par rendez-vous ou commande.",
+            "ro": "Filtrează după programare sau comandă.",
+            "it": "Filtra per appuntamento o ordine."
+          },
+          "options": {
+            "appointment": {
+              "en": "Appointment",
+              "de": "Termin",
+              "es": "Cita",
+              "fr": "Rendez-vous",
+              "ro": "Programare",
+              "it": "Appuntamento"
+            },
+            "order": {
+              "en": "Order",
+              "de": "Bestellung",
+              "es": "Pedido",
+              "fr": "Commande",
+              "ro": "Comandă",
+              "it": "Ordine"
+            }
+          }
+        },
+        {
+          "name": "Minimum rating",
+          "as": "ratingMin",
+          "type": "number",
+          "source": "field",
+          "required": false,
+          "position": "query:ratingMin",
+          "description": {
+            "en": "Only reviews with at least this rating.",
+            "de": "Nur Bewertungen mit mindestens dieser Note.",
+            "es": "Solo reseñas con esta valoración mínima.",
+            "fr": "Avis avec une note minimale de…",
+            "ro": "Doar recenzii cu cel puțin această evaluare.",
+            "it": "Solo recensioni con almeno questa valutazione."
+          }
+        },
+        {
+          "name": "Maximum rating",
+          "as": "ratingMax",
+          "type": "number",
+          "source": "field",
+          "required": false,
+          "position": "query:ratingMax",
+          "description": {
+            "en": "Only reviews with at most this rating.",
+            "de": "Nur Bewertungen mit höchstens dieser Note.",
+            "es": "Solo reseñas con esta valoración máxima.",
+            "fr": "Avis avec une note maximale de…",
+            "ro": "Doar recenzii cu cel mult această evaluare.",
+            "it": "Solo recensioni con al massimo questa valutazione."
+          }
+        },
+        {
+          "name": "Contact",
+          "as": "contactId",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "query:contactId",
+          "description": {
+            "en": "Filter by contact hashid.",
+            "de": "Nach Kontakt-Hashid filtern.",
+            "es": "Filtrar por hashid del contacto.",
+            "fr": "Filtrer par hashid du contact.",
+            "ro": "Filtrează după hashid-ul contactului.",
+            "it": "Filtra per hashid del contatto."
+          }
+        },
+        {
+          "name": "From",
+          "as": "from",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "query:from",
+          "description": {
+            "en": "Only reviews created on or after this date.",
+            "de": "Nur Bewertungen, die an oder nach diesem Datum erstellt wurden.",
+            "es": "Solo reseñas creadas en esta fecha o después.",
+            "fr": "Avis créés à cette date ou après.",
+            "ro": "Doar recenzii create la această dată sau după.",
+            "it": "Solo recensioni create a partire da questa data."
+          }
+        },
+        {
+          "name": "To",
+          "as": "to",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "query:to",
+          "description": {
+            "en": "Only reviews created on or before this date.",
+            "de": "Nur Bewertungen, die an oder vor diesem Datum erstellt wurden.",
+            "es": "Solo reseñas creadas en esta fecha o antes.",
+            "fr": "Avis créés à cette date ou avant.",
+            "ro": "Doar recenzii create la această dată sau înainte.",
+            "it": "Solo recensioni create fino a questa data."
+          }
+        },
+        {
+          "name": "Page",
+          "as": "page",
+          "type": "number",
+          "source": "field",
+          "required": false,
+          "position": "query:page",
+          "description": {
+            "en": "Page number, starting at 1.",
+            "de": "Seitennummer, beginnend bei 1.",
+            "es": "Número de página, empezando por 1.",
+            "fr": "Numéro de page, à partir de 1.",
+            "ro": "Numărul paginii, începând de la 1.",
+            "it": "Numero di pagina, a partire da 1."
+          }
+        },
+        {
+          "name": "Per page",
+          "as": "perPage",
+          "type": "number",
+          "source": "field",
+          "required": false,
+          "position": "query:perPage",
+          "description": {
+            "en": "Number of reviews per page (max. 100).",
+            "de": "Anzahl der Bewertungen pro Seite (max. 100).",
+            "es": "Reseñas por página (máx. 100).",
+            "fr": "Nombre d’avis par page (max. 100).",
+            "ro": "Numărul de recenzii pe pagină (max. 100).",
+            "it": "Numero di recensioni per pagina (max 100)."
+          }
+        }
+      ]
+    }
+  ],
+  "output": {
+    "REVIEWS": "out.data",
+    "PAGINATION": "out.meta"
+  },
+  "messages": {
+    "success": {
+      "en": "Reviews loaded.",
+      "de": "Bewertungen geladen.",
+      "es": "Reseñas cargadas.",
+      "fr": "Avis chargés.",
+      "ro": "Recenziile au fost încărcate.",
+      "it": "Recensioni caricate."
+    }
+  }
+}
