@@ -27,6 +27,7 @@ export function PolicyView({ policy }: Props) {
   const { executeWarp } = useAppContext()
   const tr = useTranslations(translations).policyGet
   const dayLabels = useTranslations(translations).configure.days
+  const themeLabels = useTranslations(translations).configure.themes
   const isActive = policy.active !== false
   const openingHours = groupOpeningHours(policy.availability, dayLabels)
   const capacity = formatCapacity(policy.bookingCapacity, policy.bookingCapacityUnit, tr.fields.capacityUnits)
@@ -43,6 +44,7 @@ export function PolicyView({ policy }: Props) {
     { label: tr.fields.conferenceEnabled, value: formatFlag(policy.conferenceEnabled, tr.yes, tr.no) },
     { label: tr.fields.serviceSelectionEnabled, value: formatFlag(policy.serviceSelectionEnabled, tr.yes, tr.no) },
     { label: tr.fields.paymentEnabled, value: formatFlag(policy.paymentEnabled, tr.yes, tr.no) },
+    { label: tr.fields.bookingTheme, value: policy.bookingTheme ? themeLabels[policy.bookingTheme] : null },
   ] as Array<{ label: string; value: string | null }>).filter((row): row is Row => !!row.value)
 
   const blockedDates = policy.blockedDates?.filter(Boolean) ?? []
