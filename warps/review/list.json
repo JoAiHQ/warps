@@ -1,0 +1,154 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Reviews: List",
+  "title": {
+    "en": "List reviews",
+    "de": "Bewertungen auflisten",
+    "es": "List reviews",
+    "fr": "List reviews",
+    "ro": "List reviews",
+    "it": "List reviews"
+  },
+  "description": {
+    "en": "List review requests and responses for the team. Includes pending requests, ratings, feedback, and follow-up status.",
+    "de": "Listet Bewertungsanfragen und Antworten des Teams auf. Enthält offene Anfragen, Bewertungen, Feedback und Follow-up-Status.",
+    "es": "List review requests and responses for the team.",
+    "fr": "List review requests and responses for the team.",
+    "ro": "List review requests and responses for the team.",
+    "it": "List review requests and responses for the team."
+  },
+  "bot": "Use this when the user wants to see reviews, feedback, response rates, or which customers left negative feedback. Filters are optional.",
+  "vars": {
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "List reviews",
+        "de": "Bewertungen auflisten",
+        "es": "List reviews",
+        "fr": "List reviews",
+        "ro": "List reviews",
+        "it": "List reviews"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/teams/{{team}}/reviews",
+        "method": "GET",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Team",
+          "as": "team",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}",
+          "position": "url:team"
+        },
+        {
+          "name": "Status",
+          "as": "status",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "query:status",
+          "options": {
+            "queued": "Queued",
+            "sent": "Sent",
+            "failed": "Failed",
+            "responded": "Responded",
+            "suppressed": "Suppressed",
+            "expired": "Expired"
+          }
+        },
+        {
+          "name": "Subject type",
+          "as": "subjectType",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "query:subjectType",
+          "options": {
+            "appointment": "Appointment",
+            "order": "Order"
+          }
+        },
+        {
+          "name": "Minimum rating",
+          "as": "ratingMin",
+          "type": "number",
+          "source": "field",
+          "required": false,
+          "position": "query:ratingMin"
+        },
+        {
+          "name": "Maximum rating",
+          "as": "ratingMax",
+          "type": "number",
+          "source": "field",
+          "required": false,
+          "position": "query:ratingMax"
+        },
+        {
+          "name": "Contact",
+          "as": "contactId",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "query:contactId"
+        },
+        {
+          "name": "From",
+          "as": "from",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "query:from"
+        },
+        {
+          "name": "To",
+          "as": "to",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "query:to"
+        },
+        {
+          "name": "Page",
+          "as": "page",
+          "type": "number",
+          "source": "field",
+          "required": false,
+          "position": "query:page"
+        },
+        {
+          "name": "Per page",
+          "as": "perPage",
+          "type": "number",
+          "source": "field",
+          "required": false,
+          "position": "query:perPage"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "REVIEWS": "out.data",
+    "PAGINATION": "out.meta"
+  },
+  "messages": {
+    "success": {
+      "en": "Reviews loaded.",
+      "de": "Bewertungen geladen.",
+      "es": "Reviews loaded.",
+      "fr": "Reviews loaded.",
+      "ro": "Reviews loaded.",
+      "it": "Reviews loaded."
+    }
+  }
+}
