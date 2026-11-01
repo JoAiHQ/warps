@@ -10,14 +10,14 @@
     "ro": "Actualizează un produs"
   },
   "description": {
-    "en": "Update an existing shop product — name, unit, tags, description, structured details, active state, or visibility. Only the fields you provide are changed.",
-    "de": "Ein bestehendes Shop-Produkt aktualisieren — Name, Einheit, Tags, Beschreibung, strukturierte Details, Aktiv-Status oder Sichtbarkeit. Nur die angegebenen Felder werden geändert.",
-    "fr": "Mettre à jour un produit de boutique — nom, unité, tags, description, détails structurés, état actif ou visibilité. Seuls les champs fournis sont modifiés.",
-    "es": "Actualiza un producto de tienda — nombre, unidad, etiquetas, descripción, detalles estructurados, estado activo o visibilidad. Solo cambian los campos proporcionados.",
-    "it": "Aggiorna un prodotto del negozio — nome, unità, tag, descrizione, dettagli strutturati, stato attivo o visibilità. Vengono modificati solo i campi forniti.",
-    "ro": "Actualizează un produs din magazin — nume, unitate, taguri, descriere, detalii structurate, stare activă sau vizibilitate. Se schimbă doar câmpurile furnizate."
+    "en": "Update an existing shop product — name, unit, tags, description, structured details, configurator, active state, or visibility. Only the fields you provide are changed.",
+    "de": "Ein bestehendes Shop-Produkt aktualisieren — Name, Einheit, Tags, Beschreibung, strukturierte Details, Konfigurator, Aktiv-Status oder Sichtbarkeit. Nur die angegebenen Felder werden geändert.",
+    "fr": "Mettre à jour un produit de boutique — nom, unité, tags, description, détails structurés, configurateur, état actif ou visibilité. Seuls les champs fournis sont modifiés.",
+    "es": "Actualiza un producto de tienda — nombre, unidad, etiquetas, descripción, detalles estructurados, configurador, estado activo o visibilidad. Solo cambian los campos proporcionados.",
+    "it": "Aggiorna un prodotto del negozio — nome, unità, tag, descrizione, dettagli strutturati, configuratore, stato attivo o visibilità. Vengono modificati solo i campi forniti.",
+    "ro": "Actualizează un produs din magazin — nume, unitate, taguri, descriere, detalii structurate, configurator, stare activă sau vizibilitate. Se schimbă doar câmpurile furnizate."
   },
-  "bot": "Use when the user wants to change an existing product. Pass the product slug from list_products as product_id. PUT goes to /v1/products/{slug} — never the collection URL. Only include fields that change. Pass tags as [] to clear tags. Do not send price (price is on variations). To change VAT, pass taxClassId from tax-class-list. For nutrition/ingredients/specs, pass meta.details as a sections array (kind kv or text).",
+  "bot": "Use when the user wants to change an existing product. Pass the product slug from list_products as product_id. PUT goes to /v1/products/{slug} — never the collection URL. Only include fields that change. Pass tags as [] to clear tags. Do not send price (price is on variations). To change VAT, pass taxClassId from tax-class-list. For nutrition/ingredients/specs, pass meta.details as a sections array (kind kv or text). To change the optional customer input form on the product page, pass settings.configurator.",
   "vars": {
     "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
     "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
@@ -189,6 +189,23 @@
           "type": "json",
           "source": "field",
           "position": "payload:meta.details",
+          "required": false
+        },
+        {
+          "name": "Configurator",
+          "as": "configurator",
+          "description": {
+            "en": "Optional customer input form shown on the product page (e.g. name print). Pass [] to remove it.",
+            "de": "Optionales Eingabeformular für Kundinnen und Kunden auf der Produktseite (z. B. Namensdruck). Mit [] entfernst du es.",
+            "fr": "Formulaire de saisie client facultatif affiché sur la page produit (ex. impression du nom). Passe [] pour le supprimer.",
+            "es": "Formulario de entrada opcional para el cliente que se muestra en la página del producto (p. ej. impresión del nombre). Pasa [] para quitarlo.",
+            "it": "Modulo di inserimento opzionale per il cliente mostrato nella pagina del prodotto (es. stampa del nome). Passa [] per rimuoverlo.",
+            "ro": "Formular opțional de introducere pentru client, afișat pe pagina produsului (ex. tipărirea numelui). Trimite [] pentru a-l elimina."
+          },
+          "bot": "Sets settings.configurator. Optional: {\"type\":\"collect\",\"label\":string,\"inputs\":[{\"name\":\"[a-zA-Z][a-zA-Z0-9_]*\",\"label\"?:string,\"type\":\"string\"|\"textarea\"|\"select\"|\"file\"|\"email\",\"source\":\"field\",\"required\"?:bool,\"max\"?:int,\"placeholder\"?:string,\"options\"?:[...] (required for select)}]}. Pass [] to clear. Omit to leave unchanged. Example: {\"type\":\"collect\",\"label\":\"Personalisierung\",\"inputs\":[{\"name\":\"name\",\"label\":\"Name\",\"type\":\"string\",\"source\":\"field\",\"required\":false,\"max\":12,\"placeholder\":\"Dein Name\"}]}.",
+          "type": "json",
+          "source": "field",
+          "position": "payload:settings.configurator",
           "required": false
         },
         {

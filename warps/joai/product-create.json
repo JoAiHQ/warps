@@ -9,7 +9,7 @@
     "en": "Create a shop product for a team with a base price in cents and an optional stock level for its default variation. For tiered pricing, add variations with their own SKU, price, and stock. Use it when launching a product catalog or adding a new item to a shop.",
     "de": "Erstelle ein Shop-Produkt für ein Team mit Basispreis in Cent und optionalem Lagerbestand für die Standardvariante. Für Staffelpreise füge Varianten mit eigener SKU, Preis und Bestand hinzu. Nutze dies, um einen Produktkatalog aufzubauen oder einen neuen Artikel in den Shop aufzunehmen."
   },
-  "bot": "Use when the user wants to create a new product, material, or billable item with multiple variations/pricing tiers. Extract name, price, and variation names/SKUs/prices from their description. For example: '10 pieces at €4, 50 pieces at €3' becomes variations with different SKUs. For food or reduced VAT, pass taxClassId from tax-class-list. For nutrition/ingredients/specs, pass meta.details as a sections array (kind kv or text).",
+  "bot": "Use when the user wants to create a new product, material, or billable item with multiple variations/pricing tiers. Extract name, price, and variation names/SKUs/prices from their description. For example: '10 pieces at €4, 50 pieces at €3' becomes variations with different SKUs. For food or reduced VAT, pass taxClassId from tax-class-list. For nutrition/ingredients/specs, pass meta.details as a sections array (kind kv or text). Pass settings.configurator to add an optional customer input form on the product page.",
   "vars": {
     "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
     "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
@@ -143,6 +143,23 @@
           "type": "json",
           "source": "field",
           "position": "payload:meta.details",
+          "required": false
+        },
+        {
+          "name": "Configurator",
+          "as": "configurator",
+          "description": {
+            "en": "Optional customer input form shown on the product page (e.g. name print).",
+            "de": "Optionales Eingabeformular für Kundinnen und Kunden auf der Produktseite (z. B. Namensdruck).",
+            "fr": "Formulaire de saisie client facultatif affiché sur la page produit (ex. impression du nom).",
+            "es": "Formulario de entrada opcional para el cliente que se muestra en la página del producto (p. ej. impresión del nombre).",
+            "it": "Modulo di inserimento opzionale per il cliente mostrato nella pagina del prodotto (es. stampa del nome).",
+            "ro": "Formular opțional de introducere pentru client, afișat pe pagina produsului (ex. tipărirea numelui)."
+          },
+          "bot": "Optional settings.configurator: {\"type\":\"collect\",\"label\":string,\"inputs\":[{\"name\":\"[a-zA-Z][a-zA-Z0-9_]*\",\"label\"?:string,\"type\":\"string\"|\"textarea\"|\"select\"|\"file\"|\"email\",\"source\":\"field\",\"required\"?:bool,\"max\"?:int,\"placeholder\"?:string,\"options\"?:[...] (required for select)}]}. Example: {\"type\":\"collect\",\"label\":\"Personalisierung\",\"inputs\":[{\"name\":\"name\",\"label\":\"Name\",\"type\":\"string\",\"source\":\"field\",\"required\":false,\"max\":12,\"placeholder\":\"Dein Name\"}]}.",
+          "type": "json",
+          "source": "field",
+          "position": "payload:settings.configurator",
           "required": false
         },
         {
