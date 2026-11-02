@@ -18,6 +18,27 @@ export const meta: Record<string, WarpExtras> = {
     category: 'productivity',
     faq: { en: [{ question: 'How do I connect a custom domain to a site?', answer: 'Pass the bare hostname, for example example.com, as the custom domain. It must be unique across teams.' }], de: [{ question: 'Wie verbinde ich eine eigene Domain mit einer Website?', answer: 'Gib den nackten Hostname an, zum Beispiel example.com. Er muss teamübergreifend eindeutig sein.' }] },
   },
+  'site-delete': {
+    keywords: {
+      en: ['delete site', 'remove website', 'delete website record', 'remove site monitoring', 'site cleanup'],
+      de: ['Website löschen', 'Website entfernen', 'Website-Eintrag löschen', 'Website-Monitoring entfernen', 'Website aufräumen'],
+    },
+    useCases: {
+      en: ['Remove a website you no longer manage', 'Delete a test or duplicate site entry', 'Stop reporting and uptime monitoring for a site'],
+      de: ['Eine Website entfernen, die du nicht mehr betreust', 'Einen Test- oder doppelten Website-Eintrag löschen', 'Reporting und Uptime-Monitoring für eine Website beenden'],
+    },
+    category: 'productivity',
+    faq: {
+      en: [
+        { question: 'Can I undo deleting a site?', answer: 'No. Deleting a site is permanent and also removes its settings and uptime history.' },
+        { question: 'How do I delete the right site?', answer: 'List your sites first, choose the matching entry, then delete it.' },
+      ],
+      de: [
+        { question: 'Kann ich das Löschen einer Website rückgängig machen?', answer: 'Nein. Das Löschen ist dauerhaft und entfernt auch Einstellungen und Uptime-Verlauf.' },
+        { question: 'Wie lösche ich die richtige Website?', answer: 'Liste zuerst deine Websites auf, wähle den passenden Eintrag und lösche ihn dann.' },
+      ],
+    },
+  },
   'metrics-query': {
     keywords: { en: ['metrics', 'Cloudflare analytics', 'Google Search Console', 'page views', 'search clicks', 'reporting'], de: ['Metriken', 'Cloudflare Analytics', 'Google Search Console', 'Seitenaufrufe', 'Suchklicks', 'Reporting'] },
     useCases: { en: ['Collect source-backed facts for a client update', 'Compare Cloudflare traffic or Search Console clicks/impressions for a period'], de: ['Quellenbasierte Fakten für ein Kunden-Update sammeln', 'Cloudflare-Traffic oder Search-Console-Klicks/Impressionen für einen Zeitraum vergleichen'] },

@@ -1,0 +1,102 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Delete Site",
+  "title": {
+    "en": "Delete a site",
+    "de": "Website löschen",
+    "fr": "Supprimer un site",
+    "es": "Eliminar un sitio",
+    "it": "Elimina un sito",
+    "ro": "Șterge un site"
+  },
+  "description": {
+    "en": "Permanently delete a site from your JoAi workspace. This removes the site and its settings, including uptime history, and cannot be undone.",
+    "de": "Lösche eine Website dauerhaft aus deinem JoAi-Workspace. Dabei werden die Website und ihre Einstellungen inklusive Uptime-Verlauf entfernt. Das lässt sich nicht rückgängig machen.",
+    "fr": "Supprime définitivement un site de votre espace JoAi. Le site et ses paramètres, y compris l'historique de disponibilité, sont retirés. Cette action est irréversible.",
+    "es": "Elimina permanentemente un sitio de tu espacio de JoAi. Se eliminan el sitio y su configuración, incluido el historial de disponibilidad. Esta acción no se puede deshacer.",
+    "it": "Elimina definitivamente un sito dal tuo spazio JoAi. Il sito e le sue impostazioni, inclusa la cronologia di uptime, vengono rimossi. L'operazione non può essere annullata.",
+    "ro": "Șterge definitiv un site din spațiul tău JoAi. Site-ul și setările sale, inclusiv istoricul de uptime, sunt eliminate. Această acțiune nu poate fi anulată."
+  },
+  "bot": "Use when the user wants to delete a site. Pass the site hashid from list_sites. This permanently deletes the site, including its settings and uptime history, and cannot be undone. If the user refers to a site by name, list sites first.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Delete site",
+        "de": "Website löschen",
+        "fr": "Supprimer le site",
+        "es": "Eliminar el sitio",
+        "it": "Elimina il sito",
+        "ro": "Șterge site-ul"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/sites/{{siteId}}",
+        "method": "DELETE",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Site ID",
+          "as": "siteId",
+          "description": {
+            "en": "The site hashid from list_sites",
+            "de": "Die Website-Hashid aus list_sites",
+            "fr": "Le hashid du site depuis list_sites",
+            "es": "El hashid del sitio desde list_sites",
+            "it": "L'hashid del sito da list_sites",
+            "ro": "Hashid-ul site-ului din list_sites"
+          },
+          "bot": "The site hashid from list_sites. If the user refers to a site by name, list sites first.",
+          "type": "string",
+          "position": "url:siteId",
+          "source": "field",
+          "required": true,
+          "min": 1
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug of the site. Defaults to the current team.",
+            "de": "Team-Slug der Website. Standardmäßig das aktuelle Team.",
+            "fr": "Slug d'équipe du site. Par défaut l'équipe actuelle.",
+            "es": "Slug del equipo del sitio. Por defecto el equipo actual.",
+            "it": "Slug del team del sito. Predefinito: team attuale.",
+            "ro": "Slug-ul echipei site-ului. Implicit echipa curentă."
+          },
+          "bot": "The slug of the team the site belongs to. Omit to use the current team.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Site deleted.",
+      "de": "Website gelöscht.",
+      "fr": "Site supprimé.",
+      "es": "Sitio eliminado.",
+      "it": "Sito eliminato.",
+      "ro": "Site șters."
+    },
+    "error": {
+      "en": "Failed to delete site: {{MESSAGE}}",
+      "de": "Website konnte nicht gelöscht werden: {{MESSAGE}}",
+      "fr": "Impossible de supprimer le site : {{MESSAGE}}",
+      "es": "No se pudo eliminar el sitio: {{MESSAGE}}",
+      "it": "Impossibile eliminare il sito: {{MESSAGE}}",
+      "ro": "Site-ul nu a putut fi șters: {{MESSAGE}}"
+    }
+  }
+}
