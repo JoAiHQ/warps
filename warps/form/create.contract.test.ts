@@ -7,7 +7,7 @@ type FormCreateWarp = {
   vars: Record<string, string>
   actions: Array<{
     destination: { headers: Record<string, string> }
-    inputs: Array<{ as: string; default?: unknown }>
+    inputs: Array<{ as: string; type?: string; default?: unknown; position?: string }>
   }>
 }
 
@@ -24,5 +24,9 @@ describe('@form-create team routing', () => {
   it('does not attach the connected agent to a different team', () => {
     expect(formCreateWarp.vars.JOAI_AGENT_UUID).toBeUndefined()
     expect(inputs).not.toContainEqual(expect.objectContaining({ as: 'agent' }))
+  })
+
+  it('exposes notification recipients', () => {
+    expect(inputs).toContainEqual(expect.objectContaining({ as: 'notify', type: 'json' }))
   })
 })
