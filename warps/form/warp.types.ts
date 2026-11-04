@@ -7,6 +7,7 @@ export type FormCreateInputs = {
   team: string;
   public: boolean;
   extras: string;
+  notify: string;
   form: boolean;
 };
 
@@ -122,6 +123,7 @@ export type FormUpdateInputs = {
   public: boolean;
   optIn: boolean;
   extras: string;
+  notify: string;
 };
 
 export type FormUpdateData = {
