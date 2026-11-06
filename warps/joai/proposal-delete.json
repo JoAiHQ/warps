@@ -1,0 +1,85 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Delete Client Proposal",
+  "title": {
+    "en": "Delete a client proposal",
+    "de": "Kundenangebot löschen",
+    "es": "Eliminar una propuesta de cliente",
+    "fr": "Supprimer une proposition client",
+    "it": "Elimina una proposta per il cliente",
+    "ro": "Șterge o ofertă pentru client"
+  },
+  "description": {
+    "en": "Permanently delete a draft, expired, or archived client proposal and its items. Sent, converted, or quoted proposals cannot be deleted.",
+    "de": "Lösche ein Entwurfs-, abgelaufenes oder archiviertes Kundenangebot samt Positionen dauerhaft. Gesendete, angenommene oder mit verbindlichem Angebot verknüpfte Angebote können nicht gelöscht werden.",
+    "es": "Elimina permanentemente una propuesta en borrador, caducada o archivada y sus elementos. Las propuestas enviadas, convertidas o con oferta no se pueden eliminar.",
+    "fr": "Supprime définitivement une proposition en brouillon, expirée ou archivée et ses éléments. Les propositions envoyées, converties ou liées à une offre ne peuvent pas être supprimées.",
+    "it": "Elimina definitivamente una proposta in bozza, scaduta o archiviata e i suoi elementi. Le proposte inviate, convertite o con offerta non possono essere eliminate.",
+    "ro": "Șterge definitiv o ofertă în schiță, expirată sau arhivată și elementele sale. Ofertele trimise, convertite sau cu ofertă formală nu pot fi șterse."
+  },
+  "bot": "Use only when the user explicitly asks to delete a proposal. Prefer archive when the proposal should be kept. This cannot be undone.",
+  "vars": {
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Delete proposal",
+        "de": "Angebot löschen",
+        "es": "Eliminar propuesta",
+        "fr": "Supprimer la proposition",
+        "it": "Elimina proposta",
+        "ro": "Șterge oferta"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/proposals/{{proposal}}",
+        "method": "DELETE",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Proposal ID",
+          "as": "proposal",
+          "description": {
+            "en": "Proposal hash ID",
+            "de": "Hash-ID des Angebots"
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:proposal"
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug. Defaults to the current team.",
+            "de": "Team-Slug. Standardmäßig das aktuelle Team."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "DELETED": "out.data.deleted"
+  },
+  "messages": {
+    "success": {
+      "en": "Proposal deleted.",
+      "de": "Angebot gelöscht.",
+      "es": "Propuesta eliminada.",
+      "fr": "Proposition supprimée.",
+      "it": "Proposta eliminata.",
+      "ro": "Ofertă ștearsă."
+    }
+  }
+}

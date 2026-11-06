@@ -1,0 +1,167 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Update Client Proposal Item",
+  "title": {
+    "en": "Update a proposal item",
+    "de": "Angebotsposition aktualisieren",
+    "es": "Actualizar un elemento de la propuesta",
+    "fr": "Mettre à jour un élément de la proposition",
+    "it": "Aggiorna un elemento della proposta",
+    "ro": "Actualizează un element din ofertă"
+  },
+  "description": {
+    "en": "Update the required flag, quantity, minimum term, choice group, display position, or price override of one proposal item. Only the fields you provide are changed.",
+    "de": "Aktualisiere Pflicht-Flag, Menge, Mindestlaufzeit, Auswahlgruppe, Anzeigeposition oder Preis-Überschreibung einer Angebotsposition. Nur die angegebenen Felder werden geändert.",
+    "es": "Actualiza el indicador obligatorio, la cantidad, la permanencia mínima, el grupo de elección, la posición o el precio de un elemento. Solo cambian los campos proporcionados.",
+    "fr": "Mets à jour l’indicateur obligatoire, la quantité, la durée minimale, le groupe de choix, la position ou le prix d’un élément. Seuls les champs fournis sont modifiés.",
+    "it": "Aggiorna il flag obbligatorio, la quantità, la durata minima, il gruppo di scelta, la posizione o il prezzo di un elemento. Vengono modificati solo i campi forniti.",
+    "ro": "Actualizează marcajul obligatoriu, cantitatea, durata minimă, grupul de alegere, poziția sau prețul unui element. Se modifică doar câmpurile furnizate."
+  },
+  "bot": "Use when changing one existing item. Read the proposal first if you need the item hash ID. Price overrides are in cents; clearing the price restores the catalog price.",
+  "vars": {
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Update item",
+        "de": "Position aktualisieren",
+        "es": "Actualizar elemento",
+        "fr": "Mettre à jour l’élément",
+        "it": "Aggiorna elemento",
+        "ro": "Actualizează elementul"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/proposals/{{proposal}}/items/{{proposalItem}}",
+        "method": "PUT",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Proposal ID",
+          "as": "proposal",
+          "description": {
+            "en": "Proposal hash ID",
+            "de": "Hash-ID des Angebots"
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:proposal"
+        },
+        {
+          "name": "Proposal item ID",
+          "as": "proposalItem",
+          "description": {
+            "en": "Proposal item hash ID",
+            "de": "Hash-ID der Angebotsposition"
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:proposalItem"
+        },
+        {
+          "name": "Required",
+          "as": "required",
+          "description": {
+            "en": "Keep this item included for the client",
+            "de": "Diese Position für den Kunden verpflichtend halten"
+          },
+          "type": "bool",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Quantity",
+          "as": "quantity",
+          "description": {
+            "en": "Quantity, default 1",
+            "de": "Menge, Standard 1"
+          },
+          "type": "number",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Minimum term (days)",
+          "as": "minimumTermDays",
+          "description": {
+            "en": "Minimum term in days, or empty to clear",
+            "de": "Mindestlaufzeit in Tagen oder leer zum Entfernen"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Choice group",
+          "as": "choiceGroup",
+          "description": {
+            "en": "Choice group, or empty to clear",
+            "de": "Auswahlgruppe oder leer zum Entfernen"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Position",
+          "as": "position",
+          "description": {
+            "en": "Display position, starting at 0",
+            "de": "Anzeigeposition, beginnend bei 0"
+          },
+          "type": "number",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Price override (cents)",
+          "as": "price",
+          "description": {
+            "en": "Unit price override in cents, or empty to restore the catalog price",
+            "de": "Einzelpreis-Überschreibung in Cent oder leer zum Wiederherstellen des Katalogpreises"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug. Defaults to the current team.",
+            "de": "Team-Slug. Standardmäßig das aktuelle Team."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "PROPOSAL": "out.data",
+    "PROPOSAL_ID": "out.data.id",
+    "PROPOSAL_TITLE": "out.data.title",
+    "STATUS": "out.data.status",
+    "SHARE_URL": "out.data.shareUrl"
+  },
+  "messages": {
+    "success": {
+      "en": "Proposal item updated: {{PROPOSAL_TITLE}}",
+      "de": "Angebotsposition aktualisiert: {{PROPOSAL_TITLE}}",
+      "es": "Elemento actualizado: {{PROPOSAL_TITLE}}",
+      "fr": "Élément mis à jour : {{PROPOSAL_TITLE}}",
+      "it": "Elemento aggiornato: {{PROPOSAL_TITLE}}",
+      "ro": "Element actualizat: {{PROPOSAL_TITLE}}"
+    }
+  }
+}

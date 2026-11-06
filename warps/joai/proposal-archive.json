@@ -1,0 +1,89 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Archive Client Proposal",
+  "title": {
+    "en": "Archive a client proposal",
+    "de": "Kundenangebot archivieren",
+    "es": "Archivar una propuesta de cliente",
+    "fr": "Archiver une proposition client",
+    "it": "Archivia una proposta per il cliente",
+    "ro": "Arhivează o ofertă pentru client"
+  },
+  "description": {
+    "en": "Archive an editable client proposal so it no longer appears in the default proposal list. Converted proposals or proposals with a quote cannot be archived.",
+    "de": "Archiviere ein bearbeitbares Kundenangebot, damit es nicht mehr in der Standardliste erscheint. Angenommene Angebote oder Angebote mit verbindlichem Angebot können nicht archiviert werden.",
+    "es": "Archiva una propuesta editable para que deje de aparecer en la lista predeterminada. Las propuestas convertidas o con oferta no se pueden archivar.",
+    "fr": "Archive une proposition modifiable afin qu’elle n’apparaisse plus dans la liste par défaut. Les propositions converties ou liées à une offre ne peuvent pas être archivées.",
+    "it": "Archivia una proposta modificabile in modo che non compaia più nell’elenco predefinito. Le proposte convertite o con un’offerta non possono essere archiviate.",
+    "ro": "Arhivează o ofertă editabilă pentru a nu mai apărea în lista implicită. Ofertele convertite sau cu ofertă formală nu pot fi arhivate."
+  },
+  "bot": "Use when a proposal is no longer active but should be kept. Archived proposals are hidden from the default list and the public share page.",
+  "vars": {
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Archive proposal",
+        "de": "Angebot archivieren",
+        "es": "Archivar propuesta",
+        "fr": "Archiver la proposition",
+        "it": "Archivia proposta",
+        "ro": "Arhivează oferta"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/proposals/{{proposal}}/archive",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Proposal ID",
+          "as": "proposal",
+          "description": {
+            "en": "Proposal hash ID",
+            "de": "Hash-ID des Angebots"
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:proposal"
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug. Defaults to the current team.",
+            "de": "Team-Slug. Standardmäßig das aktuelle Team."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "PROPOSAL": "out.data",
+    "PROPOSAL_ID": "out.data.id",
+    "PROPOSAL_TITLE": "out.data.title",
+    "STATUS": "out.data.status",
+    "SHARE_URL": "out.data.shareUrl"
+  },
+  "messages": {
+    "success": {
+      "en": "Proposal archived: {{PROPOSAL_TITLE}}",
+      "de": "Angebot archiviert: {{PROPOSAL_TITLE}}",
+      "es": "Propuesta archivada: {{PROPOSAL_TITLE}}",
+      "fr": "Proposition archivée : {{PROPOSAL_TITLE}}",
+      "it": "Proposta archiviata: {{PROPOSAL_TITLE}}",
+      "ro": "Ofertă arhivată: {{PROPOSAL_TITLE}}"
+    }
+  }
+}

@@ -2188,13 +2188,59 @@ export const meta: Record<string, WarpExtras> = {
     category: 'commerce',
     faq: {
       en: [
-        { question: 'Can I change the items on an existing proposal?', answer: 'No. Items are fixed after creation; you can only update the text fields, validity, coupon, price mode, and access code.' },
+        { question: 'Can I change the items on an existing proposal?', answer: 'Yes, with the proposal item tools: set_client_proposal_items, add_client_proposal_item, update_client_proposal_item, or remove_client_proposal_item. This update tool only changes the proposal metadata.' },
         { question: 'Can I update a proposal the client already accepted?', answer: 'No. Only proposals that are not yet accepted can be changed.' },
       ],
       de: [
-        { question: 'Kann ich die Positionen eines bestehenden Angebots ändern?', answer: 'Nein. Die Positionen sind nach dem Erstellen fix; du kannst nur Textfelder, Gültigkeit, Gutschein, Preismodus und Zugangscode aktualisieren.' },
+        { question: 'Kann ich die Positionen eines bestehenden Angebots ändern?', answer: 'Ja, mit den Angebotspositions-Tools: set_client_proposal_items, add_client_proposal_item, update_client_proposal_item oder remove_client_proposal_item. Dieses Update-Tool ändert nur die Angebotsmetadaten.' },
         { question: 'Kann ich ein bereits angenommenes Angebot aktualisieren?', answer: 'Nein. Nur Angebote, die noch nicht angenommen wurden, lassen sich ändern.' },
       ],
     },
+  },
+  'proposal-get': {
+    keywords: { en: ['get client proposal', 'view proposal', 'proposal items', 'proposal status'], de: ['Kundenangebot ansehen', 'Angebot öffnen', 'Angebotspositionen', 'Angebotsstatus'] },
+    useCases: { en: ['Read a proposal before editing its items', 'Check the current status and share URL'], de: ['Ein Angebot vor dem Bearbeiten der Positionen lesen', 'Aktuellen Status und Freigabelink prüfen'] },
+    category: 'commerce',
+  },
+  'proposal-items-set': {
+    keywords: { en: ['replace proposal items', 'set proposal items', 'restructure proposal', 'proposal scope'], de: ['Angebotspositionen ersetzen', 'Angebotspositionen setzen', 'Angebot umstrukturieren', 'Angebotsumfang'] },
+    useCases: { en: ['Replace the complete scope of a proposal', 'Restructure or dissolve choice groups'], de: ['Den kompletten Umfang eines Angebots ersetzen', 'Auswahlgruppen umstrukturieren oder auflösen'] },
+    category: 'commerce',
+    faq: { en: [{ question: 'Does this send the proposal?', answer: 'No. It only saves the new item list. Use publish_client_proposal when the proposal should be ready to share.' }], de: [{ question: 'Wird das Angebot damit versendet?', answer: 'Nein. Es speichert nur die neue Positionsliste. Nutze publish_client_proposal, wenn das Angebot teilbar sein soll.' }] },
+  },
+  'proposal-item-add': {
+    keywords: { en: ['add proposal item', 'add service to proposal', 'proposal scope'], de: ['Angebotsposition hinzufügen', 'Leistung zum Angebot hinzufügen', 'Angebotsumfang'] },
+    useCases: { en: ['Add one service or product variation to a proposal', 'Offer an optional upgrade'], de: ['Eine Dienstleistung oder Produktvariante zum Angebot hinzufügen', 'Ein optionales Upgrade anbieten'] },
+    category: 'commerce',
+  },
+  'proposal-item-update': {
+    keywords: { en: ['update proposal item', 'change proposal price', 'proposal quantity', 'proposal required'], de: ['Angebotsposition aktualisieren', 'Angebotspreis ändern', 'Angebotsmenge', 'Angebot Pflichtposition'] },
+    useCases: { en: ['Change the quantity or price of one item', 'Mark an item required or optional', 'Move an item into or out of a choice group'], de: ['Menge oder Preis einer Position ändern', 'Eine Position als Pflicht oder optional markieren', 'Eine Position in eine Auswahlgruppe verschieben oder daraus entfernen'] },
+    category: 'commerce',
+    faq: { en: [{ question: 'Are prices in euros or cents?', answer: 'Prices are in cents. For example, 120000 means 1,200.00.' }], de: [{ question: 'Sind Preise in Euro oder Cent?', answer: 'Preise sind in Cent. 120000 bedeutet zum Beispiel 1.200,00.' }] },
+  },
+  'proposal-item-remove': {
+    keywords: { en: ['remove proposal item', 'delete proposal item', 'remove proposal scope'], de: ['Angebotsposition entfernen', 'Angebotsposition löschen', 'Angebotsumfang entfernen'] },
+    useCases: { en: ['Remove one item from a proposal', 'Clear the last member of a choice group'], de: ['Eine Position aus einem Angebot entfernen', 'Das letzte Mitglied einer Auswahlgruppe entfernen'] },
+    category: 'commerce',
+    faq: { en: [{ question: 'Can I remove every item?', answer: 'No. The last remaining item cannot be removed. Use set_client_proposal_items to replace the full list.' }], de: [{ question: 'Kann ich alle Positionen entfernen?', answer: 'Nein. Die letzte verbleibende Position kann nicht entfernt werden. Nutze set_client_proposal_items, um die komplette Liste zu ersetzen.' }] },
+  },
+  'proposal-delete': {
+    keywords: { en: ['delete client proposal', 'remove proposal', 'delete draft proposal'], de: ['Kundenangebot löschen', 'Angebot entfernen', 'Angebotsentwurf löschen'] },
+    useCases: { en: ['Delete a draft, expired, or archived proposal', 'Clean up a proposal created by mistake'], de: ['Ein Entwurfs-, abgelaufenes oder archiviertes Angebot löschen', 'Ein versehentlich erstelltes Angebot aufräumen'] },
+    category: 'commerce',
+    faq: { en: [{ question: 'Can I delete a sent proposal?', answer: 'No. Sent proposals must be archived first; converted proposals cannot be deleted.' }], de: [{ question: 'Kann ich ein gesendetes Angebot löschen?', answer: 'Nein. Gesendete Angebote müssen zuerst archiviert werden; angenommene Angebote können nicht gelöscht werden.' }] },
+  },
+  'proposal-archive': {
+    keywords: { en: ['archive client proposal', 'hide proposal', 'inactive proposal'], de: ['Kundenangebot archivieren', 'Angebot ausblenden', 'inaktives Angebot'] },
+    useCases: { en: ['Hide a proposal that is no longer active', 'Keep a proposal without deleting it'], de: ['Ein nicht mehr aktives Angebot ausblenden', 'Ein Angebot behalten, ohne es zu löschen'] },
+    category: 'commerce',
+    faq: { en: [{ question: 'Does archiving delete the proposal?', answer: 'No. It hides the proposal from the default list and public share page; the record is kept.' }], de: [{ question: 'Löscht das Archivieren das Angebot?', answer: 'Nein. Es blendet das Angebot aus der Standardliste und der öffentlichen Freigabeseite aus; der Datensatz bleibt erhalten.' }] },
+  },
+  'proposal-publish': {
+    keywords: { en: ['publish client proposal', 'make proposal shareable', 'send proposal link'], de: ['Kundenangebot veröffentlichen', 'Angebot teilbar machen', 'Angebotslink senden'] },
+    useCases: { en: ['Mark a reviewed proposal as ready to share', 'Make the share URL live before sending it'], de: ['Ein geprüftes Angebot als teilbar markieren', 'Den Freigabelink vor dem Versenden aktivieren'] },
+    category: 'commerce',
+    faq: { en: [{ question: 'Does this email the client?', answer: 'No. It only makes the share link live. Share the returned URL yourself.' }], de: [{ question: 'Wird das Angebot per E-Mail an den Kunden gesendet?', answer: 'Nein. Es macht nur den Freigabelink aktiv. Teile die zurückgegebene URL selbst.' }] },
   },
 }

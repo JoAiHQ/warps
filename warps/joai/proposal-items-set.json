@@ -1,0 +1,100 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Set Client Proposal Items",
+  "title": {
+    "en": "Replace proposal items",
+    "de": "Angebotspositionen ersetzen",
+    "es": "Reemplazar elementos de la propuesta",
+    "fr": "Remplacer les éléments de la proposition",
+    "it": "Sostituisci gli elementi della proposta",
+    "ro": "Înlocuiește elementele ofertei"
+  },
+  "description": {
+    "en": "Replace the complete item list of an editable client proposal. Use this to restructure a proposal or dissolve choice groups; required items stay included for the client.",
+    "de": "Ersetze die komplette Positionsliste eines bearbeitbaren Kundenangebots. Nutze dies, um ein Angebot umzustrukturieren oder Auswahlgruppen aufzulösen; Pflichtpositionen bleiben für den Kunden enthalten.",
+    "es": "Reemplaza la lista completa de elementos de una propuesta editable. Úsalo para reestructurar una propuesta o disolver grupos de elección; los elementos obligatorios permanecen incluidos.",
+    "fr": "Remplace la liste complète des éléments d’une proposition modifiable. Utilise-le pour restructurer une proposition ou dissoudre des groupes de choix ; les éléments obligatoires restent inclus.",
+    "it": "Sostituisci l’elenco completo degli elementi di una proposta modificabile. Usalo per ristrutturare una proposta o sciogliere gruppi di scelta; gli elementi obbligatori restano inclusi.",
+    "ro": "Înlocuiește lista completă de elemente a unei oferte editabile. Folosește-o pentru a restructura oferta sau a dizolva grupurile de alegere; elementele obligatorii rămân incluse."
+  },
+  "bot": "Use when the user wants to replace or restructure all items at once. Read the proposal first if you need to preserve existing item details. Never remove required items the user still wants included.",
+  "vars": {
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Replace items",
+        "de": "Positionen ersetzen",
+        "es": "Reemplazar elementos",
+        "fr": "Remplacer les éléments",
+        "it": "Sostituisci elementi",
+        "ro": "Înlocuiește elementele"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/proposals/{{proposal}}/items",
+        "method": "PUT",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Proposal ID",
+          "as": "proposal",
+          "description": {
+            "en": "Proposal hash ID",
+            "de": "Hash-ID des Angebots"
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:proposal"
+        },
+        {
+          "name": "Items",
+          "as": "items",
+          "description": {
+            "en": "Array of proposal items: [{\"id\":\"...\",\"type\":\"service\",\"required\":true,\"quantity\":1,\"minimumTermDays\":365,\"choiceGroup\":\"billing\",\"position\":0,\"price\":120000}]. type is service or productVariation. price is an optional unit price override in cents.",
+            "de": "Liste von Angebotspositionen: [{\"id\":\"...\",\"type\":\"service\",\"required\":true,\"quantity\":1,\"minimumTermDays\":365,\"choiceGroup\":\"billing\",\"position\":0,\"price\":120000}]. type ist service oder productVariation. price ist eine optionale Einzelpreis-Überschreibung in Cent."
+          },
+          "type": "json",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug. Defaults to the current team.",
+            "de": "Team-Slug. Standardmäßig das aktuelle Team."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "PROPOSAL": "out.data",
+    "PROPOSAL_ID": "out.data.id",
+    "PROPOSAL_TITLE": "out.data.title",
+    "STATUS": "out.data.status",
+    "SHARE_URL": "out.data.shareUrl"
+  },
+  "messages": {
+    "success": {
+      "en": "Proposal items replaced: {{PROPOSAL_TITLE}}",
+      "de": "Angebotspositionen ersetzt: {{PROPOSAL_TITLE}}",
+      "es": "Elementos reemplazados: {{PROPOSAL_TITLE}}",
+      "fr": "Éléments remplacés : {{PROPOSAL_TITLE}}",
+      "it": "Elementi sostituiti: {{PROPOSAL_TITLE}}",
+      "ro": "Elemente înlocuite: {{PROPOSAL_TITLE}}"
+    }
+  }
+}

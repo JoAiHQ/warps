@@ -1,0 +1,101 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Remove Client Proposal Item",
+  "title": {
+    "en": "Remove a proposal item",
+    "de": "Angebotsposition entfernen",
+    "es": "Eliminar un elemento de la propuesta",
+    "fr": "Supprimer un élément de la proposition",
+    "it": "Rimuovi un elemento dalla proposta",
+    "ro": "Elimină un element din ofertă"
+  },
+  "description": {
+    "en": "Remove one item from an editable client proposal. The last remaining item cannot be removed; removing the last member of a choice group clears that group.",
+    "de": "Entferne eine Position aus einem bearbeitbaren Kundenangebot. Die letzte verbleibende Position kann nicht entfernt werden; wird das letzte Mitglied einer Auswahlgruppe entfernt, wird die Gruppe aufgehoben.",
+    "es": "Elimina un elemento de una propuesta editable. El último elemento restante no se puede eliminar; al eliminar el último miembro de un grupo de elección, se disuelve el grupo.",
+    "fr": "Supprime un élément d’une proposition modifiable. Le dernier élément restant ne peut pas être supprimé ; supprimer le dernier membre d’un groupe de choix dissout ce groupe.",
+    "it": "Rimuovi un elemento da una proposta modificabile. L’ultimo elemento rimasto non può essere rimosso; rimuovendo l’ultimo membro di un gruppo di scelta, il gruppo viene sciolto.",
+    "ro": "Elimină un element dintr-o ofertă editabilă. Ultimul element rămas nu poate fi eliminat; eliminarea ultimului membru al unui grup de alegere dizolvă grupul."
+  },
+  "bot": "Use when removing one existing item. Read the proposal first if you need the item hash ID. Use set_client_proposal_items to replace the complete item list.",
+  "vars": {
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Remove item",
+        "de": "Position entfernen",
+        "es": "Eliminar elemento",
+        "fr": "Supprimer l’élément",
+        "it": "Rimuovi elemento",
+        "ro": "Elimină elementul"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/proposals/{{proposal}}/items/{{proposalItem}}",
+        "method": "DELETE",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Proposal ID",
+          "as": "proposal",
+          "description": {
+            "en": "Proposal hash ID",
+            "de": "Hash-ID des Angebots"
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:proposal"
+        },
+        {
+          "name": "Proposal item ID",
+          "as": "proposalItem",
+          "description": {
+            "en": "Proposal item hash ID",
+            "de": "Hash-ID der Angebotsposition"
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:proposalItem"
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug. Defaults to the current team.",
+            "de": "Team-Slug. Standardmäßig das aktuelle Team."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "PROPOSAL": "out.data",
+    "PROPOSAL_ID": "out.data.id",
+    "PROPOSAL_TITLE": "out.data.title",
+    "STATUS": "out.data.status",
+    "SHARE_URL": "out.data.shareUrl"
+  },
+  "messages": {
+    "success": {
+      "en": "Item removed from proposal: {{PROPOSAL_TITLE}}",
+      "de": "Position aus Angebot entfernt: {{PROPOSAL_TITLE}}",
+      "es": "Elemento eliminado: {{PROPOSAL_TITLE}}",
+      "fr": "Élément supprimé : {{PROPOSAL_TITLE}}",
+      "it": "Elemento rimosso: {{PROPOSAL_TITLE}}",
+      "ro": "Element eliminat: {{PROPOSAL_TITLE}}"
+    }
+  }
+}
