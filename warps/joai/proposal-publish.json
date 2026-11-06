@@ -1,0 +1,89 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Publish Client Proposal",
+  "title": {
+    "en": "Publish a client proposal",
+    "de": "Kundenangebot veröffentlichen",
+    "es": "Publicar una propuesta de cliente",
+    "fr": "Publier une proposition client",
+    "it": "Pubblica una proposta per il cliente",
+    "ro": "Publică o ofertă pentru client"
+  },
+  "description": {
+    "en": "Mark an editable client proposal as ready to share by setting its status to sent. This does not send an email; share the returned link with the client.",
+    "de": "Markiere ein bearbeitbares Kundenangebot als teilbar, indem der Status auf gesendet gesetzt wird. Es wird keine E-Mail versendet; teile den zurückgegebenen Link mit dem Kunden.",
+    "es": "Marca una propuesta editable como lista para compartir estableciendo el estado en enviada. No se envía un correo; comparte el enlace devuelto con el cliente.",
+    "fr": "Marque une proposition modifiable comme prête à partager en passant son statut à envoyée. Aucun e-mail n’est envoyé ; partage le lien renvoyé avec le client.",
+    "it": "Contrassegna una proposta modificabile come pronta da condividere impostando lo stato su inviata. Non viene inviata un’e-mail; condividi il link restituito con il cliente.",
+    "ro": "Marchează o ofertă editabilă ca pregătită de distribuire setând statusul pe trimis. Nu se trimite niciun e-mail; distribuie linkul returnat clientului."
+  },
+  "bot": "Use only when the user explicitly wants the proposal ready to share. This tool never sends an email; it only makes the share link live.",
+  "vars": {
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Publish proposal",
+        "de": "Angebot veröffentlichen",
+        "es": "Publicar propuesta",
+        "fr": "Publier la proposition",
+        "it": "Pubblica proposta",
+        "ro": "Publică oferta"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/proposals/{{proposal}}/publish",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Proposal ID",
+          "as": "proposal",
+          "description": {
+            "en": "Proposal hash ID",
+            "de": "Hash-ID des Angebots"
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:proposal"
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug. Defaults to the current team.",
+            "de": "Team-Slug. Standardmäßig das aktuelle Team."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "PROPOSAL": "out.data",
+    "PROPOSAL_ID": "out.data.id",
+    "PROPOSAL_TITLE": "out.data.title",
+    "STATUS": "out.data.status",
+    "SHARE_URL": "out.data.shareUrl"
+  },
+  "messages": {
+    "success": {
+      "en": "Proposal ready to share: {{PROPOSAL_TITLE}} — {{SHARE_URL}}",
+      "de": "Angebot teilbar: {{PROPOSAL_TITLE}} — {{SHARE_URL}}",
+      "es": "Propuesta lista para compartir: {{PROPOSAL_TITLE}} — {{SHARE_URL}}",
+      "fr": "Proposition prête à partager : {{PROPOSAL_TITLE}} — {{SHARE_URL}}",
+      "it": "Proposta pronta da condividere: {{PROPOSAL_TITLE}} — {{SHARE_URL}}",
+      "ro": "Ofertă pregătită de distribuire: {{PROPOSAL_TITLE}} — {{SHARE_URL}}"
+    }
+  }
+}

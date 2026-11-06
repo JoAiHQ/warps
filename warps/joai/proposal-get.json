@@ -1,0 +1,90 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Get Client Proposal",
+  "title": {
+    "en": "View a client proposal",
+    "de": "Kundenangebot ansehen",
+    "es": "Ver una propuesta de cliente",
+    "fr": "Voir une proposition client",
+    "it": "Visualizza una proposta per il cliente",
+    "ro": "Vezi o ofertă pentru client"
+  },
+  "description": {
+    "en": "View one client proposal with its items, status, share URL, and quote. Use the returned IDs and status before editing, publishing, or archiving it.",
+    "de": "Zeige ein Kundenangebot mit Positionen, Status, Freigabelink und Angebot an. Nutze die zurückgegebenen IDs und den Status vor dem Bearbeiten, Veröffentlichen oder Archivieren.",
+    "es": "Consulta una propuesta de cliente con sus elementos, estado, enlace para compartir y oferta. Usa los IDs y el estado devueltos antes de editarla, publicarla o archivarla.",
+    "fr": "Affiche une proposition client avec ses éléments, son statut, son lien de partage et son offre. Utilise les identifiants et le statut renvoyés avant de la modifier, publier ou archiver.",
+    "it": "Visualizza una proposta per il cliente con elementi, stato, link di condivisione e offerta. Usa gli ID e lo stato restituiti prima di modificarla, pubblicarla o archiviarla.",
+    "ro": "Vezi o ofertă pentru client cu elementele, statusul, linkul de distribuire și oferta. Folosește ID-urile și statusul returnate înainte de editare, publicare sau arhivare."
+  },
+  "bot": "Use this when the proposal hash ID is known and the agent needs the current items, status, share URL, or quote ID.",
+  "vars": {
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "View proposal",
+        "de": "Angebot ansehen",
+        "es": "Ver propuesta",
+        "fr": "Voir la proposition",
+        "it": "Visualizza proposta",
+        "ro": "Vezi oferta"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/proposals/{{proposal}}",
+        "method": "GET",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Proposal ID",
+          "as": "proposal",
+          "description": {
+            "en": "Proposal hash ID to view",
+            "de": "Hash-ID des Angebots"
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:proposal"
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug. Defaults to the current team.",
+            "de": "Team-Slug. Standardmäßig das aktuelle Team."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "PROPOSAL": "out.data",
+    "PROPOSAL_ID": "out.data.id",
+    "PROPOSAL_TITLE": "out.data.title",
+    "STATUS": "out.data.status",
+    "SHARE_URL": "out.data.shareUrl",
+    "QUOTE_ID": "out.data.quoteId"
+  },
+  "messages": {
+    "success": {
+      "en": "Client proposal loaded: {{PROPOSAL_TITLE}} — {{STATUS}}",
+      "de": "Kundenangebot geladen: {{PROPOSAL_TITLE}} — {{STATUS}}",
+      "es": "Propuesta cargada: {{PROPOSAL_TITLE}} — {{STATUS}}",
+      "fr": "Proposition chargée : {{PROPOSAL_TITLE}} — {{STATUS}}",
+      "it": "Proposta caricata: {{PROPOSAL_TITLE}} — {{STATUS}}",
+      "ro": "Ofertă încărcată: {{PROPOSAL_TITLE}} — {{STATUS}}"
+    }
+  }
+}

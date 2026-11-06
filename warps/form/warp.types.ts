@@ -19,6 +19,7 @@ export type FormCreateData = {
 
 export type FormDeleteInputs = {
   formId: string;
+  team: string;
 };
 
 export type FormAddFieldInputs = {
@@ -47,6 +48,7 @@ export type FormUpdateFieldInputs = {
 
 export type FormGetInputs = {
   formId: string;
+  team: string;
 };
 
 export type FormGetData = {
@@ -73,6 +75,7 @@ export type FormListData = {
 
 export type FormPublishInputs = {
   formId: string;
+  team: string;
   public: boolean;
   store: boolean;
 };
@@ -106,6 +109,7 @@ export type FormSubmissionsData = {
 
 export type FormUnpublishInputs = {
   formId: string;
+  team: string;
   store: boolean;
 };
 
@@ -115,6 +119,7 @@ export type FormUnpublishData = {
 
 export type FormUpdateInputs = {
   formId: string;
+  team: string;
   name: string;
   title: string;
   description: string;

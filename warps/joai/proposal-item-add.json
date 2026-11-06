@@ -1,0 +1,181 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Add Client Proposal Item",
+  "title": {
+    "en": "Add a proposal item",
+    "de": "Angebotsposition hinzufügen",
+    "es": "Añadir un elemento a la propuesta",
+    "fr": "Ajouter un élément à la proposition",
+    "it": "Aggiungi un elemento alla proposta",
+    "ro": "Adaugă un element în ofertă"
+  },
+  "description": {
+    "en": "Add one service or product variation to an editable client proposal. The item is placed last unless a display position is provided.",
+    "de": "Füge eine Dienstleistung oder Produktvariante zu einem bearbeitbaren Kundenangebot hinzu. Die Position wird am Ende eingefügt, sofern keine Anzeigeposition angegeben ist.",
+    "es": "Añade un servicio o variación de producto a una propuesta editable. El elemento se coloca al final salvo que se indique una posición.",
+    "fr": "Ajoute un service ou une variation de produit à une proposition modifiable. L’élément est placé à la fin sauf si une position est indiquée.",
+    "it": "Aggiungi un servizio o una variante di prodotto a una proposta modificabile. L’elemento viene inserito in fondo salvo diversa posizione.",
+    "ro": "Adaugă un serviciu sau o variantă de produs într-o ofertă editabilă. Elementul este adăugat la final dacă nu este specificată o poziție."
+  },
+  "bot": "Use when adding one catalog item to an existing proposal. If the exact item ID is unknown, list services or products first.",
+  "vars": {
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Add item",
+        "de": "Position hinzufügen",
+        "es": "Añadir elemento",
+        "fr": "Ajouter l’élément",
+        "it": "Aggiungi elemento",
+        "ro": "Adaugă elementul"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/proposals/{{proposal}}/items",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Proposal ID",
+          "as": "proposal",
+          "description": {
+            "en": "Proposal hash ID",
+            "de": "Hash-ID des Angebots"
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:proposal"
+        },
+        {
+          "name": "Catalog item ID",
+          "as": "id",
+          "description": {
+            "en": "Service hash ID or product variation hash ID",
+            "de": "Service-Hash-ID oder Produktvarianten-Hash-ID"
+          },
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Item type",
+          "as": "type",
+          "description": {
+            "en": "Catalog item type",
+            "de": "Katalogpositionstyp"
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "options": [
+            "service",
+            "productVariation"
+          ]
+        },
+        {
+          "name": "Required",
+          "as": "required",
+          "description": {
+            "en": "Keep this item included for the client",
+            "de": "Diese Position für den Kunden verpflichtend halten"
+          },
+          "type": "bool",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Quantity",
+          "as": "quantity",
+          "description": {
+            "en": "Quantity, default 1",
+            "de": "Menge, Standard 1"
+          },
+          "type": "number",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Minimum term (days)",
+          "as": "minimumTermDays",
+          "description": {
+            "en": "Minimum term in days for recurring items, e.g. 365 = 12 months",
+            "de": "Mindestlaufzeit in Tagen für wiederkehrende Positionen, z. B. 365 = 12 Monate"
+          },
+          "type": "number",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Choice group",
+          "as": "choiceGroup",
+          "description": {
+            "en": "Items sharing this group are mutually exclusive alternatives; all need the same required setting and at least two items",
+            "de": "Positionen mit derselben Gruppe sind sich ausschließende Alternativen; alle brauchen dieselbe Pflicht-Einstellung und mindestens zwei Positionen"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Position",
+          "as": "position",
+          "description": {
+            "en": "Display position, starting at 0",
+            "de": "Anzeigeposition, beginnend bei 0"
+          },
+          "type": "number",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Price override (cents)",
+          "as": "price",
+          "description": {
+            "en": "Optional unit price override in cents",
+            "de": "Optionale Einzelpreis-Überschreibung in Cent"
+          },
+          "type": "number",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug. Defaults to the current team.",
+            "de": "Team-Slug. Standardmäßig das aktuelle Team."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "PROPOSAL": "out.data",
+    "PROPOSAL_ID": "out.data.id",
+    "PROPOSAL_TITLE": "out.data.title",
+    "STATUS": "out.data.status",
+    "SHARE_URL": "out.data.shareUrl"
+  },
+  "messages": {
+    "success": {
+      "en": "Item added to proposal: {{PROPOSAL_TITLE}}",
+      "de": "Position zum Angebot hinzugefügt: {{PROPOSAL_TITLE}}",
+      "es": "Elemento añadido: {{PROPOSAL_TITLE}}",
+      "fr": "Élément ajouté : {{PROPOSAL_TITLE}}",
+      "it": "Elemento aggiunto: {{PROPOSAL_TITLE}}",
+      "ro": "Element adăugat: {{PROPOSAL_TITLE}}"
+    }
+  }
+}

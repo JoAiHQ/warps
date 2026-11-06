@@ -1,0 +1,140 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Send Voice Message",
+  "title": {
+    "en": "Send voice message to contact",
+    "de": "Sprachnachricht an Kontakt senden",
+    "es": "Enviar mensaje de voz al contacto",
+    "fr": "Envoyer un message vocal au contact",
+    "ro": "Trimite un mesaj vocal contactului",
+    "it": "Invia un messaggio vocale al contatto"
+  },
+  "description": {
+    "en": "Synthesize a voice note in the agent's cloned voice and send it through personal WhatsApp. The message text is the script; only the voice note is delivered.",
+    "de": "Erzeugt eine Sprachnachricht in der geklonten Stimme des Agenten und sendet sie über persönliches WhatsApp. Der Nachrichtentext ist das Skript; es wird nur die Sprachnachricht gesendet.",
+    "es": "Genera una nota de voz con la voz clonada del agente y la envía por WhatsApp personal. El texto del mensaje es el guion; solo se envía la nota de voz.",
+    "fr": "Génère une note vocale avec la voix clonée de l’agent et l’envoie via WhatsApp personnel. Le texte du message est le script ; seule la note vocale est envoyée.",
+    "ro": "Generează o notă vocală cu vocea clonată a agentului și o trimite prin WhatsApp personal. Textul mesajului este scenariul; se trimite doar nota vocală.",
+    "it": "Genera una nota vocale con la voce clonata dell’agente e la invia tramite WhatsApp personale. Il testo del messaggio è il copione; viene inviata solo la nota vocale."
+  },
+  "bot": "Send a voice note in the agent's cloned voice. Provide recipientId and the message script; contactId is optional (needed for CRM logging when known). integration defaults to whatsapp-personal.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Send voice message",
+        "de": "Sprachnachricht senden",
+        "es": "Enviar mensaje de voz",
+        "fr": "Envoyer un message vocal",
+        "ro": "Trimite mesajul vocal",
+        "it": "Invia messaggio vocale"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/agents/{{JOAI_AGENT_UUID}}/voice/message",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Message",
+          "as": "message",
+          "description": {
+            "en": "The script to speak in the cloned voice",
+            "de": "Der Text, der in der geklonten Stimme gesprochen wird",
+            "es": "El texto que se leerá con la voz clonada",
+            "fr": "Le texte à lire avec la voix clonée",
+            "ro": "Textul care va fi rostit cu vocea clonată",
+            "it": "Il testo da pronunciare con la voce clonata"
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:message"
+        },
+        {
+          "name": "Contact",
+          "as": "contactId",
+          "description": {
+            "en": "Contact to message",
+            "de": "Kontakt für die Nachricht",
+            "es": "Contacto al que enviar el mensaje",
+            "fr": "Contact à qui envoyer le message",
+            "ro": "Contactul căruia îi trimiți mesajul",
+            "it": "Contatto a cui inviare il messaggio"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:contactId"
+        },
+        {
+          "name": "Recipient ID",
+          "as": "recipientId",
+          "description": {
+            "en": "Phone number or group JID to send to",
+            "de": "Telefonnummer oder Gruppen-JID für den Versand",
+            "es": "Número de teléfono o JID de grupo al que enviar",
+            "fr": "Numéro de téléphone ou JID de groupe auquel envoyer",
+            "ro": "Număr de telefon sau JID de grup către care trimiți",
+            "it": "Numero di telefono o JID di gruppo a cui inviare"
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:recipientId"
+        },
+        {
+          "name": "Integration",
+          "as": "integration",
+          "description": {
+            "en": "Channel to send on (whatsapp-personal)",
+            "de": "Kanal für den Versand (whatsapp-personal)",
+            "es": "Canal por el que enviar (whatsapp-personal)",
+            "fr": "Canal d’envoi (whatsapp-personal)",
+            "ro": "Canalul pe care trimiți (whatsapp-personal)",
+            "it": "Canale su cui inviare (whatsapp-personal)"
+          },
+          "type": "string",
+          "source": "hidden",
+          "required": false,
+          "default": "whatsapp-personal",
+          "position": "payload:integration"
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "type": "string",
+          "source": "hidden",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Voice message sent.",
+      "de": "Sprachnachricht gesendet.",
+      "es": "Mensaje de voz enviado.",
+      "fr": "Message vocal envoyé.",
+      "ro": "Mesaj vocal trimis.",
+      "it": "Messaggio vocale inviato."
+    },
+    "error": {
+      "en": "Failed to send voice message: {{MESSAGE}}",
+      "de": "Sprachnachricht konnte nicht gesendet werden: {{MESSAGE}}",
+      "es": "No se pudo enviar el mensaje de voz: {{MESSAGE}}",
+      "fr": "Échec de l’envoi du message vocal : {{MESSAGE}}",
+      "ro": "Trimiterea mesajului vocal a eșuat: {{MESSAGE}}",
+      "it": "Invio del messaggio vocale non riuscito: {{MESSAGE}}"
+    }
+  }
+}
