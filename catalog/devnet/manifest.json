@@ -4,8 +4,8 @@
   "repo": "JoAiHQ/warps",
   "branch": "dev",
   "network": "devnet",
-  "commitSha": "27a7a0b40266a7f6a824c66aedd6749ddc99ff8b",
-  "generatedAt": "2026-11-10T18:04:42.796Z",
+  "commitSha": "b9b879a13faad4308c2df0790a6a6425c4d2434e",
+  "generatedAt": "2026-11-10T21:56:53.197Z",
   "warps": [
     {
       "key": "arbitrum:omniset-deposit-arbitrum",
@@ -100093,8 +100093,8 @@
       "identifier": "@joai-product-create",
       "alias": "joai-product-create",
       "chain": "none",
-      "hash": "1bf37192476822360da39c60f1d315a20c6dd407d8828e2ee29d66b9e6d1041d",
-      "checksum": "1bf37192476822360da39c60f1d315a20c6dd407d8828e2ee29d66b9e6d1041d",
+      "hash": "cc7cb10c713c541602ce5a9a4bbbddf7443ea15036f0dc1b1076b412eb8599cd",
+      "checksum": "cc7cb10c713c541602ce5a9a4bbbddf7443ea15036f0dc1b1076b412eb8599cd",
       "name": "JoAi: Create Product",
       "title": {
         "en": "Create a product",
@@ -100146,7 +100146,7 @@
           "en": "Create a shop product for a team with a base price in cents and an optional stock level for its default variation. For tiered pricing, add variations with their own SKU, price, and stock. Use it when launching a product catalog or adding a new item to a shop.",
           "de": "Erstelle ein Shop-Produkt für ein Team mit Basispreis in Cent und optionalem Lagerbestand für die Standardvariante. Für Staffelpreise füge Varianten mit eigener SKU, Preis und Bestand hinzu. Nutze dies, um einen Produktkatalog aufzubauen oder einen neuen Artikel in den Shop aufzunehmen."
         },
-        "bot": "Use when the user wants to create a new product, material, or billable item with multiple variations/pricing tiers. Extract name, price, and variation names/SKUs/prices from their description. For example: '10 pieces at €4, 50 pieces at €3' becomes variations with different SKUs. For food or reduced VAT, pass taxClassId from tax-class-list. For nutrition/ingredients/specs, pass meta.details as a sections array (kind kv or text). Pass settings.configurator to add an optional customer input form on the product page.",
+        "bot": "Use when the user wants to create a new product, material, or billable item with multiple variations/pricing tiers. Extract name, price, and variation names/SKUs/prices from their description. For example: '10 pieces at €4, 50 pieces at €3' becomes variations with different SKUs. For food or reduced VAT, pass taxClassId from tax-class-list. For nutrition/ingredients/specs, pass meta.details as a sections array (kind kv or text). Pass settings.configurator to add an optional customer input form on the product page. Set perishable to true for food that spoils quickly so statutory withdrawal is excluded.",
         "vars": {
           "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
           "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
@@ -100259,6 +100259,18 @@
                 },
                 "type": "bool",
                 "source": "field",
+                "required": false
+              },
+              {
+                "name": "Perishable",
+                "as": "perishable",
+                "description": {
+                  "en": "Whether this is quickly perishable food. Perishable items are excluded from statutory withdrawal.",
+                  "de": "Ob es sich um schnell verderbliche Lebensmittel handelt. Für diese Artikel besteht kein gesetzliches Widerrufsrecht."
+                },
+                "type": "bool",
+                "source": "field",
+                "position": "payload:meta.perishable",
                 "required": false
               },
               {
@@ -100805,8 +100817,8 @@
       "identifier": "@joai-product-update",
       "alias": "joai-product-update",
       "chain": "none",
-      "hash": "63a3a00eb2147505a61c2cbbb46a693a21fcd69983ce5aceed9e140e59fe7da2",
-      "checksum": "63a3a00eb2147505a61c2cbbb46a693a21fcd69983ce5aceed9e140e59fe7da2",
+      "hash": "20e4fe9bf314fa5f400978a70c3d164e95530b8ce3d294f97af938d2bd0f5068",
+      "checksum": "20e4fe9bf314fa5f400978a70c3d164e95530b8ce3d294f97af938d2bd0f5068",
       "name": "JoAi: Update Product",
       "title": {
         "en": "Update a product",
@@ -100874,7 +100886,7 @@
           "it": "Aggiorna un prodotto del negozio — nome, unità, tag, descrizione, dettagli strutturati, configuratore, stato attivo o visibilità. Vengono modificati solo i campi forniti.",
           "ro": "Actualizează un produs din magazin — nume, unitate, taguri, descriere, detalii structurate, configurator, stare activă sau vizibilitate. Se schimbă doar câmpurile furnizate."
         },
-        "bot": "Use when the user wants to change an existing product. Pass the product slug from list_products as product_id. PUT goes to /v1/products/{slug} — never the collection URL. Only include fields that change. Pass tags as [] to clear tags. Do not send price (price is on variations). To change VAT, pass taxClassId from tax-class-list. For nutrition/ingredients/specs, pass meta.details as a sections array (kind kv or text). To change the optional customer input form on the product page, pass settings.configurator.",
+        "bot": "Use when the user wants to change an existing product. Pass the product slug from list_products as product_id. PUT goes to /v1/products/{slug} — never the collection URL. Only include fields that change. Pass tags as [] to clear tags. Do not send price (price is on variations). To change VAT, pass taxClassId from tax-class-list. For nutrition/ingredients/specs, pass meta.details as a sections array (kind kv or text). To change the optional customer input form on the product page, pass settings.configurator. Set perishable to true for food that spoils quickly so statutory withdrawal is excluded.",
         "vars": {
           "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
           "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
@@ -101038,6 +101050,18 @@
                 },
                 "type": "bool",
                 "source": "field",
+                "required": false
+              },
+              {
+                "name": "Perishable",
+                "as": "perishable",
+                "description": {
+                  "en": "Whether this is quickly perishable food. Perishable items are excluded from statutory withdrawal.",
+                  "de": "Ob es sich um schnell verderbliche Lebensmittel handelt. Für diese Artikel besteht kein gesetzliches Widerrufsrecht."
+                },
+                "type": "bool",
+                "source": "field",
+                "position": "payload:meta.perishable",
                 "required": false
               },
               {
