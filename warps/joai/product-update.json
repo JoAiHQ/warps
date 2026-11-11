@@ -17,7 +17,7 @@
     "it": "Aggiorna un prodotto del negozio — nome, unità, tag, descrizione, dettagli strutturati, configuratore, stato attivo o visibilità. Vengono modificati solo i campi forniti.",
     "ro": "Actualizează un produs din magazin — nume, unitate, taguri, descriere, detalii structurate, configurator, stare activă sau vizibilitate. Se schimbă doar câmpurile furnizate."
   },
-  "bot": "Use when the user wants to change an existing product. Pass the product slug from list_products as product_id. PUT goes to /v1/products/{slug} — never the collection URL. Only include fields that change. Pass tags as [] to clear tags. Do not send price (price is on variations). To change VAT, pass taxClassId from tax-class-list. For nutrition/ingredients/specs, pass meta.details as a sections array (kind kv or text). To change the optional customer input form on the product page, pass settings.configurator.",
+  "bot": "Use when the user wants to change an existing product. Pass the product slug from list_products as product_id. PUT goes to /v1/products/{slug} — never the collection URL. Only include fields that change. Pass tags as [] to clear tags. Do not send price (price is on variations). To change VAT, pass taxClassId from tax-class-list. For nutrition/ingredients/specs, pass meta.details as a sections array (kind kv or text). To change the optional customer input form on the product page, pass settings.configurator. Set perishable to true for food that spoils quickly so statutory withdrawal is excluded.",
   "vars": {
     "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
     "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
@@ -181,6 +181,18 @@
           },
           "type": "bool",
           "source": "field",
+          "required": false
+        },
+        {
+          "name": "Perishable",
+          "as": "perishable",
+          "description": {
+            "en": "Whether this is quickly perishable food. Perishable items are excluded from statutory withdrawal.",
+            "de": "Ob es sich um schnell verderbliche Lebensmittel handelt. Für diese Artikel besteht kein gesetzliches Widerrufsrecht."
+          },
+          "type": "bool",
+          "source": "field",
+          "position": "payload:meta.perishable",
           "required": false
         },
         {
