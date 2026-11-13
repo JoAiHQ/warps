@@ -7,7 +7,6 @@ import { useTranslations } from '../../../ui/lib/hooks'
 import { EmptyMessageSkeleton } from '../../../ui/lib/skeletons'
 import { translations } from '../i18n'
 import { BookingRules } from './BookingRules'
-import { BookingThemePicker } from './BookingThemePicker'
 import { OfficeHours } from './OfficeHours'
 import { AppointmentConfigureData, AppointmentPolicy } from './warp.types'
 
@@ -23,7 +22,6 @@ function emptyPolicy(): AppointmentPolicy {
     conferenceEnabled: true,
     serviceSelectionEnabled: true,
     paymentEnabled: false,
-    bookingTheme: 'classic',
   }
 }
 
@@ -69,7 +67,6 @@ function Main() {
         conferenceEnabled: policy.conferenceEnabled ?? true,
         serviceSelectionEnabled: policy.serviceSelectionEnabled ?? true,
         paymentEnabled: policy.paymentEnabled ?? false,
-        bookingTheme: policy.bookingTheme ?? 'classic',
       })
       setSaved(true)
     } finally {
@@ -93,11 +90,6 @@ function Main() {
       />
 
       <BookingRules policy={policy} onChange={updatePolicy} />
-
-      <BookingThemePicker
-        value={policy.bookingTheme}
-        onChange={(bookingTheme) => updatePolicy({ bookingTheme })}
-      />
 
       <Button color="primary" block onClick={handleSave} disabled={saving}>
         {saved ? (
