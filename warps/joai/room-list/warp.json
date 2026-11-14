@@ -10,17 +10,18 @@
     "ro": "List rooms"
   },
   "description": {
-    "en": "View all rooms for your agent, including their integration type.",
-    "de": "Zeige alle Räume deines Agenten inklusive Integrationstyp an.",
-    "es": "View all rooms for your agent, including their integration type.",
-    "fr": "View all rooms for your agent, including their integration type.",
-    "it": "View all rooms for your agent, including their integration type.",
-    "ro": "View all rooms for your agent, including their integration type."
+    "en": "View all rooms in a team, including their integration type.",
+    "de": "Zeige alle Räume eines Teams inklusive Integrationstyp an.",
+    "es": "View all rooms in a team, including their integration type.",
+    "fr": "View all rooms in a team, including their integration type.",
+    "it": "View all rooms in a team, including their integration type.",
+    "ro": "View all rooms in a team, including their integration type."
   },
-  "bot": "Use this when the user wants to see, list, or check the rooms or channels of an agent.",
+  "bot": "Use this when the user wants to see, list, or check the rooms or channels of a team. Defaults to the current team; pass a team slug to list another team.",
   "vars": {
     "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
-    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
   },
   "actions": [
     {
@@ -35,77 +36,30 @@
         "ro": "List rooms"
       },
       "destination": {
-        "url": "INJECT:API_BASE/v1/agents/{{JOAI_AGENT_UUID}}/rooms?sort={{sort}}&direction={{direction}}&limit={{limit}}&search={{search}}",
+        "url": "INJECT:API_BASE/v1/rooms?team={{team}}",
         "method": "GET",
         "headers": {
-          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
         }
       },
       "inputs": [
         {
-          "name": "Sort",
-          "as": "sort",
+          "name": "Team",
+          "as": "team",
           "type": "string",
-          "position": "query",
+          "source": "field",
           "required": false,
-          "default": "lastActivity",
-          "options": ["lastActivity", "created"],
+          "default": "{{JOAI_TEAM_SLUG}}",
           "description": {
-            "en": "Sort rooms by lastActivity or created (default lastActivity)",
-            "de": "Räume nach lastActivity oder created sortieren (Standard lastActivity)",
-            "es": "Ordena las salas por lastActivity o created (lastActivity por defecto)",
-            "fr": "Trier les salons par lastActivity ou created (lastActivity par défaut)",
-            "it": "Ordina le stanze per lastActivity o created (lastActivity predefinito)",
-            "ro": "Sortează camerele după lastActivity sau created (implicit lastActivity)"
+            "en": "Team slug for this action. Defaults to the current team.",
+            "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team.",
+            "es": "Team slug for this action. Defaults to the current team.",
+            "fr": "Team slug for this action. Defaults to the current team.",
+            "it": "Team slug for this action. Defaults to the current team.",
+            "ro": "Team slug for this action. Defaults to the current team."
           },
-          "bot": "Use lastActivity with direction desc to find recent chats."
-        },
-        {
-          "name": "Direction",
-          "as": "direction",
-          "type": "string",
-          "position": "query",
-          "required": false,
-          "default": "desc",
-          "options": ["asc", "desc"],
-          "description": {
-            "en": "Sort direction: asc or desc (default desc)",
-            "de": "Sortierrichtung: asc oder desc (Standard desc)",
-            "es": "Dirección de orden: asc o desc (desc por defecto)",
-            "fr": "Sens de tri : asc ou desc (desc par défaut)",
-            "it": "Direzione di ordinamento: asc o desc (desc predefinito)",
-            "ro": "Direcția de sortare: asc sau desc (implicit desc)"
-          }
-        },
-        {
-          "name": "Limit",
-          "as": "limit",
-          "type": "number",
-          "position": "query",
-          "required": false,
-          "description": {
-            "en": "Maximum number of rooms to return",
-            "de": "Maximale Anzahl zurückgegebener Räume",
-            "es": "Número máximo de salas a devolver",
-            "fr": "Nombre maximal de salons à renvoyer",
-            "it": "Numero massimo di stanze da restituire",
-            "ro": "Numărul maxim de camere returnate"
-          }
-        },
-        {
-          "name": "Search",
-          "as": "search",
-          "type": "string",
-          "position": "query",
-          "required": false,
-          "description": {
-            "en": "Search rooms by name",
-            "de": "Räume nach Namen durchsuchen",
-            "es": "Busca salas por nombre",
-            "fr": "Rechercher des salons par nom",
-            "it": "Cerca stanze per nome",
-            "ro": "Caută camere după nume"
-          }
+          "bot": "The slug of the team to list rooms for. Omit to use the current team."
         }
       ]
     }
