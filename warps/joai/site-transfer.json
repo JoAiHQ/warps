@@ -1,0 +1,116 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Transfer Site",
+  "title": {
+    "en": "Transfer site",
+    "de": "Website übertragen",
+    "fr": "Transférer un site",
+    "es": "Transferir sitio",
+    "it": "Trasferisci sito",
+    "ro": "Transferă site-ul"
+  },
+  "description": {
+    "en": "Move a site to another team you manage. The custom domain is re-verified under the new team; contacts are remapped by email to the target team or detached when no match exists.",
+    "de": "Verschiebt eine Website in ein anderes Team, das du verwaltest. Die eigene Domain wird im neuen Team erneut verifiziert; Kontakte werden per E-Mail dem Zielteam zugeordnet oder entfernt, wenn es keine Übereinstimmung gibt.",
+    "fr": "Déplace un site vers une autre équipe que vous gérez. Le domaine personnalisé est vérifié à nouveau dans la nouvelle équipe ; les contacts sont rattachés par e-mail à l'équipe cible ou détachés sans correspondance.",
+    "es": "Mueve un sitio a otro equipo que gestionas. El dominio personalizado se vuelve a verificar en el nuevo equipo; los contactos se reasignan por correo al equipo de destino o se desvinculan si no hay coincidencia.",
+    "it": "Sposta un sito in un altro team che gestisci. Il dominio personalizzato viene verificato di nuovo nel nuovo team; i contatti vengono ricollegati per email al team di destinazione o scollegati se non c'è corrispondenza.",
+    "ro": "Mută un site într-o altă echipă pe care o administrezi. Domeniul personalizat este reverificat în noua echipă; contactele sunt remapate după e-mail în echipa țintă sau detașate dacă nu există o potrivire."
+  },
+  "bot": "Use when the user wants to move a site to another team. Pass the site hashid from list_sites, the source team slug, and the target team slug. The user needs site-manage permission on both teams. Existing custom domain verification is reset and re-run under the target team. The linked contact is remapped by email when the target team has a match, otherwise detached. If the brand slug or site slug already exists on the target team, the transfer fails; resolve the conflict first.",
+  "vars": {
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Transfer site",
+        "de": "Website übertragen",
+        "fr": "Transférer le site",
+        "es": "Transferir el sitio",
+        "it": "Trasferisci il sito",
+        "ro": "Transferă site-ul"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/sites/{{siteId}}/transfer",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Site ID",
+          "as": "siteId",
+          "description": {
+            "en": "The site hashid from list_sites",
+            "de": "Die Website-Hashid aus list_sites",
+            "fr": "Le hashid du site depuis list_sites",
+            "es": "El hashid del sitio desde list_sites",
+            "it": "L'hashid del sito da list_sites",
+            "ro": "Hashid-ul site-ului din list_sites"
+          },
+          "type": "string",
+          "position": "url:siteId",
+          "source": "field",
+          "required": true,
+          "min": 1
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug of the site. Defaults to the current team.",
+            "de": "Team-Slug der Website. Standardmäßig das aktuelle Team.",
+            "fr": "Slug d'équipe du site. Par défaut l'équipe actuelle.",
+            "es": "Slug del equipo del sitio. Por defecto el equipo actual.",
+            "it": "Slug del team del sito. Predefinito: team attuale.",
+            "ro": "Slug-ul echipei site-ului. Implicit echipa curentă."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        },
+        {
+          "name": "Target team",
+          "as": "targetTeam",
+          "description": {
+            "en": "Slug of the team that should own the site.",
+            "de": "Slug des Teams, das die Website künftig besitzen soll.",
+            "fr": "Slug de l'équipe qui doit posséder le site.",
+            "es": "Slug del equipo que debe ser propietario del sitio.",
+            "it": "Slug del team che deve possedere il sito.",
+            "ro": "Slug-ul echipei care va deține site-ul."
+          },
+          "type": "string",
+          "position": "payload:team",
+          "source": "field",
+          "required": true,
+          "min": 1
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Site transferred.",
+      "de": "Website übertragen.",
+      "fr": "Site transféré.",
+      "es": "Sitio transferido.",
+      "it": "Sito trasferito.",
+      "ro": "Site transferat."
+    },
+    "error": {
+      "en": "Failed to transfer site: {{MESSAGE}}",
+      "de": "Website konnte nicht übertragen werden: {{MESSAGE}}",
+      "fr": "Impossible de transférer le site : {{MESSAGE}}",
+      "es": "No se pudo transferir el sitio: {{MESSAGE}}",
+      "it": "Impossibile trasferire il sito: {{MESSAGE}}",
+      "ro": "Site-ul nu a putut fi transferat: {{MESSAGE}}"
+    }
+  }
+}

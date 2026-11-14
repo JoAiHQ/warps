@@ -1,23 +1,26 @@
 {
   "protocol": "warp:3.0.0",
-  "name": "OpenCode: Launch Task",
+  "name": "OpenCode (CLI): Launch Task",
   "title": {
-    "en": "Launch task",
-    "es": "Iniciar tarea",
-    "fr": "Lancer la tâche",
-    "ro": "Lansați sarcina",
-    "it": "Avvia attività"
+    "en": "Launch task (OpenCode)",
+    "es": "Iniciar tarea (OpenCode)",
+    "fr": "Lancer la tâche (OpenCode)",
+    "ro": "Lansați sarcina (OpenCode)",
+    "it": "Avvia attività (OpenCode)"
   },
   "description": {
-    "en": "Create a new OpenCode session for task execution.",
-    "es": "Create a new OpenCode session for task execution.",
-    "fr": "Create a new OpenCode session for task execution.",
-    "ro": "Create a new OpenCode session for task execution.",
-    "it": "Create a new OpenCode session for task execution."
+    "en": "Launch a task through the local OpenCode CLI on the repository's existing dev branch and report the result.",
+    "es": "Inicie una tarea a través de la CLI local de OpenCode en la rama dev existente del repositorio e informe el resultado.",
+    "fr": "Lancez une tâche via la CLI OpenCode locale sur la branche dev existante du dépôt et signalez le résultat.",
+    "ro": "Lansați o sarcină prin CLI-ul local OpenCode pe branch-ul dev existent al depozitului și raportați rezultatul.",
+    "it": "Avvia un'attività tramite la CLI OpenCode locale sul branch dev esistente del repository, esegui i controlli del repository e segnala il risultato."
+  },
+  "cli": {
+    "mode": "session"
   },
   "actions": [
     {
-      "type": "collect",
+      "type": "prompt",
       "label": {
         "en": "Launch Task",
         "es": "Iniciar tarea",
@@ -25,53 +28,112 @@
         "ro": "Lansați Sarcina",
         "it": "Avvia attività"
       },
-      "destination": {
-        "url": "INJECT:API_BASE/session",
-        "method": "POST",
-        "headers": {
-          "Content-Type": "application/json"
-        }
+      "cli": {
+        "mode": "session"
       },
+      "prompt": "/bash -ls <<'JOAI_SCRIPT'\nset -u\nCODE_ROOT=\"${JOAI_CODE_ROOT:-$HOME/Code}\"\ncase \"$CODE_ROOT\" in\n  \"~\") CODE_ROOT=\"$HOME\" ;;\n  \"~/\"*) CODE_ROOT=\"$HOME/${CODE_ROOT#\"~/\"}\" ;;\nesac\nREPO_NAME=$(cat <<'JOAI_REPO'\n{{REPO}}\nJOAI_REPO\n)\ncase \"$REPO_NAME\" in\n  ''|.|..|*/*|*[!A-Za-z0-9._-]*) echo \"OpenCode: invalid repository name: $REPO_NAME\" >&2; exit 2 ;;\nesac\nREPO_DIR=\"$CODE_ROOT/$REPO_NAME\"\n[ -d \"$REPO_DIR\" ] || { echo \"OpenCode: repository not found: $REPO_DIR\" >&2; exit 2; }\ncd \"$REPO_DIR\" || exit 2\ngit rev-parse --verify --quiet refs/heads/dev >/dev/null || { echo \"OpenCode: branch 'dev' not found in $REPO_DIR\" >&2; exit 2; }\n\nLOCK_DIR=\"${TMPDIR:-/tmp}/joai-opencode-${REPO_NAME}.lock\"\nif ! mkdir \"$LOCK_DIR\" 2>/dev/null; then\n  LOCK_PID=$(cat \"$LOCK_DIR/pid\" 2>/dev/null || true)\n  if [ -n \"$LOCK_PID\" ] && kill -0 \"$LOCK_PID\" 2>/dev/null; then\n    echo \"OpenCode: another run is active for $REPO_NAME\" >&2\n    exit 3\n  fi\n  rm -rf \"$LOCK_DIR\"\n  mkdir \"$LOCK_DIR\" 2>/dev/null || { echo \"OpenCode: could not acquire repository lock\" >&2; exit 3; }\nfi\necho $$ > \"$LOCK_DIR/pid\"\ntrap 'rm -rf \"$LOCK_DIR\"' EXIT INT TERM\n\nORIGINAL_BRANCH=$(git rev-parse --abbrev-ref HEAD)\nHEAD_BEFORE=$(git rev-parse HEAD)\ngit switch dev >/dev/null 2>&1 || git checkout dev >/dev/null 2>&1 || { echo \"OpenCode: could not switch to branch 'dev' in $REPO_DIR\" >&2; exit 2; }\nexport PATH=\"$HOME/.opencode/bin:$HOME/.local/bin:$PATH\"\n\nTASK_TEXT=$(cat <<'JOAI_TASK_9F2A'\n{{TASK}}\nJOAI_TASK_9F2A\n)\nCALLBACK_URL=$(cat <<'JOAI_CALLBACK_URL'\n{{CALLBACK_URL}}\nJOAI_CALLBACK_URL\n)\nCALLBACK_TOKEN=$(cat <<'JOAI_CALLBACK_TOKEN'\n{{CALLBACK_TOKEN}}\nJOAI_CALLBACK_TOKEN\n)\nRUN_ID_VALUE=$(cat <<'JOAI_RUN_ID'\n{{RUN_ID}}\nJOAI_RUN_ID\n)\n\nOPENCODE_STATUS=0\nopencode run --auto \"$TASK_TEXT\" || OPENCODE_STATUS=$?\n\nCHANGED_FILES=$(git status --short)\nDIFF_STAT=$(git diff --stat)\nBRANCH_AFTER=$(git rev-parse --abbrev-ref HEAD)\nHEAD_AFTER=$(git rev-parse HEAD)\nif [ \"$BRANCH_AFTER\" != \"dev\" ] || [ \"$HEAD_BEFORE\" != \"$HEAD_AFTER\" ]; then\n  echo \"OpenCode: unexpected commit or branch change (expected branch 'dev', no commits).\" >&2\n  OPENCODE_STATUS=1\n  if [ \"$BRANCH_AFTER\" = \"dev\" ] && [ \"$HEAD_BEFORE\" != \"$HEAD_AFTER\" ]; then\n    git reset --mixed \"$HEAD_BEFORE\" >/dev/null 2>&1 || true\n  fi\nfi\n\nif [ \"$(git rev-parse --abbrev-ref HEAD)\" != \"$ORIGINAL_BRANCH\" ]; then\n  git switch \"$ORIGINAL_BRANCH\" >/dev/null 2>&1 || echo \"OpenCode: could not restore branch $ORIGINAL_BRANCH\" >&2\nfi\n\nif [ \"$OPENCODE_STATUS\" -ne 0 ]; then RUN_STATUS=failed; else RUN_STATUS=completed; fi\nSUMMARY=\"OpenCode run on $REPO_NAME (branch dev)\nStatus: $RUN_STATUS\nOpenCode exit: $OPENCODE_STATUS\nChanged files:\n${CHANGED_FILES:-none}\nDiff stat:\n${DIFF_STAT:-none}\"\n\nPAYLOAD=\"\"\nif [ -n \"$CALLBACK_URL\" ] && [ -n \"$CALLBACK_TOKEN\" ] && command -v curl >/dev/null 2>&1; then\n  if command -v jq >/dev/null 2>&1; then\n    PAYLOAD=$(jq -n --arg itemId \"$RUN_ID_VALUE\" --arg runStatus \"$RUN_STATUS\" --arg summary \"$SUMMARY\" --arg provider \"opencode\" '{itemId:$itemId,runStatus:$runStatus,summary:$summary,provider:$provider}')\n  elif command -v python3 >/dev/null 2>&1; then\n    PAYLOAD=$(python3 -c 'import json,sys; print(json.dumps({\"itemId\":sys.argv[1],\"runStatus\":sys.argv[2],\"summary\":sys.argv[3],\"provider\":\"opencode\"}))' \"$RUN_ID_VALUE\" \"$RUN_STATUS\" \"$SUMMARY\")\n  fi\n  if [ -n \"$PAYLOAD\" ]; then\n    curl -sS -X POST \"$CALLBACK_URL\" -H \"Authorization: Bearer $CALLBACK_TOKEN\" -H \"Content-Type: application/json\" -H \"X-JoAi-Request-Id: opencode-$(date +%s)-$$\" --connect-timeout 5 --max-time 30 --data \"$PAYLOAD\" >/dev/null || true\n  fi\nfi\nprintf '%s\\n' \"$SUMMARY\"\n[ \"$RUN_STATUS\" = \"completed\" ]\nJOAI_SCRIPT",
       "inputs": [
+        {
+          "name": "Run ID",
+          "as": "RUN_ID",
+          "description": {
+            "en": "Tracking run ID used by JoAi orchestration.",
+            "es": "ID de ejecución de seguimiento utilizado por la orquestación de JoAi.",
+            "fr": "ID d'exécution de suivi utilisé par l'orchestration JoAi.",
+            "ro": "ID-ul rulării de urmărire utilizat de orchestrația JoAi.",
+            "it": "ID esecuzione di monitoraggio utilizzato dall'orchestrazione JoAi."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
         {
           "name": "Task",
           "as": "TASK",
           "description": {
-            "en": "Initial task title for the session.",
-            "es": "Initial task title for the session.",
-            "fr": "Initial task title for the session.",
-            "ro": "Initial task title for the session.",
-            "it": "Initial task title for the session."
+            "en": "Full task instruction to execute with OpenCode CLI.",
+            "es": "Instrucción de tarea completa para ejecutar con OpenCode CLI.",
+            "fr": "Instruction de tâche complète à exécuter avec OpenCode CLI.",
+            "ro": "Instrucțiunea completă a sarcinii de executat cu OpenCode CLI.",
+            "it": "Istruzione completa dell'attività da eseguire con la CLI OpenCode."
           },
           "type": "string",
           "source": "field",
           "required": true,
-          "position": "payload:title",
           "label": {
             "en": "Task",
-            "de": "Task",
-            "es": "Task",
-            "fr": "Task",
-            "ro": "Task",
-            "it": "Task"
+            "es": "Tarea",
+            "fr": "Tâche",
+            "ro": "Sarcina",
+            "it": "Attività"
           }
+        },
+        {
+          "name": "Repository",
+          "as": "REPO",
+          "description": {
+            "en": "Repository directory name under the local code root (for example joai--api).",
+            "es": "Nombre del directorio del repositorio bajo la raíz de código local (por ejemplo joai--api).",
+            "fr": "Nom du répertoire du dépôt sous la racine de code locale (par exemple joai--api).",
+            "ro": "Numele directorului depozitului sub rădăcina de cod locală (de exemplu joai--api).",
+            "it": "Nome della directory del repository sotto la root del codice locale (ad esempio joai--api)."
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "label": {
+            "en": "Repository",
+            "es": "Repositorio",
+            "fr": "Dépôt",
+            "ro": "Depozit",
+            "it": "Repository"
+          }
+        },
+        {
+          "name": "Callback URL",
+          "as": "CALLBACK_URL",
+          "description": {
+            "en": "Item execution callback URL used to report the run result.",
+            "es": "URL de callback de ejecución del elemento utilizado para informar el resultado.",
+            "fr": "URL de callback d'exécution de l'élément utilisée pour signaler le résultat.",
+            "ro": "URL-ul de callback pentru execuția elementului folosit pentru raportarea rezultatului.",
+            "it": "URL del callback di esecuzione dell'elemento usato per segnalare il risultato."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": ""
+        },
+        {
+          "name": "Callback Token",
+          "as": "CALLBACK_TOKEN",
+          "description": {
+            "en": "Bearer token for the item execution callback.",
+            "es": "Token Bearer para la callback de ejecución del elemento.",
+            "fr": "Jeton Bearer pour le callback d'exécution de l'élément.",
+            "ro": "Token Bearer pentru callback-ul de execuție al elementului.",
+            "it": "Token Bearer per il callback di esecuzione dell'elemento."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": ""
         }
       ]
     }
   ],
   "output": {
-    "RUN_ID": "out.id",
-    "RUN_STATUS": "transform:() => out.status || 'created'",
-    "RUN_URL": "transform:() => out.id ? `opencode://session/${out.id}` : null",
-    "SUMMARY": "transform:() => out.title || 'Session created'"
+    "RUN_ID": "in.RUN_ID",
+    "RUN_STATUS": "transform:() => 'submitted'",
+    "SUMMARY": "transform:() => 'Task submitted to OpenCode CLI.'"
   },
   "messages": {
     "success": {
-      "en": "OpenCode session {{RUN_ID}} created ({{RUN_STATUS}}).",
-      "es": "OpenCode session {{RUN_ID}} created ({{RUN_STATUS}}).",
-      "fr": "OpenCode session {{RUN_ID}} created ({{RUN_STATUS}}).",
-      "ro": "OpenCode session {{RUN_ID}} created ({{RUN_STATUS}}).",
-      "it": "OpenCode session {{RUN_ID}} created ({{RUN_STATUS}})."
+      "en": "OpenCode task submitted.",
+      "es": "Tarea de OpenCode enviada.",
+      "fr": "Tâche OpenCode soumise.",
+      "ro": "Sarcina OpenCode a fost trimisă.",
+      "it": "Attività OpenCode inviata."
     }
   }
 }

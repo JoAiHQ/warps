@@ -2,6 +2,7 @@
 
 export type JoAiGetRoomMessagesInputs = {
   room: string;
+  page: number;
   limit: number;
   team: string;
 };

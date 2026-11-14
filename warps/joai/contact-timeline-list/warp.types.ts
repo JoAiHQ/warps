@@ -2,6 +2,7 @@
 
 export type JoAiListContactTimelineInputs = {
   contactId: string;
+  page: number;
   team: string;
 };
 
