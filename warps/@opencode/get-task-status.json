@@ -1,23 +1,26 @@
 {
   "protocol": "warp:3.0.0",
-  "name": "OpenCode: Get Task Status",
+  "name": "OpenCode (CLI): Get Task Status",
   "title": {
-    "en": "Get task status",
-    "es": "Obtener el estado de la tarea",
-    "fr": "Obtenir le statut de la tâche",
-    "ro": "Obțineți starea sarcinii",
-    "it": "Ottieni lo stato dell'attività"
+    "en": "Get task status (OpenCode)",
+    "es": "Obtener estado de la tarea (OpenCode)",
+    "fr": "Obtenir le statut de la tâche (OpenCode)",
+    "ro": "Obține starea sarcinii (OpenCode)",
+    "it": "Ottieni lo stato dell'attività (OpenCode)"
   },
   "description": {
-    "en": "Get current status of an OpenCode session.",
-    "es": "Get current status of an OpenCode session.",
-    "fr": "Get current status of an OpenCode session.",
-    "ro": "Get current status of an OpenCode session.",
-    "it": "Get current status of an OpenCode session."
+    "en": "Check task status by asking the local OpenCode CLI for a one-line status update.",
+    "es": "Verifique el estado de la tarea solicitando a la CLI local de OpenCode una actualización de estado de una línea.",
+    "fr": "Vérifiez l'état de la tâche en demandant à la CLI OpenCode locale une mise à jour du statut sur une ligne.",
+    "ro": "Verificați starea sarcinii solicitând CLI-ului local OpenCode o actualizare de stare pe o singură linie.",
+    "it": "Controlla lo stato dell'attività chiedendo alla CLI OpenCode locale un aggiornamento dello stato su una riga."
+  },
+  "cli": {
+    "mode": "session"
   },
   "actions": [
     {
-      "type": "collect",
+      "type": "prompt",
       "label": {
         "en": "Get Status",
         "es": "Obtener estado",
@@ -25,26 +28,22 @@
         "ro": "Obține stare",
         "it": "Ottieni lo stato"
       },
-      "destination": {
-        "url": "INJECT:API_BASE/session/{{RUN_ID}}",
-        "method": "GET",
-        "headers": {
-          "Content-Type": "application/json"
-        }
+      "cli": {
+        "mode": "session"
       },
+      "prompt": "/opencode run \"For run ID {{RUN_ID}}, summarize current status in one line using one of: running, blocked, completed.\"",
       "inputs": [
         {
           "name": "Run ID",
           "as": "RUN_ID",
           "description": {
-            "en": "OpenCode session ID.",
-            "es": "OpenCode session ID.",
-            "fr": "OpenCode session ID.",
-            "ro": "OpenCode session ID.",
-            "it": "OpenCode session ID."
+            "en": "Run identifier returned by launch-task.",
+            "es": "Identificador de ejecución devuelto por launch-task.",
+            "fr": "Identifiant d'exécution renvoyé par launch-task.",
+            "ro": "Identificatorul de rulare returnat de launch-task.",
+            "it": "Identificatore di esecuzione restituito da launch-task."
           },
           "type": "string",
-          "position": "path:RUN_ID",
           "source": "field",
           "required": true
         }
@@ -52,18 +51,17 @@
     }
   ],
   "output": {
-    "RUN_ID": "out.id",
-    "RUN_STATUS": "transform:() => out.status || 'unknown'",
-    "RUN_URL": "transform:() => out.id ? `opencode://session/${out.id}` : null",
-    "SUMMARY": "transform:() => out.title || 'Session loaded'"
+    "RUN_ID": "in.RUN_ID",
+    "RUN_STATUS": "transform:() => 'status_requested'",
+    "SUMMARY": "transform:() => 'Status requested from OpenCode CLI.'"
   },
   "messages": {
     "success": {
-      "en": "OpenCode session {{RUN_ID}} is {{RUN_STATUS}}.",
-      "es": "OpenCode session {{RUN_ID}} is {{RUN_STATUS}}.",
-      "fr": "OpenCode session {{RUN_ID}} is {{RUN_STATUS}}.",
-      "ro": "OpenCode session {{RUN_ID}} is {{RUN_STATUS}}.",
-      "it": "OpenCode session {{RUN_ID}} is {{RUN_STATUS}}."
+      "en": "OpenCode status requested for {{RUN_ID}}.",
+      "es": "Estado de OpenCode solicitado para {{RUN_ID}}.",
+      "fr": "Statut OpenCode demandé pour {{RUN_ID}}.",
+      "ro": "Starea OpenCode a fost solicitată pentru {{RUN_ID}}.",
+      "it": "Stato OpenCode richiesto per {{RUN_ID}}."
     }
   }
 }

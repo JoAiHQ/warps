@@ -1,106 +1,81 @@
 {
   "protocol": "warp:3.0.0",
-  "name": "OpenCode: Add Followup",
+  "name": "OpenCode (CLI): Add Follow-up",
   "title": {
-    "en": "Add followup",
-    "es": "Agregar seguimiento",
-    "fr": "Ajouter un suivi",
-    "ro": "Adăugați continuarea",
-    "it": "Aggiungi il follow-up"
+    "en": "Add follow-up (OpenCode)",
+    "es": "Añadir seguimiento (OpenCode)",
+    "fr": "Ajouter un suivi (OpenCode)",
+    "ro": "Adăugați continuare (OpenCode)",
+    "it": "Aggiungi follow-up (OpenCode)"
   },
   "description": {
-    "en": "Send a followup message to an existing OpenCode session.",
-    "es": "Send a followup message to an existing OpenCode session.",
-    "fr": "Send a followup message to an existing OpenCode session.",
-    "ro": "Send a followup message to an existing OpenCode session.",
-    "it": "Send a followup message to an existing OpenCode session."
+    "en": "Send a follow-up instruction through the local OpenCode CLI.",
+    "es": "Enviar una instrucción de seguimiento a través de la CLI local de OpenCode.",
+    "fr": "Envoyez une instruction de suivi via la CLI OpenCode locale.",
+    "ro": "Trimiteți o instrucțiune ulterioară prin CLI-ul local OpenCode.",
+    "it": "Invia un'istruzione di follow-up tramite la CLI OpenCode locale."
+  },
+  "cli": {
+    "mode": "session"
   },
   "actions": [
     {
-      "type": "collect",
+      "type": "prompt",
       "label": {
-        "en": "Add Followup",
+        "en": "Add Follow-up",
         "es": "Agregar seguimiento",
         "fr": "Ajouter un suivi",
         "ro": "Adăugați urmărire",
         "it": "Aggiungi follow-up"
       },
-      "destination": {
-        "url": "INJECT:API_BASE/session/{{RUN_ID}}/message",
-        "method": "POST",
-        "headers": {
-          "Content-Type": "application/json"
-        }
+      "cli": {
+        "mode": "session"
       },
+      "prompt": "/opencode run --auto --continue \"$(cat <<'JOAI_PROMPT'\nFor run ID {{RUN_ID}}, continue with this follow-up:\n{{FOLLOWUP}}\nJOAI_PROMPT\n)\"",
       "inputs": [
         {
           "name": "Run ID",
           "as": "RUN_ID",
           "description": {
-            "en": "OpenCode session ID.",
-            "es": "OpenCode session ID.",
-            "fr": "OpenCode session ID.",
-            "ro": "OpenCode session ID.",
-            "it": "OpenCode session ID."
+            "en": "Run identifier to continue.",
+            "es": "Identificador de ejecución a continuar.",
+            "fr": "Identifiant d'exécution à continuer.",
+            "ro": "Identificatorul de rulare de continuat.",
+            "it": "Identificatore di esecuzione da continuare."
           },
           "type": "string",
-          "position": "path:RUN_ID",
           "source": "field",
           "required": true
         },
         {
-          "name": "Followup",
+          "name": "Follow-up",
           "as": "FOLLOWUP",
           "description": {
-            "en": "Followup instruction text.",
-            "es": "Followup instruction text.",
-            "fr": "Followup instruction text.",
-            "ro": "Followup instruction text.",
-            "it": "Followup instruction text."
+            "en": "Additional instruction for OpenCode.",
+            "es": "Instrucción adicional para OpenCode.",
+            "fr": "Instruction supplémentaire pour OpenCode.",
+            "ro": "Instrucțiuni suplimentare pentru OpenCode.",
+            "it": "Istruzioni aggiuntive per OpenCode."
           },
           "type": "string",
           "source": "field",
-          "required": true,
-          "position": "payload:parts.0.text"
-        },
-        {
-          "name": "Part Type",
-          "as": "PART_TYPE",
-          "description": {
-            "en": "Message part type.",
-            "es": "Message part type.",
-            "fr": "Message part type.",
-            "ro": "Message part type.",
-            "it": "Message part type."
-          },
-          "type": "string",
-          "source": "field",
-          "required": false,
-          "default": {
-            "en": "text",
-            "de": "text",
-            "es": "text",
-            "fr": "text",
-            "ro": "text",
-            "it": "text"
-          },
-          "position": "payload:parts.0.type"
+          "required": true
         }
       ]
     }
   ],
   "output": {
     "RUN_ID": "in.RUN_ID",
-    "RUN_STATUS": "transform:() => out.status || 'updated'",
-    "SUMMARY": "transform:() => out.summary || 'Followup sent'"
+    "RUN_STATUS": "transform:() => 'submitted'",
+    "SUMMARY": "transform:() => 'Follow-up submitted to OpenCode CLI.'"
   },
   "messages": {
     "success": {
-      "en": "Followup sent to OpenCode session {{RUN_ID}}.",
-      "es": "Followup sent to OpenCode session {{RUN_ID}}.",
-      "fr": "Followup sent to OpenCode session {{RUN_ID}}.",
-      "ro": "Followup sent to OpenCode session {{RUN_ID}}.",
-      "it": "Followup sent to OpenCode session {{RUN_ID}}."
+      "en": "Follow-up submitted for {{RUN_ID}}.",
+      "es": "Seguimiento enviado para {{RUN_ID}}.",
+      "fr": "Suivi soumis pour {{RUN_ID}}.",
+      "ro": "Urmărire trimisă pentru {{RUN_ID}}.",
+      "it": "Follow-up inviato per {{RUN_ID}}."
     }
   }
 }

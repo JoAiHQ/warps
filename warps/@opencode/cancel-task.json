@@ -1,23 +1,26 @@
 {
   "protocol": "warp:3.0.0",
-  "name": "OpenCode: Cancel Task",
+  "name": "OpenCode (CLI): Cancel Task",
   "title": {
-    "en": "Cancel task",
-    "es": "Cancelar tarea",
-    "fr": "Annuler la tâche",
-    "ro": "Anulați sarcina",
-    "it": "Annulla attività"
+    "en": "Cancel task (OpenCode)",
+    "es": "Cancelar tarea (OpenCode)",
+    "fr": "Annuler la tâche (OpenCode)",
+    "ro": "Anulați sarcina (OpenCode)",
+    "it": "Annulla attività (OpenCode)"
   },
   "description": {
-    "en": "Abort and close an OpenCode session.",
-    "es": "Abort and close an OpenCode session.",
-    "fr": "Abort and close an OpenCode session.",
-    "ro": "Abort and close an OpenCode session.",
-    "it": "Abort and close an OpenCode session."
+    "en": "Request cancellation through the local OpenCode CLI.",
+    "es": "Solicitar cancelación a través de la CLI local de OpenCode.",
+    "fr": "Demander l'annulation via la CLI OpenCode locale.",
+    "ro": "Solicitați anularea prin CLI-ul local OpenCode.",
+    "it": "Richiedi la cancellazione tramite la CLI OpenCode locale."
+  },
+  "cli": {
+    "mode": "session"
   },
   "actions": [
     {
-      "type": "collect",
+      "type": "prompt",
       "label": {
         "en": "Cancel Task",
         "es": "Cancelar tarea",
@@ -25,26 +28,22 @@
         "ro": "Anulează sarcina",
         "it": "Annulla attività"
       },
-      "destination": {
-        "url": "INJECT:API_BASE/session/{{RUN_ID}}/abort",
-        "method": "POST",
-        "headers": {
-          "Content-Type": "application/json"
-        }
+      "cli": {
+        "mode": "session"
       },
+      "prompt": "/opencode run \"For run ID {{RUN_ID}}, stop work now and return only: cancel_requested.\"",
       "inputs": [
         {
           "name": "Run ID",
           "as": "RUN_ID",
           "description": {
-            "en": "OpenCode session ID.",
-            "es": "OpenCode session ID.",
-            "fr": "OpenCode session ID.",
-            "ro": "OpenCode session ID.",
-            "it": "OpenCode session ID."
+            "en": "Run identifier to cancel.",
+            "es": "Identificador de ejecución a cancelar.",
+            "fr": "Identifiant d'exécution à annuler.",
+            "ro": "Identificatorul de rulare de anulat.",
+            "it": "Identificatore di esecuzione da annullare."
           },
           "type": "string",
-          "position": "path:RUN_ID",
           "source": "field",
           "required": true
         }
@@ -53,16 +52,16 @@
   ],
   "output": {
     "RUN_ID": "in.RUN_ID",
-    "RUN_STATUS": "transform:() => 'aborted'",
-    "SUMMARY": "transform:() => 'Session aborted'"
+    "RUN_STATUS": "transform:() => 'cancel_requested'",
+    "SUMMARY": "transform:() => 'Cancellation requested via OpenCode CLI.'"
   },
   "messages": {
     "success": {
-      "en": "OpenCode session {{RUN_ID}} aborted.",
-      "es": "OpenCode session {{RUN_ID}} aborted.",
-      "fr": "OpenCode session {{RUN_ID}} aborted.",
-      "ro": "OpenCode session {{RUN_ID}} aborted.",
-      "it": "OpenCode session {{RUN_ID}} aborted."
+      "en": "Cancellation requested for {{RUN_ID}}.",
+      "es": "Cancelación solicitada para {{RUN_ID}}.",
+      "fr": "Annulation demandée pour {{RUN_ID}}.",
+      "ro": "Anularea a fost solicitată pentru {{RUN_ID}}.",
+      "it": "Cancellazione richiesta per {{RUN_ID}}."
     }
   }
 }
