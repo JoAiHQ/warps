@@ -39,6 +39,27 @@ export const meta: Record<string, WarpExtras> = {
       ],
     },
   },
+  'site-transfer': {
+    keywords: {
+      en: ['transfer site', 'move website', 'change site team', 'hand over website'],
+      de: ['Website übertragen', 'Website verschieben', 'Website-Team wechseln', 'Website übergeben'],
+    },
+    useCases: {
+      en: ['Move a client site to the team that manages it', 'Hand a site over to another team you manage', 'Reorganize sites between teams'],
+      de: ['Eine Kundenwebsite in das Team verschieben, das sie betreut', 'Eine Website an ein anderes Team übergeben, das du verwaltest', 'Websites zwischen Teams neu organisieren'],
+    },
+    category: 'productivity',
+    faq: {
+      en: [
+        { question: 'What happens to the custom domain?', answer: 'Verification is reset and re-run under the target team; the domain stays on the site.' },
+        { question: 'Why can the transfer fail?', answer: 'The site slug or brand slug may already be used on the target team, or you may lack site-manage permission there.' },
+      ],
+      de: [
+        { question: 'Was passiert mit der eigenen Domain?', answer: 'Die Verifizierung wird zurückgesetzt und im Zielteam erneut ausgeführt; die Domain bleibt bei der Website.' },
+        { question: 'Warum kann die Übertragung fehlschlagen?', answer: 'Der Website- oder Brand-Slug wird im Zielteam bereits verwendet, oder dir fehlt dort die Berechtigung zur Website-Verwaltung.' },
+      ],
+    },
+  },
   'metrics-query': {
     keywords: { en: ['metrics', 'Cloudflare analytics', 'Google Search Console', 'page views', 'search clicks', 'reporting'], de: ['Metriken', 'Cloudflare Analytics', 'Google Search Console', 'Seitenaufrufe', 'Suchklicks', 'Reporting'] },
     useCases: { en: ['Collect source-backed facts for a client update', 'Compare Cloudflare traffic or Search Console clicks/impressions for a period'], de: ['Quellenbasierte Fakten für ein Kunden-Update sammeln', 'Cloudflare-Traffic oder Search-Console-Klicks/Impressionen für einen Zeitraum vergleichen'] },
