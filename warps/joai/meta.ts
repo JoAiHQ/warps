@@ -419,6 +419,47 @@ export const meta: Record<string, WarpExtras> = {
       ],
     },
   },
+  'room-list': {
+    keywords: {
+      en: ['list rooms', 'chat rooms', 'team inbox', 'channels', 'conversations'],
+      de: ['Räume anzeigen', 'Chat-Räume', 'Team-Postfach', 'Kanäle', 'Unterhaltungen'],
+    },
+    useCases: {
+      en: [
+        'Get an overview of all chat rooms in a team',
+        'Find the room of a specific contact before reading its messages',
+        'Review recent conversations sorted by last activity',
+      ],
+      de: [
+        'Einen Überblick über alle Chat-Räume eines Teams bekommen',
+        'Den Raum eines bestimmten Kontakts finden, bevor seine Nachrichten gelesen werden',
+        'Aktuelle Unterhaltungen nach letzter Aktivität sortiert durchsehen',
+      ],
+    },
+    category: 'communication',
+    faq: {
+      en: [
+        {
+          question: 'How do I list all chats of my team?',
+          answer: 'Run the list rooms action; it returns the rooms of the team, most recently active first.',
+        },
+        {
+          question: 'Can I list rooms of another team?',
+          answer: 'Yes, pass a team slug. The agent needs access to that team.',
+        },
+      ],
+      de: [
+        {
+          question: 'Wie liste ich alle Chats meines Teams auf?',
+          answer: 'Führe die Aktion „Räume anzeigen“ aus; sie liefert die Räume des Teams, zuletzt aktiv zuerst.',
+        },
+        {
+          question: 'Kann ich Räume eines anderen Teams auflisten?',
+          answer: 'Ja, gib einen Team-Slug an. Der Agent braucht Zugriff auf dieses Team.',
+        },
+      ],
+    },
+  },
   'message-send': {
     keywords: {
       en: ['send message', 'deliver message', 'room message', 'post message', 'channel message'],
