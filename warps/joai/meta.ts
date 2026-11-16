@@ -143,6 +143,35 @@ export const meta: Record<string, WarpExtras> = {
       ],
     },
   },
+  'agent-team-access-grant': {
+    keywords: {
+      en: ['agent team access', 'grant team access', 'agent across teams', 'multi-team agent', 'team permissions'],
+      de: ['Agent Team-Zugriff', 'Team-Zugriff erteilen', 'Agent für mehrere Teams', 'Multi-Team-Agent', 'Team-Berechtigungen'],
+    },
+    useCases: {
+      en: [
+        'Let an agent request access to a client team you already belong to',
+        'Work with contacts, bookings, and orders across multiple teams',
+        'Grant the least-privilege role the agent needs for a second team',
+      ],
+      de: [
+        'Einen Agenten Zugriff auf ein Kundenteam anfragen lassen, in dem du bereits bist',
+        'Mit Kontakten, Buchungen und Bestellungen in mehreren Teams arbeiten',
+        'Dem Agenten die minimal nötige Rolle für ein weiteres Team geben',
+      ],
+    },
+    category: 'security',
+    faq: {
+      en: [
+        { question: 'Can an agent access another team without approval?', answer: 'No. Team access always needs an explicit approval, even when the agent runs in auto mode.' },
+        { question: 'Which teams can an agent request access to?', answer: 'Only teams where the owner can manage member roles (owner or admin). Access to unrelated teams is rejected.' },
+      ],
+      de: [
+        { question: 'Kann ein Agent ohne Freigabe auf ein anderes Team zugreifen?', answer: 'Nein. Team-Zugriff erfordert immer eine ausdrückliche Freigabe, auch im Auto-Modus.' },
+        { question: 'Auf welche Teams kann ein Agent Zugriff anfragen?', answer: 'Nur auf Teams, in denen der Eigentümer Mitgliederrollen verwalten kann (Owner oder Admin). Zugriff auf fremde Teams wird abgelehnt.' },
+      ],
+    },
+  },
   'team-create': {
     keywords: {
       en: ['create team', 'business onboarding', 'team profile', 'public directory listing', 'workspace setup'],
