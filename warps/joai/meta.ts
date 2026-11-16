@@ -1181,6 +1181,49 @@ export const meta: Record<string, WarpExtras> = {
     },
     category: 'commerce',
   },
+  'bank-account-list': {
+    keywords: {
+      en: ['bank accounts', 'IBAN', 'bank account list', 'bookkeeping bank'],
+      de: ['Bankkonten', 'IBAN', 'Bankkonto Liste', 'Buchhaltung Bank'],
+    },
+    useCases: {
+      en: ['Find a bank account ID before importing a statement', 'Review linked bank accounts and ledger accounts'],
+      de: ['Bankkonto-ID vor dem Import finden', 'Verknüpfte Bank- und Sachkonten prüfen'],
+    },
+    category: 'commerce',
+  },
+  'bank-transaction-list': {
+    keywords: {
+      en: ['bank transactions', 'statement lines', 'imported transactions', 'bank movements'],
+      de: ['Bankumsätze', 'Kontoauszug Zeilen', 'importierte Umsätze', 'Bankbewegungen'],
+    },
+    useCases: {
+      en: ['Review imported bank statement lines', 'Filter transactions by account, status, date or counterparty'],
+      de: ['Importierte Kontoauszugzeilen prüfen', 'Umsätze nach Konto, Status, Datum oder Gegenpartei filtern'],
+    },
+    category: 'commerce',
+  },
+  'bank-transaction-import': {
+    keywords: {
+      en: ['import bank statement', 'N26 CSV', 'CAMT.053', 'bank import', 'CSV mapping'],
+      de: ['Bankauszug importieren', 'N26 CSV', 'CAMT.053', 'Bankimport', 'CSV-Zuordnung'],
+    },
+    useCases: {
+      en: ['Import an N26 CSV export into a bank account', 'Import a CAMT.053 XML statement', 'Import a mapped generic CSV without creating duplicates'],
+      de: ['N26-CSV-Export in ein Bankkonto importieren', 'CAMT.053-XML-Auszug importieren', 'Zugeordnetes CSV ohne Duplikate importieren'],
+    },
+    category: 'commerce',
+    faq: {
+      en: [
+        { question: 'Does importing create bookings?', answer: 'No. It only imports bank lines and never touches the ledger.' },
+        { question: 'What happens on re-import?', answer: 'Existing rows are skipped by external ID or stable hash.' },
+      ],
+      de: [
+        { question: 'Erzeugt der Import Buchungen?', answer: 'Nein. Er importiert nur Bankzeilen und verändert das Journal nicht.' },
+        { question: 'Was passiert bei erneutem Import?', answer: 'Bestehende Zeilen werden über externe ID oder stabilen Hash übersprungen.' },
+      ],
+    },
+  },
   'ledger-account-list': {
     keywords: {
       en: ['ledger accounts', 'chart of accounts', 'bookkeeping accounts', 'accounting codes'],
