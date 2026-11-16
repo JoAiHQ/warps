@@ -1,4 +1,5 @@
 export type AppointmentPolicy = {
+  agent?: { uuid: string; name?: string } | null
   timezone?: string | null
   availability?: Record<string, string[]>
   minNoticeMinutes?: number | null

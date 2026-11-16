@@ -1,29 +1,62 @@
-import React, { useCallback, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import ReactDOM from 'react-dom/client'
 import { App, useAppContext } from '../../../ui/lib/components'
 import { useTranslations } from '../../../ui/lib/hooks'
 import { EmptyMessageSkeleton } from '../../../ui/lib/skeletons'
 import { translations } from '../i18n'
-import { startOfDay } from './helpers/format'
+import { isSameDay, startOfDay } from './helpers/format'
+import { resolveBookingPrefill } from './helpers/prefill'
 import { Calendar } from './components/Calendar'
 import { SlotList } from './components/SlotList'
 import { ContactForm } from './components/ContactForm'
 import { BookingConfirmed } from './components/BookingConfirmed'
 import { ServicePicker } from './components/ServicePicker'
-import type { AppointmentService, AvailabilitySlot, BookPublicData, BookingResult } from './warp.types'
+import type { AppointmentService, AvailabilitySlot, BookPrefill, BookPublicData, BookingResult } from './warp.types'
 
 function Main() {
-  const { data, executeWarp, locale } = useAppContext<BookPublicData>()
+  const { data, inputs, executeWarp, locale } = useAppContext<BookPublicData, BookPrefill>()
   const tr = useTranslations(translations).book
 
   const policy = data?.policy ?? null
-  const services = data?.services ?? []
-  const serviceSelectionEnabled = policy?.serviceSelectionEnabled ?? true
-  const showServiceStep = serviceSelectionEnabled && services.length > 0
+  const services = (data?.services?.length ? data.services : (inputs?.services ?? [])).filter((service) => service.bookable !== false)
+  const prefilled = resolveBookingPrefill(inputs, policy, services)
+  const prefilledSlots = inputs?.slots ?? []
 
-  const agentTimezone = policy?.timezone ?? null
-  const [displayTimezone, setDisplayTimezone] = useState(() => Intl.DateTimeFormat().resolvedOptions().timeZone)
+  const [displayTimezone, setDisplayTimezone] = useState(() => prefilled.timezone ?? Intl.DateTimeFormat().resolvedOptions().timeZone)
+  const [targetAgentUuid, setTargetAgentUuid] = useState<string | null>(prefilled.agentUuid)
   const maxDaysAhead = policy?.maxDaysAhead ?? 14
+
+  useEffect(() => {
+    if (!targetAgentUuid && policy?.agent?.uuid) setTargetAgentUuid(policy.agent.uuid)
+  }, [policy?.agent?.uuid, targetAgentUuid])
+
+  const appliedInputs = useRef(false)
+  const initialized = useRef(false)
+  useEffect(() => {
+    if (!data || !inputs || appliedInputs.current) return
+    const draft = resolveBookingPrefill(inputs, policy, services)
+    setName(draft.name)
+    setEmail(draft.email)
+    setPurpose(draft.purpose)
+    setNotes(draft.notes)
+    setSelectedService(draft.service)
+    setSelectedDate(draft.date)
+    setSlots(draft.slots)
+    setSelectedSlot(draft.slot)
+    setStep(draft.step)
+    if (draft.agentUuid) setTargetAgentUuid(draft.agentUuid)
+    if (draft.timezone) setDisplayTimezone(draft.timezone)
+    appliedInputs.current = true
+    initialized.current = true
+  }, [data, inputs, policy, services])
+
+  useEffect(() => {
+    if (!data || inputs || initialized.current) return
+    const draft = resolveBookingPrefill(undefined, policy, services)
+    setStep(draft.step)
+    if (draft.timezone) setDisplayTimezone(draft.timezone)
+    initialized.current = true
+  }, [data, inputs, policy, services])
 
   const today = startOfDay(new Date())
   const maxDate = startOfDay(new Date())
@@ -49,24 +82,25 @@ function Main() {
     return d
   })
 
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null)
-  const [slots, setSlots] = useState<AvailabilitySlot[]>([])
+  const [selectedDate, setSelectedDate] = useState<Date | null>(() => prefilled.date)
+  const [slots, setSlots] = useState<AvailabilitySlot[]>(() => prefilled.slots)
   const [loadingSlots, setLoadingSlots] = useState(false)
   const [slotsError, setSlotsError] = useState<string | null>(null)
   const fetchIdRef = useRef(0)
-  const [selectedSlot, setSelectedSlot] = useState<AvailabilitySlot | null>(null)
+  const [selectedSlot, setSelectedSlot] = useState<AvailabilitySlot | null>(() => prefilled.slot)
 
-  const [selectedService, setSelectedService] = useState<AppointmentService | null | undefined>(undefined)
-  const [step, setStep] = useState<'service' | 'datetime' | 'contact' | 'confirmed'>(() => showServiceStep ? 'service' : 'datetime')
-  const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
-  const [purpose, setPurpose] = useState('')
-  const [notes, setNotes] = useState('')
+  const [selectedService, setSelectedService] = useState<AppointmentService | null | undefined>(() => prefilled.service)
+  const [step, setStep] = useState<'service' | 'datetime' | 'contact' | 'pending' | 'confirmed'>(() => prefilled.step)
+  const [name, setName] = useState(() => prefilled.name)
+  const [email, setEmail] = useState(() => prefilled.email)
+  const [purpose, setPurpose] = useState(() => prefilled.purpose)
+  const [notes, setNotes] = useState(() => prefilled.notes)
   const [booking, setBooking] = useState(false)
   const [booked, setBooked] = useState<BookingResult | null>(null)
   const [nameError, setNameError] = useState(false)
   const [cancelling, setCancelling] = useState(false)
   const [cancelled, setCancelled] = useState(false)
+  const [cancelPending, setCancelPending] = useState(false)
   const [bookingError, setBookingError] = useState<string | null>(null)
   const [cancelError, setCancelError] = useState<string | null>(null)
   const [confirmUrl, setConfirmUrl] = useState<string | null>(null)
@@ -91,6 +125,7 @@ function Main() {
         windowEnd: windowEnd.toISOString(),
         durationMinutes,
         timezone: tz,
+        agentUuid: targetAgentUuid ?? undefined,
       })) as any
 
       if (fetchId !== fetchIdRef.current) return
@@ -101,11 +136,16 @@ function Main() {
     } finally {
       if (fetchId === fetchIdRef.current) setLoadingSlots(false)
     }
-  }, [executeWarp, selectedService, policy?.slotIntervalMinutes, tr.slotsError])
+  }, [executeWarp, selectedService, policy?.slotIntervalMinutes, targetAgentUuid, tr.slotsError])
 
   const handleDateSelect = (date: Date) => {
     setSelectedDate(date)
     setSelectedSlot(null)
+    if (prefilledSlots.some((slot) => isSameDay(new Date(slot.startAt), date))) {
+      setSlots(prefilledSlots)
+      setSlotsError(null)
+      return
+    }
     fetchSlots(date, displayTimezone)
   }
 
@@ -131,11 +171,17 @@ function Main() {
     if (!booked?.id) return
     setCancelling(true)
     setCancelError(null)
+    setCancelPending(false)
     try {
-      await executeWarp('appointment-cancel-public', {
+      const result = (await executeWarp('appointment-cancel-public', {
         meetingId: booked.id,
         reason: reason || undefined,
-      })
+        agentUuid: targetAgentUuid ?? undefined,
+      })) as { queued?: boolean } | undefined
+      if (result?.queued) {
+        setCancelPending(true)
+        return
+      }
       setCancelled(true)
     } catch (err) {
       setCancelError(err instanceof Error ? err.message : tr.cancelError)
@@ -159,9 +205,15 @@ function Main() {
         attendeeName: name.trim(),
         attendeeEmail: email.trim() || undefined,
         description: notes.trim() || undefined,
+        agentUuid: targetAgentUuid ?? selectedSlot.agentUuid,
         routedAgentUuid: selectedSlot.agentUuid,
         serviceSlug: selectedService?.slug,
       })) as any
+
+      if (result?.queued) {
+        setStep('pending')
+        return
+      }
 
       if (!result?.MEETING_ID) {
         throw new Error(tr.bookingError)
@@ -207,6 +259,18 @@ function Main() {
     )
   }
 
+  if (step === 'pending') {
+    return (
+      <div className="flex flex-col items-center gap-5 p-6 text-center max-w-sm mx-auto">
+        <div className="flex items-center justify-center w-14 h-14 rounded-full bg-amber-100 text-amber-600 text-2xl">⏳</div>
+        <div>
+          <h2 className="text-xl font-semibold">{locale.startsWith('de') ? 'Zur Freigabe eingereicht' : 'Submitted for approval'}</h2>
+          <p className="text-sm text-gray-500 mt-2">{locale.startsWith('de') ? 'Bestätige die Buchung im Chat. Danach erscheint der Termin in deinem Kalender.' : 'Confirm the booking in chat. The appointment will then appear in the calendar.'}</p>
+        </div>
+      </div>
+    )
+  }
+
   if (step === 'confirmed' && booked && selectedDate) {
     return (
       <BookingConfirmed
@@ -228,6 +292,7 @@ function Main() {
         cancelling={cancelling}
         cancelled={cancelled}
         cancelError={cancelError}
+        cancelPending={cancelPending}
         onCancel={handleCancel}
         shareUrl={confirmUrl ?? undefined}
         copyLinkLabel={tr.copyLink}
