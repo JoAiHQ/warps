@@ -1,0 +1,90 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Get Ledger Entry",
+  "title": {
+    "en": "Show ledger entry",
+    "de": "Buchung anzeigen",
+    "fr": "Afficher l’écriture",
+    "es": "Ver asiento",
+    "it": "Mostra registrazione",
+    "ro": "Afișează înregistrarea"
+  },
+  "description": {
+    "en": "Show one final journal entry with all debit and credit lines.",
+    "de": "Eine endgültige Buchung mit allen Soll- und Haben-Zeilen anzeigen.",
+    "fr": "Affiche une écriture finale avec toutes ses lignes de débit et de crédit.",
+    "es": "Muestra un asiento final con todas sus líneas de debe y haber.",
+    "it": "Mostra una registrazione finale con tutte le righe di dare e avere.",
+    "ro": "Afișează o înregistrare finală cu toate liniile de debit și credit."
+  },
+  "bot": "Use when the user wants to inspect one booking before reversing it or checking its lines.",
+  "vars": {
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Show ledger entry",
+        "de": "Buchung anzeigen",
+        "fr": "Afficher l’écriture",
+        "es": "Ver asiento",
+        "it": "Mostra registrazione",
+        "ro": "Afișează înregistrarea"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/teams/{{team}}/ledger-entries/{{entryId}}",
+        "method": "GET",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Entry ID",
+          "as": "entryId",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "description": {
+            "en": "Ledger entry hash ID",
+            "de": "Buchungs-Hash-ID",
+            "fr": "Hash ID de l’écriture",
+            "es": "Hash ID del asiento",
+            "it": "Hash ID della registrazione",
+            "ro": "Hash ID-ul înregistrării"
+          },
+          "bot": "The ledger entry hash ID from list_ledger_entries.",
+          "position": "url:entryId"
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "type": "string",
+          "position": "url:team",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}",
+          "description": {
+            "en": "Team slug for this action. Defaults to the current team.",
+            "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team.",
+            "fr": "Slug de l’équipe pour cette action. Par défaut, l’équipe actuelle.",
+            "es": "Slug del equipo para esta acción. Por defecto, el equipo actual.",
+            "it": "Slug del team per questa azione. Predefinito: team attuale.",
+            "ro": "Slug-ul echipei pentru această acțiune. Implicit echipa curentă."
+          },
+          "bot": "The slug of the team to operate on. Omit to use the current team."
+        }
+      ],
+      "auto": true,
+      "output": {
+        "entry": "out.data"
+      }
+    }
+  ],
+  "output": {
+    "LEDGER_ENTRY": "out.data"
+  }
+}

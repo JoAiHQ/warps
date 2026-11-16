@@ -1,0 +1,107 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: VAT Summary",
+  "title": {
+    "en": "VAT summary",
+    "de": "UVA-Auswertung",
+    "fr": "Récapitulatif TVA",
+    "es": "Resumen de IVA",
+    "it": "Riepilogo IVA",
+    "ro": "Sumar TVA"
+  },
+  "description": {
+    "en": "Calculate the Austrian UVA fields from final bookings in a date range.",
+    "de": "Österreichische UVA-Kennzahlen aus endgültigen Buchungen eines Zeitraums berechnen.",
+    "fr": "Calcule les champs UVA autrichiens à partir des écritures finales sur une période.",
+    "es": "Calcula los campos UVA austriacos a partir de los asientos finales de un periodo.",
+    "it": "Calcola i campi UVA austriaci dalle registrazioni finali di un periodo.",
+    "ro": "Calculează câmpurile UVA austriece din înregistrările finale dintr-o perioadă."
+  },
+  "bot": "Use when the user asks for VAT, UVA, or tax summary figures for a period.",
+  "vars": {
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "VAT summary",
+        "de": "UVA-Auswertung",
+        "fr": "Récapitulatif TVA",
+        "es": "Resumen de IVA",
+        "it": "Riepilogo IVA",
+        "ro": "Sumar TVA"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/teams/{{team}}/vat-summary?from={{from}}&to={{to}}",
+        "method": "GET",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "From",
+          "as": "from",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "description": {
+            "en": "First booking date (YYYY-MM-DD)",
+            "de": "Erstes Buchungsdatum (JJJJ-MM-TT)",
+            "fr": "Première date d’écriture (AAAA-MM-JJ)",
+            "es": "Primera fecha de asiento (AAAA-MM-DD)",
+            "it": "Prima data registrazione (AAAA-MM-GG)",
+            "ro": "Prima dată de înregistrare (AAAA-LL-ZZ)"
+          },
+          "bot": "Inclusive start date.",
+          "position": "query"
+        },
+        {
+          "name": "To",
+          "as": "to",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "description": {
+            "en": "Last booking date (YYYY-MM-DD)",
+            "de": "Letztes Buchungsdatum (JJJJ-MM-TT)",
+            "fr": "Dernière date d’écriture (AAAA-MM-JJ)",
+            "es": "Última fecha de asiento (AAAA-MM-DD)",
+            "it": "Ultima data registrazione (AAAA-MM-GG)",
+            "ro": "Ultima dată de înregistrare (AAAA-LL-ZZ)"
+          },
+          "bot": "Inclusive end date.",
+          "position": "query"
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "type": "string",
+          "position": "url:team",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}",
+          "description": {
+            "en": "Team slug for this action. Defaults to the current team.",
+            "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team.",
+            "fr": "Slug de l’équipe pour cette action. Par défaut, l’équipe actuelle.",
+            "es": "Slug del equipo para esta acción. Por defecto, el equipo actual.",
+            "it": "Slug del team per questa azione. Predefinito: team attuale.",
+            "ro": "Slug-ul echipei pentru această acțiune. Implicit echipa curentă."
+          },
+          "bot": "The slug of the team to operate on. Omit to use the current team."
+        }
+      ],
+      "auto": true,
+      "output": {
+        "summary": "out.data"
+      }
+    }
+  ],
+  "output": {
+    "VAT_SUMMARY": "out.data"
+  }
+}

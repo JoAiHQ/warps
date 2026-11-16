@@ -1,0 +1,74 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: List Tax Codes",
+  "title": {
+    "en": "List tax codes",
+    "de": "Steuercodes anzeigen",
+    "fr": "Lister les codes de taxe",
+    "es": "Listar códigos de impuesto",
+    "it": "Elenca codici IVA",
+    "ro": "Listează codurile de taxă"
+  },
+  "description": {
+    "en": "List the team tax codes with rates and Austrian UVA report fields.",
+    "de": "Steuercodes des Teams mit Sätzen und österreichischen UVA-Kennzahlen anzeigen.",
+    "fr": "Liste les codes de taxe de l’équipe avec taux et champs UVA autrichiens.",
+    "es": "Lista los códigos de impuesto del equipo con tipos y campos UVA austriacos.",
+    "it": "Elenca i codici IVA del team con aliquote e campi UVA austriaci.",
+    "ro": "Listează codurile de taxă ale echipei cu cote și câmpuri UVA austriece."
+  },
+  "bot": "Use when the user wants to see VAT/tax codes or map a tax rate to a tax code before booking.",
+  "vars": {
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "List tax codes",
+        "de": "Steuercodes anzeigen",
+        "fr": "Lister les codes de taxe",
+        "es": "Listar códigos de impuesto",
+        "it": "Elenca codici IVA",
+        "ro": "Listează codurile de taxă"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/teams/{{team}}/tax-codes",
+        "method": "GET",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Team",
+          "as": "team",
+          "type": "string",
+          "position": "url:team",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}",
+          "description": {
+            "en": "Team slug for this action. Defaults to the current team.",
+            "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team.",
+            "fr": "Slug de l’équipe pour cette action. Par défaut, l’équipe actuelle.",
+            "es": "Slug del equipo para esta acción. Por defecto, el equipo actual.",
+            "it": "Slug del team per questa azione. Predefinito: team attuale.",
+            "ro": "Slug-ul echipei pentru această acțiune. Implicit echipa curentă."
+          },
+          "bot": "The slug of the team to operate on. Omit to use the current team."
+        }
+      ],
+      "auto": true,
+      "output": {
+        "taxCodes": "out.data",
+        "taxCodesCount": "out.data.length"
+      }
+    }
+  ],
+  "output": {
+    "TAX_CODES": "out.data"
+  }
+}

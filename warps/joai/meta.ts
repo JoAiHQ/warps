@@ -1181,6 +1181,135 @@ export const meta: Record<string, WarpExtras> = {
     },
     category: 'commerce',
   },
+  'ledger-account-list': {
+    keywords: {
+      en: ['ledger accounts', 'chart of accounts', 'bookkeeping accounts', 'accounting codes'],
+      de: ['Sachkonten', 'Kontenplan', 'Buchhaltungskonten', 'Kontocode'],
+    },
+    useCases: {
+      en: ['Find a ledger account code or hash ID before booking', 'Review the team chart of accounts'],
+      de: ['Kontocode oder Hash-ID vor der Buchung finden', 'Kontenplan des Teams prüfen'],
+    },
+    category: 'commerce',
+  },
+  'tax-code-list': {
+    keywords: {
+      en: ['bookkeeping tax codes', 'UVA codes', 'VAT codes', 'ledger tax rates'],
+      de: ['Buchhaltungs-Steuercodes', 'UVA-Kennzahlen', 'Steuercodes', 'USt-Codes'],
+    },
+    useCases: {
+      en: ['Map an invoice VAT rate to a bookkeeping tax code', 'Review UVA report fields for a tax code'],
+      de: ['Rechnungs-USt-Satz einem Buchhaltungs-Steuercode zuordnen', 'UVA-Kennzahlen eines Steuercodes prüfen'],
+    },
+    category: 'commerce',
+  },
+  'ledger-entry-list': {
+    keywords: {
+      en: ['list bookings', 'journal entries', 'ledger entries', 'bookings by period', 'find booking'],
+      de: ['Buchungen anzeigen', 'Journalbuchungen', 'Buchungen nach Zeitraum', 'Buchung finden'],
+    },
+    useCases: {
+      en: ['Review bookings for a period', 'Find a booking ID to reverse', 'Filter bookings by order, account, or source'],
+      de: ['Buchungen eines Zeitraums prüfen', 'Buchungs-ID zum Stornieren finden', 'Buchungen nach Bestellung, Konto oder Quelle filtern'],
+    },
+    category: 'commerce',
+  },
+  'ledger-entry-get': {
+    keywords: {
+      en: ['show booking', 'ledger entry lines', 'booking detail', 'journal entry detail'],
+      de: ['Buchung anzeigen', 'Buchungszeilen', 'Buchungsdetails', 'Journalbuchung prüfen'],
+    },
+    useCases: {
+      en: ['Inspect every debit and credit line before reversing', 'Check tax code and VAT amounts on a booking'],
+      de: ['Alle Soll- und Haben-Zeilen vor dem Storno prüfen', 'Steuercode und USt-Betrag einer Buchung prüfen'],
+    },
+    category: 'commerce',
+  },
+  'vat-summary': {
+    keywords: {
+      en: ['VAT summary', 'UVA summary', 'tax summary', 'output VAT', 'input VAT'],
+      de: ['USt-Auswertung', 'UVA-Auswertung', 'Steuerübersicht', 'Umsatzsteuer', 'Vorsteuer'],
+    },
+    useCases: {
+      en: ['Calculate UVA fields for a month or quarter', 'Review output VAT and reverse-charge figures'],
+      de: ['UVA-Kennzahlen für Monat oder Quartal berechnen', 'Umsatzsteuer und Reverse-Charge-Werte prüfen'],
+    },
+    category: 'commerce',
+  },
+  'ledger-entry-create': {
+    keywords: {
+      en: ['create booking', 'manual booking', 'double-entry entry', 'journal entry', 'book revenue'],
+      de: ['Buchung erstellen', 'manuelle Buchung', 'doppelte Buchung', 'Journalbuchung', 'Erlös buchen'],
+    },
+    useCases: {
+      en: ['Book a balanced manual journal entry', 'Record a correction with explicit debit and credit lines'],
+      de: ['Ausgeglichene manuelle Journalbuchung erfassen', 'Korrektur mit expliziten Soll- und Haben-Zeilen buchen'],
+    },
+    category: 'commerce',
+    faq: {
+      en: [
+        { question: 'Can I edit a booking later?', answer: 'No. Final journal entries are immutable. Use reversal and a new entry instead.' },
+        { question: 'How do I attach a document?', answer: 'Upload it to the team media library first, then pass its media hash ID.' },
+      ],
+      de: [
+        { question: 'Kann ich eine Buchung später bearbeiten?', answer: 'Nein. Endgültige Buchungen sind unveränderlich. Nutze Storno und eine neue Buchung.' },
+        { question: 'Wie hänge ich einen Beleg an?', answer: 'Lade ihn zuerst in die Team-Medienbibliothek und übergib dann die Medien-Hash-ID.' },
+      ],
+    },
+  },
+  'ledger-revenue-entry-create': {
+    keywords: {
+      en: ['book order revenue', 'order revenue', 'book invoice', 'revenue booking', 'cash accrual'],
+      de: ['Bestellerlös buchen', 'Erlösbuchung', 'Rechnung buchen', 'Einnahmen buchen', 'E/A oder Soll'],
+    },
+    useCases: {
+      en: ['Book an order using its invoice net and VAT amounts', 'Post revenue on payment date in cash mode', 'Post revenue to receivables in accrual mode'],
+      de: ['Bestellung mit Rechnungsnetto und USt buchen', 'Erlös im E/A-Modus am Zahlungsdatum buchen', 'Erlös im Soll-Modus auf Forderungen buchen'],
+    },
+    category: 'commerce',
+    faq: {
+      en: [
+        { question: 'Which date is used in cash mode?', answer: 'The payment date, or the explicit paidAt date when provided.' },
+        { question: 'What happens in accrual mode?', answer: 'Revenue is booked to receivables on the invoice date.' },
+      ],
+      de: [
+        { question: 'Welches Datum wird im E/A-Modus verwendet?', answer: 'Das Zahlungsdatum oder das explizit übergebene paidAt-Datum.' },
+        { question: 'Was passiert im Soll-Modus?', answer: 'Der Erlös wird am Rechnungsdatum auf Forderungen gebucht.' },
+      ],
+    },
+  },
+  'ledger-entry-reverse': {
+    keywords: {
+      en: ['reverse booking', 'cancel booking', 'storno', 'correct journal entry'],
+      de: ['Buchung stornieren', 'Storno', 'Buchung korrigieren', 'Journalbuchung korrigieren'],
+    },
+    useCases: {
+      en: ['Correct a wrong booking without editing it', 'Reverse every debit and credit on an entry'],
+      de: ['Falsche Buchung ohne Bearbeitung korrigieren', 'Alle Soll- und Haben-Zeilen einer Buchung stornieren'],
+    },
+    category: 'commerce',
+    faq: {
+      en: [
+        { question: 'Does reversal delete the original?', answer: 'No. It creates a new entry linked to the original.' },
+        { question: 'Can I reverse a reversal?', answer: 'No. Create a new booking instead.' },
+      ],
+      de: [
+        { question: 'Löscht das Storno die ursprüngliche Buchung?', answer: 'Nein. Es wird eine neue, verknüpfte Buchung erstellt.' },
+        { question: 'Kann ich ein Storno stornieren?', answer: 'Nein. Erstelle stattdessen eine neue Buchung.' },
+      ],
+    },
+  },
+  'ledger-period-lock': {
+    keywords: {
+      en: ['lock period', 'close month', 'close quarter', 'bookkeeping lock'],
+      de: ['Zeitraum sperren', 'Monat abschließen', 'Quartal abschließen', 'Buchhaltung sperren'],
+    },
+    useCases: {
+      en: ['Close a month or quarter for bookkeeping', 'Prevent new bookings in a completed period'],
+      de: ['Monat oder Quartal für die Buchhaltung abschließen', 'Neue Buchungen in einem abgeschlossenen Zeitraum verhindern'],
+    },
+    category: 'commerce',
+  },
   'service-list': {
     keywords: {
       en: ['list services', 'view services', 'service catalog', 'billable services', 'appointment services', 'inactive services', 'private services'],
