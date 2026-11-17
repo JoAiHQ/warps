@@ -1,0 +1,201 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: List Ledger Entries",
+  "title": {
+    "en": "List ledger entries",
+    "de": "Buchungen anzeigen",
+    "fr": "Lister les écritures",
+    "es": "Listar asientos",
+    "it": "Elenca registrazioni",
+    "ro": "Listează înregistrările"
+  },
+  "description": {
+    "en": "List final journal entries for a team, filtered by booking period, source, or account.",
+    "de": "Endgültige Buchungen eines Teams anzeigen, gefiltert nach Buchungszeitraum, Quelle oder Konto.",
+    "fr": "Liste les écritures finales d’une équipe, filtrées par période, source ou compte.",
+    "es": "Lista los asientos finales de un equipo, filtrados por periodo, origen o cuenta.",
+    "it": "Elenca le registrazioni finali di un team, filtrate per periodo, origine o conto.",
+    "ro": "Listează înregistrările finale ale unei echipe, filtrate după perioadă, sursă sau cont."
+  },
+  "bot": "Use when the user wants to inspect bookings, find a booking ID for reversal, or review a period.",
+  "vars": {
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "List ledger entries",
+        "de": "Buchungen anzeigen",
+        "fr": "Lister les écritures",
+        "es": "Listar asientos",
+        "it": "Elenca registrazioni",
+        "ro": "Listează înregistrările"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/teams/{{team}}/ledger-entries?from={{from}}&to={{to}}&sourceType={{sourceType}}&sourceId={{sourceId}}&accountId={{accountId}}&page={{page}}&perPage={{perPage}}",
+        "method": "GET",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "From",
+          "as": "from",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "description": {
+            "en": "First booking date (YYYY-MM-DD)",
+            "de": "Erstes Buchungsdatum (JJJJ-MM-TT)",
+            "fr": "Première date d’écriture (AAAA-MM-JJ)",
+            "es": "Primera fecha de asiento (AAAA-MM-DD)",
+            "it": "Prima data registrazione (AAAA-MM-GG)",
+            "ro": "Prima dată de înregistrare (AAAA-LL-ZZ)"
+          },
+          "bot": "Inclusive start date.",
+          "position": "query"
+        },
+        {
+          "name": "To",
+          "as": "to",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "description": {
+            "en": "Last booking date (YYYY-MM-DD)",
+            "de": "Letztes Buchungsdatum (JJJJ-MM-TT)",
+            "fr": "Dernière date d’écriture (AAAA-MM-JJ)",
+            "es": "Última fecha de asiento (AAAA-MM-DD)",
+            "it": "Ultima data registrazione (AAAA-MM-GG)",
+            "ro": "Ultima dată de înregistrare (AAAA-LL-ZZ)"
+          },
+          "bot": "Inclusive end date.",
+          "position": "query"
+        },
+        {
+          "name": "Source type",
+          "as": "sourceType",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "description": {
+            "en": "Filter by source type: order, manual or reversal",
+            "de": "Nach Quelltyp filtern: order, manual oder reversal",
+            "fr": "Filtrer par type de source : commande, manuel ou extourne",
+            "es": "Filtrar por tipo de origen: pedido, manual o rectificación",
+            "it": "Filtra per tipo origine: ordine, manuale o storno",
+            "ro": "Filtrează după tip sursă: comandă, manual sau stornare"
+          },
+          "bot": "Optional source type filter.",
+          "options": [
+            "order",
+            "manual",
+            "reversal"
+          ],
+          "position": "query"
+        },
+        {
+          "name": "Source ID",
+          "as": "sourceId",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "description": {
+            "en": "Filter by source ID (for example an order hash ID)",
+            "de": "Nach Quell-ID filtern (z. B. Order-Hash-ID)",
+            "fr": "Filtrer par ID de source (par ex. un hash ID de commande)",
+            "es": "Filtrar por ID de origen (p. ej., un hash ID de pedido)",
+            "it": "Filtra per ID origine (ad es. hash ID di un ordine)",
+            "ro": "Filtrează după ID sursă (de exemplu hash ID comandă)"
+          },
+          "bot": "Optional source ID filter.",
+          "position": "query"
+        },
+        {
+          "name": "Account ID",
+          "as": "accountId",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "description": {
+            "en": "Filter by ledger account hash ID or account code",
+            "de": "Nach Konto-Hash-ID oder Kontocode filtern",
+            "fr": "Filtrer par hash ID de compte ou code de compte",
+            "es": "Filtrar por hash ID de cuenta o código de cuenta",
+            "it": "Filtra per hash ID conto o codice conto",
+            "ro": "Filtrează după hash ID cont sau cod cont"
+          },
+          "bot": "Optional account hash ID or code.",
+          "position": "query"
+        },
+        {
+          "name": "Page",
+          "as": "page",
+          "type": "uint16",
+          "source": "field",
+          "required": false,
+          "description": {
+            "en": "Page number (default 1)",
+            "de": "Seitennummer (Standard 1)",
+            "fr": "Numéro de page (par défaut 1)",
+            "es": "Número de página (por defecto 1)",
+            "it": "Numero pagina (predefinito 1)",
+            "ro": "Numărul paginii (implicit 1)"
+          },
+          "bot": "1-based page number.",
+          "default": "1",
+          "position": "query"
+        },
+        {
+          "name": "Per page",
+          "as": "perPage",
+          "type": "uint16",
+          "source": "field",
+          "required": false,
+          "description": {
+            "en": "Results per page (max 100)",
+            "de": "Ergebnisse pro Seite (max. 100)",
+            "fr": "Résultats par page (max 100)",
+            "es": "Resultados por página (máx. 100)",
+            "it": "Risultati per pagina (max 100)",
+            "ro": "Rezultate pe pagină (max. 100)"
+          },
+          "bot": "Page size, max 100.",
+          "default": "50",
+          "position": "query"
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "type": "string",
+          "position": "url:team",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}",
+          "description": {
+            "en": "Team slug for this action. Defaults to the current team.",
+            "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team.",
+            "fr": "Slug de l’équipe pour cette action. Par défaut, l’équipe actuelle.",
+            "es": "Slug del equipo para esta acción. Por defecto, el equipo actual.",
+            "it": "Slug del team per questa azione. Predefinito: team attuale.",
+            "ro": "Slug-ul echipei pentru această acțiune. Implicit echipa curentă."
+          },
+          "bot": "The slug of the team to operate on. Omit to use the current team."
+        }
+      ],
+      "auto": true,
+      "output": {
+        "entries": "out.data",
+        "entriesCount": "out.data.length"
+      }
+    }
+  ],
+  "output": {
+    "LEDGER_ENTRIES": "out.data"
+  },
+  "ui": "https://raw.githubusercontent.com/JoAiHQ/warps/dev/warps/joai/ledger-entry-list/chatapp.a8ee1f0f.dist.html"
+}

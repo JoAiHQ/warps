@@ -10,17 +10,16 @@
     "it": "Appointment availability"
   },
   "description": {
-    "en": "Collect booking details and return appointment availability from the current agent calendar.",
-    "de": "Sammelt Buchungsdetails und liefert Terminverfuegbarkeit aus dem Kalender des aktuellen Agenten.",
-    "fr": "Collectez les details de reservation et recuperez les disponibilites depuis le calendrier de l agent actuel.",
-    "es": "Recoge los datos de la reserva y devuelve la disponibilidad desde el calendario del agente actual.",
-    "ro": "Colecteaza detaliile rezervarii si intoarce disponibilitatea din calendarul agentului curent.",
-    "it": "Collect booking details and return appointment availability from the current agent calendar."
+    "en": "Collect booking details and return appointment availability from the target agent calendar.",
+    "de": "Sammelt Buchungsdetails und liefert Terminverfuegbarkeit aus dem Kalender des Ziel-Agenten.",
+    "fr": "Collectez les details de reservation et recuperez les disponibilites depuis le calendrier de l agent cible.",
+    "es": "Recoge los datos de la reserva y devuelve la disponibilidad desde el calendario del agente de destino.",
+    "ro": "Colecteaza detaliile rezervarii si intoarce disponibilitatea din calendarul agentului tinta.",
+    "it": "Collect booking details and return appointment availability from the target agent calendar."
   },
   "bot": "REQUIRED first step for any appointment booking. Do not create calendar events directly; that bypasses availability checks, policy rules, and attendee tracking. Collect purpose, preferred time, timezone, and attendee contacts. Convert relative dates to exact ISO datetimes with an explicit year (use the current year/next occurrence — never a past year). If the user agrees on a specific time (e.g. 'Wednesday Oct 7 at 11:00'), set windowStart to that exact datetime and windowEnd to start + durationMinutes — do NOT expand to a full day or next-day midnight. Only use a broad day/range window when the user is still flexible. Prefer contactIds from CRM (find-or-create / list contacts first); use attendeeName only as a fallback when no contacts exist yet.",
   "vars": {
-    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
-    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID"
   },
   "actions": [
     {
@@ -34,11 +33,8 @@
         "it": "Check availability"
       },
       "destination": {
-        "url": "INJECT:API_BASE/v1/agents/{{JOAI_AGENT_UUID}}/appointments/availability",
-        "method": "POST",
-        "headers": {
-          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
-        }
+        "url": "INJECT:API_BASE/v1/agents/{{agentUuid}}/appointments/availability",
+        "method": "POST"
       },
       "inputs": [
         {
@@ -177,6 +173,20 @@
           "type": "string",
           "source": "field",
           "required": false
+        },
+        {
+          "name": "Agent UUID",
+          "as": "agentUuid",
+          "description": {
+            "en": "Optional target agent UUID for cross-team booking",
+            "de": "Optionale UUID des Ziel-Agenten fuer teamuebergreifende Buchungen"
+          },
+          "bot": "Target agent UUID. Omit to use the current agent. For a business booking, pass the agent UUID from the business appointment policy.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_AGENT_UUID}}",
+          "position": "url:agentUuid"
         }
       ]
     }

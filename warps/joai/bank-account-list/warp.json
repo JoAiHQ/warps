@@ -1,0 +1,75 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: List Bank Accounts",
+  "title": {
+    "en": "List bank accounts",
+    "de": "Bankkonten anzeigen",
+    "fr": "Lister les comptes bancaires",
+    "es": "Listar cuentas bancarias",
+    "it": "Elenca conti bancari",
+    "ro": "Listează conturile bancare"
+  },
+  "description": {
+    "en": "List bank accounts with IBAN, provider and linked ledger account.",
+    "de": "Bankkonten mit IBAN, Anbieter und verknüpftem Sachkonto anzeigen.",
+    "fr": "Liste les comptes bancaires avec IBAN, fournisseur et compte comptable lié.",
+    "es": "Lista cuentas bancarias con IBAN, proveedor y cuenta contable vinculada.",
+    "it": "Elenca i conti bancari con IBAN, provider e conto contabile collegato.",
+    "ro": "Listează conturile bancare cu IBAN, furnizor și cont contabil asociat."
+  },
+  "bot": "Use when the user wants to see bank accounts or needs a bank account ID for importing transactions.",
+  "vars": {
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "List bank accounts",
+        "de": "Bankkonten anzeigen",
+        "fr": "Lister les comptes bancaires",
+        "es": "Listar cuentas bancarias",
+        "it": "Elenca conti bancari",
+        "ro": "Listează conturile bancare"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/teams/{{team}}/bank-accounts",
+        "method": "GET",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Team",
+          "as": "team",
+          "type": "string",
+          "position": "url:team",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}",
+          "description": {
+            "en": "Team slug for this action. Defaults to the current team.",
+            "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team.",
+            "fr": "Slug de l’équipe pour cette action. Par défaut, l’équipe actuelle.",
+            "es": "Slug del equipo para esta acción. Por defecto, el equipo actual.",
+            "it": "Slug del team per questa azione. Predefinito: team attuale.",
+            "ro": "Slug-ul echipei pentru această acțiune. Implicit echipa curentă."
+          },
+          "bot": "The slug of the team to operate on. Omit to use the current team."
+        }
+      ],
+      "auto": true,
+      "output": {
+        "accounts": "out.data",
+        "accountsCount": "out.data.length"
+      }
+    }
+  ],
+  "output": {
+    "BANK_ACCOUNTS": "out.data"
+  },
+  "ui": "https://raw.githubusercontent.com/JoAiHQ/warps/dev/warps/joai/bank-account-list/chatapp.fd494fd0.dist.html"
+}

@@ -1,0 +1,204 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Create Ledger Entry",
+  "title": {
+    "en": "Create ledger entry",
+    "de": "Buchung erstellen",
+    "fr": "Créer une écriture",
+    "es": "Crear asiento",
+    "it": "Crea registrazione",
+    "ro": "Creează înregistrare"
+  },
+  "description": {
+    "en": "Create a balanced double-entry booking. Review the line preview before approving; journal entries cannot be edited later.",
+    "de": "Eine ausgeglichene doppelte Buchung erstellen. Zeilenvorschau vor der Freigabe prüfen; Buchungen können später nicht bearbeitet werden.",
+    "fr": "Crée une écriture équilibrée en partie double. Vérifie l’aperçu des lignes avant l’approbation ; les écritures ne peuvent plus être modifiées ensuite.",
+    "es": "Crea un asiento equilibrado por partida doble. Revisa la vista previa de las líneas antes de aprobar; los asientos no se pueden editar después.",
+    "it": "Crea una registrazione bilanciata in partita doppia. Controlla l’anteprima delle righe prima dell’approvazione; le registrazioni non possono più essere modificate.",
+    "ro": "Creează o înregistrare echilibrată în partidă dublă. Verifică previzualizarea liniilor înainte de aprobare; înregistrările nu mai pot fi modificate."
+  },
+  "bot": "Use only after the user explicitly asked to book something and the debit/credit lines are known. Always show the line preview and get approval before executing.",
+  "vars": {
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Booking lines",
+        "de": "Buchungszeilen",
+        "fr": "Lignes d’écriture",
+        "es": "Líneas del asiento",
+        "it": "Righe di registrazione",
+        "ro": "Linii de înregistrare"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/teams/{{team}}/ledger-entries",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Booked at",
+          "as": "bookedAt",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "description": {
+            "en": "Booking date (YYYY-MM-DD); defaults to today",
+            "de": "Buchungsdatum (JJJJ-MM-TT); Standard heute",
+            "fr": "Date d’écriture (AAAA-MM-JJ) ; par défaut aujourd’hui",
+            "es": "Fecha de asiento (AAAA-MM-DD); por defecto hoy",
+            "it": "Data registrazione (AAAA-MM-GG); predefinita oggi",
+            "ro": "Data înregistrării (AAAA-LL-ZZ); implicit azi"
+          },
+          "bot": "Date the booking hits the journal."
+        },
+        {
+          "name": "Document date",
+          "as": "documentDate",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "description": {
+            "en": "Document date (YYYY-MM-DD)",
+            "de": "Belegdatum (JJJJ-MM-TT)",
+            "fr": "Date du document (AAAA-MM-JJ)",
+            "es": "Fecha del documento (AAAA-MM-DD)",
+            "it": "Data documento (AAAA-MM-GG)",
+            "ro": "Data documentului (AAAA-LL-ZZ)"
+          },
+          "bot": "Optional document date."
+        },
+        {
+          "name": "Document media",
+          "as": "documentMediaId",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "description": {
+            "en": "Optional team media hash ID for the document",
+            "de": "Optionale Team-Medien-Hash-ID für den Beleg",
+            "fr": "Hash ID de média d’équipe facultatif pour le document",
+            "es": "Hash ID de medio del equipo opcional para el documento",
+            "it": "Hash ID media del team facoltativo per il documento",
+            "ro": "Hash ID media al echipei opțional pentru document"
+          },
+          "bot": "Optional media hash ID from the team media library."
+        },
+        {
+          "name": "Text",
+          "as": "text",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "description": {
+            "en": "Booking text",
+            "de": "Buchungstext",
+            "fr": "Libellé de l’écriture",
+            "es": "Texto del asiento",
+            "it": "Testo registrazione",
+            "ro": "Textul înregistrării"
+          },
+          "bot": "Short description shown on the entry."
+        },
+        {
+          "name": "Lines",
+          "as": "lines",
+          "type": "json",
+          "source": "field",
+          "required": true,
+          "description": {
+            "en": "Array of lines: [{\"accountCode\":\"BA\",\"debit\":11900,\"credit\":0},{\"accountCode\":\"E20\",\"debit\":0,\"credit\":10000,\"taxCode\":\"320\",\"taxBase\":10000},{\"accountCode\":\"3500\",\"debit\":0,\"credit\":1900,\"taxCode\":\"320\",\"taxBase\":10000,\"taxAmount\":1900}]. Sum of debit must equal sum of credit.",
+            "de": "Array von Zeilen: [{\"accountCode\":\"BA\",\"debit\":11900,\"credit\":0},{\"accountCode\":\"E20\",\"debit\":0,\"credit\":10000,\"taxCode\":\"320\",\"taxBase\":10000},{\"accountCode\":\"3500\",\"debit\":0,\"credit\":1900,\"taxCode\":\"320\",\"taxBase\":10000,\"taxAmount\":1900}]. Summe Soll muss gleich Summe Haben sein.",
+            "fr": "Tableau de lignes : [{\"accountCode\":\"BA\",\"debit\":11900,\"credit\":0},{\"accountCode\":\"E20\",\"debit\":0,\"credit\":10000,\"taxCode\":\"320\",\"taxBase\":10000},{\"accountCode\":\"3500\",\"debit\":0,\"credit\":1900,\"taxCode\":\"320\",\"taxBase\":10000,\"taxAmount\":1900}]. La somme des débits doit être égale à la somme des crédits.",
+            "es": "Array de líneas: [{\"accountCode\":\"BA\",\"debit\":11900,\"credit\":0},{\"accountCode\":\"E20\",\"debit\":0,\"credit\":10000,\"taxCode\":\"320\",\"taxBase\":10000},{\"accountCode\":\"3500\",\"debit\":0,\"credit\":1900,\"taxCode\":\"320\",\"taxBase\":10000,\"taxAmount\":1900}]. La suma del debe debe ser igual a la suma del haber.",
+            "it": "Array di righe: [{\"accountCode\":\"BA\",\"debit\":11900,\"credit\":0},{\"accountCode\":\"E20\",\"debit\":0,\"credit\":10000,\"taxCode\":\"320\",\"taxBase\":10000},{\"accountCode\":\"3500\",\"debit\":0,\"credit\":1900,\"taxCode\":\"320\",\"taxBase\":10000,\"taxAmount\":1900}]. La somma dei dare deve essere uguale alla somma degli avere.",
+            "ro": "Matrice de linii: [{\"accountCode\":\"BA\",\"debit\":11900,\"credit\":0},{\"accountCode\":\"E20\",\"debit\":0,\"credit\":10000,\"taxCode\":\"320\",\"taxBase\":10000},{\"accountCode\":\"3500\",\"debit\":0,\"credit\":1900,\"taxCode\":\"320\",\"taxBase\":10000,\"taxAmount\":1900}]. Suma debitului trebuie să fie egală cu suma creditului."
+          },
+          "bot": "Balanced lines in cents. Use accountId/taxCodeId hash IDs or accountCode/taxCode codes."
+        },
+        {
+          "name": "Source type",
+          "as": "sourceType",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "description": {
+            "en": "Source type: manual or order",
+            "de": "Quelltyp: manual oder order",
+            "fr": "Type de source : manuel ou commande",
+            "es": "Tipo de origen: manual o pedido",
+            "it": "Tipo origine: manuale o ordine",
+            "ro": "Tip sursă: manual sau comandă"
+          },
+          "options": [
+            "manual",
+            "order"
+          ]
+        },
+        {
+          "name": "Source ID",
+          "as": "sourceId",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "description": {
+            "en": "Optional source ID for idempotency",
+            "de": "Optionale Quell-ID für Idempotenz",
+            "fr": "ID de source facultatif pour l’idempotence",
+            "es": "ID de origen opcional para idempotencia",
+            "it": "ID origine facoltativo per idempotenza",
+            "ro": "ID sursă opțional pentru idempotență"
+          }
+        },
+        {
+          "name": "Approval reference",
+          "as": "approvalReference",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "description": {
+            "en": "Optional approval reference",
+            "de": "Optionale Freigabereferenz",
+            "fr": "Référence d’approbation facultative",
+            "es": "Referencia de aprobación opcional",
+            "it": "Riferimento di approvazione facoltativo",
+            "ro": "Referință de aprobare opțională"
+          }
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "type": "string",
+          "position": "url:team",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}",
+          "description": {
+            "en": "Team slug for this action. Defaults to the current team.",
+            "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team.",
+            "fr": "Slug de l’équipe pour cette action. Par défaut, l’équipe actuelle.",
+            "es": "Slug del equipo para esta acción. Por defecto, el equipo actual.",
+            "it": "Slug del team per questa azione. Predefinito: team attuale.",
+            "ro": "Slug-ul echipei pentru această acțiune. Implicit echipa curentă."
+          },
+          "bot": "The slug of the team to operate on. Omit to use the current team."
+        }
+      ],
+      "output": {
+        "entry": "out.data",
+        "entryId": "out.data.id"
+      }
+    }
+  ],
+  "output": {
+    "LEDGER_ENTRY": "out.data",
+    "LEDGER_ENTRY_ID": "out.data.id"
+  },
+  "ui": "https://raw.githubusercontent.com/JoAiHQ/warps/dev/warps/joai/ledger-entry-create/chatapp.643ee464.dist.html"
+}

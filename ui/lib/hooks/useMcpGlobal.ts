@@ -4,12 +4,20 @@ import { McpHostContext } from './types'
 
 export function useMcpGlobal<K extends keyof McpHostContext>(
   key: K,
-  app: App
+  app: App,
+  connected = false
 ): McpHostContext[K] {
   const [value, setValue] = useState<McpHostContext[K] | undefined>(() => {
     const hostContext = app?.getHostContext()
     return hostContext?.[key] ?? undefined
   })
+
+  // The initial host context arrives with connect(), not as a change notification.
+  useEffect(() => {
+    if (!app || !connected) return
+    const initial = app.getHostContext()?.[key]
+    if (initial !== undefined) setValue(initial)
+  }, [app, connected, key])
 
   useEffect(() => {
     if (!app) return
@@ -30,10 +38,16 @@ export function useMcpGlobal<K extends keyof McpHostContext>(
   return value
 }
 
-export function useMcpHostContext(app: App | null): McpHostContext | null {
+export function useMcpHostContext(app: App | null, connected = false): McpHostContext | null {
   const [context, setContext] = useState<McpHostContext | null>(() => {
     return app?.getHostContext() ?? null
   })
+
+  // The initial host context arrives with connect(), not as a change notification.
+  useEffect(() => {
+    if (!app || !connected) return
+    setContext(app.getHostContext() ?? null)
+  }, [app, connected])
 
   useEffect(() => {
     if (!app) return

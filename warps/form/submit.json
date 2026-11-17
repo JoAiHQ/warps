@@ -1,0 +1,68 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Form: Submit",
+  "title": {
+    "en": "Submit form",
+    "de": "Formular absenden",
+    "fr": "Envoyer le formulaire",
+    "es": "Enviar formulario",
+    "ro": "Trimite formularul",
+    "it": "Submit form"
+  },
+  "description": {
+    "en": "Submit inputs to a public JoAi form.",
+    "de": "Sendet Eingaben an ein oeffentliches JoAi-Formular.",
+    "fr": "Envoie des entrees a un formulaire public JoAi.",
+    "es": "Envia entradas a un formulario publico de JoAi.",
+    "ro": "Trimite date catre un formular public JoAi.",
+    "it": "Submit inputs to a public JoAi form."
+  },
+  "bot": "Use this only from the @form-open app after the user has reviewed and confirmed the inputs. It executes the public form definition with the submitted inputs.",
+  "actions": [
+    {
+      "type": "collect",
+      "inputs": [
+        {
+          "name": "Form ID",
+          "as": "formId",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:formId"
+        },
+        {
+          "name": "Inputs",
+          "as": "inputs",
+          "type": "json",
+          "source": "field",
+          "required": true,
+          "position": "payload:inputs",
+          "description": {
+            "en": "Form field inputs",
+            "de": "Formularfelder"
+          },
+          "bot": "The form inputs to validate and execute, keyed by field name."
+        },
+        {
+          "name": "Locale",
+          "as": "locale",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:context.locale"
+        }
+      ],
+      "destination": {
+        "url": "INJECT:API_BASE/v1/warps/{{formId}}/execute",
+        "method": "POST",
+        "headers": {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        }
+      }
+    }
+  ],
+  "output": {
+    "EXECUTION": "out.data"
+  }
+}

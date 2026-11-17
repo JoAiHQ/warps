@@ -1,8 +1,10 @@
 import { describe, expect, it } from 'vitest'
 import {
   extractList,
+  extractOutputRecord,
   extractRecord,
   formatCents,
+  formatDateOnly,
   formatDateShort,
   humanizeKey,
   pickValue,
@@ -87,6 +89,17 @@ describe('extractRecord', () => {
   })
 })
 
+describe('extractOutputRecord', () => {
+  it('unwraps a named output alias', () => {
+    expect(extractOutputRecord({ LEDGER_ENTRY: { text: 'Invoice' } }, ['LEDGER_ENTRY'])).toEqual({ text: 'Invoice' })
+  })
+
+  it('falls back to the record when the alias is missing', () => {
+    expect(extractOutputRecord({ text: 'Invoice' }, ['LEDGER_ENTRY'])).toEqual({ text: 'Invoice' })
+    expect(extractOutputRecord(null, ['LEDGER_ENTRY'])).toBeNull()
+  })
+})
+
 describe('display helpers', () => {
   it('picks the first present key', () => {
     expect(pickValue({ TOTAL_CAMPAIGNS: 4, totalCampaigns: 9 }, ['totalCampaigns', 'TOTAL_CAMPAIGNS'])).toBe(9)
@@ -114,6 +127,8 @@ describe('display helpers', () => {
   it('formats money, dates, truncates, prices and images', () => {
     expect(formatCents(1999, 'EUR')).toMatch(/19/)
     expect(formatDateShort('2026-04-18T10:00:00Z')).toBeTruthy()
+    expect(formatDateOnly('2026-04-18')).toBeTruthy()
+    expect(formatDateOnly('not-a-date')).toBeNull()
     expect(truncateText('abcdefghij', 8)).toBe('abcdefg…')
     expect(truncateMiddle('erd1abcdefghijklmnop', 6, 4)).toBe('erd1ab…mnop')
     expect(priceFromVariations({ variations: [{ price: 500 }, { price: 300 }] })).toBe(300)

@@ -48,7 +48,7 @@ export function App(props: Props) {
     setApp(newApp)
   }, [appName, appVersion])
 
-  const hostContext = useMcpHostContext(app)
+  const hostContext = useMcpHostContext(app, isConnected)
   useTheme(hostContext?.theme)
 
   const locale = useMemo(() => normalizeLocale(hostContext?.locale ?? (typeof navigator !== 'undefined' ? navigator.language : 'en')), [hostContext?.locale])

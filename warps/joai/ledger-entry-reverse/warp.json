@@ -1,0 +1,139 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Reverse Ledger Entry",
+  "title": {
+    "en": "Reverse ledger entry",
+    "de": "Buchung stornieren",
+    "fr": "Extourner l’écriture",
+    "es": "Rectificar asiento",
+    "it": "Storna registrazione",
+    "ro": "Stornează înregistrarea"
+  },
+  "description": {
+    "en": "Create a reversal entry that swaps every debit and credit. The original journal entry is never edited or deleted.",
+    "de": "Eine Stornobuchung erstellen, die jede Soll- und Haben-Zeile tauscht. Die ursprüngliche Buchung bleibt unverändert.",
+    "fr": "Crée une écriture d’extourne qui inverse chaque débit et crédit. L’écriture d’origine n’est jamais modifiée ni supprimée.",
+    "es": "Crea un asiento de rectificación que invierte cada debe y haber. El asiento original nunca se modifica ni elimina.",
+    "it": "Crea una registrazione di storno che inverte ogni dare e avere. La registrazione originale non viene mai modificata o eliminata.",
+    "ro": "Creează o înregistrare de stornare care inversează fiecare debit și credit. Înregistrarea originală nu este niciodată modificată sau ștearsă."
+  },
+  "bot": "Use when a booking must be corrected. Review the original entry first and confirm the reason before approving.",
+  "vars": {
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Reversal",
+        "de": "Storno",
+        "fr": "Extourne",
+        "es": "Rectificación",
+        "it": "Storno",
+        "ro": "Stornare"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/teams/{{team}}/ledger-entries/{{entryId}}/reverse",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Entry ID",
+          "as": "entryId",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "description": {
+            "en": "Ledger entry hash ID to reverse",
+            "de": "Zu stornierende Buchungs-Hash-ID",
+            "fr": "Hash ID de l’écriture à extourner",
+            "es": "Hash ID del asiento a rectificar",
+            "it": "Hash ID della registrazione da stornare",
+            "ro": "Hash ID-ul înregistrării de stornat"
+          },
+          "bot": "The entry hash ID to reverse.",
+          "position": "url:entryId"
+        },
+        {
+          "name": "Reason",
+          "as": "reason",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "description": {
+            "en": "Reversal reason",
+            "de": "Stornogrund",
+            "fr": "Motif de l’extourne",
+            "es": "Motivo de la rectificación",
+            "it": "Motivo dello storno",
+            "ro": "Motivul stornării"
+          },
+          "bot": "Clear reason stored on the reversal entry."
+        },
+        {
+          "name": "Booked at",
+          "as": "bookedAt",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "description": {
+            "en": "Reversal booking date (YYYY-MM-DD); defaults to today",
+            "de": "Stornobuchungsdatum (JJJJ-MM-TT); Standard heute",
+            "fr": "Date d’écriture de l’extourne (AAAA-MM-JJ) ; par défaut aujourd’hui",
+            "es": "Fecha de asiento de la rectificación (AAAA-MM-DD); por defecto hoy",
+            "it": "Data registrazione storno (AAAA-MM-GG); predefinita oggi",
+            "ro": "Data înregistrării stornării (AAAA-LL-ZZ); implicit azi"
+          },
+          "bot": "Optional reversal date. It must not fall in a locked period."
+        },
+        {
+          "name": "Approval reference",
+          "as": "approvalReference",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "description": {
+            "en": "Optional approval reference",
+            "de": "Optionale Freigabereferenz",
+            "fr": "Référence d’approbation facultative",
+            "es": "Referencia de aprobación opcional",
+            "it": "Riferimento di approvazione facoltativo",
+            "ro": "Referință de aprobare opțională"
+          }
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "type": "string",
+          "position": "url:team",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}",
+          "description": {
+            "en": "Team slug for this action. Defaults to the current team.",
+            "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team.",
+            "fr": "Slug de l’équipe pour cette action. Par défaut, l’équipe actuelle.",
+            "es": "Slug del equipo para esta acción. Por defecto, el equipo actual.",
+            "it": "Slug del team per questa azione. Predefinito: team attuale.",
+            "ro": "Slug-ul echipei pentru această acțiune. Implicit echipa curentă."
+          },
+          "bot": "The slug of the team to operate on. Omit to use the current team."
+        }
+      ],
+      "output": {
+        "entry": "out.data",
+        "entryId": "out.data.id"
+      }
+    }
+  ],
+  "output": {
+    "LEDGER_ENTRY": "out.data",
+    "LEDGER_ENTRY_ID": "out.data.id"
+  },
+  "ui": "https://raw.githubusercontent.com/JoAiHQ/warps/dev/warps/joai/ledger-entry-reverse/chatapp.9fdf9e99.dist.html"
+}

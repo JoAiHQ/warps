@@ -10,17 +10,16 @@
     "it": "Book appointment"
   },
   "description": {
-    "en": "Book a confirmed appointment slot for the current agent.",
-    "de": "Bucht einen bestaetigten Termin fuer den aktuellen Agenten.",
-    "fr": "Confirmez un creneau de rendez-vous pour l agent actuel.",
-    "es": "Reserva un horario ya confirmado para el agente actual.",
-    "ro": "Rezerva un interval confirmat pentru agentul curent.",
-    "it": "Book a confirmed appointment slot for the current agent."
+    "en": "Book a confirmed appointment slot for the target agent.",
+    "de": "Bucht einen bestaetigten Termin fuer den Ziel-Agenten.",
+    "fr": "Confirmez un creneau de rendez-vous pour l agent cible.",
+    "es": "Reserva un horario ya confirmado para el agente de destino.",
+    "ro": "Rezerva un interval confirmat pentru agentul tinta.",
+    "it": "Book a confirmed appointment slot for the target agent."
   },
-  "bot": "Use this only after running appointment-availability and the user has explicitly chosen a slot from the results. Never substitute this with direct calendar event creation — that skips booking policy, overlap checks, and attendee tracking. Always refer to bookings as 'appointments', never 'meetings'. Prefer contactIds for attendees (resolve via CRM find-or-create / list — never invent duplicates). Fall back to attendeeName/email only when no contacts exist. Build a descriptive title combining purpose and name (e.g. 'Consultation with Anna Schmidt'). Pass exact start time from the chosen slot as scheduledAt.",
+  "bot": "Use this only after availability and the user has explicitly chosen a slot. For a city business booking, pass agentUuid from the business appointment policy and keep routedAgentUuid from the slot. Never substitute this with direct calendar event creation — that skips booking policy, overlap checks, and attendee tracking. Always refer to bookings as 'appointments', never 'meetings'. Prefer contactIds for attendees (resolve via CRM find-or-create / list — never invent duplicates). Fall back to attendeeName/email only when no contacts exist. Build a descriptive title combining purpose and name (e.g. 'Consultation with Anna Schmidt'). Pass exact start time from the chosen slot as scheduledAt.",
   "vars": {
-    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
-    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID"
   },
   "actions": [
     {
@@ -34,11 +33,8 @@
         "it": "Book now"
       },
       "destination": {
-        "url": "INJECT:API_BASE/v1/agents/{{JOAI_AGENT_UUID}}/appointments/book",
-        "method": "POST",
-        "headers": {
-          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
-        }
+        "url": "INJECT:API_BASE/v1/agents/{{agentUuid}}/appointments/book",
+        "method": "POST"
       },
       "inputs": [
         {
@@ -231,6 +227,20 @@
               "it": "Zoom"
             }
           }
+        },
+        {
+          "name": "Agent UUID",
+          "as": "agentUuid",
+          "description": {
+            "en": "Optional target agent UUID for cross-team booking",
+            "de": "Optionale UUID des Ziel-Agenten fuer teamuebergreifende Buchungen"
+          },
+          "bot": "Target agent UUID. Omit to use the current agent. For a business booking, pass the agent UUID from the business appointment policy. Keep routedAgentUuid for the specific staff member returned by availability.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_AGENT_UUID}}",
+          "position": "url:agentUuid"
         }
       ]
     }

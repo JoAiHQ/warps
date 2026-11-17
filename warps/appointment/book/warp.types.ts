@@ -6,6 +6,7 @@ export type AppointmentService = {
   slug: string
   name?: string
   durationMinutes?: number
+  bookable?: boolean
 }
 
 export type AvailabilitySlot = {
@@ -14,6 +15,22 @@ export type AvailabilitySlot = {
   agentUuid: string
   agentName: string
   serviceSlug?: string | null
+}
+
+export type BookPrefill = {
+  teamSlug?: string
+  agentUuid?: string
+  serviceSlug?: string
+  scheduledAt?: string
+  scheduledEndAt?: string
+  attendeeName?: string
+  attendeeEmail?: string
+  purpose?: string
+  title?: string
+  notes?: string
+  timezone?: string
+  services?: AppointmentService[]
+  slots?: AvailabilitySlot[]
 }
 
 export type BookPublicData = {
