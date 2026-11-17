@@ -1342,6 +1342,28 @@ export const meta: Record<string, WarpExtras> = {
       ],
     },
   },
+  'ledger-account-create': {
+    keywords: {
+      en: ['create ledger account', 'add account', 'chart of accounts', 'VAT account'],
+      de: ['Konto anlegen', 'Sachkonto erstellen', 'Kontenplan erweitern', 'Steuerkonto'],
+    },
+    useCases: {
+      en: ['Add a missing expense or revenue account before booking', 'Add a reverse-charge or acquisition VAT account'],
+      de: ['Fehlendes Aufwands- oder Erlöskonto vor der Buchung anlegen', 'Reverse-Charge- oder Erwerbsteuerkonto anlegen'],
+    },
+    category: 'commerce',
+  },
+  'trial-balance': {
+    keywords: {
+      en: ['trial balance', 'account balances', 'balance list', 'ledger totals'],
+      de: ['Saldenliste', 'Kontensalden', 'Summen und Salden', 'Kontostände'],
+    },
+    useCases: {
+      en: ['Compare account totals for a year or quarter', 'Check debit and credit per account'],
+      de: ['Kontensummen für ein Jahr oder Quartal vergleichen', 'Soll und Haben je Konto prüfen'],
+    },
+    category: 'commerce',
+  },
   'ledger-period-lock': {
     keywords: {
       en: ['lock period', 'close month', 'close quarter', 'bookkeeping lock'],
