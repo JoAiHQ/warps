@@ -4,8 +4,8 @@
   "repo": "JoAiHQ/warps",
   "branch": "dev",
   "network": "devnet",
-  "commitSha": "82d9d5788d7a66a706350cf72c17249efb74fb7b",
-  "generatedAt": "2026-11-16T12:35:57.731Z",
+  "commitSha": "6c175ee79a31d62f5301952e2c69132e8cce3652",
+  "generatedAt": "2026-11-17T10:09:55.182Z",
   "warps": [
     {
       "key": "arbitrum:omniset-deposit-arbitrum",
@@ -39804,8 +39804,8 @@
       "identifier": "@appointment-availability",
       "alias": "appointment-availability",
       "chain": "none",
-      "hash": "e36840e417d2238a27d82fc3b3e487b11d01a79ccda487b596b633c69297a3ae",
-      "checksum": "e36840e417d2238a27d82fc3b3e487b11d01a79ccda487b596b633c69297a3ae",
+      "hash": "16271a16ba3df7ebefc0d3869669d9d3bf493ae9de60e4def2889067d59bce9c",
+      "checksum": "16271a16ba3df7ebefc0d3869669d9d3bf493ae9de60e4def2889067d59bce9c",
       "name": "Appointments: Availability",
       "title": {
         "en": "Appointment availability",
@@ -39816,12 +39816,12 @@
         "it": "Appointment availability"
       },
       "description": {
-        "en": "Collect booking details and return appointment availability from the current agent calendar.",
-        "de": "Sammelt Buchungsdetails und liefert Terminverfuegbarkeit aus dem Kalender des aktuellen Agenten.",
-        "fr": "Collectez les details de reservation et recuperez les disponibilites depuis le calendrier de l agent actuel.",
-        "es": "Recoge los datos de la reserva y devuelve la disponibilidad desde el calendario del agente actual.",
-        "ro": "Colecteaza detaliile rezervarii si intoarce disponibilitatea din calendarul agentului curent.",
-        "it": "Collect booking details and return appointment availability from the current agent calendar."
+        "en": "Collect booking details and return appointment availability from the target agent calendar.",
+        "de": "Sammelt Buchungsdetails und liefert Terminverfuegbarkeit aus dem Kalender des Ziel-Agenten.",
+        "fr": "Collectez les details de reservation et recuperez les disponibilites depuis le calendrier de l agent cible.",
+        "es": "Recoge los datos de la reserva y devuelve la disponibilidad desde el calendario del agente de destino.",
+        "ro": "Colecteaza detaliile rezervarii si intoarce disponibilitatea din calendarul agentului tinta.",
+        "it": "Collect booking details and return appointment availability from the target agent calendar."
       },
       "preview": null,
       "creator": "github:JoAiHQ/warps",
@@ -39862,17 +39862,16 @@
           "it": "Appointment availability"
         },
         "description": {
-          "en": "Collect booking details and return appointment availability from the current agent calendar.",
-          "de": "Sammelt Buchungsdetails und liefert Terminverfuegbarkeit aus dem Kalender des aktuellen Agenten.",
-          "fr": "Collectez les details de reservation et recuperez les disponibilites depuis le calendrier de l agent actuel.",
-          "es": "Recoge los datos de la reserva y devuelve la disponibilidad desde el calendario del agente actual.",
-          "ro": "Colecteaza detaliile rezervarii si intoarce disponibilitatea din calendarul agentului curent.",
-          "it": "Collect booking details and return appointment availability from the current agent calendar."
+          "en": "Collect booking details and return appointment availability from the target agent calendar.",
+          "de": "Sammelt Buchungsdetails und liefert Terminverfuegbarkeit aus dem Kalender des Ziel-Agenten.",
+          "fr": "Collectez les details de reservation et recuperez les disponibilites depuis le calendrier de l agent cible.",
+          "es": "Recoge los datos de la reserva y devuelve la disponibilidad desde el calendario del agente de destino.",
+          "ro": "Colecteaza detaliile rezervarii si intoarce disponibilitatea din calendarul agentului tinta.",
+          "it": "Collect booking details and return appointment availability from the target agent calendar."
         },
         "bot": "REQUIRED first step for any appointment booking. Do not create calendar events directly; that bypasses availability checks, policy rules, and attendee tracking. Collect purpose, preferred time, timezone, and attendee contacts. Convert relative dates to exact ISO datetimes with an explicit year (use the current year/next occurrence — never a past year). If the user agrees on a specific time (e.g. 'Wednesday Oct 7 at 11:00'), set windowStart to that exact datetime and windowEnd to start + durationMinutes — do NOT expand to a full day or next-day midnight. Only use a broad day/range window when the user is still flexible. Prefer contactIds from CRM (find-or-create / list contacts first); use attendeeName only as a fallback when no contacts exist yet.",
         "vars": {
-          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
-          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID"
         },
         "actions": [
           {
@@ -39886,11 +39885,8 @@
               "it": "Check availability"
             },
             "destination": {
-              "url": "https://devnet-api.joai.ai/v1/agents/{{JOAI_AGENT_UUID}}/appointments/availability",
-              "method": "POST",
-              "headers": {
-                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
-              }
+              "url": "https://devnet-api.joai.ai/v1/agents/{{agentUuid}}/appointments/availability",
+              "method": "POST"
             },
             "inputs": [
               {
@@ -40029,6 +40025,20 @@
                 "type": "string",
                 "source": "field",
                 "required": false
+              },
+              {
+                "name": "Agent UUID",
+                "as": "agentUuid",
+                "description": {
+                  "en": "Optional target agent UUID for cross-team booking",
+                  "de": "Optionale UUID des Ziel-Agenten fuer teamuebergreifende Buchungen"
+                },
+                "bot": "Target agent UUID. Omit to use the current agent. For a business booking, pass the agent UUID from the business appointment policy.",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "default": "{{JOAI_AGENT_UUID}}",
+                "position": "url:agentUuid"
               }
             ]
           }
@@ -40180,8 +40190,8 @@
       "identifier": "@appointment-book",
       "alias": "appointment-book",
       "chain": "none",
-      "hash": "3f76f84c04b736b5feca4d4cc6788c9b5547c4e85f658c2da432a42cefbcd701",
-      "checksum": "3f76f84c04b736b5feca4d4cc6788c9b5547c4e85f658c2da432a42cefbcd701",
+      "hash": "b85858e07d4217457502fb1b7e79b3e3e978f34c4db63e59ae82d06601a06d4b",
+      "checksum": "b85858e07d4217457502fb1b7e79b3e3e978f34c4db63e59ae82d06601a06d4b",
       "name": "Appointments: Book",
       "title": {
         "en": "Book an Appointment",
@@ -40260,9 +40270,24 @@
               "ro": "Load",
               "it": "Load"
             },
-            "inputs": [],
+            "inputs": [
+              {
+                "name": "Team",
+                "as": "teamSlug",
+                "description": {
+                  "en": "Business team slug",
+                  "de": "Team-Slug des Unternehmens"
+                },
+                "bot": "Team slug that owns the appointment policy. For a city business, pass its JoAi team slug (for example flora). Omit to use the current team.",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "default": "{{JOAI_TEAM_SLUG}}",
+                "position": "url:teamSlug"
+              }
+            ],
             "destination": {
-              "url": "https://devnet-api.joai.ai/v1/teams/{{JOAI_TEAM_SLUG}}/appointments/policy",
+              "url": "https://devnet-api.joai.ai/v1/teams/{{teamSlug}}/appointments/policy",
               "method": "GET"
             },
             "output": {
@@ -40275,7 +40300,7 @@
             "en": "Failed to load appointment configuration: {{MESSAGE}}"
           }
         },
-        "ui": "https://raw.githubusercontent.com/JoAiHQ/warps/main/warps/appointment/book/chatapp.5b69d7f2.dist.html"
+        "ui": "https://raw.githubusercontent.com/JoAiHQ/warps/main/warps/appointment/book/chatapp.715e52d0.dist.html"
       },
       "extras": {
         "keywords": {
@@ -40338,8 +40363,8 @@
       "identifier": "@appointment-book-confirm",
       "alias": "appointment-book-confirm",
       "chain": "none",
-      "hash": "c62898c8962931d7c12bbeaca7eb66de5a3ec4f54eec8d72fdc03104c705c29a",
-      "checksum": "c62898c8962931d7c12bbeaca7eb66de5a3ec4f54eec8d72fdc03104c705c29a",
+      "hash": "122c6121ae96efb8b617588a35ed1c9fb1687c6572df54f7d370923cc8b550f5",
+      "checksum": "122c6121ae96efb8b617588a35ed1c9fb1687c6572df54f7d370923cc8b550f5",
       "name": "Appointments: Book",
       "title": {
         "en": "Book appointment",
@@ -40350,12 +40375,12 @@
         "it": "Book appointment"
       },
       "description": {
-        "en": "Book a confirmed appointment slot for the current agent.",
-        "de": "Bucht einen bestaetigten Termin fuer den aktuellen Agenten.",
-        "fr": "Confirmez un creneau de rendez-vous pour l agent actuel.",
-        "es": "Reserva un horario ya confirmado para el agente actual.",
-        "ro": "Rezerva un interval confirmat pentru agentul curent.",
-        "it": "Book a confirmed appointment slot for the current agent."
+        "en": "Book a confirmed appointment slot for the target agent.",
+        "de": "Bucht einen bestaetigten Termin fuer den Ziel-Agenten.",
+        "fr": "Confirmez un creneau de rendez-vous pour l agent cible.",
+        "es": "Reserva un horario ya confirmado para el agente de destino.",
+        "ro": "Rezerva un interval confirmat pentru agentul tinta.",
+        "it": "Book a confirmed appointment slot for the target agent."
       },
       "preview": null,
       "creator": "github:JoAiHQ/warps",
@@ -40396,17 +40421,16 @@
           "it": "Book appointment"
         },
         "description": {
-          "en": "Book a confirmed appointment slot for the current agent.",
-          "de": "Bucht einen bestaetigten Termin fuer den aktuellen Agenten.",
-          "fr": "Confirmez un creneau de rendez-vous pour l agent actuel.",
-          "es": "Reserva un horario ya confirmado para el agente actual.",
-          "ro": "Rezerva un interval confirmat pentru agentul curent.",
-          "it": "Book a confirmed appointment slot for the current agent."
+          "en": "Book a confirmed appointment slot for the target agent.",
+          "de": "Bucht einen bestaetigten Termin fuer den Ziel-Agenten.",
+          "fr": "Confirmez un creneau de rendez-vous pour l agent cible.",
+          "es": "Reserva un horario ya confirmado para el agente de destino.",
+          "ro": "Rezerva un interval confirmat pentru agentul tinta.",
+          "it": "Book a confirmed appointment slot for the target agent."
         },
-        "bot": "Use this only after running appointment-availability and the user has explicitly chosen a slot from the results. Never substitute this with direct calendar event creation — that skips booking policy, overlap checks, and attendee tracking. Always refer to bookings as 'appointments', never 'meetings'. Prefer contactIds for attendees (resolve via CRM find-or-create / list — never invent duplicates). Fall back to attendeeName/email only when no contacts exist. Build a descriptive title combining purpose and name (e.g. 'Consultation with Anna Schmidt'). Pass exact start time from the chosen slot as scheduledAt.",
+        "bot": "Use this only after availability and the user has explicitly chosen a slot. For a city business booking, pass agentUuid from the business appointment policy and keep routedAgentUuid from the slot. Never substitute this with direct calendar event creation — that skips booking policy, overlap checks, and attendee tracking. Always refer to bookings as 'appointments', never 'meetings'. Prefer contactIds for attendees (resolve via CRM find-or-create / list — never invent duplicates). Fall back to attendeeName/email only when no contacts exist. Build a descriptive title combining purpose and name (e.g. 'Consultation with Anna Schmidt'). Pass exact start time from the chosen slot as scheduledAt.",
         "vars": {
-          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
-          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID"
         },
         "actions": [
           {
@@ -40420,11 +40444,8 @@
               "it": "Book now"
             },
             "destination": {
-              "url": "https://devnet-api.joai.ai/v1/agents/{{JOAI_AGENT_UUID}}/appointments/book",
-              "method": "POST",
-              "headers": {
-                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
-              }
+              "url": "https://devnet-api.joai.ai/v1/agents/{{agentUuid}}/appointments/book",
+              "method": "POST"
             },
             "inputs": [
               {
@@ -40617,6 +40638,20 @@
                     "it": "Zoom"
                   }
                 }
+              },
+              {
+                "name": "Agent UUID",
+                "as": "agentUuid",
+                "description": {
+                  "en": "Optional target agent UUID for cross-team booking",
+                  "de": "Optionale UUID des Ziel-Agenten fuer teamuebergreifende Buchungen"
+                },
+                "bot": "Target agent UUID. Omit to use the current agent. For a business booking, pass the agent UUID from the business appointment policy. Keep routedAgentUuid for the specific staff member returned by availability.",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "default": "{{JOAI_AGENT_UUID}}",
+                "position": "url:agentUuid"
               }
             ]
           }
@@ -41077,8 +41112,8 @@
       "identifier": "@appointment-cancel-public",
       "alias": "appointment-cancel-public",
       "chain": "none",
-      "hash": "6272eec4e18be48b6a1e920b6e4adac8cdfdc9dfd4e7081e071989ea75c83db4",
-      "checksum": "6272eec4e18be48b6a1e920b6e4adac8cdfdc9dfd4e7081e071989ea75c83db4",
+      "hash": "32ac82554c8f4f5d06052dcb748788352bc3c4a6b848889a1244fb0d3654fa90",
+      "checksum": "32ac82554c8f4f5d06052dcb748788352bc3c4a6b848889a1244fb0d3654fa90",
       "name": "Appointments: Cancel (Public)",
       "title": {
         "en": "Cancel appointment",
@@ -41159,7 +41194,7 @@
               "it": "Cancel"
             },
             "destination": {
-              "url": "https://devnet-api.joai.ai/v1/agents/{{JOAI_AGENT_UUID}}/appointments/{{meetingId}}/cancel",
+              "url": "https://devnet-api.joai.ai/v1/agents/{{agentUuid}}/appointments/{{meetingId}}/cancel",
               "method": "POST"
             },
             "inputs": [
@@ -41177,6 +41212,20 @@
                 "type": "string",
                 "source": "field",
                 "required": false
+              },
+              {
+                "name": "Agent UUID",
+                "as": "agentUuid",
+                "description": {
+                  "en": "Optional target agent UUID",
+                  "de": "Optionale UUID des Ziel-Agenten"
+                },
+                "bot": "Target agent UUID. Omit to use the current agent.",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "default": "{{JOAI_AGENT_UUID}}",
+                "position": "url:agentUuid"
               }
             ]
           }
@@ -59965,6 +60014,112 @@
       }
     },
     {
+      "key": "none:form-open",
+      "identifier": "@form-open",
+      "alias": "form-open",
+      "chain": "none",
+      "hash": "8314adb677097649c67b0f7674df8bfa163fad85b1b593889381e66a696de3b0",
+      "checksum": "8314adb677097649c67b0f7674df8bfa163fad85b1b593889381e66a696de3b0",
+      "name": "Form: Open",
+      "title": {
+        "en": "Form",
+        "de": "Formular",
+        "fr": "Formulaire",
+        "es": "Formulario",
+        "ro": "Formular",
+        "it": "Form"
+      },
+      "description": {
+        "en": "Open a prefilled public form, edit the fields, and submit it.",
+        "de": "Oeffnet ein vorausgefuelltes oeffentliches Formular, Felder bearbeiten und absenden.",
+        "fr": "Ouvrez un formulaire public pre-rempli, modifiez les champs et envoyez-le.",
+        "es": "Abre un formulario publico precargado, edita los campos y envialo.",
+        "ro": "Deschide un formular public precompletat, editeaza campurile si trimite-l.",
+        "it": "Open a prefilled public form, edit the fields, and submit it."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "da14806a07af833be268c0f09fc6533dc779fd433126ad9e418ac92e38f054d3",
+        "slug": "form",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "Form",
+        "description": {
+          "en": "Create, manage, publish, and install standalone forms for leads, registrations, feedback, and contact requests.",
+          "de": "Erstelle, verwalte, veröffentliche und installiere eigenständige Formulare für Leads, Anmeldungen, Feedback und Kontaktanfragen.",
+          "fr": "Créez, gérez, publiez et installez des formulaires autonomes pour les prospects, inscriptions et retours.",
+          "es": "Crea, gestiona, publica e instala formularios independientes para contactos, registros y comentarios.",
+          "ro": "Creeaza, gestioneaza, publica si instaleaza formulare independente pentru lead-uri, inscrieri si feedback."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "Form: Open",
+        "title": {
+          "en": "Form",
+          "de": "Formular",
+          "fr": "Formulaire",
+          "es": "Formulario",
+          "ro": "Formular",
+          "it": "Form"
+        },
+        "description": {
+          "en": "Open a prefilled public form, edit the fields, and submit it.",
+          "de": "Oeffnet ein vorausgefuelltes oeffentliches Formular, Felder bearbeiten und absenden.",
+          "fr": "Ouvrez un formulaire public pre-rempli, modifiez les champs et envoyez-le.",
+          "es": "Abre un formulario publico precargado, edita los campos y envialo.",
+          "ro": "Deschide un formular public precompletat, editeaza campurile si trimite-l.",
+          "it": "Open a prefilled public form, edit the fields, and submit it."
+        },
+        "bot": "Open a form app for a public JoAi form. Collect the known field values in chat and pass them as `values`; the user can edit everything before submitting. Get the form id from the city or business data. The app submits through form-submit.",
+        "ui": "https://raw.githubusercontent.com/JoAiHQ/warps/main/warps/form/open/chatapp.18edfb87.dist.html",
+        "actions": [
+          {
+            "type": "collect",
+            "auto": true,
+            "inputs": [
+              {
+                "name": "Form ID",
+                "as": "formId",
+                "description": {
+                  "en": "Public form id",
+                  "de": "Oeffentliche Formular-ID"
+                },
+                "bot": "The public form id, for example private_GjJZrBARQKpn.",
+                "type": "string",
+                "source": "field",
+                "required": true,
+                "position": "url:formId"
+              }
+            ],
+            "destination": {
+              "url": "https://devnet-api.joai.ai/v1/warps/{{formId}}",
+              "method": "GET",
+              "headers": {
+                "Accept": "application/json"
+              }
+            },
+            "output": {
+              "FORM": "out.data"
+            }
+          }
+        ]
+      },
+      "extras": null
+    },
+    {
       "key": "none:form-publish",
       "identifier": "@form-publish",
       "alias": "form-publish",
@@ -60636,6 +60791,127 @@
         },
         "category": "productivity"
       }
+    },
+    {
+      "key": "none:form-submit",
+      "identifier": "@form-submit",
+      "alias": "form-submit",
+      "chain": "none",
+      "hash": "9b667e00a2054b1142ad02ddb9c60e970502033e34ffcfc2e691be03d940f0cd",
+      "checksum": "9b667e00a2054b1142ad02ddb9c60e970502033e34ffcfc2e691be03d940f0cd",
+      "name": "Form: Submit",
+      "title": {
+        "en": "Submit form",
+        "de": "Formular absenden",
+        "fr": "Envoyer le formulaire",
+        "es": "Enviar formulario",
+        "ro": "Trimite formularul",
+        "it": "Submit form"
+      },
+      "description": {
+        "en": "Submit inputs to a public JoAi form.",
+        "de": "Sendet Eingaben an ein oeffentliches JoAi-Formular.",
+        "fr": "Envoie des entrees a un formulaire public JoAi.",
+        "es": "Envia entradas a un formulario publico de JoAi.",
+        "ro": "Trimite date catre un formular public JoAi.",
+        "it": "Submit inputs to a public JoAi form."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "da14806a07af833be268c0f09fc6533dc779fd433126ad9e418ac92e38f054d3",
+        "slug": "form",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "Form",
+        "description": {
+          "en": "Create, manage, publish, and install standalone forms for leads, registrations, feedback, and contact requests.",
+          "de": "Erstelle, verwalte, veröffentliche und installiere eigenständige Formulare für Leads, Anmeldungen, Feedback und Kontaktanfragen.",
+          "fr": "Créez, gérez, publiez et installez des formulaires autonomes pour les prospects, inscriptions et retours.",
+          "es": "Crea, gestiona, publica e instala formularios independientes para contactos, registros y comentarios.",
+          "ro": "Creeaza, gestioneaza, publica si instaleaza formulare independente pentru lead-uri, inscrieri si feedback."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "Form: Submit",
+        "title": {
+          "en": "Submit form",
+          "de": "Formular absenden",
+          "fr": "Envoyer le formulaire",
+          "es": "Enviar formulario",
+          "ro": "Trimite formularul",
+          "it": "Submit form"
+        },
+        "description": {
+          "en": "Submit inputs to a public JoAi form.",
+          "de": "Sendet Eingaben an ein oeffentliches JoAi-Formular.",
+          "fr": "Envoie des entrees a un formulaire public JoAi.",
+          "es": "Envia entradas a un formulario publico de JoAi.",
+          "ro": "Trimite date catre un formular public JoAi.",
+          "it": "Submit inputs to a public JoAi form."
+        },
+        "bot": "Use this only from the @form-open app after the user has reviewed and confirmed the inputs. It executes the public form definition with the submitted inputs.",
+        "actions": [
+          {
+            "type": "collect",
+            "inputs": [
+              {
+                "name": "Form ID",
+                "as": "formId",
+                "type": "string",
+                "source": "field",
+                "required": true,
+                "position": "url:formId"
+              },
+              {
+                "name": "Inputs",
+                "as": "inputs",
+                "type": "json",
+                "source": "field",
+                "required": true,
+                "position": "payload:inputs",
+                "description": {
+                  "en": "Form field inputs",
+                  "de": "Formularfelder"
+                },
+                "bot": "The form inputs to validate and execute, keyed by field name."
+              },
+              {
+                "name": "Locale",
+                "as": "locale",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "position": "payload:context.locale"
+              }
+            ],
+            "destination": {
+              "url": "https://devnet-api.joai.ai/v1/warps/{{formId}}/execute",
+              "method": "POST",
+              "headers": {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+              }
+            }
+          }
+        ],
+        "output": {
+          "EXECUTION": "out.data"
+        }
+      },
+      "extras": null
     },
     {
       "key": "none:form-unpublish",
@@ -75146,6 +75422,721 @@
         }
       },
       "extras": null
+    },
+    {
+      "key": "none:joai-bank-account-list",
+      "identifier": "@joai-bank-account-list",
+      "alias": "joai-bank-account-list",
+      "chain": "none",
+      "hash": "0c9bd0df652eaff965a9f5388da4f05da9f9b83eebabe6abdc46c65157a2eec5",
+      "checksum": "0c9bd0df652eaff965a9f5388da4f05da9f9b83eebabe6abdc46c65157a2eec5",
+      "name": "JoAi: List Bank Accounts",
+      "title": {
+        "en": "List bank accounts",
+        "de": "Bankkonten anzeigen",
+        "fr": "Lister les comptes bancaires",
+        "es": "Listar cuentas bancarias",
+        "it": "Elenca conti bancari",
+        "ro": "Listează conturile bancare"
+      },
+      "description": {
+        "en": "List bank accounts with IBAN, provider and linked ledger account.",
+        "de": "Bankkonten mit IBAN, Anbieter und verknüpftem Sachkonto anzeigen.",
+        "fr": "Liste les comptes bancaires avec IBAN, fournisseur et compte comptable lié.",
+        "es": "Lista cuentas bancarias con IBAN, proveedor y cuenta contable vinculada.",
+        "it": "Elenca i conti bancari con IBAN, provider e conto contabile collegato.",
+        "ro": "Listează conturile bancare cu IBAN, furnizor și cont contabil asociat."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: List Bank Accounts",
+        "title": {
+          "en": "List bank accounts",
+          "de": "Bankkonten anzeigen",
+          "fr": "Lister les comptes bancaires",
+          "es": "Listar cuentas bancarias",
+          "it": "Elenca conti bancari",
+          "ro": "Listează conturile bancare"
+        },
+        "description": {
+          "en": "List bank accounts with IBAN, provider and linked ledger account.",
+          "de": "Bankkonten mit IBAN, Anbieter und verknüpftem Sachkonto anzeigen.",
+          "fr": "Liste les comptes bancaires avec IBAN, fournisseur et compte comptable lié.",
+          "es": "Lista cuentas bancarias con IBAN, proveedor y cuenta contable vinculada.",
+          "it": "Elenca i conti bancari con IBAN, provider e conto contabile collegato.",
+          "ro": "Listează conturile bancare cu IBAN, furnizor și cont contabil asociat."
+        },
+        "bot": "Use when the user wants to see bank accounts or needs a bank account ID for importing transactions.",
+        "vars": {
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+          "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "List bank accounts",
+              "de": "Bankkonten anzeigen",
+              "fr": "Lister les comptes bancaires",
+              "es": "Listar cuentas bancarias",
+              "it": "Elenca conti bancari",
+              "ro": "Listează conturile bancare"
+            },
+            "destination": {
+              "url": "https://devnet-api.joai.ai/v1/teams/{{team}}/bank-accounts",
+              "method": "GET",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+                "X-Team": "{{team}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Team",
+                "as": "team",
+                "type": "string",
+                "position": "url:team",
+                "source": "field",
+                "required": false,
+                "default": "{{JOAI_TEAM_SLUG}}",
+                "description": {
+                  "en": "Team slug for this action. Defaults to the current team.",
+                  "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team.",
+                  "fr": "Slug de l’équipe pour cette action. Par défaut, l’équipe actuelle.",
+                  "es": "Slug del equipo para esta acción. Por defecto, el equipo actual.",
+                  "it": "Slug del team per questa azione. Predefinito: team attuale.",
+                  "ro": "Slug-ul echipei pentru această acțiune. Implicit echipa curentă."
+                },
+                "bot": "The slug of the team to operate on. Omit to use the current team."
+              }
+            ],
+            "auto": true,
+            "output": {
+              "accounts": "out.data",
+              "accountsCount": "out.data.length"
+            }
+          }
+        ],
+        "output": {
+          "BANK_ACCOUNTS": "out.data"
+        }
+      },
+      "extras": {
+        "keywords": {
+          "en": [
+            "bank accounts",
+            "IBAN",
+            "bank account list",
+            "bookkeeping bank"
+          ],
+          "de": [
+            "Bankkonten",
+            "IBAN",
+            "Bankkonto Liste",
+            "Buchhaltung Bank"
+          ]
+        },
+        "useCases": {
+          "en": [
+            "Find a bank account ID before importing a statement",
+            "Review linked bank accounts and ledger accounts"
+          ],
+          "de": [
+            "Bankkonto-ID vor dem Import finden",
+            "Verknüpfte Bank- und Sachkonten prüfen"
+          ]
+        },
+        "category": "commerce"
+      }
+    },
+    {
+      "key": "none:joai-bank-transaction-import",
+      "identifier": "@joai-bank-transaction-import",
+      "alias": "joai-bank-transaction-import",
+      "chain": "none",
+      "hash": "d1d27a9b6974a9f1225a272011e6fa2c36d5144b0c72937a60b5a2fa5d84462e",
+      "checksum": "d1d27a9b6974a9f1225a272011e6fa2c36d5144b0c72937a60b5a2fa5d84462e",
+      "name": "JoAi: Import Bank Statement",
+      "title": {
+        "en": "Import bank transactions",
+        "de": "Bankumsätze importieren",
+        "fr": "Importer des transactions bancaires",
+        "es": "Importar movimientos bancarios",
+        "it": "Importa movimenti bancari",
+        "ro": "Importă tranzacții bancare"
+      },
+      "description": {
+        "en": "Import an N26 CSV, CAMT.053 XML or mapped CSV statement into a bank account. Duplicate rows are skipped.",
+        "de": "Importiere einen N26-CSV-, CAMT.053-XML- oder zugeordneten CSV-Auszug in ein Bankkonto. Doppelte Zeilen werden übersprungen.",
+        "fr": "Importe un relevé CSV N26, XML CAMT.053 ou CSV mappé dans un compte bancaire. Les doublons sont ignorés.",
+        "es": "Importa un extracto CSV de N26, XML CAMT.053 o CSV mapeado en una cuenta bancaria. Las filas duplicadas se omiten.",
+        "it": "Importa un estratto CSV N26, XML CAMT.053 o CSV mappato in un conto bancario. Le righe duplicate vengono saltate.",
+        "ro": "Importă un extras CSV N26, XML CAMT.053 sau CSV mapat într-un cont bancar. Rândurile duplicate sunt omise."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: Import Bank Statement",
+        "title": {
+          "en": "Import bank transactions",
+          "de": "Bankumsätze importieren",
+          "fr": "Importer des transactions bancaires",
+          "es": "Importar movimientos bancarios",
+          "it": "Importa movimenti bancari",
+          "ro": "Importă tranzacții bancare"
+        },
+        "description": {
+          "en": "Import an N26 CSV, CAMT.053 XML or mapped CSV statement into a bank account. Duplicate rows are skipped.",
+          "de": "Importiere einen N26-CSV-, CAMT.053-XML- oder zugeordneten CSV-Auszug in ein Bankkonto. Doppelte Zeilen werden übersprungen.",
+          "fr": "Importe un relevé CSV N26, XML CAMT.053 ou CSV mappé dans un compte bancaire. Les doublons sont ignorés.",
+          "es": "Importa un extracto CSV de N26, XML CAMT.053 o CSV mapeado en una cuenta bancaria. Las filas duplicadas se omiten.",
+          "it": "Importa un estratto CSV N26, XML CAMT.053 o CSV mappato in un conto bancario. Le righe duplicate vengono saltate.",
+          "ro": "Importă un extras CSV N26, XML CAMT.053 sau CSV mapat într-un cont bancar. Rândurile duplicate sunt omise."
+        },
+        "bot": "Raw bank imports need no approval. Use list_bank_accounts first when the account ID is unknown.",
+        "vars": {
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+          "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Import bank statement",
+              "de": "Bankauszug importieren",
+              "fr": "Importer le relevé",
+              "es": "Importar extracto",
+              "it": "Importa estratto conto",
+              "ro": "Importă extrasul"
+            },
+            "destination": {
+              "url": "https://devnet-api.joai.ai/v1/teams/{{team}}/bank-accounts/{{bankAccountId}}/imports",
+              "method": "POST",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+                "X-Team": "{{team}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Bank account ID",
+                "as": "bankAccountId",
+                "type": "string",
+                "source": "field",
+                "required": true,
+                "description": {
+                  "en": "Bank account hash ID",
+                  "de": "Bankkonto-Hash-ID",
+                  "fr": "Hash ID du compte bancaire",
+                  "es": "Hash ID de la cuenta bancaria",
+                  "it": "Hash ID del conto bancario",
+                  "ro": "Hash ID-ul contului bancar"
+                },
+                "position": "url:bankAccountId"
+              },
+              {
+                "name": "Contents",
+                "as": "contents",
+                "type": "string",
+                "source": "field",
+                "required": true,
+                "description": {
+                  "en": "Raw CSV or CAMT.053 XML contents",
+                  "de": "Rohe CSV- oder CAMT.053-XML-Inhalte",
+                  "fr": "Contenu brut CSV ou XML CAMT.053",
+                  "es": "Contenido bruto CSV o XML CAMT.053",
+                  "it": "Contenuto grezzo CSV o XML CAMT.053",
+                  "ro": "Conținut brut CSV sau XML CAMT.053"
+                }
+              },
+              {
+                "name": "Format",
+                "as": "format",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "description": {
+                  "en": "Statement format, auto-detected when omitted",
+                  "de": "Auszugsformat, wird sonst automatisch erkannt",
+                  "fr": "Format du relevé, détecté automatiquement si omis",
+                  "es": "Formato del extracto, se detecta automáticamente",
+                  "it": "Formato estratto conto, rilevato automaticamente se omesso",
+                  "ro": "Formatul extrasului, detectat automat dacă este omis"
+                },
+                "options": [
+                  "n26",
+                  "camt053",
+                  "csv"
+                ]
+              },
+              {
+                "name": "File name",
+                "as": "fileName",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "description": {
+                  "en": "Original file name",
+                  "de": "Ursprünglicher Dateiname",
+                  "fr": "Nom du fichier d’origine",
+                  "es": "Nombre del archivo original",
+                  "it": "Nome file originale",
+                  "ro": "Numele fișierului original"
+                }
+              },
+              {
+                "name": "Mapping",
+                "as": "mapping",
+                "type": "json",
+                "source": "field",
+                "required": false,
+                "description": {
+                  "en": "CSV column mapping: {\"bookedAt\":\"datum\",\"amount\":\"betrag\"}",
+                  "de": "CSV-Spaltenzuordnung: {\"bookedAt\":\"datum\",\"amount\":\"betrag\"}",
+                  "fr": "Correspondance CSV : {\"bookedAt\":\"datum\",\"amount\":\"betrag\"}",
+                  "es": "Mapeo CSV: {\"bookedAt\":\"datum\",\"amount\":\"betrag\"}",
+                  "it": "Mappatura CSV: {\"bookedAt\":\"datum\",\"amount\":\"betrag\"}",
+                  "ro": "Mapare CSV: {\"bookedAt\":\"datum\",\"amount\":\"betrag\"}"
+                }
+              },
+              {
+                "name": "Since",
+                "as": "since",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "description": {
+                  "en": "Fetch-since date for future live importers (YYYY-MM-DD)",
+                  "de": "Ab-Datum für künftige Live-Importer (JJJJ-MM-TT)",
+                  "fr": "Date depuis pour de futurs importeurs live (AAAA-MM-JJ)",
+                  "es": "Fecha desde para futuros importadores live (AAAA-MM-DD)",
+                  "it": "Data da per futuri importer live (AAAA-MM-GG)",
+                  "ro": "Data de la pentru importatori live viitori (AAAA-LL-ZZ)"
+                }
+              },
+              {
+                "name": "Team",
+                "as": "team",
+                "type": "string",
+                "position": "url:team",
+                "source": "field",
+                "required": false,
+                "default": "{{JOAI_TEAM_SLUG}}",
+                "description": {
+                  "en": "Team slug for this action. Defaults to the current team.",
+                  "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team.",
+                  "fr": "Slug de l’équipe pour cette action. Par défaut, l’équipe actuelle.",
+                  "es": "Slug del equipo para esta acción. Por defecto, el equipo actual.",
+                  "it": "Slug del team per questa azione. Predefinito: team attuale.",
+                  "ro": "Slug-ul echipei pentru această acțiune. Implicit echipa curentă."
+                },
+                "bot": "The slug of the team to operate on. Omit to use the current team."
+              }
+            ],
+            "auto": true,
+            "output": {
+              "import": "out.data.import",
+              "importedCount": "out.data.import.importedCount",
+              "duplicateCount": "out.data.import.duplicateCount"
+            }
+          }
+        ],
+        "output": {
+          "BANK_IMPORT": "out.data.import",
+          "BANK_IMPORT_ID": "out.data.import.id"
+        }
+      },
+      "extras": {
+        "keywords": {
+          "en": [
+            "import bank statement",
+            "N26 CSV",
+            "CAMT.053",
+            "bank import",
+            "CSV mapping"
+          ],
+          "de": [
+            "Bankauszug importieren",
+            "N26 CSV",
+            "CAMT.053",
+            "Bankimport",
+            "CSV-Zuordnung"
+          ]
+        },
+        "useCases": {
+          "en": [
+            "Import an N26 CSV export into a bank account",
+            "Import a CAMT.053 XML statement",
+            "Import a mapped generic CSV without creating duplicates"
+          ],
+          "de": [
+            "N26-CSV-Export in ein Bankkonto importieren",
+            "CAMT.053-XML-Auszug importieren",
+            "Zugeordnetes CSV ohne Duplikate importieren"
+          ]
+        },
+        "category": "commerce",
+        "faq": {
+          "en": [
+            {
+              "question": "Does importing create bookings?",
+              "answer": "No. It only imports bank lines and never touches the ledger."
+            },
+            {
+              "question": "What happens on re-import?",
+              "answer": "Existing rows are skipped by external ID or stable hash."
+            }
+          ],
+          "de": [
+            {
+              "question": "Erzeugt der Import Buchungen?",
+              "answer": "Nein. Er importiert nur Bankzeilen und verändert das Journal nicht."
+            },
+            {
+              "question": "Was passiert bei erneutem Import?",
+              "answer": "Bestehende Zeilen werden über externe ID oder stabilen Hash übersprungen."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "key": "none:joai-bank-transaction-list",
+      "identifier": "@joai-bank-transaction-list",
+      "alias": "joai-bank-transaction-list",
+      "chain": "none",
+      "hash": "5a0c525b88eacf95300d1779f1d445f590a8bb4cce7e36c8438ff08c6a3f1613",
+      "checksum": "5a0c525b88eacf95300d1779f1d445f590a8bb4cce7e36c8438ff08c6a3f1613",
+      "name": "JoAi: List Bank Transactions",
+      "title": {
+        "en": "List bank transactions",
+        "de": "Bankumsätze anzeigen",
+        "fr": "Lister les transactions bancaires",
+        "es": "Listar movimientos bancarios",
+        "it": "Elenca movimenti bancari",
+        "ro": "Listează tranzacțiile bancare"
+      },
+      "description": {
+        "en": "List imported bank transactions with filters for account, status, date and search.",
+        "de": "Importierte Bankumsätze mit Filtern für Konto, Status, Datum und Suche anzeigen.",
+        "fr": "Liste les transactions bancaires importées avec filtres par compte, statut, date et recherche.",
+        "es": "Lista movimientos bancarios importados con filtros por cuenta, estado, fecha y búsqueda.",
+        "it": "Elenca i movimenti bancari importati con filtri per conto, stato, data e ricerca.",
+        "ro": "Listează tranzacțiile bancare importate cu filtre după cont, stare, dată și căutare."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: List Bank Transactions",
+        "title": {
+          "en": "List bank transactions",
+          "de": "Bankumsätze anzeigen",
+          "fr": "Lister les transactions bancaires",
+          "es": "Listar movimientos bancarios",
+          "it": "Elenca movimenti bancari",
+          "ro": "Listează tranzacțiile bancare"
+        },
+        "description": {
+          "en": "List imported bank transactions with filters for account, status, date and search.",
+          "de": "Importierte Bankumsätze mit Filtern für Konto, Status, Datum und Suche anzeigen.",
+          "fr": "Liste les transactions bancaires importées avec filtres par compte, statut, date et recherche.",
+          "es": "Lista movimientos bancarios importados con filtros por cuenta, estado, fecha y búsqueda.",
+          "it": "Elenca i movimenti bancari importati con filtri per conto, stato, data e ricerca.",
+          "ro": "Listează tranzacțiile bancare importate cu filtre după cont, stare, dată și căutare."
+        },
+        "bot": "Use when the user wants to review imported bank transactions.",
+        "vars": {
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+          "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "List bank transactions",
+              "de": "Bankumsätze anzeigen",
+              "fr": "Lister les transactions",
+              "es": "Listar movimientos",
+              "it": "Elenca movimenti",
+              "ro": "Listează tranzacțiile"
+            },
+            "destination": {
+              "url": "https://devnet-api.joai.ai/v1/teams/{{team}}/bank-transactions?bankAccountId={{bankAccountId}}&status={{status}}&from={{from}}&to={{to}}&search={{search}}&page={{page}}&perPage={{perPage}}",
+              "method": "GET",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+                "X-Team": "{{team}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Bank account ID",
+                "as": "bankAccountId",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "description": {
+                  "en": "Bank account hash ID",
+                  "de": "Bankkonto-Hash-ID",
+                  "fr": "Hash ID du compte bancaire",
+                  "es": "Hash ID de la cuenta bancaria",
+                  "it": "Hash ID del conto bancario",
+                  "ro": "Hash ID-ul contului bancar"
+                },
+                "position": "query"
+              },
+              {
+                "name": "Status",
+                "as": "status",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "description": {
+                  "en": "Filter by status",
+                  "de": "Nach Status filtern",
+                  "fr": "Filtrer par statut",
+                  "es": "Filtrar por estado",
+                  "it": "Filtra per stato",
+                  "ro": "Filtrează după stare"
+                },
+                "options": [
+                  "open",
+                  "matched",
+                  "booked",
+                  "ignored"
+                ],
+                "position": "query"
+              },
+              {
+                "name": "From",
+                "as": "from",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "description": {
+                  "en": "First booking date (YYYY-MM-DD)",
+                  "de": "Erstes Buchungsdatum (JJJJ-MM-TT)",
+                  "fr": "Première date d’écriture (AAAA-MM-JJ)",
+                  "es": "Primera fecha de asiento (AAAA-MM-DD)",
+                  "it": "Prima data registrazione (AAAA-MM-GG)",
+                  "ro": "Prima dată de înregistrare (AAAA-LL-ZZ)"
+                },
+                "position": "query"
+              },
+              {
+                "name": "To",
+                "as": "to",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "description": {
+                  "en": "Last booking date (YYYY-MM-DD)",
+                  "de": "Letztes Buchungsdatum (JJJJ-MM-TT)",
+                  "fr": "Dernière date d’écriture (AAAA-MM-JJ)",
+                  "es": "Última fecha de asiento (AAAA-MM-DD)",
+                  "it": "Ultima data registrazione (AAAA-MM-GG)",
+                  "ro": "Ultima dată de înregistrare (AAAA-LL-ZZ)"
+                },
+                "position": "query"
+              },
+              {
+                "name": "Search",
+                "as": "search",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "description": {
+                  "en": "Search counterparty, reference, IBAN or external ID",
+                  "de": "Gegenpartei, Verwendungszweck, IBAN oder externe ID durchsuchen",
+                  "fr": "Rechercher contrepartie, référence, IBAN ou ID externe",
+                  "es": "Buscar contraparte, referencia, IBAN o ID externo",
+                  "it": "Cerca controparte, riferimento, IBAN o ID esterno",
+                  "ro": "Caută contrapartidă, referință, IBAN sau ID extern"
+                },
+                "position": "query"
+              },
+              {
+                "name": "Page",
+                "as": "page",
+                "type": "uint16",
+                "source": "field",
+                "required": false,
+                "description": {
+                  "en": "Page number (default 1)",
+                  "de": "Seitennummer (Standard 1)",
+                  "fr": "Numéro de page (par défaut 1)",
+                  "es": "Número de página (por defecto 1)",
+                  "it": "Numero pagina (predefinito 1)",
+                  "ro": "Numărul paginii (implicit 1)"
+                },
+                "default": "1",
+                "position": "query"
+              },
+              {
+                "name": "Per page",
+                "as": "perPage",
+                "type": "uint16",
+                "source": "field",
+                "required": false,
+                "description": {
+                  "en": "Results per page (max 100)",
+                  "de": "Ergebnisse pro Seite (max. 100)",
+                  "fr": "Résultats par page (max 100)",
+                  "es": "Resultados por página (máx. 100)",
+                  "it": "Risultati per pagina (max 100)",
+                  "ro": "Rezultate pe pagină (max. 100)"
+                },
+                "default": "50",
+                "position": "query"
+              },
+              {
+                "name": "Team",
+                "as": "team",
+                "type": "string",
+                "position": "url:team",
+                "source": "field",
+                "required": false,
+                "default": "{{JOAI_TEAM_SLUG}}",
+                "description": {
+                  "en": "Team slug for this action. Defaults to the current team.",
+                  "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team.",
+                  "fr": "Slug de l’équipe pour cette action. Par défaut, l’équipe actuelle.",
+                  "es": "Slug del equipo para esta acción. Por defecto, el equipo actual.",
+                  "it": "Slug del team per questa azione. Predefinito: team attuale.",
+                  "ro": "Slug-ul echipei pentru această acțiune. Implicit echipa curentă."
+                },
+                "bot": "The slug of the team to operate on. Omit to use the current team."
+              }
+            ],
+            "auto": true,
+            "output": {
+              "transactions": "out.data",
+              "transactionsCount": "out.data.length"
+            }
+          }
+        ],
+        "output": {
+          "BANK_TRANSACTIONS": "out.data"
+        }
+      },
+      "extras": {
+        "keywords": {
+          "en": [
+            "bank transactions",
+            "statement lines",
+            "imported transactions",
+            "bank movements"
+          ],
+          "de": [
+            "Bankumsätze",
+            "Kontoauszug Zeilen",
+            "importierte Umsätze",
+            "Bankbewegungen"
+          ]
+        },
+        "useCases": {
+          "en": [
+            "Review imported bank statement lines",
+            "Filter transactions by account, status, date or counterparty"
+          ],
+          "de": [
+            "Importierte Kontoauszugzeilen prüfen",
+            "Umsätze nach Konto, Status, Datum oder Gegenpartei filtern"
+          ]
+        },
+        "category": "commerce"
+      }
     },
     {
       "key": "none:joai-blueprint-create",
@@ -94831,6 +95822,1860 @@
         }
       },
       "extras": null
+    },
+    {
+      "key": "none:joai-ledger-account-create",
+      "identifier": "@joai-ledger-account-create",
+      "alias": "joai-ledger-account-create",
+      "chain": "none",
+      "hash": "62f8e73393a27cf1ad62f7283360b5ff216ade8fda80a6526ae8d2a14eb14e67",
+      "checksum": "62f8e73393a27cf1ad62f7283360b5ff216ade8fda80a6526ae8d2a14eb14e67",
+      "name": "JoAi: Create Ledger Account",
+      "title": {
+        "en": "Create ledger account",
+        "de": "Konto anlegen",
+        "fr": "Créer un compte",
+        "es": "Crear cuenta",
+        "it": "Crea conto",
+        "ro": "Creează cont"
+      },
+      "description": {
+        "en": "Add an account to the team chart of accounts, for example an expense account or a VAT account.",
+        "de": "Ein Konto zum Kontenplan des Teams hinzufügen, zum Beispiel ein Aufwands- oder Steuerkonto.",
+        "fr": "Ajoute un compte au plan comptable de l’équipe, par exemple un compte de charges ou de TVA.",
+        "es": "Añade una cuenta al plan contable del equipo, por ejemplo una cuenta de gastos o de IVA.",
+        "it": "Aggiunge un conto al piano dei conti del team, ad esempio un conto di costo o IVA.",
+        "ro": "Adaugă un cont în planul de conturi al echipei, de exemplu un cont de cheltuieli sau de TVA."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: Create Ledger Account",
+        "title": {
+          "en": "Create ledger account",
+          "de": "Konto anlegen",
+          "fr": "Créer un compte",
+          "es": "Crear cuenta",
+          "it": "Crea conto",
+          "ro": "Creează cont"
+        },
+        "description": {
+          "en": "Add an account to the team chart of accounts, for example an expense account or a VAT account.",
+          "de": "Ein Konto zum Kontenplan des Teams hinzufügen, zum Beispiel ein Aufwands- oder Steuerkonto.",
+          "fr": "Ajoute un compte au plan comptable de l’équipe, par exemple un compte de charges ou de TVA.",
+          "es": "Añade una cuenta al plan contable del equipo, por ejemplo una cuenta de gastos o de IVA.",
+          "it": "Aggiunge un conto al piano dei conti del team, ad esempio un conto di costo o IVA.",
+          "ro": "Adaugă un cont în planul de conturi al echipei, de exemplu un cont de cheltuieli sau de TVA."
+        },
+        "bot": "Use when a booking needs an account that is missing from the chart. List ledger accounts first; codes must be unique per team.",
+        "vars": {
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+          "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Account",
+              "de": "Konto",
+              "fr": "Compte",
+              "es": "Cuenta",
+              "it": "Conto",
+              "ro": "Cont"
+            },
+            "destination": {
+              "url": "https://devnet-api.joai.ai/v1/teams/{{team}}/ledger-accounts",
+              "method": "POST",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+                "X-Team": "{{team}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Code",
+                "as": "code",
+                "type": "string",
+                "source": "field",
+                "required": true,
+                "description": {
+                  "en": "Account code, letters and digits (e.g. HOS, 2513)",
+                  "de": "Kontonummer, Buchstaben und Ziffern (z. B. HOS, 2513)",
+                  "fr": "Code du compte, lettres et chiffres (ex. HOS, 2513)",
+                  "es": "Código de cuenta, letras y números (p. ej. HOS, 2513)",
+                  "it": "Codice conto, lettere e cifre (es. HOS, 2513)",
+                  "ro": "Codul contului, litere și cifre (ex. HOS, 2513)"
+                },
+                "bot": "Unique account code; stored in upper case."
+              },
+              {
+                "name": "Name",
+                "as": "name",
+                "type": "string",
+                "source": "field",
+                "required": true,
+                "description": {
+                  "en": "Account name",
+                  "de": "Kontobezeichnung",
+                  "fr": "Nom du compte",
+                  "es": "Nombre de la cuenta",
+                  "it": "Nome del conto",
+                  "ro": "Numele contului"
+                },
+                "bot": "Human-readable account name."
+              },
+              {
+                "name": "Type",
+                "as": "type",
+                "type": "string",
+                "source": "field",
+                "required": true,
+                "description": {
+                  "en": "Account type",
+                  "de": "Kontotyp",
+                  "fr": "Type de compte",
+                  "es": "Tipo de cuenta",
+                  "it": "Tipo di conto",
+                  "ro": "Tipul contului"
+                },
+                "bot": "asset, liability, equity, revenue or expense.",
+                "options": [
+                  "asset",
+                  "liability",
+                  "equity",
+                  "revenue",
+                  "expense"
+                ]
+              },
+              {
+                "name": "Role",
+                "as": "role",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "description": {
+                  "en": "Optional system role",
+                  "de": "Optionale Systemrolle",
+                  "fr": "Rôle système facultatif",
+                  "es": "Rol de sistema opcional",
+                  "it": "Ruolo di sistema facoltativo",
+                  "ro": "Rol de sistem opțional"
+                },
+                "bot": "Use input_vat or output_vat for VAT accounts so they count in the VAT summary.",
+                "options": [
+                  "bank",
+                  "cash",
+                  "receivable",
+                  "payable",
+                  "input_vat",
+                  "output_vat",
+                  "private"
+                ]
+              },
+              {
+                "name": "Default tax code",
+                "as": "defaultTaxCodeId",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "description": {
+                  "en": "Optional default tax code hash ID",
+                  "de": "Optionale Standard-Steuercode-Hash-ID",
+                  "fr": "Hash ID du code TVA par défaut facultatif",
+                  "es": "Hash ID del código de IVA predeterminado opcional",
+                  "it": "Hash ID del codice IVA predefinito facoltativo",
+                  "ro": "Hash ID opțional al codului de TVA implicit"
+                },
+                "bot": "Hash ID from the tax code list."
+              },
+              {
+                "name": "Team",
+                "as": "team",
+                "type": "string",
+                "position": "url:team",
+                "source": "field",
+                "required": false,
+                "default": "{{JOAI_TEAM_SLUG}}",
+                "description": {
+                  "en": "Team slug for this action. Defaults to the current team.",
+                  "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team.",
+                  "fr": "Slug de l’équipe pour cette action. Par défaut, l’équipe actuelle.",
+                  "es": "Slug del equipo para esta acción. Por defecto, el equipo actual.",
+                  "it": "Slug del team per questa azione. Predefinito: team attuale.",
+                  "ro": "Slug-ul echipei pentru această acțiune. Implicit echipa curentă."
+                },
+                "bot": "The slug of the team to operate on. Omit to use the current team."
+              }
+            ],
+            "output": {
+              "account": "out.data"
+            }
+          }
+        ],
+        "output": {
+          "LEDGER_ACCOUNT": "out.data"
+        }
+      },
+      "extras": {
+        "keywords": {
+          "en": [
+            "create ledger account",
+            "add account",
+            "chart of accounts",
+            "VAT account"
+          ],
+          "de": [
+            "Konto anlegen",
+            "Sachkonto erstellen",
+            "Kontenplan erweitern",
+            "Steuerkonto"
+          ]
+        },
+        "useCases": {
+          "en": [
+            "Add a missing expense or revenue account before booking",
+            "Add a reverse-charge or acquisition VAT account"
+          ],
+          "de": [
+            "Fehlendes Aufwands- oder Erlöskonto vor der Buchung anlegen",
+            "Reverse-Charge- oder Erwerbsteuerkonto anlegen"
+          ]
+        },
+        "category": "commerce"
+      }
+    },
+    {
+      "key": "none:joai-ledger-account-list",
+      "identifier": "@joai-ledger-account-list",
+      "alias": "joai-ledger-account-list",
+      "chain": "none",
+      "hash": "570753e23e6601f0925bb174ad80e80319443f3ce3975bcd067cd2025183b771",
+      "checksum": "570753e23e6601f0925bb174ad80e80319443f3ce3975bcd067cd2025183b771",
+      "name": "JoAi: List Ledger Accounts",
+      "title": {
+        "en": "List ledger accounts",
+        "de": "Konten anzeigen",
+        "fr": "Lister les comptes",
+        "es": "Listar cuentas",
+        "it": "Elenca conti",
+        "ro": "Listează conturile"
+      },
+      "description": {
+        "en": "List the team chart of accounts, including bank, cash, revenue, VAT and private accounts.",
+        "de": "Kontenplan des Teams anzeigen, inklusive Bank, Kasse, Erlöse, Umsatzsteuer und Privatkonten.",
+        "fr": "Liste le plan comptable de l’équipe, avec banque, caisse, revenus, TVA et comptes privés.",
+        "es": "Lista el plan de cuentas del equipo, incluidas banco, caja, ingresos, IVA y cuentas privadas.",
+        "it": "Elenca il piano dei conti del team, inclusi banca, cassa, ricavi, IVA e conti privati.",
+        "ro": "Listează planul de conturi al echipei, inclusiv bancă, casă, venituri, TVA și conturi private."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: List Ledger Accounts",
+        "title": {
+          "en": "List ledger accounts",
+          "de": "Konten anzeigen",
+          "fr": "Lister les comptes",
+          "es": "Listar cuentas",
+          "it": "Elenca conti",
+          "ro": "Listează conturile"
+        },
+        "description": {
+          "en": "List the team chart of accounts, including bank, cash, revenue, VAT and private accounts.",
+          "de": "Kontenplan des Teams anzeigen, inklusive Bank, Kasse, Erlöse, Umsatzsteuer und Privatkonten.",
+          "fr": "Liste le plan comptable de l’équipe, avec banque, caisse, revenus, TVA et comptes privés.",
+          "es": "Lista el plan de cuentas del equipo, incluidas banco, caja, ingresos, IVA y cuentas privadas.",
+          "it": "Elenca il piano dei conti del team, inclusi banca, cassa, ricavi, IVA e conti privati.",
+          "ro": "Listează planul de conturi al echipei, inclusiv bancă, casă, venituri, TVA și conturi private."
+        },
+        "bot": "Use when the user wants to see the bookkeeping accounts or find an account code/hash ID before booking.",
+        "vars": {
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+          "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "List ledger accounts",
+              "de": "Konten anzeigen",
+              "fr": "Lister les comptes",
+              "es": "Listar cuentas",
+              "it": "Elenca conti",
+              "ro": "Listează conturile"
+            },
+            "destination": {
+              "url": "https://devnet-api.joai.ai/v1/teams/{{team}}/ledger-accounts?includeArchived={{includeArchived}}",
+              "method": "GET",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+                "X-Team": "{{team}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Include archived",
+                "as": "includeArchived",
+                "type": "bool",
+                "source": "field",
+                "required": false,
+                "description": {
+                  "en": "Include archived accounts too",
+                  "de": "Auch archivierte Konten anzeigen",
+                  "fr": "Inclure aussi les comptes archivés",
+                  "es": "Incluir también cuentas archivadas",
+                  "it": "Includi anche i conti archiviati",
+                  "ro": "Include și conturile arhivate"
+                },
+                "bot": "Set true to include archived accounts.",
+                "default": false
+              },
+              {
+                "name": "Team",
+                "as": "team",
+                "type": "string",
+                "position": "url:team",
+                "source": "field",
+                "required": false,
+                "default": "{{JOAI_TEAM_SLUG}}",
+                "description": {
+                  "en": "Team slug for this action. Defaults to the current team.",
+                  "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team.",
+                  "fr": "Slug de l’équipe pour cette action. Par défaut, l’équipe actuelle.",
+                  "es": "Slug del equipo para esta acción. Por defecto, el equipo actual.",
+                  "it": "Slug del team per questa azione. Predefinito: team attuale.",
+                  "ro": "Slug-ul echipei pentru această acțiune. Implicit echipa curentă."
+                },
+                "bot": "The slug of the team to operate on. Omit to use the current team."
+              }
+            ],
+            "auto": true,
+            "output": {
+              "accounts": "out.data",
+              "accountsCount": "out.data.length"
+            }
+          }
+        ],
+        "output": {
+          "LEDGER_ACCOUNTS": "out.data"
+        }
+      },
+      "extras": {
+        "keywords": {
+          "en": [
+            "ledger accounts",
+            "chart of accounts",
+            "bookkeeping accounts",
+            "accounting codes"
+          ],
+          "de": [
+            "Sachkonten",
+            "Kontenplan",
+            "Buchhaltungskonten",
+            "Kontocode"
+          ]
+        },
+        "useCases": {
+          "en": [
+            "Find a ledger account code or hash ID before booking",
+            "Review the team chart of accounts"
+          ],
+          "de": [
+            "Kontocode oder Hash-ID vor der Buchung finden",
+            "Kontenplan des Teams prüfen"
+          ]
+        },
+        "category": "commerce"
+      }
+    },
+    {
+      "key": "none:joai-ledger-entry-create",
+      "identifier": "@joai-ledger-entry-create",
+      "alias": "joai-ledger-entry-create",
+      "chain": "none",
+      "hash": "65d5baccd754f4f04855aa7c103fa01f9fdca6813805942465253c2dab9d1552",
+      "checksum": "65d5baccd754f4f04855aa7c103fa01f9fdca6813805942465253c2dab9d1552",
+      "name": "JoAi: Create Ledger Entry",
+      "title": {
+        "en": "Create ledger entry",
+        "de": "Buchung erstellen",
+        "fr": "Créer une écriture",
+        "es": "Crear asiento",
+        "it": "Crea registrazione",
+        "ro": "Creează înregistrare"
+      },
+      "description": {
+        "en": "Create a balanced double-entry booking. Review the line preview before approving; journal entries cannot be edited later.",
+        "de": "Eine ausgeglichene doppelte Buchung erstellen. Zeilenvorschau vor der Freigabe prüfen; Buchungen können später nicht bearbeitet werden.",
+        "fr": "Crée une écriture équilibrée en partie double. Vérifie l’aperçu des lignes avant l’approbation ; les écritures ne peuvent plus être modifiées ensuite.",
+        "es": "Crea un asiento equilibrado por partida doble. Revisa la vista previa de las líneas antes de aprobar; los asientos no se pueden editar después.",
+        "it": "Crea una registrazione bilanciata in partita doppia. Controlla l’anteprima delle righe prima dell’approvazione; le registrazioni non possono più essere modificate.",
+        "ro": "Creează o înregistrare echilibrată în partidă dublă. Verifică previzualizarea liniilor înainte de aprobare; înregistrările nu mai pot fi modificate."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: Create Ledger Entry",
+        "title": {
+          "en": "Create ledger entry",
+          "de": "Buchung erstellen",
+          "fr": "Créer une écriture",
+          "es": "Crear asiento",
+          "it": "Crea registrazione",
+          "ro": "Creează înregistrare"
+        },
+        "description": {
+          "en": "Create a balanced double-entry booking. Review the line preview before approving; journal entries cannot be edited later.",
+          "de": "Eine ausgeglichene doppelte Buchung erstellen. Zeilenvorschau vor der Freigabe prüfen; Buchungen können später nicht bearbeitet werden.",
+          "fr": "Crée une écriture équilibrée en partie double. Vérifie l’aperçu des lignes avant l’approbation ; les écritures ne peuvent plus être modifiées ensuite.",
+          "es": "Crea un asiento equilibrado por partida doble. Revisa la vista previa de las líneas antes de aprobar; los asientos no se pueden editar después.",
+          "it": "Crea una registrazione bilanciata in partita doppia. Controlla l’anteprima delle righe prima dell’approvazione; le registrazioni non possono più essere modificate.",
+          "ro": "Creează o înregistrare echilibrată în partidă dublă. Verifică previzualizarea liniilor înainte de aprobare; înregistrările nu mai pot fi modificate."
+        },
+        "bot": "Use only after the user explicitly asked to book something and the debit/credit lines are known. Always show the line preview and get approval before executing.",
+        "vars": {
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+          "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Booking lines",
+              "de": "Buchungszeilen",
+              "fr": "Lignes d’écriture",
+              "es": "Líneas del asiento",
+              "it": "Righe di registrazione",
+              "ro": "Linii de înregistrare"
+            },
+            "destination": {
+              "url": "https://devnet-api.joai.ai/v1/teams/{{team}}/ledger-entries",
+              "method": "POST",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+                "X-Team": "{{team}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Booked at",
+                "as": "bookedAt",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "description": {
+                  "en": "Booking date (YYYY-MM-DD); defaults to today",
+                  "de": "Buchungsdatum (JJJJ-MM-TT); Standard heute",
+                  "fr": "Date d’écriture (AAAA-MM-JJ) ; par défaut aujourd’hui",
+                  "es": "Fecha de asiento (AAAA-MM-DD); por defecto hoy",
+                  "it": "Data registrazione (AAAA-MM-GG); predefinita oggi",
+                  "ro": "Data înregistrării (AAAA-LL-ZZ); implicit azi"
+                },
+                "bot": "Date the booking hits the journal."
+              },
+              {
+                "name": "Document date",
+                "as": "documentDate",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "description": {
+                  "en": "Document date (YYYY-MM-DD)",
+                  "de": "Belegdatum (JJJJ-MM-TT)",
+                  "fr": "Date du document (AAAA-MM-JJ)",
+                  "es": "Fecha del documento (AAAA-MM-DD)",
+                  "it": "Data documento (AAAA-MM-GG)",
+                  "ro": "Data documentului (AAAA-LL-ZZ)"
+                },
+                "bot": "Optional document date."
+              },
+              {
+                "name": "Document media",
+                "as": "documentMediaId",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "description": {
+                  "en": "Optional team media hash ID for the document",
+                  "de": "Optionale Team-Medien-Hash-ID für den Beleg",
+                  "fr": "Hash ID de média d’équipe facultatif pour le document",
+                  "es": "Hash ID de medio del equipo opcional para el documento",
+                  "it": "Hash ID media del team facoltativo per il documento",
+                  "ro": "Hash ID media al echipei opțional pentru document"
+                },
+                "bot": "Optional media hash ID from the team media library."
+              },
+              {
+                "name": "Text",
+                "as": "text",
+                "type": "string",
+                "source": "field",
+                "required": true,
+                "description": {
+                  "en": "Booking text",
+                  "de": "Buchungstext",
+                  "fr": "Libellé de l’écriture",
+                  "es": "Texto del asiento",
+                  "it": "Testo registrazione",
+                  "ro": "Textul înregistrării"
+                },
+                "bot": "Short description shown on the entry."
+              },
+              {
+                "name": "Lines",
+                "as": "lines",
+                "type": "json",
+                "source": "field",
+                "required": true,
+                "description": {
+                  "en": "Array of lines: [{\"accountCode\":\"BA\",\"debit\":11900,\"credit\":0},{\"accountCode\":\"E20\",\"debit\":0,\"credit\":10000,\"taxCode\":\"320\",\"taxBase\":10000},{\"accountCode\":\"3500\",\"debit\":0,\"credit\":1900,\"taxCode\":\"320\",\"taxBase\":10000,\"taxAmount\":1900}]. Sum of debit must equal sum of credit.",
+                  "de": "Array von Zeilen: [{\"accountCode\":\"BA\",\"debit\":11900,\"credit\":0},{\"accountCode\":\"E20\",\"debit\":0,\"credit\":10000,\"taxCode\":\"320\",\"taxBase\":10000},{\"accountCode\":\"3500\",\"debit\":0,\"credit\":1900,\"taxCode\":\"320\",\"taxBase\":10000,\"taxAmount\":1900}]. Summe Soll muss gleich Summe Haben sein.",
+                  "fr": "Tableau de lignes : [{\"accountCode\":\"BA\",\"debit\":11900,\"credit\":0},{\"accountCode\":\"E20\",\"debit\":0,\"credit\":10000,\"taxCode\":\"320\",\"taxBase\":10000},{\"accountCode\":\"3500\",\"debit\":0,\"credit\":1900,\"taxCode\":\"320\",\"taxBase\":10000,\"taxAmount\":1900}]. La somme des débits doit être égale à la somme des crédits.",
+                  "es": "Array de líneas: [{\"accountCode\":\"BA\",\"debit\":11900,\"credit\":0},{\"accountCode\":\"E20\",\"debit\":0,\"credit\":10000,\"taxCode\":\"320\",\"taxBase\":10000},{\"accountCode\":\"3500\",\"debit\":0,\"credit\":1900,\"taxCode\":\"320\",\"taxBase\":10000,\"taxAmount\":1900}]. La suma del debe debe ser igual a la suma del haber.",
+                  "it": "Array di righe: [{\"accountCode\":\"BA\",\"debit\":11900,\"credit\":0},{\"accountCode\":\"E20\",\"debit\":0,\"credit\":10000,\"taxCode\":\"320\",\"taxBase\":10000},{\"accountCode\":\"3500\",\"debit\":0,\"credit\":1900,\"taxCode\":\"320\",\"taxBase\":10000,\"taxAmount\":1900}]. La somma dei dare deve essere uguale alla somma degli avere.",
+                  "ro": "Matrice de linii: [{\"accountCode\":\"BA\",\"debit\":11900,\"credit\":0},{\"accountCode\":\"E20\",\"debit\":0,\"credit\":10000,\"taxCode\":\"320\",\"taxBase\":10000},{\"accountCode\":\"3500\",\"debit\":0,\"credit\":1900,\"taxCode\":\"320\",\"taxBase\":10000,\"taxAmount\":1900}]. Suma debitului trebuie să fie egală cu suma creditului."
+                },
+                "bot": "Balanced lines in cents. Use accountId/taxCodeId hash IDs or accountCode/taxCode codes."
+              },
+              {
+                "name": "Source type",
+                "as": "sourceType",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "description": {
+                  "en": "Source type: manual or order",
+                  "de": "Quelltyp: manual oder order",
+                  "fr": "Type de source : manuel ou commande",
+                  "es": "Tipo de origen: manual o pedido",
+                  "it": "Tipo origine: manuale o ordine",
+                  "ro": "Tip sursă: manual sau comandă"
+                },
+                "options": [
+                  "manual",
+                  "order"
+                ]
+              },
+              {
+                "name": "Source ID",
+                "as": "sourceId",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "description": {
+                  "en": "Optional source ID for idempotency",
+                  "de": "Optionale Quell-ID für Idempotenz",
+                  "fr": "ID de source facultatif pour l’idempotence",
+                  "es": "ID de origen opcional para idempotencia",
+                  "it": "ID origine facoltativo per idempotenza",
+                  "ro": "ID sursă opțional pentru idempotență"
+                }
+              },
+              {
+                "name": "Approval reference",
+                "as": "approvalReference",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "description": {
+                  "en": "Optional approval reference",
+                  "de": "Optionale Freigabereferenz",
+                  "fr": "Référence d’approbation facultative",
+                  "es": "Referencia de aprobación opcional",
+                  "it": "Riferimento di approvazione facoltativo",
+                  "ro": "Referință de aprobare opțională"
+                }
+              },
+              {
+                "name": "Team",
+                "as": "team",
+                "type": "string",
+                "position": "url:team",
+                "source": "field",
+                "required": false,
+                "default": "{{JOAI_TEAM_SLUG}}",
+                "description": {
+                  "en": "Team slug for this action. Defaults to the current team.",
+                  "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team.",
+                  "fr": "Slug de l’équipe pour cette action. Par défaut, l’équipe actuelle.",
+                  "es": "Slug del equipo para esta acción. Por defecto, el equipo actual.",
+                  "it": "Slug del team per questa azione. Predefinito: team attuale.",
+                  "ro": "Slug-ul echipei pentru această acțiune. Implicit echipa curentă."
+                },
+                "bot": "The slug of the team to operate on. Omit to use the current team."
+              }
+            ],
+            "output": {
+              "entry": "out.data",
+              "entryId": "out.data.id"
+            }
+          }
+        ],
+        "output": {
+          "LEDGER_ENTRY": "out.data",
+          "LEDGER_ENTRY_ID": "out.data.id"
+        }
+      },
+      "extras": {
+        "keywords": {
+          "en": [
+            "create booking",
+            "manual booking",
+            "double-entry entry",
+            "journal entry",
+            "book revenue"
+          ],
+          "de": [
+            "Buchung erstellen",
+            "manuelle Buchung",
+            "doppelte Buchung",
+            "Journalbuchung",
+            "Erlös buchen"
+          ]
+        },
+        "useCases": {
+          "en": [
+            "Book a balanced manual journal entry",
+            "Record a correction with explicit debit and credit lines"
+          ],
+          "de": [
+            "Ausgeglichene manuelle Journalbuchung erfassen",
+            "Korrektur mit expliziten Soll- und Haben-Zeilen buchen"
+          ]
+        },
+        "category": "commerce",
+        "faq": {
+          "en": [
+            {
+              "question": "Can I edit a booking later?",
+              "answer": "No. Final journal entries are immutable. Use reversal and a new entry instead."
+            },
+            {
+              "question": "How do I attach a document?",
+              "answer": "Upload it to the team media library first, then pass its media hash ID."
+            }
+          ],
+          "de": [
+            {
+              "question": "Kann ich eine Buchung später bearbeiten?",
+              "answer": "Nein. Endgültige Buchungen sind unveränderlich. Nutze Storno und eine neue Buchung."
+            },
+            {
+              "question": "Wie hänge ich einen Beleg an?",
+              "answer": "Lade ihn zuerst in die Team-Medienbibliothek und übergib dann die Medien-Hash-ID."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "key": "none:joai-ledger-entry-get",
+      "identifier": "@joai-ledger-entry-get",
+      "alias": "joai-ledger-entry-get",
+      "chain": "none",
+      "hash": "ef9ca82923dff451fdbccc5227a4bd4dace3ee3006a9b9929db9adf7b3b7b322",
+      "checksum": "ef9ca82923dff451fdbccc5227a4bd4dace3ee3006a9b9929db9adf7b3b7b322",
+      "name": "JoAi: Get Ledger Entry",
+      "title": {
+        "en": "Show ledger entry",
+        "de": "Buchung anzeigen",
+        "fr": "Afficher l’écriture",
+        "es": "Ver asiento",
+        "it": "Mostra registrazione",
+        "ro": "Afișează înregistrarea"
+      },
+      "description": {
+        "en": "Show one final journal entry with all debit and credit lines.",
+        "de": "Eine endgültige Buchung mit allen Soll- und Haben-Zeilen anzeigen.",
+        "fr": "Affiche une écriture finale avec toutes ses lignes de débit et de crédit.",
+        "es": "Muestra un asiento final con todas sus líneas de debe y haber.",
+        "it": "Mostra una registrazione finale con tutte le righe di dare e avere.",
+        "ro": "Afișează o înregistrare finală cu toate liniile de debit și credit."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: Get Ledger Entry",
+        "title": {
+          "en": "Show ledger entry",
+          "de": "Buchung anzeigen",
+          "fr": "Afficher l’écriture",
+          "es": "Ver asiento",
+          "it": "Mostra registrazione",
+          "ro": "Afișează înregistrarea"
+        },
+        "description": {
+          "en": "Show one final journal entry with all debit and credit lines.",
+          "de": "Eine endgültige Buchung mit allen Soll- und Haben-Zeilen anzeigen.",
+          "fr": "Affiche une écriture finale avec toutes ses lignes de débit et de crédit.",
+          "es": "Muestra un asiento final con todas sus líneas de debe y haber.",
+          "it": "Mostra una registrazione finale con tutte le righe di dare e avere.",
+          "ro": "Afișează o înregistrare finală cu toate liniile de debit și credit."
+        },
+        "bot": "Use when the user wants to inspect one booking before reversing it or checking its lines.",
+        "vars": {
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+          "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Show ledger entry",
+              "de": "Buchung anzeigen",
+              "fr": "Afficher l’écriture",
+              "es": "Ver asiento",
+              "it": "Mostra registrazione",
+              "ro": "Afișează înregistrarea"
+            },
+            "destination": {
+              "url": "https://devnet-api.joai.ai/v1/teams/{{team}}/ledger-entries/{{entryId}}",
+              "method": "GET",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+                "X-Team": "{{team}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Entry ID",
+                "as": "entryId",
+                "type": "string",
+                "source": "field",
+                "required": true,
+                "description": {
+                  "en": "Ledger entry hash ID",
+                  "de": "Buchungs-Hash-ID",
+                  "fr": "Hash ID de l’écriture",
+                  "es": "Hash ID del asiento",
+                  "it": "Hash ID della registrazione",
+                  "ro": "Hash ID-ul înregistrării"
+                },
+                "bot": "The ledger entry hash ID from list_ledger_entries.",
+                "position": "url:entryId"
+              },
+              {
+                "name": "Team",
+                "as": "team",
+                "type": "string",
+                "position": "url:team",
+                "source": "field",
+                "required": false,
+                "default": "{{JOAI_TEAM_SLUG}}",
+                "description": {
+                  "en": "Team slug for this action. Defaults to the current team.",
+                  "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team.",
+                  "fr": "Slug de l’équipe pour cette action. Par défaut, l’équipe actuelle.",
+                  "es": "Slug del equipo para esta acción. Por defecto, el equipo actual.",
+                  "it": "Slug del team per questa azione. Predefinito: team attuale.",
+                  "ro": "Slug-ul echipei pentru această acțiune. Implicit echipa curentă."
+                },
+                "bot": "The slug of the team to operate on. Omit to use the current team."
+              }
+            ],
+            "auto": true,
+            "output": {
+              "entry": "out.data"
+            }
+          }
+        ],
+        "output": {
+          "LEDGER_ENTRY": "out.data"
+        }
+      },
+      "extras": {
+        "keywords": {
+          "en": [
+            "show booking",
+            "ledger entry lines",
+            "booking detail",
+            "journal entry detail"
+          ],
+          "de": [
+            "Buchung anzeigen",
+            "Buchungszeilen",
+            "Buchungsdetails",
+            "Journalbuchung prüfen"
+          ]
+        },
+        "useCases": {
+          "en": [
+            "Inspect every debit and credit line before reversing",
+            "Check tax code and VAT amounts on a booking"
+          ],
+          "de": [
+            "Alle Soll- und Haben-Zeilen vor dem Storno prüfen",
+            "Steuercode und USt-Betrag einer Buchung prüfen"
+          ]
+        },
+        "category": "commerce"
+      }
+    },
+    {
+      "key": "none:joai-ledger-entry-list",
+      "identifier": "@joai-ledger-entry-list",
+      "alias": "joai-ledger-entry-list",
+      "chain": "none",
+      "hash": "be672cf0af895cedee047a1c21144b29e38deea2850e45ba9da3b6240dde68ca",
+      "checksum": "be672cf0af895cedee047a1c21144b29e38deea2850e45ba9da3b6240dde68ca",
+      "name": "JoAi: List Ledger Entries",
+      "title": {
+        "en": "List ledger entries",
+        "de": "Buchungen anzeigen",
+        "fr": "Lister les écritures",
+        "es": "Listar asientos",
+        "it": "Elenca registrazioni",
+        "ro": "Listează înregistrările"
+      },
+      "description": {
+        "en": "List final journal entries for a team, filtered by booking period, source, or account.",
+        "de": "Endgültige Buchungen eines Teams anzeigen, gefiltert nach Buchungszeitraum, Quelle oder Konto.",
+        "fr": "Liste les écritures finales d’une équipe, filtrées par période, source ou compte.",
+        "es": "Lista los asientos finales de un equipo, filtrados por periodo, origen o cuenta.",
+        "it": "Elenca le registrazioni finali di un team, filtrate per periodo, origine o conto.",
+        "ro": "Listează înregistrările finale ale unei echipe, filtrate după perioadă, sursă sau cont."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: List Ledger Entries",
+        "title": {
+          "en": "List ledger entries",
+          "de": "Buchungen anzeigen",
+          "fr": "Lister les écritures",
+          "es": "Listar asientos",
+          "it": "Elenca registrazioni",
+          "ro": "Listează înregistrările"
+        },
+        "description": {
+          "en": "List final journal entries for a team, filtered by booking period, source, or account.",
+          "de": "Endgültige Buchungen eines Teams anzeigen, gefiltert nach Buchungszeitraum, Quelle oder Konto.",
+          "fr": "Liste les écritures finales d’une équipe, filtrées par période, source ou compte.",
+          "es": "Lista los asientos finales de un equipo, filtrados por periodo, origen o cuenta.",
+          "it": "Elenca le registrazioni finali di un team, filtrate per periodo, origine o conto.",
+          "ro": "Listează înregistrările finale ale unei echipe, filtrate după perioadă, sursă sau cont."
+        },
+        "bot": "Use when the user wants to inspect bookings, find a booking ID for reversal, or review a period.",
+        "vars": {
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+          "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "List ledger entries",
+              "de": "Buchungen anzeigen",
+              "fr": "Lister les écritures",
+              "es": "Listar asientos",
+              "it": "Elenca registrazioni",
+              "ro": "Listează înregistrările"
+            },
+            "destination": {
+              "url": "https://devnet-api.joai.ai/v1/teams/{{team}}/ledger-entries?from={{from}}&to={{to}}&sourceType={{sourceType}}&sourceId={{sourceId}}&accountId={{accountId}}&page={{page}}&perPage={{perPage}}",
+              "method": "GET",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+                "X-Team": "{{team}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "From",
+                "as": "from",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "description": {
+                  "en": "First booking date (YYYY-MM-DD)",
+                  "de": "Erstes Buchungsdatum (JJJJ-MM-TT)",
+                  "fr": "Première date d’écriture (AAAA-MM-JJ)",
+                  "es": "Primera fecha de asiento (AAAA-MM-DD)",
+                  "it": "Prima data registrazione (AAAA-MM-GG)",
+                  "ro": "Prima dată de înregistrare (AAAA-LL-ZZ)"
+                },
+                "bot": "Inclusive start date.",
+                "position": "query"
+              },
+              {
+                "name": "To",
+                "as": "to",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "description": {
+                  "en": "Last booking date (YYYY-MM-DD)",
+                  "de": "Letztes Buchungsdatum (JJJJ-MM-TT)",
+                  "fr": "Dernière date d’écriture (AAAA-MM-JJ)",
+                  "es": "Última fecha de asiento (AAAA-MM-DD)",
+                  "it": "Ultima data registrazione (AAAA-MM-GG)",
+                  "ro": "Ultima dată de înregistrare (AAAA-LL-ZZ)"
+                },
+                "bot": "Inclusive end date.",
+                "position": "query"
+              },
+              {
+                "name": "Source type",
+                "as": "sourceType",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "description": {
+                  "en": "Filter by source type: order, manual or reversal",
+                  "de": "Nach Quelltyp filtern: order, manual oder reversal",
+                  "fr": "Filtrer par type de source : commande, manuel ou extourne",
+                  "es": "Filtrar por tipo de origen: pedido, manual o rectificación",
+                  "it": "Filtra per tipo origine: ordine, manuale o storno",
+                  "ro": "Filtrează după tip sursă: comandă, manual sau stornare"
+                },
+                "bot": "Optional source type filter.",
+                "options": [
+                  "order",
+                  "manual",
+                  "reversal"
+                ],
+                "position": "query"
+              },
+              {
+                "name": "Source ID",
+                "as": "sourceId",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "description": {
+                  "en": "Filter by source ID (for example an order hash ID)",
+                  "de": "Nach Quell-ID filtern (z. B. Order-Hash-ID)",
+                  "fr": "Filtrer par ID de source (par ex. un hash ID de commande)",
+                  "es": "Filtrar por ID de origen (p. ej., un hash ID de pedido)",
+                  "it": "Filtra per ID origine (ad es. hash ID di un ordine)",
+                  "ro": "Filtrează după ID sursă (de exemplu hash ID comandă)"
+                },
+                "bot": "Optional source ID filter.",
+                "position": "query"
+              },
+              {
+                "name": "Account ID",
+                "as": "accountId",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "description": {
+                  "en": "Filter by ledger account hash ID or account code",
+                  "de": "Nach Konto-Hash-ID oder Kontocode filtern",
+                  "fr": "Filtrer par hash ID de compte ou code de compte",
+                  "es": "Filtrar por hash ID de cuenta o código de cuenta",
+                  "it": "Filtra per hash ID conto o codice conto",
+                  "ro": "Filtrează după hash ID cont sau cod cont"
+                },
+                "bot": "Optional account hash ID or code.",
+                "position": "query"
+              },
+              {
+                "name": "Page",
+                "as": "page",
+                "type": "uint16",
+                "source": "field",
+                "required": false,
+                "description": {
+                  "en": "Page number (default 1)",
+                  "de": "Seitennummer (Standard 1)",
+                  "fr": "Numéro de page (par défaut 1)",
+                  "es": "Número de página (por defecto 1)",
+                  "it": "Numero pagina (predefinito 1)",
+                  "ro": "Numărul paginii (implicit 1)"
+                },
+                "bot": "1-based page number.",
+                "default": "1",
+                "position": "query"
+              },
+              {
+                "name": "Per page",
+                "as": "perPage",
+                "type": "uint16",
+                "source": "field",
+                "required": false,
+                "description": {
+                  "en": "Results per page (max 100)",
+                  "de": "Ergebnisse pro Seite (max. 100)",
+                  "fr": "Résultats par page (max 100)",
+                  "es": "Resultados por página (máx. 100)",
+                  "it": "Risultati per pagina (max 100)",
+                  "ro": "Rezultate pe pagină (max. 100)"
+                },
+                "bot": "Page size, max 100.",
+                "default": "50",
+                "position": "query"
+              },
+              {
+                "name": "Team",
+                "as": "team",
+                "type": "string",
+                "position": "url:team",
+                "source": "field",
+                "required": false,
+                "default": "{{JOAI_TEAM_SLUG}}",
+                "description": {
+                  "en": "Team slug for this action. Defaults to the current team.",
+                  "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team.",
+                  "fr": "Slug de l’équipe pour cette action. Par défaut, l’équipe actuelle.",
+                  "es": "Slug del equipo para esta acción. Por defecto, el equipo actual.",
+                  "it": "Slug del team per questa azione. Predefinito: team attuale.",
+                  "ro": "Slug-ul echipei pentru această acțiune. Implicit echipa curentă."
+                },
+                "bot": "The slug of the team to operate on. Omit to use the current team."
+              }
+            ],
+            "auto": true,
+            "output": {
+              "entries": "out.data",
+              "entriesCount": "out.data.length"
+            }
+          }
+        ],
+        "output": {
+          "LEDGER_ENTRIES": "out.data"
+        }
+      },
+      "extras": {
+        "keywords": {
+          "en": [
+            "list bookings",
+            "journal entries",
+            "ledger entries",
+            "bookings by period",
+            "find booking"
+          ],
+          "de": [
+            "Buchungen anzeigen",
+            "Journalbuchungen",
+            "Buchungen nach Zeitraum",
+            "Buchung finden"
+          ]
+        },
+        "useCases": {
+          "en": [
+            "Review bookings for a period",
+            "Find a booking ID to reverse",
+            "Filter bookings by order, account, or source"
+          ],
+          "de": [
+            "Buchungen eines Zeitraums prüfen",
+            "Buchungs-ID zum Stornieren finden",
+            "Buchungen nach Bestellung, Konto oder Quelle filtern"
+          ]
+        },
+        "category": "commerce"
+      }
+    },
+    {
+      "key": "none:joai-ledger-entry-reverse",
+      "identifier": "@joai-ledger-entry-reverse",
+      "alias": "joai-ledger-entry-reverse",
+      "chain": "none",
+      "hash": "8a7439c72af8ef419c06af080b3e0d8000673cd2fc3050d29b1ad3be898907ac",
+      "checksum": "8a7439c72af8ef419c06af080b3e0d8000673cd2fc3050d29b1ad3be898907ac",
+      "name": "JoAi: Reverse Ledger Entry",
+      "title": {
+        "en": "Reverse ledger entry",
+        "de": "Buchung stornieren",
+        "fr": "Extourner l’écriture",
+        "es": "Rectificar asiento",
+        "it": "Storna registrazione",
+        "ro": "Stornează înregistrarea"
+      },
+      "description": {
+        "en": "Create a reversal entry that swaps every debit and credit. The original journal entry is never edited or deleted.",
+        "de": "Eine Stornobuchung erstellen, die jede Soll- und Haben-Zeile tauscht. Die ursprüngliche Buchung bleibt unverändert.",
+        "fr": "Crée une écriture d’extourne qui inverse chaque débit et crédit. L’écriture d’origine n’est jamais modifiée ni supprimée.",
+        "es": "Crea un asiento de rectificación que invierte cada debe y haber. El asiento original nunca se modifica ni elimina.",
+        "it": "Crea una registrazione di storno che inverte ogni dare e avere. La registrazione originale non viene mai modificata o eliminata.",
+        "ro": "Creează o înregistrare de stornare care inversează fiecare debit și credit. Înregistrarea originală nu este niciodată modificată sau ștearsă."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: Reverse Ledger Entry",
+        "title": {
+          "en": "Reverse ledger entry",
+          "de": "Buchung stornieren",
+          "fr": "Extourner l’écriture",
+          "es": "Rectificar asiento",
+          "it": "Storna registrazione",
+          "ro": "Stornează înregistrarea"
+        },
+        "description": {
+          "en": "Create a reversal entry that swaps every debit and credit. The original journal entry is never edited or deleted.",
+          "de": "Eine Stornobuchung erstellen, die jede Soll- und Haben-Zeile tauscht. Die ursprüngliche Buchung bleibt unverändert.",
+          "fr": "Crée une écriture d’extourne qui inverse chaque débit et crédit. L’écriture d’origine n’est jamais modifiée ni supprimée.",
+          "es": "Crea un asiento de rectificación que invierte cada debe y haber. El asiento original nunca se modifica ni elimina.",
+          "it": "Crea una registrazione di storno che inverte ogni dare e avere. La registrazione originale non viene mai modificata o eliminata.",
+          "ro": "Creează o înregistrare de stornare care inversează fiecare debit și credit. Înregistrarea originală nu este niciodată modificată sau ștearsă."
+        },
+        "bot": "Use when a booking must be corrected. Review the original entry first and confirm the reason before approving.",
+        "vars": {
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+          "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Reversal",
+              "de": "Storno",
+              "fr": "Extourne",
+              "es": "Rectificación",
+              "it": "Storno",
+              "ro": "Stornare"
+            },
+            "destination": {
+              "url": "https://devnet-api.joai.ai/v1/teams/{{team}}/ledger-entries/{{entryId}}/reverse",
+              "method": "POST",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+                "X-Team": "{{team}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Entry ID",
+                "as": "entryId",
+                "type": "string",
+                "source": "field",
+                "required": true,
+                "description": {
+                  "en": "Ledger entry hash ID to reverse",
+                  "de": "Zu stornierende Buchungs-Hash-ID",
+                  "fr": "Hash ID de l’écriture à extourner",
+                  "es": "Hash ID del asiento a rectificar",
+                  "it": "Hash ID della registrazione da stornare",
+                  "ro": "Hash ID-ul înregistrării de stornat"
+                },
+                "bot": "The entry hash ID to reverse.",
+                "position": "url:entryId"
+              },
+              {
+                "name": "Reason",
+                "as": "reason",
+                "type": "string",
+                "source": "field",
+                "required": true,
+                "description": {
+                  "en": "Reversal reason",
+                  "de": "Stornogrund",
+                  "fr": "Motif de l’extourne",
+                  "es": "Motivo de la rectificación",
+                  "it": "Motivo dello storno",
+                  "ro": "Motivul stornării"
+                },
+                "bot": "Clear reason stored on the reversal entry."
+              },
+              {
+                "name": "Booked at",
+                "as": "bookedAt",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "description": {
+                  "en": "Reversal booking date (YYYY-MM-DD); defaults to today",
+                  "de": "Stornobuchungsdatum (JJJJ-MM-TT); Standard heute",
+                  "fr": "Date d’écriture de l’extourne (AAAA-MM-JJ) ; par défaut aujourd’hui",
+                  "es": "Fecha de asiento de la rectificación (AAAA-MM-DD); por defecto hoy",
+                  "it": "Data registrazione storno (AAAA-MM-GG); predefinita oggi",
+                  "ro": "Data înregistrării stornării (AAAA-LL-ZZ); implicit azi"
+                },
+                "bot": "Optional reversal date. It must not fall in a locked period."
+              },
+              {
+                "name": "Approval reference",
+                "as": "approvalReference",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "description": {
+                  "en": "Optional approval reference",
+                  "de": "Optionale Freigabereferenz",
+                  "fr": "Référence d’approbation facultative",
+                  "es": "Referencia de aprobación opcional",
+                  "it": "Riferimento di approvazione facoltativo",
+                  "ro": "Referință de aprobare opțională"
+                }
+              },
+              {
+                "name": "Team",
+                "as": "team",
+                "type": "string",
+                "position": "url:team",
+                "source": "field",
+                "required": false,
+                "default": "{{JOAI_TEAM_SLUG}}",
+                "description": {
+                  "en": "Team slug for this action. Defaults to the current team.",
+                  "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team.",
+                  "fr": "Slug de l’équipe pour cette action. Par défaut, l’équipe actuelle.",
+                  "es": "Slug del equipo para esta acción. Por defecto, el equipo actual.",
+                  "it": "Slug del team per questa azione. Predefinito: team attuale.",
+                  "ro": "Slug-ul echipei pentru această acțiune. Implicit echipa curentă."
+                },
+                "bot": "The slug of the team to operate on. Omit to use the current team."
+              }
+            ],
+            "output": {
+              "entry": "out.data",
+              "entryId": "out.data.id"
+            }
+          }
+        ],
+        "output": {
+          "LEDGER_ENTRY": "out.data",
+          "LEDGER_ENTRY_ID": "out.data.id"
+        }
+      },
+      "extras": {
+        "keywords": {
+          "en": [
+            "reverse booking",
+            "cancel booking",
+            "storno",
+            "correct journal entry"
+          ],
+          "de": [
+            "Buchung stornieren",
+            "Storno",
+            "Buchung korrigieren",
+            "Journalbuchung korrigieren"
+          ]
+        },
+        "useCases": {
+          "en": [
+            "Correct a wrong booking without editing it",
+            "Reverse every debit and credit on an entry"
+          ],
+          "de": [
+            "Falsche Buchung ohne Bearbeitung korrigieren",
+            "Alle Soll- und Haben-Zeilen einer Buchung stornieren"
+          ]
+        },
+        "category": "commerce",
+        "faq": {
+          "en": [
+            {
+              "question": "Does reversal delete the original?",
+              "answer": "No. It creates a new entry linked to the original."
+            },
+            {
+              "question": "Can I reverse a reversal?",
+              "answer": "No. Create a new booking instead."
+            }
+          ],
+          "de": [
+            {
+              "question": "Löscht das Storno die ursprüngliche Buchung?",
+              "answer": "Nein. Es wird eine neue, verknüpfte Buchung erstellt."
+            },
+            {
+              "question": "Kann ich ein Storno stornieren?",
+              "answer": "Nein. Erstelle stattdessen eine neue Buchung."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "key": "none:joai-ledger-period-lock",
+      "identifier": "@joai-ledger-period-lock",
+      "alias": "joai-ledger-period-lock",
+      "chain": "none",
+      "hash": "03b887e2d95cc88654f2989a0ec265e7c41804a910ed6248cc80358a72ad0d36",
+      "checksum": "03b887e2d95cc88654f2989a0ec265e7c41804a910ed6248cc80358a72ad0d36",
+      "name": "JoAi: Lock Ledger Period",
+      "title": {
+        "en": "Lock ledger period",
+        "de": "Zeitraum sperren",
+        "fr": "Verrouiller la période",
+        "es": "Bloquear periodo",
+        "it": "Blocca periodo",
+        "ro": "Blochează perioada"
+      },
+      "description": {
+        "en": "Lock a booking period so no new entry or reversal can be booked into it.",
+        "de": "Einen Buchungszeitraum sperren, damit keine neue Buchung oder Stornierung darin erstellt werden kann.",
+        "fr": "Verrouille une période pour qu’aucune écriture ni extourne ne puisse y être enregistrée.",
+        "es": "Bloquea un periodo para que no se puedan registrar asientos ni rectificaciones en él.",
+        "it": "Blocca un periodo in modo che non possano essere registrate nuove scritture o storni.",
+        "ro": "Blochează o perioadă astfel încât să nu se poată înregistra asumări sau stornări în ea."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: Lock Ledger Period",
+        "title": {
+          "en": "Lock ledger period",
+          "de": "Zeitraum sperren",
+          "fr": "Verrouiller la période",
+          "es": "Bloquear periodo",
+          "it": "Blocca periodo",
+          "ro": "Blochează perioada"
+        },
+        "description": {
+          "en": "Lock a booking period so no new entry or reversal can be booked into it.",
+          "de": "Einen Buchungszeitraum sperren, damit keine neue Buchung oder Stornierung darin erstellt werden kann.",
+          "fr": "Verrouille une période pour qu’aucune écriture ni extourne ne puisse y être enregistrée.",
+          "es": "Bloquea un periodo para que no se puedan registrar asientos ni rectificaciones en él.",
+          "it": "Blocca un periodo in modo che non possano essere registrate nuove scritture o storni.",
+          "ro": "Blochează o perioadă astfel încât să nu se poată înregistra asumări sau stornări în ea."
+        },
+        "bot": "Use when the user explicitly wants to close a month or quarter. Locked periods cannot receive new bookings.",
+        "vars": {
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+          "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Lock period",
+              "de": "Zeitraum sperren",
+              "fr": "Verrouiller la période",
+              "es": "Bloquear periodo",
+              "it": "Blocca periodo",
+              "ro": "Blochează perioada"
+            },
+            "destination": {
+              "url": "https://devnet-api.joai.ai/v1/teams/{{team}}/ledger-periods/lock",
+              "method": "POST",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+                "X-Team": "{{team}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Starts on",
+                "as": "startsOn",
+                "type": "string",
+                "source": "field",
+                "required": true,
+                "description": {
+                  "en": "First date of the period (YYYY-MM-DD)",
+                  "de": "Erstes Datum des Zeitraums (JJJJ-MM-TT)",
+                  "fr": "Première date de la période (AAAA-MM-JJ)",
+                  "es": "Primera fecha del periodo (AAAA-MM-DD)",
+                  "it": "Prima data del periodo (AAAA-MM-GG)",
+                  "ro": "Prima dată a perioadei (AAAA-LL-ZZ)"
+                },
+                "bot": "Inclusive period start."
+              },
+              {
+                "name": "Ends on",
+                "as": "endsOn",
+                "type": "string",
+                "source": "field",
+                "required": true,
+                "description": {
+                  "en": "Last date of the period (YYYY-MM-DD)",
+                  "de": "Letztes Datum des Zeitraums (JJJJ-MM-TT)",
+                  "fr": "Dernière date de la période (AAAA-MM-JJ)",
+                  "es": "Última fecha del periodo (AAAA-MM-DD)",
+                  "it": "Ultima data del periodo (AAAA-MM-GG)",
+                  "ro": "Ultima dată a perioadei (AAAA-LL-ZZ)"
+                },
+                "bot": "Inclusive period end."
+              },
+              {
+                "name": "Team",
+                "as": "team",
+                "type": "string",
+                "position": "url:team",
+                "source": "field",
+                "required": false,
+                "default": "{{JOAI_TEAM_SLUG}}",
+                "description": {
+                  "en": "Team slug for this action. Defaults to the current team.",
+                  "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team.",
+                  "fr": "Slug de l’équipe pour cette action. Par défaut, l’équipe actuelle.",
+                  "es": "Slug del equipo para esta acción. Por defecto, el equipo actual.",
+                  "it": "Slug del team per questa azione. Predefinito: team attuale.",
+                  "ro": "Slug-ul echipei pentru această acțiune. Implicit echipa curentă."
+                },
+                "bot": "The slug of the team to operate on. Omit to use the current team."
+              }
+            ],
+            "output": {
+              "period": "out.data"
+            }
+          }
+        ],
+        "output": {
+          "LEDGER_PERIOD": "out.data"
+        }
+      },
+      "extras": {
+        "keywords": {
+          "en": [
+            "lock period",
+            "close month",
+            "close quarter",
+            "bookkeeping lock"
+          ],
+          "de": [
+            "Zeitraum sperren",
+            "Monat abschließen",
+            "Quartal abschließen",
+            "Buchhaltung sperren"
+          ]
+        },
+        "useCases": {
+          "en": [
+            "Close a month or quarter for bookkeeping",
+            "Prevent new bookings in a completed period"
+          ],
+          "de": [
+            "Monat oder Quartal für die Buchhaltung abschließen",
+            "Neue Buchungen in einem abgeschlossenen Zeitraum verhindern"
+          ]
+        },
+        "category": "commerce"
+      }
+    },
+    {
+      "key": "none:joai-ledger-revenue-entry-create",
+      "identifier": "@joai-ledger-revenue-entry-create",
+      "alias": "joai-ledger-revenue-entry-create",
+      "chain": "none",
+      "hash": "f83058c8a8400acc36ef0d3afd4f3e466f42eeb67e6b3c8a3b70703282b7de16",
+      "checksum": "f83058c8a8400acc36ef0d3afd4f3e466f42eeb67e6b3c8a3b70703282b7de16",
+      "name": "JoAi: Book Order Revenue",
+      "title": {
+        "en": "Book order revenue",
+        "de": "Bestellerlös buchen",
+        "fr": "Comptabiliser le revenu d’une commande",
+        "es": "Registrar ingresos de un pedido",
+        "it": "Registra i ricavi di un ordine",
+        "ro": "Înregistrează venitul unei comenzi"
+      },
+      "description": {
+        "en": "Build and create the revenue booking for an existing JoAi order, using its invoice net/tax amounts and cash or accrual mode.",
+        "de": "Erlösbuchung für eine bestehende JoAi-Bestellung aus Rechnungsnetto/-steuer und Zahlungs- oder Rechnungsdatum erstellen.",
+        "fr": "Construit et crée l’écriture de revenu d’une commande JoAi existante à partir du net et de la TVA de la facture, en mode trésorerie ou engagement.",
+        "es": "Crea el asiento de ingresos de un pedido JoAi existente usando el neto y el IVA de la factura, en modo caja o devengo.",
+        "it": "Crea la registrazione dei ricavi per un ordine JoAi esistente usando netto e IVA della fattura, in modalità cassa o competenza.",
+        "ro": "Creează înregistrarea de venit pentru o comandă JoAi existentă folosind netul și TVA-ul facturii, în modul casă sau angajament."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: Book Order Revenue",
+        "title": {
+          "en": "Book order revenue",
+          "de": "Bestellerlös buchen",
+          "fr": "Comptabiliser le revenu d’une commande",
+          "es": "Registrar ingresos de un pedido",
+          "it": "Registra i ricavi di un ordine",
+          "ro": "Înregistrează venitul unei comenzi"
+        },
+        "description": {
+          "en": "Build and create the revenue booking for an existing JoAi order, using its invoice net/tax amounts and cash or accrual mode.",
+          "de": "Erlösbuchung für eine bestehende JoAi-Bestellung aus Rechnungsnetto/-steuer und Zahlungs- oder Rechnungsdatum erstellen.",
+          "fr": "Construit et crée l’écriture de revenu d’une commande JoAi existante à partir du net et de la TVA de la facture, en mode trésorerie ou engagement.",
+          "es": "Crea el asiento de ingresos de un pedido JoAi existente usando el neto y el IVA de la factura, en modo caja o devengo.",
+          "it": "Crea la registrazione dei ricavi per un ordine JoAi esistente usando netto e IVA della fattura, in modalità cassa o competenza.",
+          "ro": "Creează înregistrarea de venit pentru o comandă JoAi existentă folosind netul și TVA-ul facturii, în modul casă sau angajament."
+        },
+        "bot": "Use when the user wants to book an order into the ledger. Confirm the order and booking date before approving.",
+        "vars": {
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+          "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Revenue booking",
+              "de": "Erlösbuchung",
+              "fr": "Écriture de revenu",
+              "es": "Asiento de ingresos",
+              "it": "Registrazione ricavi",
+              "ro": "Înregistrare venit"
+            },
+            "destination": {
+              "url": "https://devnet-api.joai.ai/v1/teams/{{team}}/ledger-entries/revenue-order",
+              "method": "POST",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+                "X-Team": "{{team}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Order ID",
+                "as": "orderId",
+                "type": "string",
+                "source": "field",
+                "required": true,
+                "description": {
+                  "en": "Order hash ID to book",
+                  "de": "Zu buchende Bestell-Hash-ID",
+                  "fr": "Hash ID de la commande à comptabiliser",
+                  "es": "Hash ID del pedido a registrar",
+                  "it": "Hash ID dell’ordine da registrare",
+                  "ro": "Hash ID-ul comenzii de înregistrat"
+                },
+                "bot": "Order hash ID from list_orders."
+              },
+              {
+                "name": "Paid at",
+                "as": "paidAt",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "description": {
+                  "en": "Payment date for cash mode (YYYY-MM-DD)",
+                  "de": "Zahlungsdatum für E/A-Modus (JJJJ-MM-TT)",
+                  "fr": "Date de paiement pour le mode trésorerie (AAAA-MM-JJ)",
+                  "es": "Fecha de pago para el modo caja (AAAA-MM-DD)",
+                  "it": "Data pagamento per la modalità cassa (AAAA-MM-GG)",
+                  "ro": "Data plății pentru modul casă (AAAA-LL-ZZ)"
+                },
+                "bot": "Optional explicit payment date; otherwise the order payment date is used."
+              },
+              {
+                "name": "Approval reference",
+                "as": "approvalReference",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "description": {
+                  "en": "Optional approval reference",
+                  "de": "Optionale Freigabereferenz",
+                  "fr": "Référence d’approbation facultative",
+                  "es": "Referencia de aprobación opcional",
+                  "it": "Riferimento di approvazione facoltativo",
+                  "ro": "Referință de aprobare opțională"
+                }
+              },
+              {
+                "name": "Team",
+                "as": "team",
+                "type": "string",
+                "position": "url:team",
+                "source": "field",
+                "required": false,
+                "default": "{{JOAI_TEAM_SLUG}}",
+                "description": {
+                  "en": "Team slug for this action. Defaults to the current team.",
+                  "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team.",
+                  "fr": "Slug de l’équipe pour cette action. Par défaut, l’équipe actuelle.",
+                  "es": "Slug del equipo para esta acción. Por defecto, el equipo actual.",
+                  "it": "Slug del team per questa azione. Predefinito: team attuale.",
+                  "ro": "Slug-ul echipei pentru această acțiune. Implicit echipa curentă."
+                },
+                "bot": "The slug of the team to operate on. Omit to use the current team."
+              }
+            ],
+            "output": {
+              "entry": "out.data",
+              "entryId": "out.data.id"
+            }
+          }
+        ],
+        "output": {
+          "LEDGER_ENTRY": "out.data",
+          "LEDGER_ENTRY_ID": "out.data.id"
+        }
+      },
+      "extras": {
+        "keywords": {
+          "en": [
+            "book order revenue",
+            "order revenue",
+            "book invoice",
+            "revenue booking",
+            "cash accrual"
+          ],
+          "de": [
+            "Bestellerlös buchen",
+            "Erlösbuchung",
+            "Rechnung buchen",
+            "Einnahmen buchen",
+            "E/A oder Soll"
+          ]
+        },
+        "useCases": {
+          "en": [
+            "Book an order using its invoice net and VAT amounts",
+            "Post revenue on payment date in cash mode",
+            "Post revenue to receivables in accrual mode"
+          ],
+          "de": [
+            "Bestellung mit Rechnungsnetto und USt buchen",
+            "Erlös im E/A-Modus am Zahlungsdatum buchen",
+            "Erlös im Soll-Modus auf Forderungen buchen"
+          ]
+        },
+        "category": "commerce",
+        "faq": {
+          "en": [
+            {
+              "question": "Which date is used in cash mode?",
+              "answer": "The payment date, or the explicit paidAt date when provided."
+            },
+            {
+              "question": "What happens in accrual mode?",
+              "answer": "Revenue is booked to receivables on the invoice date."
+            }
+          ],
+          "de": [
+            {
+              "question": "Welches Datum wird im E/A-Modus verwendet?",
+              "answer": "Das Zahlungsdatum oder das explizit übergebene paidAt-Datum."
+            },
+            {
+              "question": "Was passiert im Soll-Modus?",
+              "answer": "Der Erlös wird am Rechnungsdatum auf Forderungen gebucht."
+            }
+          ]
+        }
+      }
     },
     {
       "key": "none:joai-link-create",
@@ -118647,6 +121492,163 @@
       }
     },
     {
+      "key": "none:joai-tax-code-list",
+      "identifier": "@joai-tax-code-list",
+      "alias": "joai-tax-code-list",
+      "chain": "none",
+      "hash": "441da36bbae2a9b9fc239baccc39dad52c0024772224ecccf9f7e2cfa88779a4",
+      "checksum": "441da36bbae2a9b9fc239baccc39dad52c0024772224ecccf9f7e2cfa88779a4",
+      "name": "JoAi: List Tax Codes",
+      "title": {
+        "en": "List tax codes",
+        "de": "Steuercodes anzeigen",
+        "fr": "Lister les codes de taxe",
+        "es": "Listar códigos de impuesto",
+        "it": "Elenca codici IVA",
+        "ro": "Listează codurile de taxă"
+      },
+      "description": {
+        "en": "List the team tax codes with rates and Austrian UVA report fields.",
+        "de": "Steuercodes des Teams mit Sätzen und österreichischen UVA-Kennzahlen anzeigen.",
+        "fr": "Liste les codes de taxe de l’équipe avec taux et champs UVA autrichiens.",
+        "es": "Lista los códigos de impuesto del equipo con tipos y campos UVA austriacos.",
+        "it": "Elenca i codici IVA del team con aliquote e campi UVA austriaci.",
+        "ro": "Listează codurile de taxă ale echipei cu cote și câmpuri UVA austriece."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: List Tax Codes",
+        "title": {
+          "en": "List tax codes",
+          "de": "Steuercodes anzeigen",
+          "fr": "Lister les codes de taxe",
+          "es": "Listar códigos de impuesto",
+          "it": "Elenca codici IVA",
+          "ro": "Listează codurile de taxă"
+        },
+        "description": {
+          "en": "List the team tax codes with rates and Austrian UVA report fields.",
+          "de": "Steuercodes des Teams mit Sätzen und österreichischen UVA-Kennzahlen anzeigen.",
+          "fr": "Liste les codes de taxe de l’équipe avec taux et champs UVA autrichiens.",
+          "es": "Lista los códigos de impuesto del equipo con tipos y campos UVA austriacos.",
+          "it": "Elenca i codici IVA del team con aliquote e campi UVA austriaci.",
+          "ro": "Listează codurile de taxă ale echipei cu cote și câmpuri UVA austriece."
+        },
+        "bot": "Use when the user wants to see VAT/tax codes or map a tax rate to a tax code before booking.",
+        "vars": {
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+          "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "List tax codes",
+              "de": "Steuercodes anzeigen",
+              "fr": "Lister les codes de taxe",
+              "es": "Listar códigos de impuesto",
+              "it": "Elenca codici IVA",
+              "ro": "Listează codurile de taxă"
+            },
+            "destination": {
+              "url": "https://devnet-api.joai.ai/v1/teams/{{team}}/tax-codes",
+              "method": "GET",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+                "X-Team": "{{team}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Team",
+                "as": "team",
+                "type": "string",
+                "position": "url:team",
+                "source": "field",
+                "required": false,
+                "default": "{{JOAI_TEAM_SLUG}}",
+                "description": {
+                  "en": "Team slug for this action. Defaults to the current team.",
+                  "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team.",
+                  "fr": "Slug de l’équipe pour cette action. Par défaut, l’équipe actuelle.",
+                  "es": "Slug del equipo para esta acción. Por defecto, el equipo actual.",
+                  "it": "Slug del team per questa azione. Predefinito: team attuale.",
+                  "ro": "Slug-ul echipei pentru această acțiune. Implicit echipa curentă."
+                },
+                "bot": "The slug of the team to operate on. Omit to use the current team."
+              }
+            ],
+            "auto": true,
+            "output": {
+              "taxCodes": "out.data",
+              "taxCodesCount": "out.data.length"
+            }
+          }
+        ],
+        "output": {
+          "TAX_CODES": "out.data"
+        }
+      },
+      "extras": {
+        "keywords": {
+          "en": [
+            "bookkeeping tax codes",
+            "UVA codes",
+            "VAT codes",
+            "ledger tax rates"
+          ],
+          "de": [
+            "Buchhaltungs-Steuercodes",
+            "UVA-Kennzahlen",
+            "Steuercodes",
+            "USt-Codes"
+          ]
+        },
+        "useCases": {
+          "en": [
+            "Map an invoice VAT rate to a bookkeeping tax code",
+            "Review UVA report fields for a tax code"
+          ],
+          "de": [
+            "Rechnungs-USt-Satz einem Buchhaltungs-Steuercode zuordnen",
+            "UVA-Kennzahlen eines Steuercodes prüfen"
+          ]
+        },
+        "category": "commerce"
+      }
+    },
+    {
       "key": "none:joai-team-create",
       "identifier": "@joai-team-create",
       "alias": "joai-team-create",
@@ -120407,6 +123409,196 @@
         }
       },
       "extras": null
+    },
+    {
+      "key": "none:joai-trial-balance",
+      "identifier": "@joai-trial-balance",
+      "alias": "joai-trial-balance",
+      "chain": "none",
+      "hash": "2d3fc97b9844397df345845153ed522a522cf4f48bf0a484078ec79155ab9bc6",
+      "checksum": "2d3fc97b9844397df345845153ed522a522cf4f48bf0a484078ec79155ab9bc6",
+      "name": "JoAi: Trial Balance",
+      "title": {
+        "en": "Trial balance",
+        "de": "Saldenliste",
+        "fr": "Balance des comptes",
+        "es": "Balance de sumas y saldos",
+        "it": "Bilancio di verifica",
+        "ro": "Balanță de verificare"
+      },
+      "description": {
+        "en": "Sum debit, credit and balance per ledger account from final bookings in a date range.",
+        "de": "Soll, Haben und Saldo je Konto aus endgültigen Buchungen eines Zeitraums summieren.",
+        "fr": "Additionne débit, crédit et solde par compte à partir des écritures finales d’une période.",
+        "es": "Suma debe, haber y saldo por cuenta a partir de los asientos finales de un periodo.",
+        "it": "Somma dare, avere e saldo per conto dalle registrazioni finali di un periodo.",
+        "ro": "Însumează debit, credit și sold pe cont din înregistrările finale dintr-o perioadă."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: Trial Balance",
+        "title": {
+          "en": "Trial balance",
+          "de": "Saldenliste",
+          "fr": "Balance des comptes",
+          "es": "Balance de sumas y saldos",
+          "it": "Bilancio di verifica",
+          "ro": "Balanță de verificare"
+        },
+        "description": {
+          "en": "Sum debit, credit and balance per ledger account from final bookings in a date range.",
+          "de": "Soll, Haben und Saldo je Konto aus endgültigen Buchungen eines Zeitraums summieren.",
+          "fr": "Additionne débit, crédit et solde par compte à partir des écritures finales d’une période.",
+          "es": "Suma debe, haber y saldo por cuenta a partir de los asientos finales de un periodo.",
+          "it": "Somma dare, avere e saldo per conto dalle registrazioni finali di un periodo.",
+          "ro": "Însumează debit, credit și sold pe cont din înregistrările finale dintr-o perioadă."
+        },
+        "bot": "Use when the user asks for account balances, a trial balance, or a Saldenliste for a period.",
+        "vars": {
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+          "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Trial balance",
+              "de": "Saldenliste",
+              "fr": "Balance des comptes",
+              "es": "Balance de sumas y saldos",
+              "it": "Bilancio di verifica",
+              "ro": "Balanță de verificare"
+            },
+            "destination": {
+              "url": "https://devnet-api.joai.ai/v1/teams/{{team}}/trial-balance?from={{from}}&to={{to}}",
+              "method": "GET",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+                "X-Team": "{{team}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "From",
+                "as": "from",
+                "type": "string",
+                "source": "field",
+                "required": true,
+                "description": {
+                  "en": "First booking date (YYYY-MM-DD)",
+                  "de": "Erstes Buchungsdatum (JJJJ-MM-TT)",
+                  "fr": "Première date d’écriture (AAAA-MM-JJ)",
+                  "es": "Primera fecha de asiento (AAAA-MM-DD)",
+                  "it": "Prima data registrazione (AAAA-MM-GG)",
+                  "ro": "Prima dată de înregistrare (AAAA-LL-ZZ)"
+                },
+                "bot": "Inclusive start date.",
+                "position": "query"
+              },
+              {
+                "name": "To",
+                "as": "to",
+                "type": "string",
+                "source": "field",
+                "required": true,
+                "description": {
+                  "en": "Last booking date (YYYY-MM-DD)",
+                  "de": "Letztes Buchungsdatum (JJJJ-MM-TT)",
+                  "fr": "Dernière date d’écriture (AAAA-MM-JJ)",
+                  "es": "Última fecha de asiento (AAAA-MM-DD)",
+                  "it": "Ultima data registrazione (AAAA-MM-GG)",
+                  "ro": "Ultima dată de înregistrare (AAAA-LL-ZZ)"
+                },
+                "bot": "Inclusive end date.",
+                "position": "query"
+              },
+              {
+                "name": "Team",
+                "as": "team",
+                "type": "string",
+                "position": "url:team",
+                "source": "field",
+                "required": false,
+                "default": "{{JOAI_TEAM_SLUG}}",
+                "description": {
+                  "en": "Team slug for this action. Defaults to the current team.",
+                  "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team.",
+                  "fr": "Slug de l’équipe pour cette action. Par défaut, l’équipe actuelle.",
+                  "es": "Slug del equipo para esta acción. Por defecto, el equipo actual.",
+                  "it": "Slug del team per questa azione. Predefinito: team attuale.",
+                  "ro": "Slug-ul echipei pentru această acțiune. Implicit echipa curentă."
+                },
+                "bot": "The slug of the team to operate on. Omit to use the current team."
+              }
+            ],
+            "auto": true,
+            "output": {
+              "trialBalance": "out.data"
+            }
+          }
+        ],
+        "output": {
+          "TRIAL_BALANCE": "out.data"
+        }
+      },
+      "extras": {
+        "keywords": {
+          "en": [
+            "trial balance",
+            "account balances",
+            "balance list",
+            "ledger totals"
+          ],
+          "de": [
+            "Saldenliste",
+            "Kontensalden",
+            "Summen und Salden",
+            "Kontostände"
+          ]
+        },
+        "useCases": {
+          "en": [
+            "Compare account totals for a year or quarter",
+            "Check debit and credit per account"
+          ],
+          "de": [
+            "Kontensummen für ein Jahr oder Quartal vergleichen",
+            "Soll und Haben je Konto prüfen"
+          ]
+        },
+        "category": "commerce"
+      }
     },
     {
       "key": "none:joai-update-create",
@@ -122373,6 +125565,198 @@
         }
       },
       "extras": null
+    },
+    {
+      "key": "none:joai-vat-summary",
+      "identifier": "@joai-vat-summary",
+      "alias": "joai-vat-summary",
+      "chain": "none",
+      "hash": "0c35dd842eed3e308c6724bd5605f5e9c5aa353543ddb55c8b73feb204540234",
+      "checksum": "0c35dd842eed3e308c6724bd5605f5e9c5aa353543ddb55c8b73feb204540234",
+      "name": "JoAi: VAT Summary",
+      "title": {
+        "en": "VAT summary",
+        "de": "UVA-Auswertung",
+        "fr": "Récapitulatif TVA",
+        "es": "Resumen de IVA",
+        "it": "Riepilogo IVA",
+        "ro": "Sumar TVA"
+      },
+      "description": {
+        "en": "Calculate the Austrian UVA fields from final bookings in a date range.",
+        "de": "Österreichische UVA-Kennzahlen aus endgültigen Buchungen eines Zeitraums berechnen.",
+        "fr": "Calcule les champs UVA autrichiens à partir des écritures finales sur une période.",
+        "es": "Calcula los campos UVA austriacos a partir de los asientos finales de un periodo.",
+        "it": "Calcola i campi UVA austriaci dalle registrazioni finali di un periodo.",
+        "ro": "Calculează câmpurile UVA austriece din înregistrările finale dintr-o perioadă."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: VAT Summary",
+        "title": {
+          "en": "VAT summary",
+          "de": "UVA-Auswertung",
+          "fr": "Récapitulatif TVA",
+          "es": "Resumen de IVA",
+          "it": "Riepilogo IVA",
+          "ro": "Sumar TVA"
+        },
+        "description": {
+          "en": "Calculate the Austrian UVA fields from final bookings in a date range.",
+          "de": "Österreichische UVA-Kennzahlen aus endgültigen Buchungen eines Zeitraums berechnen.",
+          "fr": "Calcule les champs UVA autrichiens à partir des écritures finales sur une période.",
+          "es": "Calcula los campos UVA austriacos a partir de los asientos finales de un periodo.",
+          "it": "Calcola i campi UVA austriaci dalle registrazioni finali di un periodo.",
+          "ro": "Calculează câmpurile UVA austriece din înregistrările finale dintr-o perioadă."
+        },
+        "bot": "Use when the user asks for VAT, UVA, or tax summary figures for a period.",
+        "vars": {
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+          "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "VAT summary",
+              "de": "UVA-Auswertung",
+              "fr": "Récapitulatif TVA",
+              "es": "Resumen de IVA",
+              "it": "Riepilogo IVA",
+              "ro": "Sumar TVA"
+            },
+            "destination": {
+              "url": "https://devnet-api.joai.ai/v1/teams/{{team}}/vat-summary?from={{from}}&to={{to}}",
+              "method": "GET",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+                "X-Team": "{{team}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "From",
+                "as": "from",
+                "type": "string",
+                "source": "field",
+                "required": true,
+                "description": {
+                  "en": "First booking date (YYYY-MM-DD)",
+                  "de": "Erstes Buchungsdatum (JJJJ-MM-TT)",
+                  "fr": "Première date d’écriture (AAAA-MM-JJ)",
+                  "es": "Primera fecha de asiento (AAAA-MM-DD)",
+                  "it": "Prima data registrazione (AAAA-MM-GG)",
+                  "ro": "Prima dată de înregistrare (AAAA-LL-ZZ)"
+                },
+                "bot": "Inclusive start date.",
+                "position": "query"
+              },
+              {
+                "name": "To",
+                "as": "to",
+                "type": "string",
+                "source": "field",
+                "required": true,
+                "description": {
+                  "en": "Last booking date (YYYY-MM-DD)",
+                  "de": "Letztes Buchungsdatum (JJJJ-MM-TT)",
+                  "fr": "Dernière date d’écriture (AAAA-MM-JJ)",
+                  "es": "Última fecha de asiento (AAAA-MM-DD)",
+                  "it": "Ultima data registrazione (AAAA-MM-GG)",
+                  "ro": "Ultima dată de înregistrare (AAAA-LL-ZZ)"
+                },
+                "bot": "Inclusive end date.",
+                "position": "query"
+              },
+              {
+                "name": "Team",
+                "as": "team",
+                "type": "string",
+                "position": "url:team",
+                "source": "field",
+                "required": false,
+                "default": "{{JOAI_TEAM_SLUG}}",
+                "description": {
+                  "en": "Team slug for this action. Defaults to the current team.",
+                  "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team.",
+                  "fr": "Slug de l’équipe pour cette action. Par défaut, l’équipe actuelle.",
+                  "es": "Slug del equipo para esta acción. Por defecto, el equipo actual.",
+                  "it": "Slug del team per questa azione. Predefinito: team attuale.",
+                  "ro": "Slug-ul echipei pentru această acțiune. Implicit echipa curentă."
+                },
+                "bot": "The slug of the team to operate on. Omit to use the current team."
+              }
+            ],
+            "auto": true,
+            "output": {
+              "summary": "out.data"
+            }
+          }
+        ],
+        "output": {
+          "VAT_SUMMARY": "out.data"
+        }
+      },
+      "extras": {
+        "keywords": {
+          "en": [
+            "VAT summary",
+            "UVA summary",
+            "tax summary",
+            "output VAT",
+            "input VAT"
+          ],
+          "de": [
+            "USt-Auswertung",
+            "UVA-Auswertung",
+            "Steuerübersicht",
+            "Umsatzsteuer",
+            "Vorsteuer"
+          ]
+        },
+        "useCases": {
+          "en": [
+            "Calculate UVA fields for a month or quarter",
+            "Review output VAT and reverse-charge figures"
+          ],
+          "de": [
+            "UVA-Kennzahlen für Monat oder Quartal berechnen",
+            "Umsatzsteuer und Reverse-Charge-Werte prüfen"
+          ]
+        },
+        "category": "commerce"
+      }
     },
     {
       "key": "none:joai-wallet-create",
