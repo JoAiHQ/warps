@@ -70,14 +70,39 @@ async function typeCheck() {
   }
 }
 
+function getGitBranch() {
+    if (process.env.GITHUB_REF_NAME) return process.env.GITHUB_REF_NAME;
+    try {
+        const branch = execSync('git rev-parse --abbrev-ref HEAD', { cwd: resolve(__dirname, '..') }).toString().trim();
+        return branch && branch !== 'HEAD' ? branch : 'main';
+    } catch {
+        return 'main';
+    }
+}
+
 function getGithubUrl(relativePath) {
+    const branch = getGitBranch();
     try {
         const remote = execSync('git remote get-url origin', { cwd: resolve(__dirname, '..') }).toString().trim();
         let repo = remote.replace(/\.git$/, '').split(/[:/]/).slice(-2).join('/');
-        return `https://raw.githubusercontent.com/${repo}/main/${relativePath}`;
+        return `https://raw.githubusercontent.com/${repo}/${branch}/${relativePath}`;
     } catch {
-        return `https://raw.githubusercontent.com/joai-com/warps/main/${relativePath}`;
+        return `https://raw.githubusercontent.com/joai-com/warps/${branch}/${relativePath}`;
     }
+}
+
+function updateWarpUi(appDir, url) {
+    const warpJsonPath = join(appDir, 'warp.json');
+    if (!existsSync(warpJsonPath)) {
+        console.warn(`⚠️ warp.json not found at ${warpJsonPath}`);
+        return;
+    }
+    const content = JSON.parse(readFileSync(warpJsonPath, 'utf-8'));
+    const oldUi = content.ui;
+    if (oldUi === url) return;
+    content.ui = url;
+    writeFileSync(warpJsonPath, JSON.stringify(content, null, 2));
+    console.log(`✓ Updated warp.json ui field: ${oldUi} -> ${url}`);
 }
 
 async function buildApp(targetAppName) {
@@ -183,27 +208,18 @@ ${jsContent}
       console.log(`  Removed old artifact: ${file.name}`)
     }
 
+    const url = getGithubUrl(`warps/${targetAppName}/${htmlFilename}`)
+
     if (existsSync(htmlPath)) {
       console.log(`✓ Skipped ${targetAppName} (unchanged) → ${htmlFilename}`)
+      updateWarpUi(appDir, url)
       return
     }
 
     writeFileSync(htmlPath, html)
     console.log(`✓ Built ${targetAppName} → ${htmlFilename}`)
 
-    const relativePath = `warps/${targetAppName}/${htmlFilename}`;
-    const url = getGithubUrl(relativePath);
-    
-    const warpJsonPath = join(appDir, 'warp.json');
-    if (existsSync(warpJsonPath)) {
-        const content = JSON.parse(readFileSync(warpJsonPath, 'utf-8'));
-        const oldUi = content.ui;
-        content.ui = url;
-        writeFileSync(warpJsonPath, JSON.stringify(content, null, 2));
-        console.log(`✓ Updated warp.json ui field: ${oldUi} -> ${url}`);
-    } else {
-        console.warn(`⚠️ warp.json not found at ${warpJsonPath}`);
-    }
+    updateWarpUi(appDir, url)
 
   } catch (error) {
     console.error(`✗ Build failed for ${targetAppName}:`, error)
