@@ -11,7 +11,7 @@ function issueList(value: unknown): string[] {
 }
 
 export function BankImportResult() {
-  const { data, copyToClipboard } = useAppContext()
+  const { data, copyToClipboard, locale, t } = useAppContext()
   const output = extractOutputRecord(data, ['BANK_IMPORT_RESULT'])
   const statement = asRecord(pickValue(output, ['import', 'BANK_IMPORT']))
   const record = statement ? output : null
@@ -20,7 +20,7 @@ export function BankImportResult() {
     return (
       <div className="flex justify-center py-10">
         <EmptyMessage fill="none">
-          <EmptyMessage.Title className="text-warp-fg">No import result available.</EmptyMessage.Title>
+          <EmptyMessage.Title className="text-warp-fg">{t({ en: 'No import result available.', de: 'Kein Importergebnis verfügbar.' })}</EmptyMessage.Title>
         </EmptyMessage>
       </div>
     )
@@ -36,7 +36,7 @@ export function BankImportResult() {
     <div className="flex flex-col gap-3">
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
-          <h3 className="text-sm font-semibold text-warp-fg">Statement imported</h3>
+          <h3 className="text-sm font-semibold text-warp-fg">{t({ en: 'Statement imported', de: 'Kontoauszug importiert' })}</h3>
           <div className="mt-0.5 flex flex-wrap gap-x-2 text-xs text-warp-fg-muted">
             <span>{valueToDisplay(statement.fileName)}</span>
             <span>·</span>
@@ -44,7 +44,7 @@ export function BankImportResult() {
             {statement.createdAt ? (
               <>
                 <span>·</span>
-                <span>{formatDateShort(statement.createdAt)}</span>
+                <span>{formatDateShort(statement.createdAt, locale)}</span>
               </>
             ) : null}
           </div>
@@ -54,28 +54,28 @@ export function BankImportResult() {
           onClick={() => copyToClipboard(JSON.stringify(record, null, 2))}
           className="shrink-0 rounded-md px-2 py-1 text-xs font-medium text-warp-fg-muted transition-colors hover:bg-warp-surface-secondary hover:text-warp-fg"
         >
-          Copy
+          {t({ en: 'Copy', de: 'Kopieren' })}
         </button>
       </div>
 
       <div className="grid grid-cols-3 gap-2">
         <div className="rounded-lg border border-warp-border bg-warp-surface px-3 py-2.5">
-          <div className="text-[11px] font-medium uppercase tracking-wide text-warp-fg-secondary">Imported</div>
+          <div className="text-[11px] font-medium uppercase tracking-wide text-warp-fg-secondary">{t({ en: 'Imported', de: 'Importiert' })}</div>
           <div className="mt-1 text-xl font-semibold tabular-nums text-warp-fg">{imported}</div>
         </div>
         <div className="rounded-lg border border-warp-border bg-warp-surface px-3 py-2.5">
-          <div className="text-[11px] font-medium uppercase tracking-wide text-warp-fg-secondary">Duplicates</div>
+          <div className="text-[11px] font-medium uppercase tracking-wide text-warp-fg-secondary">{t({ en: 'Duplicates', de: 'Duplikate' })}</div>
           <div className="mt-1 text-xl font-semibold tabular-nums text-warp-fg">{duplicates}</div>
         </div>
         <div className="rounded-lg border border-warp-border bg-warp-surface px-3 py-2.5">
-          <div className="text-[11px] font-medium uppercase tracking-wide text-warp-fg-secondary">Skipped</div>
+          <div className="text-[11px] font-medium uppercase tracking-wide text-warp-fg-secondary">{t({ en: 'Skipped', de: 'Übersprungen' })}</div>
           <div className="mt-1 text-xl font-semibold tabular-nums text-warp-fg">{skipped}</div>
         </div>
       </div>
 
       {errors.length > 0 && (
         <div className="rounded-lg border border-warp-border bg-warp-surface px-3.5 py-2.5">
-          <div className="text-xs font-semibold text-warp-fg">Errors</div>
+          <div className="text-xs font-semibold text-warp-fg">{t({ en: 'Errors', de: 'Fehler' })}</div>
           <ul className="mt-1 list-disc space-y-0.5 pl-4 text-xs text-warp-fg-secondary">
             {errors.slice(0, 10).map((error, index) => (
               <li key={index}>{error}</li>
@@ -86,7 +86,7 @@ export function BankImportResult() {
 
       {warnings.length > 0 && (
         <div className="rounded-lg border border-warp-border bg-warp-surface px-3.5 py-2.5">
-          <div className="text-xs font-semibold text-warp-fg">Warnings</div>
+          <div className="text-xs font-semibold text-warp-fg">{t({ en: 'Warnings', de: 'Warnungen' })}</div>
           <ul className="mt-1 list-disc space-y-0.5 pl-4 text-xs text-warp-fg-secondary">
             {warnings.slice(0, 10).map((warning, index) => (
               <li key={index}>{warning}</li>

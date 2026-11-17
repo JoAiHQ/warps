@@ -2,30 +2,35 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { App, useAppContext } from '../../../ui/lib/components'
 import { EmptyMessageSkeleton } from '../../../ui/lib/skeletons'
-import { ListResult, mapListItems, truncateMiddle, valueToDisplay } from '../../../ui/shared/joai'
+import { ListResult, accountingValue, mapListItems, truncateMiddle, valueToDisplay } from '../../../ui/shared/joai'
 
 function Main() {
-  const { data } = useAppContext()
+  const { data, t } = useAppContext()
   if (!data) return <EmptyMessageSkeleton />
 
   const items = mapListItems(data, (item) => ({
     name: valueToDisplay(item.name),
     code: valueToDisplay(item.code),
-    type: valueToDisplay(item.type),
-    role: item.role ? valueToDisplay(item.role) : null,
+    type: accountingValue(t, item.type),
+    role: accountingValue(t, item.role),
     taxCode: item.defaultTaxCodeId ? truncateMiddle(item.defaultTaxCodeId, 8, 4) : null,
-    archived: item.archivedAt ? 'Archived' : null,
+    archived: item.archivedAt ? t({ en: 'Archived', de: 'Archiviert' }) : null,
   }))
 
   return (
     <ListResult
-      title="Ledger accounts"
-      emptyText="No ledger accounts found."
+      title={t({ en: 'Ledger accounts', de: 'Kontenplan' })}
+      emptyText={t({ en: 'No ledger accounts found.', de: 'Keine Konten gefunden.' })}
       items={items}
       primaryKey="name"
       secondaryKey="code"
       detailKeys={['type', 'role', 'taxCode', 'archived']}
-      detailLabels={{ taxCode: 'Default tax code', archived: 'Status' }}
+      detailLabels={{
+        type: t({ en: 'Type', de: 'Kontoart' }),
+        role: t({ en: 'Role', de: 'Funktion' }),
+        taxCode: t({ en: 'Default tax code', de: 'Standard-Steuercode' }),
+        archived: t({ en: 'Status', de: 'Status' }),
+      }}
     />
   )
 }

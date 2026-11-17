@@ -8,7 +8,7 @@ function Main() {
   const { data } = useAppContext()
   if (!data) return <EmptyMessageSkeleton />
 
-  return <LedgerEntryResult title="Entry booked" />
+  return <LedgerEntryResult title={{ en: 'Entry booked', de: 'Buchung erfasst' }} />
 }
 
 const rootElement = document.getElementById('root')

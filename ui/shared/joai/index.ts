@@ -8,6 +8,7 @@ export { LedgerEntryResult } from './LedgerEntryResult'
 export { VatSummaryResult } from './VatSummaryResult'
 export { TrialBalanceResult } from './TrialBalanceResult'
 export { BankImportResult } from './BankImportResult'
+export { UVA_FIELD_LABELS, accountingValue } from './accountingLabels'
 export {
   extractList,
   extractRecord,
@@ -20,6 +21,7 @@ export {
   formatCents,
   formatDateShort,
   formatDateOnly,
+  toIntlLocale,
   truncateText,
   truncateMiddle,
   nestedName,

@@ -77,9 +77,9 @@ export function humanizeKey(key: string): string {
   return spaced.replace(/^\w/, (char) => char.toUpperCase())
 }
 
-export function valueToDisplay(value: unknown): string {
+export function valueToDisplay(value: unknown, locale?: string): string {
   if (value === null || value === undefined) return '—'
-  if (typeof value === 'boolean') return value ? 'Yes' : 'No'
+  if (typeof value === 'boolean') return locale?.startsWith('de') ? (value ? 'Ja' : 'Nein') : value ? 'Yes' : 'No'
   if (Array.isArray(value)) {
     if (value.length === 0) return '—'
     if (value.every((item) => typeof item === 'string' || typeof item === 'number')) {
@@ -88,14 +88,14 @@ export function valueToDisplay(value: unknown): string {
     return `${value.length} items`
   }
   if (typeof value === 'object') {
-    const localized = resolveLocalized(value)
+    const localized = resolveLocalized(value, locale)
     if (localized !== '—') return localized
     return JSON.stringify(value)
   }
   if (typeof value === 'string') {
     const trimmed = value.trim()
     if (/^\d{4}-\d{2}-\d{2}T/.test(trimmed)) {
-      return formatDateShort(trimmed) ?? trimmed
+      return formatDateShort(trimmed, locale) ?? trimmed
     }
     return trimmed || '—'
   }
@@ -106,22 +106,31 @@ export function resolveLocalized(value: unknown, locale = 'en'): string {
   if (typeof value === 'string' && value.trim()) return value
   const record = asRecord(value)
   if (!record) return '—'
-  const preferred = record[locale] ?? record.en
+  const preferred = record[locale.split(/[-_]/)[0]!.toLowerCase()] ?? record.en
   if (typeof preferred === 'string' && preferred.trim()) return preferred
   const first = Object.values(record).find((entry) => typeof entry === 'string' && entry.trim())
   return typeof first === 'string' ? first : '—'
 }
 
-export function formatCents(value: unknown, currency = 'EUR'): string | null {
-  if (typeof value !== 'number' || Number.isNaN(value)) return null
-  return new Intl.NumberFormat(undefined, { style: 'currency', currency, maximumFractionDigits: 2 }).format(value / 100)
+/**
+ * Maps the host locale to an Intl locale. Bare "de" resolves to Austrian
+ * German so amounts and dates follow Austrian formatting (€ 14.988,60).
+ */
+export function toIntlLocale(locale?: string): string | undefined {
+  if (!locale) return undefined
+  return locale.toLowerCase() === 'de' ? 'de-AT' : locale
 }
 
-export function formatDateShort(value: unknown): string | null {
+export function formatCents(value: unknown, currency = 'EUR', locale?: string): string | null {
+  if (typeof value !== 'number' || Number.isNaN(value)) return null
+  return new Intl.NumberFormat(toIntlLocale(locale), { style: 'currency', currency, maximumFractionDigits: 2 }).format(value / 100)
+}
+
+export function formatDateShort(value: unknown, locale?: string): string | null {
   if (!value) return null
   const date = new Date(String(value))
   if (Number.isNaN(date.getTime())) return null
-  return date.toLocaleString(undefined, {
+  return date.toLocaleString(toIntlLocale(locale), {
     month: 'short',
     day: 'numeric',
     year: 'numeric',
@@ -130,12 +139,12 @@ export function formatDateShort(value: unknown): string | null {
   })
 }
 
-export function formatDateOnly(value: unknown): string | null {
+export function formatDateOnly(value: unknown, locale?: string): string | null {
   if (!value) return null
   const raw = String(value)
   const date = /^\d{4}-\d{2}-\d{2}$/.test(raw) ? new Date(`${raw}T12:00:00`) : new Date(raw)
   if (Number.isNaN(date.getTime())) return null
-  return date.toLocaleDateString(undefined, {
+  return date.toLocaleDateString(toIntlLocale(locale), {
     month: 'short',
     day: 'numeric',
     year: 'numeric',

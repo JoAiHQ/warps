@@ -8,7 +8,7 @@ function Main() {
   const { data } = useAppContext()
   if (!data) return <EmptyMessageSkeleton />
 
-  return <LedgerEntryResult title="Entry reversed" />
+  return <LedgerEntryResult title={{ en: 'Entry reversed', de: 'Buchung storniert' }} />
 }
 
 const rootElement = document.getElementById('root')

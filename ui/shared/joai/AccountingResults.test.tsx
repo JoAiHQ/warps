@@ -2,14 +2,15 @@ import React from 'react'
 import { render, screen } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 import { AppContext } from '../../lib/components'
+import { createTranslator } from '../../lib/i18n'
 import { BankImportResult } from './BankImportResult'
 import { LedgerEntryResult } from './LedgerEntryResult'
 import { TrialBalanceResult } from './TrialBalanceResult'
 import { VatSummaryResult } from './VatSummaryResult'
 
-function renderWithData(ui: React.ReactNode, data: unknown) {
+function renderWithData(ui: React.ReactNode, data: unknown, locale = 'en') {
   return render(
-    <AppContext.Provider value={{ data, copyToClipboard: vi.fn() } as any}>
+    <AppContext.Provider value={{ data, copyToClipboard: vi.fn(), locale, t: createTranslator(locale) } as any}>
       {ui}
     </AppContext.Provider>,
   )
@@ -48,6 +49,28 @@ describe('LedgerEntryResult', () => {
     renderWithData(<LedgerEntryResult />, {})
     expect(screen.getByText('No ledger entry found.')).toBeInTheDocument()
   })
+
+  it('renders German labels and amounts for the de locale', () => {
+    renderWithData(<LedgerEntryResult />, {
+      LEDGER_ENTRY: {
+        text: 'OpenAI 07/26',
+        number: 1,
+        bookedAt: '2026-07-03',
+        sourceType: 'manual',
+        lines: [
+          { accountCode: 'LIZ', accountName: 'Lizenzgebühren', debit: 1498860, credit: 0, currency: 'EUR' },
+          { accountCode: 'BA', accountName: 'Bank', debit: 0, credit: 1498860, currency: 'EUR' },
+        ],
+      },
+    }, 'de')
+
+    expect(screen.getByText('Buchung')).toBeInTheDocument()
+    expect(screen.getByText('Soll')).toBeInTheDocument()
+    expect(screen.getByText('Haben')).toBeInTheDocument()
+    expect(screen.getByText('Summe')).toBeInTheDocument()
+    expect(screen.getByText('Manuell')).toBeInTheDocument()
+    expect(screen.getAllByText('€ 14.988,60')).toHaveLength(4)
+  })
 })
 
 describe('VatSummaryResult', () => {
@@ -64,13 +87,29 @@ describe('VatSummaryResult', () => {
     expect(screen.getByText('VAT summary')).toBeInTheDocument()
     expect(screen.getByText('Output VAT 20%')).toBeInTheDocument()
     expect(screen.getByText('320')).toBeInTheDocument()
-    expect(screen.getByText('standard')).toBeInTheDocument()
+    expect(screen.getByText('Standard')).toBeInTheDocument()
     expect(screen.getAllByText(/200\.00/).length).toBeGreaterThan(0)
   })
 
   it('shows an empty state when there is no VAT activity', () => {
     renderWithData(<VatSummaryResult />, { VAT_SUMMARY: { from: '2026-07-01', to: '2026-09-30', fields: {}, taxCodes: [] } })
     expect(screen.getByText('No VAT activity in this period.')).toBeInTheDocument()
+  })
+
+  it('renders German UVA labels and amounts for the de locale', () => {
+    renderWithData(<VatSummaryResult />, {
+      VAT_SUMMARY: {
+        from: '2026-07-01',
+        to: '2026-09-30',
+        fields: { '022': { base: 147693, tax: 29539 } },
+        taxCodes: [{ code: '320', rate: 20, kind: 'standard', base: 147693, tax: 29539 }],
+      },
+    }, 'de')
+
+    expect(screen.getByText('UVA-Auswertung')).toBeInTheDocument()
+    expect(screen.getByText('Normalsteuersatz 20%')).toBeInTheDocument()
+    expect(screen.getByText('Normal')).toBeInTheDocument()
+    expect(screen.getAllByText('€ 295,39').length).toBeGreaterThan(0)
   })
 })
 
@@ -99,6 +138,28 @@ describe('TrialBalanceResult', () => {
       TRIAL_BALANCE: { from: '2026-07-01', to: '2026-09-30', accounts: [] },
     })
     expect(screen.getByText('No account activity in this period.')).toBeInTheDocument()
+  })
+
+  it('renders German labels and amounts for the de locale', () => {
+    renderWithData(<TrialBalanceResult />, {
+      TRIAL_BALANCE: {
+        from: '2026-01-01',
+        to: '2026-12-31',
+        accounts: [
+          { code: 'LIZ', name: 'Lizenzgebühren', type: 'expense', debit: 1498860, credit: 0, balance: 1498860 },
+          { code: 'BA', name: 'Bank', type: 'asset', debit: 0, credit: 1498860, balance: -1498860 },
+        ],
+      },
+    }, 'de')
+
+    expect(screen.getByText('Saldenliste')).toBeInTheDocument()
+    expect(screen.getAllByText('Soll')).toHaveLength(2)
+    expect(screen.getAllByText('Haben')).toHaveLength(2)
+    expect(screen.getAllByText('Saldo')).toHaveLength(2)
+    expect(screen.getByText('Konto')).toBeInTheDocument()
+    expect(screen.getByText('Bezeichnung')).toBeInTheDocument()
+    expect(screen.getByText('Aktivkonto')).toBeInTheDocument()
+    expect(screen.getAllByText('€ 14.988,60').length).toBeGreaterThan(0)
   })
 })
 
@@ -129,5 +190,20 @@ describe('BankImportResult', () => {
   it('shows an empty state without an import record', () => {
     renderWithData(<BankImportResult />, {})
     expect(screen.getByText('No import result available.')).toBeInTheDocument()
+  })
+
+  it('renders German labels for the de locale', () => {
+    renderWithData(<BankImportResult />, {
+      BANK_IMPORT_RESULT: {
+        import: { fileName: 'n26.csv', source: 'n26', importedCount: 3, skippedCount: 1, duplicateCount: 2 },
+        errors: [],
+        warnings: [],
+      },
+    }, 'de')
+
+    expect(screen.getByText('Kontoauszug importiert')).toBeInTheDocument()
+    expect(screen.getByText('Importiert')).toBeInTheDocument()
+    expect(screen.getByText('Duplikate')).toBeInTheDocument()
+    expect(screen.getByText('Übersprungen')).toBeInTheDocument()
   })
 })
