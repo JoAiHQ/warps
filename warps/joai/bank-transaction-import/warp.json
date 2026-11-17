@@ -1,0 +1,174 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Import Bank Statement",
+  "title": {
+    "en": "Import bank transactions",
+    "de": "Bankumsätze importieren",
+    "fr": "Importer des transactions bancaires",
+    "es": "Importar movimientos bancarios",
+    "it": "Importa movimenti bancari",
+    "ro": "Importă tranzacții bancare"
+  },
+  "description": {
+    "en": "Import an N26 CSV, CAMT.053 XML or mapped CSV statement into a bank account. Duplicate rows are skipped.",
+    "de": "Importiere einen N26-CSV-, CAMT.053-XML- oder zugeordneten CSV-Auszug in ein Bankkonto. Doppelte Zeilen werden übersprungen.",
+    "fr": "Importe un relevé CSV N26, XML CAMT.053 ou CSV mappé dans un compte bancaire. Les doublons sont ignorés.",
+    "es": "Importa un extracto CSV de N26, XML CAMT.053 o CSV mapeado en una cuenta bancaria. Las filas duplicadas se omiten.",
+    "it": "Importa un estratto CSV N26, XML CAMT.053 o CSV mappato in un conto bancario. Le righe duplicate vengono saltate.",
+    "ro": "Importă un extras CSV N26, XML CAMT.053 sau CSV mapat într-un cont bancar. Rândurile duplicate sunt omise."
+  },
+  "bot": "Raw bank imports need no approval. Use list_bank_accounts first when the account ID is unknown.",
+  "vars": {
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Import bank statement",
+        "de": "Bankauszug importieren",
+        "fr": "Importer le relevé",
+        "es": "Importar extracto",
+        "it": "Importa estratto conto",
+        "ro": "Importă extrasul"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/teams/{{team}}/bank-accounts/{{bankAccountId}}/imports",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Bank account ID",
+          "as": "bankAccountId",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "description": {
+            "en": "Bank account hash ID",
+            "de": "Bankkonto-Hash-ID",
+            "fr": "Hash ID du compte bancaire",
+            "es": "Hash ID de la cuenta bancaria",
+            "it": "Hash ID del conto bancario",
+            "ro": "Hash ID-ul contului bancar"
+          },
+          "position": "url:bankAccountId"
+        },
+        {
+          "name": "Contents",
+          "as": "contents",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "description": {
+            "en": "Raw CSV or CAMT.053 XML contents",
+            "de": "Rohe CSV- oder CAMT.053-XML-Inhalte",
+            "fr": "Contenu brut CSV ou XML CAMT.053",
+            "es": "Contenido bruto CSV o XML CAMT.053",
+            "it": "Contenuto grezzo CSV o XML CAMT.053",
+            "ro": "Conținut brut CSV sau XML CAMT.053"
+          }
+        },
+        {
+          "name": "Format",
+          "as": "format",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "description": {
+            "en": "Statement format, auto-detected when omitted",
+            "de": "Auszugsformat, wird sonst automatisch erkannt",
+            "fr": "Format du relevé, détecté automatiquement si omis",
+            "es": "Formato del extracto, se detecta automáticamente",
+            "it": "Formato estratto conto, rilevato automaticamente se omesso",
+            "ro": "Formatul extrasului, detectat automat dacă este omis"
+          },
+          "options": [
+            "n26",
+            "camt053",
+            "csv"
+          ]
+        },
+        {
+          "name": "File name",
+          "as": "fileName",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "description": {
+            "en": "Original file name",
+            "de": "Ursprünglicher Dateiname",
+            "fr": "Nom du fichier d’origine",
+            "es": "Nombre del archivo original",
+            "it": "Nome file originale",
+            "ro": "Numele fișierului original"
+          }
+        },
+        {
+          "name": "Mapping",
+          "as": "mapping",
+          "type": "json",
+          "source": "field",
+          "required": false,
+          "description": {
+            "en": "CSV column mapping: {\"bookedAt\":\"datum\",\"amount\":\"betrag\"}",
+            "de": "CSV-Spaltenzuordnung: {\"bookedAt\":\"datum\",\"amount\":\"betrag\"}",
+            "fr": "Correspondance CSV : {\"bookedAt\":\"datum\",\"amount\":\"betrag\"}",
+            "es": "Mapeo CSV: {\"bookedAt\":\"datum\",\"amount\":\"betrag\"}",
+            "it": "Mappatura CSV: {\"bookedAt\":\"datum\",\"amount\":\"betrag\"}",
+            "ro": "Mapare CSV: {\"bookedAt\":\"datum\",\"amount\":\"betrag\"}"
+          }
+        },
+        {
+          "name": "Since",
+          "as": "since",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "description": {
+            "en": "Fetch-since date for future live importers (YYYY-MM-DD)",
+            "de": "Ab-Datum für künftige Live-Importer (JJJJ-MM-TT)",
+            "fr": "Date depuis pour de futurs importeurs live (AAAA-MM-JJ)",
+            "es": "Fecha desde para futuros importadores live (AAAA-MM-DD)",
+            "it": "Data da per futuri importer live (AAAA-MM-GG)",
+            "ro": "Data de la pentru importatori live viitori (AAAA-LL-ZZ)"
+          }
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "type": "string",
+          "position": "url:team",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}",
+          "description": {
+            "en": "Team slug for this action. Defaults to the current team.",
+            "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team.",
+            "fr": "Slug de l’équipe pour cette action. Par défaut, l’équipe actuelle.",
+            "es": "Slug del equipo para esta acción. Por defecto, el equipo actual.",
+            "it": "Slug del team per questa azione. Predefinito: team attuale.",
+            "ro": "Slug-ul echipei pentru această acțiune. Implicit echipa curentă."
+          },
+          "bot": "The slug of the team to operate on. Omit to use the current team."
+        }
+      ],
+      "auto": true,
+      "output": {
+        "import": "out.data.import",
+        "importedCount": "out.data.import.importedCount",
+        "duplicateCount": "out.data.import.duplicateCount"
+      }
+    }
+  ],
+  "output": {
+    "BANK_IMPORT": "out.data.import",
+    "BANK_IMPORT_ID": "out.data.import.id",
+    "BANK_IMPORT_RESULT": "out.data"
+  },
+  "ui": "https://raw.githubusercontent.com/JoAiHQ/warps/main/warps/joai/bank-transaction-import/chatapp.0b8c1fb9.dist.html"
+}

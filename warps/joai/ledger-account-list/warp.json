@@ -1,0 +1,92 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: List Ledger Accounts",
+  "title": {
+    "en": "List ledger accounts",
+    "de": "Konten anzeigen",
+    "fr": "Lister les comptes",
+    "es": "Listar cuentas",
+    "it": "Elenca conti",
+    "ro": "Listează conturile"
+  },
+  "description": {
+    "en": "List the team chart of accounts, including bank, cash, revenue, VAT and private accounts.",
+    "de": "Kontenplan des Teams anzeigen, inklusive Bank, Kasse, Erlöse, Umsatzsteuer und Privatkonten.",
+    "fr": "Liste le plan comptable de l’équipe, avec banque, caisse, revenus, TVA et comptes privés.",
+    "es": "Lista el plan de cuentas del equipo, incluidas banco, caja, ingresos, IVA y cuentas privadas.",
+    "it": "Elenca il piano dei conti del team, inclusi banca, cassa, ricavi, IVA e conti privati.",
+    "ro": "Listează planul de conturi al echipei, inclusiv bancă, casă, venituri, TVA și conturi private."
+  },
+  "bot": "Use when the user wants to see the bookkeeping accounts or find an account code/hash ID before booking.",
+  "vars": {
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "List ledger accounts",
+        "de": "Konten anzeigen",
+        "fr": "Lister les comptes",
+        "es": "Listar cuentas",
+        "it": "Elenca conti",
+        "ro": "Listează conturile"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/teams/{{team}}/ledger-accounts?includeArchived={{includeArchived}}",
+        "method": "GET",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Include archived",
+          "as": "includeArchived",
+          "type": "bool",
+          "source": "field",
+          "required": false,
+          "description": {
+            "en": "Include archived accounts too",
+            "de": "Auch archivierte Konten anzeigen",
+            "fr": "Inclure aussi les comptes archivés",
+            "es": "Incluir también cuentas archivadas",
+            "it": "Includi anche i conti archiviati",
+            "ro": "Include și conturile arhivate"
+          },
+          "bot": "Set true to include archived accounts.",
+          "default": false
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "type": "string",
+          "position": "url:team",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}",
+          "description": {
+            "en": "Team slug for this action. Defaults to the current team.",
+            "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team.",
+            "fr": "Slug de l’équipe pour cette action. Par défaut, l’équipe actuelle.",
+            "es": "Slug del equipo para esta acción. Por defecto, el equipo actual.",
+            "it": "Slug del team per questa azione. Predefinito: team attuale.",
+            "ro": "Slug-ul echipei pentru această acțiune. Implicit echipa curentă."
+          },
+          "bot": "The slug of the team to operate on. Omit to use the current team."
+        }
+      ],
+      "auto": true,
+      "output": {
+        "accounts": "out.data",
+        "accountsCount": "out.data.length"
+      }
+    }
+  ],
+  "output": {
+    "LEDGER_ACCOUNTS": "out.data"
+  },
+  "ui": "https://raw.githubusercontent.com/JoAiHQ/warps/main/warps/joai/ledger-account-list/chatapp.76efc9c9.dist.html"
+}

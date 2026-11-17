@@ -1,0 +1,122 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Book Order Revenue",
+  "title": {
+    "en": "Book order revenue",
+    "de": "Bestellerlös buchen",
+    "fr": "Comptabiliser le revenu d’une commande",
+    "es": "Registrar ingresos de un pedido",
+    "it": "Registra i ricavi di un ordine",
+    "ro": "Înregistrează venitul unei comenzi"
+  },
+  "description": {
+    "en": "Build and create the revenue booking for an existing JoAi order, using its invoice net/tax amounts and cash or accrual mode.",
+    "de": "Erlösbuchung für eine bestehende JoAi-Bestellung aus Rechnungsnetto/-steuer und Zahlungs- oder Rechnungsdatum erstellen.",
+    "fr": "Construit et crée l’écriture de revenu d’une commande JoAi existante à partir du net et de la TVA de la facture, en mode trésorerie ou engagement.",
+    "es": "Crea el asiento de ingresos de un pedido JoAi existente usando el neto y el IVA de la factura, en modo caja o devengo.",
+    "it": "Crea la registrazione dei ricavi per un ordine JoAi esistente usando netto e IVA della fattura, in modalità cassa o competenza.",
+    "ro": "Creează înregistrarea de venit pentru o comandă JoAi existentă folosind netul și TVA-ul facturii, în modul casă sau angajament."
+  },
+  "bot": "Use when the user wants to book an order into the ledger. Confirm the order and booking date before approving.",
+  "vars": {
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Revenue booking",
+        "de": "Erlösbuchung",
+        "fr": "Écriture de revenu",
+        "es": "Asiento de ingresos",
+        "it": "Registrazione ricavi",
+        "ro": "Înregistrare venit"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/teams/{{team}}/ledger-entries/revenue-order",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Order ID",
+          "as": "orderId",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "description": {
+            "en": "Order hash ID to book",
+            "de": "Zu buchende Bestell-Hash-ID",
+            "fr": "Hash ID de la commande à comptabiliser",
+            "es": "Hash ID del pedido a registrar",
+            "it": "Hash ID dell’ordine da registrare",
+            "ro": "Hash ID-ul comenzii de înregistrat"
+          },
+          "bot": "Order hash ID from list_orders."
+        },
+        {
+          "name": "Paid at",
+          "as": "paidAt",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "description": {
+            "en": "Payment date for cash mode (YYYY-MM-DD)",
+            "de": "Zahlungsdatum für E/A-Modus (JJJJ-MM-TT)",
+            "fr": "Date de paiement pour le mode trésorerie (AAAA-MM-JJ)",
+            "es": "Fecha de pago para el modo caja (AAAA-MM-DD)",
+            "it": "Data pagamento per la modalità cassa (AAAA-MM-GG)",
+            "ro": "Data plății pentru modul casă (AAAA-LL-ZZ)"
+          },
+          "bot": "Optional explicit payment date; otherwise the order payment date is used."
+        },
+        {
+          "name": "Approval reference",
+          "as": "approvalReference",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "description": {
+            "en": "Optional approval reference",
+            "de": "Optionale Freigabereferenz",
+            "fr": "Référence d’approbation facultative",
+            "es": "Referencia de aprobación opcional",
+            "it": "Riferimento di approvazione facoltativo",
+            "ro": "Referință de aprobare opțională"
+          }
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "type": "string",
+          "position": "url:team",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}",
+          "description": {
+            "en": "Team slug for this action. Defaults to the current team.",
+            "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team.",
+            "fr": "Slug de l’équipe pour cette action. Par défaut, l’équipe actuelle.",
+            "es": "Slug del equipo para esta acción. Por defecto, el equipo actual.",
+            "it": "Slug del team per questa azione. Predefinito: team attuale.",
+            "ro": "Slug-ul echipei pentru această acțiune. Implicit echipa curentă."
+          },
+          "bot": "The slug of the team to operate on. Omit to use the current team."
+        }
+      ],
+      "output": {
+        "entry": "out.data",
+        "entryId": "out.data.id"
+      }
+    }
+  ],
+  "output": {
+    "LEDGER_ENTRY": "out.data",
+    "LEDGER_ENTRY_ID": "out.data.id"
+  },
+  "ui": "https://raw.githubusercontent.com/JoAiHQ/warps/main/warps/joai/ledger-revenue-entry-create/chatapp.403a7edb.dist.html"
+}

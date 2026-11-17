@@ -46,6 +46,20 @@ export function asRecord(value: unknown): Record<string, unknown> | null {
   return value && typeof value === 'object' && !Array.isArray(value) ? (value as Record<string, unknown>) : null
 }
 
+/**
+ * Extract a record that may be wrapped under one of the warp output aliases,
+ * e.g. `{ LEDGER_ENTRY: { ... } }`.
+ */
+export function extractOutputRecord(value: unknown, keys: string[]): Record<string, unknown> | null {
+  const record = extractRecord(value)
+  if (!record) return null
+  for (const key of keys) {
+    const nested = asRecord(record[key])
+    if (nested) return nested
+  }
+  return record
+}
+
 export function pickValue(record: Record<string, unknown> | null | undefined, keys: string[]): unknown {
   if (!record) return undefined
   for (const key of keys) {
@@ -113,6 +127,18 @@ export function formatDateShort(value: unknown): string | null {
     year: 'numeric',
     hour: '2-digit',
     minute: '2-digit',
+  })
+}
+
+export function formatDateOnly(value: unknown): string | null {
+  if (!value) return null
+  const raw = String(value)
+  const date = /^\d{4}-\d{2}-\d{2}$/.test(raw) ? new Date(`${raw}T12:00:00`) : new Date(raw)
+  if (Number.isNaN(date.getTime())) return null
+  return date.toLocaleDateString(undefined, {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
   })
 }
 

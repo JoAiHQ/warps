@@ -4,9 +4,14 @@ export { TimelineResult } from './TimelineResult'
 export { MessageThreadResult } from './MessageThreadResult'
 export { StatsResult } from './StatsResult'
 export { DetailResult } from './DetailResult'
+export { LedgerEntryResult } from './LedgerEntryResult'
+export { VatSummaryResult } from './VatSummaryResult'
+export { TrialBalanceResult } from './TrialBalanceResult'
+export { BankImportResult } from './BankImportResult'
 export {
   extractList,
   extractRecord,
+  extractOutputRecord,
   asRecord,
   pickValue,
   humanizeKey,
@@ -14,6 +19,7 @@ export {
   resolveLocalized,
   formatCents,
   formatDateShort,
+  formatDateOnly,
   truncateText,
   truncateMiddle,
   nestedName,

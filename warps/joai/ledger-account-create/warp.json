@@ -1,0 +1,169 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Create Ledger Account",
+  "title": {
+    "en": "Create ledger account",
+    "de": "Konto anlegen",
+    "fr": "Créer un compte",
+    "es": "Crear cuenta",
+    "it": "Crea conto",
+    "ro": "Creează cont"
+  },
+  "description": {
+    "en": "Add an account to the team chart of accounts, for example an expense account or a VAT account.",
+    "de": "Ein Konto zum Kontenplan des Teams hinzufügen, zum Beispiel ein Aufwands- oder Steuerkonto.",
+    "fr": "Ajoute un compte au plan comptable de l’équipe, par exemple un compte de charges ou de TVA.",
+    "es": "Añade una cuenta al plan contable del equipo, por ejemplo una cuenta de gastos o de IVA.",
+    "it": "Aggiunge un conto al piano dei conti del team, ad esempio un conto di costo o IVA.",
+    "ro": "Adaugă un cont în planul de conturi al echipei, de exemplu un cont de cheltuieli sau de TVA."
+  },
+  "bot": "Use when a booking needs an account that is missing from the chart. List ledger accounts first; codes must be unique per team.",
+  "vars": {
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Account",
+        "de": "Konto",
+        "fr": "Compte",
+        "es": "Cuenta",
+        "it": "Conto",
+        "ro": "Cont"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/teams/{{team}}/ledger-accounts",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Code",
+          "as": "code",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "description": {
+            "en": "Account code, letters and digits (e.g. HOS, 2513)",
+            "de": "Kontonummer, Buchstaben und Ziffern (z. B. HOS, 2513)",
+            "fr": "Code du compte, lettres et chiffres (ex. HOS, 2513)",
+            "es": "Código de cuenta, letras y números (p. ej. HOS, 2513)",
+            "it": "Codice conto, lettere e cifre (es. HOS, 2513)",
+            "ro": "Codul contului, litere și cifre (ex. HOS, 2513)"
+          },
+          "bot": "Unique account code; stored in upper case."
+        },
+        {
+          "name": "Name",
+          "as": "name",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "description": {
+            "en": "Account name",
+            "de": "Kontobezeichnung",
+            "fr": "Nom du compte",
+            "es": "Nombre de la cuenta",
+            "it": "Nome del conto",
+            "ro": "Numele contului"
+          },
+          "bot": "Human-readable account name."
+        },
+        {
+          "name": "Type",
+          "as": "type",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "description": {
+            "en": "Account type",
+            "de": "Kontotyp",
+            "fr": "Type de compte",
+            "es": "Tipo de cuenta",
+            "it": "Tipo di conto",
+            "ro": "Tipul contului"
+          },
+          "bot": "asset, liability, equity, revenue or expense.",
+          "options": [
+            "asset",
+            "liability",
+            "equity",
+            "revenue",
+            "expense"
+          ]
+        },
+        {
+          "name": "Role",
+          "as": "role",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "description": {
+            "en": "Optional system role",
+            "de": "Optionale Systemrolle",
+            "fr": "Rôle système facultatif",
+            "es": "Rol de sistema opcional",
+            "it": "Ruolo di sistema facoltativo",
+            "ro": "Rol de sistem opțional"
+          },
+          "bot": "Use input_vat or output_vat for VAT accounts so they count in the VAT summary.",
+          "options": [
+            "bank",
+            "cash",
+            "receivable",
+            "payable",
+            "input_vat",
+            "output_vat",
+            "private"
+          ]
+        },
+        {
+          "name": "Default tax code",
+          "as": "defaultTaxCodeId",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "description": {
+            "en": "Optional default tax code hash ID",
+            "de": "Optionale Standard-Steuercode-Hash-ID",
+            "fr": "Hash ID du code TVA par défaut facultatif",
+            "es": "Hash ID del código de IVA predeterminado opcional",
+            "it": "Hash ID del codice IVA predefinito facoltativo",
+            "ro": "Hash ID opțional al codului de TVA implicit"
+          },
+          "bot": "Hash ID from the tax code list."
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "type": "string",
+          "position": "url:team",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}",
+          "description": {
+            "en": "Team slug for this action. Defaults to the current team.",
+            "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team.",
+            "fr": "Slug de l’équipe pour cette action. Par défaut, l’équipe actuelle.",
+            "es": "Slug del equipo para esta acción. Por defecto, el equipo actual.",
+            "it": "Slug del team per questa azione. Predefinito: team attuale.",
+            "ro": "Slug-ul echipei pentru această acțiune. Implicit echipa curentă."
+          },
+          "bot": "The slug of the team to operate on. Omit to use the current team."
+        }
+      ],
+      "output": {
+        "account": "out.data"
+      }
+    }
+  ],
+  "output": {
+    "LEDGER_ACCOUNT": "out.data"
+  },
+  "ui": "https://raw.githubusercontent.com/JoAiHQ/warps/main/warps/joai/ledger-account-create/chatapp.b8c1d03b.dist.html"
+}

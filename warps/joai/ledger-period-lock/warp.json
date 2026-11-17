@@ -1,0 +1,105 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Lock Ledger Period",
+  "title": {
+    "en": "Lock ledger period",
+    "de": "Zeitraum sperren",
+    "fr": "Verrouiller la période",
+    "es": "Bloquear periodo",
+    "it": "Blocca periodo",
+    "ro": "Blochează perioada"
+  },
+  "description": {
+    "en": "Lock a booking period so no new entry or reversal can be booked into it.",
+    "de": "Einen Buchungszeitraum sperren, damit keine neue Buchung oder Stornierung darin erstellt werden kann.",
+    "fr": "Verrouille une période pour qu’aucune écriture ni extourne ne puisse y être enregistrée.",
+    "es": "Bloquea un periodo para que no se puedan registrar asientos ni rectificaciones en él.",
+    "it": "Blocca un periodo in modo che non possano essere registrate nuove scritture o storni.",
+    "ro": "Blochează o perioadă astfel încât să nu se poată înregistra asumări sau stornări în ea."
+  },
+  "bot": "Use when the user explicitly wants to close a month or quarter. Locked periods cannot receive new bookings.",
+  "vars": {
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Lock period",
+        "de": "Zeitraum sperren",
+        "fr": "Verrouiller la période",
+        "es": "Bloquear periodo",
+        "it": "Blocca periodo",
+        "ro": "Blochează perioada"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/teams/{{team}}/ledger-periods/lock",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Starts on",
+          "as": "startsOn",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "description": {
+            "en": "First date of the period (YYYY-MM-DD)",
+            "de": "Erstes Datum des Zeitraums (JJJJ-MM-TT)",
+            "fr": "Première date de la période (AAAA-MM-JJ)",
+            "es": "Primera fecha del periodo (AAAA-MM-DD)",
+            "it": "Prima data del periodo (AAAA-MM-GG)",
+            "ro": "Prima dată a perioadei (AAAA-LL-ZZ)"
+          },
+          "bot": "Inclusive period start."
+        },
+        {
+          "name": "Ends on",
+          "as": "endsOn",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "description": {
+            "en": "Last date of the period (YYYY-MM-DD)",
+            "de": "Letztes Datum des Zeitraums (JJJJ-MM-TT)",
+            "fr": "Dernière date de la période (AAAA-MM-JJ)",
+            "es": "Última fecha del periodo (AAAA-MM-DD)",
+            "it": "Ultima data del periodo (AAAA-MM-GG)",
+            "ro": "Ultima dată a perioadei (AAAA-LL-ZZ)"
+          },
+          "bot": "Inclusive period end."
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "type": "string",
+          "position": "url:team",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}",
+          "description": {
+            "en": "Team slug for this action. Defaults to the current team.",
+            "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team.",
+            "fr": "Slug de l’équipe pour cette action. Par défaut, l’équipe actuelle.",
+            "es": "Slug del equipo para esta acción. Por defecto, el equipo actual.",
+            "it": "Slug del team per questa azione. Predefinito: team attuale.",
+            "ro": "Slug-ul echipei pentru această acțiune. Implicit echipa curentă."
+          },
+          "bot": "The slug of the team to operate on. Omit to use the current team."
+        }
+      ],
+      "output": {
+        "period": "out.data"
+      }
+    }
+  ],
+  "output": {
+    "LEDGER_PERIOD": "out.data"
+  },
+  "ui": "https://raw.githubusercontent.com/JoAiHQ/warps/main/warps/joai/ledger-period-lock/chatapp.fd9653a5.dist.html"
+}
