@@ -1,0 +1,91 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Create Contact Stage",
+  "title": {
+    "en": "Create a contact stage",
+    "de": "Kontakt-Phase anlegen"
+  },
+  "description": {
+    "en": "Add a stage to the team pipeline. The key is the stable identifier routines and agents use; the name is display only.",
+    "de": "Fügt dem Team-Pipeline eine Phase hinzu. Der Schlüssel ist die stabile Kennung für Routinen und Agenten; der Name ist nur Anzeige."
+  },
+  "bot": "Create a stage only when list-contact-stages shows the key does not exist yet. Keys are lowercase English identifiers; names are display text.",
+  "vars": {
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Create contact stage",
+        "de": "Kontakt-Phase anlegen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/contacts/stages",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Team",
+          "as": "team",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}",
+          "position": "header:team",
+          "description": {
+            "en": "Team slug. Defaults to the current team.",
+            "de": "Team-Slug. Standardmäßig das aktuelle Team."
+          }
+        },
+        {
+          "name": "Key",
+          "as": "key",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:key",
+          "description": {
+            "en": "Stable key: lowercase letters, numbers, dash or underscore.",
+            "de": "Stabiler Schlüssel: Kleinbuchstaben, Zahlen, Bindestrich oder Unterstrich."
+          }
+        },
+        {
+          "name": "Name",
+          "as": "name",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "payload:name",
+          "description": {
+            "en": "Display name shown in the app and on the wall.",
+            "de": "Anzeigename in der App und an der Wand."
+          }
+        },
+        {
+          "name": "Position",
+          "as": "position",
+          "type": "number",
+          "source": "field",
+          "required": false,
+          "position": "payload:position",
+          "description": {
+            "en": "Pipeline position, lower is earlier. Defaults to the end.",
+            "de": "Position in der Pipeline, kleiner ist früher. Standard: am Ende."
+          }
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Contact stage created.",
+      "de": "Kontakt-Phase angelegt."
+    }
+  }
+}

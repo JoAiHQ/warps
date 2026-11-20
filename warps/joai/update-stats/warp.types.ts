@@ -8,4 +8,6 @@ export type JoAiUpdateStatsData = {
   DEALS_COUNT: number;
   EVENTS_COUNT: number;
   NEWS_COUNT: number;
+  ARTICLES_COUNT: number;
+  JOBS_COUNT: number;
 };

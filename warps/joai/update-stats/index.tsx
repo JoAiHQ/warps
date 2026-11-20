@@ -18,6 +18,7 @@ function Main() {
         { label: 'Events', value: pickValue(record, ['EVENTS_COUNT', 'eventsCount']) },
         { label: 'News', value: pickValue(record, ['NEWS_COUNT', 'newsCount']) },
         { label: 'Articles', value: pickValue(record, ['ARTICLES_COUNT', 'articlesCount']) },
+        { label: 'Jobs', value: pickValue(record, ['JOBS_COUNT', 'jobsCount']) },
       ]}
     />
   )

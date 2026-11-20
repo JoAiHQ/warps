@@ -1,0 +1,83 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Contact Funnel",
+  "title": {
+    "en": "Contact funnel",
+    "de": "Kontakt-Funnel"
+  },
+  "description": {
+    "en": "Count contacts per contact stage for a window, plus how many entered and exited each stage.",
+    "de": "Zählt Kontakte je Phase in einem Zeitraum sowie Ein- und Austritte pro Phase."
+  },
+  "bot": "Use for pipeline reporting. Stages come back in pipeline order with their key; the window defaults to the last 30 days.",
+  "vars": {
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "output": {
+    "funnel": "out",
+    "funnelData": "out.data"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Read contact funnel",
+        "de": "Kontakt-Funnel lesen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/contacts/funnel?from={{from}}&to={{to}}",
+        "method": "GET",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Team",
+          "as": "team",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}",
+          "position": "header:team",
+          "description": {
+            "en": "Team slug. Defaults to the current team.",
+            "de": "Team-Slug. Standardmäßig das aktuelle Team."
+          }
+        },
+        {
+          "name": "From",
+          "as": "from",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "url:from",
+          "description": {
+            "en": "Window start, ISO date. Defaults to 30 days before to.",
+            "de": "Start des Zeitraums, ISO-Datum. Standard: 30 Tage vor to."
+          }
+        },
+        {
+          "name": "To",
+          "as": "to",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "url:to",
+          "description": {
+            "en": "Window end, ISO date. Defaults to now.",
+            "de": "Ende des Zeitraums, ISO-Datum. Standard: jetzt."
+          }
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Contact funnel loaded.",
+      "de": "Kontakt-Funnel geladen."
+    }
+  }
+}
