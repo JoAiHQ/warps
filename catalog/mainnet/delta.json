@@ -4,33 +4,25 @@
   "repo": "JoAiHQ/warps",
   "branch": "main",
   "network": "mainnet",
-  "commitSha": "e8958a0797467463aacae308755aceb1a26205b6",
-  "committedAt": "2026-11-19T17:05:10.202Z",
-  "generatedAt": "2026-11-19T17:05:12.637Z",
+  "commitSha": "a489419a594c560a2ada99be6b5215704f2de44c",
+  "committedAt": "2026-11-20T20:45:25.278Z",
+  "generatedAt": "2026-11-20T20:45:27.993Z",
   "upserts": [
     {
-      "key": "none:joai-item-create",
-      "identifier": "@joai-item-create",
-      "alias": "joai-item-create",
+      "key": "none:joai-contact-funnel",
+      "identifier": "@joai-contact-funnel",
+      "alias": "joai-contact-funnel",
       "chain": "none",
-      "hash": "5087aab09c1bc7c14d242edc4dfb2cb4d10514ef1df724ddb7ce896c9a23928a",
-      "checksum": "5087aab09c1bc7c14d242edc4dfb2cb4d10514ef1df724ddb7ce896c9a23928a",
-      "name": "JoAi: Create Action Item",
+      "hash": "b803f086c232ae52fedfcbeb1fa7974db15de287a53d0458f86576dac83367a3",
+      "checksum": "b803f086c232ae52fedfcbeb1fa7974db15de287a53d0458f86576dac83367a3",
+      "name": "JoAi: Contact Funnel",
       "title": {
-        "en": "Create an action item",
-        "de": "Aufgabe erstellen",
-        "es": "Create an action item",
-        "fr": "Create an action item",
-        "ro": "Create an action item",
-        "it": "Create an action item"
+        "en": "Contact funnel",
+        "de": "Kontakt-Funnel"
       },
       "description": {
-        "en": "Create a trackable task or to-do item that your AI agent will remember and follow up on. Set a title, priority, and optional due date to stay organized and never miss a deadline.",
-        "de": "Erstelle eine verfolgbare Aufgabe oder ein To-do, das dein KI-Agent sich merkt und nachverfolgt. Lege Titel, Priorität und optional ein Fälligkeitsdatum fest, um organisiert zu bleiben und keine Deadline zu verpassen.",
-        "es": "Create a trackable task or to-do item that your AI agent will remember and follow up on. Set a title, priority, and optional due date to stay organized and never miss a deadline.",
-        "fr": "Create a trackable task or to-do item that your AI agent will remember and follow up on. Set a title, priority, and optional due date to stay organized and never miss a deadline.",
-        "ro": "Create a trackable task or to-do item that your AI agent will remember and follow up on. Set a title, priority, and optional due date to stay organized and never miss a deadline.",
-        "it": "Create a trackable task or to-do item that your AI agent will remember and follow up on. Set a title, priority, and optional due date to stay organized and never miss a deadline."
+        "en": "Count contacts per contact stage for a window, plus how many entered and exited each stage.",
+        "de": "Zählt Kontakte je Phase in einem Zeitraum sowie Ein- und Austritte pro Phase."
       },
       "preview": null,
       "creator": "github:JoAiHQ/warps",
@@ -65,250 +57,75 @@
       },
       "warp": {
         "protocol": "warp:3.0.0",
-        "name": "JoAi: Create Action Item",
+        "name": "JoAi: Contact Funnel",
         "title": {
-          "en": "Create an action item",
-          "de": "Aufgabe erstellen",
-          "es": "Create an action item",
-          "fr": "Create an action item",
-          "ro": "Create an action item",
-          "it": "Create an action item"
+          "en": "Contact funnel",
+          "de": "Kontakt-Funnel"
         },
         "description": {
-          "en": "Create a trackable task or to-do item that your AI agent will remember and follow up on. Set a title, priority, and optional due date to stay organized and never miss a deadline.",
-          "de": "Erstelle eine verfolgbare Aufgabe oder ein To-do, das dein KI-Agent sich merkt und nachverfolgt. Lege Titel, Priorität und optional ein Fälligkeitsdatum fest, um organisiert zu bleiben und keine Deadline zu verpassen.",
-          "es": "Create a trackable task or to-do item that your AI agent will remember and follow up on. Set a title, priority, and optional due date to stay organized and never miss a deadline.",
-          "fr": "Create a trackable task or to-do item that your AI agent will remember and follow up on. Set a title, priority, and optional due date to stay organized and never miss a deadline.",
-          "ro": "Create a trackable task or to-do item that your AI agent will remember and follow up on. Set a title, priority, and optional due date to stay organized and never miss a deadline.",
-          "it": "Create a trackable task or to-do item that your AI agent will remember and follow up on. Set a title, priority, and optional due date to stay organized and never miss a deadline."
+          "en": "Count contacts per contact stage for a window, plus how many entered and exited each stage.",
+          "de": "Zählt Kontakte je Phase in einem Zeitraum sowie Ein- und Austritte pro Phase."
         },
-        "bot": "Use this when the user mentions a task, to-do, or action item. Extract a clear title and optional details.",
+        "bot": "Use for pipeline reporting. Stages come back in pipeline order with their key; the window defaults to the last 30 days.",
         "vars": {
-          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
-          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+          "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+        },
+        "output": {
+          "funnel": "out",
+          "funnelData": "out.data"
         },
         "actions": [
           {
             "type": "collect",
             "label": {
-              "en": "Create item",
-              "de": "Aufgabe erstellen",
-              "es": "Create item",
-              "fr": "Create item",
-              "ro": "Create item",
-              "it": "Create item"
+              "en": "Read contact funnel",
+              "de": "Kontakt-Funnel lesen"
             },
             "destination": {
-              "url": "https://api.joai.ai/v1/items",
-              "method": "POST",
+              "url": "https://api.joai.ai/v1/contacts/funnel?from={{from}}&to={{to}}",
+              "method": "GET",
               "headers": {
-                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+                "X-Team": "{{team}}"
               }
             },
             "inputs": [
               {
-                "name": "Title",
-                "as": "title",
-                "description": {
-                  "en": "A clear, actionable title",
-                  "de": "Ein klarer, umsetzbarer Titel",
-                  "es": "A clear, actionable title",
-                  "fr": "A clear, actionable title",
-                  "ro": "A clear, actionable title",
-                  "it": "A clear, actionable title"
-                },
-                "bot": "Short, clear title describing what needs to be done.",
-                "type": "string",
-                "source": "field",
-                "required": true,
-                "min": 3
-              },
-              {
-                "name": "Description",
-                "as": "description",
-                "description": {
-                  "en": "Additional details",
-                  "de": "Zusätzliche Details",
-                  "es": "Additional details",
-                  "fr": "Additional details",
-                  "ro": "Additional details",
-                  "it": "Additional details"
-                },
-                "bot": "Optional extra context about this action item.",
-                "type": "string",
-                "source": "field",
-                "required": false
-              },
-              {
-                "name": "Priority",
-                "as": "priority",
-                "description": {
-                  "en": "How urgent is this?",
-                  "de": "Wie dringend ist das?",
-                  "es": "How urgent is this?",
-                  "fr": "How urgent is this?",
-                  "ro": "How urgent is this?",
-                  "it": "How urgent is this?"
-                },
-                "bot": "Priority level. Use 'normal' unless the user indicates urgency.",
+                "name": "Team",
+                "as": "team",
                 "type": "string",
                 "source": "field",
                 "required": false,
-                "default": "normal",
-                "options": {
-                  "low": "Low",
-                  "normal": "Normal",
-                  "high": {
-                    "en": "High",
-                    "de": "High",
-                    "es": "High",
-                    "fr": "High",
-                    "ro": "High",
-                    "it": "High"
-                  },
-                  "urgent": "Urgent"
+                "default": "{{JOAI_TEAM_SLUG}}",
+                "position": "header:team",
+                "description": {
+                  "en": "Team slug. Defaults to the current team.",
+                  "de": "Team-Slug. Standardmäßig das aktuelle Team."
                 }
               },
               {
-                "name": "Due Date",
-                "as": "dueDate",
-                "description": {
-                  "en": "When is this due?",
-                  "de": "Wann ist das fällig?",
-                  "es": "When is this due?",
-                  "fr": "When is this due?",
-                  "ro": "When is this due?",
-                  "it": "When is this due?"
-                },
-                "bot": "Optional due date in ISO format (YYYY-MM-DD), if mentioned.",
+                "name": "From",
+                "as": "from",
                 "type": "string",
                 "source": "field",
-                "required": false
-              },
-              {
-                "name": "Tags",
-                "as": "tags",
-                "description": {
-                  "en": "Tags for categorization",
-                  "de": "Tags zur Kategorisierung",
-                  "es": "Tags for categorization",
-                  "fr": "Tags for categorization",
-                  "ro": "Tags for categorization",
-                  "it": "Tags for categorization"
-                },
-                "bot": "Array of stable slugs to group / filter items (e.g. outreach, nurture, kanzlei). Pass a JSON array of strings.",
-                "type": "json",
-                "source": "field",
                 "required": false,
-                "label": {
-                  "en": "Tags",
-                  "de": "Tags",
-                  "es": "Tags",
-                  "fr": "Tags",
-                  "ro": "Tags",
-                  "it": "Tags"
+                "position": "url:from",
+                "description": {
+                  "en": "Window start, ISO date. Defaults to 30 days before to.",
+                  "de": "Start des Zeitraums, ISO-Datum. Standard: 30 Tage vor to."
                 }
               },
               {
-                "name": "Goal ID",
-                "as": "goalId",
-                "description": {
-                  "en": "Link to a goal",
-                  "de": "Verknüpfung mit einem Ziel",
-                  "es": "Link to a goal",
-                  "fr": "Link to a goal",
-                  "ro": "Link to a goal",
-                  "it": "Link to a goal"
-                },
-                "bot": "Optional ID of a goal this item contributes to.",
-                "type": "string",
-                "source": "field",
-                "required": false
-              },
-              {
-                "name": "Status",
-                "as": "status",
-                "description": {
-                  "en": "Item status",
-                  "de": "Aufgabenstatus",
-                  "es": "Item status",
-                  "fr": "Item status",
-                  "ro": "Item status",
-                  "it": "Item status"
-                },
-                "bot": "Item status. Use 'done' for completed reports.",
+                "name": "To",
+                "as": "to",
                 "type": "string",
                 "source": "field",
                 "required": false,
-                "default": "backlog",
-                "options": {
-                  "backlog": "Backlog",
-                  "active": "Active",
-                  "review": "Review",
-                  "done": {
-                    "en": "Done",
-                    "de": "Done",
-                    "es": "Done",
-                    "fr": "Done",
-                    "ro": "Done",
-                    "it": "Done"
-                  }
-                }
-              },
-              {
-                "name": "Contact IDs",
-                "as": "contactIds",
+                "position": "url:to",
                 "description": {
-                  "en": "Link to contacts",
-                  "de": "Verknüpfung mit Kontakten",
-                  "es": "Link to contacts",
-                  "fr": "Link to contacts",
-                  "ro": "Link to contacts",
-                  "it": "Link to contacts"
-                },
-                "bot": "Array of contact hash IDs to assign to this item. Pass as JSON array.",
-                "type": "json",
-                "source": "field",
-                "required": false
-              },
-              {
-                "name": "Agent IDs",
-                "as": "agents",
-                "description": {
-                  "en": "Assign agents",
-                  "de": "Agenten zuweisen",
-                  "es": "Asignar agentes",
-                  "fr": "Assigner des agents",
-                  "ro": "Atribuie agenți",
-                  "it": "Assegna agenti"
-                },
-                "bot": "Optional JSON array of agent UUIDs. Use it to assign another agent, for example the tester. Omit to keep the default assignment.",
-                "type": "json",
-                "source": "field",
-                "required": false
-              },
-              {
-                "name": "Meta",
-                "as": "meta",
-                "description": {
-                  "en": "Metadata",
-                  "de": "Metadaten",
-                  "es": "Metadata",
-                  "fr": "Metadata",
-                  "ro": "Metadata",
-                  "it": "Metadata"
-                },
-                "bot": "Optional JSON object for structured data. Stored in the item's meta field. Pass as JSON object.",
-                "type": "json",
-                "source": "field",
-                "required": false,
-                "label": {
-                  "en": "Meta",
-                  "de": "Meta",
-                  "es": "Meta",
-                  "fr": "Meta",
-                  "ro": "Meta",
-                  "it": "Meta"
+                  "en": "Window end, ISO date. Defaults to now.",
+                  "de": "Ende des Zeitraums, ISO-Datum. Standard: jetzt."
                 }
               }
             ]
@@ -316,40 +133,28 @@
         ],
         "messages": {
           "success": {
-            "en": "Action item '{{title}}' created!",
-            "de": "Aufgabe '{{title}}' erstellt!",
-            "es": "Action item '{{title}}' created!",
-            "fr": "Action item '{{title}}' created!",
-            "ro": "Action item '{{title}}' created!",
-            "it": "Action item '{{title}}' created!"
+            "en": "Contact funnel loaded.",
+            "de": "Kontakt-Funnel geladen."
           }
         }
       },
       "extras": null
     },
     {
-      "key": "none:joai-item-update",
-      "identifier": "@joai-item-update",
-      "alias": "joai-item-update",
+      "key": "none:joai-contact-stage-create",
+      "identifier": "@joai-contact-stage-create",
+      "alias": "joai-contact-stage-create",
       "chain": "none",
-      "hash": "2438a7017fbd10441aee6558705925c67cfefcbf2ed92faea1159de091bcee99",
-      "checksum": "2438a7017fbd10441aee6558705925c67cfefcbf2ed92faea1159de091bcee99",
-      "name": "JoAi: Update Item",
+      "hash": "f95de089c0b680546bf6124089b048ce403eae38be8e1d6116da147a574a8f40",
+      "checksum": "f95de089c0b680546bf6124089b048ce403eae38be8e1d6116da147a574a8f40",
+      "name": "JoAi: Create Contact Stage",
       "title": {
-        "en": "Update an item",
-        "de": "Element aktualisieren",
-        "es": "Update an item",
-        "fr": "Update an item",
-        "ro": "Update an item",
-        "it": "Update an item"
+        "en": "Create a contact stage",
+        "de": "Kontakt-Phase anlegen"
       },
       "description": {
-        "en": "Edit the details of an existing item such as its title, description, status, priority, due date, tags, or linked contacts.",
-        "de": "Bearbeite die Details eines bestehenden Elements, z. B. Titel, Beschreibung, Status, Priorität, Fälligkeit, Tags oder verknüpfte Kontakte.",
-        "es": "Edit the details of an existing item such as its title, content, or status.",
-        "fr": "Edit the details of an existing item such as its title, content, or status.",
-        "ro": "Edit the details of an existing item such as its title, content, or status.",
-        "it": "Edit the details of an existing item such as its title, content, or status."
+        "en": "Add a stage to the team pipeline. The key is the stable identifier routines and agents use; the name is display only.",
+        "de": "Fügt dem Team-Pipeline eine Phase hinzu. Der Schlüssel ist die stabile Kennung für Routinen und Agenten; der Name ist nur Anzeige."
       },
       "preview": null,
       "creator": "github:JoAiHQ/warps",
@@ -384,315 +189,17 @@
       },
       "warp": {
         "protocol": "warp:3.0.0",
-        "name": "JoAi: Update Item",
+        "name": "JoAi: Create Contact Stage",
         "title": {
-          "en": "Update an item",
-          "de": "Element aktualisieren",
-          "es": "Update an item",
-          "fr": "Update an item",
-          "ro": "Update an item",
-          "it": "Update an item"
+          "en": "Create a contact stage",
+          "de": "Kontakt-Phase anlegen"
         },
         "description": {
-          "en": "Edit the details of an existing item such as its title, description, status, priority, due date, tags, or linked contacts.",
-          "de": "Bearbeite die Details eines bestehenden Elements, z. B. Titel, Beschreibung, Status, Priorität, Fälligkeit, Tags oder verknüpfte Kontakte.",
-          "es": "Edit the details of an existing item such as its title, content, or status.",
-          "fr": "Edit the details of an existing item such as its title, content, or status.",
-          "ro": "Edit the details of an existing item such as its title, content, or status.",
-          "it": "Edit the details of an existing item such as its title, content, or status."
+          "en": "Add a stage to the team pipeline. The key is the stable identifier routines and agents use; the name is display only.",
+          "de": "Fügt dem Team-Pipeline eine Phase hinzu. Der Schlüssel ist die stabile Kennung für Routinen und Agenten; der Name ist nur Anzeige."
         },
-        "bot": "Use this when the user wants to modify an existing item. If the user refers to an item by title, list items first to find the matching ID. Pass contactIds as a JSON array of contact hashids to (re)assign contacts.",
+        "bot": "Create a stage only when list-contact-stages shows the key does not exist yet. Keys are lowercase English identifiers; names are display text.",
         "vars": {
-          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
-          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY"
-        },
-        "actions": [
-          {
-            "type": "collect",
-            "label": {
-              "en": "Update item",
-              "de": "Element aktualisieren",
-              "es": "Update item",
-              "fr": "Update item",
-              "ro": "Update item",
-              "it": "Update item"
-            },
-            "destination": {
-              "url": "https://api.joai.ai/v1/items/{{itemId}}",
-              "method": "PUT",
-              "headers": {
-                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}"
-              }
-            },
-            "inputs": [
-              {
-                "name": "Item ID",
-                "as": "itemId",
-                "description": {
-                  "en": "The ID of the item to update",
-                  "de": "Die ID des zu aktualisierenden Elements",
-                  "es": "The ID of the item to update",
-                  "fr": "The ID of the item to update",
-                  "ro": "The ID of the item to update",
-                  "it": "The ID of the item to update"
-                },
-                "bot": "The item hash ID. If the user refers to an item by title, list items first to find the matching ID.",
-                "type": "string",
-                "position": "url:itemId",
-                "source": "field",
-                "required": true,
-                "min": 1
-              },
-              {
-                "name": "Title",
-                "as": "title",
-                "description": {
-                  "en": "Updated title for this item",
-                  "de": "Aktualisierter Titel für dieses Element",
-                  "es": "Updated title for this item",
-                  "fr": "Updated title for this item",
-                  "ro": "Updated title for this item",
-                  "it": "Updated title for this item"
-                },
-                "bot": "A new title for this item, if the user wants to rename it.",
-                "type": "string",
-                "source": "field",
-                "required": false
-              },
-              {
-                "name": "Description",
-                "as": "description",
-                "description": {
-                  "en": "Updated description or body of the item",
-                  "de": "Aktualisierte Beschreibung oder Text des Elements",
-                  "es": "Updated description or body of the item",
-                  "fr": "Updated description or body of the item",
-                  "ro": "Updated description or body of the item",
-                  "it": "Updated description or body of the item"
-                },
-                "bot": "The updated description/body for this item.",
-                "type": "string",
-                "source": "field",
-                "required": false
-              },
-              {
-                "name": "Status",
-                "as": "status",
-                "description": {
-                  "en": "Updated status for this item",
-                  "de": "Aktualisierter Status für dieses Element",
-                  "es": "Updated status for this item",
-                  "fr": "Updated status for this item",
-                  "ro": "Updated status for this item",
-                  "it": "Updated status for this item"
-                },
-                "bot": "The new status for this item (e.g., active, done, archived).",
-                "type": "string",
-                "source": "field",
-                "required": false
-              },
-              {
-                "name": "Priority",
-                "as": "priority",
-                "description": {
-                  "en": "Updated priority",
-                  "de": "Aktualisierte Priorität",
-                  "es": "Updated priority",
-                  "fr": "Updated priority",
-                  "ro": "Updated priority",
-                  "it": "Updated priority"
-                },
-                "bot": "Priority level: normal, high, or critical.",
-                "type": "string",
-                "source": "field",
-                "required": false,
-                "options": {
-                  "normal": "Normal",
-                  "high": "High",
-                  "critical": "Critical"
-                }
-              },
-              {
-                "name": "Due Date",
-                "as": "dueDate",
-                "description": {
-                  "en": "When is this due?",
-                  "de": "Wann ist das fällig?",
-                  "es": "When is this due?",
-                  "fr": "When is this due?",
-                  "ro": "When is this due?",
-                  "it": "When is this due?"
-                },
-                "bot": "Optional due date in ISO format (YYYY-MM-DD).",
-                "type": "string",
-                "source": "field",
-                "required": false
-              },
-              {
-                "name": "Tags",
-                "as": "tags",
-                "description": {
-                  "en": "Tags for categorization",
-                  "de": "Tags zur Kategorisierung",
-                  "es": "Tags for categorization",
-                  "fr": "Tags for categorization",
-                  "ro": "Tags for categorization",
-                  "it": "Tags for categorization"
-                },
-                "bot": "Array of stable slugs. Pass a JSON array of strings. Replaces existing tags.",
-                "type": "json",
-                "source": "field",
-                "required": false,
-                "label": {
-                  "en": "Tags",
-                  "de": "Tags",
-                  "es": "Tags",
-                  "fr": "Tags",
-                  "ro": "Tags",
-                  "it": "Tags"
-                }
-              },
-              {
-                "name": "Goal ID",
-                "as": "goalId",
-                "description": {
-                  "en": "Link to a goal",
-                  "de": "Verknüpfung mit einem Ziel",
-                  "es": "Link to a goal",
-                  "fr": "Link to a goal",
-                  "ro": "Link to a goal",
-                  "it": "Link to a goal"
-                },
-                "bot": "Optional goal hash ID. Pass empty string to clear.",
-                "type": "string",
-                "source": "field",
-                "required": false
-              },
-              {
-                "name": "Contact IDs",
-                "as": "contactIds",
-                "description": {
-                  "en": "Link to contacts",
-                  "de": "Verknüpfung mit Kontakten",
-                  "es": "Link to contacts",
-                  "fr": "Link to contacts",
-                  "ro": "Link to contacts",
-                  "it": "Link to contacts"
-                },
-                "bot": "Array of contact hash IDs to assign to this item (replaces existing). Pass as JSON array. Pass [] to clear.",
-                "type": "json",
-                "source": "field",
-                "required": false
-              },
-              {
-                "name": "Agent IDs",
-                "as": "agents",
-                "description": {
-                  "en": "Assign agents",
-                  "de": "Agenten zuweisen",
-                  "es": "Asignar agentes",
-                  "fr": "Assigner des agents",
-                  "ro": "Atribuie agenți",
-                  "it": "Assegna agenti"
-                },
-                "bot": "JSON array of agent UUIDs to assign (replaces existing). Pass [] to clear. Use it to reassign an item to the tester or back to the owner.",
-                "type": "json",
-                "source": "field",
-                "required": false
-              }
-            ]
-          }
-        ],
-        "messages": {
-          "success": {
-            "en": "Item updated.",
-            "de": "Element aktualisiert.",
-            "es": "Item updated.",
-            "fr": "Item updated.",
-            "ro": "Item updated.",
-            "it": "Item updated."
-          }
-        }
-      },
-      "extras": null
-    },
-    {
-      "key": "none:joai-project-update",
-      "identifier": "@joai-project-update",
-      "alias": "joai-project-update",
-      "chain": "none",
-      "hash": "0b44900ed60db13375bbd757388ea0a4714cdc11ddf56bf0dd4028a91b9bce32",
-      "checksum": "0b44900ed60db13375bbd757388ea0a4714cdc11ddf56bf0dd4028a91b9bce32",
-      "name": "JoAi: Update Project",
-      "title": {
-        "en": "Update a project",
-        "de": "Projekt bearbeiten",
-        "es": "Update a project",
-        "fr": "Update a project",
-        "ro": "Update a project",
-        "it": "Update a project"
-      },
-      "description": {
-        "en": "Edit an existing project: name, brief, presets, platforms, skills, or the template values it renders from.",
-        "de": "Bearbeite ein bestehendes Projekt: Name, Brief, Presets, Plattformen, Skills oder die Template-Werte, aus denen es gerendert wird.",
-        "es": "Edit an existing project: name, brief, presets, platforms, skills, or the template values it renders from.",
-        "fr": "Edit an existing project: name, brief, presets, platforms, skills, or the template values it renders from.",
-        "ro": "Edit an existing project: name, brief, presets, platforms, skills, or the template values it renders from.",
-        "it": "Edit an existing project: name, brief, presets, platforms, skills, or the template values it renders from."
-      },
-      "preview": null,
-      "creator": "github:JoAiHQ/warps",
-      "privileges": [],
-      "listed": true,
-      "visibility": "public",
-      "primaryAddress": null,
-      "primaryFunc": null,
-      "brand": {
-        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
-        "slug": "joai",
-        "active": true,
-        "protocol": "brand:0.2.0",
-        "name": "JoAi",
-        "description": {
-          "en": "JoAi is a platform for creating and managing your own AI agents.",
-          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
-          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
-          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
-          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
-        },
-        "logo": {
-          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
-        },
-        "urls": {
-          "web": "https://joai.ai"
-        },
-        "colors": {
-          "primary": "#98FF98",
-          "secondary": "#FFFF66"
-        }
-      },
-      "warp": {
-        "protocol": "warp:3.0.0",
-        "name": "JoAi: Update Project",
-        "title": {
-          "en": "Update a project",
-          "de": "Projekt bearbeiten",
-          "es": "Update a project",
-          "fr": "Update a project",
-          "ro": "Update a project",
-          "it": "Update a project"
-        },
-        "description": {
-          "en": "Edit an existing project: name, brief, presets, platforms, skills, or the template values it renders from.",
-          "de": "Bearbeite ein bestehendes Projekt: Name, Brief, Presets, Plattformen, Skills oder die Template-Werte, aus denen es gerendert wird.",
-          "es": "Edit an existing project: name, brief, presets, platforms, skills, or the template values it renders from.",
-          "fr": "Edit an existing project: name, brief, presets, platforms, skills, or the template values it renders from.",
-          "ro": "Edit an existing project: name, brief, presets, platforms, skills, or the template values it renders from.",
-          "it": "Edit an existing project: name, brief, presets, platforms, skills, or the template values it renders from."
-        },
-        "bot": "Use this when the user wants to change an existing project instead of creating a new one. Find the project with list_projects first. Editing the template block drops the previous render, so produce it again afterwards.",
-        "vars": {
-          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
           "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
           "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
         },
@@ -700,15 +207,151 @@
           {
             "type": "collect",
             "label": {
-              "en": "Update project",
-              "de": "Projekt bearbeiten",
-              "es": "Update project",
-              "fr": "Update project",
-              "ro": "Update project",
-              "it": "Update project"
+              "en": "Create contact stage",
+              "de": "Kontakt-Phase anlegen"
             },
             "destination": {
-              "url": "https://api.joai.ai/v1/studio/projects/{{projectId}}",
+              "url": "https://api.joai.ai/v1/contacts/stages",
+              "method": "POST",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+                "X-Team": "{{team}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Team",
+                "as": "team",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "default": "{{JOAI_TEAM_SLUG}}",
+                "position": "header:team",
+                "description": {
+                  "en": "Team slug. Defaults to the current team.",
+                  "de": "Team-Slug. Standardmäßig das aktuelle Team."
+                }
+              },
+              {
+                "name": "Key",
+                "as": "key",
+                "type": "string",
+                "source": "field",
+                "required": true,
+                "position": "payload:key",
+                "description": {
+                  "en": "Stable key: lowercase letters, numbers, dash or underscore.",
+                  "de": "Stabiler Schlüssel: Kleinbuchstaben, Zahlen, Bindestrich oder Unterstrich."
+                }
+              },
+              {
+                "name": "Name",
+                "as": "name",
+                "type": "string",
+                "source": "field",
+                "required": true,
+                "position": "payload:name",
+                "description": {
+                  "en": "Display name shown in the app and on the wall.",
+                  "de": "Anzeigename in der App und an der Wand."
+                }
+              },
+              {
+                "name": "Position",
+                "as": "position",
+                "type": "number",
+                "source": "field",
+                "required": false,
+                "position": "payload:position",
+                "description": {
+                  "en": "Pipeline position, lower is earlier. Defaults to the end.",
+                  "de": "Position in der Pipeline, kleiner ist früher. Standard: am Ende."
+                }
+              }
+            ]
+          }
+        ],
+        "messages": {
+          "success": {
+            "en": "Contact stage created.",
+            "de": "Kontakt-Phase angelegt."
+          }
+        }
+      },
+      "extras": null
+    },
+    {
+      "key": "none:joai-contact-stage-set",
+      "identifier": "@joai-contact-stage-set",
+      "alias": "joai-contact-stage-set",
+      "chain": "none",
+      "hash": "fc88adf35ca6d4a929d578a6121be5faa175575b8ec950921d936c4f226ecd6a",
+      "checksum": "fc88adf35ca6d4a929d578a6121be5faa175575b8ec950921d936c4f226ecd6a",
+      "name": "JoAi: Set Contact Stage",
+      "title": {
+        "en": "Move a contact to a stage",
+        "de": "Kontakt in eine Phase verschieben"
+      },
+      "description": {
+        "en": "Move a contact into a contact stage, or clear it, recording who moved it and why.",
+        "de": "Verschiebt einen Kontakt in eine Phase oder leert sie — mit Zeitpunkt, Urheber und Begründung."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: Set Contact Stage",
+        "title": {
+          "en": "Move a contact to a stage",
+          "de": "Kontakt in eine Phase verschieben"
+        },
+        "description": {
+          "en": "Move a contact into a contact stage, or clear it, recording who moved it and why.",
+          "de": "Verschiebt einen Kontakt in eine Phase oder leert sie — mit Zeitpunkt, Urheber und Begründung."
+        },
+        "bot": "Pass the stage key from list-contact-stages, or null to clear the stage. The reason is what the funnel and velocity read, so write the real reason.",
+        "vars": {
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+          "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Set contact stage",
+              "de": "Kontakt-Phase setzen"
+            },
+            "destination": {
+              "url": "https://api.joai.ai/v1/contacts/{{contactId}}/stage",
               "method": "PUT",
               "headers": {
                 "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
@@ -717,117 +360,15 @@
             },
             "inputs": [
               {
-                "name": "Project",
-                "as": "projectId",
-                "description": {
-                  "en": "The project to edit",
-                  "de": "Das zu bearbeitende Projekt",
-                  "es": "The project to edit",
-                  "fr": "The project to edit",
-                  "ro": "The project to edit",
-                  "it": "The project to edit"
-                },
-                "bot": "The hash ID of the project to edit.",
+                "name": "Contact",
+                "as": "contactId",
                 "type": "string",
                 "source": "field",
-                "required": true
-              },
-              {
-                "name": "Name",
-                "as": "name",
+                "required": true,
+                "position": "url:contactId",
                 "description": {
-                  "en": "New name for this project",
-                  "de": "Neuer Name für dieses Projekt",
-                  "es": "New name for this project",
-                  "fr": "New name for this project",
-                  "ro": "New name for this project",
-                  "it": "New name for this project"
-                },
-                "bot": "Optional new project name. Leave out to keep the current one.",
-                "type": "string",
-                "source": "field",
-                "required": false,
-                "min": 2
-              },
-              {
-                "name": "Brief",
-                "as": "brief",
-                "description": {
-                  "en": "New creative brief or description",
-                  "de": "Neuer Kreativ-Brief oder Beschreibung",
-                  "es": "New creative brief or description",
-                  "fr": "New creative brief or description",
-                  "ro": "New creative brief or description",
-                  "it": "New creative brief or description"
-                },
-                "bot": "Optional new creative brief. Leave out to keep the current one.",
-                "type": "string",
-                "source": "field",
-                "required": false
-              },
-              {
-                "name": "Output Preset",
-                "as": "outputPreset",
-                "description": {
-                  "en": "Output preset: 9:16 social, 16:9 launch, or 1:1 square teaser.",
-                  "de": "Ausgabe-Preset: 9:16 Social, 16:9 Launch oder 1:1 quadratischer Teaser."
-                },
-                "bot": "Optional new output preset. One of: 9:16 social, 16:9 launch, 1:1 square teaser.",
-                "type": "string",
-                "source": "field",
-                "required": false,
-                "options": {
-                  "9:16 social": "9:16 social",
-                  "16:9 launch": "16:9 launch",
-                  "1:1 square teaser": "1:1 square teaser"
-                }
-              },
-              {
-                "name": "Target Platforms",
-                "as": "targetPlatforms",
-                "description": {
-                  "en": "Target platforms as a JSON array, e.g. [\"instagram\",\"tiktok\"].",
-                  "de": "Zielplattformen als JSON-Array, z.B. [\"instagram\",\"tiktok\"]."
-                },
-                "bot": "Optional JSON array of target platform names.",
-                "type": "json",
-                "source": "field",
-                "required": false
-              },
-              {
-                "name": "Selected Skills",
-                "as": "selectedSkills",
-                "description": {
-                  "en": "Skill IDs to attach as a JSON array, e.g. [\"skill-id\"].",
-                  "de": "Skill-IDs zum Anhängen als JSON-Array, z.B. [\"skill-id\"]."
-                },
-                "bot": "Optional JSON array of skill IDs. Replaces the current selection.",
-                "type": "json",
-                "source": "field",
-                "required": false
-              },
-              {
-                "name": "Template",
-                "as": "template",
-                "description": {
-                  "en": "Re-pin the project to a template variation with new values",
-                  "de": "Projekt mit neuen Werten an eine Vorlagen-Variation binden",
-                  "es": "Re-pin the project to a template variation with new values",
-                  "fr": "Re-pin the project to a template variation with new values",
-                  "ro": "Re-pin the project to a template variation with new values",
-                  "it": "Re-pin the project to a template variation with new values"
-                },
-                "bot": "Optional JSON: {\"elementVariationId\": \"...\", \"mode\": \"light\"|\"dark\", \"values\": {field: value}}. Send null to unpin the template. Editing the template sets the project back to draft and clears the previous render.",
-                "type": "json",
-                "source": "field",
-                "required": false,
-                "label": {
-                  "en": "Template",
-                  "de": "Vorlage",
-                  "es": "Plantilla",
-                  "fr": "Modèle",
-                  "ro": "Șablon",
-                  "it": "Modello"
+                  "en": "Contact hashid.",
+                  "de": "Kontakt-Hashid."
                 }
               },
               {
@@ -837,31 +378,1485 @@
                 "source": "field",
                 "required": false,
                 "default": "{{JOAI_TEAM_SLUG}}",
+                "position": "header:team",
                 "description": {
-                  "en": "Team slug for this action. Defaults to the current team.",
-                  "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team.",
-                  "es": "Team slug for this action. Defaults to the current team.",
-                  "fr": "Team slug for this action. Defaults to the current team.",
-                  "ro": "Team slug for this action. Defaults to the current team.",
-                  "it": "Team slug for this action. Defaults to the current team."
-                },
-                "bot": "The slug of the team to operate on. Omit to use the current team."
+                  "en": "Team slug. Defaults to the current team.",
+                  "de": "Team-Slug. Standardmäßig das aktuelle Team."
+                }
+              },
+              {
+                "name": "Stage key",
+                "as": "key",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "position": "payload:key",
+                "description": {
+                  "en": "Stage key from list-contact-stages. Empty clears the stage.",
+                  "de": "Schlüssel aus list-contact-stages. Leer entfernt die Phase."
+                }
+              },
+              {
+                "name": "Reason",
+                "as": "reason",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "position": "payload:reason",
+                "description": {
+                  "en": "Why the contact moved, e.g. \"listing live\".",
+                  "de": "Warum der Kontakt wechselt, z. B. \"listing live\"."
+                }
               }
             ]
           }
         ],
         "messages": {
           "success": {
-            "en": "Project updated.",
-            "de": "Projekt aktualisiert.",
-            "es": "Project updated.",
-            "fr": "Project updated.",
-            "ro": "Project updated.",
-            "it": "Project updated."
+            "en": "Contact stage updated.",
+            "de": "Kontakt-Phase gesetzt."
           }
         }
       },
       "extras": null
+    },
+    {
+      "key": "none:joai-contact-stage-update",
+      "identifier": "@joai-contact-stage-update",
+      "alias": "joai-contact-stage-update",
+      "chain": "none",
+      "hash": "f7c67c96c64eb3532472574df11a271b2d6223171b1238e3ac30581f17a37bfa",
+      "checksum": "f7c67c96c64eb3532472574df11a271b2d6223171b1238e3ac30581f17a37bfa",
+      "name": "JoAi: Update Contact Stage",
+      "title": {
+        "en": "Update a contact stage",
+        "de": "Kontakt-Phase ändern"
+      },
+      "description": {
+        "en": "Rename, reposition or archive an existing contact stage, addressed by its key.",
+        "de": "Benennt eine Kontakt-Phase um, verschiebt sie oder archiviert sie — adressiert über den Schlüssel."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: Update Contact Stage",
+        "title": {
+          "en": "Update a contact stage",
+          "de": "Kontakt-Phase ändern"
+        },
+        "description": {
+          "en": "Rename, reposition or archive an existing contact stage, addressed by its key.",
+          "de": "Benennt eine Kontakt-Phase um, verschiebt sie oder archiviert sie — adressiert über den Schlüssel."
+        },
+        "bot": "The key never changes once created; pass it as the identifier. Archive a stage instead of deleting it, so history stays readable.",
+        "vars": {
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+          "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Update contact stage",
+              "de": "Kontakt-Phase ändern"
+            },
+            "destination": {
+              "url": "https://api.joai.ai/v1/contacts/stages/{{key}}",
+              "method": "PUT",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+                "X-Team": "{{team}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Key",
+                "as": "key",
+                "type": "string",
+                "source": "field",
+                "required": true,
+                "position": "url:key",
+                "description": {
+                  "en": "The stage key to update.",
+                  "de": "Der Schlüssel der Phase."
+                }
+              },
+              {
+                "name": "Team",
+                "as": "team",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "default": "{{JOAI_TEAM_SLUG}}",
+                "position": "header:team",
+                "description": {
+                  "en": "Team slug. Defaults to the current team.",
+                  "de": "Team-Slug. Standardmäßig das aktuelle Team."
+                }
+              },
+              {
+                "name": "Name",
+                "as": "name",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "position": "payload:name",
+                "description": {
+                  "en": "New display name.",
+                  "de": "Neuer Anzeigename."
+                }
+              },
+              {
+                "name": "Position",
+                "as": "position",
+                "type": "number",
+                "source": "field",
+                "required": false,
+                "position": "payload:position",
+                "description": {
+                  "en": "New position in the pipeline.",
+                  "de": "Neue Position in der Pipeline."
+                }
+              },
+              {
+                "name": "Archived",
+                "as": "archived",
+                "type": "boolean",
+                "source": "field",
+                "required": false,
+                "position": "payload:archived",
+                "description": {
+                  "en": "Retire the stage without losing its history.",
+                  "de": "Phase stilllegen, ohne die Historie zu verlieren."
+                }
+              }
+            ]
+          }
+        ],
+        "messages": {
+          "success": {
+            "en": "Contact stage updated.",
+            "de": "Kontakt-Phase geändert."
+          }
+        }
+      },
+      "extras": null
+    },
+    {
+      "key": "none:joai-contact-stages-list",
+      "identifier": "@joai-contact-stages-list",
+      "alias": "joai-contact-stages-list",
+      "chain": "none",
+      "hash": "b1ef959565a75fc719368bc7fb95fd18511bc2818dec6b6fd45b8b5c7e5a7cb1",
+      "checksum": "b1ef959565a75fc719368bc7fb95fd18511bc2818dec6b6fd45b8b5c7e5a7cb1",
+      "name": "JoAi: List Contact Stages",
+      "title": {
+        "en": "List contact stages",
+        "de": "Kontakt-Phasen auflisten"
+      },
+      "description": {
+        "en": "List the team contact stages in pipeline order, with their stable key, display name and position.",
+        "de": "Listet die Kontakt-Phasen eines Teams in Pipeline-Reihenfolge mit stabilem Schlüssel, Anzeigename und Position."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: List Contact Stages",
+        "title": {
+          "en": "List contact stages",
+          "de": "Kontakt-Phasen auflisten"
+        },
+        "description": {
+          "en": "List the team contact stages in pipeline order, with their stable key, display name and position.",
+          "de": "Listet die Kontakt-Phasen eines Teams in Pipeline-Reihenfolge mit stabilem Schlüssel, Anzeigename und Position."
+        },
+        "bot": "Read the pipeline before moving a contact. The key is the identifier used by contact-stage-set; the name is only for display.",
+        "vars": {
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+          "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+        },
+        "output": {
+          "stages": "out",
+          "stagesList": "out.data"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "List contact stages",
+              "de": "Kontakt-Phasen auflisten"
+            },
+            "destination": {
+              "url": "https://api.joai.ai/v1/contacts/stages",
+              "method": "GET",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+                "X-Team": "{{team}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Team",
+                "as": "team",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "default": "{{JOAI_TEAM_SLUG}}",
+                "position": "header:team",
+                "description": {
+                  "en": "Team slug. Defaults to the current team.",
+                  "de": "Team-Slug. Standardmäßig das aktuelle Team."
+                }
+              }
+            ]
+          }
+        ],
+        "messages": {
+          "success": {
+            "en": "Contact stages loaded.",
+            "de": "Kontakt-Phasen geladen."
+          }
+        }
+      },
+      "extras": null
+    },
+    {
+      "key": "none:joai-update-create",
+      "identifier": "@joai-update-create",
+      "alias": "joai-update-create",
+      "chain": "none",
+      "hash": "127fe60633e98f872c71a609914de39c77d7c5041ccc5e888483432246e6a182",
+      "checksum": "127fe60633e98f872c71a609914de39c77d7c5041ccc5e888483432246e6a182",
+      "name": "JoAi: Create Update",
+      "title": {
+        "en": "Post an update",
+        "de": "Update veröffentlichen"
+      },
+      "description": {
+        "en": "Post a deal, event, news, article, or job update for your team so it can appear in connected websites, directories, and public feeds. Supports scheduled publishing windows, links, media, custom props, and draft or published status for local business communication.",
+        "de": "Veröffentliche ein Angebot, Event, News, Artikel oder Job für dein Team, damit er auf verbundenen Websites, in Verzeichnissen und öffentlichen Feeds erscheinen kann. Unterstützt geplante Zeiträume, Links sowie Entwurf- oder Veröffentlichungsstatus für lokale Betriebsinfos."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: Create Update",
+        "title": {
+          "en": "Post an update",
+          "de": "Update veröffentlichen"
+        },
+        "description": {
+          "en": "Post a deal, event, news, article, or job update for your team so it can appear in connected websites, directories, and public feeds. Supports scheduled publishing windows, links, media, custom props, and draft or published status for local business communication.",
+          "de": "Veröffentliche ein Angebot, Event, News, Artikel oder Job für dein Team, damit er auf verbundenen Websites, in Verzeichnissen und öffentlichen Feeds erscheinen kann. Unterstützt geplante Zeiträume, Links sowie Entwurf- oder Veröffentlichungsstatus für lokale Betriebsinfos."
+        },
+        "bot": "Use this to create a deal, event, news, article, or job update for customers. Set startsAt/endsAt for time-limited offers, events, or job application windows. For jobs, put structured details in props: jobLocation, jobWorkplaceType (onsite|hybrid|remote), jobEmploymentType (full-time|part-time|contract|internship|temporary|volunteer|other, comma-separated), jobSalaryMin, jobSalaryMax, jobSalaryUnit (hour|day|week|month|year), jobSalaryCurrency, jobStartDate, jobApplyEmail.",
+        "vars": {
+          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+          "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Post update",
+              "de": "Update veröffentlichen"
+            },
+            "destination": {
+              "url": "https://api.joai.ai/v1/updates",
+              "method": "POST",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+                "X-Team": "{{team}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Title",
+                "as": "title",
+                "description": {
+                  "en": "Headline of the update",
+                  "de": "Überschrift des Updates"
+                },
+                "type": "string",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Type",
+                "as": "type",
+                "description": {
+                  "en": "Type of update",
+                  "de": "Art des Updates"
+                },
+                "type": "string",
+                "source": "field",
+                "required": true,
+                "options": {
+                  "deal": "Deal",
+                  "event": "Event",
+                  "news": "News",
+                  "article": "Article",
+                  "job": "Job"
+                }
+              },
+              {
+                "name": "Body",
+                "as": "body",
+                "description": {
+                  "en": "Detailed description (supports markdown)",
+                  "de": "Detailbeschreibung (unterstützt Markdown)"
+                },
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Starts At",
+                "as": "startsAt",
+                "description": {
+                  "en": "When the update becomes active (ISO 8601 with Z or offset, e.g. 2026-10-09T14:00:00+02:00, optional)",
+                  "de": "Wann das Update aktiv wird (ISO 8601 mit Z oder Offset, z. B. 2026-10-09T14:00:00+02:00, optional)"
+                },
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}(:\\d{2}(\\.\\d+)?)?(Z|[+-]\\d{2}:\\d{2})$"
+              },
+              {
+                "name": "Ends At",
+                "as": "endsAt",
+                "description": {
+                  "en": "When the update expires (ISO 8601 with Z or offset, e.g. 2026-10-09T16:00:00+02:00, optional)",
+                  "de": "Wann das Update abläuft (ISO 8601 mit Z oder Offset, z. B. 2026-10-09T16:00:00+02:00, optional)"
+                },
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}(:\\d{2}(\\.\\d+)?)?(Z|[+-]\\d{2}:\\d{2})$"
+              },
+              {
+                "name": "Status",
+                "as": "status",
+                "description": {
+                  "en": "Publication status",
+                  "de": "Veröffentlichungsstatus"
+                },
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "options": {
+                  "draft": "Draft",
+                  "published": "Published",
+                  "archived": "Archived"
+                }
+              },
+              {
+                "name": "Link URL",
+                "as": "linkUrl",
+                "description": {
+                  "en": "URL to link from the update",
+                  "de": "URL, auf die das Update verlinkt"
+                },
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Media",
+                "as": "media",
+                "description": {
+                  "en": "Media IDs to attach (JSON array of team media IDs), e.g. [\"abc123\"]",
+                  "de": "Media-IDs zum Anhängen (JSON-Array), z. B. [\"abc123\"]"
+                },
+                "type": "json",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Props",
+                "as": "props",
+                "description": {
+                  "en": "Custom key/value properties as a JSON object (e.g. {\"top-news\":\"true\"}). Keys camelCase or kebab-case; values strings. Jobs use jobLocation, jobWorkplaceType, jobEmploymentType, salary fields, jobStartDate, and jobApplyEmail.",
+                  "de": "Benutzerdefinierte Eigenschaften als JSON-Objekt (z. B. {\"top-news\":\"true\"}). Schlüssel in camelCase oder Kebab-Case; Werte als Strings. Jobs nutzen jobLocation, jobWorkplaceType, jobEmploymentType, Gehaltsfelder, jobStartDate und jobApplyEmail."
+                },
+                "bot": "Optional props object (string values). For city-directory top news set {\"top-news\":\"true\"} on type=news. For jobs set jobLocation, jobWorkplaceType, jobEmploymentType, jobSalaryMin/Max/Unit/Currency, jobStartDate, and jobApplyEmail as needed.",
+                "type": "json",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Team",
+                "as": "team",
+                "description": {
+                  "en": "Team slug for this action. Defaults to the current team.",
+                  "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team."
+                },
+                "bot": "The slug of the team to operate on. Omit to use the current team.",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "default": "{{JOAI_TEAM_SLUG}}"
+              }
+            ],
+            "output": {
+              "id": "out.data.id",
+              "title": "out.data.title",
+              "type": "out.data.type",
+              "status": "out.data.status"
+            }
+          }
+        ],
+        "output": {
+          "UPDATE_ID": "out.data.id",
+          "UPDATE_TITLE": "out.data.title"
+        },
+        "messages": {
+          "success": {
+            "en": "Update '{{UPDATE_TITLE}}' posted!",
+            "de": "Update '{{UPDATE_TITLE}}' veröffentlicht!"
+          }
+        }
+      },
+      "extras": {
+        "keywords": {
+          "en": [
+            "post update",
+            "create deal",
+            "publish event",
+            "business news",
+            "article",
+            "job",
+            "local announcement"
+          ],
+          "de": [
+            "Update veröffentlichen",
+            "Angebot erstellen",
+            "Event veröffentlichen",
+            "Betriebsnews",
+            "Artikel",
+            "Job",
+            "lokale Ankündigung"
+          ]
+        },
+        "useCases": {
+          "en": [
+            "Publish a limited-time offer for customers",
+            "Announce an upcoming event on a business profile",
+            "Post a longer article or local news to connected directories",
+            "Publish an open position for the team"
+          ],
+          "de": [
+            "Ein zeitlich begrenztes Angebot für Kunden veröffentlichen",
+            "Ein bevorstehendes Event im Betriebsprofil ankündigen",
+            "Einen längeren Artikel oder lokale News in verbundenen Verzeichnissen posten",
+            "Eine offene Stelle für das Team veröffentlichen"
+          ]
+        },
+        "category": "communication",
+        "faq": {
+          "en": [
+            {
+              "question": "Can I publish deals, events, news, articles, and jobs?",
+              "answer": "Yes. Use deal for offers, event for happenings, news for short announcements, article for longer posts, and job for open positions."
+            },
+            {
+              "question": "Can an update be scheduled?",
+              "answer": "Yes. Add startsAt and endsAt to control when the update is active."
+            }
+          ],
+          "de": [
+            {
+              "question": "Kann ich Angebote, Events, News, Artikel und Jobs veröffentlichen?",
+              "answer": "Ja. Nutze deal für Angebote, event für Veranstaltungen, news für kurze Ankündigungen, article für längere Beiträge und job für offene Stellen."
+            },
+            {
+              "question": "Kann ein Update geplant werden?",
+              "answer": "Ja. Mit startsAt und endsAt steuerst du, wann das Update aktiv ist."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "key": "none:joai-update-delete",
+      "identifier": "@joai-update-delete",
+      "alias": "joai-update-delete",
+      "chain": "none",
+      "hash": "f632650970890c86e6f0e911ec15768e075cfe8d3dd5bb6f2490ac92399dafdb",
+      "checksum": "f632650970890c86e6f0e911ec15768e075cfe8d3dd5bb6f2490ac92399dafdb",
+      "name": "JoAi: Delete Update",
+      "title": {
+        "en": "Delete an update",
+        "de": "Update löschen"
+      },
+      "description": {
+        "en": "Remove an existing deal, event, news, article, or job update from your team. Use this when outdated announcements should no longer appear in connected websites, directories, or public feeds.",
+        "de": "Entferne ein bestehendes Angebot, Event, News oder einen Artikel aus deinem Team. Nutze diese Aktion, wenn veraltete Ankündigungen nicht mehr auf verbundenen Websites, in Verzeichnissen oder öffentlichen Feeds erscheinen sollen."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: Delete Update",
+        "title": {
+          "en": "Delete an update",
+          "de": "Update löschen"
+        },
+        "description": {
+          "en": "Remove an existing deal, event, news, article, or job update from your team. Use this when outdated announcements should no longer appear in connected websites, directories, or public feeds.",
+          "de": "Entferne ein bestehendes Angebot, Event, News oder einen Artikel aus deinem Team. Nutze diese Aktion, wenn veraltete Ankündigungen nicht mehr auf verbundenen Websites, in Verzeichnissen oder öffentlichen Feeds erscheinen sollen."
+        },
+        "bot": "Use this when the user wants to delete an update. If the user refers to an update by title, list updates first to find the matching ID.",
+        "vars": {
+          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+          "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Delete update",
+              "de": "Update löschen"
+            },
+            "destination": {
+              "url": "https://api.joai.ai/v1/updates/{{updateId}}",
+              "method": "DELETE",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+                "X-Team": "{{team}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Update ID",
+                "as": "updateId",
+                "description": {
+                  "en": "The ID of the update to delete",
+                  "de": "Die ID des Updates, das gelöscht werden soll"
+                },
+                "type": "string",
+                "position": "url:updateId",
+                "source": "field",
+                "required": true,
+                "min": 1
+              },
+              {
+                "name": "Team",
+                "as": "team",
+                "description": {
+                  "en": "Team slug for this action. Defaults to the current team.",
+                  "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team."
+                },
+                "bot": "The slug of the team to operate on. Omit to use the current team.",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "default": "{{JOAI_TEAM_SLUG}}"
+              }
+            ]
+          }
+        ],
+        "messages": {
+          "success": {
+            "en": "Update deleted.",
+            "de": "Update gelöscht."
+          }
+        }
+      },
+      "extras": {
+        "keywords": {
+          "en": [
+            "delete update",
+            "remove deal",
+            "delete event",
+            "remove announcement",
+            "delete business news",
+            "delete article",
+            "delete job"
+          ],
+          "de": [
+            "Update löschen",
+            "Angebot entfernen",
+            "Event löschen",
+            "Ankündigung entfernen",
+            "Betriebsnews löschen",
+            "Artikel löschen",
+            "Job löschen"
+          ]
+        },
+        "useCases": {
+          "en": [
+            "Remove an outdated announcement from public feeds",
+            "Delete a duplicate deal",
+            "Clean up a canceled event",
+            "Remove a filled job"
+          ],
+          "de": [
+            "Eine veraltete Ankündigung aus öffentlichen Feeds entfernen",
+            "Ein doppeltes Angebot löschen",
+            "Ein abgesagtes Event bereinigen",
+            "Eine besetzte Stelle entfernen"
+          ]
+        },
+        "category": "communication",
+        "faq": {
+          "en": [
+            {
+              "question": "Should I delete or archive an update?",
+              "answer": "Archive content you may want to keep for history. Delete only when the update should be removed permanently."
+            },
+            {
+              "question": "Do I need the update ID?",
+              "answer": "Yes. If you only know the title, list updates first to find the matching ID."
+            }
+          ],
+          "de": [
+            {
+              "question": "Soll ich ein Update löschen oder archivieren?",
+              "answer": "Archiviere Inhalte, die historisch erhalten bleiben sollen. Lösche nur, wenn das Update dauerhaft entfernt werden soll."
+            },
+            {
+              "question": "Brauche ich die Update-ID?",
+              "answer": "Ja. Wenn du nur den Titel kennst, liste zuerst die Updates, um die passende ID zu finden."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "key": "none:joai-update-list",
+      "identifier": "@joai-update-list",
+      "alias": "joai-update-list",
+      "chain": "none",
+      "hash": "5c6b85bb9bf5b5c4df6977dc1cab5a47aaa8dbe4723eca0a716d3c2c6299561c",
+      "checksum": "5c6b85bb9bf5b5c4df6977dc1cab5a47aaa8dbe4723eca0a716d3c2c6299561c",
+      "name": "JoAi: List Updates",
+      "title": {
+        "en": "View updates",
+        "de": "Updates anzeigen"
+      },
+      "description": {
+        "en": "View current or archived deals, events, news, article, and job updates for your team. Filter by type, status, or active publishing window to check what customers can see across connected websites and public feeds.",
+        "de": "Zeige aktuelle oder archivierte Angebote, Events, News, Artikel und Jobs für dein Team. Filtere nach Typ, Status oder aktivem Veröffentlichungszeitraum, um zu prüfen, was Kunden auf verbundenen Websites und öffentlichen Feeds sehen."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: List Updates",
+        "title": {
+          "en": "View updates",
+          "de": "Updates anzeigen"
+        },
+        "description": {
+          "en": "View current or archived deals, events, news, article, and job updates for your team. Filter by type, status, or active publishing window to check what customers can see across connected websites and public feeds.",
+          "de": "Zeige aktuelle oder archivierte Angebote, Events, News, Artikel und Jobs für dein Team. Filtere nach Typ, Status oder aktivem Veröffentlichungszeitraum, um zu prüfen, was Kunden auf verbundenen Websites und öffentlichen Feeds sehen."
+        },
+        "bot": "Use this to see team updates. By default active=true returns currently visible updates. Results are paginated: check meta.lastPage and pass page to load more. Use type=job for open positions.",
+        "vars": {
+          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+          "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "View updates",
+              "de": "Updates anzeigen"
+            },
+            "destination": {
+              "url": "https://api.joai.ai/v1/updates?active={{active}}&type={{type}}&status={{status}}&page={{page}}&perPage={{perPage}}",
+              "method": "GET",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+                "X-Team": "{{team}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Active",
+                "as": "active",
+                "description": {
+                  "en": "Whether to show only currently active updates. Use true by default.",
+                  "de": "Ob nur aktuell aktive Updates angezeigt werden sollen. Standardmäßig true verwenden."
+                },
+                "type": "boolean",
+                "position": "url:active",
+                "source": "field",
+                "required": false,
+                "default": true
+              },
+              {
+                "name": "Type",
+                "as": "type",
+                "description": {
+                  "en": "Filter by update type.",
+                  "de": "Nach Update-Typ filtern."
+                },
+                "type": "string",
+                "position": "url:type",
+                "source": "field",
+                "required": false,
+                "options": {
+                  "deal": "Deal",
+                  "event": "Event",
+                  "news": "News",
+                  "article": "Article",
+                  "job": "Job"
+                }
+              },
+              {
+                "name": "Status",
+                "as": "status",
+                "description": {
+                  "en": "Filter by publication status",
+                  "de": "Nach Veröffentlichungsstatus filtern"
+                },
+                "type": "string",
+                "position": "url:status",
+                "source": "field",
+                "required": false,
+                "options": {
+                  "draft": "Draft",
+                  "published": "Published",
+                  "archived": "Archived"
+                }
+              },
+              {
+                "name": "Team",
+                "as": "team",
+                "description": {
+                  "en": "Team slug for this action. Defaults to the current team.",
+                  "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team."
+                },
+                "bot": "The slug of the team to operate on. Omit to use the current team.",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "default": "{{JOAI_TEAM_SLUG}}"
+              },
+              {
+                "name": "Page",
+                "as": "page",
+                "description": {
+                  "en": "Page number (default 1). Check meta.lastPage for more pages.",
+                  "de": "Seitennummer (Standard 1). Prüfe meta.lastPage für weitere Seiten."
+                },
+                "bot": "1-based page number. Omit for the first page.",
+                "type": "uint16",
+                "position": "url:page",
+                "source": "field",
+                "required": false,
+                "min": 1
+              },
+              {
+                "name": "Per Page",
+                "as": "perPage",
+                "description": {
+                  "en": "Results per page (default 20, max 100).",
+                  "de": "Ergebnisse pro Seite (Standard 20, max. 100)."
+                },
+                "type": "uint16",
+                "position": "url:perPage",
+                "source": "field",
+                "required": false,
+                "min": 1,
+                "max": 100
+              }
+            ]
+          }
+        ],
+        "messages": {
+          "success": {
+            "en": "Here are your updates.",
+            "de": "Hier sind deine Updates."
+          }
+        },
+        "ui": "https://raw.githubusercontent.com/JoAiHQ/warps/main/warps/joai/update-list/chatapp.6d6f84b4.dist.html"
+      },
+      "extras": {
+        "keywords": {
+          "en": [
+            "list updates",
+            "view deals",
+            "view events",
+            "business announcements",
+            "active updates",
+            "articles",
+            "jobs"
+          ],
+          "de": [
+            "Updates anzeigen",
+            "Angebote anzeigen",
+            "Events anzeigen",
+            "Betriebsankündigungen",
+            "aktive Updates",
+            "Artikel",
+            "Jobs"
+          ]
+        },
+        "useCases": {
+          "en": [
+            "Check currently active customer announcements",
+            "Filter updates by deal, event, news, article, or job type",
+            "Review published content before editing it"
+          ],
+          "de": [
+            "Aktive Kundenankündigungen prüfen",
+            "Updates nach Angebot, Event, News, Artikel oder Job filtern",
+            "Veröffentlichte Inhalte vor dem Bearbeiten prüfen"
+          ]
+        },
+        "category": "communication",
+        "faq": {
+          "en": [
+            {
+              "question": "Can I filter updates by type?",
+              "answer": "Yes. Filter by deal, event, news, article, or job."
+            },
+            {
+              "question": "Does this show only visible updates?",
+              "answer": "By default active updates are shown, but you can adjust the active and status filters."
+            }
+          ],
+          "de": [
+            {
+              "question": "Kann ich Updates nach Typ filtern?",
+              "answer": "Ja. Filtere nach deal, event, news, article oder job."
+            },
+            {
+              "question": "Zeigt diese Aktion nur sichtbare Updates?",
+              "answer": "Standardmäßig werden aktive Updates angezeigt, du kannst active und status aber anpassen."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "key": "none:joai-update-stats",
+      "identifier": "@joai-update-stats",
+      "alias": "joai-update-stats",
+      "chain": "none",
+      "hash": "48a177052d94282baf444e3e991976041948597a8ff3bd11d2ce5649ecf59e2c",
+      "checksum": "48a177052d94282baf444e3e991976041948597a8ff3bd11d2ce5649ecf59e2c",
+      "name": "JoAi: Update Stats",
+      "title": {
+        "en": "View update stats",
+        "de": "Update-Statistik anzeigen"
+      },
+      "description": {
+        "en": "View summary counts for your team updates, including deals, events, news, articles, and jobs. Use this to understand how much active customer-facing content is available across connected websites and public feeds.",
+        "de": "Zeige zusammengefasste Zahlen für Team-Updates, inklusive Angeboten, Events, News, Artikeln und Jobs. So siehst du, wie viele kundenrelevante Inhalte auf verbundenen Websites und öffentlichen Feeds verfügbar sind."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: Update Stats",
+        "title": {
+          "en": "View update stats",
+          "de": "Update-Statistik anzeigen"
+        },
+        "description": {
+          "en": "View summary counts for your team updates, including deals, events, news, articles, and jobs. Use this to understand how much active customer-facing content is available across connected websites and public feeds.",
+          "de": "Zeige zusammengefasste Zahlen für Team-Updates, inklusive Angeboten, Events, News, Artikeln und Jobs. So siehst du, wie viele kundenrelevante Inhalte auf verbundenen Websites und öffentlichen Feeds verfügbar sind."
+        },
+        "bot": "Use this when the user asks how many updates, deals, events, news, articles, or jobs the team has.",
+        "vars": {
+          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+          "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "View stats",
+              "de": "Statistik anzeigen"
+            },
+            "destination": {
+              "url": "https://api.joai.ai/v1/updates/stats",
+              "method": "GET",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+                "X-Team": "{{team}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Team",
+                "as": "team",
+                "description": {
+                  "en": "Team slug for this action. Defaults to the current team.",
+                  "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team."
+                },
+                "bot": "The slug of the team to operate on. Omit to use the current team.",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "default": "{{JOAI_TEAM_SLUG}}"
+              }
+            ],
+            "output": {
+              "dealsCount": "out.data.dealsCount",
+              "eventsCount": "out.data.eventsCount",
+              "newsCount": "out.data.newsCount",
+              "articlesCount": "out.data.articlesCount",
+              "jobsCount": "out.data.jobsCount"
+            }
+          }
+        ],
+        "output": {
+          "DEALS_COUNT": "out.data.dealsCount",
+          "EVENTS_COUNT": "out.data.eventsCount",
+          "NEWS_COUNT": "out.data.newsCount",
+          "ARTICLES_COUNT": "out.data.articlesCount",
+          "JOBS_COUNT": "out.data.jobsCount"
+        },
+        "messages": {
+          "success": {
+            "en": "Updates: {{DEALS_COUNT}} deals, {{EVENTS_COUNT}} events, {{NEWS_COUNT}} news, {{ARTICLES_COUNT}} articles, {{JOBS_COUNT}} jobs.",
+            "de": "Updates: {{DEALS_COUNT}} Angebote, {{EVENTS_COUNT}} Events, {{NEWS_COUNT}} News, {{ARTICLES_COUNT}} Artikel, {{JOBS_COUNT}} Jobs."
+          }
+        },
+        "ui": "https://raw.githubusercontent.com/JoAiHQ/warps/main/warps/joai/update-stats/chatapp.f568cf49.dist.html"
+      },
+      "extras": {
+        "keywords": {
+          "en": [
+            "update statistics",
+            "deal count",
+            "event count",
+            "news count",
+            "article count",
+            "job count",
+            "announcement analytics"
+          ],
+          "de": [
+            "Update Statistik",
+            "Anzahl Angebote",
+            "Anzahl Events",
+            "Anzahl News",
+            "Anzahl Artikel",
+            "Anzahl Jobs",
+            "Ankündigungsanalyse"
+          ]
+        },
+        "useCases": {
+          "en": [
+            "Check how many deals are currently managed",
+            "See event, news, article, and job counts for a business profile",
+            "Audit customer-facing content coverage"
+          ],
+          "de": [
+            "Prüfen, wie viele Angebote verwaltet werden",
+            "Event-, News-, Artikel- und Job-Zahlen für ein Betriebsprofil ansehen",
+            "Kundenrelevante Inhalte auf Vollständigkeit prüfen"
+          ]
+        },
+        "category": "analytics",
+        "faq": {
+          "en": [
+            {
+              "question": "What counts are included?",
+              "answer": "The stats include deals, events, news, article, and job updates for the team."
+            },
+            {
+              "question": "Can this help audit a business profile?",
+              "answer": "Yes. Use it to see whether a profile has enough current customer-facing content."
+            }
+          ],
+          "de": [
+            {
+              "question": "Welche Zahlen sind enthalten?",
+              "answer": "Die Statistik enthält Angebote, Events, News, Artikel und Jobs des Teams."
+            },
+            {
+              "question": "Hilft das beim Prüfen eines Betriebsprofils?",
+              "answer": "Ja. Damit siehst du, ob ein Profil genug aktuelle kundenrelevante Inhalte hat."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "key": "none:joai-update-update",
+      "identifier": "@joai-update-update",
+      "alias": "joai-update-update",
+      "chain": "none",
+      "hash": "09d5caa30acf34e6ee2554c11cccc081a9473ab6d262c793550c87f44bfa5a65",
+      "checksum": "09d5caa30acf34e6ee2554c11cccc081a9473ab6d262c793550c87f44bfa5a65",
+      "name": "JoAi: Update Update",
+      "title": {
+        "en": "Edit an update",
+        "de": "Update bearbeiten"
+      },
+      "description": {
+        "en": "Edit an existing deal, event, news, article, or job update for your team. Change the title, body, type, schedule, link, media, props, or publication status so connected websites and public feeds stay accurate.",
+        "de": "Bearbeite ein bestehendes Angebot, Event, News, Artikel oder einen Job für dein Team. Ändere Titel, Text, Typ, Zeitraum, Link oder Veröffentlichungsstatus, damit verbundene Websites und öffentliche Feeds aktuell bleiben."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: Update Update",
+        "title": {
+          "en": "Edit an update",
+          "de": "Update bearbeiten"
+        },
+        "description": {
+          "en": "Edit an existing deal, event, news, article, or job update for your team. Change the title, body, type, schedule, link, media, props, or publication status so connected websites and public feeds stay accurate.",
+          "de": "Bearbeite ein bestehendes Angebot, Event, News, Artikel oder einen Job für dein Team. Ändere Titel, Text, Typ, Zeitraum, Link oder Veröffentlichungsstatus, damit verbundene Websites und öffentliche Feeds aktuell bleiben."
+        },
+        "bot": "Use this when the user wants to edit an existing deal, event, news, article, or job update. If the user refers to an update by title, list updates first to find the matching ID. Optional props replaces the entire props bag when provided; preserve existing job props unless the user asks to change them.",
+        "vars": {
+          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+          "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Edit update",
+              "de": "Update bearbeiten"
+            },
+            "destination": {
+              "url": "https://api.joai.ai/v1/updates/{{updateId}}",
+              "method": "PATCH",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+                "X-Team": "{{team}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Update ID",
+                "as": "updateId",
+                "description": {
+                  "en": "The ID of the update to edit",
+                  "de": "Die ID des Updates, das bearbeitet werden soll"
+                },
+                "type": "string",
+                "position": "url:updateId",
+                "source": "field",
+                "required": true,
+                "min": 1
+              },
+              {
+                "name": "Title",
+                "as": "title",
+                "description": {
+                  "en": "Updated headline",
+                  "de": "Aktualisierte Überschrift"
+                },
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Type",
+                "as": "type",
+                "description": {
+                  "en": "Updated type.",
+                  "de": "Aktualisierter Typ."
+                },
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "options": {
+                  "deal": "Deal",
+                  "event": "Event",
+                  "news": "News",
+                  "article": "Article",
+                  "job": "Job"
+                }
+              },
+              {
+                "name": "Body",
+                "as": "body",
+                "description": {
+                  "en": "Updated description or announcement body",
+                  "de": "Aktualisierte Beschreibung oder Nachricht"
+                },
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Starts At",
+                "as": "startsAt",
+                "description": {
+                  "en": "When the update becomes active (ISO 8601 with Z or offset, e.g. 2026-10-09T14:00:00+02:00, optional)",
+                  "de": "Wann das Update aktiv wird (ISO 8601 mit Z oder Offset, z. B. 2026-10-09T14:00:00+02:00, optional)"
+                },
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}(:\\d{2}(\\.\\d+)?)?(Z|[+-]\\d{2}:\\d{2})$"
+              },
+              {
+                "name": "Ends At",
+                "as": "endsAt",
+                "description": {
+                  "en": "When the update expires (ISO 8601 with Z or offset, e.g. 2026-10-09T16:00:00+02:00, optional)",
+                  "de": "Wann das Update abläuft (ISO 8601 mit Z oder Offset, z. B. 2026-10-09T16:00:00+02:00, optional)"
+                },
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}(:\\d{2}(\\.\\d+)?)?(Z|[+-]\\d{2}:\\d{2})$"
+              },
+              {
+                "name": "Status",
+                "as": "status",
+                "description": {
+                  "en": "Updated publication status",
+                  "de": "Aktualisierter Veröffentlichungsstatus"
+                },
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "options": {
+                  "draft": "Draft",
+                  "published": "Published",
+                  "archived": "Archived"
+                }
+              },
+              {
+                "name": "Link URL",
+                "as": "linkUrl",
+                "description": {
+                  "en": "URL to link from the update",
+                  "de": "URL, auf die das Update verlinkt"
+                },
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Media",
+                "as": "media",
+                "description": {
+                  "en": "Replace attached media (JSON array of team media IDs)",
+                  "de": "Angehängte Medien ersetzen (JSON-Array von Media-IDs)"
+                },
+                "type": "json",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Props",
+                "as": "props",
+                "description": {
+                  "en": "Replace custom key/value properties as a JSON object (e.g. {\"top-news\":\"true\"}). Omitting leaves existing props unchanged; empty object clears them. Jobs use jobLocation, jobWorkplaceType, jobEmploymentType, salary fields, jobStartDate, and jobApplyEmail.",
+                  "de": "Ersetzt benutzerdefinierte Eigenschaften als JSON-Objekt (z. B. {\"top-news\":\"true\"}). Weglassen lässt bestehende Props unverändert; leeres Objekt löscht sie. Jobs nutzen jobLocation, jobWorkplaceType, jobEmploymentType, Gehaltsfelder, jobStartDate und jobApplyEmail."
+                },
+                "bot": "Optional. When provided, replaces the entire props bag. For jobs preserve jobLocation, jobWorkplaceType, jobEmploymentType, jobSalaryMin/Max/Unit/Currency, jobStartDate, and jobApplyEmail unless the user asks to change them.",
+                "type": "json",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Team",
+                "as": "team",
+                "description": {
+                  "en": "Team slug for this action. Defaults to the current team.",
+                  "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team."
+                },
+                "bot": "The slug of the team to operate on. Omit to use the current team.",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "default": "{{JOAI_TEAM_SLUG}}"
+              }
+            ],
+            "output": {
+              "id": "out.data.id",
+              "title": "out.data.title",
+              "type": "out.data.type",
+              "status": "out.data.status"
+            }
+          }
+        ],
+        "output": {
+          "UPDATE_ID": "out.data.id",
+          "UPDATE_TITLE": "out.data.title"
+        },
+        "messages": {
+          "success": {
+            "en": "Update '{{UPDATE_TITLE}}' edited.",
+            "de": "Update '{{UPDATE_TITLE}}' bearbeitet."
+          }
+        }
+      },
+      "extras": {
+        "keywords": {
+          "en": [
+            "edit update",
+            "update deal",
+            "edit event",
+            "change business news",
+            "edit article",
+            "edit job",
+            "announcement status"
+          ],
+          "de": [
+            "Update bearbeiten",
+            "Angebot bearbeiten",
+            "Event bearbeiten",
+            "Betriebsnews ändern",
+            "Artikel bearbeiten",
+            "Job bearbeiten",
+            "Ankündigungsstatus"
+          ]
+        },
+        "useCases": {
+          "en": [
+            "Change the dates of an event announcement",
+            "Archive an expired deal",
+            "Correct the title or link of a news or article post",
+            "Update the application window of a job"
+          ],
+          "de": [
+            "Den Zeitraum einer Event-Ankündigung ändern",
+            "Ein abgelaufenes Angebot archivieren",
+            "Titel oder Link einer News oder eines Artikels korrigieren",
+            "Das Bewerbungsfenster eines Jobs aktualisieren"
+          ]
+        },
+        "category": "communication",
+        "faq": {
+          "en": [
+            {
+              "question": "Can I change the type of an update?",
+              "answer": "Yes. Existing posts can be changed between deal, event, news, article, and job when needed."
+            },
+            {
+              "question": "Can I unpublish an update?",
+              "answer": "Yes. Set its status to draft or archived depending on whether it should be hidden or retired."
+            }
+          ],
+          "de": [
+            {
+              "question": "Kann ich den Typ eines Updates ändern?",
+              "answer": "Ja. Bestehende Beiträge können bei Bedarf zwischen deal, event, news, article und job wechseln."
+            },
+            {
+              "question": "Kann ich ein Update ausblenden?",
+              "answer": "Ja. Setze den Status auf draft oder archived, je nachdem ob es versteckt oder endgültig erledigt ist."
+            }
+          ]
+        }
+      }
     },
     {
       "key": "none:poll-results",
