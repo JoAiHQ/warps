@@ -1,0 +1,91 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Set Contact Stage",
+  "title": {
+    "en": "Move a contact to a stage",
+    "de": "Kontakt in eine Phase verschieben"
+  },
+  "description": {
+    "en": "Move a contact into a contact stage, or clear it, recording who moved it and why.",
+    "de": "Verschiebt einen Kontakt in eine Phase oder leert sie — mit Zeitpunkt, Urheber und Begründung."
+  },
+  "bot": "Pass the stage key from list-contact-stages, or null to clear the stage. The reason is what the funnel and velocity read, so write the real reason.",
+  "vars": {
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Set contact stage",
+        "de": "Kontakt-Phase setzen"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/contacts/{{contactId}}/stage",
+        "method": "PUT",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Contact",
+          "as": "contactId",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:contactId",
+          "description": {
+            "en": "Contact hashid.",
+            "de": "Kontakt-Hashid."
+          }
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}",
+          "position": "header:team",
+          "description": {
+            "en": "Team slug. Defaults to the current team.",
+            "de": "Team-Slug. Standardmäßig das aktuelle Team."
+          }
+        },
+        {
+          "name": "Stage key",
+          "as": "key",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:key",
+          "description": {
+            "en": "Stage key from list-contact-stages. Empty clears the stage.",
+            "de": "Schlüssel aus list-contact-stages. Leer entfernt die Phase."
+          }
+        },
+        {
+          "name": "Reason",
+          "as": "reason",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:reason",
+          "description": {
+            "en": "Why the contact moved, e.g. \"listing live\".",
+            "de": "Warum der Kontakt wechselt, z. B. \"listing live\"."
+          }
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Contact stage updated.",
+      "de": "Kontakt-Phase gesetzt."
+    }
+  }
+}

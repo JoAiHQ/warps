@@ -1,0 +1,103 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Update Contact Stage",
+  "title": {
+    "en": "Update a contact stage",
+    "de": "Kontakt-Phase ändern"
+  },
+  "description": {
+    "en": "Rename, reposition or archive an existing contact stage, addressed by its key.",
+    "de": "Benennt eine Kontakt-Phase um, verschiebt sie oder archiviert sie — adressiert über den Schlüssel."
+  },
+  "bot": "The key never changes once created; pass it as the identifier. Archive a stage instead of deleting it, so history stays readable.",
+  "vars": {
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Update contact stage",
+        "de": "Kontakt-Phase ändern"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/contacts/stages/{{key}}",
+        "method": "PUT",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Key",
+          "as": "key",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:key",
+          "description": {
+            "en": "The stage key to update.",
+            "de": "Der Schlüssel der Phase."
+          }
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}",
+          "position": "header:team",
+          "description": {
+            "en": "Team slug. Defaults to the current team.",
+            "de": "Team-Slug. Standardmäßig das aktuelle Team."
+          }
+        },
+        {
+          "name": "Name",
+          "as": "name",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "payload:name",
+          "description": {
+            "en": "New display name.",
+            "de": "Neuer Anzeigename."
+          }
+        },
+        {
+          "name": "Position",
+          "as": "position",
+          "type": "number",
+          "source": "field",
+          "required": false,
+          "position": "payload:position",
+          "description": {
+            "en": "New position in the pipeline.",
+            "de": "Neue Position in der Pipeline."
+          }
+        },
+        {
+          "name": "Archived",
+          "as": "archived",
+          "type": "boolean",
+          "source": "field",
+          "required": false,
+          "position": "payload:archived",
+          "description": {
+            "en": "Retire the stage without losing its history.",
+            "de": "Phase stilllegen, ohne die Historie zu verlieren."
+          }
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Contact stage updated.",
+      "de": "Kontakt-Phase geändert."
+    }
+  }
+}

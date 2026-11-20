@@ -1,0 +1,59 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: List Contact Stages",
+  "title": {
+    "en": "List contact stages",
+    "de": "Kontakt-Phasen auflisten"
+  },
+  "description": {
+    "en": "List the team contact stages in pipeline order, with their stable key, display name and position.",
+    "de": "Listet die Kontakt-Phasen eines Teams in Pipeline-Reihenfolge mit stabilem Schlüssel, Anzeigename und Position."
+  },
+  "bot": "Read the pipeline before moving a contact. The key is the identifier used by contact-stage-set; the name is only for display.",
+  "vars": {
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "output": {
+    "stages": "out",
+    "stagesList": "out.data"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "List contact stages",
+        "de": "Kontakt-Phasen auflisten"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/contacts/stages",
+        "method": "GET",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Team",
+          "as": "team",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}",
+          "position": "header:team",
+          "description": {
+            "en": "Team slug. Defaults to the current team.",
+            "de": "Team-Slug. Standardmäßig das aktuelle Team."
+          }
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Contact stages loaded.",
+      "de": "Kontakt-Phasen geladen."
+    }
+  }
+}
