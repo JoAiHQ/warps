@@ -1,0 +1,65 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Delete Event Series",
+  "title": {
+    "en": "Delete an event series"
+  },
+  "description": {
+    "en": "Delete an event series. Future generated occurrences are removed; past and explicit occurrences stay as standalone events."
+  },
+  "bot": "Use only when the series should stop entirely. To skip one date, cancel that occurrence with update_update instead.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Delete event series"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/event-series/{{seriesId}}",
+        "method": "DELETE",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Series ID",
+          "as": "seriesId",
+          "description": {
+            "en": "The series hashid to delete"
+          },
+          "type": "string",
+          "position": "url:seriesId",
+          "source": "field",
+          "required": true,
+          "min": 1
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug. Defaults to the current team."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Event series deleted."
+    },
+    "error": {
+      "en": "Could not delete the event series."
+    }
+  }
+}

@@ -1,0 +1,152 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Create Event Series",
+  "title": {
+    "en": "Create an event series"
+  },
+  "description": {
+    "en": "Create a recurring event series. The API generates the dated event occurrences from the rule (or leaves it to explicit dates only)."
+  },
+  "bot": "Use for recurring programmes (weekly classes, monthly nights, seasonal exhibitions). Give either a rule (weekly with interval, or nth-weekday) or only explicit dates. Occurrences are generated automatically; do not create rule dates by hand.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Create event series"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/event-series",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}",
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Title",
+          "as": "title",
+          "description": {
+            "en": "Series title used for every occurrence"
+          },
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Timezone",
+          "as": "timezone",
+          "description": {
+            "en": "IANA timezone of the series, e.g. Europe/Vienna"
+          },
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "default": "Europe/Vienna"
+        },
+        {
+          "name": "Starts On",
+          "as": "startsOn",
+          "description": {
+            "en": "Season start (YYYY-MM-DD)"
+          },
+          "type": "string",
+          "source": "field",
+          "required": true
+        },
+        {
+          "name": "Ends On",
+          "as": "endsOn",
+          "description": {
+            "en": "Season end (YYYY-MM-DD), optional"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Duration Minutes",
+          "as": "durationMinutes",
+          "description": {
+            "en": "Length of each occurrence in minutes"
+          },
+          "type": "number",
+          "source": "field",
+          "required": true,
+          "default": 60
+        },
+        {
+          "name": "Internal",
+          "as": "internal",
+          "description": {
+            "en": "Internal series: visible on the business page, hidden from the city calendar"
+          },
+          "type": "boolean",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Body",
+          "as": "body",
+          "description": {
+            "en": "Description copied into every occurrence"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Media",
+          "as": "media",
+          "description": {
+            "en": "Team media IDs (JSON array) used as the series image"
+          },
+          "type": "json",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Rule",
+          "as": "rule",
+          "description": {
+            "en": "Recurrence rule object: {kind: weekly|nth-weekday, weekday: 1-7, time: HH:MM, interval?, nth?}"
+          },
+          "bot": "weekday is ISO (1=Monday). weekly uses interval (1 or 2). nth-weekday uses nth (1-5). Omit the whole rule for explicit dates only.",
+          "type": "json",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug. Defaults to the current team."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "SERIES_ID": "out.data.id",
+    "SERIES_TITLE": "out.data.title"
+  },
+  "messages": {
+    "success": {
+      "en": "Event series '{{SERIES_TITLE}}' created."
+    },
+    "error": {
+      "en": "Could not create the event series."
+    }
+  }
+}

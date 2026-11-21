@@ -1,0 +1,161 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Update Event Series",
+  "title": {
+    "en": "Update an event series"
+  },
+  "description": {
+    "en": "Edit an event series template or rule. Future generated occurrences are updated or regenerated; explicit dates are kept."
+  },
+  "bot": "Use to rename a series, change its time or rule, season or visibility. Editing one occurrence is done with update_update on that event, not here.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Update event series"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/event-series/{{seriesId}}",
+        "method": "PATCH",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}",
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Series ID",
+          "as": "seriesId",
+          "description": {
+            "en": "The series hashid to edit"
+          },
+          "type": "string",
+          "position": "url:seriesId",
+          "source": "field",
+          "required": true,
+          "min": 1
+        },
+        {
+          "name": "Title",
+          "as": "title",
+          "description": {
+            "en": "Updated series title"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Body",
+          "as": "body",
+          "description": {
+            "en": "Updated description"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Timezone",
+          "as": "timezone",
+          "description": {
+            "en": "Updated IANA timezone"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Starts On",
+          "as": "startsOn",
+          "description": {
+            "en": "Updated season start (YYYY-MM-DD)"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Ends On",
+          "as": "endsOn",
+          "description": {
+            "en": "Updated season end (YYYY-MM-DD)"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Duration Minutes",
+          "as": "durationMinutes",
+          "description": {
+            "en": "Updated occurrence length"
+          },
+          "type": "number",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Internal",
+          "as": "internal",
+          "description": {
+            "en": "Internal series: hidden from the city calendar"
+          },
+          "type": "boolean",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Media",
+          "as": "media",
+          "description": {
+            "en": "Replace the series media (JSON array of team media IDs)"
+          },
+          "type": "json",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Rule",
+          "as": "rule",
+          "description": {
+            "en": "New rule object: {kind: weekly|nth-weekday, weekday: 1-7, time: HH:MM, interval?, nth?}"
+          },
+          "type": "json",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug. Defaults to the current team."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "SERIES_ID": "out.data.id",
+    "SERIES_TITLE": "out.data.title"
+  },
+  "messages": {
+    "success": {
+      "en": "Event series '{{SERIES_TITLE}}' updated."
+    },
+    "error": {
+      "en": "Could not update the event series."
+    }
+  }
+}

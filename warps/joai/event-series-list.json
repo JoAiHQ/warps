@@ -1,0 +1,58 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: List Event Series",
+  "title": {
+    "en": "List event series"
+  },
+  "description": {
+    "en": "List the event series of a team, including rule, season and internal visibility."
+  },
+  "bot": "Use to find a series hashid before editing or deleting it, or to inspect an existing recurring programme.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "auto": true,
+      "label": {
+        "en": "List event series"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/event-series",
+        "method": "GET",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}",
+          "Accept": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug. Defaults to the current team."
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ]
+    }
+  ],
+  "output": {
+    "series": "out.data"
+  },
+  "messages": {
+    "success": {
+      "en": "Event series loaded."
+    },
+    "error": {
+      "en": "Could not load event series."
+    }
+  }
+}
