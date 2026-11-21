@@ -1,0 +1,136 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "JoAi: Update Media",
+  "title": {
+    "en": "Update media",
+    "de": "Medium bearbeiten",
+    "es": "Update media",
+    "fr": "Update media",
+    "ro": "Update media",
+    "it": "Update media"
+  },
+  "description": {
+    "en": "Update a media asset's name, copyright credit, or AI-generated flag. Only the provided fields change.",
+    "de": "Bearbeite Name, Copyright-Hinweis oder KI-Kennzeichnung eines Mediums. Nur übergebene Felder ändern sich.",
+    "es": "Update a media asset's name, copyright credit, or AI-generated flag. Only the provided fields change.",
+    "fr": "Update a media asset's name, copyright credit, or AI-generated flag. Only the provided fields change.",
+    "ro": "Update a media asset's name, copyright credit, or AI-generated flag. Only the provided fields change.",
+    "it": "Update a media asset's name, copyright credit, or AI-generated flag. Only the provided fields change."
+  },
+  "bot": "Use this to fix media metadata — for example clearing an incorrect copyright credit. Only the fields you pass are changed. If the user refers to media by label, list media first to find the matching ID.",
+  "vars": {
+    "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Update media",
+        "de": "Medium bearbeiten",
+        "es": "Update media",
+        "fr": "Update media",
+        "ro": "Update media",
+        "it": "Update media"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/media/{{mediaId}}",
+        "method": "PUT",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "X-Team": "{{team}}",
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Media ID",
+          "as": "mediaId",
+          "description": {
+            "en": "The ID of the media asset to update",
+            "de": "Die ID des zu bearbeitenden Mediums",
+            "es": "The ID of the media asset to update",
+            "fr": "The ID of the media asset to update",
+            "ro": "The ID of the media asset to update",
+            "it": "The ID of the media asset to update"
+          },
+          "bot": "The media hash ID. If the user refers to media by label, list media first to find the matching ID.",
+          "type": "string",
+          "position": "url:mediaId",
+          "source": "field",
+          "required": true,
+          "min": 1
+        },
+        {
+          "name": "Name",
+          "as": "name",
+          "description": {
+            "en": "New display name for the asset",
+            "de": "Neuer Anzeigename des Mediums",
+            "es": "New display name for the asset",
+            "fr": "New display name for the asset",
+            "ro": "New display name for the asset",
+            "it": "New display name for the asset"
+          },
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "max": 255
+        },
+        {
+          "name": "Copyright",
+          "as": "copyright",
+          "description": {
+            "en": "Public credit line. Keep it client-facing only — never internal provenance. Send an empty string to clear it.",
+            "de": "Öffentliche Copyright-Zeile. Nur kundentaugliche Angaben — niemals interne Herkunft. Leerer String entfernt sie.",
+            "es": "Public credit line. Keep it client-facing only — never internal provenance. Send an empty string to clear it.",
+            "fr": "Public credit line. Keep it client-facing only — never internal provenance. Send an empty string to clear it.",
+            "ro": "Public credit line. Keep it client-facing only — never internal provenance. Send an empty string to clear it.",
+            "it": "Public credit line. Keep it client-facing only — never internal provenance. Send an empty string to clear it."
+          },
+          "bot": "Rendered publicly. Use the client or business name only, or an empty string to clear. Never put WhatsApp, email, internal dates, contact names, or system names here.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "max": 500
+        },
+        {
+          "name": "AI Generated",
+          "as": "aiGenerated",
+          "description": {
+            "en": "Whether the asset was AI-generated",
+            "de": "Ob das Medium KI-generiert wurde",
+            "es": "Whether the asset was AI-generated",
+            "fr": "Whether the asset was AI-generated",
+            "ro": "Whether the asset was AI-generated",
+            "it": "Whether the asset was AI-generated"
+          },
+          "type": "boolean",
+          "source": "field",
+          "required": false
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "description": {
+            "en": "Team slug for this action. Defaults to the current team.",
+            "de": "Team-Slug für diese Aktion. Standardmäßig das aktuelle Team."
+          },
+          "bot": "The slug of the team that owns the media. Omit to use the current team.",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}"
+        }
+      ]
+    }
+  ],
+  "messages": {
+    "success": {
+      "en": "Media updated.",
+      "de": "Medium aktualisiert."
+    }
+  }
+}
