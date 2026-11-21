@@ -4,8 +4,8 @@
   "repo": "JoAiHQ/warps",
   "branch": "main",
   "network": "mainnet",
-  "commitSha": "6f875ccaab072f893e77a666b6cbd172a6e61c88",
-  "generatedAt": "2026-11-21T21:20:32.950Z",
+  "commitSha": "6ef450765690e115092860ba92d5565c586e07a6",
+  "generatedAt": "2026-11-21T23:08:21.779Z",
   "warps": [
     {
       "key": "arbitrum:omniset-deposit-arbitrum",
@@ -91183,6 +91183,630 @@
       "extras": null
     },
     {
+      "key": "none:joai-event-series-create",
+      "identifier": "@joai-event-series-create",
+      "alias": "joai-event-series-create",
+      "chain": "none",
+      "hash": "1d3459a5caff013334be19aa462e5e5cfb978dc713938a378166e4296b660a12",
+      "checksum": "1d3459a5caff013334be19aa462e5e5cfb978dc713938a378166e4296b660a12",
+      "name": "JoAi: Create Event Series",
+      "title": {
+        "en": "Create an event series"
+      },
+      "description": {
+        "en": "Create a recurring event series. The API generates the dated event occurrences from the rule (or leaves it to explicit dates only)."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: Create Event Series",
+        "title": {
+          "en": "Create an event series"
+        },
+        "description": {
+          "en": "Create a recurring event series. The API generates the dated event occurrences from the rule (or leaves it to explicit dates only)."
+        },
+        "bot": "Use for recurring programmes (weekly classes, monthly nights, seasonal exhibitions). Give either a rule (weekly with interval, or nth-weekday) or only explicit dates. Occurrences are generated automatically; do not create rule dates by hand.",
+        "vars": {
+          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+          "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Create event series"
+            },
+            "destination": {
+              "url": "https://api.joai.ai/v1/event-series",
+              "method": "POST",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+                "X-Team": "{{team}}",
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Title",
+                "as": "title",
+                "description": {
+                  "en": "Series title used for every occurrence"
+                },
+                "type": "string",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Timezone",
+                "as": "timezone",
+                "description": {
+                  "en": "IANA timezone of the series, e.g. Europe/Vienna"
+                },
+                "type": "string",
+                "source": "field",
+                "required": true,
+                "default": "Europe/Vienna"
+              },
+              {
+                "name": "Starts On",
+                "as": "startsOn",
+                "description": {
+                  "en": "Season start (YYYY-MM-DD)"
+                },
+                "type": "string",
+                "source": "field",
+                "required": true
+              },
+              {
+                "name": "Ends On",
+                "as": "endsOn",
+                "description": {
+                  "en": "Season end (YYYY-MM-DD), optional"
+                },
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Duration Minutes",
+                "as": "durationMinutes",
+                "description": {
+                  "en": "Length of each occurrence in minutes"
+                },
+                "type": "number",
+                "source": "field",
+                "required": true,
+                "default": 60
+              },
+              {
+                "name": "Internal",
+                "as": "internal",
+                "description": {
+                  "en": "Internal series: visible on the business page, hidden from the city calendar"
+                },
+                "type": "boolean",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Body",
+                "as": "body",
+                "description": {
+                  "en": "Description copied into every occurrence"
+                },
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Media",
+                "as": "media",
+                "description": {
+                  "en": "Team media IDs (JSON array) used as the series image"
+                },
+                "type": "json",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Rule",
+                "as": "rule",
+                "description": {
+                  "en": "Recurrence rule object: {kind: weekly|nth-weekday, weekday: 1-7, time: HH:MM, interval?, nth?}"
+                },
+                "bot": "weekday is ISO (1=Monday). weekly uses interval (1 or 2). nth-weekday uses nth (1-5). Omit the whole rule for explicit dates only.",
+                "type": "json",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Team",
+                "as": "team",
+                "description": {
+                  "en": "Team slug. Defaults to the current team."
+                },
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "default": "{{JOAI_TEAM_SLUG}}"
+              }
+            ]
+          }
+        ],
+        "output": {
+          "SERIES_ID": "out.data.id",
+          "SERIES_TITLE": "out.data.title"
+        },
+        "messages": {
+          "success": {
+            "en": "Event series '{{SERIES_TITLE}}' created."
+          },
+          "error": {
+            "en": "Could not create the event series."
+          }
+        }
+      },
+      "extras": null
+    },
+    {
+      "key": "none:joai-event-series-delete",
+      "identifier": "@joai-event-series-delete",
+      "alias": "joai-event-series-delete",
+      "chain": "none",
+      "hash": "4b66920d9641dc92e756ed0fa66a5dca9ce5c2d13d85eb89157525e46a4e9e65",
+      "checksum": "4b66920d9641dc92e756ed0fa66a5dca9ce5c2d13d85eb89157525e46a4e9e65",
+      "name": "JoAi: Delete Event Series",
+      "title": {
+        "en": "Delete an event series"
+      },
+      "description": {
+        "en": "Delete an event series. Future generated occurrences are removed; past and explicit occurrences stay as standalone events."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: Delete Event Series",
+        "title": {
+          "en": "Delete an event series"
+        },
+        "description": {
+          "en": "Delete an event series. Future generated occurrences are removed; past and explicit occurrences stay as standalone events."
+        },
+        "bot": "Use only when the series should stop entirely. To skip one date, cancel that occurrence with update_update instead.",
+        "vars": {
+          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+          "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Delete event series"
+            },
+            "destination": {
+              "url": "https://api.joai.ai/v1/event-series/{{seriesId}}",
+              "method": "DELETE",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+                "X-Team": "{{team}}"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Series ID",
+                "as": "seriesId",
+                "description": {
+                  "en": "The series hashid to delete"
+                },
+                "type": "string",
+                "position": "url:seriesId",
+                "source": "field",
+                "required": true,
+                "min": 1
+              },
+              {
+                "name": "Team",
+                "as": "team",
+                "description": {
+                  "en": "Team slug. Defaults to the current team."
+                },
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "default": "{{JOAI_TEAM_SLUG}}"
+              }
+            ]
+          }
+        ],
+        "messages": {
+          "success": {
+            "en": "Event series deleted."
+          },
+          "error": {
+            "en": "Could not delete the event series."
+          }
+        }
+      },
+      "extras": null
+    },
+    {
+      "key": "none:joai-event-series-list",
+      "identifier": "@joai-event-series-list",
+      "alias": "joai-event-series-list",
+      "chain": "none",
+      "hash": "6aea9989ee23250b3208465f365db5ab9f26dc2fd8388ef91d0aea876f6ba6df",
+      "checksum": "6aea9989ee23250b3208465f365db5ab9f26dc2fd8388ef91d0aea876f6ba6df",
+      "name": "JoAi: List Event Series",
+      "title": {
+        "en": "List event series"
+      },
+      "description": {
+        "en": "List the event series of a team, including rule, season and internal visibility."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: List Event Series",
+        "title": {
+          "en": "List event series"
+        },
+        "description": {
+          "en": "List the event series of a team, including rule, season and internal visibility."
+        },
+        "bot": "Use to find a series hashid before editing or deleting it, or to inspect an existing recurring programme.",
+        "vars": {
+          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+          "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "auto": true,
+            "label": {
+              "en": "List event series"
+            },
+            "destination": {
+              "url": "https://api.joai.ai/v1/event-series",
+              "method": "GET",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+                "X-Team": "{{team}}",
+                "Accept": "application/json"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Team",
+                "as": "team",
+                "description": {
+                  "en": "Team slug. Defaults to the current team."
+                },
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "default": "{{JOAI_TEAM_SLUG}}"
+              }
+            ]
+          }
+        ],
+        "output": {
+          "series": "out.data"
+        },
+        "messages": {
+          "success": {
+            "en": "Event series loaded."
+          },
+          "error": {
+            "en": "Could not load event series."
+          }
+        }
+      },
+      "extras": null
+    },
+    {
+      "key": "none:joai-event-series-update",
+      "identifier": "@joai-event-series-update",
+      "alias": "joai-event-series-update",
+      "chain": "none",
+      "hash": "40b29cf51cfd22e9da3c919a56522ead3fff72130d519ece54f31cdfdc03105e",
+      "checksum": "40b29cf51cfd22e9da3c919a56522ead3fff72130d519ece54f31cdfdc03105e",
+      "name": "JoAi: Update Event Series",
+      "title": {
+        "en": "Update an event series"
+      },
+      "description": {
+        "en": "Edit an event series template or rule. Future generated occurrences are updated or regenerated; explicit dates are kept."
+      },
+      "preview": null,
+      "creator": "github:JoAiHQ/warps",
+      "privileges": [],
+      "listed": true,
+      "visibility": "public",
+      "primaryAddress": null,
+      "primaryFunc": null,
+      "brand": {
+        "hash": "b0aa1c906e84200a1e6fb55cd853c97542c93d735d1afcd999917fdbdb81712b",
+        "slug": "joai",
+        "active": true,
+        "protocol": "brand:0.2.0",
+        "name": "JoAi",
+        "description": {
+          "en": "JoAi is a platform for creating and managing your own AI agents.",
+          "de": "JoAi ist eine Plattform für das Erstellen und Verwalten eigener AI-Agenten.",
+          "fr": "JoAi est une plateforme qui permet de créer et de gérer vos propres agents IA.",
+          "es": "JoAi es una plataforma para crear y gestionar tus propios agentes de IA.",
+          "ro": "JoAi este o platforma pentru crearea si gestionarea propriilor tai agenti AI."
+        },
+        "logo": {
+          "default": "https://raw.githubusercontent.com/JoAiHQ/assets/refs/heads/main/apps/logos/joai.svg"
+        },
+        "urls": {
+          "web": "https://joai.ai"
+        },
+        "colors": {
+          "primary": "#98FF98",
+          "secondary": "#FFFF66"
+        }
+      },
+      "warp": {
+        "protocol": "warp:3.0.0",
+        "name": "JoAi: Update Event Series",
+        "title": {
+          "en": "Update an event series"
+        },
+        "description": {
+          "en": "Edit an event series template or rule. Future generated occurrences are updated or regenerated; explicit dates are kept."
+        },
+        "bot": "Use to rename a series, change its time or rule, season or visibility. Editing one occurrence is done with update_update on that event, not here.",
+        "vars": {
+          "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
+          "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+          "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+        },
+        "actions": [
+          {
+            "type": "collect",
+            "label": {
+              "en": "Update event series"
+            },
+            "destination": {
+              "url": "https://api.joai.ai/v1/event-series/{{seriesId}}",
+              "method": "PATCH",
+              "headers": {
+                "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+                "X-Team": "{{team}}",
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+              }
+            },
+            "inputs": [
+              {
+                "name": "Series ID",
+                "as": "seriesId",
+                "description": {
+                  "en": "The series hashid to edit"
+                },
+                "type": "string",
+                "position": "url:seriesId",
+                "source": "field",
+                "required": true,
+                "min": 1
+              },
+              {
+                "name": "Title",
+                "as": "title",
+                "description": {
+                  "en": "Updated series title"
+                },
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Body",
+                "as": "body",
+                "description": {
+                  "en": "Updated description"
+                },
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Timezone",
+                "as": "timezone",
+                "description": {
+                  "en": "Updated IANA timezone"
+                },
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Starts On",
+                "as": "startsOn",
+                "description": {
+                  "en": "Updated season start (YYYY-MM-DD)"
+                },
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Ends On",
+                "as": "endsOn",
+                "description": {
+                  "en": "Updated season end (YYYY-MM-DD)"
+                },
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Duration Minutes",
+                "as": "durationMinutes",
+                "description": {
+                  "en": "Updated occurrence length"
+                },
+                "type": "number",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Internal",
+                "as": "internal",
+                "description": {
+                  "en": "Internal series: hidden from the city calendar"
+                },
+                "type": "boolean",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Media",
+                "as": "media",
+                "description": {
+                  "en": "Replace the series media (JSON array of team media IDs)"
+                },
+                "type": "json",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Rule",
+                "as": "rule",
+                "description": {
+                  "en": "New rule object: {kind: weekly|nth-weekday, weekday: 1-7, time: HH:MM, interval?, nth?}"
+                },
+                "type": "json",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Team",
+                "as": "team",
+                "description": {
+                  "en": "Team slug. Defaults to the current team."
+                },
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "default": "{{JOAI_TEAM_SLUG}}"
+              }
+            ]
+          }
+        ],
+        "output": {
+          "SERIES_ID": "out.data.id",
+          "SERIES_TITLE": "out.data.title"
+        },
+        "messages": {
+          "success": {
+            "en": "Event series '{{SERIES_TITLE}}' updated."
+          },
+          "error": {
+            "en": "Could not update the event series."
+          }
+        }
+      },
+      "extras": null
+    },
+    {
       "key": "none:joai-fulfillment-create",
       "identifier": "@joai-fulfillment-create",
       "alias": "joai-fulfillment-create",
@@ -124763,8 +125387,8 @@
       "identifier": "@joai-update-create",
       "alias": "joai-update-create",
       "chain": "none",
-      "hash": "127fe60633e98f872c71a609914de39c77d7c5041ccc5e888483432246e6a182",
-      "checksum": "127fe60633e98f872c71a609914de39c77d7c5041ccc5e888483432246e6a182",
+      "hash": "40f4811d1d223d0da2611d0582437142d1fa43e0c5f2c7afdd326d4d3bfcd9c6",
+      "checksum": "40f4811d1d223d0da2611d0582437142d1fa43e0c5f2c7afdd326d4d3bfcd9c6",
       "name": "JoAi: Create Update",
       "title": {
         "en": "Post an update",
@@ -124949,6 +125573,65 @@
                 },
                 "bot": "Optional props object (string values). For city-directory top news set {\"top-news\":\"true\"} on type=news. For jobs set jobLocation, jobWorkplaceType, jobEmploymentType, jobSalaryMin/Max/Unit/Currency, jobStartDate, and jobApplyEmail as needed.",
                 "type": "json",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Kind",
+                "as": "kind",
+                "description": {
+                  "en": "Event kind: session (single date) or run (multi-day window)",
+                  "de": "Event-Art: session (ein Termin) oder run (mehrtägig)"
+                },
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "options": {
+                  "session": "Session",
+                  "run": "Run"
+                }
+              },
+              {
+                "name": "All Day",
+                "as": "allDay",
+                "description": {
+                  "en": "The event lasts all day",
+                  "de": "Der Termin dauert den ganzen Tag"
+                },
+                "type": "boolean",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Internal",
+                "as": "internal",
+                "description": {
+                  "en": "Internal event: visible on the business page, hidden from the city calendar",
+                  "de": "Interner Termin: auf der Betriebsseite sichtbar, im Stadtkalender ausgeblendet"
+                },
+                "type": "boolean",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Series ID",
+                "as": "seriesId",
+                "description": {
+                  "en": "Series hashid when adding an explicit occurrence",
+                  "de": "Serien-Hashid beim Anlegen eines expliziten Termins"
+                },
+                "type": "string",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Recurrence ID",
+                "as": "recurrenceId",
+                "description": {
+                  "en": "Nominal local start (YYYY-MM-DD HH:mm) of the occurrence; derived from startsAt when omitted",
+                  "de": "Nominaler lokaler Start (YYYY-MM-DD HH:mm) des Termins; wird sonst aus startsAt abgeleitet"
+                },
+                "type": "string",
                 "source": "field",
                 "required": false
               },
@@ -125641,8 +126324,8 @@
       "identifier": "@joai-update-update",
       "alias": "joai-update-update",
       "chain": "none",
-      "hash": "09d5caa30acf34e6ee2554c11cccc081a9473ab6d262c793550c87f44bfa5a65",
-      "checksum": "09d5caa30acf34e6ee2554c11cccc081a9473ab6d262c793550c87f44bfa5a65",
+      "hash": "c38e5f6d6efec527b30614a07eac54c4c09c1b3de3ca88916a50dc2017dbc4a7",
+      "checksum": "c38e5f6d6efec527b30614a07eac54c4c09c1b3de3ca88916a50dc2017dbc4a7",
       "name": "JoAi: Update Update",
       "title": {
         "en": "Edit an update",
@@ -125840,6 +126523,54 @@
                 },
                 "bot": "Optional. When provided, replaces the entire props bag. For jobs preserve jobLocation, jobWorkplaceType, jobEmploymentType, jobSalaryMin/Max/Unit/Currency, jobStartDate, and jobApplyEmail unless the user asks to change them.",
                 "type": "json",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Kind",
+                "as": "kind",
+                "description": {
+                  "en": "Event kind: session (single date) or run (multi-day window)",
+                  "de": "Event-Art: session (ein Termin) oder run (mehrtägig)"
+                },
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "options": {
+                  "session": "Session",
+                  "run": "Run"
+                }
+              },
+              {
+                "name": "All Day",
+                "as": "allDay",
+                "description": {
+                  "en": "The event lasts all day",
+                  "de": "Der Termin dauert den ganzen Tag"
+                },
+                "type": "boolean",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Internal",
+                "as": "internal",
+                "description": {
+                  "en": "Internal event: visible on the business page, hidden from the city calendar",
+                  "de": "Interner Termin: auf der Betriebsseite sichtbar, im Stadtkalender ausgeblendet"
+                },
+                "type": "boolean",
+                "source": "field",
+                "required": false
+              },
+              {
+                "name": "Cancelled At",
+                "as": "cancelledAt",
+                "description": {
+                  "en": "Set to cancel this series occurrence (ISO 8601)",
+                  "de": "Setzen, um diesen Serientermin abzusagen (ISO 8601)"
+                },
+                "type": "string",
                 "source": "field",
                 "required": false
               },
