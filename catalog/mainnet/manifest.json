@@ -4,8 +4,8 @@
   "repo": "JoAiHQ/warps",
   "branch": "main",
   "network": "mainnet",
-  "commitSha": "b2318b0b35a7536f5f7f3708be2bbdfea69d299b",
-  "generatedAt": "2026-11-24T15:28:24.307Z",
+  "commitSha": "632dfd7174338bc9a658ee4c445a925041406023",
+  "generatedAt": "2026-11-24T19:38:38.765Z",
   "warps": [
     {
       "key": "arbitrum:omniset-deposit-arbitrum",
@@ -124427,8 +124427,8 @@
       "identifier": "@joai-team-place-update",
       "alias": "joai-team-place-update",
       "chain": "none",
-      "hash": "b8a410b4534b0584ce39605c7dfdf4a02b913eee96e4f409c8ec751aecce7fa2",
-      "checksum": "b8a410b4534b0584ce39605c7dfdf4a02b913eee96e4f409c8ec751aecce7fa2",
+      "hash": "27c980a7495961132035b05ea5dca4438d04eb8cbdd47d490865abcd404f4980",
+      "checksum": "27c980a7495961132035b05ea5dca4438d04eb8cbdd47d490865abcd404f4980",
       "name": "JoAi: Update Team Place",
       "title": {
         "en": "Set business location",
@@ -124496,7 +124496,7 @@
           "ro": "Selectează sau schimbă locația nativă de afaceri a unei echipe dintr-un rezultat de căutare confirmat, inclusiv adresă, coordonate și detalii despre furnizor. Folosește această acțiune dedicată pentru identitatea locației în loc să salvezi identificatori sau programe în metadatele echipei.",
           "it": "Seleziona o cambia la posizione aziendale nativa di un team da un risultato di ricerca confermato, inclusi indirizzo, coordinate e dettagli del fornitore. Usa questa azione dedicata per l'identità della posizione invece di salvare identificatori o orari nei metadati del team."
         },
-        "bot": "Use this when a confirmed place search result should become the team's native business location. Pass the sourceId of the place to select it, or null to remove the location. Do not use it for opening hours; enable synchronization through the appointment policy after the place is selected.",
+        "bot": "Use this when a place source should be attached to a team. Use provider google with the sourceId of a confirmed place search result for the native business location, or provider falstaff with the public falstaff.com guide URL for an editorial rating. Pass null as sourceId to remove that provider. Do not use it for opening hours; enable synchronization through the appointment policy after the Google place is selected.",
         "vars": {
           "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
           "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
@@ -124515,7 +124515,7 @@
             },
             "auto": true,
             "destination": {
-              "url": "https://api.joai.ai/v1/teams/{{slug}}/place",
+              "url": "https://api.joai.ai/v1/teams/{{slug}}/places/{{provider}}",
               "method": "PUT",
               "headers": {
                 "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
@@ -124555,6 +124555,23 @@
                 "type": "json",
                 "source": "field",
                 "required": true
+              },
+              {
+                "name": "Provider",
+                "as": "provider",
+                "description": {
+                  "en": "Place provider: google for the location, falstaff for the editorial guide rating",
+                  "de": "Ortsanbieter: google für den Standort, falstaff für die redaktionelle Guide-Bewertung",
+                  "fr": "Fournisseur de lieu : google pour l'emplacement, falstaff pour la note du guide",
+                  "es": "Proveedor del lugar: google para la ubicación, falstaff para la valoración de la guía",
+                  "ro": "Furnizor de locație: google pentru locație, falstaff pentru evaluarea ghidului",
+                  "it": "Fornitore del luogo: google per la posizione, falstaff per la valutazione della guida"
+                },
+                "bot": "Use google for the business location and falstaff for a Falstaff guide rating. Defaults to google.",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "default": "google"
               },
               {
                 "name": "Team",
