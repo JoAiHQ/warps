@@ -2,7 +2,7 @@
 
 ## Testing Billing Flow (Devnet)
 **Target URL**: `https://devnet.joai.ai`
-**Test User**: `apptester@vleap.at` (Magic Link Login)
+**Test User**: use your own Devnet account. The App Store review identity is secret and must not be documented here.
 
 ### Automation Steps
 1.  **Login**: Use email only. No password required. Verify dashboard loads.
