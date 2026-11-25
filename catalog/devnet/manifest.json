@@ -4,8 +4,8 @@
   "repo": "JoAiHQ/warps",
   "branch": "dev",
   "network": "devnet",
-  "commitSha": "0e0866162023c0569d2e14835732437603b0f2cf",
-  "generatedAt": "2026-11-24T00:00:24.578Z",
+  "commitSha": "e58a8dc1d78ecab31225cca0588f17a2bed5f59d",
+  "generatedAt": "2026-11-25T10:58:37.812Z",
   "warps": [
     {
       "key": "arbitrum:omniset-deposit-arbitrum",
@@ -124427,8 +124427,8 @@
       "identifier": "@joai-team-place-update",
       "alias": "joai-team-place-update",
       "chain": "none",
-      "hash": "4df770cff53715600845a930c434b79d5c38602dd5f91b312891052bb38c4e36",
-      "checksum": "4df770cff53715600845a930c434b79d5c38602dd5f91b312891052bb38c4e36",
+      "hash": "56ea6e7cc16c9d0ae45ce2724f858c5bcd78bf5b9cf7ab52add94b4df41e1e43",
+      "checksum": "56ea6e7cc16c9d0ae45ce2724f858c5bcd78bf5b9cf7ab52add94b4df41e1e43",
       "name": "JoAi: Update Team Place",
       "title": {
         "en": "Set business location",
@@ -124496,7 +124496,7 @@
           "ro": "Selectează sau schimbă locația nativă de afaceri a unei echipe dintr-un rezultat de căutare confirmat, inclusiv adresă, coordonate și detalii despre furnizor. Folosește această acțiune dedicată pentru identitatea locației în loc să salvezi identificatori sau programe în metadatele echipei.",
           "it": "Seleziona o cambia la posizione aziendale nativa di un team da un risultato di ricerca confermato, inclusi indirizzo, coordinate e dettagli del fornitore. Usa questa azione dedicata per l'identità della posizione invece di salvare identificatori o orari nei metadati del team."
         },
-        "bot": "Use this when a confirmed place search result should become the team's native business location. Pass the sourceId of the place to select it, or null to remove the location. Do not use it for opening hours; enable synchronization through the appointment policy after the place is selected.",
+        "bot": "Use this when a place source should be attached to a team. Use provider google with the sourceId of a confirmed place search result for the native business location, or provider falstaff with the public falstaff.com guide URL for an editorial rating. Pass null as sourceId to remove that provider. Do not use it for opening hours; enable synchronization through the appointment policy after the Google place is selected.",
         "vars": {
           "JOAI_AGENT_UUID": "env:JOAI_AGENT_UUID",
           "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
@@ -124515,7 +124515,7 @@
             },
             "auto": true,
             "destination": {
-              "url": "https://devnet-api.joai.ai/v1/teams/{{slug}}/place",
+              "url": "https://devnet-api.joai.ai/v1/teams/{{slug}}/places/{{provider}}",
               "method": "PUT",
               "headers": {
                 "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
@@ -124544,17 +124544,34 @@
                 "name": "Source ID",
                 "as": "sourceId",
                 "description": {
-                  "en": "The provider place identifier from a place search result, or null to clear the location",
-                  "de": "Die Ortskennung des Anbieters aus einem Ortssuchergebnis, oder null zum Entfernen des Standorts",
-                  "fr": "L'identifiant du lieu du fournisseur issu d'un résultat de recherche, ou null pour supprimer l'emplacement",
-                  "es": "El identificador del lugar del proveedor de un resultado de búsqueda, o null para eliminar la ubicación",
-                  "ro": "Identificatorul locului de la furnizor dintr-un rezultat de căutare, sau null pentru a șterge locația",
-                  "it": "L'identificatore del luogo del fornitore da un risultato di ricerca, o null per rimuovere la posizione"
+                  "en": "The provider place identifier from a place search result, or an empty value to clear the source",
+                  "de": "Die Ortskennung des Anbieters aus einem Ortssuchergebnis, oder leer zum Entfernen der Quelle",
+                  "fr": "L'identifiant du lieu du fournisseur issu d'un résultat de recherche, ou vide pour supprimer la source",
+                  "es": "El identificador del lugar del proveedor de un resultado de búsqueda, o vacío para eliminar la fuente",
+                  "ro": "Identificatorul locului de la furnizor dintr-un rezultat de căutare, sau gol pentru a șterge sursa",
+                  "it": "L'identificatore del luogo del fornitore da un risultato di ricerca, o vuoto per rimuovere la fonte"
                 },
-                "bot": "The provider place identifier from a confirmed place search result. Pass null to remove the current location.",
-                "type": "json",
+                "bot": "The provider source from a confirmed search (Google place id) or the public Falstaff URL. Pass an empty value to remove that provider.",
+                "type": "string",
                 "source": "field",
-                "required": true
+                "required": false
+              },
+              {
+                "name": "Provider",
+                "as": "provider",
+                "description": {
+                  "en": "Place provider: google for the location, falstaff for the editorial guide rating",
+                  "de": "Ortsanbieter: google für den Standort, falstaff für die redaktionelle Guide-Bewertung",
+                  "fr": "Fournisseur de lieu : google pour l'emplacement, falstaff pour la note du guide",
+                  "es": "Proveedor del lugar: google para la ubicación, falstaff para la valoración de la guía",
+                  "ro": "Furnizor de locație: google pentru locație, falstaff pentru evaluarea ghidului",
+                  "it": "Fornitore del luogo: google per la posizione, falstaff per la valutazione della guida"
+                },
+                "bot": "Use google for the business location and falstaff for a Falstaff guide rating. Defaults to google.",
+                "type": "string",
+                "source": "field",
+                "required": false,
+                "default": "google"
               },
               {
                 "name": "Team",
