@@ -1,0 +1,162 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Routes: List",
+  "title": {
+    "en": "List routes",
+    "de": "Routen auflisten",
+    "es": "Listar rutas",
+    "fr": "Lister les parcours",
+    "it": "Elenca i percorsi",
+    "ro": "Listează traseele"
+  },
+  "description": {
+    "en": "List routes of the team with ordered stops. Team members with view access also receive hidden and scheduled routes.",
+    "de": "Listet die Routen des Teams mit ihren Stationen in Reihenfolge auf. Teammitglieder mit Ansichtsrecht erhalten auch ausgeblendete und geplante Routen.",
+    "es": "Lista las rutas del equipo con sus paradas en orden. Los miembros con permiso de visualización también reciben rutas ocultas y programadas.",
+    "fr": "Liste les parcours de l’équipe avec leurs étapes ordonnées. Les membres ayant accès en lecture reçoivent aussi les parcours masqués et programmés.",
+    "it": "Elenca i percorsi del team con le tappe in ordine. I membri con accesso in lettura ricevono anche percorsi nascosti e programmati.",
+    "ro": "Listează traseele echipei cu opririle în ordine. Membrii cu acces de vizualizare primesc și traseele ascunse sau programate."
+  },
+  "bot": "Filter by team, city, tag or search. Hidden routes are included when the caller can view the team.",
+  "vars": {
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "List routes",
+        "de": "Routen auflisten",
+        "es": "Listar rutas",
+        "fr": "Lister les parcours",
+        "it": "Elenca i percorsi",
+        "ro": "Listează traseele"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/routes",
+        "method": "GET",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "Accept": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Team",
+          "as": "team",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}",
+          "position": "query:team",
+          "description": {
+            "en": "Team slug.",
+            "de": "Team-Slug.",
+            "es": "Slug del equipo.",
+            "fr": "Slug de l’équipe.",
+            "it": "Slug del team.",
+            "ro": "Slugul echipei."
+          }
+        },
+        {
+          "name": "City",
+          "as": "city",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "query:city",
+          "description": {
+            "en": "City filter.",
+            "de": "Stadtfilter.",
+            "es": "Filtro por ciudad.",
+            "fr": "Filtre par ville.",
+            "it": "Filtro per città.",
+            "ro": "Filtru după oraș."
+          }
+        },
+        {
+          "name": "Tag",
+          "as": "tag",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "query:tag",
+          "description": {
+            "en": "Tag filter.",
+            "de": "Tag-Filter.",
+            "es": "Filtro por etiqueta.",
+            "fr": "Filtre par tag.",
+            "it": "Filtro per tag.",
+            "ro": "Filtru după etichetă."
+          }
+        },
+        {
+          "name": "Search",
+          "as": "search",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "query:search",
+          "description": {
+            "en": "Free-text search.",
+            "de": "Freitextsuche.",
+            "es": "Búsqueda libre.",
+            "fr": "Recherche libre.",
+            "it": "Ricerca libera.",
+            "ro": "Căutare liberă."
+          }
+        },
+        {
+          "name": "Limit",
+          "as": "limit",
+          "type": "number",
+          "source": "field",
+          "required": false,
+          "position": "query:limit",
+          "description": {
+            "en": "Results per page.",
+            "de": "Ergebnisse pro Seite.",
+            "es": "Resultados por página.",
+            "fr": "Résultats par page.",
+            "it": "Risultati per pagina.",
+            "ro": "Rezultate pe pagină."
+          }
+        },
+        {
+          "name": "Page",
+          "as": "page",
+          "type": "number",
+          "source": "field",
+          "required": false,
+          "position": "query:page",
+          "description": {
+            "en": "Page number.",
+            "de": "Seitennummer.",
+            "es": "Número de página.",
+            "fr": "Numéro de page.",
+            "it": "Numero di pagina.",
+            "ro": "Numărul paginii."
+          }
+        }
+      ],
+      "output": {
+        "ROUTES": "out.data",
+        "PAGINATION": "out.meta"
+      }
+    }
+  ],
+  "output": {
+    "ROUTES": "out.data"
+  },
+  "messages": {
+    "success": {
+      "en": "Routes loaded.",
+      "de": "Routen geladen.",
+      "es": "Rutas cargadas.",
+      "fr": "Parcours chargés.",
+      "it": "Percorsi caricati.",
+      "ro": "Traseele au fost încărcate."
+    }
+  }
+}
