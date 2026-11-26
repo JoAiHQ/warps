@@ -28,6 +28,13 @@
 *   **Devnet**: Payments require test credentials (not fully automated without them).
 *   **Form Persistence**: Billing info saves correctly.
 
+## Localization
+
+- All user-facing warp fields must be localized in every supported language: `title`, `description`, action `label`, input `description` and `messages`.
+- JoAi warps support `en`, `de`, `es`, `fr`, `it` and `ro`.
+- `bot` is model guidance, not user-facing, and stays English.
+- Never ship a user-facing warp field in English only.
+
 ## German Localization
 
 - Never use formal "Sie/Ihre" in German translations. Always use informal "du/dein" (lowercase) or rephrase to avoid the pronoun entirely.
@@ -56,7 +63,7 @@ Every warp must meet these requirements before it can be considered complete:
 - The `description` field must be 2-3 sentences, optimized for SEO and LLM search discoverability.
 - Include relevant keywords naturally — mention the brand/service name, what the action does, and who benefits.
 - If a description is only 1 short sentence, it is not ready — expand it.
-- All descriptions must have both `en` and `de` translations.
+- All descriptions must be localized in every supported language for the brand. JoAi requires `en`, `de`, `es`, `fr`, `it` and `ro`.
 - German translations must sound natural (informal "du" form, not robotic/literal). See the German Localization section.
 - Never expose the internal term "warp" in user-facing text. Users know these as "actions".
 
@@ -99,10 +106,10 @@ export const meta: Record<string, WarpExtras> = {
 
 **Field requirements:**
 
-- `keywords`: relevant search terms users would type. Include brand name, action name, and related terms. Both `en` and `de`.
-- `useCases`: 3-4 short, specific scenario strings describing who benefits or what can be done. Not generic platitudes — be concrete. Both `en` and `de`.
+- `keywords`: relevant search terms users would type. Include brand name, action name, and related terms. Localize in every supported language for the brand (JoAi: all six).
+- `useCases`: 3-4 short, specific scenario strings describing who benefits or what can be done. Not generic platitudes — be concrete. Localize in every supported language for the brand (JoAi: all six).
 - `category`: exactly one of: `'productivity'`, `'communication'`, `'developer'`, `'defi'`, `'staking'`, `'nft'`, `'analytics'`, `'commerce'`, `'social'`, `'security'`, `'infrastructure'`.
-- `faq`: 2-3 question/answer pairs per warp. Questions should be things users actually search for. Answers must be concise (1-2 sentences). Both `en` and `de`.
+- `faq`: 2-3 question/answer pairs per warp. Questions should be things users actually search for. Answers must be concise (1-2 sentences). Localize in every supported language for the brand (JoAi: all six).
 
 **Content rules:**
 

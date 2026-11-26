@@ -1,0 +1,95 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Routes: Reorder Stops",
+  "title": {
+    "en": "Reorder route stops",
+    "de": "Stationen sortieren",
+    "es": "Reordenar paradas",
+    "fr": "Réordonner les étapes",
+    "it": "Riordina le tappe",
+    "ro": "Reordonează opririle"
+  },
+  "description": {
+    "en": "Set the order of every route stop. Send every stop exactly once.",
+    "de": "Legt die Reihenfolge aller Stationen einer Route fest. Jede Station genau einmal senden.",
+    "es": "Define el orden de todas las paradas de una ruta. Envía cada parada exactamente una vez.",
+    "fr": "Définit l’ordre de toutes les étapes d’un parcours. Envoyez chaque étape une seule fois.",
+    "it": "Imposta l’ordine di tutte le tappe di un percorso. Invia ogni tappa una sola volta.",
+    "ro": "Stabilește ordinea tuturor opririlor unui traseu. Trimite fiecare oprire o singură dată."
+  },
+  "bot": "Send every stop exactly once with positions 1 to n.",
+  "vars": {
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Reorder route stops",
+        "de": "Stationen sortieren",
+        "es": "Reordenar paradas",
+        "fr": "Réordonner les étapes",
+        "it": "Riordina le tappe",
+        "ro": "Reordonează opririle"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/routes/{{id}}/stops/order",
+        "method": "PUT",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "Accept": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Route ID",
+          "as": "id",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:id",
+          "description": {
+            "en": "Route hashid.",
+            "de": "Routen-Hashid.",
+            "es": "Hashid de la ruta.",
+            "fr": "Hashid du parcours.",
+            "it": "Hashid del percorso.",
+            "ro": "Hashid-ul traseului."
+          }
+        },
+        {
+          "name": "Stops",
+          "as": "stops",
+          "type": "json",
+          "source": "field",
+          "required": true,
+          "description": {
+            "en": "JSON array of {id, position} for every stop.",
+            "de": "JSON-Array aus {id, position} für jede Station.",
+            "es": "Array JSON de {id, position} para cada parada.",
+            "fr": "Tableau JSON de {id, position} pour chaque étape.",
+            "it": "Array JSON di {id, position} per ogni tappa.",
+            "ro": "Array JSON de {id, position} pentru fiecare oprire."
+          }
+        }
+      ],
+      "output": {
+        "id": "out.data.id"
+      }
+    }
+  ],
+  "output": {
+    "ROUTE_ID": "out.data.id"
+  },
+  "messages": {
+    "success": {
+      "en": "Stops reordered.",
+      "de": "Stationen sortiert.",
+      "es": "Paradas reordenadas.",
+      "fr": "Étapes réordonnées.",
+      "it": "Tappe riordinate.",
+      "ro": "Opriri reordonate."
+    }
+  }
+}

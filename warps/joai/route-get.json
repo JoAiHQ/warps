@@ -1,0 +1,96 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Routes: Get",
+  "title": {
+    "en": "Get route",
+    "de": "Route laden",
+    "es": "Obtener ruta",
+    "fr": "Obtenir le parcours",
+    "it": "Ottieni percorso",
+    "ro": "Obține traseul"
+  },
+  "description": {
+    "en": "Load one route by slug with ordered stops and places. Hidden and scheduled routes are returned when the caller has team access.",
+    "de": "Lädt eine Route anhand des Slugs mit Stationen und Orten in Reihenfolge. Ausgeblendete und geplante Routen werden zurückgegeben, wenn der Aufrufer Zugriff auf das Team hat.",
+    "es": "Carga una ruta por slug con paradas y lugares en orden. Las rutas ocultas y programadas se devuelven cuando quien llama tiene acceso al equipo.",
+    "fr": "Charge un parcours par slug avec ses étapes et lieux ordonnés. Les parcours masqués et programmés sont renvoyés lorsque l’appelant a accès à l’équipe.",
+    "it": "Carica un percorso per slug con tappe e luoghi in ordine. I percorsi nascosti e programmati vengono restituiti quando il chiamante ha accesso al team.",
+    "ro": "Încarcă un traseu după slug, cu opriri și locuri în ordine. Traseele ascunse și programate sunt returnate când apelantul are acces la echipă."
+  },
+  "bot": "Pass team when slugs collide. Team members with view access also receive hidden and scheduled routes.",
+  "vars": {
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Get route",
+        "de": "Route laden",
+        "es": "Obtener ruta",
+        "fr": "Obtenir le parcours",
+        "it": "Ottieni percorso",
+        "ro": "Obține traseul"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/routes/{{slug}}",
+        "method": "GET",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "Accept": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Slug",
+          "as": "slug",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "url:slug",
+          "description": {
+            "en": "Route slug.",
+            "de": "Routen-Slug.",
+            "es": "Slug de la ruta.",
+            "fr": "Slug du parcours.",
+            "it": "Slug del percorso.",
+            "ro": "Slugul traseului."
+          }
+        },
+        {
+          "name": "Team",
+          "as": "team",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "query:team",
+          "description": {
+            "en": "Team slug.",
+            "de": "Team-Slug.",
+            "es": "Slug del equipo.",
+            "fr": "Slug de l’équipe.",
+            "it": "Slug del team.",
+            "ro": "Slugul echipei."
+          }
+        }
+      ],
+      "output": {
+        "ROUTE": "out.data"
+      }
+    }
+  ],
+  "output": {
+    "ROUTE": "out.data"
+  },
+  "messages": {
+    "success": {
+      "en": "Route loaded.",
+      "de": "Route geladen.",
+      "es": "Ruta cargada.",
+      "fr": "Parcours chargé.",
+      "it": "Percorso caricato.",
+      "ro": "Traseul a fost încărcat."
+    }
+  }
+}
