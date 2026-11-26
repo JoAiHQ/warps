@@ -1,0 +1,102 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Places: Import",
+  "title": {
+    "en": "Import place",
+    "de": "Ort importieren",
+    "es": "Importar lugar",
+    "fr": "Importer un lieu",
+    "ro": "Importă locul",
+    "it": "Importa luogo"
+  },
+  "description": {
+    "en": "Import a provider place into the team's Places catalogue using the provider key and source id from search_place_providers.",
+    "de": "Importiert einen Ort aus einer Quelle anhand von Quellen-Schlüssel und Quell-ID aus search_place_providers in den Ort-Katalog des Teams.",
+    "es": "Importa un lugar de una fuente al catálogo del equipo usando la clave de fuente y el id de search_place_providers.",
+    "fr": "Importe un lieu d’une source dans le catalogue de l’équipe à partir de la clé de source et de l’id renvoyés par search_place_providers.",
+    "ro": "Importă un loc dintr-o sursă în catalogul echipei folosind cheia sursei și id-ul din search_place_providers.",
+    "it": "Importa un luogo da una fonte nel catalogo del team usando la chiave della fonte e l’id da search_place_providers."
+  },
+  "bot": "Requires team manage permission. The imported place inherits the team's visibility and is refreshed daily from the provider.",
+  "vars": {
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Import place",
+        "de": "Ort importieren",
+        "es": "Importar lugar",
+        "fr": "Importer un lieu",
+        "ro": "Importă locul",
+        "it": "Importa luogo"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/places/import",
+        "method": "POST",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "Accept": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Team",
+          "as": "team",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}",
+          "description": {
+            "en": "Team slug to import into. Defaults to the current team.",
+            "de": "Team-Slug für den Import. Standardmäßig das aktuelle Team."
+          }
+        },
+        {
+          "name": "Provider",
+          "as": "provider",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "description": {
+            "en": "Provider key from list_place_providers.",
+            "de": "Quellen-Schlüssel aus list_place_providers."
+          }
+        },
+        {
+          "name": "Source ID",
+          "as": "sourceId",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "description": {
+            "en": "Provider place id from search_place_providers.",
+            "de": "Orts-ID aus search_place_providers."
+          }
+        }
+      ],
+      "output": {
+        "id": "out.data.id",
+        "slug": "out.data.slug",
+        "name": "out.data.name"
+      }
+    }
+  ],
+  "output": {
+    "PLACE_ID": "out.data.id",
+    "PLACE_SLUG": "out.data.slug",
+    "PLACE_NAME": "out.data.name"
+  },
+  "messages": {
+    "success": {
+      "en": "Place '{{PLACE_NAME}}' imported.",
+      "de": "Ort '{{PLACE_NAME}}' importiert.",
+      "es": "Lugar '{{PLACE_NAME}}' importado.",
+      "fr": "Lieu '{{PLACE_NAME}}' importé.",
+      "ro": "Locul '{{PLACE_NAME}}' a fost importat.",
+      "it": "Luogo '{{PLACE_NAME}}' importato."
+    }
+  }
+}

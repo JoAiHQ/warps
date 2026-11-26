@@ -1,0 +1,159 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Places: List",
+  "title": {
+    "en": "List places",
+    "de": "Orte auflisten",
+    "es": "Listar lugares",
+    "fr": "Lister les lieux",
+    "ro": "Listează locurile",
+    "it": "Elenca i luoghi"
+  },
+  "description": {
+    "en": "List all places of the team, including hidden and scheduled ones: sights, businesses, playgrounds and viewpoints on the map. Filter by city, tag or free-text search.",
+    "de": "Listet die Orte des Teams auf: Sehenswürdigkeiten, Betriebe, Spielplätze und Aussichtspunkte auf der Karte. Filter nach Stadt, Tag oder Freitextsuche.",
+    "es": "Lista los lugares del equipo: monumentos, negocios, parques y miradores en el mapa. Filtra por ciudad, etiqueta o búsqueda libre.",
+    "fr": "Liste les lieux de l’équipe : sites, commerces, aires de jeux et points de vue sur la carte. Filtrez par ville, tag ou recherche libre.",
+    "ro": "Listează locurile echipei: obiective, afaceri, locuri de joacă și puncte de belvedere pe hartă. Filtrează după oraș, etichetă sau căutare liberă.",
+    "it": "Elenca i luoghi del team: attrazioni, attività, parchi giochi e punti panoramici sulla mappa. Filtra per città, tag o ricerca libera."
+  },
+  "bot": "Staff tool. Includes hidden and scheduled places so they can be found and republished. Use the returned ids for update_place.",
+  "vars": {
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "List places",
+        "de": "Orte auflisten",
+        "es": "Listar lugares",
+        "fr": "Lister les lieux",
+        "ro": "Listează locurile",
+        "it": "Elenca i luoghi"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/places/manage",
+        "method": "GET",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "Accept": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Team",
+          "as": "team",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}",
+          "position": "query:team",
+          "description": {
+            "en": "Team slug to scope the catalogue.",
+            "de": "Team-Slug zum Eingrenzen des Katalogs.",
+            "es": "Slug del equipo para limitar el catálogo.",
+            "fr": "Slug de l’équipe pour limiter le catalogue.",
+            "ro": "Slugul echipei pentru a limita catalogul.",
+            "it": "Slug del team per limitare il catalogo."
+          }
+        },
+        {
+          "name": "City",
+          "as": "city",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "query:city",
+          "description": {
+            "en": "Filter by city name.",
+            "de": "Nach Stadt filtern.",
+            "es": "Filtrar por ciudad.",
+            "fr": "Filtrer par ville.",
+            "ro": "Filtrează după oraș.",
+            "it": "Filtra per città."
+          }
+        },
+        {
+          "name": "Tag",
+          "as": "tag",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "query:tag",
+          "description": {
+            "en": "Filter by one tag, e.g. poi or viewpoint.",
+            "de": "Nach einem Tag filtern, z. B. poi oder viewpoint.",
+            "es": "Filtrar por una etiqueta, p. ej. poi o mirador.",
+            "fr": "Filtrer par tag, par ex. poi ou point-de-vue.",
+            "ro": "Filtrează după o etichetă, de ex. poi sau belvedere.",
+            "it": "Filtra per un tag, ad es. poi o belvedere."
+          }
+        },
+        {
+          "name": "Search",
+          "as": "search",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "query:search",
+          "description": {
+            "en": "Free-text search on name and address.",
+            "de": "Freitextsuche in Name und Adresse.",
+            "es": "Búsqueda libre por nombre y dirección.",
+            "fr": "Recherche libre sur le nom et l’adresse.",
+            "ro": "Căutare liberă după nume și adresă.",
+            "it": "Ricerca libera su nome e indirizzo."
+          }
+        },
+        {
+          "name": "Limit",
+          "as": "limit",
+          "type": "number",
+          "source": "field",
+          "required": false,
+          "position": "query:limit",
+          "description": {
+            "en": "Results per page (max. 100).",
+            "de": "Ergebnisse pro Seite (max. 100).",
+            "es": "Resultados por página (máx. 100).",
+            "fr": "Résultats par page (max. 100).",
+            "ro": "Rezultate pe pagină (max. 100).",
+            "it": "Risultati per pagina (max 100)."
+          }
+        },
+        {
+          "name": "Page",
+          "as": "page",
+          "type": "number",
+          "source": "field",
+          "required": false,
+          "position": "query:page",
+          "description": {
+            "en": "Page number, starting at 1.",
+            "de": "Seitennummer, beginnend bei 1.",
+            "es": "Número de página, a partir de 1.",
+            "fr": "Numéro de page, à partir de 1.",
+            "ro": "Numărul paginii, începând de la 1.",
+            "it": "Numero di pagina, a partire da 1."
+          }
+        }
+      ]
+    }
+  ],
+  "output": {
+    "PLACES": "out.data",
+    "PAGINATION": "out.meta"
+  },
+  "messages": {
+    "success": {
+      "en": "Places loaded.",
+      "de": "Orte geladen.",
+      "es": "Lugares cargados.",
+      "fr": "Lieux chargés.",
+      "ro": "Locurile au fost încărcate.",
+      "it": "Luoghi caricati."
+    }
+  }
+}
