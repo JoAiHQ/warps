@@ -1,0 +1,111 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "competition-check",
+  "title": {
+    "en": "Check Competition Answer",
+    "de": "Wettbewerbsantwort prüfen",
+    "es": "Comprobar respuesta de la competición",
+    "fr": "Vérifier la réponse du concours",
+    "it": "Controlla la risposta della competizione",
+    "ro": "Verifică răspunsul competiției"
+  },
+  "description": {
+    "en": "Checks a message against the active Booga Town competition answer.",
+    "de": "Prüft eine Nachricht gegen die aktive Booga-Town-Wettbewerbsantwort.",
+    "es": "Comprueba un mensaje contra la respuesta activa de Booga Town.",
+    "fr": "Vérifie un message par rapport à la réponse active du concours Booga Town.",
+    "it": "Controlla un messaggio rispetto alla risposta attiva della competizione Booga Town.",
+    "ro": "Verifică un mesaj față de răspunsul activ al competiției Booga Town."
+  },
+  "trigger": {
+    "type": "message",
+    "pattern": "^.+$"
+  },
+  "actions": [
+    {
+      "type": "state",
+      "label": {
+        "en": "Load competition",
+        "de": "Wettbewerb laden",
+        "es": "Cargar competición",
+        "fr": "Charger le concours",
+        "it": "Carica competizione",
+        "ro": "Încarcă competiția"
+      },
+      "op": {
+        "en": "read",
+        "de": "read",
+        "es": "read",
+        "fr": "read",
+        "it": "read",
+        "ro": "read"
+      },
+      "store": "boogas-competitions",
+      "keys": ["competition"]
+    },
+    {
+      "type": "compute",
+      "label": {
+        "en": "Check answer",
+        "de": "Antwort prüfen",
+        "es": "Comprobar respuesta",
+        "fr": "Vérifier la réponse",
+        "it": "Controlla risposta",
+        "ro": "Verifică răspunsul"
+      },
+      "inputs": [
+        {
+          "name": "correct",
+          "type": "boolean",
+          "source": "hidden",
+          "modifier": "transform:() => { const raw='{{state.competition}}'; if(!raw) return false; const d=JSON.parse(raw); if(!d.active) return false; return '{{JOAI_MESSAGE_TEXT}}'.trim().toLowerCase() === String(d.active.answer).trim().toLowerCase(); }"
+        },
+        {
+          "name": "dataJson",
+          "type": "string",
+          "source": "hidden",
+          "modifier": "transform:() => { const raw='{{state.competition}}'; if(!raw) return ''; const d=JSON.parse(raw); if(!d.active) return raw; const ok='{{JOAI_MESSAGE_TEXT}}'.trim().toLowerCase() === String(d.active.answer).trim().toLowerCase(); if(!ok) return raw; d.active=null; return JSON.stringify(d); }"
+        },
+        {
+          "name": "message",
+          "type": "string",
+          "source": "hidden",
+          "modifier": "transform:() => { const raw='{{state.competition}}'; if(!raw) return ''; const d=JSON.parse(raw); if(!d.active) return ''; const ok='{{JOAI_MESSAGE_TEXT}}'.trim().toLowerCase() === String(d.active.answer).trim().toLowerCase(); return ok ? '🎉 ' + '{{JOAI_SENDER_NAME}}' + ' got it! The answer was ' + d.active.answer + '.' : ''; }"
+        }
+      ]
+    },
+    {
+      "type": "state",
+      "label": {
+        "en": "Close competition",
+        "de": "Wettbewerb schließen",
+        "es": "Cerrar competición",
+        "fr": "Clôturer le concours",
+        "it": "Chiudi competizione",
+        "ro": "Închide competiția"
+      },
+      "op": "write",
+      "store": "boogas-competitions",
+      "data": {
+        "competition": "{{dataJson}}"
+      },
+      "when": "{{correct}} === true"
+    },
+    {
+      "type": "unmount",
+      "label": {
+        "en": "Unmount competition check",
+        "de": "Wettbewerbsprüfung deaktivieren",
+        "es": "Desactivar comprobación",
+        "fr": "Désactiver la vérification",
+        "it": "Disattiva verifica",
+        "ro": "Dezactivează verificarea"
+      },
+      "warp": "@boogas-competition-check",
+      "when": "{{correct}} === true"
+    }
+  ],
+  "messages": {
+    "success": "{{message}}"
+  }
+}

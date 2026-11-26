@@ -1,0 +1,97 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "competition-import",
+  "title": {
+    "en": "Import Competition Bank",
+    "de": "Wettbewerbsbank importieren",
+    "es": "Importar banco de competiciones",
+    "fr": "Importer la banque de concours",
+    "it": "Importa banca competizioni",
+    "ro": "Importă banca de competiții"
+  },
+  "description": {
+    "en": "Import the competition question bank as JSON into JoAi state.",
+    "de": "Importiert die Wettbewerbs-Fragenbank als JSON in den JoAi-State.",
+    "es": "Importa el banco de preguntas de competiciones como JSON al estado de JoAi.",
+    "fr": "Importe la banque de questions des concours en JSON dans l'état JoAi.",
+    "it": "Importa la banca domande delle competizioni come JSON nello stato JoAi.",
+    "ro": "Importă banca de întrebări a competițiilor ca JSON în starea JoAi."
+  },
+  "bot": "Use when an admin wants to import competition questions as JSON.",
+  "actions": [
+    {
+      "type": "compute",
+      "label": {
+        "en": "Read bank",
+        "de": "Fragenbank lesen",
+        "es": "Leer banco de preguntas",
+        "fr": "Lire la banque de questions",
+        "it": "Leggi banca domande",
+        "ro": "Citește banca de întrebări"
+      },
+      "inputs": [
+        {
+          "name": "Bank",
+          "as": "bank",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "description": {
+            "en": "JSON: {\"bank\":[{\"name\":\"test\",\"question\":\"...\",\"answer\":\"...\"}],\"active\":null}",
+            "de": "JSON: {\"bank\":[{\"name\":\"test\",\"question\":\"...\",\"answer\":\"...\"}],\"active\":null}",
+            "es": "JSON: {\"bank\":[{\"name\":\"test\",\"question\":\"...\",\"answer\":\"...\"}],\"active\":null}",
+            "fr": "JSON: {\"bank\":[{\"name\":\"test\",\"question\":\"...\",\"answer\":\"...\"}],\"active\":null}",
+            "it": "JSON: {\"bank\":[{\"name\":\"test\",\"question\":\"...\",\"answer\":\"...\"}],\"active\":null}",
+            "ro": "JSON: {\"bank\":[{\"name\":\"test\",\"question\":\"...\",\"answer\":\"...\"}],\"active\":null}"
+          },
+          "bot": "The full competition bank JSON."
+        }
+      ]
+    },
+    {
+      "type": "compute",
+      "label": {
+        "en": "Check admin",
+        "de": "Admin prüfen",
+        "es": "Comprobar admin",
+        "fr": "Vérifier l'admin",
+        "it": "Controlla admin",
+        "ro": "Verifică adminul"
+      },
+      "inputs": [
+        {
+          "name": "isAdmin",
+          "type": "boolean",
+          "source": "hidden",
+          "modifier": "transform:() => ['rokboogas','rok boogas'].includes('{{JOAI_SENDER_NAME}}'.toLowerCase().replace(/^@/,''))"
+        },
+        {
+          "name": "message",
+          "type": "string",
+          "source": "hidden",
+          "modifier": "transform:() => {{isAdmin}} ? 'Competition bank imported.' : 'Only @RokBoogas can import competitions.'"
+        }
+      ]
+    },
+    {
+      "type": "state",
+      "label": {
+        "en": "Save bank",
+        "de": "Fragenbank speichern",
+        "es": "Guardar banco de preguntas",
+        "fr": "Enregistrer la banque",
+        "it": "Salva banca domande",
+        "ro": "Salvează banca"
+      },
+      "op": "write",
+      "store": "boogas-competitions",
+      "data": {
+        "competition": "{{bank}}"
+      },
+      "when": "{{isAdmin}} === true"
+    }
+  ],
+  "messages": {
+    "success": "{{message}}"
+  }
+}
