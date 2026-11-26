@@ -277,35 +277,6 @@ export const meta: Record<string, WarpExtras> = {
     },
     category: 'productivity',
   },
-  'team-place-update': {
-    keywords: {
-      en: ['set business location', 'business address', 'company location', 'native place selection', 'local business map'],
-      de: ['Geschäftsstandort festlegen', 'Geschäftsadresse', 'Standort wählen', 'native Standortauswahl', 'lokale Businesskarte'],
-    },
-    useCases: {
-      en: [
-        'Set the verified business location on a team profile from a place search result',
-        'Update an address and coordinates after a business relocates',
-        'Clear a business location from a team when it is no longer needed',
-      ],
-      de: [
-        'Den verifizierten Geschäftsstandort eines Teams aus einem Ortssuchergebnis festlegen',
-        'Adresse und Koordinaten nach einem Umzug aktualisieren',
-        'Einen Geschäftsstandort aus einem Team entfernen, wenn er nicht mehr benötigt wird',
-      ],
-    },
-    category: 'productivity',
-    faq: {
-      en: [
-        { question: 'How do I set a business location?', answer: 'Search for the place first, then pass the matching sourceId to set the verified location on the team.' },
-        { question: 'Can I remove a location?', answer: 'Yes, pass null as the sourceId to clear the business location from the team.' },
-      ],
-      de: [
-        { question: 'Wie lege ich einen Geschäftsstandort fest?', answer: 'Suche zuerst nach dem Ort und übergib dann die passende Ortskennung, um den verifizierten Standort im Team zu setzen.' },
-        { question: 'Kann ich einen Standort entfernen?', answer: 'Ja, übergib null als Ortskennung, um den Geschäftsstandort vom Team zu entfernen.' },
-      ],
-    },
-  },
   'team-get': {
     keywords: {
       en: ['get team', 'team profile', 'view team', 'team branding', 'invoice settings'],
