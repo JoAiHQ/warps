@@ -1,0 +1,137 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "competition-start",
+  "title": {
+    "en": "Start Competition",
+    "de": "Wettbewerb starten",
+    "es": "Iniciar competición",
+    "fr": "Démarrer le concours",
+    "it": "Avvia competizione",
+    "ro": "Începe competiția"
+  },
+  "description": {
+    "en": "Start the next unused Booga Town competition by name.",
+    "de": "Startet den nächsten unbenutzten Booga-Town-Wettbewerb nach Namen.",
+    "es": "Inicia la siguiente competición no usada de Booga Town por nombre.",
+    "fr": "Démarre le prochain concours Booga Town inutilisé par nom.",
+    "it": "Avvia la prossima competizione Booga Town non usata per nome.",
+    "ro": "Începe următoarea competiție Booga Town nefolosită după nume."
+  },
+  "bot": "Use when a user starts a competition, e.g. '/compete test'.",
+  "actions": [
+    {
+      "type": "compute",
+      "label": {
+        "en": "Competition name",
+        "de": "Wettbewerbsname",
+        "es": "Nombre de la competición",
+        "fr": "Nom du concours",
+        "it": "Nome della competizione",
+        "ro": "Numele competiției"
+      },
+      "inputs": [
+        {
+          "name": "Name",
+          "as": "name",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "description": {
+            "en": "Competition name (e.g. test)",
+            "de": "Wettbewerbsname (z. B. test)",
+            "es": "Nombre de la competición (p. ej. test)",
+            "fr": "Nom du concours (p. ex. test)",
+            "it": "Nome della competizione (es. test)",
+            "ro": "Numele competiției (de ex. test)"
+          },
+          "bot": "The competition name the user asked for."
+        }
+      ]
+    },
+    {
+      "type": "state",
+      "label": {
+        "en": "Load competitions",
+        "de": "Wettbewerbe laden",
+        "es": "Cargar competiciones",
+        "fr": "Charger les concours",
+        "it": "Carica competizioni",
+        "ro": "Încarcă competițiile"
+      },
+      "op": {
+        "en": "read",
+        "de": "read",
+        "es": "read",
+        "fr": "read",
+        "it": "read",
+        "ro": "read"
+      },
+      "store": "boogas-competitions",
+      "keys": ["competition"]
+    },
+    {
+      "type": "compute",
+      "label": {
+        "en": "Select competition",
+        "de": "Wettbewerb auswählen",
+        "es": "Seleccionar competición",
+        "fr": "Sélectionner le concours",
+        "it": "Seleziona competizione",
+        "ro": "Selectează competiția"
+      },
+      "inputs": [
+        {
+          "name": "found",
+          "type": "boolean",
+          "source": "hidden",
+          "modifier": "transform:() => { const name='{{name}}'.trim().toLowerCase(); const raw='{{state.competition}}'; const d=raw?JSON.parse(raw):{bank:[],active:null}; return d.bank.some(q=>q.name===name && !q.used); }"
+        },
+        {
+          "name": "dataJson",
+          "type": "string",
+          "source": "hidden",
+          "modifier": "transform:() => { const name='{{name}}'.trim().toLowerCase(); const raw='{{state.competition}}'; const d=raw?JSON.parse(raw):{bank:[],active:null}; const item=d.bank.find(q=>q.name===name && !q.used); if(!item) return JSON.stringify(d); item.used=true; d.active={name:item.name,question:item.question,answer:item.answer}; return JSON.stringify(d); }"
+        },
+        {
+          "name": "message",
+          "type": "string",
+          "source": "hidden",
+          "modifier": "transform:() => { const name='{{name}}'.trim().toLowerCase(); const raw='{{state.competition}}'; const d=raw?JSON.parse(raw):{bank:[],active:null}; const item=d.bank.find(q=>q.name===name && !q.used); return item ? 'Ooga Booga, it\\'s competition time!\\n\\nQuestion: ' + item.question + '\\n\\nThe first exact right answer wins!' : 'No unused question for \"' + name + '\".'; }"
+        }
+      ]
+    },
+    {
+      "type": "state",
+      "label": {
+        "en": "Save competition",
+        "de": "Wettbewerb speichern",
+        "es": "Guardar competición",
+        "fr": "Enregistrer le concours",
+        "it": "Salva competizione",
+        "ro": "Salvează competiția"
+      },
+      "op": "write",
+      "store": "boogas-competitions",
+      "data": {
+        "competition": "{{dataJson}}"
+      },
+      "when": "{{found}} === true"
+    },
+    {
+      "type": "mount",
+      "label": {
+        "en": "Mount competition check",
+        "de": "Wettbewerbsprüfung aktivieren",
+        "es": "Activar comprobación",
+        "fr": "Activer la vérification",
+        "it": "Attiva verifica",
+        "ro": "Activează verificarea"
+      },
+      "warp": "@boogas-competition-check",
+      "when": "{{found}} === true"
+    }
+  ],
+  "messages": {
+    "success": "{{message}}"
+  }
+}
