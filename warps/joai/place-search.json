@@ -1,0 +1,134 @@
+{
+  "protocol": "warp:3.0.0",
+  "name": "Places: Search Providers",
+  "title": {
+    "en": "Search place providers",
+    "de": "Ort-Quellen durchsuchen",
+    "es": "Buscar en fuentes de lugares",
+    "fr": "Rechercher dans les sources de lieux",
+    "ro": "Caută în sursele de locuri",
+    "it": "Cerca nelle fonti dei luoghi"
+  },
+  "description": {
+    "en": "Search an external provider for a place the team can import. Returns provider source ids, names, addresses and coordinates.",
+    "de": "Durchsucht eine externe Quelle nach einem Ort, den das Team importieren kann. Liefert Quell-IDs, Namen, Adressen und Koordinaten.",
+    "es": "Busca en una fuente externa un lugar que el equipo pueda importar. Devuelve identificadores, nombres, direcciones y coordenadas.",
+    "fr": "Recherche dans une source externe un lieu importable par l’équipe. Renvoie les identifiants, noms, adresses et coordonnées.",
+    "ro": "Caută într-o sursă externă un loc pe care echipa îl poate importa. Returnează id-uri, nume, adrese și coordonate.",
+    "it": "Cerca in una fonte esterna un luogo importabile dal team. Restituisce id, nomi, indirizzi e coordinate."
+  },
+  "bot": "Call list_place_providers first if you do not know the provider key. Pass the chosen sourceId to import_place.",
+  "vars": {
+    "JOAI_AGENT_AUTH_KEY": "env:JOAI_AGENT_AUTH_KEY",
+    "JOAI_TEAM_SLUG": "env:JOAI_TEAM_SLUG"
+  },
+  "actions": [
+    {
+      "type": "collect",
+      "label": {
+        "en": "Search places",
+        "de": "Orte durchsuchen",
+        "es": "Buscar lugares",
+        "fr": "Rechercher des lieux",
+        "ro": "Caută locuri",
+        "it": "Cerca luoghi"
+      },
+      "destination": {
+        "url": "INJECT:API_BASE/v1/places/search",
+        "method": "GET",
+        "headers": {
+          "X-Agent-Auth-Key": "{{JOAI_AGENT_AUTH_KEY}}",
+          "Accept": "application/json"
+        }
+      },
+      "inputs": [
+        {
+          "name": "Team",
+          "as": "team",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "default": "{{JOAI_TEAM_SLUG}}",
+          "position": "query:team",
+          "description": {
+            "en": "Team slug to import into. Defaults to the current team.",
+            "de": "Team-Slug für den Import. Standardmäßig das aktuelle Team."
+          }
+        },
+        {
+          "name": "Provider",
+          "as": "provider",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "query:provider",
+          "description": {
+            "en": "Provider key from list_place_providers.",
+            "de": "Quellen-Schlüssel aus list_place_providers."
+          }
+        },
+        {
+          "name": "Query",
+          "as": "query",
+          "type": "string",
+          "source": "field",
+          "required": true,
+          "position": "query:query",
+          "description": {
+            "en": "Place name or address to search for.",
+            "de": "Ortsname oder Adresse für die Suche."
+          }
+        },
+        {
+          "name": "Language",
+          "as": "language",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "query:language",
+          "description": {
+            "en": "Optional language code.",
+            "de": "Optionaler Sprachcode."
+          }
+        },
+        {
+          "name": "Region",
+          "as": "region",
+          "type": "string",
+          "source": "field",
+          "required": false,
+          "position": "query:region",
+          "description": {
+            "en": "Optional two-letter region code.",
+            "de": "Optionaler zweistelliger Regionscode."
+          }
+        },
+        {
+          "name": "Limit",
+          "as": "limit",
+          "type": "number",
+          "source": "field",
+          "required": false,
+          "position": "query:limit",
+          "description": {
+            "en": "Maximum results (1-10, default 5).",
+            "de": "Maximale Treffer (1-10, Standard 5)."
+          }
+        }
+      ]
+    }
+  ],
+  "output": {
+    "RESULTS": "out.data"
+  },
+  "messages": {
+    "success": {
+      "en": "Provider places loaded.",
+      "de": "Orte aus der Quelle geladen.",
+      "es": "Lugares de la fuente cargados.",
+      "fr": "Lieux de la source chargés.",
+      "ro": "Locurile din sursă au fost încărcate.",
+      "it": "Luoghi della fonte caricati."
+    }
+  }
+}
